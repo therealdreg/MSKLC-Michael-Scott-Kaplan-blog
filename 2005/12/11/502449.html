@@ -1,0 +1,130 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2005/12/11/502449.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:40 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>More limitations with percentage support</title></head><body>
+<h1>More limitations with percentage support</h1>
+<p><em>by Michael S. Kaplan, published on 2005/12/11 08:01 -05:00, original URI: http://blogs.msdn.com/b/michkap/archive/2005/12/11/502449.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P><FONT face=Tahoma>I have spoken previously about limitations that affect the support of percent formats in the .NET Framework's globalization classes, in the post entitled </FONT><STRONG><FONT face=Tahoma><a href="http://archives.miloush.net/michkap/archive/2005/11/24/495349.html">And you can't set all of the properties all of the time...</A></FONT></STRONG></P>
+<P><FONT face=Tahoma>I thought I'd talk for a bit about the parsing support.</FONT></P>
+<P><FONT face=Tahoma>Make no mistake: the parsing support in the .NET Framework is very impressive, from a globalization standpoint.</FONT></P>
+<P><FONT face=Tahoma>Methods like <A href="http://msdn2.microsoft.com/en-us/library/0kb11ck8.aspx">Double.Parse</A> can take both an <A href="http://msdn2.microsoft.com/en-us/library/system.iformatprovider.aspx">IFormatProvider</A> (which&nbsp;for numbers can&nbsp;be&nbsp;a <A href="http://msdn2.microsoft.com/en-us/library/system.globalization.numberformatinfo.aspx">NumberFormatInfo</A>&nbsp;object) to provide the proper cultural settings to take what was once a particular type and has somehow found itself in string format, and a bitwise combination of NumberStyles flags:</FONT></P>
+<P><FONT face=Tahoma>
+<TABLE cellSpacing=2 cellPadding=5 width="70%" border=1>
+<TBODY>
+<TR>
+<TH align=left><FONT size=2>Member name</FONT></TH>
+<TH align=left><FONT size=2>Description</FONT></TH></TR>
+<TR vAlign=top>
+<TD><B><FONT size=2>AllowCurrencySymbol</FONT></B></TD>
+<TD><FONT size=2>Indicates that the numeric string is parsed as currency if it contains a currency symbol; otherwise, it is parsed as a number. Valid currency symbols are determined by the </FONT><A href="http://msdn2.microsoft.com/en-us/library/system.globalization.numberformatinfo.currencysymbol.aspx"><FONT size=2>CurrencySymbol</FONT></A><FONT size=2> property of <B>NumberFormatInfo</B>.&nbsp;</FONT></TD></TR>
+<TR vAlign=top>
+<TD><B><FONT size=2>AllowDecimalPoint</FONT></B></TD>
+<TD><FONT size=2>Indicates that the numeric string can have a decimal point. Valid decimal point characters are determined by the <B>NumberDecimalSeparator</B> and <B>CurrencyDecimalSeparator</B> properties of <B>NumberFormatInfo</B>.&nbsp;</FONT></TD></TR>
+<TR vAlign=top>
+<TD><B><FONT size=2>AllowExponent</FONT></B></TD>
+<TD><FONT size=2>Indicates that the numeric string can be in exponential notation.&nbsp;</FONT></TD></TR>
+<TR vAlign=top>
+<TD><B><FONT size=2>AllowHexSpecifier</FONT></B></TD>
+<TD><FONT size=2>Indicates that the numeric string represents a hexadecimal value. Valid hexadecimal values include the numeric digits 0-9 and the hexadecimal digits A-F and a-f. Hexadecimal values can be left-padded with zeros. Strings parsed using this style are not permitted to be prefixed with "0x".&nbsp;</FONT></TD></TR>
+<TR vAlign=top>
+<TD><B><FONT size=2>AllowLeadingSign</FONT></B></TD>
+<TD><FONT size=2>Indicates that the numeric string can have a leading sign. Valid leading sign characters are determined by the </FONT><A href="http://msdn2.microsoft.com/en-us/library/system.globalization.numberformatinfo.positivesign.aspx"><FONT size=2>PositiveSign</FONT></A><FONT size=2> and </FONT><A href="http://msdn2.microsoft.com/en-us/library/system.globalization.numberformatinfo.negativesign.aspx"><FONT size=2>NegativeSign</FONT></A><FONT size=2> properties of <B>NumberFormatInfo</B>.&nbsp;</FONT></TD></TR>
+<TR vAlign=top>
+<TD><B><FONT size=2>AllowLeadingWhite</FONT></B></TD>
+<TD><FONT size=2>Indicates that a leading white-space character must be ignored during parsing. Valid white-space characters have the Unicode values U+0009, U+000A, U+000B, U+000C, U+000D, and U+0020.&nbsp;</FONT></TD></TR>
+<TR vAlign=top>
+<TD><B><FONT size=2>AllowParentheses</FONT></B></TD>
+<TD><FONT size=2>Indicates that the numeric string can have one pair of parentheses enclosing the number.&nbsp;</FONT></TD></TR>
+<TR vAlign=top>
+<TD><B><FONT size=2>AllowThousands</FONT></B></TD>
+<TD><FONT size=2>Indicates that the numeric string can have group separators; for example, separating the hundreds from the thousands. Valid group separator characters are determined by the <B>NumberGroupSeparator</B> and <B>CurrencyGroupSeparator</B> properties of <B>NumberFormatInfo</B> and the number of digits in each group is determined by the </FONT><A href="http://msdn2.microsoft.com/en-us/library/system.globalization.numberformatinfo.numbergroupsizes.aspx"><FONT size=2>NumberGroupSizes</FONT></A><FONT size=2> and </FONT><A href="http://msdn2.microsoft.com/en-us/library/system.globalization.numberformatinfo.currencygroupsizes.aspx"><FONT size=2>CurrencyGroupSizes</FONT></A><FONT size=2> properties of <B>NumberFormatInfo</B>.&nbsp;</FONT></TD></TR>
+<TR vAlign=top>
+<TD><B><FONT size=2>AllowTrailingSign</FONT></B></TD>
+<TD><FONT size=2>Indicates that the numeric string can have a trailing sign. Valid trailing sign characters are determined by the <B>PositiveSign</B> and <B>NegativeSign</B> properties of <B>NumberFormatInfo</B>.&nbsp;</FONT></TD></TR>
+<TR vAlign=top>
+<TD><B><FONT size=2>AllowTrailingWhite</FONT></B></TD>
+<TD><FONT size=2>Indicates that trailing white-space character must be ignored during parsing. Valid white-space characters have the Unicode values U+0009, U+000A, U+000B, U+000C, U+000D, and U+0020.&nbsp;</FONT></TD></TR>
+<TR vAlign=top>
+<TD><B><FONT size=2>Any</FONT></B></TD>
+<TD><FONT size=2>Indicates that all styles, except AllowHexSpecifier, are used. This is a composite number style.&nbsp;</FONT></TD></TR>
+<TR vAlign=top>
+<TD><B><FONT size=2>Currency</FONT></B></TD>
+<TD><FONT size=2>Indicates that all styles, except AllowExponent and AllowHexSpecifier, are used. This is a composite number style.&nbsp;</FONT></TD></TR>
+<TR vAlign=top>
+<TD><B><FONT size=2>Float</FONT></B></TD>
+<TD><FONT size=2>Indicates that the AllowLeadingWhite, AllowTrailingWhite, AllowLeadingSign, AllowDecimalPoint, and AllowExponent styles are used. This is a composite number style.&nbsp;</FONT></TD></TR>
+<TR vAlign=top>
+<TD><B><FONT size=2>HexNumber</FONT></B></TD>
+<TD><FONT size=2>Indicates that the AllowLeadingWhite, AllowTrailingWhite, and AllowHexSpecifier styles are used. This is a composite number style.&nbsp;</FONT></TD></TR>
+<TR vAlign=top>
+<TD><B><FONT size=2>Integer</FONT></B></TD>
+<TD><FONT size=2>Indicates that the AllowLeadingWhite, AllowTrailingWhite, and AllowLeadingSign styles are used. This is a composite number style.&nbsp;</FONT></TD></TR>
+<TR vAlign=top>
+<TD><B><FONT size=2>None</FONT></B></TD>
+<TD><FONT size=2>Indicates that none of the bit styles are allowed.&nbsp;</FONT></TD></TR>
+<TR vAlign=top>
+<TD><B><FONT size=2>Number</FONT></B></TD>
+<TD><FONT size=2>Indicates that the AllowLeadingWhite, AllowTrailingWhite, AllowLeadingSign, AllowTrailingSign, AllowDecimalPoint, and AllowThousands styles are used. This is a composite number style.&nbsp;</FONT></TD></TR></TBODY></TABLE></FONT></P>
+<P><FONT face=Tahoma>This is obviously a pretty comprehensive representation of the various kinds of things that you can do with formatting, although it is missing one item.</FONT></P>
+<P><FONT face=Tahoma>Percentages.</FONT></P>
+<P><FONT face=Tahoma>What that means is that currently in the .NET Framework cannot roundtrip values through percentage formats.</FONT></P>
+<P><FONT face=Tahoma>Of course even getting values into percantages via formatting is more difficult&nbsp;than it is for numbers and currency values.</FONT></P>
+<P><FONT face=Tahoma>A hint as to why can be found if you look at the standard formatting characters supported in <A href="http://msdn2.microsoft.com/en-us/library/2xdwt6xx(en-US,VS.80).aspx">NumberFormatInfo</A>:</FONT></P>
+<P><FONT face=Tahoma>
+<TABLE style="WIDTH: 926px; HEIGHT: 306px" cellSpacing=2 cellPadding=5 width=926 border=1>
+<TBODY>
+<TR>
+<TH>
+<P><FONT size=2>Format Character </FONT></P></TH>
+<TH>
+<P><FONT size=2>Description and Associated Properties </FONT></P></TH></TR>
+<TR>
+<TD>
+<P><FONT size=2>c, C </FONT></P></TD>
+<TD>
+<P><FONT size=2>Currency format. </FONT><A href="http://msdn2.microsoft.com/en-us/library/system.globalization.numberformatinfo.currencynegativepattern.aspx"><FONT size=2>CurrencyNegativePattern</FONT></A><FONT size=2>, </FONT><A href="http://msdn2.microsoft.com/en-us/library/system.globalization.numberformatinfo.currencypositivepattern.aspx"><FONT size=2>CurrencyPositivePattern</FONT></A><FONT size=2>, </FONT><A href="http://msdn2.microsoft.com/en-us/library/system.globalization.numberformatinfo.currencysymbol.aspx"><FONT size=2>CurrencySymbol</FONT></A><FONT size=2>, </FONT><A href="http://msdn2.microsoft.com/en-us/library/system.globalization.numberformatinfo.currencygroupsizes.aspx"><FONT size=2>CurrencyGroupSizes</FONT></A><FONT size=2>, </FONT><A href="http://msdn2.microsoft.com/en-us/library/system.globalization.numberformatinfo.currencygroupseparator.aspx"><FONT size=2>CurrencyGroupSeparator</FONT></A><FONT size=2>, </FONT><A href="http://msdn2.microsoft.com/en-us/library/system.globalization.numberformatinfo.currencydecimaldigits.aspx"><FONT size=2>CurrencyDecimalDigits</FONT></A><FONT size=2>, </FONT><A href="http://msdn2.microsoft.com/en-us/library/system.globalization.numberformatinfo.currencydecimalseparator.aspx"><FONT size=2>CurrencyDecimalSeparator</FONT></A><FONT size=2>. </FONT></P></TD></TR>
+<TR>
+<TD>
+<P><FONT size=2>d, D </FONT></P></TD>
+<TD>
+<P><FONT size=2>Decimal format. </FONT></P></TD></TR>
+<TR>
+<TD>
+<P><FONT size=2>e, E </FONT></P></TD>
+<TD>
+<P><FONT size=2>Scientific (exponential) format. </FONT></P></TD></TR>
+<TR>
+<TD>
+<P><FONT size=2>f, F </FONT></P></TD>
+<TD>
+<P><FONT size=2>Fixed-point format. </FONT></P></TD></TR>
+<TR>
+<TD>
+<P><FONT size=2>g, G </FONT></P></TD>
+<TD>
+<P><FONT size=2>General format. </FONT></P></TD></TR>
+<TR>
+<TD>
+<P><FONT size=2>n, N </FONT></P></TD>
+<TD>
+<P><FONT size=2>Number format. </FONT><A href="http://msdn2.microsoft.com/en-us/library/system.globalization.numberformatinfo.numbernegativepattern.aspx"><FONT size=2>NumberNegativePattern</FONT></A><FONT size=2>, </FONT><A href="http://msdn2.microsoft.com/en-us/library/system.globalization.numberformatinfo.numbergroupsizes.aspx"><FONT size=2>NumberGroupSizes</FONT></A><FONT size=2>, </FONT><A href="http://msdn2.microsoft.com/en-us/library/system.globalization.numberformatinfo.numbergroupseparator.aspx"><FONT size=2>NumberGroupSeparator</FONT></A><FONT size=2>, </FONT><A href="http://msdn2.microsoft.com/en-us/library/system.globalization.numberformatinfo.numberdecimaldigits.aspx"><FONT size=2>NumberDecimalDigits</FONT></A><FONT size=2>, </FONT><A href="http://msdn2.microsoft.com/en-us/library/system.globalization.numberformatinfo.numberdecimalseparator.aspx"><FONT size=2>NumberDecimalSeparator</FONT></A><FONT size=2>. </FONT></P></TD></TR>
+<TR>
+<TD>
+<P><FONT size=2>r, R </FONT></P></TD>
+<TD>
+<P><FONT size=2>Roundtrip format, which ensures that numbers converted to strings will have the same value when they are converted back to numbers. </FONT></P></TD></TR>
+<TR>
+<TD>
+<P><FONT size=2>x, X </FONT></P></TD>
+<TD>
+<P><FONT size=2>Hexadecimal format. </FONT></P></TD></TR></TBODY></TABLE></FONT></P>
+<P><FONT face=Tahoma>Notice what is not there along with the Currency and Number formats -- the Percentage format. Something that would take <A href="http://msdn2.microsoft.com/en-us/library/system.globalization.numberformatinfo.percentnegativepattern.aspx">PercentNegativePattern</A>, <A href="http://msdn2.microsoft.com/en-us/library/system.globalization.numberformatinfo.percentpositivepattern.aspx">PercentPositivePattern</A>, <A href="http://msdn2.microsoft.com/en-us/library/system.globalization.numberformatinfo.percentsymbol.aspx">PercentSymbol</A>, <A href="http://msdn2.microsoft.com/en-us/library/system.globalization.numberformatinfo.percentgroupsizes.aspx">PercentGroupSizes</A>, <A href="http://msdn2.microsoft.com/en-us/library/system.globalization.numberformatinfo.percentgroupseparator.aspx">PercentGroupSeparator</A>, <A href="http://msdn2.microsoft.com/en-us/library/system.globalization.numberformatinfo.percentdecimaldigits.aspx">PercentDecimalDigits</A>, and <A href="http://msdn2.microsoft.com/en-us/library/system.globalization.numberformatinfo.percentdecimalseparator.aspx">PercentDecimalSeparator</A> into account.</FONT></P>
+<P><FONT face=Tahoma>Now one thing that is possible is creating your own class that supports <A href="http://msdn2.microsoft.com/en-us/library/system.iformatprovider.aspx">IFormatProvider</A>.</FONT></P>
+<P><FONT face=Tahoma>This means that one could perhaps write all the code between <A href="http://msdn2.microsoft.com/en-us/library/system.iformatprovider.aspx">IFormatProvider</A>&nbsp;and <A href="http://msdn2.microsoft.com/en-us/library/system.icustomformatter.aspx">ICustomFormatter</A> to do this work without waiting for it to be added to the .NET Framework.</FONT></P>
+<P><FONT face=Tahoma>Though I honestly do not know if this would work or not, since it is unclear&nbsp;(to me at least) how much of the parsing code relies on the <A href="http://msdn2.microsoft.com/en-us/library/system.iformatprovider.aspx">IFormatProvider</A>....</FONT></P>
+<P><FONT face=Tahoma>Probably worth trying some weekend, though. I'll report back if I find out anything interesting....</FONT></P>
+<P><FONT face=Tahoma></FONT>&nbsp;</P>
+<P><FONT color=#ff1493><FONT face=Tahoma><EM>This post brought to you by</EM> "<FONT size=6>％</FONT>" <EM>(<A href="http://www.fileformat.info/info/unicode/char/ff05">U+ff05</A>, a.k.a.&nbsp;FULLWIDTH PERCENT&nbsp;SIGN)</EM></FONT></FONT></P>
+<hr/><div style="margin-left: 1em"><em>no comments</em></div><hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2005/12/11 <a href="http://archives.miloush.net/michkap/archive/2005/12/11/502455.html">Why does the percent stuff have so many restrictions?</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2005/12/11/502455.html" title="Why does the percent stuff have so many restrictions?">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2005/12/10/502422.html" title="We&#39;re damned if we do, and damned if we don&#39;t">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2005-12">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2005-12-11">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2005/12/11/502449.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:40 GMT -->
+</html>

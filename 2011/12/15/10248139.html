@@ -1,0 +1,84 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2011/12/15/10248139.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>I Adar you to guess how they make it work!</title></head><body>
+<h1>I Adar you to guess how they make it work!</h1>
+<p><em>by Michael S. Kaplan, published on 2011/12/15 07:36 -05:00, original URI: http://blogs.msdn.com/b/michkap/archive/2011/12/15/10248139.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<p>The other day, when I blogged <strong><a title="These aren't the MONTHS you're looking for (aka You'll never get to the 13th month *that* way)" href="http://archives.miloush.net/michkap/archive/2011/12/13/10247214.html">These aren't the MONTHS you're looking for (aka You'll never get to the 13th month *that* way)</a></strong>, I oversimplified some of the described results in order to concentrate on proving that GetLocaleInfo was never returning the CAL_HEBREW (Hebrew calendar) months, without distracting the issue with other points.</p>
+<p>The comments went slightly afield on other points, e.g. when Shachar Shemesh suggested:</p>
+<p style="padding-left: 60px;"><span style="font-family: times new roman,times; font-size: medium;">Surely, the 12th month in the Hebrew calendar is אלול, not כסלו. Now, if you claim that the sixth month is אדר א׳ and the seventh אדר ב׳, then the 12th month would still be אב.&lrm; כסלו is the third month, either count.</span></p>
+<p style="padding-left: 60px;"><span style="font-family: times new roman,times; font-size: medium;">Or is that what you meant by "but you probably know what I mean", in which case, I know what you mean, but not that you meant it.</span></p>
+<p style="padding-left: 60px;"><span style="font-family: times new roman,times; font-size: medium;">Shachar</span></p>
+<p>or when Alex Cohn commeted:</p>
+<p style="padding-left: 60px;"><span style="font-family: times new roman,times; font-size: medium;">@Shahar, some would argue that Kislev is number 9, because the first month is Nissan! But anyway, I would choose Adar bet to occupy the 13th slot, to emphasize its conditional existence.</span></p>
+<p>Obviously the NLS API has to make a decision somehow.</p>
+<p>The Hebrew calendar works a little differently anyway, as I'll describe a little bit of now.</p>
+<p>If you use <a href="http://msdn.microsoft.com/en-us/site/dd318072">GetCalendarInfo</a>&nbsp;or <a href="http://msdn.microsoft.com/en-us/site/dd318075">GetCalendarInfoEx</a>&nbsp;with CAL_HEBREW, here are the&nbsp;names you get:</p>
+<table border="1" cellspacing="3" cellpadding="3">
+<tbody>
+<tr>
+<td>Constant</td>
+<td>Month Name</td>
+</tr>
+<tr>
+<td>CAL_SMONTHNAME1</td>
+<td style="text-align: right;"><span style="font-size: large;">תשרי</span></td>
+</tr>
+<tr>
+<td>CAL_SMONTHNAME2</td>
+<td style="text-align: right;"><span style="font-size: large;">חשון</span></td>
+</tr>
+<tr>
+<td>CAL_SMONTHNAME3</td>
+<td style="text-align: right;"><span style="font-size: large;">כסלו</span></td>
+</tr>
+<tr>
+<td>CAL_SMONTHNAME4</td>
+<td style="text-align: right;"><span style="font-size: large;">טבת</span></td>
+</tr>
+<tr>
+<td>CAL_SMONTHNAME5</td>
+<td style="text-align: right;"><span style="font-size: large;">שבט</span></td>
+</tr>
+<tr>
+<td>CAL_SMONTHNAME6</td>
+<td style="text-align: right;"><span style="font-size: large;">אדר</span></td>
+</tr>
+<tr>
+<td>CAL_SMONTHNAME7</td>
+<td style="text-align: right;"><span style="font-size: large;">אדר ב</span></td>
+</tr>
+<tr>
+<td>CAL_SMONTHNAME8</td>
+<td style="text-align: right;"><span style="font-size: large;">ניסן</span></td>
+</tr>
+<tr>
+<td>CAL_SMONTHNAME9</td>
+<td style="text-align: right;"><span style="font-size: large;">אייר</span></td>
+</tr>
+<tr>
+<td>CAL_SMONTHNAME10</td>
+<td style="text-align: right;"><span style="font-size: large;">סיון</span></td>
+</tr>
+<tr>
+<td>CAL_SMONTHNAME11</td>
+<td style="text-align: right;"><span style="font-size: large;">תמוז</span></td>
+</tr>
+<tr>
+<td>CAL_SMONTHNAME12</td>
+<td style="text-align: right;"><span style="font-size: large;">אב</span></td>
+</tr>
+<tr>
+<td>CAL_SMONTHNAME13</td>
+<td style="text-align: right;"><span style="font-size: large;">אלול</span></td>
+</tr>
+</tbody>
+</table>
+<p>&nbsp;Note that neither function takes an actual date value, so you have no way from just these functions to determine whether the 7th month entry wll be skipped or not for a given year.</p>
+<p>Only when you format a&nbsp;date that uses this calendar can you determine whether that seventh entry is to be used.</p>
+<p>And of course note that unlike the LOCALE_SMONTHNAME# constants, you cannot really equate the numbers in the CAL_SMONTHNAME# values -- the calendar itself does everything and doesn't give you easy methods to get additional information....</p>
+<p>&nbsp;Bonus thought:</p>
+<p>Keeping in mind the differences I mentioned in <strong><a title="I Adar you! Hell, I Double Adar you!" href="http://archives.miloush.net/michkap/archive/2008/04/25/8423349.html">I Adar you! Hell, I Double Adar you!</a></strong>, where are the other .Net names hidden now that Windows an .Net share data?</p>
+<hr/><div style="margin-left: 1em"><em>no comments</em></div><hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2011/12/19/10249086.html" title="So...a three pack of black socks from Nordstrom, huh?">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2011/12/14/10247653.html" title="Every character has a story #35: ARABIC LETTER HAH WITH TWO DOTS VERTICAL ABOVE (U+0682)">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2011-12">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2011-12-15">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2011/12/15/10248139.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+</html>

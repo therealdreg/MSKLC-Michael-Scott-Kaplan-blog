@@ -1,0 +1,74 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2011/02/16/10130119.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Windows the Enabler</title></head><body>
+<h1>Windows the Enabler</h1>
+<p><em>by Michael S. Kaplan, published on 2011/02/16 07:01 -05:00, original URI: http://blogs.msdn.com/b/michkap/archive/2011/02/16/10130119.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<p>I had someone ask me</p>
+<p style="PADDING-LEFT: 30px"><em>I don&rsquo;t have a big picture on the whole process of enabling a new language, even though I know a little here or there. For my learning purpose, do you have something that I can read to teach myself?</em></p>
+<p>Now there really isn't an explicit single place that I know of where such info is kept, so I took a similar item on my "blog request list" and promoted it to right now so you can read the response right here. :-)</p>
+<p>Now these steps are going to be described in&nbsp;a narrative since that is how my blogs often work, but the actual process is done by different people and the order often reflects the built-in multitasking that any multi-person project can bring to the mix. So don't think of this blog as providing an ordered recipe or directions.</p>
+<p>Here we go!</p>
+<hr />
+<p><strong>STEP ONE: The Reading</strong></p>
+<p>The most basic level of enablement is the display of text, which means a font that has the glyphs for the language's letters in it.</p>
+<p>I wouldn't really claim that the language was fully enabled or anything, but if I can read documents in it when I explicitly choose that font&nbsp;then it is a good first step.</p>
+<p>And this step enables the reading, which is great. But the next step is another crucial one on&nbsp;the way to full enablement: </p>
+<p><strong>STEP TWO: The Writing</strong></p>
+<p>Put simply, there needs to be a keyboard or an IME.</p>
+<p><em>Other methods exist like handwriting recognition and speech recognition, but those tend to show up much later in the lifetime of as language's support in computers. So for present purposes we can assume a keyboard or an IME.</em></p>
+<p>The quality of the input method is one that I would usually make on a more global basis (since if it is a part of Windows it is available for use to a frightening number of people), but for the purposes of this blog on language enablement, I'll say that the perceived quality of an input method to an individual customer is directly proportional to how easy it is that they find it to use.</p>
+<p>I'll get into that issue further another day, I just mention it here so people can keep in mind how much the fundamental process of language enablement is sabatoged at its root if any of these first three steps is mesed up.</p>
+<p>Of course it is also worth noting that these first two steps can be done by anyone, without even getting real help from Windows. Microsoft and many third parties have provided tools to help woth both fonts and keyboards. </p>
+<p>But in the context of Microsoft being the one doing the enabling, we should start talking about the things Microsoft can do for enabling a language that goes beyond these things.</p>
+<p><strong>STEP THREE: Underlying Rendering Support</strong></p>
+<p>Even that basic display needs a lot more behind it to do seemingly simple scenarios automatcally&nbsp;like</p>
+<ul>
+<li>looking at web pages or </li>
+<li>seeing the characters without explicitly choosing the font or </li>
+<li>seeing proper shaping of complex scripts</li>
+</ul>
+<p>So the proper rendering support via Uniscribe and DWrite and in some cases GDI font linking is important. The only thing cooler for language display than having a good font is not having to choose that font explicitly, so skipping this third step is ill advised. </p>
+<p>Obviously there are other little items in this&nbsp;step like adding the Unicode character names to Character Map that don't affect rendering per se but definitely make working with fonts and characters easier.</p>
+<p>Additionally, once the next two steps are done, additional rendering support can be expanded to handle features like digit substitution or font linking based on system locale or writing system differences implicit in different locales, and so on. All of the various pieces have to be in place for these last few fancy&nbsp;items to work properly, no matter how much of the work is done earlier in preparation for when the step appears to people using the system.</p>
+<p><strong>STEP FOUR: Underlying Script Support in NLS</strong></p>
+<p>This step may already have been done ages ago if the script was already supported and all the requisite characters have their properties&nbsp;in the OS tables, but often times new languages that Windows has never supported might require whole scripts or specific individual characters that have just been added to Unicode to be added to the system as well.</p>
+<p>It is easy, but important, to have this support.</p>
+<p><strong>STEP FIVE: Underlying locale support in NLS</strong></p>
+<p>I have a colleague who is grimacing at the way I have added "locales" to a discussion of "language enablement" but the next part of the enablement process involves sorting and date formats and calendars and language names, and so on. And all of these items are stored on a per locale basis. So that person is likely just going to have to suck it up and get over it</p>
+<p><strong>STEP SIX: The Localization</strong></p>
+<p>Now this step has many substeps within it, but for the moment we'll treat it as one big chunk.</p>
+<p>Once of this support is there, people can start seeing the user interface itself making use of the enabled language!</p>
+<hr />
+<p>Ok, so there we go.</p>
+<p>Now looking at the steps I gave:</p>
+<ol>
+<li>The Reading</li>
+<li>The Writing</li>
+<li>Underlying Rendering Support</li>
+<li>Underlying Script Support in NLS</li>
+<li>Underlying locale support in NLS</li>
+<li>The Localization</li>
+</ol>
+<p>At which point would you declare a language to be <strong>enabled</strong>?</p>
+<p>There are several teams that consider enablement to happen once their work is done, especially when other steps aren't planned. </p>
+<p>In most cases Microsoft in general won't claim they have enabled a language unless a supportable chunk of steps 1-5 are present.</p>
+<p>But how much support is relative: not every language is intended to go through every step.</p>
+<p>There are even languages that were originally intended to go through the whole series of steps that ran into problems along the way; at that point all of the support can be yanked out but in many cases the partial support will be left in and shored up so that proper support is what will be seen.</p>
+<p>If you look at Windows you can probably find languages essentially stopped at each of these steps. </p>
+<p><strong>In fact, anyone who can name one language that only goes so far as each step will win the prize today!</strong></p>
+<hr/><p><strong>Andrew C</strong> on 16 Feb 2011 3:37 PM:</p><div style="margin-left: 1em"><p>I&#39;d place part of Step 3 into a Step 0 ... if there isn&#39;t any &quot;proper rendering support&quot; for a complex script, then even step 1 doesn&#39;t get you anywhere in particular.</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 16 Feb 2011 4:06 PM:</p><div style="margin-left: 1em"><p>Remember, they are assessed in tandem, and the majority of scripts that are supported are *not* complex in the shaping sense. :-)</p></div>
+<p><strong>Andrew C.</strong> on 16 Feb 2011 4:13 PM:</p><div style="margin-left: 1em"><p>Very true, making them somewhat more straight forward.</p>
+<p>But the real fun is supporting the languages using the missing complex scripts ;)</p>
+</div>
+<p><strong>Yuhong Bao</strong> on 16 Feb 2011 11:58 PM:</p><div style="margin-left: 1em"><p>BTW, classic Mac OS had support for WorldScript and made it easy for third-parties to plug in new script systems, which Evertype used to add support for languages such as Inuktitut long before Windows had support for the language. If you take a look at <a rel="nofollow" target="_new" href="http://www.unicode.org/Public/MAPPINGS/VENDORS/APPLE/">www.unicode.org/.../APPLE</a> you will see the credits for Michael Everson of Evertype in some of them.</p>
+</div>
+<p><strong>Dong Wang</strong> on 24 Mar 2011 11:38 AM:</p><div style="margin-left: 1em"><p>Thank you very much, Michael.</p>
+<p>I really apprecaited you outline the picture for me. :)</p>
+<p>Dong</p>
+</div>
+<hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2011/03/08 <a href="http://archives.miloush.net/michkap/archive/2011/03/08/10137970.html">Lackng official influence frees me up somewhat to talk about things that interest me</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2011/02/17/10130786.html" title="the importance of symbols and punctuation">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2011/02/15/10129419.html" title="UTF-8 default isn&#39;t in the latest Notepad, either">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2011-02">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2011-02-16">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2011/02/16/10130119.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+</html>

@@ -1,0 +1,19 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2005/08/12/451043.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:41 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Code units vs. code points</title></head><body>
+<h1>Code units vs. code points</h1>
+<p><em>by Michael S. Kaplan, published on 2005/08/12 17:39 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2005/08/12/451043.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P><FONT face=Tahoma>Dmitiri suggested:</FONT></P>
+<BLOCKQUOTE dir=ltr style="MARGIN-RIGHT: 0px">
+<P><EM>You mentioned somewhere in the blog that the length of unicode strings passed to windows API calls is to be counted in code points. MSDN however usually mentiones 'number of TCHARs' or 'number of wide characters' (WideCharToMultiByte) or 'number of WORDs' (TextOut). This looks like code units to me in fact. To prove that, I did some testing by converting a string containing surrogate pairs to UTF8 using WideCharToMultiByte (on W2K and 2003) and checking how many characters it consumed (which is seen from what it returns). It has clearly shown that it counts the input string in code units. Any comments ? And is there any API at all that operates with code points ?</EM></P></BLOCKQUOTE>
+<P><FONT face=Tahoma>Yes, this was sloppy language on my part, although in my defense it is because I do not particularly care for the <A href="http://www.unicode.org/glossary/">Unicode terminology</A> here:</FONT></P><FONT face=Tahoma>
+<BLOCKQUOTE dir=ltr style="MARGIN-RIGHT: 0px">
+<P><EM><A name=code_point><FONT face="Times New Roman" size=2><STRONG>Code Point</STRONG></FONT></A></EM><FONT face="Times New Roman" size=2><STRONG>.</STRONG> Any value in the Unicode codespace; that is, the range of integers from 0 to 10FFFF<SUB>16</SUB>. (See definition D4b in </FONT><FONT face="Times New Roman" size=2><A href="http://www.unicode.org/versions/Unicode4.0.0/ch03.pdf">Section 3.4, Characters and Encoding</A></FONT><FONT face="Times New Roman" size=2>.)</FONT></P>
+<P><EM><A name=code_unit><FONT face="Times New Roman" size=2><STRONG>Code Unit</STRONG></FONT></A></EM><FONT face="Times New Roman" size=2><STRONG>.</STRONG> The minimal bit combination that can represent a unit of encoded text for processing or interchange. The Unicode Standard uses 8-bit code units in the UTF-8 encoding form, 16-bit code units in the UTF-16 encoding form, and 32-bit code units in the UTF-32 encoding form. (See definition D28a in </FONT><FONT face="Times New Roman" size=2><A href="http://www.unicode.org/versions/Unicode4.0.0/ch03.pdf">Section 3.9, Unicode Encoding Forms</A></FONT><FONT face="Times New Roman" size=2>.) </FONT></P></BLOCKQUOTE></FONT>
+<P><FONT face=Tahoma>If I say "UTF-16 code points" that ought to be good enough. :-)</FONT></P>
+<P><FONT face=Tahoma>But you are correct Dmitri -- they are technically code units, not code points....</FONT></P>
+<P><FONT face=Tahoma></FONT>&nbsp;</P>
+<hr/><div style="margin-left: 1em"><em>no comments</em></div><hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2005/08/13/451469.html" title="Hardware is still not always software">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2005/08/11/450249.html" title="Jet indirect/internet replication requries the Jet synchronizer....">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2005-08">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2005-08-12">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2005/08/12/451043.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:41 GMT -->
+</html>

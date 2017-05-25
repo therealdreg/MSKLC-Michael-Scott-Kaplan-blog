@@ -1,0 +1,90 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2007/10/01/5218976.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:37 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>What's wrong with what FxCop does for globalization, Part 1</title></head><body>
+<h1>What's wrong with what FxCop does for globalization, Part 1</h1>
+<p><em>by Michael S. Kaplan, published on 2007/10/01 03:31 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2007/10/01/5218976.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P>It was way back in December of last year that I was talking about problems with FxCop and globalization (in posts like <STRONG><A class="" href="http://archives.miloush.net/michkap/archive/2006/12/05/1210407.html" mce_href="http://archives.miloush.net/michkap/archive/2006/12/05/1210407.html">this one</A></STRONG> and <STRONG><A class="" href="http://archives.miloush.net/michkap/archive/2006/12/06/1221890.html" mce_href="http://archives.miloush.net/michkap/archive/2006/12/06/1221890.html">this other one</A></STRONG>).</P>
+<P>Then I sort of forgot about it.</P>
+<P>Sorry, I have been busy. :-)</P>
+<P>But then in the course of a month I was once again reminded of the problems in the form of three large projects that were (for lack of a better word) assaulted by these problems.</P>
+<P>If you are a fan of the programs from the BuffyVerse (<STRONG>Buffy the Vampire Slayer</STRONG> and <STRONG>Angel</STRONG>) then you know that one of the rules with vampires is that they can't come in to your home unless you invite them in.</P>
+<P>Well, FxCop is the same way -- you have to run it and then do something to follow its advice; if you don't, then nothing bad can befall you. :-)</P>
+<P>Here is how the FxCop experience works:</P>
+<P>1) You find the FxCop and run it.</P>
+<P>2) You don't understand the errors at all as they seem wrong, then you discover that you are running the wrong version of FxCop for your project.</P>
+<P>3) Repeat steps 1 and 2 another time or two while you get the right version.</P>
+<P>4) Look at the errors and warnings, there are a bunch of level 1 and level 2 errors so you decide for this version to leave the level 3 and level 4 errors alone<FONT size=1><SUP>1</SUP></FONT>.</P>
+<P>5) You ship your product.</P>
+<P mce_keep="true">6) In the space between ending development work on the version you just shipped and starting the development on the next version, someone decides to tackle all of the globalization errors.</P>
+<P mce_keep="true">Here is where the trouble happens, where some well-meaning developer has decided to let the vampires in, and indeed to help to extract the blood for them from your project.</P>
+<P mce_keep="true">The specific warnings are described here, there are really just three of them in particular, though they can easily leads to hundreds or even thousands of occurrences in a single project. They apply to every single method that either has an overload that takes a </P>
+<LI><A href="http://msdn2.microsoft.com/library/ms182188.aspx">Set locale for data types</A> 
+<LI><A href="http://msdn2.microsoft.com/library/ms182189.aspx">Specify CultureInfo</A> 
+<LI><A href="http://msdn2.microsoft.com/library/ms182190.aspx">Specify IFormatProvider</A> </LI>
+<P mce_keep="true">The problems with the warnings are twofold:</P>
+<P mce_keep="true">1) FxCop assumes that if you are running the method that does not let you specify and <A class="" href="http://msdn2.microsoft.com/library/system.iformatprovider.aspx" mce_href="http://msdn2.microsoft.com/library/system.iformatprovider.aspx">IFormatProvider</A> or a <A class="" href="http://msdn2.microsoft.com/library/system.globalization.cultureinfo.aspx" mce_href="http://msdn2.microsoft.com/library/system.globalization.cultureinfo.aspx">CultureInfo</A> or you use the method with an override that dies not let you do so that your usage is wrong.</P>
+<P mce_keep="true">2) FxCop shuts up if you specify such a thing, even if it will return results that can be entirely&nbsp;wrong (like passing <A class="" href="http://msdn2.microsoft.com/library/system.globalization.cultureinfo.currentuiculture.aspx" mce_href="http://msdn2.microsoft.com/library/system.globalization.cultureinfo.currentuiculture.aspx">CurrentUICulture</A>&nbsp;for formatting) or will be ignored )like passing a <A class="" href="http://msdn2.microsoft.com/library/system.globalization.datetimeformatinfo.aspx" mce_href="http://msdn2.microsoft.com/library/system.globalization.datetimeformatinfo.aspx">DateTimeFormatInfo</A> style <A class="" href="http://msdn2.microsoft.com/library/system.iformatprovider.aspx" mce_href="http://msdn2.microsoft.com/library/system.iformatprovider.aspx">IFormatProvider</A> when one is formatting&nbsp;numbers).</P>
+<P mce_keep="true">#1 can make the code less readable&nbsp;even if it was right before, and #2 the problems are I think self-explanatory though when one considers how easy it is to add <A class="" href="http://msdn2.microsoft.com/library/system.globalization.cultureinfo.currentuiculture.aspx" mce_href="http://msdn2.microsoft.com/library/system.globalization.cultureinfo.currentuiculture.aspx">CurrentUICulture</A>&nbsp;to get rid of 90% of the warnings even though the answer is almost always wrong, you see where I start ascribing field-like attributes to our FxCop vampire we invited in.</P>
+<P mce_keep="true">In one such project, between the time that Vista was released and the beta 3 date of Server 2008, someone had updated the code in 250 different places, almost all of them wrong, and FxCop was happy with each mistake since it assumes that if you take the time to specify&nbsp;an <A class="" href="http://msdn2.microsoft.com/library/system.iformatprovider.aspx" mce_href="http://msdn2.microsoft.com/library/system.iformatprovider.aspx">IFormatProvider</A> or a <A class="" href="http://msdn2.microsoft.com/library/system.globalization.cultureinfo.aspx" mce_href="http://msdn2.microsoft.com/library/system.globalization.cultureinfo.aspx">CultureInfo</A> that you must have chosen one correctly, even if the choice is dead wrong.</P>
+<P mce_keep="true">Needless to say, the developer who was left holding the bag on this one (she was not the well-meaning developer who introduced the regressions) Kathy, once we walked through the very basic rules by which one could intelligently decide what the right fix should have been, was able to bring the product back to health in short order.</P>
+<P mce_keep="true">Unfortunately, not everyone is as skilled as she is, and not everyone has a team like the International Fundamentals team to ask for help.</P>
+<P mce_keep="true">But Kathy was kind enough to let me talk about the project as long as I didn't identify it and as long as I gave the rules that she was able to use to quickly bring the code back to a state of readiness. Here they are:</P>
+<UL>
+<LI>
+<DIV mce_keep="true">String comparison:</DIV></LI>
+<UL>
+<LI>
+<DIV mce_keep="true">String comparison for equality -- Specify StringComparison.Ordinal or OrdinalIgnoreCase.&nbsp;This is true when comparing against string resources, and particularly important when comparing file names.</DIV></LI>
+<LI>
+<DIV mce_keep="true">String comparison for sorting – Specify StringComparison.CurrentCulture when sorting lists</DIV></LI></UL>
+<LI>
+<DIV mce_keep="true">String.ToUpper – Use ToUpper rather than ToLower, and specify InvariantCulture in order to pick up OS casing rules</DIV></LI>
+<LI>
+<DIV mce_keep="true">Determining BiDi languages, for example to load correct icons – Continue to specify CurrentUICulture for these cases.</DIV></LI>
+<LI>
+<DIV mce_keep="true">String formatting including numbers, and int.ToString – Specify CurrentCulture</DIV></LI>
+<LI>
+<DIV mce_keep="true">String formatting of strings only (no numbers) – the Culture arg here is a no-op.&nbsp; Use CurrentCulture.</DIV></LI></UL>
+<P mce_keep="true">But getting back to the problem with FxCop, it does not do enough real analysis of the usage. And as long as FxCop wants to warn that the code below is bad (switch to&nbsp;"English (United Kingdom)"&nbsp;in Regional Options to see the differences):</P>
+<BLOCKQUOTE>
+<P mce_keep="true"><FONT face="courier new,courier"><STRONG>Console.WriteLine(DateTime.Now.ToString());</STRONG></FONT></P></BLOCKQUOTE>
+<P mce_keep="true">Even when it thinks the code below which returns identical results and is just completely wrong and weird is somehow fine to it:</P>
+<BLOCKQUOTE>
+<P mce_keep="true"><FONT face="courier new,courier"><STRONG>Console.WriteLine(DateTime.Now.ToString(NumberFormatInfo.InvariantInfo));</STRONG></FONT></P></BLOCKQUOTE>
+<P mce_keep="true">When the intended code which will return different results would be:</P>
+<BLOCKQUOTE>
+<P mce_keep="true"><FONT face="courier new,courier"><STRONG>Console.WriteLine(DateTime.Now.ToString(CultureInfo.InvariantCulture));</STRONG></FONT></P></BLOCKQUOTE>
+<P mce_keep="true">Then FxCop for globalization errors has a net effect of leaving the code in a possibly still incorrect and in all likelihood less readable form....</P>
+<P mce_keep="true">To spread the blame around a bit, the .NET Framework decision to have the <A class="" href="http://msdn2.microsoft.com/library/system.iformatprovider.aspx" mce_href="http://msdn2.microsoft.com/library/system.iformatprovider.aspx">IFormatProvider</A>&nbsp;parameter be one that is implemented as "if the param applies then use it, otherwise treat is as null" is also slightly boneheaded, since that is the sort of thing that can easily lead to the wrong code being put in there in the first place.</P>
+<P mce_keep="true">But it is too late to fix all of them, so with our last defense as FxCop the tool's strength at defending against these scenarios is quite limited....</P>
+<P mce_keep="true">&nbsp;</P>
+<P><FONT size=1>1 - The bulk of the globalization errors are there in those lower levels, I assume not because globalization isn't important but because there are a lot of false positives so&nbsp;if&nbsp;you average them together then they are less important per warning.</FONT></P>
+<P mce_keep="true">&nbsp;</P>
+<P mce_keep="true"><FONT color=#ff00ff><EM>This post brought to you by</EM> <FONT size=5>ခ</FONT> <EM>(<A class="" href="http://www.fileformat.info/info/unicode/char/1001" mce_href="http://www.fileformat.info/info/unicode/char/1001">U+1001</A>, a.k.a. MYANMAR LETTER KHA)</EM></FONT></P>
+<hr/><p><a id="5222039" href="#5222039">#</a> <strong>Mike Dimmick</strong> on 1 Oct 2007 8:19 AM:</p><div style="margin-left: 1em"><p>Ahem. en-GB, not en-UK. But you don't specify that in Control Panel anyway, you specify &quot;English (United Kingdom)&quot;.</p>
+</div>
+<p><a id="5223453" href="#5223453">#</a> <strong>Michael S. Kaplan</strong> on 1 Oct 2007 9:39 AM:</p><div style="margin-left: 1em"><p>Heh heh, good point. Fixed now.</p>
+<p>Or maybe I meant English (Ukraine)? :-)</p>
+<p>I didn't, of course, though I once had such a custom culture installed....</p>
+</div>
+<p><a id="5239003" href="#5239003">#</a> <strong>Arun Philip</strong> on 2 Oct 2007 2:50 AM:</p><div style="margin-left: 1em"><p>Hmm, for strings, I usually cop out (&quot;cop out&quot; -&gt; FxCop, get it? huh? huh??) and use CultureInfo.InvariantCulture. </p>
+<p>Thank you for providing these rules, especially the usage of OrdinalIgnoreCase for filenames. </p>
+</div>
+<p><a id="5240173" href="#5240173">#</a> <strong>Dean Harding</strong> on 2 Oct 2007 5:21 AM:</p><div style="margin-left: 1em"><p>FxCop is OK if you've used it right from the beginning of your project and managed to stay on top of *all* the warnings (well, assuming you know the basic rules for string comparison/equality -- which I suppose many people don't). The problem is when you've got a relatively large code base and suddenly decide to run FxCop over it.</p>
+<p>I tried it once on our source code at work, but it spat out something like 15,000 warnings so I just decided not to bother :p</p>
+</div>
+<p><a id="5252358" href="#5252358">#</a> <strong>David M. Kean</strong> on 2 Oct 2007 11:30 PM:</p><div style="margin-left: 1em"><p>(Disclosure for others reading this - I work on the FxCop team)</p>
+<p>Now, Michael, first of all, I need to say that I have tremendous amount of respect for you, but I'm going to have to disagree with you. ;) </p>
+<p>&gt; 1) FxCop assumes that if you are running the method that does not let you specify and IFormatProvider or a CultureInfo or you use the method with an override that dies not let you do so that your usage is wrong.</p>
+<p>Remember FxCop orginally was designed to run over the BCL. In the BCL and other low level Frameworks that sit below an application, using the default overload for most methods that take an IFormatProvider (which typically use CultureInfo.CurrentCulture as the default) is almost always the wrong thing to do. &nbsp;Unfortunately, in things like Windows Applications, this is a tough choice, we have no idea what you're going to do with the result, you could be persisting it to a database, or you could be displaying it to the end user. In this situation, I think its better to be explict about this similar to string comparison.</p>
+<p>Now, we did make a change to warning text for SpecifyIFormatProvider and SpecifyCultureInfo rules for Orcas RTM. They now explictly provide a little more information as to when to use CurrentCulture and InvarientCulture.</p>
+<p>&gt; 2) FxCop shuts up if you specify such a thing, even if it will return results that can be entirely wrong (like passing CurrentUICulture for formatting) or will be ignored )like passing a DateTimeFormatInfo style IFormatProvider when one is formatting numbers).</p>
+<p>We wanted to fire on passing CurrentUICulture when an IFormatProvider (and we have a bug open about it) is expected, however, we ran out-of-time and couldn't get it into Orcas. With regards to passing a DateTimeFormatInfo when formatting numbers; FxCop is not a replacement for common-sense nor code reviews. Yes we could change the rule to catch this situation, however, this would take away precious time from catching other not so obvious problems. </p>
+<p>My take is that if you are making fixes without first understanding the reasoning around the rule and what's it trying to catch - then we've got other problems. FxCop is just a Code Analysis tool whose intentions are good...</p>
+</div>
+<p><a id="5254155" href="#5254155">#</a> <strong>Michael S. Kaplan</strong> on 3 Oct 2007 12:59 AM:</p><div style="margin-left: 1em"><p>Fair enough, though given the security questions related to casing and collation, it is hard to say that the current shipping behavior is right (and Orcas has not RTM'ed yet, has it?)....</p>
+</div>
+<hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2007/10/08 <a href="http://archives.miloush.net/michkap/archive/2007/10/08/5320425.html">The roadꂸ to the solution starts with identifying the actual problem.NET</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2007/10/02/5233452.html" title="In my opinion, the only thing worse than an office move is a largely gratuitous one">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2007/10/01/5217431.html" title="You&#39;ll flip if you see the early right-to-left builds of products (aka Don&#39;t flip if you have to flip or not flip)">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2007-10">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2007-10-01">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2007/10/01/5218976.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:37 GMT -->
+</html>

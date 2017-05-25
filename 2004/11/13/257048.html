@@ -1,0 +1,28 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2004/11/13/257048.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:42 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>If you are using MFC 6.0 or 7.0 and you want to use MSLU...</title></head><body>
+<h1>If you are using MFC 6.0 or 7.0 and you want to use MSLU...</h1>
+<p><em>by Michael S. Kaplan, published on 2004/11/13 17:28 -05:00, original URI: http://blogs.msdn.com/b/michkap/archive/2004/11/13/257048.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P>If you are using the Microsoft Layer for Unicode on Windows 95/98/Me Systems and the Microsoft Foundation Classes (MFC), there are a few things you need to know about!</P>
+<HR>
+
+<P>There are two bugs in MFC 6.0 that you will have to fix and rebuild (both bugs are fixed in MFC 7.0). One only applies to people compiling their own private MFC DLL, and the other applies to all MFC usage. In addition, there is a third problem if you are using the MFC DLLs that requires you to rebuild the C runtime (CRT) as well (applies to both 6.0 and 7.0).</P>
+<OL>
+<LI>
+<P>AFFECTS both STATIC MFC and private DLL: If you look in CEditView (inside of viewedit.cpp) there are three member functions that contain code that does an #ifndef _UNICODE in them: they are <B>CEditView::ReadFromArchive</B>, <B>CEditView::LockBuffer</B>, and <B>CEditView::UnlockBuffer</B>. You should remove the #ifndefs (but leave the code within them!). They were making an assumption that you could <B>never</B> be running a Unicode MFC on Win9x (but of course, it turns out they are wrong, given the existence of MSLU!).</P><BR>
+<LI>
+<P>AFFECTS THE CUSTOM MFC DLL CASE ONLY: If you look in the <B>RawDllMain</B> function in dllinit.cpp, they have some more code, this time wrapped in #ifdef _UNICODE. It will cause the MFC DLL to fail anytime you try to use it on Win9x. You should remove this block of code too, and then rebuild the MFC DLL as per the info in <A href="http://msdn.microsoft.com/library/en-us/vcmfc98/html/_mfcnotes_tn033.asp" target=new>TN033</A> (making sure you have it use MSLU when you build it, of course!). </P>
+<LI>
+<P>IF YOU ARE REBUILDING THE MFC DLL: Unfortunately, you will also have to rebuild the CRT dll (msvcrt.dll) as well, due to the use of several CRT functions that rely on Unicode APIs, when called by the Unicode MFC. This is true in both 6.0 and 7.0.</P></LI></OL>
+<HR>
+
+<P>There is one additional problem that can occur if you are using <B>AfxWndProc</B> (MFC's main, shared window proc wrapper) as an actual wndproc in any of your windows. You see, MFC has code in it so that if <B>AfxWndProc</B> is called and is told that the wndproc to follow up with is <B>AfxWndProc</B>, it notices that it is being asked to call itself and forwards for <B>DefWindowProc</B> instead.</P>
+<P>Unfortunately, MSLU breaks this code by having its own proc be the one that shows up. MFC has no way of detecting this case so it calls the MSLU proc which calls <B>AfxWndProc</B> which calls the MSLU proc, etc., until the stack overflows. By using either <B>DefWindowProc</B> or your own proc yourself, you avoid the stack overflow.</P>
+<hr/><p><a id="257134" href="#257134">#</a> <strong>Uwe Keim</strong> on 14 Nov 2004 12:03 AM:</p><div style="margin-left: 1em">What I asked me since a long time: If I DO use the MSLU, is CString then Unicode enabled?<br><br>I.e. if I enable MSLU for my project, do the CString functions all use MSLU functions only? Or should I use my own string class to be safe?</div>
+<p><a id="257219" href="#257219">#</a> <strong>Gregory Faer</strong> on 14 Nov 2004 11:13 AM:</p><div style="margin-left: 1em">Your blog doesn't work well in firefox - the comments disappear when you mouseover.  Any chance of updating your style?</div>
+<p><a id="257223" href="#257223">#</a> <strong>michkap</strong> on 14 Nov 2004 11:20 AM:</p><div style="margin-left: 1em">Sure -- they do not give us many choices, and I do not run FireFox. But I'll try changing and you can let me know if it worked. :)</div>
+<p><a id="275265" href="#275265">#</a> <strong>michkap</strong> on 5 Dec 2004 5:43 AM:</p><div style="margin-left: 1em">To get unto Uwe's question -- yes. If you compile an application with UNICODE and _UNICODE, then you get a Uniocde CString. If you are running on Win9x then you pretty much must use MSLU in thst case....</div>
+<hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2005/11/13 <a href="http://archives.miloush.net/michkap/archive/2005/11/13/492342.html">Happy Birthday to the blog</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2004/11/13/257049.html" title="Using MSLU with ATL/WTL">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2004/11/01/280092.html" title="About Contacting Me">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2004-11">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2004-11-13">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2004/11/13/257048.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:42 GMT -->
+</html>

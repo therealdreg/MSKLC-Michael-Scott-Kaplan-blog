@@ -1,0 +1,26 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2006/03/17/553499.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:40 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>On the fuzzier definition of a 'Unicode application' on Win9x....</title></head><body>
+<h1>On the fuzzier definition of a 'Unicode application' on Win9x....</h1>
+<p><em>by Michael S. Kaplan, published on 2006/03/17 03:21 -05:00, original URI: http://blogs.msdn.com/b/michkap/archive/2006/03/17/553499.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P><FONT face=Tahoma>Riffing on <A HREF="http://blogs.msdn.com/oldnewthing/">Raymond</A> here, and his post <A HREF="http://blogs.msdn.com/oldnewthing/archive/2006/03/15/551897.aspx">On the fuzzy definition of a "Unicode application"</A>....</FONT></P>
+<P><FONT face=Tahoma>The points that his post raises are real ones. And they kind of came up in reverse a few years ago for me when I was explaining how the Microsoft Layer for Unicode on Win9x Systems works.</FONT></P>
+<P><FONT face=Tahoma>I was explaining how MSLU worked hard in messaging functions to try to make sure of two things, basically that:</FONT></P>
+<UL>
+<LI><FONT face=Tahoma>When calling a user's Unicode </FONT><FONT face=Tahoma>WNDPROC/DLGPROC functions that it would convert strings to Unicode, and</FONT></LI>
+<LI><FONT face=Tahoma>When calling any of the OS functions that it would convert strings out of Unicode.</FONT></LI></UL>
+<P><FONT face=Tahoma>This seemed terribly wasteful, especially for situations where it seemed like a Unicode application could avoid those extra conversions. But in the end, there is really no way to control:</FONT></P>
+<UL>
+<LI><FONT face=Tahoma>when the Win9x would not be expecting Unicode</FONT></LI>
+<LI><FONT face=Tahoma>when any other component or application that is subclassing or communicating with the app would not be expecting Unicode</FONT></LI>
+<LI><FONT face=Tahoma>when another application supporting MSLU <STRONG>would</STRONG> be expecting Unicode</FONT></LI></UL>
+<P><FONT face=Tahoma>And in the end the same sort of problem comes up, just in reverse.</FONT></P>
+<P><FONT face=Tahoma>In the MSLU case, the main point of Raymond's article (which many people missed) is answered easily -- it will always be 0x5c and U+005c for the separator, even in a Unicode application where U+00a5 is entered, due to the problems with the path separator <A HREF="http://archives.miloush.net/michkap/archive/2005/09/17/469941.html">that</A> <A HREF="http://archives.miloush.net/michkap/archive/2005/12/28/507759.html">I</A> <A HREF="http://archives.miloush.net/michkap/archive/2005/10/12/479561.html">have</A> <A HREF="http://archives.miloush.net/michkap/archive/2005/11/01/487665.html">talked</A> <A HREF="http://archives.miloush.net/michkap/archive/2005/11/23/495193.html">about</A> <A HREF="http://archives.miloush.net/michkap/archive/2005/12/28/507759.html">before</A>&nbsp;<A HREF="http://archives.miloush.net/michkap/archive/2005/07/22/441633.html">here</A>.</FONT></P>
+<P><FONT face=Tahoma></FONT>&nbsp;</P>
+<P><FONT face=Tahoma color=#ff1493><EM>This post brought to you by</EM> "<FONT size=6>¥</FONT>" <EM>(<A href="http://www.fileformat.info/info/unicode/char/00a5/">U+00a5</A>, a.k.a. YEN SIGN)</EM></FONT></P>
+<hr/><p><a id="555464" href="#555464">#</a> <strong>Aidan Kehoe</strong> on 20 Mar 2006 8:45 AM:</p><div style="margin-left: 1em">Heh, was that the character of the day on purpose? I'm sure you know that it is unutterably hard to keep the yen sign distinct from the backslash on Japanese machines, since JIS X 0201 is identical to ASCII except for this, and since all the non-Unicode Japanese encodings use JIS X 0201 as their base, not ASCII.</div>
+<p><a id="555517" href="#555517">#</a> <strong>Michael S. Kaplan</strong> on 20 Mar 2006 10:16 AM:</p><div style="margin-left: 1em">Hi Aidan,<br><br>Yes, it definitely was! (See Raymond's post for more on why). :-)</div>
+<hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2006/03/18/554301.html" title="Typing those marks?">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2006/03/17/553445.html" title="Bidi isn&#39;t always intuitive....">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2006-03">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2006-03-17">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2006/03/17/553499.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:40 GMT -->
+</html>

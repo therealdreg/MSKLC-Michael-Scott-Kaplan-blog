@@ -1,0 +1,69 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2012/04/05/10290985.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:33 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>WideCharToMultiByte vs. DrawTextW? In tennis terms, 15-Love!</title></head><body>
+<h1>WideCharToMultiByte vs. DrawTextW? In tennis terms, 15-Love!</h1>
+<p><em>by Michael S. Kaplan, published on 2012/04/05 07:01 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2012/04/05/10290985.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<p>Some long-time regular readers&nbsp;may recall when I blogged <strong><a title="Cyrillic looks so spacy when viewed from some parts of East Asia...." href="http://archives.miloush.net/michkap/archive/2007/05/11/2559407.html">Cyrillic looks so spacy when viewed from some parts of East Asia....</a></strong> from almost five years ago.</p>
+<p>Here is the art I showed at the time:</p>
+<p><a href="http://msdnshared.blob.core.windows.net/media/MSDNBlogsFS/prod.evol.blogs.msdn.com/CommunityServer.Blogs.Components.WeblogFiles/00/00/00/33/81/4643.spaced_2D00_cyrillic2.jpg"><img border="0" alt="" src="http://blogs.msdn.com/resized-image.ashx/__size/550x0/__key/communityserver-blogs-components-weblogfiles/00-00-00-33-81/4643.spaced_2D00_cyrillic2.jpg" /></a></p>
+<p>See what happens with the "spacy" Cyrillic text? :-)</p>
+<p>At the time, SDiZ commented:</p>
+<p style="padding-left: 30px;"><em>I believe this is, indeed, a "feature".</em></p>
+<p style="padding-left: 30px;"><em>In big5 encoding (at least in the big5 ETen-extension), Cyrillic scripts are full-width. To compatible with old system, Chinese fonts always comes with full width Cyrillic characters.</em></p>
+<p>Though it can't really be that simple, since in cases like both the one above and the similar case we were looking at today involving a <strong>Japanese default system locale</strong> and a <strong>Russian user UI language</strong> where line breaking was being done wrong, all of the text is 100% Unicode.</p>
+<p>If you look at Microsoft's code pages:</p>
+<ul>
+<li>Japanese <a title="Windows Code Page 932" href="http://msdn.microsoft.com/en-us/goglobal/cc305152">Windows Code Page 932</a> has some Cyrillic in <a title="Lead Byte 0x84" href="http://msdn.microsoft.com/en-us/goglobal/gg638870">Lead Byte 0x84</a>, and</li>
+<li>Korean <a title="Windows Code Page 949" href="http://msdn.microsoft.com/en-us/goglobal/cc305154">Windows Code Page 949</a> has some Cyrillic in <a title="Lead Byte 0xAC" href="http://msdn.microsoft.com/en-us/goglobal/gg670862">Lead Byte 0xAC</a>, and</li>
+<li>Simplified Chinese <a title="Windows Code Page 936" href="http://msdn.microsoft.com/en-us/goglobal/cc305153">Windows Code Page 936</a> has some Cyrillic in <a title="Lead Byte 0xA7" href="http://msdn.microsoft.com/en-us/goglobal/gg675273">Lead Byte 0xA7</a>.</li>
+</ul>
+<p>But Traditional Chinese <a title="Windows Code Page 950" href="http://msdn.microsoft.com/en-us/goglobal/cc305155">Windows Code Page 950</a> has no Cyrillic in it whatsoever!</p>
+<p>So, it is not a mere code page issue. Or at least not for the reasons one might usually expect.</p>
+<p>The various non-full-width CJK fonts don't give the Cyrillic characters full width visually.</p>
+<p><em>Though that is just common sense -- if they did, then instead of "spacy" Cyrillic, you'd just get "fat" Cyrillic!</em></p>
+<p>So that isn't it either.</p>
+<p>And it isn't some kind of Uniscribe issue (which I'll be honest was my first guess!), either.</p>
+<p>I found this out yesterday afternoon, when&nbsp;one of the Uniscribe developers took a look at the bug, and while debugging through&nbsp;it found the&nbsp;actual problem without seeing the root cause, which was actually right&nbsp;there:</p>
+<p style="padding-left: 60px;"><span style="font-family: times new roman,times; font-size: medium;">Ok, debugged this. (Michael, you may want to take a look if this is expected in regards to WideCharToMultiByte behavior)</span></p>
+<p style="padding-left: 60px;"><span style="font-family: times new roman,times; font-size: medium;">The reason for this is indeed the use of the Russian UI on a Japanese system. The DrawText api in a word wrapping mode pays attention to the user&rsquo;s codepage (it does DWORD dwCodePage = USERGETCODEPAGE(hdc)). The codepage in this case is 0x3a4. When analyzing text for wraps, it checks the current character if it is a Full Width character in the current codepage using</span></p>
+<p style="padding-left: 60px;"><span style="font-family: times new roman,times; font-size: medium;">&nbsp;&nbsp;&nbsp; cChars = WideCharToMultiByte((UINT)dwCodePage,0,&amp;wChar,1,NULL,0,NULL,NULL);</span></p>
+<p style="padding-left: 60px;"><span style="font-family: times new roman,times; font-size: medium;">This API with these parameters reports that all Russian characters are Full Width (why?), i.e. it returns cChars=2. Then the following code treats this Russian character as a full width, and believes it can break anywhere after it:</span></p>
+<p style="padding-left: 60px;"><span style="font-family: times new roman,times; font-size: medium;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; /*</span><br /><span style="font-family: times new roman,times; font-size: medium;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; * Otherwise, we just return the character that is next of FullWidth</span><br /><span style="font-family: times new roman,times; font-size: medium;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; * Character. Because we treat A FullWidth character as A Word.</span><br /><span style="font-family: times new roman,times; font-size: medium;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; */</span></p>
+<p style="padding-left: 60px;"><span style="font-family: times new roman,times; font-size: medium;">So it never uses the Uniscribe for word breaking for Russian text in this configuration.</span></p>
+<p>Aha!</p>
+<p>Do you see the bug?</p>
+<p>Admittedly, I didn't see it right away, myself.</p>
+<p>I saw it about 15 minutes after I read and responded to the mail.</p>
+<p>It isn't in <a title="WideCharToMultiByte" href="http://msdn.microsoft.com/library/dd374130.aspx">WideCharToMultiByte</a> at all!</p>
+<p>Did you spot it?</p>
+<p>The bug is in using&nbsp;<a title="WideCharToMultiByte" href="http://msdn.microsoft.com/library/dd374130.aspx">WideCharToMultiByte</a> to detect "wide" characters by converting it using a code page.</p>
+<p>Because every CJK code page has some characters that&nbsp;are not double width that&nbsp;is situated&nbsp;one of the two byte ranges inside the code page (other characters that can hit this problem&nbsp;include random symbols and such).</p>
+<p>Clearly to fix this in any version would require a different, more reliable test for full width characters!</p>
+<p>For example, a simple call to <a title="GetStringTypeW" href="http://msdn.microsoft.com/library/windows/desktop/dd318119.aspx">GetStringTypeW</a>(CT_CTYPE3, ...) checking for the C3_FULLWIDTH character type flag -- the non locale specific code that should have been there all along....</p>
+<p><em>Of course, you should never call the "Ex" version, as I point out in <strong><a title="To Ex or not to Ex? THAT is the question." href="http://archives.miloush.net/michkap/archive/2005/10/31/486870.html">To Ex or not to Ex? THAT is the question.</a></strong>!</em></p>
+<p>At this point, the decision to apply that fix or not will have to depend on how worthwhile the scenario is considered.</p>
+<p>The fact that 75% of the CJK code pages have Cyrillic in them and all four have code points that could run afoul of the bug may have some impact, though the fact that the bug has apparently been around for over a decade will have impact too.</p>
+<p>Backcompat and people who might even be depending on the behavior could be&nbsp;an issue, too.</p>
+<p>What would you do in the current not-yet-shipping version?</p>
+<p>What would you do in prior versions?</p>
+<hr/><p><strong>MGetz</strong> on 6 Apr 2012 7:24 AM:</p><div style="margin-left: 1em"><p>a) The backcompat solution sounds like it will break in CP950</p>
+<p>b) The question as I see it is why is a unicode function paying attention to an ANSI Code Page?</p>
+<p>c) This might be a case where it would be useful to post the question out to various East Asian programming sites and see what comes back, it&#39;s highly likely that this behavior is not wanted.</p>
+<p>d) What happens in Unicode only Locales? Does the bug cause rendering issues there?</p>
+<p>If A and D are true then I think a breaking change is justified, if not.... further investigation would probably be needed. In any case I would consider doing C.</p>
+</div>
+<p><strong>Joshua</strong> on 9 Apr 2012 1:26 PM:</p><div style="margin-left: 1em"><p>Screw it. Your recent attitude about codepages will soon result in massive breakage for any system not on 1252 anyway.</p>
+</div>
+<p><strong>Random832</strong> on 10 Apr 2012 1:03 PM:</p><div style="margin-left: 1em"><p>&quot;Because we treat A FullWidth character as A Word.&quot; was a bad decision to begin with, at most they should apply it to ideographs (maybe GetStringTypeW wasn&#39;t available back then).</p>
+<p>Also, what width does GetStringTypeW return for ambiguous width characters? Is it not locale-dependent?</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 10 Apr 2012 11:10 PM:</p><div style="margin-left: 1em"><p>GetStringTypeW was in the first build of NT that had DrawTextW. And there are no ambioguous characters from the view of GetStringTypeW as long as they are defined...</p>
+</div>
+<p><strong>Random832</strong> on 11 Apr 2012 7:18 AM:</p><div style="margin-left: 1em"><p>So then what width class does it return for the Cyrillic characters, given they are full width in several codepages (and in the corresponding &quot;monospaced&quot; fonts)? How were the width classes of GetStringTypeW envisioned as being used? The only use I can think of is counting them up to determine how many character cells a string will take up in an east-asian-locale console window.</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 11 Apr 2012 8:07 AM:</p><div style="margin-left: 1em"><p>It uses the Unicode character properties, of course! </p>
+</div>
+<hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2013/02/13 <a href="http://archives.miloush.net/michkap/archive/2013/02/13/10393199.html">The time has come to fix a bug that has been in Windows more than twice as long as I have...</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2012/04/09/10291883.html" title="Sometimes, it&#39;s Unicode or nothing...">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2012/04/04/10290614.html" title="Can&#39;t Touch This! (unless you have the hardware, I mean)">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2012-04">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2012-04-05">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2012/04/05/10290985.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+</html>

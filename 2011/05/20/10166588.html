@@ -1,0 +1,50 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2011/05/20/10166588.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Every character has a story #33: GREEK ANO TELEIA (U+0387)</title></head><body>
+<h1>Every character has a story #33: GREEK ANO TELEIA (U+0387)</h1>
+<p><em>by Michael S. Kaplan, published on 2011/05/20 07:01 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2011/05/20/10166588.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<p>Unicode characters are a bit like actual characters, like actual people, in real life.</p>
+<p>Some of them are majestic and are revered.</p>
+<p>Others are fun and whimsical.</p>
+<p>Still others are lookalikes -- perhaps even celebrity lookalikes.</p>
+<p>And there are a few that have perhaps been put through a bad situation, improperly categorized in a way that will affect them for the rest of their lives.</p>
+<p>The scars may not be visible, but they'll always be there.</p>
+<p style="padding-left: 30px;"><span style="font-size: xx-large;">·</span></p>
+<p>That is U+0387, aka GREEK ANO TELEIA.</p>
+<p>This character went through a recent interesting thread on the "Unicore" list related to its canonical equivalance with another character: U+00b7, aka MIDDLE DOT).</p>
+<p>Let's look at those properties. from UnicodeData.txt:</p>
+<p><span style="font-family: courier new,courier; font-size: xx-large;">00B7;MIDDLE DOT&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;;Po;0;ON;&nbsp;&nbsp;&nbsp;&nbsp;;;;;N;;;;;</span></p>
+<p><span style="font-family: courier new,courier; font-size: xx-large;">0387;GREEK ANO TELEIA;Po;0;ON;00B7;;;;N;;;;;</span></p>
+<p>&nbsp;Sites like <a href="http://forum.fontlab.com/sbl-greek/greek-keyboard-options-t306.10.html">this one</a> had some interesting comments though:</p>
+<p style="padding-left: 30px;">njstram:</p>
+<p style="padding-left: 120px;">Canonical Equivalence Issues for Greek Punctuation. Some commonly used Greek punctuation marks are encoded in the Greek and Coptic block, but are canonical equivalents to generic punctuation marks encoded in the C0 Controls and Basic Latin block, because they are indistinguishable in shape. Thus, U+037E ";" GREEK QUESTION MARK is canonically equivalent to U+003B ";" SEMICOLON, and U+0387 "&middot;" GREEK ANO TELEIA is canonically equivalent to U+00B7 "&middot;" MIDDLE DOT. In these cases, as for other canonical singletons, the preferred form is the character that the canonical singletons are mapped to, namely U+003B and U+00B7 respectively. Those are the characters that will appear in any normalized form of Unicode text, even when used in Greek text as Greek punctuation. Text segmentation algorithms need to be aware of this issue, as the kinds of text units delimited by a semicolon or a middle dot in Greek text will typically&nbsp; differ from those in Latin text.</p>
+<p style="padding-left: 120px;">The character properties for U+00B7 MIDDLE DOT are particularly problematical, in part because of identifier issues for that character. There is no guarantee that all of its properties will align exactly with U+0387 GREEK ANO TELEIA itself, because the latter were established based on the more limited function of the middle dot in Greek as a delimiting punctuation mark. </p>
+<p style="padding-left: 30px;">John Hudson:</p>
+<p style="padding-left: 120px;">There are also possible glyph design discrepancies in these canonical equivalences. The Greek ano teleia is properly placed near the top of the non-ascending lowercase letters (the x-height, in Latin type terminology), roughly equivalent to the height of the top dot on the colon. The middle dot is aligned to the optical centre of the x-height, i.e. lower. Also, in all-caps settings, the ano teleia rises to align near the top of the capitals, even further from the height of the middle dot. This was a very poorly considered canonical equivalence.</p>
+<p>&nbsp;</p>
+<p>Anyway, ignoring these issues, in Greek the ANO TELEIA is not used in the middle of a word or term (right now you may see lots of </p>
+<p style="padding-left: 30px;"><span style="font-size: xx-large;">Tech&middot;Ed</span></p>
+<p>information, for example. The fact that U+0387 is not preferred and the way that Unicode normalization will pick one and the distinction is lost unless one keeps track of the "Greek-ness" of the text.</p>
+<p>But in a way both characters suffer here a bit since implementations must often make assumptions that may be invalid for some text.</p>
+<p>At Microsoft, it has some interesting issues:</p>
+<ul>
+<li><strong>In collation</strong>: It was not even in the collation tables at all until Vista (meaning it had no eight an coudln't be found), and once there it was given identical weight to the MIDDLE DOT.</li>
+<li><strong>In codepages:</strong> It does not appear in any code page, even as a best fit character in <a href="http://www.unicode.org/Public/MAPPINGS/VENDORS/MICSFT/WindowsBestFit/bestfit1253.txt">cp 1253</a>&nbsp;where it would perhaps have made sense.</li>
+<li><strong>In fonts:</strong> Some of the above comments covered this -- many believe it is not represented exactly as it should be since the two characters usually look the same.</li>
+<li><strong>In keyboards:</strong> The only keyboard it exists on is the Greek Polytonic keyboard, where it has been since Windows 2000.</li>
+<li><strong>In identifiers:</strong> Both characters are now allowed in identifiers, so you would be able to use Tech&middot;Ed in a variable name!</li>
+</ul>
+<p>The most important issue related to the equivalence is that it can't ever be changed. So ten years from now I fully expect someone to send mail asking for a change....</p>
+<hr/><p><strong>jader3rd</strong> on 20 May 2011 9:50 AM:</p><div style="margin-left: 1em"><p>Guess you&#39;ll have to set a calendar event for ten years from now and update us as to the situation.</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 20 May 2011 10:11 AM:</p><div style="margin-left: 1em"><p>Even ten years from now they won&#39;t get it (or any time before that), we&#39;re stuck on this path.</p>
+</div>
+<p><strong>Christos Georgiou</strong> on 20 May 2011 11:43 AM:</p><div style="margin-left: 1em"><p>The guy(s) who suggested that GREEK ANO TELEIA is equivalent (glyph-wise) to MIDDLE DOT should be beheaded. The name for colon in Greek is «άνω και κάτω τελεία» (ano ke kato teleia), meaning &quot;upper and lower dot&quot;, and its upper dot is at the same place where the «άνω τελεία» (upper dot) should be; even the name &quot;upper dot&quot; should be enough to differentiate from &quot;middle dot&quot;. Like I said, beheading.</p>
+<p>John Hudson is spot on. Unfortunately, based on the Unicode equivalency suggestion, many font designers choose to use the same glyph. In open (and open-source) fonts I&#39;ve fought the glyph battle, with at least one success (the FreeSans font; the FreeSerif font already had the correct glyph).</p>
+<p>It&#39;s hard to convince font designers, though, since by default they consider the Unicode consortium as a more knowledgeable entity than myself: all I&#39;ve got is my elementary education, what teachers told me, and what old books I still own containing “ano teleies” in the text.</p>
+<p>It&#39;s no wonder that CP1253 does not contain ANO TELEIA. ISO8859-7 (and its direct parent ELOT-928, the greek standards organization codepage) did not, too. What Microsoft did for CP1253 was to use the 128-159 range just like in CP1252 (ok with that) and move the GREEK CAPITAL LETTER ALPHA WITH TONOS to another place, because it co-incided with PILCROW SIGN; it is said that they kept PILCROW SIGN at that place because they didn&#39;t want users of Microsoft Word to see «Ά» instead of “¶” at the end of paragraphs (that was MS Office pre-Unicode era). Because of encoding (“character set”) misconfigurations, misspellings like «’νθρωπος» instead of «Άνθρωπος» (“Human”) were very common, especially on the web and email messages.</p>
+</div>
+<hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2011/05/23/10167319.html" title="Philosophical about enablement, the impossible, and the infeasible">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2011/05/19/10166285.html" title="How do I find out what state you&#39;re in?">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2011-05">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2011-05-20">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2011/05/20/10166588.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+</html>

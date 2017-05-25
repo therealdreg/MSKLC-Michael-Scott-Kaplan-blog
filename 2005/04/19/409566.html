@@ -1,0 +1,110 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2005/04/19/409566.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:41 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>A few of the gotchas of MultiByteToWideChar</title></head><body>
+<h1>A few of the gotchas of MultiByteToWideChar</h1>
+<p><em>by Michael S. Kaplan, published on 2005/04/19 04:30 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2005/04/19/409566.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P><FONT face=Tahoma>Like I mentioned yesterday, I have talked a bunch of times about the way that different forms of strings that are canonically equivalent according to Unicode and&nbsp;which actually look identical visually exist in the world.</FONT></P>
+<P><FONT face=Tahoma>Yesterday, I mentioned it&nbsp;while&nbsp;I was talking about&nbsp;<a href="http://archives.miloush.net/michkap/archive/2005/04/18/409095.html"><STRONG>a few of the gotchas of WideCharToMultiByte</STRONG></A>. Today I thought I would talk about the other direction, the <A href="http://msdn.microsoft.com/library/en-us/intl/unicode_17si.asp"><STRONG>MultiByteToWideChar</STRONG></A> API.</FONT></P>
+<P><FONT face=Tahoma>First of all, almost all code pages are in Normalizaton <STRONG>Form C</STRONG> (a.k.a. precomposed) at all times (I will talk about the exceptions in a second). Of course Unicode (by which I mean UTF-16 Little Endian, which Microsoft always calls Unicode) can be either <STRONG>Form C</STRONG> (a.k.a. precomposed) or <STRONG>Form D</STRONG> (a.k.a. composite).</FONT></P>
+<P><FONT face=Tahoma>If you would like to choose, then you get that option; you can pass either the <STRONG>MB_PRECOMPOSED</STRONG> or <STRONG>MB_COMPOSITE</STRONG> flags. For the reasons of having data that is consistent with the rest of the platform, I would recommend the <STRONG>MB_PRECOMPOSED</STRONG> flag, but either one is legal (just not both).</FONT></P>
+<P><FONT face=Tahoma>There is also an <STRONG>MB_USEGLYPHCHARS </STRONG>flag. Now I already beat that particular horse to death when I answered the question <a href="http://archives.miloush.net/michkap/archive/2005/02/26/381020.html"><STRONG>what the &amp;%#$ does MB_USEGLYPHCHARS do?</STRONG></A> So if you want to know more you can look there. You probably do not, at least I hope you do not....</FONT></P>
+<P><FONT face=Tahoma>Finally, there is the MB_ERR_INVALID_CHARS flag. The documentation says it all on this flag: </FONT></P>
+<BLOCKQUOTE dir=ltr>
+<P><FONT face=Tahoma size=2><EM>If the function encounters an invalid input character, it fails and GetLastError returns <STRONG>ERROR_NO_UNICODE_TRANSLATION</STRONG>. </EM></FONT></P></BLOCKQUOTE>
+<P><FONT face=Tahoma>Now after the&nbsp;<A href="http://msdn.microsoft.com/library/en-us/intl/unicode_17si.asp"><STRONG>MultiByteToWideChar</STRONG></A> topic covers these four flags, it gets confusing. It says:</FONT></P><FONT face=Tahoma>
+<BLOCKQUOTE dir=ltr>
+<P>For the code pages in the following table, <I>dwFlags</I> must be zero, otherwise the function fails with ERROR_INVALID_FLAGS. </P>
+<P><FONT face="Courier New">50220 <BR>50221<BR>50222<BR>50225<BR>50227<BR>50229<BR>52936<BR>54936<BR>57002 through 57011 <BR>65000 (UTF7)<BR>65001 (UTF8)<BR>42 (Symbol)</FONT></P>
+<P>
+<P><B>Windows XP and later:</B> MB_ERR_INVALID_CHARS is the only <I>dwFlags</I> value supported by Code page 65001 (UTF-8). </P></BLOCKQUOTE></FONT>
+<P><FONT face=Tahoma>Call me crazy, but there probably was not a need to have the sentence before the table and the table conflict with the sentence after the table. It is kind of understandble, but as topics go it has the flavor of a <a href="http://archives.miloush.net/michkap/archive/index.html#2005-04-02">WTF sentence</A>, if you ask me!</FONT></P>
+<P><FONT face=Tahoma>It does end on a better note by defining what an invalid character is:</FONT></P>
+<BLOCKQUOTE dir=ltr>
+<P><FONT face=Tahoma size=2><EM>The function fails if <STRONG>MB_ERR_INVALID_CHARS</STRONG> is set and encounters an invalid character in the source string. An invalid character is either, a) a character that is not the default character in the source string but translates to the default character when <STRONG>MB_ERR_INVALID_CHARS</STRONG> is not set, or b) for DBCS strings, a character which has a lead byte but no valid trailing byte. When an invalid character is found, and <STRONG>MB_ERR_INVALID_CHARS</STRONG> is set, the function returns 0 and sets <B>GetLastError </B>with the error <STRONG>ERROR_NO_UNICODE_TRANSLATION</STRONG>.</EM></FONT></P></BLOCKQUOTE>
+<P><FONT face=Tahoma>Oh, and before that it talks about some security considerations (more on these another day).</FONT></P>
+<P><FONT face=Tahoma>I am forgetting something now. What was it?</FONT></P>
+<P><FONT face=Tahoma>Oh yeah, I was going to talk about the code pages that are not Normalization Form C.</FONT></P>
+<P><FONT face=Tahoma>Obviously there is UTF-7 (65000), UTF-8 (65001), and GB-18030 (54936). Since each of these code pages&nbsp;covers the entire Unicode repetoire, each can have characters in Unicode normalization Form C, Form D, or any combination thereof. Some of the other code pages in the table above also fall into this category, but in the case of these three and all the rest, the <STRONG>MB_PRECOMPOSED</STRONG> and <STRONG>MB_COMPOSITE</STRONG> flags are both at best ignored and at worst will cause an <STRONG>ERROR_INVALID_FLAGS</STRONG> to be returned. So you will want to not pass either flag with any of them.</FONT></P>
+<P><FONT face=Tahoma>But there is one code page that can have data in either composite or precomposed form -- it is the Vietnamese ACP,&nbsp;<A href="http://www.microsoft.com/globaldev/reference/sbcs/1258.htm">code page&nbsp;1258</A>. It has all of the following entries:</FONT></P>
+<BLOCKQUOTE dir=ltr>
+<P><FONT face="Lucida Console" size=2>CC = U+0300 : COMBINING GRAVE ACCENT<BR>D2 = U+0309 : COMBINING HOOK ABOVE<BR>DE = U+0303 : COMBINING TILDE<BR>EC = U+0301 : COMBINING ACUTE ACCENT<BR>F2 = U+0323 : COMBINING DOT BELOW</FONT><FONT face=Tahoma></FONT></P></BLOCKQUOTE>
+<P><FONT face=Tahoma>The reason for doing this is that there was really not enough room in the code page, otherwise. Unfortunately, there are also some precomposed characters with these accents:</FONT></P>
+<BLOCKQUOTE dir=ltr>
+<P><FONT face="Lucida Console" size=2>C0 = U+00C0 : LATIN CAPITAL LETTER A WITH GRAVE<BR>C1 = U+00C1 : LATIN CAPITAL LETTER A WITH ACUTE<BR>C8 = U+00C8 : LATIN CAPITAL LETTER E WITH GRAVE<BR>C9 = U+00C9 : LATIN CAPITAL LETTER E WITH ACUTE<BR>CD = U+00CD : LATIN CAPITAL LETTER I WITH ACUTE<BR>D1 = U+00D1 : LATIN CAPITAL LETTER N WITH TILDE<BR>D3 = U+00D3 : LATIN CAPITAL LETTER O WITH ACUTE<BR>D9 = U+00D9 : LATIN CAPITAL LETTER U WITH GRAVE<BR>DA = U+00DA : LATIN CAPITAL LETTER U WITH ACUTE<BR>E0 = U+00E0 : LATIN SMALL LETTER A WITH GRAVE<BR>E1 = U+00E1 : LATIN SMALL LETTER A WITH ACUTE<BR>E8 = U+00E8 : LATIN SMALL LETTER E WITH GRAVE<BR>E9 = U+00E9 : LATIN SMALL LETTER E WITH ACUTE<BR>ED = U+00ED : LATIN SMALL LETTER I WITH ACUTE<BR>F1 = U+00F1 : LATIN SMALL LETTER N WITH TILDE<BR>F3 = U+00F3 : LATIN SMALL LETTER O WITH ACUTE<BR>F9 = U+00F9 : LATIN SMALL LETTER U WITH GRAVE<BR>FA = U+00FA : LATIN SMALL LETTER U WITH ACUTE</FONT></P></BLOCKQUOTE>
+<P><FONT face=Tahoma>So you it looks like maybe you could have mixed "Form C" and "Form D" code page 1258 text, doesn't it?</FONT></P>
+<P><FONT face=Tahoma>Unfortunately, its not that perfect. There are two error patterns, marked below in <FONT color=#ff0000><STRONG>RED</STRONG></FONT>:</FONT></P>
+<BLOCKQUOTE dir=ltr>
+<P><FONT face=Tahoma>0xc0 with MultiByteToWideChar/MB_PRECOMPOSED --&gt; <A href="http://www.fileformat.info/info/unicode/char/00c0/index.htm">U+00c0</A><BR>0xc0 with MultiByteToWideChar/MB_COMPOSITE --&gt; <A href="http://www.fileformat.info/info/unicode/char/0041/index.htm">U+0041</A> <A href="http://www.fileformat.info/info/unicode/char/0300/index.htm">U+0300</A><BR>0x41 0xcc with MultiByteToWideChar/MB_PRECOMPOSED --&gt; <STRONG><FONT color=#ff0000><A href="http://www.fileformat.info/info/unicode/char/0041/index.htm"><FONT color=#ff0000>U+0041</FONT></A> <A href="http://www.fileformat.info/info/unicode/char/0300/index.htm"><FONT color=#ff0000>U+0300</FONT></A></FONT></STRONG><BR>0x41 0xcc with MultiByteToWideChar/MB_COMPOSITE --&gt; <FONT color=#000000><A href="http://www.fileformat.info/info/unicode/char/0041/index.htm">U+0041</A> <A href="http://www.fileformat.info/info/unicode/char/0300/index.htm">U+0300</A></FONT></FONT></P></BLOCKQUOTE>
+<P dir=ltr><FONT face=Tahoma>and going the other way:</FONT></P>
+<BLOCKQUOTE dir=ltr>
+<P><FONT face=Tahoma><A href="http://www.fileformat.info/info/unicode/char/00c0/index.htm">U+00c0</A> with WideCharToMultiByte/WC_COMPOSITECHECK --&gt; 0xc0<BR><A href="http://www.fileformat.info/info/unicode/char/00c0/index.htm">U+00c0</A> with WideCharToMultiByte --&gt; 0x41 0xcc<BR><A href="http://www.fileformat.info/info/unicode/char/0041/index.htm">U+0041</A> <A href="http://www.fileformat.info/info/unicode/char/0300/index.htm">U+0300</A> with WideCharToMultiByte/WC_COMPOSITECHECK --&gt; 0xc0<BR><A href="http://www.fileformat.info/info/unicode/char/0041/index.htm">U+0041</A> <A href="http://www.fileformat.info/info/unicode/char/0300/index.htm">U+0300</A> with WideCharToMultiByte --&gt; <STRONG><FONT color=#ff0000>0xc0</FONT></STRONG></FONT></P></BLOCKQUOTE>
+<P><FONT face=Tahoma>The pattern is clear, right? MultiByteToWideChar is not quite smart enough to precompose in Unicode what is composite in cp1258, and WideCharToMultiByte is not quite smart enough to keep composite what is composite in Unicode.</FONT></P>
+<P><FONT face=Tahoma>Ah well, nothing is perfect -- the Vietnamese code page is missing some characters used in Vietnamese, anyway.</FONT></P>
+<P><FONT face=Tahoma>But the real reason for these combining characters is to handle the many letters used in Vietnamese that have double diacritics on them -- the cases of dual representations are somewhat accidental, all things considered, in the face of the need to support letters like "ẳằẵắặầẩẫấậ" and so forth....</FONT></P>
+<P><FONT face=Tahoma></FONT>&nbsp;</P>
+<P><FONT face=Tahoma><FONT color=#ff0000><EM>This post brought to you by </EM>"À" <EM>(<A href="http://www.fileformat.info/info/unicode/char/00c0/index.htm">U+00c0</A>, a.k.a. LATIN CAPITAL LETTER A WITH GRAVE)</EM></FONT></P></FONT>
+<hr/><p><a id="409607" href="#409607">#</a> <strong>Lionel Fourquaux</strong> on 19 Apr 2005 7:54 AM:</p><div style="margin-left: 1em">&quot;Some of the other code pages in the table above also fall into this category, but in the case of these three and all the rest, the MB_PRECOMPOSED and MB_COMPOSITE flags are both at best ignored and at worst will cause an ERROR_INVALID_FLAGS to be returned. So you will want to not pass either flag with any of them.&quot;<br><br>I've been wondering since I read the documentation for MultiByteToWideChar, whether there is some special reason for this limitation. I think it would be useful to be able to convert from an arbitrary code page to a given unicode normalization form using one API call. Am I missing some problem?<br><br>Another drawback of MultiByteToWideChar and WideCharToMultiByte you don't speak about is that they are not designed for streaming conversions (for huge text documents).</div>
+<p><a id="434567" href="#434567">#</a> <strong>Jochen Kalmbach</strong> on 1 Jul 2005 3:48 AM:</p><div style="margin-left: 1em">Just a small addition:<br>The &quot;MB_ERR_INVALID_CHARS&quot; flag for UTF-8 if valid for Windows 2000 SP4 and later!<br><br>In Windows XP there is a bug in MultiByteToWideChar. <br>Normally I would assume that if I call this function with cchWideChar=0 it will return the number of wchars required. And a second call (with the same parameters and the requested buffer-size) should succeed.<br>But the following example does fail:<br>DWORD gle;<br>  const char sz[]=&quot;A\xC2&quot;; // the '\xC2' is a UTF8-lead-byte<br>  int iL1=MultiByteToWideChar(CP_UTF8, 0, sz, strlen(sz), NULL, 0);<br>  WCHAR* wsz=new WCHAR[iL1];<br>  assert(iL1==strlen(sz)-1);<br>  int iL2=MultiByteToWideChar(CP_UTF8, 0, sz, strlen(sz), wsz, iL1);<br>  if (iL2 == 0)<br>    gle = GetLastError();<br>  assert(iL1==iL2);<br>  delete[] wsz; <br><br><br>It works correctly on Windows 2000 and 2003</div>
+<p><a id="457225" href="#457225">#</a> <strong>kurakuraninja</strong> on 27 Aug 2005 10:57 PM:</p><div style="margin-left: 1em">Back in May of 2004, Quan Nguyen sent a message to Dr. International about Vietnamese collation...</div>
+<p><a id="8624919" href="#8624919">#</a> <strong>Bilal</strong> on 20 Jun 2008 3:18 AM:</p><div style="margin-left: 1em"><p>my multi-byte string contains NULL characters 0x00 within it.</p>
+<p>It appears that MultiByteToWideChar does not work on the FULL string, it stops as soon as it encounters the first NULL byte in the multi-byte string, although i've passed the full length of the multi-byte buffer to MultiByteToWideChar in the fourth parameter.</p>
+<p>ny clues???</p></div>
+<p><a id="8624955" href="#8624955">#</a> <strong>Michael S. Kaplan</strong> on 20 Jun 2008 3:32 AM:</p><div style="margin-left: 1em"><P>What code page are you using? And what string, exactly?</P></div>
+<p><a id="8625022" href="#8625022">#</a> <strong>Bilal</strong> on 20 Jun 2008 4:07 AM:</p><div style="margin-left: 1em"><p>code page 932.</p>
+<p>the multi-byte string is basically from a file, that i've read in a char buffer.</p>
+<p>actually i'm detecting the code page for the data from that file, by implementing the technique &quot;Detecting a String's Character Set&quot; given at the following URL:</p>
+<p><a rel="nofollow" target="_new" href="http://www.microsoft.com/globaldev/DrIntl/columns/019/default.mspx">http://www.microsoft.com/globaldev/DrIntl/columns/019/default.mspx</a></p></div>
+<p><a id="8625157" href="#8625157">#</a> <strong>Bilal</strong> on 20 Jun 2008 5:50 AM:</p><div style="margin-left: 1em"><p>There is a file on the disk, that I read in a char buffer using MFC's CFile class. Now this file has some NULL bytes in it.</p>
+<p>I then pass this buffer to MultiByteToWideChar.</p>
+<p>I'm actually trying to detect the code page for the text in the file using the technique described under heading &quot;Detecting a String's Character Set&quot; at the following URL:</p>
+<p><a rel="nofollow" target="_new" href="http://www.microsoft.com/globaldev/DrIntl/columns/019/default.mspx">http://www.microsoft.com/globaldev/DrIntl/columns/019/default.mspx</a></p></div>
+<p><a id="8641217" href="#8641217">#</a> <strong>Bilal</strong> on 23 Jun 2008 12:48 AM:</p><div style="margin-left: 1em"><p>Any clues what I should do?</p></div>
+<p><a id="8641329" href="#8641329">#</a> <strong>Michael S. Kaplan</strong> on 23 Jun 2008 1:29 AM:</p><div style="margin-left: 1em"><p>Strictly speaking, if there are embedded NULLs then it is not a cpg932 file. :-)</p>
+<p>But I have it on my list of things to try out when I have a moment (since you didn't provide specific information to build the file for the repro like I asked or specific code you used for the MultiByteToWideChar call, this might take longer since it will have to wait until I have some real time to try it out, just in case).</p>
+<p>In the meantime, best thing might be to stick to valid files...</p>
+</div>
+<p><a id="8641676" href="#8641676">#</a> <strong>Bilal</strong> on 23 Jun 2008 4:32 AM:</p><div style="margin-left: 1em"><p>I'm thankful that you are taking out time to help me out.</p>
+<p>I can send you the file; if you open the file in MS Word, it identifies it's encoding as SHIFT JIS. If you open the file in some Hex Editor, it will show you the NULLs in it. For that i need some email address of yours.</p>
+<p>I'm pasting the code for file reading and the round trip conversion.</p>
+<p>// **** Conversion from multi-byte to Unicode and back **** //</p>
+<p>char *pBuffer;</p>
+<p>ULONG ulStreamLength;</p>
+<p>ReadFileInBuffer( pBuffer, ulStreamLength ); &nbsp;//Beware! Template fn</p>
+<p>WCHAR *szUnicodeString = new WCHAR[ ulStreamLength + 1 ];</p>
+<p>char* szANSI2 = new char[ ulStreamLength + 1 ];		</p>
+<p>for( iIndex = 0; iIndex &lt; gICodePagesArray.GetCount(); iIndex++ )</p>
+<p>{</p>
+<p>m_iFileEncodingFormat = nextCodePage from an array;</p>
+<p>wmemset( szUnicodeString, 0, ulStreamLength + 1);</p>
+<p>memset( szANSI2, 0, ulStreamLength + 1 );</p>
+<p>MultiByteToWideChar( m_iFileEncodingFormat, 0, pBuffer, ulStreamLength+1, szUnicodeString, ulStreamLength + 1 );</p>
+<p>WideCharToMultiByte( m_iFileEncodingFormat, 0, szUnicodeString, ulStreamLength + 1, szANSI2, ulStreamLength + 1, NULL, NULL );</p>
+<p>if( memcmp(pBuffer, szANSI2, ulStreamLength) == 0 )</p>
+<p> &nbsp; &nbsp; &nbsp;{</p>
+<p>		bDefaultFound = TRUE;</p>
+<p>		break;</p>
+<p> &nbsp; &nbsp; &nbsp;}</p>
+<p>}</p>
+<p>// **** File Reading **** //</p>
+<p>template &lt;class T&gt; void </p>
+<p>ECR::ReadFileInBuffer( T* &amp;pBuffer, ULONG&amp; ulStreamLength )</p>
+<p>{</p>
+<p>	CFile tempFile;</p>
+<p>	INT nBytesRead = 0;</p>
+<p>	if( !tempFile.Open( m_strFilePath, CFile::modeRead | CFile::shareDenyWrite) )</p>
+<p>		// throw exception</p>
+<p>	ulStreamLength = tempFile.GetLength();</p>
+<p> pBuffer = new T[ ulStreamLength + 1 ];</p>
+<p>memset( pBuffer, 0, ulStreamLength + 1 );</p>
+<p>nBytesRead = tempFile.Read( pBuffer, (UINT)ulStreamLength );</p>
+<p>tempFile.Close();											</p>
+<p>//end reading file closed</p>
+<p>pBuffer[ulStreamLength] = 0;//insert NULL at last position</p>
+<p>}</p></div>
+<p><a id="8641694" href="#8641694">#</a> <strong>Bilal</strong> on 23 Jun 2008 4:59 AM:</p><div style="margin-left: 1em"><p>my bad, the MultiByteToWideChar and WideCharToMultiByte work correctly, there is a bug in my code.</p>
+<p>please ignore my last post!</p>
+<p>sorry for the inconvenience</p></div>
+<hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2010/01/12 <a href="http://archives.miloush.net/michkap/archive/2010/01/12/9946880.html">On my "Vietnamese Plus" and "pseudo-Form V" constructs</a></p><p>2008/12/15 <a href="http://archives.miloush.net/michkap/archive/2008/12/15/9215772.html">Frost's The Form Not Taken</a></p><p>2008/09/25 <a href="http://archives.miloush.net/michkap/archive/2008/09/25/8964094.html">When to make a change, when to stay the same</a></p><p>2008/09/14 <a href="http://archives.miloush.net/michkap/archive/2008/09/14/8950506.html">Johab to be kidding me!</a></p><p>2007/10/29 <a href="http://archives.miloush.net/michkap/archive/2007/10/29/5756924.html">Microsoft is a Form 'C' shop, Part 1</a></p><p>2007/08/30 <a href="http://archives.miloush.net/michkap/archive/2007/08/30/4641553.html">The main criteria in determing whether a code page sucks? Suckage, of course!</a></p><p>2007/07/25 <a href="http://archives.miloush.net/michkap/archive/2007/07/25/4037646.html">What's up with MB_ERR_INVALID_CHARS?</a></p><p>2007/06/26 <a href="http://archives.miloush.net/michkap/archive/2007/06/26/3558548.html">The MB_PRECOMPOSED flag is stupid, and the MB_COMPOSITE ain't no genius either</a></p><p>2007/04/19 <a href="http://archives.miloush.net/michkap/archive/2007/04/19/2194275.html">Search and ye shall find, SIAO style!</a></p><p>2006/07/17 <a href="http://archives.miloush.net/michkap/archive/2006/07/17/668787.html">'A' and 'W' are sometimes living in two different worlds</a></p><p>2006/04/22 <a href="http://archives.miloush.net/michkap/archive/2006/04/22/580636.html">Dial 911, code page 864 isn't breathing</a></p><p>2005/11/11 <a href="http://archives.miloush.net/michkap/archive/2005/11/11/491349.html">What to do with the Vietnamese keyboard on Windows?</a></p><p>2005/09/12 <a href="http://archives.miloush.net/michkap/archive/2005/09/12/464327.html">You probably don't want to use Microsoft's code page 21027</a></p><p>2005/08/27 <a href="http://archives.miloush.net/michkap/archive/2005/08/27/457224.html">Vietnamese is a complex language on Windows</a></p><p>2005/04/20 <a href="http://archives.miloush.net/michkap/archive/2005/04/20/410043.html">Encoding APIs and Security Concerns, APIs and Security Decisions</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2005/04/20/410021.html" title="Upcoming speaking gigs in Cleveland, OH">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2005/04/18/409210.html" title="Whidbey Beta 2 without MSDN Universal">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2005-04">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2005-04-19">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2005/04/19/409566.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:41 GMT -->
+</html>

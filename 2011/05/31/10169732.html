@@ -1,0 +1,37 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2011/05/31/10169732.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>f y cn rd ths, thn cd tht strps yr vwls my nt bther y s mch....</title></head><body>
+<h1>f y cn rd ths, thn cd tht strps yr vwls my nt bther y s mch....</h1>
+<p><em>by Michael S. Kaplan, published on 2011/05/31 07:01 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2011/05/31/10169732.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<p>Relatively common practices can often be dead wrong.</p>
+<p>Take the following code snippet for example (names munged to protect the guilty):</p>
+<p style="padding-left: 30px;"><span style="font-family: Consolas,Lucida Console,Courier,Courier New,Fixed;"><b>BOOL CSillyBackwardsCollection::IsValidAlias(__in LPCWSTR pszAlias)<br />{<br />&nbsp;&nbsp;&nbsp;&nbsp; while ((*pszAlias != chNullTerminator) &amp;&amp; (MAX_NAME_LENGTH &gt; index))<br />&nbsp;&nbsp;&nbsp; {<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; if ( !iswalnum(*pszAlias) &amp;&amp; (*pszAlias != L'_') &amp;&amp; (*pszAlias != L'-') )<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // not&nbsp;a valid identifier<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return FALSE;</b></span></p>
+<p>Okay, now it is&nbsp;obvious that there are few cases where every single code point in Unicode shouldn be treated as valid for a name, identifier, or alias.</p>
+<p>And it is great that that this code is using Unicode - it has been a long time coming and it is good to see more and more people doing this, by default and automatically.</p>
+<p>But iswalnum?</p>
+<p><strong>iswalnum</strong>?</p>
+<p><span style="font-size: x-large;"><a href="http://msdn.microsoft.com/library/k84c0490.aspx">iswalnum</a>?</span></p>
+<p>Geez.</p>
+<p>This Microsoft CRT function is not (in any version whatsoever) following the latest best practices that Unicode suggests in either <a href="http://unicode.org/reports/tr18/">Unicode Technical Standard #18: Unicode Regular Expressions</a>&nbsp;or <a href="http://www.unicode.org/reports/tr31/">Unicode Standard Annex #31: Unicode Identifier and Pattern Syntax</a>, which means that there are all kinds of perfectly valid Unicode characters that are needed for many of the languges and scripts covered by Unicode that this code will discard.</p>
+<p>See the title of this blog? There are languages and scripts that will be impacted the same way in their letters. Don't forget the lessons of blogs like <strong><a href="http://archives.miloush.net/michkap/archive/2005/09/12/463991.html" title="Is Kana 'alphabetic' ? Depends on who you ask....">Is Kana 'alphabetic' ? Depends on who you ask....</a></strong>; there are languages that are completely taken out of the running here!</p>
+<p>Now a part of me wants to blame this code snippet.</p>
+<p>But just a small part.</p>
+<p>Because a much bigger part of me sees that the biggest problem is the need to overhaul the all of the Microsoft Visual C Runtime <strong>CTYPE</strong> (character type) functions to be line with both <a href="http://unicode.org/reports/tr18/">UTS #18</a>&nbsp;and <a href="http://www.unicode.org/reports/tr31/">UAX #31</a>. </p>
+<p>For example, see <a href="http://unicode.org/reports/tr18/#Compatibility_Properties">this</a>&nbsp;table for a much better way to classify Unicode characters. The distance betwen this and what the CRT uses is <strong>huge</strong>!</p>
+<p>The CRT needs to grow up and embrace Unicode in all&nbsp;of its uses rather than just using the schemes cobbled together for POSIX compatibility back before Unicode was anywhere significant....</p>
+<p><em>Note to&nbsp;folks who own the CRT -- my schedule is up to date if you want to discuss the needs of <a href="http://unicode.org/reports/tr18/">UTS #18</a>&nbsp;and <a href="http://www.unicode.org/reports/tr31/">UAX #31</a>&nbsp;further! :-)</em></p>
+<hr/><p><strong>Chris Becke</strong> on 31 May 2011 7:35 AM:</p><div style="margin-left: 1em"><p>So, what is a Windows developer actually meant to do? Grokking the entire Unicode BMP is out. But we still have user stories being pushed on us that include in the acceptance criteria that only &quot;valid&quot; usernames / email addresses / etc. are accepted.</p>
+<p>It just doesn&#39;t seem possible to *know* (as a native English speaker) what unicode codepoints outside of the Latin1 set might not - or should not - be valid in usernames or other short strings that we normally don&#39;t expect whitespace, punctuation, or control codes in.</p>
+</div>
+<p><strong>Joshua</strong> on 1 Jun 2011 10:06 AM:</p><div style="margin-left: 1em"><p>It turns out that validating email addresses is woefully hard.</p>
+<p>However if you can ignore non-internet email addresses, do what I do:</p>
+<p>* there is exactly one at sign</p>
+<p>* there are not two consecutive dots on the right side of the at sign</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 1 Jun 2011 12:26 PM:</p><div style="margin-left: 1em"><p>Validating email addresses is easy -- SEND MAIL. </p>
+<p>If their mail client can&#39;t send/receive the mail then it probably isn&#39;t their email address anyway. :-)</p>
+</div>
+<hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2011/06/01/10170165.html" title="One man&#39;s intentional design is another man&#39;s heinous bug: GDI+ edition">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2011/05/30/10169348.html" title="Semijazzed about semilight!">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2011-05">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2011-05-31">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2011/05/31/10169732.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+</html>

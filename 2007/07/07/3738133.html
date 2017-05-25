@@ -1,0 +1,58 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2007/07/07/3738133.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:38 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>We've got a style of glyphs, yes we do; we've got a style of glyphs, how 'bout you?</title></head><body>
+<h1>We've got a style of glyphs, yes we do; we've got a style of glyphs, how 'bout you?</h1>
+<p><em>by Michael S. Kaplan, published on 2007/07/07 03:01 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2007/07/07/3738133.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P>Kristen brought up&nbsp;a very good question yesterday that one of her testers asked her:</P>
+<BLOCKQUOTE><I><FONT face="Times New Roman">
+<P>This happened on WinXP and Vista<BR><BR>Set locale to Chinese(Tawain)<BR><BR>On XP - install the needed CHT pkg for surrogate support</P>
+<OL type=a>
+<LI>create a new Groove notepad record</LI>
+<LI>enter Chinese characters and then surrogate pairs<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; D841DD8C&nbsp;&nbsp; or D842DF63 on winXP</LI>
+<LI>save the record</LI>
+<LI>print the record</LI></OL>
+<P>Actual results:&nbsp; surrogate pair records are 'fainter' and thinner than the regular Chinese text<BR><BR>Expected result: would assume the characters should print the same.</P></FONT></I></BLOCKQUOTE>
+<P mce_keep="true">Actually, there is a bit of a misunderstanding about what is expected here....</P>
+<P mce_keep="true">To describe what I mean, I will start with the CJK ideographs in the Basic Multilingual Plane (BMP)</P>
+<P mce_keep="true">You may remember the GDI font link chain I described back in &nbsp;<STRONG><A class="" href="http://archives.miloush.net/michkap/archive/2005/06/18/430507.html" mce_href="http://archives.miloush.net/michkap/archive/2005/06/18/430507.html">Font substitution and linking #3</A></STRONG>. I did not give the whole list, but I showed the order of the CJK fonts themselves, and how it varied with different default system locale settings:</P>
+<BLOCKQUOTE>
+<LI><FONT face=Tahoma><STRONG>Japanese</STRONG> will default to using&nbsp;MS UI Gothic (fallback to PMingLIU, then SimSun, then Gulim)</FONT> 
+<LI><FONT face=Tahoma><STRONG>Korean</STRONG> will default to using&nbsp;Gulim (fallback to PMingLiu, then MS UI Gothic, then SimSun)</FONT> 
+<LI><FONT face=Tahoma><STRONG>Simplified Chinese</STRONG> will default to using SimSun (fallback to PMingLiu, then MS UI Gothic, then Batang)</FONT> 
+<LI><FONT face=Tahoma><STRONG>Traditional Chinese</STRONG> will default to using PMingLiu (fallback to SimSun, then MS Mincho, then Batang)</FONT></LI></BLOCKQUOTE>
+<P mce_keep="true">Now let's take the situation where the default system locale is Japanese, and the first two fonts are MS UI Gothic and PMingLiU. Looking at the two fonts in Character Map shows that the first font clearly has&nbsp;a different set of&nbsp;ideographs in that first block, if for no other reason that the two sets of ideographs in the visible block are not identical and end on two different ideographs:</P>
+<P mce_keep="true"><IMG src="http://trigeminal.fmsinc.com/images/JPNvsCHT.png"></P>
+<P mce_keep="true">Now looking at the two fonts, they clearly show different styles for the ideographs, which means that any time you have a Japanese system locale, use MS UI Gothic, and then have text that is not contained in that font that the text will look like it has different styles.</P>
+<P mce_keep="true">And this is a problem that also exists in differences between the different fonts that contain CJK ideographs from&nbsp;Extension B&nbsp;as opposed to the BMP, where differences in styles between fonts can exist just as easily. And you can end up with those different styles in mixed text.</P>
+<P mce_keep="true">Note that in the Extension B case, it is not GDI font linking that does the work; it is Uniscribe font fallback. But the end result is the same any time the two fonts do not have identical styles....</P>
+<P mce_keep="true">Now note that this will not always be the case, and sometimes the fonts may be intentionally designed to have like styles. But when they are not, it isn't always going to be unexpected! :-)</P>
+<P mce_keep="true">&nbsp;</P>
+<P mce_keep="true"><FONT color=#ff00ff><EM>This post brought to you by</EM> 𠖌 <EM>(<A class="" href="http://www.fileformat.info/info/unicode/char/2058c" mce_href="http://www.fileformat.info/info/unicode/char/2058c">U+2058c</A>, the CJK Extension B ideograph represented by <A class="" href="http://www.fileformat.info/info/unicode/char/d841" mce_href="http://www.fileformat.info/info/unicode/char/d841">U+d841</A> <A class="" href="http://www.fileformat.info/info/unicode/char/dd8c" mce_href="http://www.fileformat.info/info/unicode/char/dd8c">U+dd8c</A> in UTF-16)</EM></FONT></P>
+<hr/><p><a id="3745597" href="#3745597">#</a> <strong>Kemp</strong> on 7 Jul 2007 8:16 AM:</p><div style="margin-left: 1em"><p>Would this not still be considered a bug and unexpected from the viewpoint of a user? Something the system is doing that they don't necessarily know about or care about and certainly can't fix themselves (font fallback) is affecting something they very much do care about (the rendering of text).</p></div>
+<p><a id="3746192" href="#3746192">#</a> <strong>Kemp</strong> on 7 Jul 2007 8:47 AM:</p><div style="margin-left: 1em"><p>Sorry for double posting, I've just realised that my comment could be misinterpreted. I don't mean that font fallback itself should be considered a bug, I'm referring to the overall behaviour, i.e. different styles of character being shown where they wouldn't be expected to by someone who didn't know all this about fonts, such as your average end user.</p></div>
+<p><a id="3746830" href="#3746830">#</a> <strong>Michael S. Kaplan</strong> on 7 Jul 2007 10:05 AM:</p><div style="margin-left: 1em"><p>That is true, Kemp -- though in most situations wouldn't the user know there is something special about these characters? </p>
+<p>Rather than considering this is as bug, it is more of a limitation of the feature of both font linking and font fallback, due to the problems in trying to mke two different fonts work together. </p>
+<p>As grating a it may be to some, I am sure it is better than a .notdef glyph, at least. :-)</p>
+</div>
+<p><a id="3749228" href="#3749228">#</a> <strong>Kemp</strong> on 7 Jul 2007 2:44 PM:</p><div style="margin-left: 1em"><p>Indeed, a character of the right type showing (even if of a different style) will always be better than a blank space or the classic box :-)</p>
+<p>Just to be clear about this, in what sort of situation would this occur &quot;in the wild&quot;? Obviously you can engineer cases that force the fallback as given in the original question, but would this always only occur in situations where someone should be prepared for it, or is it something that could strike at any time, such as using a word processor? Not using those languages myself I'm not completely clear on how commonly the &quot;fallback&quot; characters would have to be used.</p></div>
+<p><a id="3750695" href="#3750695">#</a> <strong>Michael S. Kaplan</strong> on 7 Jul 2007 4:13 PM:</p><div style="margin-left: 1em"><p>It would not be expected to be common -- you have to combine text that is typical for the language with text that usually would not be....</p>
+</div>
+<p><a id="3752555" href="#3752555">#</a> <strong>Kemp</strong> on 7 Jul 2007 6:31 PM:</p><div style="margin-left: 1em"><p>Ah, in that case it'll almost always be caused by people who should be reading the documentation I guess.</p>
+<p>I don't think I have much more here, so thanks for another informative post. I don't work with localisation and suchlike myself (thus the slight cluelessness), but I do find the topics you cover rather interesting and I'm gradually learning what is good practice and what isn't in preperation for the day I'm thrown in the deep end ;-)</p></div>
+<p><a id="3752981" href="#3752981">#</a> <strong>Michael S. Kaplan</strong> on 7 Jul 2007 7:23 PM:</p><div style="margin-left: 1em"><p>Something many people tell me, I definitely take it as a compliment!</p>
+<p>I should also mention that there is also the case of browsing web sites or reading documents that are in another language, of course. :-)</p>
+<p>Ideally every CJK font would cover (via a collection or whatever) all 70,000+ ideographs, though in practice that is usully not practical. So we make these small sacrifices for the greater good....</p>
+</div>
+<p><a id="3767786" href="#3767786">#</a> <strong>Nick Lamb</strong> on 8 Jul 2007 5:12 PM:</p><div style="margin-left: 1em"><p>&quot;As grating a it may be to some, I am sure it is better than a .notdef glyph, at least. :-)&quot;</p>
+<p>I'm glad to see that you've changed your mind about that Michael. There may be hope for you yet.</p></div>
+<p><a id="3767859" href="#3767859">#</a> <strong>Michael S. Kaplan</strong> on 8 Jul 2007 5:25 PM:</p><div style="margin-left: 1em"><p>I never thought the .notdef was a good solution -- I just don't like &quot;solutions&quot; to that problem like megafonts. :-)</p>
+</div>
+<p><a id="3784440" href="#3784440">#</a> <strong>Mihai</strong> on 9 Jul 2007 2:28 PM:</p><div style="margin-left: 1em"><p>I would consider it a bug for another reason: Character Map is not consistent.</p>
+<p>Select &quot;Angsana New&quot; (or Arial, or &quot;Lucida Sans&quot; or whatever) and using &quot;Character Set: Unicode&quot; you will notice that only the glyphs that exist in the font are shown.</p>
+<p>So I guess the expectancy is that Character Map does not do any font fallback/linking/substitution.</p></div>
+<p><a id="3784445" href="#3784445">#</a> <strong>Mihai</strong> on 9 Jul 2007 2:29 PM:</p><div style="margin-left: 1em"><p>expectancy =&gt; expectation :-)</p></div>
+<hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2007/07/09 <a href="http://archives.miloush.net/michkap/archive/2007/07/09/3784549.html">Character Map Plus?</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2007/07/07/3746794.html" title="TTC indexes, the easy way...">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2007/07/06/3723277.html" title="Look out for Font Rage">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2007-07">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2007-07-07">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2007/07/07/3738133.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:38 GMT -->
+</html>

@@ -1,0 +1,33 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2006/03/12/549746.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:40 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Getting a locale from a code page?</title></head><body>
+<h1>Getting a locale from a code page?</h1>
+<p><em>by Michael S. Kaplan, published on 2006/03/12 03:11 -05:00, original URI: http://blogs.msdn.com/b/michkap/archive/2006/03/12/549746.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P><FONT face=Tahoma>Late last month, Kranthi asked in the microsoft.public.win32.programmer.international newsgroup:</FONT></P>
+<BLOCKQUOTE dir=ltr style="MARGIN-RIGHT: 0px">
+<P><FONT face="Times New Roman" size=2>Is there anyway Code Page can be related to LCID? I mean, if I get Code Page, can i get LCID from it?</FONT></P></BLOCKQUOTE>
+<P><FONT face=Tahoma>Well, the problem here is of course that this mapping does not really exist anywhere in Windows. Folks piled on to explain this....</FONT></P>
+<P><FONT face=Tahoma>Now t</FONT><FONT face=Tahoma>he other way around is easy -- <A href="http://msdn.microsoft.com/library/en-us/intl/nls_34rz.asp">GetLocaleInfo</A> with the LOCALE_IDEFAULTANSICODEPAGE <A href="http://msdn.microsoft.com/library/en-us/intl/nls_8rse.asp">LCType</A> or the <A href="http://msdn.microsoft.com/library/en-us/intl/unicode_2ovj.asp">TranslateCharsetInfo</A> function with the TCI_SRCLOCALE flag can get you a code page (among other things for that latter function).</FONT></P>
+<P><FONT face=Tahoma>But the fact is that there are just a handful of code pages and there are nearly 200 locales. So there is no result that you can get back that is likely to be meaningful for most of the actual work you might want to do with locales.</FONT></P>
+<P><FONT face=Tahoma>To be honest the only functionality in Windows that gives a locale when the source is a code page is the nLangID member of the&nbsp;<A href="http://msdn.microsoft.com/workshop/misc/mlang/reference/structures/detectencodinginfo.asp">DetectEncodingInfo structure</A> that is returned by the <A href="http://msdn.microsoft.com/workshop/misc/mlang/reference/ifaces/imultilanguage2/detectinputcodepage.asp">IMultiLanguage2::DetectInputCodepage</A> and <A href="http://msdn.microsoft.com/workshop/misc/mlang/reference/ifaces/imultilanguage2/detectcodepageinistream.asp">IMultiLanguage2::DetectCodepageInIStream</A> methods.</FONT></P>
+<P><FONT face=Tahoma>Not although that nLangID is documented as containing "<EM>Microsoft Win32-defined primary language identifier that has been detected for the source string</EM>", the truth is</FONT><FONT face=Tahoma>&nbsp;that it is little better than a "<EM>Code page 1252? That must be English, so let's return 0x0409</EM>" sort of method. Which is frankly just a little bit embarrassing, if you ask me.</FONT></P>
+<P><FONT face=Tahoma>If you absolutely need to get a locale from a code page, then you can enumerate the locales with <A href="http://msdn.microsoft.com/library/en-us/intl/nls_9qk3.asp">EnumSystemLocales</A> and&nbsp;for each locale use<A href="http://msdn.microsoft.com/library/en-us/intl/nls_34rz.asp"> GetLocaleInfo</A> with the LOCALE_IDEFAULTANSICODEPAGE, LOCALE_IDEFAULTCODEPAGE, LOCALE_IDEFAULTMACCODEPAGE, and LOCALE_IDEFAULTEBCDICCODEPAGE&nbsp;<A href="http://msdn.microsoft.com/library/en-us/intl/nls_8rse.asp">LCType</A> values until you find a match. But the results are simply not going to be all that useful, so the best thing to do here may be to reconsider whatever decision led to wanting the functionality....</FONT></P>
+<P><FONT face=Tahoma></FONT>&nbsp;</P>
+<P><FONT face=Tahoma color=#ff1493><EM>This post brought to you by</EM> "￨" <EM>(<A href="http://www.fileformat.info/info/unicode/char/ffe8">U+ffe8</A>, a.k.a. HALFWIDTH FORMS LIGHT VERTICAL)</EM></FONT></P>
+<hr/><p><strong>Martin</strong> on 15 Mar 2011 4:55 AM:</p><div style="margin-left: 1em"><p>Hi Micheal,</p>
+<p>I need to compare 2 Unicode strings (case insensitively) and I only have the CodePage.</p>
+<p>I am only interested to know whether or not the strings match i.e. I am not going to sort the strings.</p>
+<p>I am just interested to know if (wcsicmp() == 0).</p>
+<p>My plan is to:</p>
+<p>1. Obtain the locale from the CodePage (as you described above).</p>
+<p>2. Set the locale and run the comparison.</p>
+<p>What do you think of my scenario, will the obtained Locale be useful for this type of operation?</p>
+<p>If no is there a better approach?</p>
+</div>
+<p><strong>Martin</strong> on 15 Mar 2011 5:51 AM:</p><div style="margin-left: 1em"><p>Actually after a little bit more research my code looks like this:</p>
+<p>static bool MYWCSICMP(const wchar_t* lpwszOne,const wchar_t* lpwszTwo,ULONG ulCodePage)<br />{<br />&nbsp; char szLocale[128] = {0};<br />&nbsp; std::string sCP = setlocale(LC_CTYPE,NULL);<br />&nbsp; sprintf(szLocale,&quot;.%u&quot;,ulCodePage);<br />&nbsp; setlocale(LC_CTYPE,szLocale);<br />&nbsp; bool bRet = _wcsicmp(lpwszOne,lpwszTwo);<br />&nbsp; setlocale(LC_CTYPE,sCP.c_str());<br />&nbsp; return bRet;<br />}</p>
+<p>Do you see anything wrong with this?</p></div>
+<hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2006/03/12/549951.html" title="Traditional versus modern sorts">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2006/03/12/549675.html" title="Even less of a fan of blog stats">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2006-03">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2006-03-12">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2006/03/12/549746.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:40 GMT -->
+</html>

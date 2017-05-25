@@ -1,0 +1,38 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2010/08/24/10053436.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:35 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Ok, we all know when 6 turns out of nine. But when does 17 turn out to be 10?</title></head><body>
+<h1>Ok, we all know when 6 turns out of nine. But when does 17 turn out to be 10?</h1>
+<p><em>by Michael S. Kaplan, published on 2010/08/24 07:01 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2010/08/24/10053436.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<p>So does everyone know when 17 equals 10?</p>
+<p>When there is&nbsp;as bug! :-)</p>
+<p>Now this bug was fixed a long time ago. </p>
+<p>It first started happening in XP, and in fact I believe it still happens there.</p>
+<p>When I say fixed, I mean they fixed it in the new version.</p>
+<p>And by new version I don't mean Windows Server 2003, as the bug still happens there.</p>
+<p>They fixed it in all the versions after that.</p>
+<p>How to get the bug? Well let's say you tried to add a bunch of keyboards using <a href="http://support.microsoft.com/kb/289125">KB 289125</a> to handle Regional and Language Options.</p>
+<p>And your unattend looks something like this:</p>
+<p style="padding-left: 30px;"><span style="font-family: consolas,lucida console,courier new,courier;"><strong><span style="font-size: xx-small;">[RegionalSettings] <br />InputLocale=0406:00000406,0414:00000414,0816:00000816,041d:0000041d,0405:00000405,040e:0000040e,0415:00000415,0408:00000408,0419:00000419,041f:0000041f,040c:0000040c,0410:00000410,0407:00000407,0409:00000409,040a:0000040a,0411:e0010411,0804:00000804</span></strong></span></p>
+<p>Yes, there are 17 keyboards there.</p>
+<p>When it runs, only 10 get installed, though.</p>
+<p>That seems like a bug, right?</p>
+<p>I wonder if anyone hads any ideas what might be happening.</p>
+<p>Well, it is kind of a fun, oopsie kind of a bug that happens when the code gets confused somewhere. </p>
+<p>Perhaps not much of a hint, but I don't want to make it too easy!</p>
+<p>Now although the problem was fixed, the way of doing everything was also totally changed anyway, so the fix probably&nbsp;wasn't needed anyway (the only people who benefited were some internal folks who might have run into the bug back when Vista was Longhorn, etc.</p>
+<p>Every once in a while someone hits the bug again, and it suddenly occurred to me that I never talked about it before -- so that maybe I ought to write something about it....</p>
+<p>Any guesses?</p>
+<hr/><p><strong>Peter Ibbotson</strong> on 24 Aug 2010 7:29 AM:</p><div style="margin-left: 1em"><p>Guess is some sort of hex to decimal problem as an 17 keyboard entries occupy elements [0x00] to [0x10] in an array but I&#39;m struggling to see how 10 get installed (rather than 11 i.e. 0x00..0x09 + 0x10)</p>
+</div>
+<p><strong>Jiří Zídek</strong> on 24 Aug 2010 8:06 AM:</p><div style="margin-left: 1em"><p>10h = 16d almost zero based 17d ?</p>
+</div>
+<p><strong>John Cowan</strong> on 24 Aug 2010 9:06 AM:</p><div style="margin-left: 1em"><p>Perhaps when someone allocates a fixed-size data structure and sets its size arbitrarily to 10. &nbsp;&quot;640K should be enough memory for anyone.&quot;</p>
+</div>
+<p><strong>Donald Miller</strong> on 17 Nov 2010 7:59 PM:</p><div style="margin-left: 1em"><p>The problem comes when they are shuffling entries in the registry. They want to move existing keyboards down to add newer ones, and they process them like this: move last (highest) entry up one slot, move next entry up one, repeat until first entry moved, write new first entry. The entries all have integer MRU values. When they write an entry they decode the MRU number, add one, and write that new MRU value.</p>
+<p>They decode as if the MRU is hex, and write it as decimal. Values under 9 are decoded and incremented correctly, but 10 is interpreted as 16, incremented and written as 17. When the next keyboard is added, they read the 17 as 23, increment and write it as 24. The 17 keyboards will have MRU values of 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 17, 24, 37, 56, 87, 136, 311. When they load the taskbar/control panel they read up from 1, and stop when they see the missing value - there is no 11. So only 10 keyboards appear.</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 17 Nov 2010 9:33 PM:</p><div style="margin-left: 1em"><p>It is indeed an encode/decode difference interpretting decimal vs. hex -- though slightly less intelligent (it is throwing out the hexadecimal numbers in string form that cannot be interpreted as decimal numbers!) :-(</p></div>
+<hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2010/08/25/10053944.html" title="Yet another cost to not supporting Unicode?">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2010/08/23/10053047.html" title="On Feedback (some positive, and some the other kind)">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2010-08">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2010-08-24">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2010/08/24/10053436.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:35 GMT -->
+</html>

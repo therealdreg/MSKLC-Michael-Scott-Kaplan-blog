@@ -1,0 +1,137 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2008/09/25/8964291.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:35 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>You're not my type if you have no culture</title></head><body>
+<h1>You're not my type if you have no culture</h1>
+<p><em>by Michael S. Kaplan, published on 2008/09/25 10:01 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2008/09/25/8964291.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<p>This blog is about CultureTypes.</p>
+<p>The list can be kind of confusing, perhaps even a bit daunting to people. </p>
+<p>But it all makes sense, if you know where it came from.</p>
+<p>Thus this blog!<br></p>
+<p>The full list of members of the <a href="http://msdn.microsoft.com/library/system.globalization.culturetypes.aspx" mce_href="http://msdn.microsoft.com/library/system.globalization.culturetypes.aspx">CultureTypes enumeration</a> are:</p>
+
+<table border="1" cellpadding="2"><tbody>
+<tr>
+<th class="iconColumn"><!----><br></th>
+<th class="nameColumn">Member name</th>
+<th class="descriptionColumn">Description</th></tr>
+
+<tr>
+<td><img src="http://i.msdn.microsoft.com/9y39dxbc.CFW(en-us,VS.90).gif" title="Supported by the .NET Compact Framework" mce_src="http://i.msdn.microsoft.com/9y39dxbc.CFW%28en-us,VS.90%29.gif"><img src="http://i.msdn.microsoft.com/9y39dxbc.xna(en-us,VS.90).gif" title="Supported by the XNA Framework" mce_src="http://i.msdn.microsoft.com/9y39dxbc.xna%28en-us,VS.90%29.gif"></td>
+
+<td>NeutralCultures</td>
+
+<td>Cultures that are associated with a 
+language but are not specific to a country/region. The names of .NET Framework 
+cultures consist of the lowercase two-letter code derived from ISO 639-1. For 
+example: "en" (English) is a neutral culture.</td>
+</tr>
+
+<tr>
+<td><img src="http://i.msdn.microsoft.com/9y39dxbc.CFW(en-us,VS.90).gif" title="Supported by the .NET Compact Framework" mce_src="http://i.msdn.microsoft.com/9y39dxbc.CFW%28en-us,VS.90%29.gif"><img src="http://i.msdn.microsoft.com/9y39dxbc.xna(en-us,VS.90).gif" title="Supported by the XNA Framework" mce_src="http://i.msdn.microsoft.com/9y39dxbc.xna%28en-us,VS.90%29.gif"></td>
+
+<td>SpecificCultures</td>
+
+<td>Cultures that are specific to a 
+country/region. The names of these cultures follow RFC 4646 (Windows Vista and 
+later). The format is "&lt;languagecode2&gt;-&lt;country/regioncode2&gt;", where 
+&lt;languagecode2&gt; is a lowercase two-letter code derived from ISO 639-1 and 
+&lt;country/regioncode2&gt; is an uppercase two-letter code derived from ISO 
+3166. For example, "en-US" for English (United States) is a specific culture. 
+</td>
+</tr>
+
+<tr>
+<td><img src="http://i.msdn.microsoft.com/9y39dxbc.CFW(en-us,VS.90).gif" title="Supported by the .NET Compact Framework" mce_src="http://i.msdn.microsoft.com/9y39dxbc.CFW%28en-us,VS.90%29.gif"><img src="http://i.msdn.microsoft.com/9y39dxbc.xna(en-us,VS.90).gif" title="Supported by the XNA Framework" mce_src="http://i.msdn.microsoft.com/9y39dxbc.xna%28en-us,VS.90%29.gif"></td>
+
+<td>InstalledWin32Cultures</td>
+
+<td>All cultures that are installed in the 
+Windows operating system. Note that not all cultures supported by the .NET 
+Framework are installed in the operating system.</td>
+</tr>
+
+<tr>
+<td><img src="http://i.msdn.microsoft.com/9y39dxbc.CFW(en-us,VS.90).gif" title="Supported by the .NET Compact Framework" mce_src="http://i.msdn.microsoft.com/9y39dxbc.CFW%28en-us,VS.90%29.gif"><img src="http://i.msdn.microsoft.com/9y39dxbc.xna(en-us,VS.90).gif" title="Supported by the XNA Framework" mce_src="http://i.msdn.microsoft.com/9y39dxbc.xna%28en-us,VS.90%29.gif"></td>
+
+<td>AllCultures</td>
+
+<td>All cultures that ship with the .NET 
+Framework, including neutral and specific cultures, cultures installed in the 
+Windows operating system, and custom cultures created by the user. 
+</td>
+</tr>
+
+<tr>
+<td><br></td>
+
+<td>UserCustomCulture</td>
+
+<td>Custom cultures created by the user. 
+</td>
+</tr>
+
+<tr>
+<td><br></td>
+
+<td>ReplacementCultures</td>
+
+<td>Custom cultures created by the user that 
+replace cultures shipped with the .NET Framework.</td>
+</tr>
+
+<tr>
+<td><br></td>
+
+<td>WindowsOnlyCultures</td>
+
+<td>Cultures installed in the Windows 
+operating system but not the .NET Framework.</td>
+</tr>
+
+<tr>
+<td><br></td>
+
+<td>FrameworkCultures</td>
+
+<td>Neutral and specific cultures shipped 
+with the .NET Framework.</td>
+</tr>
+</tbody></table>
+
+<p>&nbsp;Now you will notice that there are two categories there -- the ones supported by the XNA Framework/the Compact Framework, and the ones that are not.</p>
+<p>A better way to look at these two categories are the culture types that existed prior to the 2.0 .NET Framework, and the ones added in 2.0.</p>
+<p>Now prior to 2.0, the model for the split was as follows:</p>
+<ul>
+<li>The neutral/specific categorization was designed along necessary functional lines since the nature of the need for cultures really requires distinguishing them this way based on the data that is needed;</li>
+<li>The InstalledWin32Cultures was a fledgling attempt to allow support for applications that needed to care about whether he underlying operating system also supported a specific culture -- crucial in a world where one might be running on windows 95 (and one may be quite excited to do so), but support of <b>Hindi</b> is obviously not going to be there whether the BCL supports it or not.</li>
+</ul>
+<p>Note that when .NET 1.0 shipped, based on the Server 2003 data, it was (<b>with one solitary almost entirely unknown exception</b>) a superset of everything else available. Therefore the above model handles the scenarios one might throw at .NET quite well.</p>
+<p>Arguing for handling the world of "supported in Windows but not in .NET" would be foolish -- that was an empty set for literally years.</p>
+<p>But then XP SP2 and ELKs came, then eventually Vista came. </p>
+<p>.NET suddenly had to care about the scenario that never mattered before.<br></p>
+<p>Starting in 2.0, the split between</p>
+<ul>
+<li>Cultures only supported by the .NET Framework's data store, and</li>
+<li>Cultures only supported by the underlying operating system upon which the .NET Framework sits atop, and</li>
+<li>Cultures only supported by user-provided data</li>
+</ul>
+<p>all had to be there, since there were many potential cases where an application might in theory have to change its behavior.</p>
+<p>You know, change it based on what kind of culture is being used.</p>
+<p>I have run across such applications in the past so I know they exist, and some of the scenarios are ones that I find totally reasonable</p>
+<p>Further reading of random circumstances where this has come up:<br></p>
+<ul>
+<li><b><a href="http://archives.miloush.net/michkap/archive/2007/11/26/6527833.html" mce_href="http://archives.miloush.net/michkap/archive/2007/11/26/6527833.html">When yesterday's workaround becomes tomorrow's potential solution...</a></b></li>
+<li><b><a href="http://archives.miloush.net/michkap/archive/2007/11/02/5808539.html" mce_href="http://archives.miloush.net/michkap/archive/2007/11/02/5808539.html">Predictably (in retrospect), aka Where Wild^H^H^Hindows-Only Things Are, aka SHORT [on ]TIME for a LONG TIME</a></b></li>
+<li><b><a href="http://archives.miloush.net/michkap/archive/2008/05/21/8520660.html" mce_href="http://archives.miloush.net/michkap/archive/2008/05/21/8520660.html">String.StartsWith || String.EndsWith != String.Equals, either</a></b></li>
+<li><b><a href="http://archives.miloush.net/michkap/archive/2008/03/16/8238240.html" mce_href="http://archives.miloush.net/michkap/archive/2008/03/16/8238240.html">On changing the world, or at least the way people order things in it</a></b></li>
+<li><b><a href="http://archives.miloush.net/michkap/archive/2008/05/27/8556091.html" mce_href="http://archives.miloush.net/michkap/archive/2008/05/27/8556091.html">SQL and the CLR? (2008 edition!)</a></b></li>
+</ul>
+<p>You get the point. The consequences if trying to build a Culture architecture that will support all manner of applications running on all kind of version of Windows or hosted in several different versions SQL Server or on several different versions of web server and so on are huge. The current potential available feature set in .NET works with what is there now.</p>
+<p>Though the average application never has to really care about any of this.</p>
+<p>Hopefully the ones that do will see its designers much happier after they have read this blog. :-)</p>
+<p>&nbsp;</p>
+<p><span style="color: rgb(255, 0, 255);"><span style="font-style: italic;">No character really felt like sponsoring today; I get the feeling they are up to something!</span></span><br></p>
+<hr/><div style="margin-left: 1em"><em>no comments</em></div><hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2008/09/26/8965526.html" title="When Flat is not the Standard, the System is null?">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2008/09/25/8964094.html" title="When to make a change, when to stay the same">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2008-09">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2008-09-25">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2008/09/25/8964291.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:35 GMT -->
+</html>

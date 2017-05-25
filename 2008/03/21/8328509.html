@@ -1,0 +1,50 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2008/03/21/8328509.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:36 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Did UnC "My name is URL" on TV the other day? Fontastic!</title></head><body>
+<h1>Did UnC "My name is URL" on TV the other day? Fontastic!</h1>
+<p><em>by Michael S. Kaplan, published on 2008/03/21 10:01 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2008/03/21/8328509.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P><FONT color=#ff0000><EM><FONT size=1>Content of </FONT></EM><A class="" href="http://blogs.msdn.com/michkap" mce_href="http://blogs.msdn.com/michkap"><EM><FONT size=1>Michael Kaplan's personal blog</FONT></EM></A><EM><FONT size=1> not approved by Microsoft (see <A class="" href="http://archives.miloush.net/michkap/archive/2008/02/28/7934999.html" mce_href="http://archives.miloush.net/michkap/archive/2008/02/28/7934999.html"><EM><FONT size=1>disclaimer</FONT></EM></A>)! Posts like this one are one of the reasons, you'll see why if you read down far enough, though if you are easily offended I would really kindly request that you leave. Right. Now.</FONT></EM></FONT></P>
+<P>Regular reader <A class="" href="http://blogs.msdn.com/user/Profile.aspx?UserID=95319" mce_href="http://blogs.msdn.com/user/Profile.aspx?UserID=95319">Jan Kučera</A> asked over in the Suggestion Box:</P>
+<BLOCKQUOTE>
+<P><EM><FONT face="times new roman,times">After reading your font series, I got interested whether loading from UNC or URL paths is supported.<BR><BR>I would try it myself, however, I don't know if there is any notificiation available, that the registry font item failed to load?<BR><BR>Thanks!</FONT></EM></P></BLOCKQUOTE>
+<P>Well, we'll start with the things I pointed out in&nbsp;<A class="" href="http://archives.miloush.net/michkap/archive/2007/09/25/5111148.html" mce_href="http://archives.miloush.net/michkap/archive/2007/09/25/5111148.html"><STRONG>*Not* new in Vista SP1 -- the Add font dialog....</STRONG></A> and <A class="" href="http://archives.miloush.net/michkap/archive/2006/07/02/654110.html" mce_href="http://archives.miloush.net/michkap/archive/2006/07/02/654110.html"><STRONG>About the Fonts folder in Windows, Part 2 (aka Adding Fonts)</STRONG></A> and <A class="" href="http://archives.miloush.net/michkap/archive/2006/06/25/646701.html" mce_href="http://archives.miloush.net/michkap/archive/2006/06/25/646701.html"><STRONG>About the Fonts folder in Windows, Part 1 (aka What are we talking about?)</STRONG></A>, like the fact that what is in the font folder just amounts to a list in the registry that&nbsp;the&nbsp;system&nbsp;calls <A class="" href="http://msdn2.microsoft.com/library/ms534231.aspx" mce_href="http://msdn2.microsoft.com/library/ms534231.aspx">AddFontResource</A> on for each item when the session starts.</P>
+<P>Which kind of indirectly answers part of&nbsp;the question here -- <A class="" href="http://msdn2.microsoft.com/library/ms534231.aspx" mce_href="http://msdn2.microsoft.com/library/ms534231.aspx">AddFontResource</A> doesn't take URLs.</P>
+<P>&nbsp;Let's take another look at the dialog. I'll remove a font and stick it on my desktop, and then add it back via the dialog:</P>
+<P><IMG height=379 src="http://trigeminal.fmsinc.com/images/uncfont01.png" width=430></P>
+<P>Now I am going to leave that "Copy fonts to Fonts folder" checkbox unchecked and hit the Install button.</P>
+<P>It will put up a warning:</P>
+<P><IMG src="http://trigeminal.fmsinc.com/images/uncfont02.png"></P>
+<P>Probably a good idea, considering where I am getting it from.</P>
+<P>But I'll say <STRONG>yes</STRONG> here.</P>
+<P>When the job is done, you can tell the difference in the Fonts folder:</P>
+<P><IMG src="http://trigeminal.fmsinc.com/images/uncfont03.png"></P>
+<P>And if you look over in RegEdit to see what happened there:</P>
+<P><IMG src="http://trigeminal.fmsinc.com/images/uncfont04.png"></P>
+<P>That might indirectly point out the other answer -- if you put a full path in there then it loads a full path. So perhaps a UNC path would work (though obviously the UI only supports mapped and local drives, so you would have to do it yourself in the registry.</P>
+<P>Assuming the UNC path can be resolved in that early part of the boot phase, everything should work.</P>
+<P>To be honest, I did not see much in the way of logging when a file was missing, though presumably you can get the same results by just calling <A class="" href="http://msdn2.microsoft.com/library/ms534231.aspx" mce_href="http://msdn2.microsoft.com/library/ms534231.aspx">AddFontResource</A> in the list again later, when the current directory is the Fonts directory. </P>
+<P>There just does not seem to be a whole lot in the event logs for failed font loads, though there are perhaps a few <A class="" href="http://msdn2.microsoft.com/library/ms792792.aspx" mce_href="http://msdn2.microsoft.com/library/ms792792.aspx">KdPrint</A> calls in there you can perhaps take a look at, though in Vista your options are much more limited.</P>
+<P>I did notice that Opera calls <A class="" href="http://msdn2.microsoft.com/library/ms776312.aspx" mce_href="http://msdn2.microsoft.com/library/ms776312.aspx">SetLocaleInfo</A> with the LOCALE_SGROUPING and LOCALE_IDIGITS a ton of times (272 after boot and another 160&nbsp;after I&nbsp;refreshed the page and shut down the browser)&nbsp;and unfortunately causing other applications to do nasty things during its&nbsp;brief clusters of -- let's face it -- public masturbatory usage of the&nbsp;<A class="" href="http://msdn2.microsoft.com/library/ms776312.aspx" mce_href="http://msdn2.microsoft.com/library/ms776312.aspx">SetLocaleInfo</A> function<FONT size=1><SUP>1</SUP></FONT>&nbsp;-- this is the obnoxious behavior that we talked the Outlook folks out of doing years ago before they went&nbsp;blind, though I guess we have less influence over the Opera folks. Though for the record, they suck for doing this. </P>
+<P>Now I think you could also blame the NLS folks a little bit here, as well -- clearly the Opera usage is inappropriate, but given our history where we know products have done this in the past, the ETW logging added in Vista really should have taken this into account to keep this kind of littering from going on. Is it a more mature analogy to call Opera an alcoholic and NLS an enabler in this case?</P>
+<P>But I digress.... :-)</P>
+<P mce_keep="true">&nbsp;</P>
+<P><EM><FONT size=1>1 - This is perhaps an opportune if inappropriate time to point out that a very senior developer&nbsp;with lot of&nbsp;years seniority&nbsp;was at times found to&nbsp;have&nbsp;dismissed the results of excessive </FONT></EM><A class="" href="http://msdn2.microsoft.com/library/ms792792.aspx" mce_href="http://msdn2.microsoft.com/library/ms792792.aspx"><EM><FONT size=1>KdPrint</FONT></EM></A><EM><FONT size=1> calls as spooge, which makes my&nbsp;sophomoric analogy way too on target for comfort....</FONT></EM></P>
+<P mce_keep="true">&nbsp;</P>
+<P><FONT color=#ff00ff><EM>This blog brought to you by</EM><FONT size=5> ✺ </FONT><EM>(<A class="" href="http://www.fileformat.info/info/unicode/char/273a" mce_href="http://www.fileformat.info/info/unicode/char/273a">U+273a</A>, aka SIXTEEN POINTED ASTERISK)</EM></FONT></P>
+<hr/><p><a id="8371963" href="#8371963">#</a> <strong>Jan Kučera</strong> on 9 Apr 2008 6:11 AM:</p><div style="margin-left: 1em"><P>Thanks for getting to this! :)</P>
+<P>"Assuming the UNC path can be resolved in that early part of the boot phase, everything should work."</P>
+<P>As you can add the fonts from your documents folder and the system is prepared for that, do I think right that the 'boot phase' means actually user logining in (so you have to have the drive mapped before login)?</P>
+<P>And a little thought more, does the system waits until all the fonts are loaded? As the loading can get very slow over network...</P></div>
+<p><a id="8372398" href="#8372398">#</a> <strong>Michael S. Kaplan</strong> on 9 Apr 2008 10:04 AM:</p><div style="margin-left: 1em"><p>That part is going to require a bit of trial and error, I think. I doubt it would be documented officially, either way....</p>
+</div>
+<p><strong>Olli</strong> on 17 Apr 2008 1:46 PM:</p><div style="margin-left: 1em"><p>I just signed us up on AA, so the problem will be fixed..</p>
+<p>Step one done ;-)</p>
+<p>-Olli</p>
+<p>Desktop-QA manager</p>
+<p>Opera </p></div>
+<p><strong>Michael S. Kaplan</strong> on 17 Apr 2008 6:24 PM:</p><div style="margin-left: 1em"><p>Awesome, Olli! I look forward to your time on the wagon. :-)</p>
+</div>
+<hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2010/02/04 <a href="http://archives.miloush.net/michkap/archive/2010/02/04/9958063.html">Being in the zone may not be the best way to get the time right</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2008/03/21/8329642.html" title="Language detection, language translation... it IS exciting, so why I am yawning?">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2008/03/21/8326989.html" title="Can you keep a Blog, because the best little blogs are kept (Oh!)">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2008-03">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2008-03-21">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2008/03/21/8328509.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:36 GMT -->
+</html>

@@ -1,0 +1,45 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2007/08/20/4489662.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:37 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>It doesn't always happen on the hour....</title></head><body>
+<h1>It doesn't always happen on the hour....</h1>
+<p><em>by Michael S. Kaplan, published on 2007/08/21 02:30 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2007/08/20/4489662.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P><EM>(Intentionally posted at the half hour&nbsp;mark. Subtle, huh?)</EM>&nbsp;</P>
+<P>Jason's question of the group of people:</P>
+<BLOCKQUOTE>
+<P><FONT face="times new roman,times"><EM>Hello All,</EM></FONT></P>
+<P><FONT face="times new roman,times"><EM>I tried using the Following Code which uses new Date ( ) in JScript:&nbsp; </EM></FONT></P>
+<P><FONT face="times new roman,times"><EM>&lt;%<BR>&nbsp;&nbsp;&nbsp; var d = new Date();<BR>&nbsp;&nbsp;&nbsp; Response.Write(d);<BR><BR>&nbsp;&nbsp;&nbsp;&nbsp;/*&nbsp; d prints&nbsp;the local time as Tue Aug 14 21:55:46 UTC+5 2007 The machine<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; is in&nbsp; IST TimeZone which is UTC+0530 ..But UTC+5&nbsp; is returned */<BR><BR>&nbsp;&nbsp;&nbsp; var e = new Date(d);&nbsp; //&nbsp; I try to use new Date () again and pass the value d whic was used earlier </EM></FONT></P>
+<P><FONT face="times new roman,times"><EM>&nbsp;&nbsp;&nbsp; Response.Write("&lt;BR&gt;");<BR>&nbsp;&nbsp;&nbsp; Response.Write(e); <BR><BR>&nbsp;&nbsp;&nbsp; /* because UTC+5 is the Time Offset , e&nbsp; prints Tue Aug 14 22:25:58 UTC+5 2007 (30 minutes more<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; than the system's local time Pls see the pink text highlighted where 30 minutes difference is seen)*/<BR>%&gt;<BR><BR>When I try using New Date () for the first Time, I get the Time with UTC+5.Teh local Time of my machine which is set to IST which is 5.30 hours ahead of UTC. So I should get UTC+530 and not UTC+5.When I try to use new Date again, I get 30 minutes difference compared to my Local Time.<BR><BR>When I try to change my Local Time setting to UTC+9 or UTC+10 or UTC+1 ...... or any natural number (i.e. UTC+1, UTC+2....UTC+12...), I don’t get this error since the value appended is already a whole number. When I try to set Time Zones involving Fractions like( UTC+530 ,UTC+430,UTC+330 ......), I get the UTC offset truncated to (UTC+5,UTC+4,UTC+3...). This undesired output format of Date gives lots of Errors in Storing Time.<BR><BR>Kindly let me know any pointers on this Issue. Any links that can help will be highly appreciated. Thanks in advance.</EM></FONT></P></BLOCKQUOTE>
+<P>It turns out that this is actually a bug:</P>
+<BLOCKQUOTE>
+<P><EM>This is a bug in the Jscript .NET implementation, which assumes the timezone offset to be in multiples of hours.<BR><BR>The Jscript engine used by IE (and other hosts in Windows) do not have this bug.</EM></P></BLOCKQUOTE>
+<P>Given that all of the following time zones have offsets that are not on the hour (this is the XP latest list):</P>
+<UL>
+<LI>Afghanistan Standard Time (GMT +04:30)</LI>
+<LI>AUS Central Standard Time (GMT +09:30)</LI>
+<LI>Cen. Australia Standard Time (GMT +09:30)</LI>
+<LI>India Standard Time (GMT +05:30)</LI>
+<LI>Iran Standard Time (GMT +03:30)</LI>
+<LI>Myanmar Standard Time (GMT&nbsp;+06:30)</LI>
+<LI>Nepal Standard Time (GMT +05:45)</LI>
+<LI>Newfoundland Standard Time (GMT -03:30)</LI>
+<LI>Sri Lanka Standard Time (GMT +05:30)</LI></UL>
+<P>A rounding problem? Storing the value in an int? Who can say for sure? It does make one miss good old JScript just a little bit....</P>
+<P>Yet another example of how easy it is to have bugs when the test cases don't cover all of the different time zones. :-(</P>
+<P mce_keep="true">&nbsp;</P>
+<P><FONT color=#ff00ff><EM>This post brought to you by</EM> <FONT size=5>༃</FONT> <EM>(<A class="" href="http://www.fileformat.info/info/unicode/char/0f03" mce_href="http://www.fileformat.info/info/unicode/char/0f03">U+0f03</A>, a.k.a. TIBETAN MAL GTER YIG MGO -UM GTER TSHEG MA)</EM></FONT></P>
+<hr/><p><a id="4494985" href="#4494985">#</a> <strong>Bradley</strong> on 21 Aug 2007 10:50 AM:</p><div style="margin-left: 1em"><p>Looks like that list might be missing at least one time zone: Chatham Standard Time (GMT +12:45)</p>
+<p><a rel="nofollow" target="_new" href="http://en.wikipedia.org/wiki/Chatham_Standard_Time_Zone">http://en.wikipedia.org/wiki/Chatham_Standard_Time_Zone</a></p></div>
+<p><a id="4499300" href="#4499300">#</a> <strong>Michael S. Kaplan</strong> on 21 Aug 2007 4:51 PM:</p><div style="margin-left: 1em"><P>That would be Windows; I used their list, and Chathm is not on it....</P></div>
+<p><a id="4502256" href="#4502256">#</a> <strong>Chuck</strong> on 21 Aug 2007 9:46 PM:</p><div style="margin-left: 1em"><p>And Venezuela will be joining that club next year:</p>
+<p><a rel="nofollow" target="_new" href="http://www.caribbeannetnews.com/news-3138--12-12--.html">http://www.caribbeannetnews.com/news-3138--12-12--.html</a></p></div>
+<p><a id="4525846" href="#4525846">#</a> <strong>Zooba</strong> on 23 Aug 2007 9:24 AM:</p><div style="margin-left: 1em"><p>Why is Australian CST listed twice?</p>
+<p>AUS Central Standard Time (GMT +09:30) </p>
+<p>Cen. Australia Standard Time (GMT +09:30) </p>
+<p>The only thing I can think of is the daylight savings settings are different between South Australia and the Northern Territory, both of which use CST.</p></div>
+<p><strong>Michael S. Kaplan</strong> on 14 Sep 2007 9:36 AM:</p><div style="margin-left: 1em"><p>It could also be the desire to list different cities?</p>
+</div>
+<hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2007/09/27 <a href="http://archives.miloush.net/michkap/archive/2007/09/27/5110938.html">Where does the time go? And when I said where, I meant when?</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2007/08/21/4489089.html" title="In Case there is a bug....">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2007/08/20/4473565.html" title="Not the most sensible post to riff on, but we do deal with GD here at SIAO">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2007-08">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2007-08-20">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2007/08/20/4489662.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:37 GMT -->
+</html>

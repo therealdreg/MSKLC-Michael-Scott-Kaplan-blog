@@ -1,0 +1,62 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2008/10/29/9022296.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:35 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>How the @#%&*! does CBS_SORT choose to sort it all out?</title></head><body>
+<h1>How the @#%&*! does CBS_SORT choose to sort it all out?</h1>
+<p><em>by Michael S. Kaplan, published on 2008/10/29 10:01 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2008/10/29/9022296.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<p>The question was an interesting one:</p>
+<blockquote>
+<p><i><font face="times new roman,times">My customer has a tree control with nodes sorted using CString::Compare(). In another part of the application he has the same list of names in a combo box that has the CBS_SORT style set. He wants names to appear in both controls in the same order. Currently they do not. We've tried changing the sort algorithm used in the tree to CString::Collate() and tried a few variations of ::CompareString(), but none of those match the ordering used internally with CBS_SORT set (particularly when names have hyphens or numbers).<br><br>The customer does not want to make the combo box owner-draw to override sorting because it will lose accessibility functionality based on this logic:<br></font></i></p>
+<ul>
+<li><i><font face="times new roman,times">Overriding Sort algorithm requires to do “Owner-Drawn” (<a href="http://msdn.microsoft.com/library/bb775921.aspx" mce_href="http://msdn.microsoft.com/library/bb775921.aspx">http://msdn.microsoft.com/library/bb775921.aspx</a>)</font></i></li>
+<li><i><font face="times new roman,times">Exposing Owner-Drawn Combo Box Items with Accessibility requires CBS_HASSTRINGS style. (<a href="http://msdn.microsoft.com/library/ms695697.aspx" mce_href="http://msdn.microsoft.com/library/ms695697.aspx">http://msdn.microsoft.com/library/ms695697.aspx</a>). </font></i></li>
+<li><i><font face="times new roman,times">Having CBS_HASSTRINGS style causes that the combo box will ONLY use the internal implementation of “Sort” if CBS_SORT is specified, or does not sort the list at all if CBS_SORT is not specified.</font></i></li>
+<li><i><font face="times new roman,times">Cause the control to completely ignore our own implementation of sort. </font></i></li>
+</ul>
+<p><i><font face="times new roman,times">Thus, to achieve the task, he expects to know the algorithm used by CBS_SORT inside Combo Box. Is it allowed? If it’s not, is there any other workarounds that can help the customer?<br><br>Many thanks in advance</font></i><br></p>
+</blockquote>
+<p>This question is interesting on multiple levels, actually.</p>
+<p>First of all, it is about collation, which is always interesting to me. :-)</p>
+<p>Then second it is interesting for the solution, which is of course to take the already sorted list and add it to the Combo Box without the CBS_SORT style, so that it will just be in that order. This way they match and there is nothing else to worry about.</p>
+<p>well, other than the fact that the CString:::Compare (actually <a href="http://msdn.microsoft.com/library/a1hbt8xe.aspx" mce_href="http://msdn.microsoft.com/library/a1hbt8xe.aspx">CStringT::Compare</a>) order is actually the <a href="http://msdn.microsoft.com/library/e0z9k731.aspx" mce_href="http://msdn.microsoft.com/library/e0z9k731.aspx">_tcscmp</a> order, which is basically a binary type if order that is not terribly useful to give to users. They'd almost certainly be happier with just about any kind of linguistic result and probably don't need or want to be exposed to an internal ordering that wouldn't be helpful for them.</p>
+<p>Think of the precedent we have in file names -- the order which NTFS uses to do sorting internally is nothing to do with the order that Explorer uses to sort them when they are being viewed. That order would just confuse any normal, sane person! :-)</p>
+<p>Then of course the question is fascinating for the uestion in the title -- what the hell is the sort order of a Com Box with the CBS_SORT style on it?</p>
+<p>The <a href="http://msdn.microsoft.com/library/7h63bxbe.aspx" mce_href="http://msdn.microsoft.com/library/7h63bxbe.aspx">documentation</a> in this case claims:</p>
+<blockquote>
+<p><font face="times new roman,times">Automatically sorts strings entered into the list box.</font></p>
+</blockquote>
+<p>which is not terribly helpful for us, is it? </p>
+<p>There is a good hint in the <a href="http://msdn.microsoft.com/library/bb775913.aspx" mce_href="http://msdn.microsoft.com/library/bb775913.aspx">CB_SETLOCALE message</a> documentation:</p>
+<blockquote>
+<p><font face="times new roman,times">An application sends a CB_SETLOCALE message to set the current locale of the combo box. If the combo box has the CBS_SORT style and strings are added using CB_ADDSTRING, the locale of a combo box affects how list items are sorted.</font></p>
+</blockquote>
+<p>Now we're getting somewhere!<br></p>
+<p>If the order is locale-based, it really suggests a <a href="http://msdn.microsoft.com/library/ms647476.aspx" mce_href="http://msdn.microsoft.com/library/ms647476.aspx">CompareString</a> type thing, doesn't it?</p>
+<p>Of course <a href="http://msdn.microsoft.com/library/bb759947.aspx" mce_href="http://msdn.microsoft.com/library/bb759947.aspx">StrCmpLogical</a> is <a href="http://msdn.microsoft.com/library/ms647476.aspx" mce_href="http://msdn.microsoft.com/library/ms647476.aspx">CompareString</a>-based (ref: <b><a href="http://archives.miloush.net/michkap/archive/2005/01/05/346933.html" mce_href="http://archives.miloush.net/michkap/archive/2005/01/05/346933.html">What is up with number sorting?</a></b>), but neither function's ordering matches the CBS_SORT ordering. </p>
+<p>The key is know what is the difference in this case.</p>
+<p>The answer was provided by Jay Krell, who I have mentioned <b><a href="http://archives.miloush.net/michkap/archive/2007/10/02/5236576.html" mce_href="http://archives.miloush.net/michkap/archive/2007/10/02/5236576.html">before</a></b> in the same context (tracking down problems!):</p>
+<blockquote>
+<p><i><font face="times new roman,times">Reading the code suggests it is roughly equivalent to CompareStringW(ignore case), except that it treats initial left square brackets differently (seriously)....<br>&nbsp;<br>But if it isn't documented, don't depend on it, of course. (unless you can convince the owners to document it..)</font></i></p>
+</blockquote>
+<p>And no, this is unlikely to ever be documented explicitly -- and no, writing about it here doesn't count as documentation! :-)</p>
+<p>Probably not worth duplicating, but the logic, which I suspect is quite old, has an illuminating comment at the top of the function that describes the thinking:</p>
+<blockquote>
+<p><font face="times new roman,times">* This is a version of lstrcmpi() specifically used for listboxes<br>* This gives more weight to '[' characters than alpha-numerics;<br>* The US version of lstrcmpi() and lstrcmp() are similar as far as<br>* non-alphanumerals are concerned; All non-alphanumerals get sorted<br>* before alphanumerals; This means that subdirectory strings that start<br>* with '[' will get sorted before; But we don't want that; So, this<br>* function takes care of it;</font></p>
+</blockquote>
+<p>And then as we all know, lstrcmpi is just a nice thin wrapper around <a href="http://msdn.microsoft.com/library/ms647476.aspx" mce_href="http://msdn.microsoft.com/library/ms647476.aspx">CompareString</a>. And there we go.</p>
+<p>Not such a bad order, really. Though to be honest it looks like a real corner case to me (if one cares about one symbol -- even negatively -- one probably cares about others, so a simple NORM_IGNORESYMBOL probably would have made more sense in the end. But then that's just me. :-)</p>
+<p>The final answer -- you can user CBS_SORT , or choose an ordering you like better. And just go from there....<br></p>
+<p>&nbsp;</p>
+<p><font color="#ff00ff"><i>This blog brought to you by</i><font size="6"> [ </font><i>(<a href="http://www.fileformat.info/info/unicode/char/005b" mce_href="http://www.fileformat.info/info/unicode/char/005b">U+005b</a>, aka LEFT SQUARE BRACKET)</i></font> <br></p>
+<hr/><p><strong>Ted.</strong> on 9 Nov 2008 9:26 AM:</p><div style="margin-left: 1em"><p>From memory, I believe the left square bracket exception stuff comes from the old Win 3.0 drives dropdowns in the file open dialogs. e.g.</p>
+<p>[-a-]</p>
+<p>[-c-]</p>
+<p>etc.</p>
+<p>see </p>
+<p><a href="http://www.guidebookgallery.org/pics/gui/interface/dialogs/openfile/win30.png" rel="nofollow" target="_new">http://www.guidebookgallery.org/pics/gui/interface/dialogs/openfile/win30.png</a></p></div>
+<p><strong>carlos</strong> on 7 Aug 2009 10:57 AM:</p><div style="margin-left: 1em"><p>Oddly, system list boxes sort as described (with '[' at the end) but .Net list boxes sort with '[' at the start. &nbsp;I guess the latter uses the default sort.</p></div>
+<p><strong>Michael S. Kaplan</strong> on 7 Aug 2009 11:31 AM:</p><div style="margin-left: 1em"><p>Not that odd, carlos -- .NET does its own sorting, probably because they didn't want document this strange ordering (not just the brackets, but the OS linguistic sort isn't the same as the .NET one)....</p>
+</div>
+<hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2008/10/30/9023605.html" title="From ____ to ____ to MUI to ELS -- World Ready @ the PDC!">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2008/10/29/9021615.html" title="Wonder why something is not in the Compact Framework? The answer is in the question!">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2008-10">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2008-10-29">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2008/10/29/9022296.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:35 GMT -->
+</html>

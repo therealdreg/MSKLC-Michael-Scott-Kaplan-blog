@@ -1,0 +1,124 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2011/02/18/10128879.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>speaking with an accent, conceptually</title></head><body>
+<h1>speaking with an accent, conceptually</h1>
+<p><em>by Michael S. Kaplan, published on 2011/02/18 07:01 -05:00, original URI: http://blogs.msdn.com/b/michkap/archive/2011/02/18/10128879.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<p>Blogs like <a href="http://archives.miloush.net/michkap/archive/2008/02/21/7836829.html" title="When the roof got raised, and why"><strong>When the roof got raised, and why</strong></a>&nbsp;and <a href="http://archives.miloush.net/michkap/archive/2005/06/21/431005.html" title="Number format and currency format are not always the same"><strong>Number format and currency format are not always the same</strong></a>) and&nbsp;<a href="http://archives.miloush.net/michkap/archive/2005/12/11/502455.html" title="Why does the percent stuff have so many restrictions?"><strong>Why does the percent stuff have so many restrictions?</strong></a>(the former two talking about the growing pains involved in extending locale support as new languages brought new requirements years ago, and the latter talking about a limitation documented here that is architecturally fixed in Windows 7 and may one day get its data fixed <strong>if we are lucky</strong>, point out that NLS is a reactive business.</p>
+<p>We have something out there, it turns out to not be enough, and so things are changed. Enhanced. Stretched. Modified.</p>
+<p>Other times, it is silly to touch things at all. There are times that a language has a similar concept that is different enough that trying to make it work within existing support that "fixing" it just makes no sense.</p>
+<p>Like for one thing, consider <a href="http://msdn.microsoft.com/library/dd373827.aspx">LOCALE_S1159</a> and <a href="http://msdn.microsoft.com/library/dd373829.aspx">LOCALE_S2359</a>, the per-locale AM and PM indicators.</p>
+<p>In a language like <span style="color: #888888;"><span style="text-decoration: line-through;">Bengali</span></span>Bangla (ref: <a href="http://archives.miloush.net/michkap/archive/2011/01/30/10121996.html" title="Even in India, the language is actually known as Bangla (not Bengali)"><strong>Even in India, the language is actually known as Bangla (not Bengali)</strong></a>), have the following set in the locale:</p>
+<p>LOCALE_S1159&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="font-size: large;">পুর্বাহ্ন</span></p>
+<p>LOCALE_S2359&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="font-size: large;">অপরাহ্ন</span></p>
+<p>If you know Bangla you might&nbsp;see the problem here.</p>
+<p>Let's look at these two words in the larger context in which they exist:</p>
+<table cellpadding="5" cellspacing="5" border="1">
+<tbody>
+<tr>
+<td>Time period</td>
+<td>Word</td>
+<td>When</td>
+</tr>
+<tr>
+<td>Dawn</td>
+<td style="text-align: center;"><span style="font-size: medium;">ভোর</span></td>
+<td>03:00&nbsp;to 06:59</td>
+</tr>
+<tr>
+<td>Morning</td>
+<td style="text-align: center;"><span style="font-size: medium;">সকাল</span></td>
+<td>07:00 to 11:59</td>
+</tr>
+<tr>
+<td>Noon</td>
+<td style="text-align: center;"><span style="font-size: medium;">দুপুর</span></td>
+<td>12:00 to 14:59</td>
+</tr>
+<tr>
+<td>Afternoon</td>
+<td style="text-align: center;"><span style="font-size: medium;">বিকেল</span></td>
+<td>15:00 to 17:59</td>
+</tr>
+<tr>
+<td>Evening</td>
+<td style="text-align: center;"><span style="font-size: medium;">সন্ধ্যা</span></td>
+<td>18:00 to 19:59</td>
+</tr>
+<tr>
+<td>Night</td>
+<td style="text-align: center;"><span style="font-size: medium;">রাত</span></td>
+<td>20:00 to 02:59</td>
+</tr>
+</tbody>
+</table>
+<p>This is a multi-part problem, of course.</p>
+<p>Now in general terms someone in Bengal or a Bangla-speaking part of Assam or Bangladesh from that table along with a time is the kind of thing one would want in a time format.</p>
+<p>One would not generally do so much with <strong>AM</strong> or&nbsp;<strong>PM</strong> after the time in these places.</p>
+<p>I emailed with friend Omi Azad about it for a bit and he confirmed that the use of these terms would simply be more intuitive; forcing everyone into the 12 hour clock we use with these two less than perfect terms is far from ideal.</p>
+<p>The folks in India and Bangladesh are not alone here, either -- Malay has a similar issue (they would use <strong>pg</strong> for the morning, <strong>tgh</strong> for 12 to 4pm, <strong>ptg</strong> for 4-7pm, and <strong>mlm</strong> for after 7pm) which has the same problem when itcomes to dding it to our time format notions.</p>
+<p>By its very nature this would be a much bigger change, making the architectural investments to support:</p>
+<ul>
+<li>the notion of other time periods that a locale might commonly use in date formats than just the AM/PM divisions between noon and midnight;</li>
+<li>the way to have the number of time periods vary;</li>
+<li>the way to define the start time for each;</li>
+<li>the way to identify the labels for each of these time periods.</li>
+</ul>
+<p>Here in the US we have such terms though I can't say I'd expect them in a formatted time string.</p>
+<p>Even after confirming with Ben and Shihab and Omi and Goldie that some or all of these terms are used, it is still not entirely clear to me whether they would be expected in a long time format, or whether instead this conceptual jump is due to Bangla people moving to the nearest conceptual analogue that they have to our AM/PM and identifying it, since AM/PM wouldn't naturally occur to them if it isn't exactly how they would look at the world.</p>
+<p>But since a similar construct is use in the US and other places, this new architecture would make sense, as would going out and trying to get all the data for it across all those locales. </p>
+<p>Though obviously this would pretty unlikely at this point.</p>
+<p>Bengalis who wanted such a mechanism for time formatting are probably going to have to keep writing their own code, alongside a 24-hour clock.</p>
+<p><em>Or go back in time 10-15 years and make the case then, of course.</em></p>
+<p>Okay, let's assume that change is not going to be heading our way.</p>
+<p>There is another problem and I was having it in my reading research on this problem in my elementary "learning Bengali" books and&nbsp;that when I started describing my troubles Omi pointed out with those AM/PM strings that appears to exist in our Bangla fonts. In his words:</p>
+<p style="padding-left: 60px;"><span style="font-size: small;">হ ্ ন is currently হ্ন but has to be হ্ণ<br />হ ্ ণ is currently হ্ণ but has to be হ্ন</span></p>
+<p style="padding-left: 60px;"><span style="font-size: small;">So when the font is fixed they will look like পুর্বাহ্ণ &amp; অপরাহ্ণ</span></p>
+<p>So the idea is that the HNA and HNNA conjuncts in the Bengali fonts are perhaps reversed?</p>
+<p>If he's right that would explain the trouble I was having. </p>
+<p><em>I was going to check with Goldie too, but she is in Mexico and asking her to be typing in Bengali script seems like a little much. I'll wait til she gets back to ask her....</em></p>
+<p>In the meantime, I'm wondering how many people might be typing words the wrong way to get the right appearance, and how much that might muck around with search in the meantime.</p>
+<p>This had me thinking about an extensive discussion I had six years ago with someone from Ethiopia about the fact that they did not have time zones but they had a different notion that they used to describe time that amounted to something wi8th many of the same effects related to how hey thought of time compared to when the sun was up (given that Ethiopia is reportedly the hottest place in the world year round I can easily imagine they would have such a mechanism!).</p>
+<p>Maybe I'll ask Scott Hanselman if he has any thoughts about that issue.</p>
+<p>And now I am wondering how much of the data in our locales is trying to map what people want on an architecture imperfect to representing what people use -- causing our locales to kind of "speak with an accent" the way as person might speak with an accent because he is using the phonemes he grew up with while speaking a language with different phonemes....</p>
+<hr/><p><strong>Siyam</strong> on 18 Feb 2011 8:28 AM:</p><div style="margin-left: 1em"><p>qoute:</p>
+<p>&quot;হ ্ ন is currently হ্ন but has to be হ্ণ</p>
+<p>হ ্ ণ is currently হ্ণ but has to be হ্ন</p>
+<p>So when the font is fixed they will look like পুর্বাহ্ণ &amp; অপরাহ্ণ&quot;</p>
+<p>I found no problem with HNA and HNNA conjuncts. Then the strings must be miss-spelled.</p>
+<p>পূর্বাহ্ণ spells প ূ র ্ ব া হ ্ ণ</p>
+<p>অপরাহ্ণ spells অ প র া হ ্ ণ</p>
+<p>In Bangla grammar, rules of &#39;ণ&#39; says ণ will take place after হ (<a rel="nofollow" target="_new" href="http://www.sachalayatan.com/guest_writer/35669">www.sachalayatan.com/.../35669</a>).</p>
+<p>হ ্ ণ should look like half of na hanging below of ha, and হ ্ ন should look like curve of na is flipped and merged with ha on right side.</p>
+<p>I have tested it with Vrinda, Lohit Bengali and my own Kalpurush. Fonts are correct.</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 18 Feb 2011 9:05 AM:</p><div style="margin-left: 1em"><p>So the AM/PM strings themselves are wrong?</p>
+</div>
+<p><strong>Siyam</strong> on 18 Feb 2011 10:38 AM:</p><div style="margin-left: 1em"><p>Yes. They translated this strings with wrong spelling. </p>
+</div>
+<p><strong>Mihai</strong> on 18 Feb 2011 5:49 PM:</p><div style="margin-left: 1em"><p>Actually, the am/pm feels alien even to me.</p>
+<p>For Romanian, most of the written content will use the 24h form, or nothing at all, relying on context. If we go out for a movie, 7 is definitely not 7 am :-)</p>
+<p>When speaking, the time of the day is not specified, unless there is a chance of confusion. And if there is, then one would qualify it with &quot;7 in the morning&quot; or &quot;7 in the evening&quot; or &quot;11 at day&quot; or &quot;11 at night&quot;, or &quot;12 at noon&quot;. No abbreviation, because you don&#39;t do that in writing.</p>
+<p>But the problem is: there are no clear limits between some of the times 10 might be &quot;in the evening&quot; for some and &quot;at night&quot; for others, depending on your lifestyle :-)</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 18 Feb 2011 6:02 PM:</p><div style="margin-left: 1em"><p>Ah, but Romanian we do right -- a 24-hour clock by default! :-)</p>
+</div>
+<p><strong>Mihai</strong> on 19 Feb 2011 1:06 AM:</p><div style="margin-left: 1em"><p>Sure, Windows does Romanian right :-)</p>
+<p>It was just an example on how things that originate in one language don&#39;t map well to how things work in other languages (the concept of am/pm feels alien, because it is not used).</p>
+<p>Same problem with something Mac and some UNIX/Linux boxes do: using &quot;yesterday&quot; or &quot;tomorrow&quot; instead of dates. Problem for Romanian is that if you use &quot;tomorrow&quot; (mâine), would also have to use the word for &quot;the day after tomorrow&quot; (poimâine) and &quot;the day after-after tomorrow&quot; (răspoimâine) because otherwise it feels weird to mix colloquial lingo with dry dates, computer style (imagine in English some software using &quot;yesterday&quot; and &quot;today&quot;, but 02/20/2011 instead of &quot;tomorrow&quot;).</p>
+</div>
+<p><strong>Alex Cohn</strong> on 19 Feb 2011 2:23 PM:</p><div style="margin-left: 1em"><p>I agree with Mihai: the whole concept of AM/PM is foreign for many locales. I must quote a song by a Russian rock group &quot;Звуки Му&quot; (Sounds of Mu):</p>
+<p style="padding-left:30px;">I woke up at night, around 3 o&#39;clock<br />And soon I realized: you left me.<br />So what? You left me, I do not care<br />Anyway, I will get drunk.<br />I woke up in the day, around 3 o&#39;clock<br />And soon I realized: you left me.<br />So what? You left me, I do not care<br />Anyway, I will get drunk.<br />I woke up in the morning, around 3 o&#39;clock<br />And soon I realized: you left me.<br />So what? You left me, I do not care<br />Anyway, I will get drunk.<br />I woke up in the evening, around 3 o&#39;clock<br />And soon I realized: you left me.<br />So what? You left me, I do not care<br />Anyway, I will get drunk.</p>
+<p>I remember that it took me some effort, when I studied English as a foreign language as a child, to comprehend this whole idea of AM/PM.</p>
+<p>This same approach is natural for Hebrew, too. The language requires to say &quot;3 before morning&quot; and &quot;5 in the morning&quot;, &quot;11 at noon&quot;, &quot;6 in the evening&quot;, and &quot;midnight&quot;, never &quot;12 in the night&quot;. Naturally, as in the case of Russian song above, there is a lot of freedom to play with the language. In hi-tech, it&#39;s a usual pun to say &quot;the meeting is at 9 before morning&quot; (תשע לפנות בוקר).</p>
+<p>True, these locales have 24-hour clock by default... But for both languages speaking about five in the evening is very natural. I agree it&#39;s not easy to formalize the 12-hour clock: will 6 be &quot;day&quot; or &quot;evening&quot;. But definitely the Hebrew locale on my Windows XP which uses untranslated &quot;AM&quot; and &quot;PM&quot; is better than the Russian that keeps both blank.</p></div>
+<p><strong>Mihai</strong> on 21 Feb 2011 9:26 AM:</p><div style="margin-left: 1em"><p>&quot;it took me some effort, ..., to comprehend this whole idea of AM/PM&quot;</p>
+<p>I still have to think twice to make sure about 12. Why 11am-12pm-1pm :-) ?</p>
+<p>Why change am/pm between 11 and 12, and not between 12 and 1, when the numbers &quot;wrap around&quot;?</p>
+<p>I would really expect 11am-12am-1pm. But maybe that&#39;s because I am an engineer :-)</p>
+<p>Or the fact that in Romanian &quot;pm&quot; would would be something like &quot;after lunch&quot; (&quot;după masă&quot; literally &quot;after table&quot;) while 12 is &quot;at lunch&quot; (&quot;la prânz&quot;), so 1pm, 2pm, 3pm are 1/2/3 &quot;după masă&quot;, but 12 is not.</p>
+<p>You can also say &quot;după amiază&quot; instead of &quot;după masă&quot;, with &quot;amiază&quot; meaning &quot;the time of the day when the sun is at it&#39;s maximum height&quot;, which probably maps a bit better to pm, but one would never say &quot;12 după amiază&quot; or &quot;12 după masă&quot;.</p>
+</div>
+<hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2011/02/19/10131689.html" title="Ski Johnson&#39;s folly: How to [almost] squeeze a scam out of cancer">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2011/02/17/10130786.html" title="the importance of symbols and punctuation">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2011-02">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2011-02-18">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2011/02/18/10128879.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+</html>

@@ -1,0 +1,63 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2010/07/10/10036652.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:35 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>On properly discerning my intent. Or at least letting me correct your ill conceived notions thereof.</title></head><body>
+<h1>On properly discerning my intent. Or at least letting me correct your ill conceived notions thereof.</h1>
+<p><em>by Michael S. Kaplan, published on 2010/07/10 07:01 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2010/07/10/10036652.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<p>Dave Winer pointed me toward Doc Searls and a recent blog of his (<a href="http://blogs.law.harvard.edu/doc/2010/07/09/context-is-king/" title="Context is King">Context is King</a>) that discusses an all-too-common "feature" of travelling and the Internet:</p>
+<p style="padding-left: 30px;"><span style="font-family: times new roman,times;">I live and work mostly in the U.S. I also speak English. My French, German and Spanish are all too minimal to count unless I happen to be in a country that speaks one of those languages. When I&rsquo;m in one of those places, as I am now in France, I do my best to learn as much of the language as I can. But I&rsquo;m still basically an English speaker.</span></p>
+<p style="padding-left: 30px;"><span style="font-family: times new roman,times;">So, by default, when I&rsquo;m on the Web my language is English. My location might be France, or Denmark or somewhere else, but when I&rsquo;m searching for something the language I require most of the time is English. That&rsquo;s my mental location.</span></p>
+<p style="padding-left: 30px;"><span style="font-family: times new roman,times;">So it drives me nuts that Google sends me to&nbsp;</span><a target="_blank" href="http://google.fr/" title="http://google.fr"><span style="font-family: times new roman,times;">http://google.fr</span></a><span style="font-family: times new roman,times;">, even when I log into iGoogle and get my personalized Google index page. When I re-write the URL so it says&nbsp;</span><a target="_blank" href="http://google.us/" title="http://google.us"><span style="font-family: times new roman,times;">http://google.us</span></a><span style="font-family: times new roman,times;">, Google re-writes it as&nbsp;</span><a target="_blank" href="http://google.fr/" title="http://google.fr"><span style="font-family: times new roman,times;">http://google.fr</span></a><span style="font-family: times new roman,times;">, no matter what. On iGoogle I can&rsquo;t find a way to set my preferred language, or my virtual location if it&rsquo;s not where I am right now. I can&rsquo;t do that even when I have Google translate, instantly, in my Google Chrome browser, the page text to English. (I&rsquo;m sure there&rsquo;s a hack, and I would appreciate it if somebody would tell me. But if there is why should it be so hard?)</span></p>
+<p style="padding-left: 30px;"><a href="http://bing.com/"><span style="font-family: times new roman,times;">Bing</span></a><span style="font-family: times new roman,times;"> comes up all-French too, but at the bottom of the page, in small white type, it says &ldquo;Go to Bing in English&rdquo;. Nice.</span></p>
+<p style="padding-left: 30px;"><span style="font-family: times new roman,times;">So now, here in Paris, I&rsquo;m using Bing when I want to search in English, and Google when I want to search for local stuff. Which is a lot, actually. But I miss searching in English on Google. I could ask them to fix that, but I&rsquo;d rather fix the fact that <em>only they</em> can fix that. Depending on suppliers to do all the work is a bug, not a feature.</span></p>
+<p>When I think about how much work the NLS team had gone to over the years to separate <strong>user locale</strong> from <strong>user interface language</strong> from <strong>location</strong>, the fact that the final result when I use Internet Explorer (or really any browser, but IE is the only one that Microsoft could expect to directly influence), I want to throw my laptop out the window.</p>
+<p><em>I suppose I should be thankful I am a hotel in India on the first floor in case the temptation overwhelms me!</em></p>
+<p>But its funny. I see the same problem he is seeing (google.com becomes google.co.in):</p>
+<p><img src="http://trigeminal.fmsinc.com/images/context01.jpg" border="0" /></p>
+<p>and Bing notices it is in India but gives the choice to look at US Bing:</p>
+<p><img src="http://trigeminal.fmsinc.com/images/context02.jpg" border="0" /></p>
+<p>So in the end they are both figuring out location on their own and no longer trying to use any clues about the user's own preferences when they try to figure out where you are and where your mind is, so to speak.</p>
+<p>If I change my HTTP_ACCEPT_LANGAUGE settings to Hindi the story changes ever-so-slightly:</p>
+<p><img src="http://trigeminal.fmsinc.com/images/context03.jpg" border="0" /></p>
+<p>and</p>
+<p><img src="http://trigeminal.fmsinc.com/images/context04.jpg" border="0" /></p>
+<p>Ok, at least they both have clearer ideas about&nbsp;<a href="http://archives.miloush.net/michkap/archive/2005/08/23/455359.html" title="What the hell does HTTP_ACCEPT_LANGUAGE mean?"><strong>What the hell does HTTP_ACCEPT_LANGUAGE mean?</strong></a> now. :-)</p>
+<p>And that part is definitely a nicer experience, so there is at least one part of this experience that is improving.</p>
+<p>Now if I use DirectAccess to get to my corporate network I am still in the same place, but if I use RAS to get there then my VPN connection is still smart enough to use a more local proxy but suddenly I see google.com instead of google.co.in. So some parts of my browsing experience are smarter than other parts.</p>
+<p>But Doc's point is that neither of these experiences is properly discerning the context -- where the user is and wants to see, or how they want to see it. I don't mind that it wants to try to produce sensible defaults for the average user who would never change their location or their language, but providing a way for the who might know a bit more about what they want would be nice.</p>
+<p>In quick tests comparing the two, I do not find the results of searches to be any different between google.co.in and google.com; maybe I am not doing the right searches, but the difference between them mainly seem to be twofold:</p>
+<ul>
+<li>I have to redo all my preferences (how many results to show&nbsp;per page, etc), and</li>
+<li>I am being told "Welcome to India, Mr. Bond" just like that guy at the hotel desk said to&nbsp;Roger Moore&nbsp;in Octopussy.</li>
+</ul>
+<p>Now the second is okay and maybe even kind of nice and I do not mind it (I suppose I would less happy if like Doc I wasn't in a place that showed English for both cases or if the James Bond reference hadn't popped up in my mind).</p>
+<p>But the first is completely asinine.</p>
+<p>Why on earth do they expect that I would ever change those settings, why does it force me to re-enter them?</p>
+<p>Notice how Bing also noticed I was in India but did not redirect me and ignore the fact that there may be a cookie there that would tell it how I wanted my browsing experience to go.</p>
+<p>Score one for Bing at least. But just one since it still isn't trying hard enough to figure me out.</p>
+<p>But suddenly Chrome OS is less interesting to me.</p>
+<p>The NLS folks had it right. My UI language and my user locale and my location are <strong>three different things</strong>and the thought of running a completely cloud based operating system that would make the things that IE and FireFox and Opera and Safari and yes <strong>Chrome</strong> do becomes my OS scares the crap out of me if I would be travelling with it.</p>
+<p>Especially since I've had no connectivity every now and again on this trip. </p>
+<p>And been at hotels with "500 rupees for 50mb" connectivity rules and got really good at connecting, checking mail, and getting out.</p>
+<p>What would happen to the context of where I was in all those cases?</p>
+<p>I don't think, also,&nbsp;that Google's Chrome OS plans are all that geared for getting low cost computers to everyone in India (they only seem to be going for the connected folks who probably want more computer power anyway).</p>
+<p>But maybe it makes more sense in other markets.</p>
+<p>And getting off the OS tangent, back to browsers and web sites, maybe&nbsp;they will both start to get better at either <strong>more properly discerning my intent</strong> or at least <strong>letting me correct its ill conceived notions thereof</strong>.</p>
+<p>But given their respective histories, I am not going to hold my breath waiting for it....</p>
+<hr/><p><strong>Daniel Cheng</strong> on 10 Jul 2010 7:43 AM:</p><div style="margin-left: 1em"><p>Actually, google.co.in have a &quot;Go to Google.com&quot;; in other languages they have &quot;Google in English link&quot;. &nbsp;which bring you to google.com/ncr which it that won&#39;t redirect.</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 10 Jul 2010 8:34 AM:</p><div style="margin-left: 1em"><p>Yes, but why? I mean, why go to a different site that doesn&#39;t share cookies with the other sites?</p>
+<p>Note that if you travel somewhere else it starts over agan. I just don&#39;t see what that gives them....</p>
+</div>
+<p><strong>Ambarish Sridharanarayanan</strong> on 10 Jul 2010 10:34 AM:</p><div style="margin-left: 1em"><p>Indeed, this is my #1 pet peeve with globalisation on web-sites today. My locale is en-IN and location is the US, and pretty much every website gets it wrong. Let&#39;s hope the biggies (Google, Microsoft, ...) fix it; the rest will follow eventually.</p>
+</div>
+<p><strong>greenlight</strong> on 10 Jul 2010 10:52 AM:</p><div style="margin-left: 1em"><p>Re: search results, maybe they haven&#39;t gotten there with India yet, but the results can differ wildly. If I want to find the website for the japanese band &quot;BREMEN&quot;, I can go to google.co.jp and enter &quot;bremen&quot; as a search and the first result is the band. If I make the same search on google.com, the band basically doesn&#39;t show up at all (a YouTube video result shows up on the fourth page).</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 10 Jul 2010 6:35 PM:</p><div style="margin-left: 1em"><p>It may also be what I am searching for -- you are correct that local results (well, results local to the market in question) may well be better! :-)</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 11 Jul 2010 4:19 AM:</p><div style="margin-left: 1em"><p>And there is another view on this -- what Facebook does. </p>
+<p style="padding-left:30px;"><img height="270" width="570" src="http://trigeminal.fmsinc.com/images/facebook_india.jpg" border="0" alt="" /></p>
+<p>I think this is kind of cool, actually.</p></div>
+<hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2010/07/11/10033336.html" title="Um…I&#39;ve noticed you around…I find you very attractive…um…would you conjoin with me?">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2010/07/09/10033379.html" title="The script can make the language more complicated [to use]">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2010-07">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2010-07-10">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2010/07/10/10036652.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:35 GMT -->
+</html>

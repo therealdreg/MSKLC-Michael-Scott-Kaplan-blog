@@ -1,0 +1,30 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2010/06/26/10028278.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:35 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>BUG SPOTTING answers</title></head><body>
+<h1>BUG SPOTTING answers</h1>
+<p><em>by Michael S. Kaplan, published on 2010/06/26 07:01 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2010/06/26/10028278.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<p>So.</p>
+<p>It was several weeks ago, in <a href="http://archives.miloush.net/michkap/archive/2010/05/31/10017323.html"><strong>BUG SPOTTING: Identify 1) what the code does, and 2) what they wanted it to do</strong></a>, that I challenged people to explain something about some code, as indicated by the title.</p>
+<p>This code:</p>
+<blockquote>
+<pre class="code">whcar_t* newParams = <span style="color: blue;">new </span>wchar[MAX_PATH + MAX_PATH]; whcar_t* p = newParams; <span style="color: blue;">while </span>(*<span style="color: blue;">params</span>) {
+    *p++ = *<span style="color: blue;">params</span>;
+    <span style="color: blue;">params </span>= ::CharNext(<span style="color: blue;">params</span>); 
+}
+*p = 0;
+<span style="color: blue;">return </span>newParams; </pre>
+</blockquote>
+<p><a href="http://11011.net/software/vspaste"></a></p>
+<p>in fact.</p>
+<p>I actually cheated a little here. :-)</p>
+<p>When I suggested <a href="http://archives.miloush.net/michkap/archive/2008/12/16/9223301.html"><strong><span style="color: #006bad;">The torrents of breaking CharNext/CharPrev</span></strong></a> as a refresher what I didn't say is that the&nbsp;bug in some code&nbsp;that caused <a href="http://blogs.msdn.com/b/oldnewthing">Raymond Chen</a> to in passing notice this other bug in NLS code looked almost identical to the current bug here. :-)</p>
+<p>In essence the intent of this code was to be some kind of really smart allocating <strong>wmemcpy</strong> or <strong>wcscpy</strong>&nbsp;in C++.</p>
+<p>But unfortunately, it was being so clever in its iteration that it had to use CharNextW rather than ++ for iterating the string, even though it clearly thought they were the same thing.</p>
+<p>And they are not, whether there is a bug like the one in <a href="http://archives.miloush.net/michkap/archive/2008/12/16/9223301.html"><strong><span style="color: #006bad;">The torrents of breaking CharNext/CharPrev</span></strong></a>&nbsp;or not!</p>
+<p>The reasoning for the separate function is unclear though, as is the need to allocate something of size MAX_PATH + MAX_PATH. </p>
+<p>That is either twice the path you need or not even close to the amount of path you need, depending on who is using the function.</p>
+<p>And none of which would perform better than an inlined wmemcpy of a function anyway. :-)</p>
+<hr/><div style="margin-left: 1em"><em>no comments</em></div><hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2010/06/27 <a href="http://archives.miloush.net/michkap/archive/2010/06/27/10028282.html">Bugs hidden in plain sight, and commented that way too ANSWERS</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2010/06/27/10028282.html" title="Bugs hidden in plain sight, and commented that way too ANSWERS">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2010/06/25/10025030.html" title="Майкрософт vs. Microsoft, aka On choosing the most reasonable inconsistency">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2010-06">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2010-06-26">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2010/06/26/10028278.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:35 GMT -->
+</html>

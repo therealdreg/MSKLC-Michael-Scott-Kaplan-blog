@@ -1,0 +1,44 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2011/01/21/10118575.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>And then nearly ten years later they added another one...</title></head><body>
+<h1>And then nearly ten years later they added another one...</h1>
+<p><em>by Michael S. Kaplan, published on 2011/01/21 07:01 -05:00, original URI: http://blogs.msdn.com/b/michkap/archive/2011/01/21/10118575.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<p>Ryan had a great question yesterday morning:</p>
+<p style="padding-left: 90px;">This function doesn&rsquo;t seem to always tell the truth &ndash; I get compiler errors trying to use the string below as an identifier, but IsValidIdentifier/CreateEscapedIdentifier seem to have no problem with it. Is there a more reliable method to detect when a string has invalid characters for an identifier?<br /><br />CSharpCodeProvider cscp = new CSharpCodeProvider();<br />string test = "イゟゝだヴゝヺドダぐるフもむ";<br />Console.WriteLine(cscp.IsValidIdentifier(test)); // True<br />Console.WriteLine(cscp.CreateEscapedIdentifier(test) == test); // Also true<br /><br /><br />Ok, try it:<br /><br /><img src="http://blogs.msdn.com/cfs-file.ashx/__key/CommunityServer-Blogs-Components-WeblogFiles/00-00-00-33-81/1351.unexpected.jpg" border="0" /></p>
+<p>Hmm, that's weird.</p>
+<p>I mean, being told you have a valid identifier and then having it not work out as an identifier can be a little unsettling.</p>
+<p>Wolf was able to point out some details on the specific character:</p>
+<p style="padding-left: 90px;">The problematic character (ゟ) is Unicode U+309F, &ldquo;Hiragana digraph yori&rdquo;. It&rsquo;s a &ldquo;vertical contraction&rdquo; of (よ) and (り). I suspect it&rsquo;s a late Unicode addition.</p>
+<p>And <a href="http://blogs.msdn.com/b/ericlippert/">Eric Lippert</a> then gave the full answer soon after:</p>
+<p style="padding-left: 90px;">Yori was added in Unicode version 3.2.0, March 2002. The previous letter, KATAKANA LETTER I (U+30A4) was added in Unicode version 1.1.0, June 1993.<br /><br />Odds are good that the (written in native C++) compiler has baked into it an extremely old version of the Unicode &ldquo;is this a letter?&rdquo; algorithm. The (written in C#) CSharpCodeProvider is apparently using a more recent version of that algorithm.<br /><br />It seems to me the fact that we may be using an almost ten-year-old out of date version of the Unicode algorithm in the native compiler could reasonably be characterized as &ldquo;a bug&rdquo;.&nbsp; I&rsquo;ll mention it to QA.<br /><br />Cheers,<br />Eric</p>
+<p>He got that in one!</p>
+<p>I remember when the Yori Digraph was added, and the concern some people had about taking what was wide regarded as a complete set (Hiragana), and adding a new character that would not be in code pages like 932 (Shift-JIS). Those complaints were considered but ultimately rejected, which makes sense given that Unicode has always been a superset of these code pages anyway.</p>
+<p>Now there are interesting issues that come up once you start adding version specific knowledge into the world of identifiers, which should make this an interesting one. It will thankfully be made easier by the fact that Unicode <strong>never removes characters</strong>, though there is no shortage of people who ask for this or that character to be removed because its very existence bothers somebody.</p>
+<p>Such changes would break the companies unlike Microsoft that do proper version-specific checking/support of their identifiers, or maybe even one day companies like Microsoft if they more aggressively support such things. :-)</p>
+<p><strong>In a future I'll blog I'll dig into the wacky world of identifiers</strong> and show that sometimes the only remedy for a Mark is a Ken....</p>
+<hr/><p><strong>John Cowan</strong> on 21 Jan 2011 8:10 AM:</p><div style="margin-left: 1em"><p>Ooo, I look forward to that!</p>
+<p>But &quot;proper version-specific checking&quot;? &nbsp;I don&#39;t see any reason to maintain a wall of separation, such that if version 3.2 (say) of your compiler doesn&#39;t understand Unicode 6 identifiers, it can *never* understand Unicode 6 even if the surrounding system libraries are updated to do so. &nbsp;If it wants to keep some codepoints valid for backward compatibility, that&#39;s fine, although Unicode already does that for the most part.</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 21 Jan 2011 8:47 AM:</p><div style="margin-left: 1em"><p>My next blog is going to get into the &#39;for the most part&#39; piece of what you said. :-)</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 21 Jan 2011 11:13 AM:</p><div style="margin-left: 1em"><p>When I say next blog, I don&#39;t mean tomorrow, I mean next blog on this issue.</p>
+</div>
+<p><strong>Aaron.E</strong> on 21 Jan 2011 1:46 PM:</p><div style="margin-left: 1em"><p>This is completely tangential, but I can&#39;t help noticing how the same handful of individuals often appear as the &quot;question answerers&quot; in blogs that reference a mailing-list or newsgroup discussion. &nbsp;You, Eric, and Raymond seem to be the most prolific, and I was wondering if you have any ideas on why that might be so. &nbsp;My hypotheses are as follows, but I don&#39;t have enough evidence to have any confidence in these (though my intuition is that it&#39;s the first one):</p>
+<p>- Bias on my part: &nbsp;I only remember anecdotes where names are named, and when it&#39;s not a blogger the name is not omitted so I don&#39;t keep track of it, making bloggers appear to be more active in discussions than everyone else. &nbsp;This could be further enhanced by bloggers&#39; names being hyperlinks, causing them to appear in a different color and therefore be more memorable.</p>
+<p>- Blogger Affinity: &nbsp;Bloggers like to blog about other bloggers, and then &quot;reciprocal blogging&quot; creates a feedback loop.</p>
+<p>- Common Interest: &nbsp;The bloggers that I find interesting tend to have overlapping areas of interest themselves, so they tend to participate in the same discussions, making them more likely source material for each other. &nbsp;(forgive the psuedo-predicate here)</p>
+<p>- Superhero Hypothesis: &nbsp;A small handful of employees, who also happen to have blogs, answer a wildly disproportionate amount of the questions.</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 21 Jan 2011 1:58 PM:</p><div style="margin-left: 1em"><p>Probably the 4th point mostly. though I suppose the 3rd point a little too, and maybe the 1st point (thoush that&#39;s your biases so you&#39;d have to answer that!). I only fully name people when there is some link (otherwise I use first name or nothing)....</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 21 Jan 2011 2:06 PM:</p><div style="margin-left: 1em"><p>But there is that small group of people who tend to be right when they say things, and they are often more likely to be quoted than others. It&#39;s a side effect of knowing the people who know their stuff!</p>
+</div>
+<p><strong>Aaron.E</strong> on 21 Jan 2011 2:30 PM:</p><div style="margin-left: 1em"><p>That&#39;s very interesting. &nbsp;I was hoping it was the fourth (because it reinforces my decisions to draw influence from the sources I do), but I wasn&#39;t honestly expecting that to be the case. &nbsp;Thanks for your insight.</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 21 Jan 2011 4:13 PM:</p><div style="margin-left: 1em"><p>(for the record, I don&#39;t consider myself to be a superhero!)</p></div>
+<p><strong>John Cowan</strong> on 30 Jan 2011 1:22 PM:</p><div style="margin-left: 1em"><p>Well, another explanation would be to take the S. in your full name, and then the three of you jointly would be Eric S. Raymond.</p>
+</div>
+<hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2011/01/22/10116914.html" title="About the Y1C problem, which really isn&#39;t too much of a problem (except maybe in North Korea)...">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2011/01/20/10118124.html" title="What version of Unicode do passwords support?">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2011-01">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2011-01-21">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2011/01/21/10118575.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+</html>

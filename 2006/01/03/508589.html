@@ -1,0 +1,31 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2006/01/03/508589.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:40 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Encoding mysteries</title></head><body>
+<h1>Encoding mysteries</h1>
+<p><em>by Michael S. Kaplan, published on 2006/01/03 05:01 -05:00, original URI: http://blogs.msdn.com/b/michkap/archive/2006/01/03/508589.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P><FONT face=Tahoma>Jennifer Reyes asked:</FONT></P>
+<BLOCKQUOTE dir=ltr style="MARGIN-RIGHT: 0px">
+<BLOCKQUOTE dir=ltr style="MARGIN-RIGHT: 0px">
+<P><EM><FONT size=2>Michael -</FONT></EM></P>
+<P><EM><FONT size=2>We have a system with terabytes of historical files, about 20% of which we are unable to view due to nonprintable ascii characters.&nbsp; These files seem to be reports sent from an IBM mainframe.</FONT></EM></P>
+<P><EM><FONT size=2>Do you have any suggestions how we could begin to determine what code set is being used and how to translate it into something viewable?</FONT></EM></P>
+<P><EM><FONT size=2>Thanking you in advance</FONT></EM></P></BLOCKQUOTE></BLOCKQUOTE>
+<P><FONT face=Tahoma>Wow, 20% is a pretty high amount of text!</FONT></P>
+<P><FONT face=Tahoma>IE's AutoDetect, which of course uses MLang's AutoDetect, probably won't do well here since it is geared toward internet data and not legacy mainframe data.</FONT></P>
+<P><FONT face=Tahoma>Now&nbsp;it is hard to comment without even knowing what bytes these are, but you could try two different approaches to this problem if you have no information about the original source:</FONT></P>
+<UL>
+<LI><FONT face=Tahoma>You could look at the data to see if you can figure out what the missing bytes should be, from context;</FONT> 
+<LI><FONT face=Tahoma>You could try running through existing code pages (for example all of the EBCDIC code pages on Windows) to see if any of them get useful information out.</FONT></LI></UL>
+<P><FONT face=Tahoma>But it is really hard to guess what the data might be without that kind of additional information.</FONT></P>
+<P><FONT face=Tahoma>It could even be that the non-printable ASCII is actually using the various control codes that used to be a part of some&nbsp;communication protocols with mainframes and devices. Looking at what the bytes are would be the best way to determine if that is the case....</FONT></P>
+<P><FONT face=Tahoma></FONT>&nbsp;</P>
+<P><FONT face=Tahoma color=#ff1493><EM>This post brought to you by</EM> <EM><A href="http://www.fileformat.info/info/unicode/char/0016">U+0016</A>, known in some circles as the SYNCHRONOUS IDLE</EM></FONT></P>
+<hr/><p><a id="508736" href="#508736">#</a> <strong>G</strong> on 3 Jan 2006 7:32 AM:</p><div style="margin-left: 1em">That's a large amount of data, but I've found unix file[1] command to be pretty smart at handling the identification of file coding systems.<br><br>It's part of cygwin.<br><br>[1] <a rel="nofollow" target="_new" href="ftp://ftp.astron.com/pub/file">ftp://ftp.astron.com/pub/file</a></div>
+<p><a id="508746" href="#508746">#</a> <strong>Peter Ibbotson</strong> on 3 Jan 2006 8:09 AM:</p><div style="margin-left: 1em">Well the obvious guess is it's EBCDIC files. However on an IBM mainframe (historically) it could be almost anything depending on the slug train put in the printer. (APL springs to mind)<br><a rel="nofollow" target="_new" href="http://en.wikipedia.org/wiki/EBCDIC">http://en.wikipedia.org/wiki/EBCDIC</a> has a link to an online converter that could be tried<br></div>
+<p><a id="509027" href="#509027">#</a> <strong>Nicholas Allen</strong> on 3 Jan 2006 8:18 PM:</p><div style="margin-left: 1em">It looks like this post's featured character has killed the feeds for your blog.</div>
+<p><a id="509037" href="#509037">#</a> <strong>Michael S. Kaplan</strong> on 3 Jan 2006 9:00 PM:</p><div style="margin-left: 1em">Grrrr... Community Server bugs!<br><br>Fixed now....</div>
+<p><a id="510543" href="#510543">#</a> <strong>Mihai</strong> on 8 Jan 2006 4:28 AM:</p><div style="margin-left: 1em">Here is a trick to easily try various code pages:<br> - in MS Word &quot;Tools&quot; -&gt; &quot;Options&quot;<br> - in &quot;General&quot; tab check &quot;Confirm conversion at Open&quot;<br> - &quot;File&quot; -&gt; &quot;Open&quot; and select the desired file<br> - when asked, select &quot;Encoded Text&quot;<br> - in the &quot;File Conversion&quot; dialog check &quot;Other encoding&quot;<br> - select each encoding in the list and see the preview windows</div>
+<hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2006/01/04/508595.html" title="Determining (and correcting) locale settings">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2006/01/03/508579.html" title="&#39;Acceptable&#39; Japanese sort order?">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2006-01">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2006-01-03">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2006/01/03/508589.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:40 GMT -->
+</html>

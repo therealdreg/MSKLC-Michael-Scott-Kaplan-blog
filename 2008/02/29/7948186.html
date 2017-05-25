@@ -1,0 +1,47 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2008/02/29/7948186.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:36 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Newer, stronger, more case pair stability! The world's first 5.1 million dollar character encoding standard!</title></head><body>
+<h1>Newer, stronger, more case pair stability! The world's first 5.1 million dollar character encoding standard!</h1>
+<p><em>by Michael S. Kaplan, published on 2008/02/29 10:01 -05:00, original URI: http://blogs.msdn.com/b/michkap/archive/2008/02/29/7948186.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<EM>
+<P><EM><FONT color=#ff0000 size=1>Please read the <A class="" href="http://archives.miloush.net/michkap/archive/2008/02/28/7934999.html" mce_href="http://archives.miloush.net/michkap/archive/2008/02/28/7934999.html">disclaimer</A>; content not approved by Microsoft!</FONT></EM></P>
+<P>(Apologies to <A class="" href="http://en.wikipedia.org/wiki/Steve_Austin_(fictional_character)" mce_href="http://en.wikipedia.org/wiki/Steve_Austin_(fictional_character)">Steve Austin</A>!)</EM></P>
+<P>The announcement went out to quite a few interested parties, it occurred to me that some of them might also be here!</P>
+<P>It went like this:</P>
+<BLOCKQUOTE>
+<P><FONT face="times new roman,times">The Unicode Consortium has recently strengthened the Unicode Character Encoding Stability Policy in accordance with the recommendations of the Unicode Technical Committee, adding the following new stability constraints:</FONT></P>
+<UL>
+<LI><FONT face="times new roman,times">Strong normalization stability</FONT></LI>
+<LI><FONT face="times new roman,times" color=#ff0000><STRONG>Case Pair stability</STRONG></FONT></LI>
+<LI><FONT face="times new roman,times">Immutability of the General_Category property values Control (Cc), Private_Use (Co), and Surrogate (Cs)</FONT></LI></UL>
+<P><FONT face="times new roman,times">In addition, the text of the Property Value stability constraints has been edited for clarity, adding the formal property names and property value names.</FONT></P>
+<P><FONT face="times new roman,times">See </FONT><A href="http://www.unicode.org/policies/stability_policy.html"><FONT face="times new roman,times">http://www.unicode.org/policies/stability_policy.html</FONT></A></P></BLOCKQUOTE>
+<P>I added the emphasis above since it was an interesting point for Microsoft in particular</P>
+<P>The exact&nbsp;addition was:</P>
+<BLOCKQUOTE>
+<BLOCKQUOTE>
+<BLOCKQUOTE>
+<P class=clauseName><A class="" title=Case_Pair name=Case_Pair></A><STRONG><U>Case Pair Stability</U></STRONG></P>
+<P class=clauseApplicability><STRONG>Applicable Version: Unicode 5.0+ </STRONG></P>
+<P class=clauseApplicability><SPAN style="FONT-WEIGHT: 400">Two assigned characters form a <I>case pair</I> when the full uppercase of the first character is the second character, and the full lowercase of the second character is the first character.</SPAN></P>
+<P><B>If two characters form a case pair in a version of Unicode, they will remain a case pair in each subsequent version of Unicode.</B></P>
+<P><B>If two characters do not form a case pair in a version of Unicode, they will never become a case pair in any subsequent version of Unicode.</B></P>
+<P>More formally, for given versions V and U of Unicode, and any two characters X and Y that are both assigned according to both V and U::</P>
+<P align=center>toLowercase<SUB>V</SUB>(X) = Y AND toUppercase<SUB>V</SUB>(Y) = X</P>
+<P align=center>if and only if</P>
+<P align=center>toLowercase<SUB>U</SUB>(X) = Y AND toUppercase<SUB>U</SUB>(Y) = X</P>
+<P>Note that these conditions apply to two existing, assigned characters. A character that is not part of a case pair could become part of one if the new case pair is formed at the time of the addition of a new character to Unicode. For example, a new capital version of U+028D ( ʍ ) LATIN SMALL LETTER TURNED W could be added in the future to form a new case pair.</P></BLOCKQUOTE></BLOCKQUOTE></BLOCKQUOTE>
+<P>You see, this was done largely at the request of Microsoft.</P>
+<P>It was really&nbsp;due to the fact that both Unicode and Microsoft had casing stability rules that were not entirely compatible, a fact that could easily lead to future problems with Microsoft moving to keep more up to date with the standard (as they did in Vista) if issues like the additions to&nbsp;Unicode I talked about in <A class="" href="http://archives.miloush.net/michkap/archive/2005/08/17/452603.html" mce_href="http://archives.miloush.net/michkap/archive/2005/08/17/452603.html"><STRONG>Every character has a story #13: U+0241 and U+0294 (upper and lower case glottal stops)</STRONG></A>&nbsp;were to happen again.</P>
+<P>Because there are so many components of Windows that depend on its casing tables, changes like that would really not be possible. Therefore being able to make sure that two letters that were&nbsp;defined in a version of the standard but were not considered to be cased variants of each other&nbsp;could sit in the same directory in an NTFS partition without some future version claiming that they could not anymore....</P>
+<P>These are the fun effects that I am really happy Microsoft does, after spending so many years sitting in Unicode without trying to drive its own requirements of it software in the standard as well.</P>
+<P>I remember talking with Asmus, Mark, and Ken at separate times before the meeting, and all of them were very supportive -- primarily since a Microsoft that is closer to the published standard is not just a good thing for Microsoft; it is also a good thing for Unicode! </P>
+<P>So it just makes sense if their stability policies can be aligned.</P>
+<P>Now at the same time, it is important (in my opinion) for Microsoft to not abuse the implied power in people thinking along those lines, especially watching how another not-too-long-ago example played out in the end&nbsp;(the <A class="" href="http://archives.miloush.net/michkap/archive/2005/12/18/505145.html" mce_href="http://archives.miloush.net/michkap/archive/2005/12/18/505145.html"><STRONG>Devanagari Sindhi characters escalated into Unicode 5.0</STRONG></A> despite the synchronization issues with 10646 when the originally hoped-for but never promised implementations never managed to appear).</P>
+<P>But examples like this are pretty rare, and Microsoft has in the past been less proactive about things than they probably should have been so as long as the behavior is responsible then I think it really is a good thing. I wish Microsoft could be more involved in standards like Unicode than they are, sometimes!</P>
+<P mce_keep="true">&nbsp;</P>
+<P><FONT color=#ff1493><FONT face=Tahoma><EM>This post brought to you by</EM> <FONT size=6>ॻ</FONT>, <FONT size=6>ॼ</FONT>, <FONT size=6>ॾ</FONT>, <EM>and</EM> <FONT size=6>ॿ</FONT>&nbsp;<EM>(</EM></FONT></FONT><A href="http://www.fileformat.info/info/unicode/char/097b"><EM><FONT face=Tahoma>097b</FONT></EM></A><EM><FONT face=Tahoma color=#ff1493>, </FONT></EM><A href="http://www.fileformat.info/info/unicode/char/097c"><EM><FONT face=Tahoma>097c</FONT></EM></A><EM><FONT face=Tahoma color=#ff1493>, </FONT></EM><A href="http://www.fileformat.info/info/unicode/char/097e"><EM><FONT face=Tahoma>097e</FONT></EM></A><EM><FONT face=Tahoma color=#ff1493>, and </FONT><A href="http://www.fileformat.info/info/unicode/char/097f"><FONT face=Tahoma>097f</FONT></A><FONT face=Tahoma color=#ff1493> -- DEVANAGARI LETTERS GGA, JJA, DDDS, and BBA -- the Sindhi implosives)</FONT></EM></P>
+<hr/><div style="margin-left: 1em"><em>no comments</em></div><hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2008/03/01/7966892.html" title="Saying you want to be 1,00,000 strong may not be (and often is not) a typo!">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2008/02/29/7945019.html" title="A more definitive definition of[ Font ]Association (a technology that helps us put the backward in backward compatibility!)">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2008-02">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2008-02-29">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2008/02/29/7948186.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:36 GMT -->
+</html>

@@ -1,0 +1,367 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2011/09/10/10208823.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>It may be one of the reasons there are different Arabic locales</title></head><body>
+<h1>It may be one of the reasons there are different Arabic locales</h1>
+<p><em>by Michael S. Kaplan, published on 2011/09/10 09:01 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2011/09/10/10208823.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<p>So I was asked the other day in response to my blog <strong><a title="The example was wrong, but the point of the example was spot on!" href="http://archives.miloush.net/michkap/archive/2011/04/06/10150467.html">The example was wrong, but the point of the example was spot on!</a></strong>, and the part of the blog that said:</p>
+<p style="padding-left: 30px;"><span style="font-family: times new roman,times; font-size: medium;">And note I am assuming that&nbsp;all sixteen of the Arabic locales on Windows all support the exact same spelling of the Hijri month names, even though some have slightly different spelling of the Gregorian month names (and other dialectical differences as well). Maybe this is more reasonable to let slide, even if there are in-county differences in Iraq, Egypt, Libya, Algeria, Morocco, Tunisia, Oman, Yemen, Syria, Jordan, Lebanon, Kuwait, U.A.E., Bahrain, or Qatar. Certainly more than the ones I mentioned earlier.</span></p>
+<p>asking me for more details.</p>
+<p>I'll start by giving the generic values for the three Gregorian calendars related to Arabic:</p>
+<ul>
+<li>CAL_GREGORIAN_ARABIC - Gregorian Arabic</li>
+<li>CAL_GREGORIAN_XLIT_ENGLISH - Gregorian transliterated English</li>
+<li>CAL_GREGORIAN_XLIT_FRENCH - Gregorian transliterated French</li>
+</ul>
+<p>for the first clue:</p>
+<table style="width: 247px;" border="1" cellspacing="3" cellpadding="3"><colgroup> <col span="3" width="64" /> <col width="55" /></colgroup>
+<tbody>
+<tr height="79">
+<td class="xl65" height="79" width="64" align="left">Locale</td>
+<td class="xl66" width="64" align="left">Gregorian (Arabic)</td>
+<td class="xl66" width="64" align="left">Gregorian (xliterated English)</td>
+<td class="xl66" width="55" align="left">Gregorian (xliterated French)</td>
+</tr>
+<tr height="31">
+<td class="xl63" height="31" width="64" align="left"><span style="font-size: large;">January</span></td>
+<td dir="rtl" class="xl64" width="64"><span style="font-size: large;">كانون&nbsp;الثاني</span></td>
+<td dir="rtl" class="xl64" width="64"><span style="font-size: large;">يناير</span></td>
+<td dir="rtl" class="xl64" width="55"><span style="font-size: large;">جانفييه</span></td>
+</tr>
+<tr height="31">
+<td class="xl63" height="31" width="64" align="left"><span style="font-size: large;">February</span></td>
+<td dir="rtl" class="xl64" width="64"><span style="font-size: large;">شباط</span></td>
+<td dir="rtl" class="xl64" width="64"><span style="font-size: large;">فبراير</span></td>
+<td dir="rtl" class="xl64" width="55"><span style="font-size: large;">ديسمبر</span></td>
+</tr>
+<tr height="31">
+<td class="xl63" height="31" width="64" align="left"><span style="font-size: large;">March</span></td>
+<td dir="rtl" class="xl64" width="64"><span style="font-size: large;">آذار</span></td>
+<td dir="rtl" class="xl64" width="64"><span style="font-size: large;">مارس</span></td>
+<td dir="rtl" class="xl64" width="55"><span style="font-size: large;">مارس</span></td>
+</tr>
+<tr height="31">
+<td class="xl63" height="31" width="64" align="left"><span style="font-size: large;">April</span></td>
+<td dir="rtl" class="xl64" width="64"><span style="font-size: large;">نيسان</span></td>
+<td dir="rtl" class="xl64" width="64"><span style="font-size: large;">أبريل</span></td>
+<td dir="rtl" class="xl64" width="55"><span style="font-size: large;">أفريل</span></td>
+</tr>
+<tr height="31">
+<td class="xl63" height="31" width="64" align="left"><span style="font-size: large;">May</span></td>
+<td dir="rtl" class="xl64" width="64"><span style="font-size: large;">أيار</span></td>
+<td dir="rtl" class="xl64" width="64"><span style="font-size: large;">مايو</span></td>
+<td dir="rtl" class="xl64" width="55"><span style="font-size: large;">مي</span></td>
+</tr>
+<tr height="31">
+<td class="xl63" height="31" width="64" align="left"><span style="font-size: large;">June</span></td>
+<td dir="rtl" class="xl64" width="64"><span style="font-size: large;">حزيران</span></td>
+<td dir="rtl" class="xl64" width="64"><span style="font-size: large;">يونيو</span></td>
+<td dir="rtl" class="xl64" width="55"><span style="font-size: large;">جوان</span></td>
+</tr>
+<tr height="31">
+<td class="xl63" height="31" width="64" align="left"><span style="font-size: large;">July</span></td>
+<td dir="rtl" class="xl64" width="64"><span style="font-size: large;">تموز</span></td>
+<td dir="rtl" class="xl64" width="64"><span style="font-size: large;">يوليو</span></td>
+<td dir="rtl" class="xl64" width="55"><span style="font-size: large;">جوييه</span></td>
+</tr>
+<tr height="31">
+<td class="xl63" height="31" width="64" align="left"><span style="font-size: large;">August</span></td>
+<td dir="rtl" class="xl64" width="64"><span style="font-size: large;">آب</span></td>
+<td dir="rtl" class="xl64" width="64"><span style="font-size: large;">أغسطس</span></td>
+<td dir="rtl" class="xl64" width="55"><span style="font-size: large;">أوت</span></td>
+</tr>
+<tr height="31">
+<td class="xl63" height="31" width="64" align="left"><span style="font-size: large;">September</span></td>
+<td dir="rtl" class="xl64" width="64"><span style="font-size: large;">أيلول</span></td>
+<td dir="rtl" class="xl64" width="64"><span style="font-size: large;">سبتمبر</span></td>
+<td dir="rtl" class="xl64" width="55"><span style="font-size: large;">سبتمبر</span></td>
+</tr>
+<tr height="31">
+<td class="xl63" height="31" width="64" align="left"><span style="font-size: large;">October</span></td>
+<td dir="rtl" class="xl64" width="64"><span style="font-size: large;">تشرين&nbsp;الأول</span></td>
+<td dir="rtl" class="xl64" width="64"><span style="font-size: large;">أكتوبر</span></td>
+<td dir="rtl" class="xl64" width="55"><span style="font-size: large;">اكتوبر</span></td>
+</tr>
+<tr height="31">
+<td class="xl63" height="31" width="64" align="left"><span style="font-size: large;">November</span></td>
+<td dir="rtl" class="xl64" width="64"><span style="font-size: large;">تشرين&nbsp;الثاني</span></td>
+<td dir="rtl" class="xl64" width="64"><span style="font-size: large;">نوفمبر</span></td>
+<td dir="rtl" class="xl64" width="55"><span style="font-size: large;">نوفمبر</span></td>
+</tr>
+<tr height="31">
+<td class="xl63" height="31" width="64" align="left"><span style="font-size: large;">December</span></td>
+<td dir="rtl" class="xl64" width="64"><span style="font-size: large;">كانون&nbsp;الأول</span></td>
+<td dir="rtl" class="xl64" width="64"><span style="font-size: large;">ديسمبر</span></td>
+<td dir="rtl" class="xl64" width="55"><span style="font-size: large;">ديسمبر</span></td>
+</tr>
+</tbody>
+</table>
+<p>Ok, got it? Three different ways of looking at the same month name.</p>
+<p>Then, when you look at the <a href="http://msdn.microsoft.com/library/dd373856.aspx">LOCALE_SMONTNAME*</a>&nbsp;values that represent the localized Gregorian month names for each locale, you may&nbsp;be able to see the pattern:</p>
+<table style="width: 1088px;" border="1" cellspacing="2" cellpadding="2"><colgroup> <col span="17" width="64" /></colgroup>
+<tbody>
+<tr height="21">
+<td class="xl65" height="21" width="64">&nbsp;</td>
+<td class="xl66" width="64" align="left">ar-sa</td>
+<td class="xl66" width="64" align="left">ar-iq</td>
+<td class="xl66" width="64" align="left">ar-eg</td>
+<td class="xl66" width="64" align="left">ar-ly</td>
+<td class="xl66" width="64" align="left">ar-dz</td>
+<td class="xl66" width="64" align="left">ar-ma</td>
+<td class="xl66" width="64" align="left">ar-tn</td>
+<td class="xl66" width="64" align="left">ar-om</td>
+<td class="xl66" width="64" align="left">ar-ye</td>
+<td class="xl66" width="64" align="left">ar-sy</td>
+<td class="xl66" width="64" align="left">ar-jo</td>
+<td class="xl66" width="64" align="left">ar-lb</td>
+<td class="xl66" width="64" align="left">ar-kw</td>
+<td class="xl66" width="64" align="left">ar-ae</td>
+<td class="xl66" width="64" align="left">ar-bh</td>
+<td class="xl66" width="64" align="left">ar-qa</td>
+</tr>
+<tr height="31">
+<td class="xl67" height="31" width="64" align="left"><span style="font-size: medium;">January</span></td>
+<td dir="rtl" class="xl68" width="64"><span style="font-size: medium;">يناير</span></td>
+<td dir="rtl" class="xl68" width="64"><span style="font-size: medium;">كانون&nbsp;الثاني</span></td>
+<td dir="rtl" class="xl68" width="64"><span style="font-size: medium;">يناير</span></td>
+<td dir="rtl" class="xl68" width="64"><span style="font-size: medium;">يناير</span></td>
+<td dir="rtl" class="xl68" width="64"><span style="font-size: medium;">جانفييه</span></td>
+<td dir="rtl" class="xl68" width="64"><span style="font-size: medium;">يناير</span></td>
+<td dir="rtl" class="xl68" width="64"><span style="font-size: medium;">جانفييه</span></td>
+<td dir="rtl" class="xl68" width="64"><span style="font-size: medium;">يناير</span></td>
+<td dir="rtl" class="xl68" width="64"><span style="font-size: medium;">يناير</span></td>
+<td dir="rtl" class="xl68" width="64"><span style="font-size: medium;">كانون&nbsp;الثاني</span></td>
+<td dir="rtl" class="xl68" width="64"><span style="font-size: medium;">كانون&nbsp;الثاني</span></td>
+<td dir="rtl" class="xl68" width="64"><span style="font-size: medium;">كانون&nbsp;الثاني</span></td>
+<td dir="rtl" class="xl68" width="64"><span style="font-size: medium;">يناير</span></td>
+<td dir="rtl" class="xl68" width="64"><span style="font-size: medium;">يناير</span></td>
+<td dir="rtl" class="xl68" width="64"><span style="font-size: medium;">يناير</span></td>
+<td dir="rtl" class="xl68" width="64"><span style="font-size: medium;">يناير</span></td>
+</tr>
+<tr height="31">
+<td class="xl67" height="31" width="64" align="left"><span style="font-size: medium;">February</span></td>
+<td dir="rtl" class="xl68" width="64"><span style="font-size: medium;">فبراير</span></td>
+<td dir="rtl" class="xl68" width="64"><span style="font-size: medium;">شباط</span></td>
+<td dir="rtl" class="xl68" width="64"><span style="font-size: medium;">فبراير</span></td>
+<td dir="rtl" class="xl68" width="64"><span style="font-size: medium;">فبراير</span></td>
+<td dir="rtl" class="xl68" width="64"><span style="font-size: medium;">فيفرييه</span></td>
+<td dir="rtl" class="xl68" width="64"><span style="font-size: medium;">فبراير</span></td>
+<td dir="rtl" class="xl68" width="64"><span style="font-size: medium;">فيفرييه</span></td>
+<td dir="rtl" class="xl68" width="64"><span style="font-size: medium;">فبراير</span></td>
+<td dir="rtl" class="xl68" width="64"><span style="font-size: medium;">فبراير</span></td>
+<td dir="rtl" class="xl68" width="64"><span style="font-size: medium;">شباط</span></td>
+<td dir="rtl" class="xl68" width="64"><span style="font-size: medium;">شباط</span></td>
+<td dir="rtl" class="xl68" width="64"><span style="font-size: medium;">شباط</span></td>
+<td dir="rtl" class="xl68" width="64"><span style="font-size: medium;">فبراير</span></td>
+<td dir="rtl" class="xl68" width="64"><span style="font-size: medium;">فبراير</span></td>
+<td dir="rtl" class="xl68" width="64"><span style="font-size: medium;">فبراير</span></td>
+<td dir="rtl" class="xl68" width="64"><span style="font-size: medium;">فبراير</span></td>
+</tr>
+<tr height="31">
+<td class="xl67" height="31" width="64" align="left"><span style="font-size: medium;">March</span></td>
+<td dir="rtl" class="xl68" width="64"><span style="font-size: medium;">مارس</span></td>
+<td dir="rtl" class="xl68" width="64"><span style="font-size: medium;">آذار</span></td>
+<td dir="rtl" class="xl68" width="64"><span style="font-size: medium;">مارس</span></td>
+<td dir="rtl" class="xl68" width="64"><span style="font-size: medium;">مارس</span></td>
+<td dir="rtl" class="xl68" width="64"><span style="font-size: medium;">مارس</span></td>
+<td dir="rtl" class="xl68" width="64"><span style="font-size: medium;">مارس</span></td>
+<td dir="rtl" class="xl68" width="64"><span style="font-size: medium;">مارس</span></td>
+<td dir="rtl" class="xl68" width="64"><span style="font-size: medium;">مارس</span></td>
+<td dir="rtl" class="xl68" width="64"><span style="font-size: medium;">مارس</span></td>
+<td dir="rtl" class="xl68" width="64"><span style="font-size: medium;">آذار</span></td>
+<td dir="rtl" class="xl68" width="64"><span style="font-size: medium;">آذار</span></td>
+<td dir="rtl" class="xl68" width="64"><span style="font-size: medium;">آذار</span></td>
+<td dir="rtl" class="xl68" width="64"><span style="font-size: medium;">مارس</span></td>
+<td dir="rtl" class="xl68" width="64"><span style="font-size: medium;">مارس</span></td>
+<td dir="rtl" class="xl68" width="64"><span style="font-size: medium;">مارس</span></td>
+<td dir="rtl" class="xl68" width="64"><span style="font-size: medium;">مارس</span></td>
+</tr>
+<tr height="31">
+<td class="xl67" height="31" width="64" align="left"><span style="font-size: medium;">April</span></td>
+<td dir="rtl" class="xl68" width="64"><span style="font-size: medium;">أبريل</span></td>
+<td dir="rtl" class="xl68" width="64"><span style="font-size: medium;">نيسان</span></td>
+<td dir="rtl" class="xl68" width="64"><span style="font-size: medium;">أبريل</span></td>
+<td dir="rtl" class="xl68" width="64"><span style="font-size: medium;">أبريل</span></td>
+<td dir="rtl" class="xl68" width="64"><span style="font-size: medium;">أفريل</span></td>
+<td dir="rtl" class="xl68" width="64"><span style="font-size: medium;">أبريل</span></td>
+<td dir="rtl" class="xl68" width="64"><span style="font-size: medium;">أفريل</span></td>
+<td dir="rtl" class="xl68" width="64"><span style="font-size: medium;">أبريل</span></td>
+<td dir="rtl" class="xl68" width="64"><span style="font-size: medium;">أبريل</span></td>
+<td dir="rtl" class="xl68" width="64"><span style="font-size: medium;">نيسان</span></td>
+<td dir="rtl" class="xl68" width="64"><span style="font-size: medium;">نيسان</span></td>
+<td dir="rtl" class="xl68" width="64"><span style="font-size: medium;">نيسان</span></td>
+<td dir="rtl" class="xl68" width="64"><span style="font-size: medium;">أبريل</span></td>
+<td dir="rtl" class="xl68" width="64"><span style="font-size: medium;">أبريل</span></td>
+<td dir="rtl" class="xl68" width="64"><span style="font-size: medium;">أبريل</span></td>
+<td dir="rtl" class="xl68" width="64"><span style="font-size: medium;">أبريل</span></td>
+</tr>
+<tr height="31">
+<td class="xl67" height="31" width="64" align="left"><span style="font-size: medium;">May</span></td>
+<td dir="rtl" class="xl68" width="64"><span style="font-size: medium;">مايو</span></td>
+<td dir="rtl" class="xl68" width="64"><span style="font-size: medium;">أيار</span></td>
+<td dir="rtl" class="xl68" width="64"><span style="font-size: medium;">مايو</span></td>
+<td dir="rtl" class="xl68" width="64"><span style="font-size: medium;">مايو</span></td>
+<td dir="rtl" class="xl68" width="64"><span style="font-size: medium;">مي</span></td>
+<td dir="rtl" class="xl68" width="64"><span style="font-size: medium;">ماي</span></td>
+<td dir="rtl" class="xl68" width="64"><span style="font-size: medium;">مي</span></td>
+<td dir="rtl" class="xl68" width="64"><span style="font-size: medium;">مايو</span></td>
+<td dir="rtl" class="xl68" width="64"><span style="font-size: medium;">مايو</span></td>
+<td dir="rtl" class="xl68" width="64"><span style="font-size: medium;">أيار</span></td>
+<td dir="rtl" class="xl68" width="64"><span style="font-size: medium;">أيار</span></td>
+<td dir="rtl" class="xl68" width="64"><span style="font-size: medium;">أيار</span></td>
+<td dir="rtl" class="xl68" width="64"><span style="font-size: medium;">مايو</span></td>
+<td dir="rtl" class="xl68" width="64"><span style="font-size: medium;">مايو</span></td>
+<td dir="rtl" class="xl68" width="64"><span style="font-size: medium;">مايو</span></td>
+<td dir="rtl" class="xl68" width="64"><span style="font-size: medium;">مايو</span></td>
+</tr>
+<tr height="31">
+<td class="xl67" height="31" width="64" align="left"><span style="font-size: medium;">June</span></td>
+<td dir="rtl" class="xl68" width="64"><span style="font-size: medium;">يونيو</span></td>
+<td dir="rtl" class="xl68" width="64"><span style="font-size: medium;">حزيران</span></td>
+<td dir="rtl" class="xl68" width="64"><span style="font-size: medium;">يونيو</span></td>
+<td dir="rtl" class="xl68" width="64"><span style="font-size: medium;">يونيو</span></td>
+<td dir="rtl" class="xl68" width="64"><span style="font-size: medium;">جوان</span></td>
+<td dir="rtl" class="xl68" width="64"><span style="font-size: medium;">يونيو</span></td>
+<td dir="rtl" class="xl68" width="64"><span style="font-size: medium;">جوان</span></td>
+<td dir="rtl" class="xl68" width="64"><span style="font-size: medium;">يونيو</span></td>
+<td dir="rtl" class="xl68" width="64"><span style="font-size: medium;">يونيو</span></td>
+<td dir="rtl" class="xl68" width="64"><span style="font-size: medium;">حزيران</span></td>
+<td dir="rtl" class="xl68" width="64"><span style="font-size: medium;">حزيران</span></td>
+<td dir="rtl" class="xl68" width="64"><span style="font-size: medium;">حزيران</span></td>
+<td dir="rtl" class="xl68" width="64"><span style="font-size: medium;">يونيو</span></td>
+<td dir="rtl" class="xl68" width="64"><span style="font-size: medium;">يونيو</span></td>
+<td dir="rtl" class="xl68" width="64"><span style="font-size: medium;">يونيو</span></td>
+<td dir="rtl" class="xl68" width="64"><span style="font-size: medium;">يونيو</span></td>
+</tr>
+<tr height="31">
+<td class="xl67" height="31" width="64" align="left"><span style="font-size: medium;">July</span></td>
+<td dir="rtl" class="xl68" width="64"><span style="font-size: medium;">يوليو</span></td>
+<td dir="rtl" class="xl68" width="64"><span style="font-size: medium;">تموز</span></td>
+<td dir="rtl" class="xl68" width="64"><span style="font-size: medium;">يوليو</span></td>
+<td dir="rtl" class="xl68" width="64"><span style="font-size: medium;">يوليو</span></td>
+<td dir="rtl" class="xl68" width="64"><span style="font-size: medium;">جوييه</span></td>
+<td dir="rtl" class="xl68" width="64"><span style="font-size: medium;">يوليوز</span></td>
+<td dir="rtl" class="xl68" width="64"><span style="font-size: medium;">جوييه</span></td>
+<td dir="rtl" class="xl68" width="64"><span style="font-size: medium;">يوليو</span></td>
+<td dir="rtl" class="xl68" width="64"><span style="font-size: medium;">يوليو</span></td>
+<td dir="rtl" class="xl68" width="64"><span style="font-size: medium;">تموز</span></td>
+<td dir="rtl" class="xl68" width="64"><span style="font-size: medium;">تموز</span></td>
+<td dir="rtl" class="xl68" width="64"><span style="font-size: medium;">تموز</span></td>
+<td dir="rtl" class="xl68" width="64"><span style="font-size: medium;">يوليو</span></td>
+<td dir="rtl" class="xl68" width="64"><span style="font-size: medium;">يوليو</span></td>
+<td dir="rtl" class="xl68" width="64"><span style="font-size: medium;">يوليو</span></td>
+<td dir="rtl" class="xl68" width="64"><span style="font-size: medium;">يوليو</span></td>
+</tr>
+<tr height="31">
+<td class="xl67" height="31" width="64" align="left"><span style="font-size: medium;">August</span></td>
+<td dir="rtl" class="xl68" width="64"><span style="font-size: medium;">أغسطس</span></td>
+<td dir="rtl" class="xl68" width="64"><span style="font-size: medium;">آب</span></td>
+<td dir="rtl" class="xl68" width="64"><span style="font-size: medium;">أغسطس</span></td>
+<td dir="rtl" class="xl68" width="64"><span style="font-size: medium;">أغسطس</span></td>
+<td dir="rtl" class="xl68" width="64"><span style="font-size: medium;">أوت</span></td>
+<td dir="rtl" class="xl68" width="64"><span style="font-size: medium;">غشت</span></td>
+<td dir="rtl" class="xl68" width="64"><span style="font-size: medium;">أوت</span></td>
+<td dir="rtl" class="xl68" width="64"><span style="font-size: medium;">أغسطس</span></td>
+<td dir="rtl" class="xl68" width="64"><span style="font-size: medium;">أغسطس</span></td>
+<td dir="rtl" class="xl68" width="64"><span style="font-size: medium;">آب</span></td>
+<td dir="rtl" class="xl68" width="64"><span style="font-size: medium;">آب</span></td>
+<td dir="rtl" class="xl68" width="64"><span style="font-size: medium;">آب</span></td>
+<td dir="rtl" class="xl68" width="64"><span style="font-size: medium;">أغسطس</span></td>
+<td dir="rtl" class="xl68" width="64"><span style="font-size: medium;">أغسطس</span></td>
+<td dir="rtl" class="xl68" width="64"><span style="font-size: medium;">أغسطس</span></td>
+<td dir="rtl" class="xl68" width="64"><span style="font-size: medium;">أغسطس</span></td>
+</tr>
+<tr height="31">
+<td class="xl67" height="31" width="64" align="left"><span style="font-size: medium;">September</span></td>
+<td dir="rtl" class="xl68" width="64"><span style="font-size: medium;">سبتمبر</span></td>
+<td dir="rtl" class="xl68" width="64"><span style="font-size: medium;">أيلول</span></td>
+<td dir="rtl" class="xl68" width="64"><span style="font-size: medium;">سبتمبر</span></td>
+<td dir="rtl" class="xl68" width="64"><span style="font-size: medium;">سبتمبر</span></td>
+<td dir="rtl" class="xl68" width="64"><span style="font-size: medium;">سبتمبر</span></td>
+<td dir="rtl" class="xl68" width="64"><span style="font-size: medium;">شتنبر</span></td>
+<td dir="rtl" class="xl68" width="64"><span style="font-size: medium;">سبتمبر</span></td>
+<td dir="rtl" class="xl68" width="64"><span style="font-size: medium;">سبتمبر</span></td>
+<td dir="rtl" class="xl68" width="64"><span style="font-size: medium;">سبتمبر</span></td>
+<td dir="rtl" class="xl68" width="64"><span style="font-size: medium;">أيلول</span></td>
+<td dir="rtl" class="xl68" width="64"><span style="font-size: medium;">أيلول</span></td>
+<td dir="rtl" class="xl68" width="64"><span style="font-size: medium;">أيلول</span></td>
+<td dir="rtl" class="xl68" width="64"><span style="font-size: medium;">سبتمبر</span></td>
+<td dir="rtl" class="xl68" width="64"><span style="font-size: medium;">سبتمبر</span></td>
+<td dir="rtl" class="xl68" width="64"><span style="font-size: medium;">سبتمبر</span></td>
+<td dir="rtl" class="xl68" width="64"><span style="font-size: medium;">سبتمبر</span></td>
+</tr>
+<tr height="31">
+<td class="xl67" height="31" width="64" align="left"><span style="font-size: medium;">October</span></td>
+<td dir="rtl" class="xl68" width="64"><span style="font-size: medium;">أكتوبر</span></td>
+<td dir="rtl" class="xl68" width="64"><span style="font-size: medium;">تشرين&nbsp;الأول</span></td>
+<td dir="rtl" class="xl68" width="64"><span style="font-size: medium;">أكتوبر</span></td>
+<td dir="rtl" class="xl68" width="64"><span style="font-size: medium;">أكتوبر</span></td>
+<td dir="rtl" class="xl68" width="64"><span style="font-size: medium;">أكتوبر</span></td>
+<td dir="rtl" class="xl68" width="64"><span style="font-size: medium;">أكتوبر</span></td>
+<td dir="rtl" class="xl68" width="64"><span style="font-size: medium;">أكتوبر</span></td>
+<td dir="rtl" class="xl68" width="64"><span style="font-size: medium;">أكتوبر</span></td>
+<td dir="rtl" class="xl68" width="64"><span style="font-size: medium;">أكتوبر</span></td>
+<td dir="rtl" class="xl68" width="64"><span style="font-size: medium;">تشرين&nbsp;الأول</span></td>
+<td dir="rtl" class="xl68" width="64"><span style="font-size: medium;">تشرين&nbsp;الأول</span></td>
+<td dir="rtl" class="xl68" width="64"><span style="font-size: medium;">تشرين&nbsp;الأول</span></td>
+<td dir="rtl" class="xl68" width="64"><span style="font-size: medium;">أكتوبر</span></td>
+<td dir="rtl" class="xl68" width="64"><span style="font-size: medium;">أكتوبر</span></td>
+<td dir="rtl" class="xl68" width="64"><span style="font-size: medium;">أكتوبر</span></td>
+<td dir="rtl" class="xl68" width="64"><span style="font-size: medium;">أكتوبر</span></td>
+</tr>
+<tr height="31">
+<td class="xl67" height="31" width="64" align="left"><span style="font-size: medium;">November</span></td>
+<td dir="rtl" class="xl68" width="64"><span style="font-size: medium;">نوفمبر</span></td>
+<td dir="rtl" class="xl68" width="64"><span style="font-size: medium;">تشرين&nbsp;الثاني</span></td>
+<td dir="rtl" class="xl68" width="64"><span style="font-size: medium;">نوفمبر</span></td>
+<td dir="rtl" class="xl68" width="64"><span style="font-size: medium;">نوفمبر</span></td>
+<td dir="rtl" class="xl68" width="64"><span style="font-size: medium;">نوفمبر</span></td>
+<td dir="rtl" class="xl68" width="64"><span style="font-size: medium;">نونبر</span></td>
+<td dir="rtl" class="xl68" width="64"><span style="font-size: medium;">نوفمبر</span></td>
+<td dir="rtl" class="xl68" width="64"><span style="font-size: medium;">نوفمبر</span></td>
+<td dir="rtl" class="xl68" width="64"><span style="font-size: medium;">نوفمبر</span></td>
+<td dir="rtl" class="xl68" width="64"><span style="font-size: medium;">تشرين&nbsp;الثاني</span></td>
+<td dir="rtl" class="xl68" width="64"><span style="font-size: medium;">تشرين&nbsp;الثاني</span></td>
+<td dir="rtl" class="xl68" width="64"><span style="font-size: medium;">تشرين&nbsp;الثاني</span></td>
+<td dir="rtl" class="xl68" width="64"><span style="font-size: medium;">نوفمبر</span></td>
+<td dir="rtl" class="xl68" width="64"><span style="font-size: medium;">نوفمبر</span></td>
+<td dir="rtl" class="xl68" width="64"><span style="font-size: medium;">نوفمبر</span></td>
+<td dir="rtl" class="xl68" width="64"><span style="font-size: medium;">نوفمبر</span></td>
+</tr>
+<tr height="31">
+<td class="xl67" height="31" width="64" align="left"><span style="font-size: medium;">December</span></td>
+<td dir="rtl" class="xl68" width="64"><span style="font-size: medium;">ديسمبر</span></td>
+<td dir="rtl" class="xl68" width="64"><span style="font-size: medium;">كانون&nbsp;الأول</span></td>
+<td dir="rtl" class="xl68" width="64"><span style="font-size: medium;">ديسمبر</span></td>
+<td dir="rtl" class="xl68" width="64"><span style="font-size: medium;">ديسمبر</span></td>
+<td dir="rtl" class="xl68" width="64"><span style="font-size: medium;">ديسمبر</span></td>
+<td dir="rtl" class="xl68" width="64"><span style="font-size: medium;">دجنبر</span></td>
+<td dir="rtl" class="xl68" width="64"><span style="font-size: medium;">ديسمبر</span></td>
+<td dir="rtl" class="xl68" width="64"><span style="font-size: medium;">ديسمبر</span></td>
+<td dir="rtl" class="xl68" width="64"><span style="font-size: medium;">ديسمبر</span></td>
+<td dir="rtl" class="xl68" width="64"><span style="font-size: medium;">كانون&nbsp;الأول</span></td>
+<td dir="rtl" class="xl68" width="64"><span style="font-size: medium;">كانون&nbsp;الأول</span></td>
+<td dir="rtl" class="xl68" width="64"><span style="font-size: medium;">كانون&nbsp;الأول</span></td>
+<td dir="rtl" class="xl68" width="64"><span style="font-size: medium;">ديسمبر</span></td>
+<td dir="rtl" class="xl68" width="64"><span style="font-size: medium;">ديسمبر</span></td>
+<td dir="rtl" class="xl68" width="64"><span style="font-size: medium;">ديسمبر</span></td>
+<td dir="rtl" class="xl68" width="64"><span style="font-size: medium;">ديسمبر</span></td>
+</tr>
+</tbody>
+</table>
+<p>You now see a bunch of things:</p>
+<p>The ar-IQ, ar-SY, ar-JO, and ar-LB locales generally&nbsp;use the CAL_GREGORIAN_ARABIC style names.</p>
+<p>While ar-DZ and&nbsp;ar-TN are mostly using the CAL_GREGORIAN_XLIT_ENGLISH style Arabic names.</p>
+<p>And ar-SA, ar-EG, ar-LY, ar-OM, ar-YE, ar-KW, ar-AE, ar-LB, and ar-QA seem to be using the Gregorian transliterated French style Arabic name.</p>
+<p>The odd man out is ar-MA, which has differences from all of them for some months.</p>
+<p>And you can likely spot other similarities and differences yourself among various months as well (more if you can read Arabic obviously, but even if not you can probably see differences with the shapes).</p>
+<p>The end result is of course that beyond the three big categories that would represent three different ways of spelling the month names, there are other differences as well.</p>
+<p>Perhaps these are bugs simply never reported by any customer.</p>
+<p>Though more likely they are mostly&nbsp;some random yet&nbsp;specific known differences between countries, for the host of reasons that things can be spelled differently for the same language in different areas.</p>
+<p>Thinking back to <strong><a title="The example was wrong, but the point of the example was spot on!" href="http://archives.miloush.net/michkap/archive/2011/04/06/10150467.html">The example was wrong, but the point of the example was spot on!</a></strong>&nbsp;a moment, it's hard to imagine that among all 16 countries there are not also any differences among the Hijri month names too.</p>
+<p>Which, if true, would mean that in addition to the many non-Arabic language&nbsp;and in some cases Arabic script locales that use the Hijri calendar and are forced to use the Arabic language, they may even be some Arabic language instances that might&nbsp;have differences in the Hijri month names too?</p>
+<p>It may be one of the reasons there are different Arabic locales. Though in the case of the Hijri issue (if it exists)&nbsp;we're not covering it?</p>
+<p>Anyone who knows the Arabic language want to comment on some of the other differences?</p>
+<hr/><div style="margin-left: 1em"><em>no comments</em></div><hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2011/09/12/10209252.html" title="Some filler, and a health update....">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2011/09/09/10208356.html" title="You can&#39;t always blame the IME....">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2011-09">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2011-09-10">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2011/09/10/10208823.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+</html>

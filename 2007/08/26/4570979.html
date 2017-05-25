@@ -1,0 +1,32 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2007/08/26/4570979.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:37 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Blame Kannada! (ಕನ್ನಡ)</title></head><body>
+<h1>Blame Kannada! (ಕನ್ನಡ)</h1>
+<p><em>by Michael S. Kaplan, published on 2007/08/26 03:41 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2007/08/26/4570979.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P><EM>(Inspired by the alternate title from Oh Kannada... (</EM>ಕನ್ನಡ<EM>) and the South Park movie!)</EM></P>
+<P>One of those interesting issues related to rendering Indic properly came up the other day, in this case with Kannada....</P>
+<P>The string in question, first:</P>
+<BLOCKQUOTE>
+<P><FONT size=5>ಅಹ್ಮ್‌‌ದ್ ಷರೀಫ್</FONT></P></BLOCKQUOTE>
+<P>If you are running on an OS that does the rendering correctly, it will not look identical to this other string:</P>
+<BLOCKQUOTE>
+<P><FONT size=5>ಅಹ್ಮ್ದ್ ಷರೀಫ್</FONT></P></BLOCKQUOTE>
+<P>Or this third string:</P>
+<BLOCKQUOTE>
+<P><FONT size=5>ಅಹ್ಮ್‍ದ್ ಷರೀಫ್</FONT></P></BLOCKQUOTE>
+<P>The customer was in this case seeing that third string&nbsp;visually for all three using some fonts, but not others, and in some technologies,&nbsp;but not others. And it&nbsp;was never working right in .NET 1.1 using GDI+ and its <A class="" href="http://msdn2.microsoft.com/library/system.drawing.graphics.drawstring.aspx" mce_href="http://msdn2.microsoft.com/library/system.drawing.graphics.drawstring.aspx">Graphics.DrawString</A> method.</P>
+<P>Now as you might have guessed, we are dealing with the combination of several different issues here, including:</P>
+<UL>
+<LI>the one I pointed out in <A class="" href="http://archives.miloush.net/michkap/archive/2006/09/25/768715.html" mce_href="http://archives.miloush.net/michkap/archive/2006/09/25/768715.html"><STRONG>Why don't all the half forms sort right?</STRONG></A>, and the fact that the decision to unify the meanings of <A class="" href="http://www.fileformat.info/info/unicode/char/200c" mce_href="http://www.fileformat.info/info/unicode/char/200c">U+200c</A> and <A class="" href="http://www.fileformat.info/info/unicode/char/200d" mce_href="http://www.fileformat.info/info/unicode/char/200d">U+200d</A> across all Indic scripts is relatively recent idea recommended by Peter Constable and adopted by Unicode in recent versions;</LI>
+<LI>the one I pointed out in <STRONG><A class="" href="http://archives.miloush.net/michkap/archive/2005/06/27/432986.html" mce_href="http://archives.miloush.net/michkap/archive/2005/06/27/432986.html">A quick look at Whidbey's TextRenderer</A></STRONG>,&nbsp;and the fact that the GDI+ shaping engines are hopelessly out of date and see little chance of being updated -- so that <A class="" href="http://msdn2.microsoft.com/library/4eab953f.aspx" mce_href="http://msdn2.microsoft.com/library/4eab953f.aspx">TextRenderer.DrawText</A> is much preferred over <A class="" href="http://msdn2.microsoft.com/library/system.drawing.graphics.drawstring.aspx" mce_href="http://msdn2.microsoft.com/library/system.drawing.graphics.drawstring.aspx">Graphics.DrawString</A>;</LI>
+<LI>the fact that (given all the above) later shaping engines and fonts and technologies&nbsp;will have a much better chance of displaying strings correctly.</LI></UL>
+<P>These issues are ones that will improve over time as the older implementations that do not have right rendering story are replaced by those that do. Though I can't help wondering whether it would have been so bad to update all of the supported technologies (including GDI+) so that customers could see text correctly without depending on technology shifts....</P>
+<P mce_keep="true">&nbsp;</P>
+<P><FONT color=#ff00ff><EM>This post brought to you by</EM> <FONT size=5>್</FONT> <EM>(<A class="" href="http://www.fileformat.info/info/unicode/char/0ccd" mce_href="http://www.fileformat.info/info/unicode/char/0ccd">U+0ccd</A>, a.k.a. KANNADA SIGN VIRAMA)</EM></FONT></P>
+<hr/><p><strong>Ian</strong> on 30 Aug 2007 12:49 PM:</p><div style="margin-left: 1em"><p>Hi Michael,</p>
+<p>I noticed that IE7 (I'm using Windows Vista) renders the sample text in this post differently from Word 2007. Which one is correct? </p></div>
+<p><strong>Michael S. Kaplan</strong> on 30 Aug 2007 12:56 PM:</p><div style="margin-left: 1em"><P>Hard to say without looking at them, right? :-)</P></div>
+<hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2007/08/26/4576704.html" title="157766400 seconds in....">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2007/08/25/4565131.html" title="Depends on what you meant about what you meant...">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2007-08">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2007-08-26">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2007/08/26/4570979.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:37 GMT -->
+</html>

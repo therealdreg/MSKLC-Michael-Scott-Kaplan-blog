@@ -1,0 +1,47 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2010/05/31/10017323.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:35 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>BUG SPOTTING: Identify 1) what the code does, and 2) what they wanted it to do</title></head><body>
+<h1>BUG SPOTTING: Identify 1) what the code does, and 2) what they wanted it to do</h1>
+<p><em>by Michael S. Kaplan, published on 2010/05/31 07:01 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2010/05/31/10017323.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<p>Okay, a little <strong>Spot the Bug</strong> for everyone on a Monday morning when one shouldn't need to be working anyway....</p>
+<p>The other day a question came up about some code.</p>
+<p>It looked something like this:</p>
+<blockquote>
+<pre class="code">whcar_t* newParams = <span style="color:blue">new </span>wchar[MAX_PATH + MAX_PATH];
+whcar_t* p = newParams;
+<span style="color:blue">while </span>(*<span style="color:blue">params</span>) {
+    *p++ = *<span style="color:blue">params</span>;
+    <span style="color:blue">params </span>= ::CharNext(<span style="color:blue">params</span>); 
+}
+*p = 0;
+<span style="color:blue">return </span>newParams;       </pre>
+</blockquote>
+<p><a href="http://11011.net/software/vspaste"></a></p>
+<p>&nbsp;Can you figure out what this code is doing? Assume it is compiled with UNICODE (since the compile would fail, otherwise!).</p>
+<p>Well, I know what it is doing. The key is trying to understand what it was trying to do.</p>
+<p>You can probably gather why whatever they were trying to do is doomed to failure, of course.</p>
+<p>Also, you can look at previous blogs like <a href="http://archives.miloush.net/michkap/archive/2008/12/16/9223301.html"><strong>The torrents of breaking CharNext/CharPrev</strong></a> if you want a quick refresher, of course.</p>
+<p>Ignore the bug mentioned there, and think about what CharNextW does.</p>
+<p>So, what does the code do, and what did the original authors want it to do?</p>
+<hr/><p><strong>Aaron Ballman</strong> on 31 May 2010 7:52 AM:</p><div style="margin-left: 1em"><p>I&#39;ll go for the pedantic answer of &quot;it doesn&#39;t compile because you can&#39;t assign a &quot;new wchar[]&quot; to a &quot;wchar_t *&quot; (note the lack of _t). &nbsp;But this code is a poor replacement for wcscpy, basically. &nbsp;Except that the rate you are skipping bytes in the destination string may not match the rate in the source string. &nbsp;Aka, you may advance 2 bytes in the destination string, but 4 bytes in the source string (since you&#39;re pulling out characters instead of surrogate pairs).</p>
+</div>
+<p><strong>Michiel</strong> on 31 May 2010 8:15 AM:</p><div style="margin-left: 1em"><p>Since the point of CharNext is that CharNext(ch) != ch+1, copying only ch but not ch+1 is a bad idea. You can&#39;t split a surrogate like that. I&#39;ve got no idea what the intent was.</p>
+</div>
+<p><strong>Robert</strong> on 31 May 2010 8:21 AM:</p><div style="margin-left: 1em"><p>The original intent seems to be copying a string. It&#39;s doomed because CharNext() may advance more than one single byte per call (due to Unicode) and thus the copy would end up with garbage (half-characters)</p>
+</div>
+<p><strong>Simon Montagu</strong> on 31 May 2010 8:40 PM:</p><div style="margin-left: 1em"><p>Never mind surrogate pairs for the moment. I think what the code was trying to do was copy the source string without diacritics -- in other words the writer knew that CharNext(ch) != ch + 1 and was trying to exploit that, maybe in order to be able to compare &quot;cafe&quot; to &quot;café&quot; and have them match or something similar.</p>
+<p>If one could guarantee that the input was in normalization form D, it might even work. Some of the time.</p>
+</div>
+<p><strong>Mihai</strong> on 2 Jun 2010 10:52 AM:</p><div style="margin-left: 1em"><p>1. If they wanted to strip all accents, it will work for string using combining characters.</p>
+<p>Otherwise they would have to perform a decomposition step before.</p>
+<p>2. If they wanted &quot;an array of user characters&quot;, it does not work because *params will only get you the first code point.</p>
+<p>Not to mention that a &quot;user character&quot; (what the user considers to be a character) does not fit in a wchar_t</p>
+<p>But based on the MAX_PATH thing, it looks like intention 1 is more likely.</p>
+<p>The intention is probably wrong in both cases, so the execution almost does not matter anymore :-)</p>
+</div>
+<p><strong>Doug Ewell</strong> on 2 Jun 2010 4:00 PM:</p><div style="margin-left: 1em"><p>I don&#39;t suppose the spelling &quot;whcar_t&quot; has anything to do with this...</p>
+</div>
+<hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2010/06/26 <a href="http://archives.miloush.net/michkap/archive/2010/06/26/10028278.html">BUG SPOTTING answers</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2010/06/01/10017368.html" title="It is with a tenge of sorrow that I say this">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2010/05/30/10014026.html" title="Not everyone wants me to do The Right Thing™ + Ampyra update/irony...">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2010-05">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2010-05-31">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2010/05/31/10017323.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:35 GMT -->
+</html>

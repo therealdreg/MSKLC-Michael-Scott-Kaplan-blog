@@ -1,0 +1,40 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2010/03/15/9974423.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:35 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Thus the problems resist solution, and the workarounds are often inadequate</title></head><body>
+<h1>Thus the problems resist solution, and the workarounds are often inadequate</h1>
+<p><em>by Michael S. Kaplan, published on 2010/03/15 07:01 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2010/03/15/9974423.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P>Language can be hard.</P>
+<P>Sure there are really complex issues I have talked about before in languages like Hungarian (ref: <A href="http://archives.miloush.net/michkap/archive/2005/08/10/449909.html" mce_href="http://archives.miloush.net/michkap/archive/2005/08/10/449909.html"><STRONG>Double compressions -- Hungarian goulash?</STRONG></A> and <A href="http://archives.miloush.net/michkap/archive/2005/11/13/491646.html" mce_href="http://archives.miloush.net/michkap/archive/2005/11/13/491646.html"><STRONG>Hungarian is even more complicated than I thought</STRONG></A>). I mean, the need to consider collation differently depending in whether one is asking <A href="http://archives.miloush.net/michkap/archive/2006/04/29/586726.html" mce_href="http://archives.miloush.net/michkap/archive/2006/04/29/586726.html">the <STRONG>which comes first?</STRONG> question or the <STRONG>are they equal?</STRONG> question</A> is a hard problem, made harder by the fact that even&nbsp;when there are two functions and a good technical reason to call the right one, engineers often don't do it (as I point out <A href="http://archives.miloush.net/michkap/archive/2006/02/09/528297.html" mce_href="http://archives.miloush.net/michkap/archive/2006/02/09/528297.html"><STRONG>here</STRONG></A>, for example).</P>
+<P>The fact that they don't have a function anyway may seem bad.</P>
+<P>But on the other hand?</P>
+<P>In the end, it really speaks against making something possible if you have good reason to believe it won't be utilized.</P>
+<P>And there is even more to it than that.</P>
+<P>Even as language shifts in its expected usage, software that keeps on top of the issues does little more than wait to flip a switch.</P>
+<P>I mean, whether one thinks about Norwegian changes that have happened with no longer treating <STRONG>aa</STRONG> as a&nbsp;<STRONG><FONT face=Tahoma>å</FONT></STRONG> (ref: <A href="http://archives.miloush.net/michkap/archive/2006/04/27/584439.html" mce_href="http://archives.miloush.net/michkap/archive/2006/04/27/584439.html"><STRONG>here</STRONG></A>), or Swedish changes that will happen differentiating <STRONG>w </STRONG>and <STRONG>v</STRONG> (ref: <A href="http://archives.miloush.net/michkap/archive/2006/04/25/583307.html" mce_href="http://archives.miloush.net/michkap/archive/2006/04/25/583307.html"><STRONG>here</STRONG></A>), all this amounts to is waiting until enough situations come up where the people annoyed with us doing some old out-of-date thing outnumber the&nbsp;people annoyed with us for doing some new-fangled thing. Basically waiting for the <A href="http://archives.miloush.net/michkap/archive/2009/02/18/9430335.html" mce_href="http://archives.miloush.net/michkap/archive/2009/02/18/9430335.html"><STRONG>tipping point</STRONG></A>, and hoping that too many people don't get annoyed along the way as the static snapshots of "what we do" interact with people who do stuff at different times, in different ways.</P>
+<P>But even with that, people usually want more.</P>
+<P>Consider the following, each one of these is something I have had requested before multiple times:</P>
+<UL>
+<LI>Why doesn't "sorting digits as numbers" handle the words like&nbsp;<STRONG>SIX</STRONG> or <STRONG>NINE</STRONG>?</LI>
+<LI>Why doesn't it handle hexadecimal digits?</LI>
+<LI>Why doesn't it handle GUIDs?</LI>
+<LI>Why can't that Hungarian case get handled right anyway?</LI>
+<LI>Why can't known non-linguistic items like HTML tags get treated as non-linguistic?</LI>
+<LI>Instead of&nbsp;"ignore diacritics" why can't there be a "prefer diacritics" where they are important but not crucial?</LI>
+<LI>Why can't words like <STRONG>A</STRONG> or <STRONG>The</STRONG> at the beginning of a string be ignored like it is in e.g. Media Player?</LI>
+<LI>Why does Thai word breaking work better in Word than in Windows?</LI>
+<LI>Why did Windows 7 break the Greek final sigma?</LI>
+<LI>What the %#$* is wrong with German sorting?</LI>
+<LI>You can treat "gross" and "groß" as the same but why can't you know when "Gross" and "Groß" need to be different?</LI></UL>
+<P>Now that last one just came in this last weekend, in regard to SQL Server. And yes it is bound up not only in issues like the technical ones I mention in <A href="http://archives.miloush.net/michkap/archive/2005/04/10/406880.html" mce_href="http://archives.miloush.net/michkap/archive/2005/04/10/406880.html"><STRONG>What the %#$* is wrong with German sorting?</STRONG></A> which are sometimes just a side effect of the logical way to try to implement a technical solution that interested language experts (though generally <STRONG><EM>not</EM></STRONG> computational linguists) are scandalized by whenever they hear about them.</P>
+<P>But instead this is actual linguistic issues related to the fact that some&nbsp;words need to be treated differently and there is no algorithmic way to discern the differences.</P>
+<P>Now each of the above problems can be solved with engineering effort that may include enhanced algorithms or may include knowledge of&nbsp;specific words/letters&nbsp;or may include dictionary lookups or may just include bug fixes/mea culpas.</P>
+<P>Though for the most part the team that owns <STRONG>globalization services</STRONG> considers all of this to be out of scope for "low level" functions.</P>
+<P>And of course they include no "higher level functions".</P>
+<P>Now any of these issues can be hacked up by anyone, but if the team that does all the work with linguistic fidelity doesn't do it, how likely is that some other team will do better here, especially when the only satisfactory way to fix many of these problems from an engineering standpoint is to do so inside the same kinds of algorithms that those lower level functions perform?</P>
+<P>And especially when there aren't oodles of teams just jumping at the chance to do that kind of work if the team that traditionally is supposed to care so much says <STRONG>meh</STRONG>.</P>
+<P>Thus the problems resist solution, and the workarounds are often inadequate....</P>
+<P>All of which ignores the fact that even when cooler, more useful functions and methods and flags exist that people don't know to call them anyway!</P>
+<hr/><div style="margin-left: 1em"><em>no comments</em></div><hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2010/03/16/9976677.html" title="That Chinese Dictionary can work anywhere, if you let it">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2010/03/14/9976052.html" title="If you can&#39;t read it, then that freaking list clearly doesn&#39;t have you in mind">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2010-03">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2010-03-15">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2010/03/15/9974423.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:35 GMT -->
+</html>

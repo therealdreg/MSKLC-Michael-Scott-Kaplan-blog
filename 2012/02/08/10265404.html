@@ -1,0 +1,65 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2012/02/08/10265404.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>The awkward insert of shortest day names...</title></head><body>
+<h1>The awkward insert of shortest day names...</h1>
+<p><em>by Michael S. Kaplan, published on 2012/02/08 07:01 -05:00, original URI: http://blogs.msdn.com/b/michkap/archive/2012/02/08/10265404.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<p>The other day in <strong><a title="Sometimes MMM is MMMM, other times MMM is M! (aka Not all abbreviations are created equal)" href="http://archives.miloush.net/michkap/archive/2012/02/03/10263576.html">Sometimes MMM is MMMM, other times MMM is M! (aka Not all abbreviations are created equal)</a></strong>, I included a table of data from <a href="http://msdn.microsoft.com/library/windows/desktop/dd317787.aspx">Day, Month, Year, and Era Format Pictures</a>:</p>
+<table border="1">
+<tbody>
+<tr>
+<td>d</td>
+<td>Day of the month as digits without leading zeros for single-digit days.</td>
+</tr>
+<tr>
+<td>dd</td>
+<td>Day of the month as digits with leading zeros for single-digit days.</td>
+</tr>
+<tr>
+<td>ddd</td>
+<td>Abbreviated day of the week as specified by a <a href="http://msdn.microsoft.com/en-us/library/windows/desktop/dd373831.aspx">LOCALE_SABBREVDAYNAME*</a>value, for example, "Mon" in English (United States).</td>
+</tr>
+<tr>
+<td>dddd</td>
+<td>Day of the week as specified by a <a href="http://msdn.microsoft.com/en-us/library/windows/desktop/dd373839.aspx">LOCALE_SDAYNAME*</a> value.</td>
+</tr>
+<tr>
+<td>M</td>
+<td>Month as digits without leading zeros for single-digit months.</td>
+</tr>
+<tr>
+<td>MM</td>
+<td>Month as digits with leading zeros for single-digit months.</td>
+</tr>
+<tr>
+<td>MMM</td>
+<td>Abbreviated month as specified by a <a href="http://msdn.microsoft.com/en-us/library/windows/desktop/dd373831.aspx">LOCALE_SABBREVMONTHNAME*</a> value, for example, "Nov" in English (United States).</td>
+</tr>
+<tr>
+<td>MMMM</td>
+<td>Month as specified by a <a href="http://msdn.microsoft.com/en-us/library/windows/desktop/dd373856.aspx">LOCALE_SMONTHNAME*</a> value, for example, "November" for English (United States), and "Noviembre" for Spanish (Spain).</td>
+</tr>
+</tbody>
+</table>
+<p>I kind of left something out of&nbsp;the<strong>&nbsp;ddd</strong> line.</p>
+<p>The actual stuff in the topic was more like this:</p>
+<table border="1">
+<tbody>
+<tr>
+<td>ddd</td>
+<td>Abbreviated day of the week as specified by a <a href="http://msdn.microsoft.com/en-us/library/windows/desktop/dd373831.aspx">LOCALE_SABBREVDAYNAME*</a>value, for example, "Mon" in English (United States). <br /><br /> <strong>Windows Vista and later</strong>: If a short version of the day of the week is required, your application should use the <a href="http://msdn.microsoft.com/library/windows/desktop/dd373890.aspx">LOCALE_SSHORTESTDAYNAME*</a> constants.</td>
+</tr>
+</tbody>
+</table>
+<p>However, I felt like this information was very very weirdly placed, in a topic about <strong>format pictures</strong>.</p>
+<p>I mean, they can't ever be used that way, something I have talked about previously in <strong><a title="We call 'em ShortestDayNames for a reason; they're as short as they're EVER gonna be!" href="http://archives.miloush.net/michkap/archive/2011/12/30/10251957.html">We call 'em ShortestDayNames for a reason; they're as short as they're EVER gonna be!</a></strong> and <strong><a title="{recycled joke here} It could have been called LOCALE_SSINGLESERVINGDAYNAME*" href="http://archives.miloush.net/michkap/archive/2011/01/27/10120308.html">{recycled joke here} It could have been called LOCALE_SSINGLESERVINGDAYNAME*</a></strong>, which give the reasoning for why the shortest day names were created and why they had no format picture abbreviation.</p>
+<p>I don't object to the docs trying to bridge the distance here, but it feels pretty much like&nbsp;a "<strong>Bridge to Nowhere</strong>" since none of the information that a developer trying to use format pictures to build calendars would need to get conceptually to the shortest day names is actually there.</p>
+<p>The reference there&nbsp;feels wrong -- like if they weren't going to explain the conceptual difference, then why mention it?</p>
+<p>As it stands, an otherwise useful topic has this weird inserted bit.</p>
+<p>I'd recommend taking it out -- the insert is weird and badly placed and awkward. We are forced to look past it since it doesn't really do anything useful for us....</p>
+<p><strong>My vote? Take it out completely -- it has nothing to do with format pictures; why pretend otherwise?</strong></p>
+<hr/><p><strong>Simon Buchan</strong> on 8 Feb 2012 11:27 AM:</p><div style="margin-left: 1em"><p>It&#39;s fairly common to read documentation backwards - imagine someone not reading this to see how to use format strings to get at the LOCAL_S* values, but someone trying to figure out how to get the values behind the format strings directly.</p>
+</div>
+<hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2013/04/02 <a href="http://archives.miloush.net/michkap/archive/2013/04/02/10406831.html">All abbreviated days of week are created equal. But some are less equal than others!</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2012/02/09/10265712.html" title="Keeping a sense of *order* about the RATIO!">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2012/02/07/10264760.html" title="If you have to ask &quot;How do I say ____ in ____ language?&quot; then maybe you shouldn&#39;t!">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2012-02">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2012-02-08">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2012/02/08/10265404.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+</html>

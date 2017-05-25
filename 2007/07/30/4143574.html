@@ -1,0 +1,36 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2007/07/30/4143574.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:37 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>See that version there? It is going down, man! #1</title></head><body>
+<h1>See that version there? It is going down, man! #1</h1>
+<p><em>by Michael S. Kaplan, published on 2007/07/31 02:45 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2007/07/30/4143574.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P>When I first started&nbsp;working in Windows and for several years,&nbsp;I did not really act by default like a member of the Windows team -- I kept looking at problems like an outsider and it was an effort of will to look at things from the inside.</P>
+<P>For the most part this was very helpful since it helped me to be able to&nbsp;point out times that people were missing out on some external developer scenarios.</P>
+<P>But slowly that viewpoint faded, and while I did not forget the work I did before, the viewpoint changed.</P>
+<P>Add to that the times that specific scenarios are not ones you have been thinking about, because they did not occur to me and no one else mentioned them.... and if you don't think of them and they aren't in th spec and no tester puts in a bug about them, then how is one supposed to keep them in mind?</P>
+<P>I'll now give a good example of this. :-)</P>
+<P>When I talked about the recommended process for using the NLS version information to figure out when to re-index, first back in <STRONG><A class="" href="http://archives.miloush.net/michkap/archive/2005/02/03/366145.html" mce_href="http://archives.miloush.net/michkap/archive/2005/02/03/366145.html">What makes a string meaningful?</A></STRONG> and&nbsp;then in&nbsp;<STRONG><A class="" href="http://archives.miloush.net/michkap/archive/2005/05/04/414520.html" mce_href="http://archives.miloush.net/michkap/archive/2005/05/04/414520.html">Collation data - must be stable, but it must not stand still</A></STRONG>, I was thinking about components that worked on that version of Windows and moved forward when Windows did. That process:</P>
+<OL>
+<LI><FONT face=Tahoma>Any time the major version is incremented, you should re-index <STRONG>no matter what</STRONG>, and </FONT>
+<LI><FONT face=Tahoma>Any time the minor version is incremented, you should re-index for any entry where IsNLSDefinedString used to return FALSE (in case it now returns TRUE or different results due to part of the string now being defined)</FONT></LI></OL>
+<P>This is all well and good, but there are a&nbsp;few scenarios that&nbsp;are not&nbsp;covered&nbsp;here:</P>
+<UL>
+<LI>What to do if you install a version of Windows or service pack that had a major version update;</LI>
+<LI>What to do if you use the collation functionality on a different machine that&nbsp;has a&nbsp;lower major version;</LI>
+<LI>What to do in either of the above cases when a lower minor version is involved.</LI></UL>
+<P>This puts a cat among the pigeons, doesn't it?</P>
+<P>Not impossible, by any means. </P>
+<P>But also not currently described in the docs or here at SIAO Plaza.</P>
+<P>I'll let this simmer for a bit and I'll come back with the additional rules in the morning. </P>
+<P>You have a few hours if you want to take a guess on one or all of them, or somewhere in between.</P>
+<P>Winners of this contest can read this blog free, for life! :-)</P>
+<P mce_keep="true">&nbsp;</P>
+<P><FONT color=#ff00ff><EM>This post brought to you by</EM> <FONT size=6>ឯ</FONT> <EM>(<A class="" href="http://www.fileformat.info/info/unicode/char/17af" mce_href="http://www.fileformat.info/info/unicode/char/17af">U+17af</A>, a.k.a. KHMER INDEPENDENT VOWEL QE)</EM></FONT></P>
+<hr/><p><strong>Dean Harding</strong> on 31 Jul 2007 6:48 AM:</p><div style="margin-left: 1em"><p>Well, I'd say if the major version changes *either way* you should re-index.</p>
+<p>If a minor version changes backwards, you probably have to re-index as well. Because otherwise, you basically have to re-index strings that *now* return FALSE for IsNLSDefinedString and you couldn't do that without scanning them all -- so you may as well just re-index everything.</p>
+<p>To be honest, though, I don't see how you could have done anything differently. If you wanted to skip the &quot;re-index on minor version decrement&quot;, I believe you would have to change IsNLSDefinedString so that it returned the minimum version that the string would have been defined in, and I can't imagine how big the data file would have to be to make that possible :-)</p>
+</div>
+<p><strong>jon</strong> on 31 Jul 2007 7:13 AM:</p><div style="margin-left: 1em"><p>You have been assimilated. Resistance was futile.</p></div>
+<hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2007/09/08 <a href="http://archives.miloush.net/michkap/archive/2007/09/08/4831056.html">2001, a Correctness Odyssey (aka What's the matter with Ü?)</a></p><p>2007/07/31 <a href="http://archives.miloush.net/michkap/archive/2007/07/31/4154107.html">See that version there? It is going down, man! #2 (aka Everybody WYNNs)</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2007/07/31/4149843.html" title="Return of the Mack^H^H^H^HMicrosoft Locale Builder!">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2007/07/30/4141423.html" title="-3 time&#39;s a charm!">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2007-07">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2007-07-30">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2007/07/30/4143574.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:37 GMT -->
+</html>

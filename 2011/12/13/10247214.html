@@ -1,0 +1,69 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2011/12/13/10247214.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>These aren't the MONTHS you're looking for (aka You'll never get to the 13th month *that* way)</title></head><body>
+<h1>These aren't the MONTHS you're looking for (aka You'll never get to the 13th month *that* way)</h1>
+<p><em>by Michael S. Kaplan, published on 2011/12/13 07:01 -05:00, original URI: http://blogs.msdn.com/b/michkap/archive/2011/12/13/10247214.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<p>The other day I had somebody call me out about a blog I wrote&nbsp;a little over a year ago. I'll excerpt the mail to avoid some of the more graphic language:</p>
+<p style="padding-left: 30px;"><span style="font-family: times new roman,times; font-size: medium;">Dude, maybe you should read a little before you freaking&nbsp;write! If you query for month names of the current user default when you Hebrew is the default and the Hebrew calendar is selected, then the only way to *avoid* getting Hebrew months is passing the flag to ignore user overrides. Kind of a huge hole in the&nbsp;"logic" of&nbsp;that blog you wrote!</span></p>
+<p><em>For the record, I replaced the word he used with freaking there. He used 𝓕𝓾𝓬𝓴𝓲𝓷𝓰 only he didn't do something clever with Unicode to avoid the publish filters.</em></p>
+<p>I was not offended, sometimes mail kind of goes that way.</p>
+<p>But there are a few things you should probably know about me:</p>
+<p>First of all, sometimes I can be wrong. There are two types of situations where that can happen:</p>
+<ul>
+<li>When it's something I don't care about. In that case, I'm simply not interested and you have an uphill battle trying to convince me it matters;</li>
+<li>When it's something I do Care about. In that case, I'll work to correct the problem, whatever it may be.</li>
+</ul>
+<p>Now the fact that I don't care about the first category means the people who point those things out might not like me, but from my point of view I find them to be a waste of time, so that saves me a lot of time. And I can use&nbsp;that Free time&nbsp;to minimize the second category when possible!</p>
+<p>Second of all, before you go down the road, you might want to try it yourself, and not trust what you might infer from the documentation.</p>
+<p>I love our docs but I point out their real flaws all the time!</p>
+<p>In this case, it is quite easy to change the <strong>Standards and Formats</strong> (aka default user locale) to Hebrew:</p>
+<p><a href="http://msdnshared.blob.core.windows.net/media/MSDNBlogsFS/prod.evol.blogs.msdn.com/CommunityServer.Blogs.Components.WeblogFiles/00/00/00/33/81/5670.hebrew01.jpg"><img style="max-width: 550px;" border="0" alt="" src="http://msdnshared.blob.core.windows.net/media/MSDNBlogsFS/prod.evol.blogs.msdn.com/CommunityServer.Blogs.Components.WeblogFiles/00/00/00/33/81/5670.hebrew01.jpg" /></a></p>
+<p>and then click the <strong>A<span style="text-decoration: underline;">d</span>ditional settings...</strong> button and choose the <strong>Date</strong> tab to get to where you can change the calendar:</p>
+<p><a href="http://msdnshared.blob.core.windows.net/media/MSDNBlogsFS/prod.evol.blogs.msdn.com/CommunityServer.Blogs.Components.WeblogFiles/00/00/00/33/81/3823.Hebrew02.jpg"><img style="max-width: 550px;" border="0" alt="" src="http://msdnshared.blob.core.windows.net/media/MSDNBlogsFS/prod.evol.blogs.msdn.com/CommunityServer.Blogs.Components.WeblogFiles/00/00/00/33/81/3823.Hebrew02.jpg" /></a></p>
+<p>Once you do this, you'll see that we are now using the Hebrew calendar:</p>
+<p><a href="http://msdnshared.blob.core.windows.net/media/MSDNBlogsFS/prod.evol.blogs.msdn.com/CommunityServer.Blogs.Components.WeblogFiles/00/00/00/33/81/1778.Hebrew03.jpg"><img style="max-width: 550px;" border="0" alt="" src="http://msdnshared.blob.core.windows.net/media/MSDNBlogsFS/prod.evol.blogs.msdn.com/CommunityServer.Blogs.Components.WeblogFiles/00/00/00/33/81/1778.Hebrew03.jpg" /></a></p>
+<p>Now if while you are in this this situation, you call</p>
+<p style="padding-left: 30px;"><strong><span style="font-family: courier new,courier;">GetLocaleInfo(LOCALE_USER_DEFAULT, LOCALE_SMONTHNAME13)</span></strong></p>
+<p>you will get a zero length string.</p>
+<p>And if you call</p>
+<p style="padding-left: 30px;"><strong><span style="font-family: courier new,courier;">GetLocaleInfo(LOCALE_USER_DEFAULT, LOCALE_SMONTHNAME12)</span></strong></p>
+<p>you will get</p>
+<p style="padding-left: 30px;"><span style="font-size: x-large;">דצמבר</span></p>
+<p>a.k.a December, not</p>
+<p style="padding-left: 30px;"><span style="font-size: x-large;">כסלו</span></p>
+<p>a.k.a. Kislev.</p>
+<p>Well, not really Kislev, but you probbly know what I mean.</p>
+<p>You see, to the random person who sent me the mail, I knew of this particular limitation. And before I wrote and&nbsp;published&nbsp;<strong><a title="Note to the NLS API: It ain't ever gonna by 13 o'clock, either." href="http://archives.miloush.net/michkap/archive/2010/10/26/10080726.html">Note to the NLS API: It ain't ever gonna by 13 o'clock, either.</a></strong>,&nbsp;I tested it out explicitly to make sure the issue was still there.</p>
+<p>Because when it's stuff I find interesting, I know it makes a 𝓕𝓾𝓬𝓴𝓲𝓷𝓰 difference to get things right....</p>
+<p>In the end, although <a href="http://msdn.microsoft.com/library/dd318101.aspx">GetLocaleInfo</a>/<a href="http://msdn.microsoft.com/library/dd318103.aspx">GetLocaleInfoEx</a> have documented behavior related to the <a href="http://msdn.microsoft.com/library/dd373821.aspx">LOCALE_NOUSEROVERRIDE</a> flag,&nbsp;the fact is that the different month names inherent in many alternate calendars have never been returned, even when the <a href="http://msdn.microsoft.com/library/dd373749.aspx">LOCALE_ICALENDARTYPE</a> has been changed and the functions can detect this fact.</p>
+<p>Only the user overrides you can drectly change are impacted, and the "secondary" data like month names aren't available through GetLocaleInfo[Ex].</p>
+<p>Is it a bug?</p>
+<p>Sure, kinda.</p>
+<p>But it is a bug that has existed for as long as alternate calendars have. In almost ever copy of Windiws ever sold or stolen.</p>
+<p>This fact is easily verified experimentally by anyone who takes the the time to do so.</p>
+<p>Ideally before cursing me in my own inbox, though if not I can always write a blog about it!</p>
+<hr/><p><strong>Doug Ewell</strong> on 13 Dec 2011 10:47 AM:</p><div style="margin-left: 1em"><p>Ah, I see you&#39;re making good use of <a rel="nofollow" target="_new" href="http://www.ewellic.org/mathtext.html">www.ewellic.org/mathtext.html</a> again.</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 13 Dec 2011 11:46 AM:</p><div style="margin-left: 1em"><p>&lt;SECRETSHAME&gt;I used the Word Insert Symbol dialog. that site would have been quicker!&lt;/SECRETSHAME&gt;</p>
+</div>
+<p><strong>Shachar Shemesh</strong> on 13 Dec 2011 12:11 PM:</p><div style="margin-left: 1em"><p>Surely, the 12th month in the Hebrew calendar is אלול, not כסלו. Now, if you claim that the sixth month is אדר א׳ and the seventh אדר ב׳, then the 12th month would still be אב.‎ כסלו is the third month, either count.</p>
+<p>Or is that what you meant by &quot;but you probably know what I mean&quot;, in which case, I know what you mean, but not that you meant it.</p>
+<p>Shachar</p>
+</div>
+<p><strong>Simon Buchan</strong> on 13 Dec 2011 1:45 PM:</p><div style="margin-left: 1em"><p>To see if I understand the issue, it&#39;s that GetLocaleInfo[Ex] only supports Gregorian calanders, but returns the month names from what the current locale&#39;s calander is, even if it&#39;s non-Gregorian (which makes no sense). From the examples you&#39;ve given, it looks like it *could* be fixed by &quot;simply&quot; following the docs and returning the current calander&#39;s 13th month if it has one, but I don&#39;t know much about non-Gregorian calanders...</p>
+<p>Annoyingly, Chrome doesn&#39;t do font fallback for your fancy swearing :)</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 13 Dec 2011 4:22 PM:</p><div style="margin-left: 1em"><p>@Shachar -- yes, I know. I was just saying we weren&#39;t getting the Hebrew calendar, we get the Gregorian calendar localized into the Hebrew language....</p></div>
+<p><strong>Alex Cohn</strong> on 14 Dec 2011 11:57 AM:</p><div style="margin-left: 1em"><p>@Shahar, some would argue that Kislev is number 9, because the first month is Nissan! But anyway, I would choose Adar bet to occupy the 13th slot, to emphasize its conditional existence. </p>
+</div>
+<p><strong>Brian Tkatch</strong> on 16 Dec 2011 5:21 AM:</p><div style="margin-left: 1em"><p>&gt;@Shahar, some would argue that Kislev is number 9, because the first month is Nissan! But anyway, I would choose Adar bet to occupy the 13th slot, to emphasize its conditional existence. </p>
+<p>Considering Esther 3:7 (<a rel="nofollow" target="_new" href="http://www.blueletterbible.org/Bible.cfm?b=Est&amp;c=3&amp;v=1&amp;t=KJV#comm/7">www.blueletterbible.org/Bible.cfm</a>) specifically describes it as such:</p>
+<p>In the first month, that [is], the month Nisan, in the twelfth year of king Ahasuerus, they cast Pur, that [is], the lot, before Haman from day to day, and from month to month, [to] the twelfth [month], that [is], the month Adar. </p>
+<p>I think counting Adar as 12 is more authentic. But English counts from the year, not the month. October is the eight month, yet 10th in the year, and so on. So, to be consistent, we&#39;d want to count from the beginning of the year as well, making Adar number 6.</p>
+<p>My gripe is the extra month is Adar Aleph, not Adar B..., and as my birthday is in Adar Aleph, i take it to heart. :)</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 16 Dec 2011 9:13 AM:</p><div style="margin-left: 1em"><p>See <strong><a href="http://archives.miloush.net/michkap/archive/2011/12/15/10248139.html">this blog</a></strong> for the actual implementation....</p></div>
+<hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2011/12/15 <a href="http://archives.miloush.net/michkap/archive/2011/12/15/10248139.html">I Adar you to guess how they make it work!</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2011/12/14/10247653.html" title="Every character has a story #35: ARABIC LETTER HAH WITH TWO DOTS VERTICAL ABOVE (U+0682)">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2011/12/12/10246749.html" title="SharePoint and CJK Extensions A, B, C, D, and even E?">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2011-12">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2011-12-13">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2011/12/13/10247214.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+</html>

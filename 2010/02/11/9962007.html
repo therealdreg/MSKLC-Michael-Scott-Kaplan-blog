@@ -1,0 +1,22 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2010/02/11/9962007.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:35 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Evil Date Parsing lives! Viva Evil Date Parsing!</title></head><body>
+<h1>Evil Date Parsing lives! Viva Evil Date Parsing!</h1>
+<p><em>by Michael S. Kaplan, published on 2010/02/11 08:16 -05:00, original URI: http://blogs.msdn.com/b/michkap/archive/2010/02/11/9962007.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P>So a&nbsp; question came up the other day about an unusual interaction between the "universal sortable" format and the Arabic Um Al Qura Calendar. Here is some code that shows the problem:</P>
+<BLOCKQUOTE><FONT face="Consolas,Lucida Console,Courier New,Courier,Fixed"><B>
+<P>CultureInfo ci = new CultureInfo("ar-sa");<BR>ci.DateTimeFormat.Calendar = ci.OptionalCalendars[1];<BR>Thread.CurrentThread.CurrentCulture = ci;<BR>String value = DateTime.UtcNow.ToString("u");<BR>DateTime dt = DateTime.Parse(value, ci, DateTimeStyles.AdjustToUniversal | DateTimeStyles.AssumeUniversal);</P></B></FONT></BLOCKQUOTE>
+<P>Running this code causes an error on the Parse call....</P>
+<P>Now I start with one of my very first blogs from the beginning (<A href="http://archives.miloush.net/michkap/archive/2004/11/26/270769.html" mce_href="http://archives.miloush.net/michkap/archive/2004/11/26/270769.html"><STRONG>'Evil date parsing', Parse, and ParseExact</STRONG></A>) and suggest that the definition of evil be extended to include parsing errors. :-)</P>
+<P>Beyond that, it is very interesting to see what is happening here.</P>
+<P>I'll explain what is going on here tomorrow in nauseating detail, but doesd anyone want to take a stab at explaining what is going on before I do that?</P>
+<hr/><p><strong>Dale</strong> on 11 Feb 2010 8:49 AM:</p><div style="margin-left: 1em"><p>guess 1... &nbsp; you get a date that uses Indic digits and the parse code chokes on that</p>
+<p>guess 2... the date is RTL and sorts before or after all the other dates..</p></div>
+<p><strong>Larry H.</strong> on 12 Feb 2010 8:22 AM:</p><div style="margin-left: 1em"><p>&quot;I'll explain what is going on here tomorrow in nauseating detail...&quot;</p>
+<p>What's going on here tomorrow? And why do you need to explain it? '-)</p></div>
+<p><strong>Michael S. Kaplan</strong> on 12 Feb 2010 12:28 PM:</p><div style="margin-left: 1em"><P>Larry, see <A href="http://archives.miloush.net/michkap/archive/2010/02/12/9962835.html"><STRONG>Evil Date Parsing lives! Viva Evil Date Parsing!, explained</STRONG></A> for the explanation.</P></div>
+<p><strong>Larry H.</strong> on 12 Feb 2010 7:51 PM:</p><div style="margin-left: 1em"><p>I know, Michael. You had a dangling participle and I was just making a joke. Apparently not that funny.</p></div>
+<hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2010/02/12 <a href="http://archives.miloush.net/michkap/archive/2010/02/12/9962835.html">Evil Date Parsing lives! Viva Evil Date Parsing!, explained</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2010/02/12/9962835.html" title="Evil Date Parsing lives! Viva Evil Date Parsing!, explained">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2010/02/10/9960976.html" title="Future compat is not back compat and wishing can&#39;t make it so....">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2010-02">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2010-02-11">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2010/02/11/9962007.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:35 GMT -->
+</html>

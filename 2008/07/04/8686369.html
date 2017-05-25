@@ -1,0 +1,44 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2008/07/04/8686369.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:36 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>The exception that proves the rule</title></head><body>
+<h1>The exception that proves the rule</h1>
+<p><em>by Michael S. Kaplan, published on 2008/07/04 03:01 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2008/07/04/8686369.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P><EM>Remember those posters that said </EM><EM>"Today is the first day of the rest of your life"</EM><EM>? </EM><EM>Well, that's true of every day but one -- the day you die.</EM> -- Lester Burnham (Kevin Spacey)</P>
+<P>Every rule has an exception.</P>
+<P>Like the general rule that it is a bad idea to hard code strings in a call to MessageBoxW -- you should always load the string from resources so that your localizer has the opportunity to translate the text.</P>
+<P>This is a very good and sensible rule, and it was just yesterday that several of us were reviewing bug descriptions that were entered to the bug database by a tool that detects such problems.</P>
+<P>But while looking through the valid reports of bugs that various developers were going to have to fix, we found one case that is the exception to this rule.</P>
+<P>This good and sensible rule.</P>
+<P>Can you guess what it might be?</P>
+<P>The one time that this rule isn't true?</P>
+<P>Some people might think it is an ASSERT function. Good guess, but no. That isn't it.</P>
+<P>The exception is when the error is something like this one:</P>
+<BLOCKQUOTE>
+<P><FONT color=#ff0000 size=5>Catastrophic Error: Unable to load message.</FONT></P></BLOCKQUOTE>
+<P>And the call comes after the attempt to load the&nbsp;error string&nbsp;in question fails.</P>
+<P>This is a great exception to the rule.</P>
+<P>I mean, is there ever a better time to point that we could hardly expect a developer to load that message from a resource....</P>
+<P>Though to be honest there is a flaw in this specific description of otherwise unassailable logic. </P>
+<P>Can anyone guess what that flaw might be?</P>
+<P mce_keep="true">&nbsp;</P>
+<P><FONT color=#ff00ff><EM>This blog brought to you by</EM><FONT size=5> ⧮ </FONT><EM>(<A class="" href="http://www.fileformat.info/info/unicode/char/29ee" mce_href="http://www.fileformat.info/info/unicode/char/29ee">U+29ee</A>, aka ERROR-BARRED WHITE SQUARE)</EM></FONT></P>
+<hr/><p><strong>tballard</strong> on 4 Jul 2008 8:05 AM:</p><div style="margin-left: 1em"><p>You're not telling the user about the original error?</p></div>
+<p><strong>Blake Handler</strong> on 4 Jul 2008 11:07 AM:</p><div style="margin-left: 1em"><p>&quot;The exception that proves the rule&quot;</p>
+<p>That phrase always amused me – when it's the exact opposite that is correct.</p>
+<p>Theories are &quot;validated&quot; when experiments are repeated by many people who ALL verify the same experiment’s outcome.</p>
+<p>If a different result occurs -- then the experiment would invalidate the theory.</p>
+<p>So . . . .&quot;The exception disproves the rule&quot; (^_^)</p></div>
+<p><strong>GregM</strong> on 4 Jul 2008 9:55 PM:</p><div style="margin-left: 1em"><p>I would hope that they tried to load the &quot;catastrophic error&quot; message from resources first, and only used the hard coded string if that string couldn't be loaded either.</p>
+<p>One that truly can't be loaded from a resource is the one that says that the resource DLL itself can't be loaded (assuming that all localization is done in resource DLLs and the main application isn't changed).</p></div>
+<p><strong>Andy</strong> on 6 Jul 2008 8:10 AM:</p><div style="margin-left: 1em"><p>Is the flaw that the program is taking itself just a teeny-weeny bit too seriously by proclaiming a &quot;Catastrophic Error&quot;?</p></div>
+<p><strong>Paulo Santos</strong> on 7 Jul 2008 3:41 AM:</p><div style="margin-left: 1em"><p>I think that you can have at least 2 kinds of destinations for error messages: the user and the administrator.</p>
+<p>If you something unexpected happens when you are trying to fetch an error message for the user, than this unexpected error should be shown to the Administrator and not the user anymore.</p>
+<p>So, the user would see be a default error page saying something like &quot;Sorry, unexpected error&quot;. And the Admin would see an error &nbsp;&quot;Unable to load message&quot; and hopefully some more details.</p></div>
+<p><strong>Timothy Fries</strong> on 7 Jul 2008 5:55 PM:</p><div style="margin-left: 1em"><p>&gt;&gt; That phrase always amused me – when it's the exact opposite that is correct.</p>
+<p>Not necessarily. &nbsp;If you consider the word &quot;rule&quot; to mean something more akin to &quot;general rule&quot;; then the very fact that the proving exception is, in fact, a truly exceptional situation does indeed validate the premise that the &quot;general rule&quot; holds as such. &nbsp;After all, if the proving exception were a common case, it wouldn't be very exceptional; and in that case the original &quot;rule&quot; would lead you astray.</p>
+<p>Rules were made to be broken, after all.</p></div>
+<p><strong>Rob Kennedy</strong> on 8 Jul 2008 3:30 PM:</p><div style="margin-left: 1em"><p>Regarding &quot;the exception that proves the rule,&quot; please see <a rel="nofollow" target="_new" href="http://www.worldwidewords.org/qa/qa-exc1.htm">http://www.worldwidewords.org/qa/qa-exc1.htm</a>.</p></div>
+<hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2008/07/04/8687005.html" title="The key to key messages is a key contribution">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2008/07/03/8682763.html" title="On installing and removing fonts, Part 1: Do I know you, or some version of you at least?">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2008-07">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2008-07-04">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2008/07/04/8686369.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:36 GMT -->
+</html>

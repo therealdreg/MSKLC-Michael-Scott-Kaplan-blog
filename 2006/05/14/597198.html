@@ -1,0 +1,127 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2006/05/14/597198.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:39 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Harder intermediate forms of characters</title></head><body>
+<h1>Harder intermediate forms of characters</h1>
+<p><em>by Michael S. Kaplan, published on 2006/05/14 03:01 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2006/05/14/597198.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P><FONT face=Tahoma>In the post <A HREF="http://archives.miloush.net/michkap/archive/2005/07/09/437063.html"><STRONG>Getting intermediate forms</STRONG></A>, I gave an example three character sequences that look the same and that are canonically equivalent according to Unicode:</FONT></P><FONT face=Tahoma>
+<UL dir=ltr style="MARGIN-RIGHT: 0px">
+<LI><FONT face=Tahoma size=5><FONT size=3>ễ</FONT>&nbsp;&nbsp;&nbsp;<A href="http://www.fileformat.info/info/unicode/char/1e35/index.htm"><FONT face="Courier New" size=2>U+1ec5</FONT></A><FONT face="Courier New" size=2>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;LATIN SMALL LETTER E WITH CIRCUMFLEX AND TILDE</FONT></FONT></LI>
+<LI><FONT face=Tahoma size=5><FONT size=3>ễ</FONT>&nbsp;&nbsp;&nbsp;<A href="http://www.fileformat.info/info/unicode/char/0065/index.htm"><FONT face="Courier New" size=2>U+0065</FONT></A><FONT face="Courier New" size=2> </FONT><A href="http://www.fileformat.info/info/unicode/char/0302/index.htm"><FONT face="Courier New" size=2>U+0302</FONT></A><FONT face="Courier New" size=2> </FONT><A href="http://www.fileformat.info/info/unicode/char/0303/index.htm"><FONT face="Courier New" size=2>U+0303</FONT></A><FONT face="Courier New" size=2>&nbsp;LATIN SMALL LETTER E +&nbsp;COMBINING CIRCUMFLEX ACCENT +&nbsp;COMBINING TILDE</FONT></FONT></LI>
+<LI><FONT face=Tahoma size=5><FONT size=3>ễ</FONT>&nbsp;&nbsp;&nbsp;<A href="http://www.fileformat.info/info/unicode/char/00ea/index.htm"><FONT face="Courier New" size=2>U+00ea</FONT></A><FONT face="Courier New" size=2> </FONT><A href="http://www.fileformat.info/info/unicode/char/0303/index.htm"><FONT face="Courier New" size=2>U+0303</FONT></A><FONT face="Courier New" size=2>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; LATIN SMALL LETTER E WITH CIRCUMFLEX +&nbsp;COMBINING TILDE</FONT></FONT></LI></UL></FONT>
+<P><FONT face=Tahoma>In this case, it is easy to see that the first one is in normalization form C, the second is in normalization form D, and the third is somewhere in between.</FONT></P>
+<P><FONT face=Tahoma>However, there are more complicated situations, such as the following:</FONT></P>
+<OL>
+<LI><FONT face=Tahoma>ą́&nbsp;&nbsp;&nbsp;</FONT><FONT face="Courier New" size=2><A href="http://www.fileformat.info/info/unicode/char/0105">U+0105</A> <A href="http://www.fileformat.info/info/unicode/char/0301">U+0301</A>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; LATIN SMALL LETTER A WITH OGONEK&nbsp;+ COMBINING ACUTE ACCENT</FONT></LI>
+<LI><FONT face=Tahoma>ą́&nbsp;&nbsp;&nbsp;</FONT><FONT face="Courier New" size=2><A href="http://www.fileformat.info/info/unicode/char/00e1">U+00e1</A> <A href="http://www.fileformat.info/info/unicode/char/0328">U+0328</A>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; LATIN SMALL LETTER A WITH ACUTE&nbsp;+ COMBINING OGONEK</FONT></LI>
+<LI><FONT face=Tahoma>ą́&nbsp;&nbsp;&nbsp;</FONT><FONT face="Courier New" size=2><A href="http://www.fileformat.info/info/unicode/char/0061">U+0061</A> <A href="http://www.fileformat.info/info/unicode/char/0328">U+0328</A> <A href="http://www.fileformat.info/info/unicode/char/0301">U+0301</A>&nbsp;LATIN SMALL LETTER A&nbsp;+ COMBINING OGONEK&nbsp;+ COMBINING ACUTE ACCENT</FONT></LI>
+<LI><FONT face=Tahoma>ą́&nbsp;&nbsp;&nbsp;</FONT><FONT face="Courier New" size=2><A href="http://www.fileformat.info/info/unicode/char/0061">U+0061</A> <A href="http://www.fileformat.info/info/unicode/char/0301">U+0301</A> <A href="http://www.fileformat.info/info/unicode/char/0328">U+0328</A>&nbsp;LATIN SMALL LETTER A&nbsp;+ COMBINING ACUTE ACCENT&nbsp;+ COMBINING OGONEK</FONT></LI></OL>
+<P><FONT face=Tahoma>Now it is important to note that there is no single precomposed character that captures this letter, and further the method used previously does not give hints as to&nbsp;which of the first two is considered normalization form C and which of the second two is normalization form D.</FONT></P>
+<P><FONT face=Tahoma>So short of calling <A href="http://msdn2.microsoft.com/en-us/library/ebza6ck1.aspx">String.Normalize(NormalizationForm)</A>&nbsp;for both <A href="http://msdn2.microsoft.com/en-us/library/system.text.normalizationform.aspx">NormlizationForm.FormC</A>&nbsp;and <A href="http://msdn2.microsoft.com/en-us/library/system.text.normalizationform.aspx">NormlizationForm.FormD</A>, or the <A href="http://msdn.microsoft.com/library/en-us/intl/nls_normalize_string.asp">NormalizeString</A> function in Win32, how to find out? And how do these methods get their answer, anyway?</FONT></P>
+<P><FONT face=Tahoma>The secret is in the canonical combining class of each Unicode code point, defined in the <A href="http://www.unicode.org/ucd/">Unicode Character Database</A>'s <A href="http://www.unicode.org/Public/UNIDATA/UnicodeData.txt">UnicodeData.txt</A>. This value is marked below, in <STRONG><FONT color=#008000>GREEN</FONT></STRONG>:</FONT></P>
+<BLOCKQUOTE dir=ltr style="MARGIN-RIGHT: 0px">
+<P><FONT face="Courier New"><STRONG>0061;LATIN SMALL LETTER A;Ll;<FONT color=#008000>0</FONT>;L;;;;;N;;;0041;;0041</STRONG></FONT></P>
+<P><FONT face="Courier New"><STRONG>00E1;LATIN SMALL LETTER A WITH ACUTE;Ll;<FONT color=#008000>0</FONT>;L;0061 0301;;;;N;LATIN SMALL LETTER A ACUTE;;00C1;;00C1</STRONG></FONT></P>
+<P><FONT face="Courier New"><STRONG>0105;LATIN SMALL LETTER A WITH OGONEK;Ll;<FONT color=#008000>0</FONT>;L;0061 0328;;;;N;LATIN SMALL LETTER A OGONEK;;0104;;0104</STRONG></FONT></P>
+<P><FONT face="Courier New"><STRONG>0301;COMBINING ACUTE ACCENT;Mn;<FONT color=#008000>230</FONT>;NSM;;;;;N;NON-SPACING ACUTE;Oxia, Tonos;;;</STRONG></FONT></P>
+<P><FONT face="Courier New"><STRONG>0328;COMBINING OGONEK;Mn;<FONT color=#008000>202</FONT>;NSM;;;;;N;NON-SPACING OGONEK;;;;</STRONG></FONT></P></BLOCKQUOTE>
+<P><FONT face=Tahoma>The meaning of the <A href="http://www.unicode.org/Public/UNIDATA/UCD.html#Canonical_Combining_Class_Values">Canonical Combining Class values</A> is:</FONT></P>
+<BLOCKQUOTE dir=ltr style="MARGIN-RIGHT: 0px">
+<P><FONT face=Tahoma>
+<TABLE width=600 border=1>
+<TBODY>
+<TR>
+<TH>
+<P align=left>Value</P></TH>
+<TH>
+<P align=left>Description</P></TH></TR>
+<TR>
+<TD align=right>0:</TD>
+<TD>Spacing, split, enclosing, reordrant, and Tibetan subjoined</TD></TR>
+<TR>
+<TD align=right>1:</TD>
+<TD>Overlays and interior</TD></TR>
+<TR>
+<TD align=right>7:</TD>
+<TD>Nuktas</TD></TR>
+<TR>
+<TD align=right>8:</TD>
+<TD>Hiragana/Katakana voicing marks</TD></TR>
+<TR>
+<TD align=right>9:</TD>
+<TD>Viramas</TD></TR>
+<TR>
+<TD align=right>10:</TD>
+<TD>Start of fixed position classes</TD></TR>
+<TR>
+<TD align=right>199:</TD>
+<TD>End of fixed position classes</TD></TR>
+<TR>
+<TD align=right>200:</TD>
+<TD>Below left attached</TD></TR>
+<TR>
+<TD align=right>202:</TD>
+<TD>Below attached</TD></TR>
+<TR>
+<TD align=right>204:</TD>
+<TD>Below right attached</TD></TR>
+<TR>
+<TD align=right>208:</TD>
+<TD>Left attached (reordrant around single base character)</TD></TR>
+<TR>
+<TD align=right>210:</TD>
+<TD>Right attached</TD></TR>
+<TR>
+<TD align=right>212:</TD>
+<TD>Above left attached</TD></TR>
+<TR>
+<TD align=right>214:</TD>
+<TD>Above attached</TD></TR>
+<TR>
+<TD align=right>216:</TD>
+<TD>Above right attached</TD></TR>
+<TR>
+<TD align=right>218:</TD>
+<TD>Below left</TD></TR>
+<TR>
+<TD align=right>220:</TD>
+<TD>Below</TD></TR>
+<TR>
+<TD align=right>222:</TD>
+<TD>Below right</TD></TR>
+<TR>
+<TD align=right>224:</TD>
+<TD>Left (reordrant around single base character)</TD></TR>
+<TR>
+<TD align=right>226:</TD>
+<TD>Right</TD></TR>
+<TR>
+<TD align=right>228:</TD>
+<TD>Above left</TD></TR>
+<TR>
+<TD align=right>230:</TD>
+<TD>Above</TD></TR>
+<TR>
+<TD align=right>232:</TD>
+<TD>Above right</TD></TR>
+<TR>
+<TD align=right>233:</TD>
+<TD>Double below</TD></TR>
+<TR>
+<TD align=right>234:</TD>
+<TD>Double above</TD></TR>
+<TR>
+<TD align=right>240:</TD>
+<TD>Below (iota subscript)</TD></TR></TBODY></TABLE></FONT></P></BLOCKQUOTE>
+<P><FONT face=Tahoma>From there, you can look at <A href="http://www.unicode.org/reports/tr15/">UAX #15: Unicode Normalization Forms</A> to get the rules for Form C and Form D, both of which include the notion of fully decompsing the string and then re-ordering all non-zero combining classes from lowest to highest.</FONT></P>
+<P><FONT face=Tahoma>Thus looking back at the original list of four ways to express ą́, #1 is normalization form C and #3 is normalization form D, and this is true whether or not a language may have&nbsp;specific linguistic (e.g. phonemic or orthographic) reasons for expressing a&nbsp;particular preference for thinking of it as having the acute or the ogonek first.</FONT></P>
+<P><FONT face=Tahoma>This particular issue can cause model problems for anyone who is looking at the character from a linguistic standpoint, and it is important to not discount some of the strong feelings that people can have about how they believe the character is best represented, which can even influence decisions on keyboards to make them more accurately reflect the language.</FONT></P>
+<P><FONT face=Tahoma>Thankfully, both modern fonts and collation on Windows will treat all four strings as both appearing and being equal, so the fact that a user is expecting (or an input method is specifically designed for) one of the forms will not punish users of that input method, even if <A HREF="http://archives.miloush.net/michkap/archive/2005/11/15/492301.html">search engines currently will</A><FONT face=Tahoma></FONT>....</FONT></P>
+<P><FONT face=Tahoma></FONT>&nbsp;</P>
+<P><FONT color=#ff1493><FONT face=Tahoma><EM>This post brought to you by</EM> "<FONT size=6>&nbsp;̨</FONT>" <EM>(<A href="http://www.fileformat.info/info/unicode/char/0328">U+0328</A>, a.k.a. COMBINING OGONEK)</EM></FONT></FONT></P>
+<hr/><p><a id="598143" href="#598143">#</a> <strong>Dan Manchester</strong> on 15 May 2006 1:16 PM:</p><div style="margin-left: 1em">Michael,<br><br>Thanks for the great blog. Your mention of intermedate forms reminded me of something I saw recently when working with Vietnamese text on Windows.<br><br>By way of background, I sometimes need to encode text via a legacy codepage. Word 2003's ability to do the needed conversion generally works out very well for me.<br><br>However, on the occasion in question, Word was unwilling to encode many of the accented characters--for example, an &quot;e&quot; with a circumflex and an acute accent--found in my Vietnamese text. I figured that these characters had to somehow be supported by codepage #1258, so I investigated further.<br><br>It turned out that the characters that Word wouldn't encode were generally pre-composed characters. However, after I manually decomposed them--for the aforementioned example, I swapped in an &quot;e&quot; with a circumflex and added a combining acute accent--Word produced a usable encoded version.<br><br>It seems like Word could do this decomposition itself without too much trouble. Is that a feature that has simply never been added? Or are there complexities here that I'm not considering?<br></div>
+<p><a id="598179" href="#598179">#</a> <strong>Igor Tandetnik</strong> on 15 May 2006 2:12 PM:</p><div style="margin-left: 1em">Re: modern fonts ... &nbsp;will treat all four strings as ... appearing ... equal<br><br>Actually, reading your post with IE6 on WinXP SP2, #1 and #3 look a little bit differently from #2 and #4. In the former the ogonek is correctly attached to the letter 'a'. In the latter, the ogonek is shifted one pixel to the right.</div>
+<p><a id="598578" href="#598578">#</a> <strong>Dean Harding</strong> on 15 May 2006 11:53 PM:</p><div style="margin-left: 1em">Igor: That's probably the font more than anything. I'd say that for #1 and #3, Uniscribe is finding a precomposed glyph 'a' with ogonek in the font, then &quot;manually&quot; putting the acute in place, while for #2 and #4 it's doing it the other way around.<br><br>And my guess is that ogonek on the precomposed glyph looks slightly different to the non-precomposed ogonek.<br><br>But that's just a guess...</div>
+<hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2011/04/23 <a href="http://archives.miloush.net/michkap/archive/2011/04/23/10157359.html">Solution: The Dead Keys Conundrum: An Encyclopedia Brown Mystery</a></p><p>2010/01/12 <a href="http://archives.miloush.net/michkap/archive/2010/01/12/9946880.html">On my "Vietnamese Plus" and "pseudo-Form V" constructs</a></p><p>2009/05/27 <a href="http://archives.miloush.net/michkap/archive/2009/05/27/9644420.html">The whole truth about MB_PRECOMPOSED and MB_COMPOSITE</a></p><p>2008/12/15 <a href="http://archives.miloush.net/michkap/archive/2008/12/15/9215772.html">Frost's The Form Not Taken</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2006/05/14/597278.html" title="Long live the Emperor">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2006/05/13/597216.html" title="Get him to the MSKLC download site!">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2006-05">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2006-05-14">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2006/05/14/597198.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:39 GMT -->
+</html>

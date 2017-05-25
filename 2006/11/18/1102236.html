@@ -1,0 +1,54 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2006/11/18/1102236.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:39 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Read-only, you say? Read-only to whom?</title></head><body>
+<h1>Read-only, you say? Read-only to whom?</h1>
+<p><em>by Michael S. Kaplan, published on 2006/11/19 02:49 -05:00, original URI: http://blogs.msdn.com/b/michkap/archive/2006/11/18/1102236.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<FONT face=Tahoma size=3>
+<P>Rick asks:</P>
+<BLOCKQUOTE><FONT face="Times New Roman,Times" size=2>
+<P mce_keep="true">We have an application written in .NET 2. In one of our controls, we use a TextBox control that’s read-only. When run on XP, the default right-click context menu for the TextBox shows the expected Cut/Copy/Paste items with Copy being the only enabled item. However, when we run the app on Longhorn Server, the context menu includes much more, including the ability to force RTL, inserting Unicode chars, etc. All these menu items are enabled – they shouldn’t be since the TextBox is read-only and have no effect.<BR><BR>So, my questions are:<BR><BR>&nbsp; &nbsp;&nbsp;1. Why are these menu items enabled?&nbsp;<BR>&nbsp;&nbsp;&nbsp; 2. Is there a property on the TextBox that will prevent the extra international items from being added at all (this TextBox will always be read-only)? I tried changing the IME-related properties, but they had no effect. <BR><BR>Thanks!<BR><BR>Rick</P></FONT></BLOCKQUOTE>
+<P mce_keep="true">It is a funny question to ask, if you think about it. </P>
+<P mce_keep="true">I mean, those items are built into the EDIT control, and for me they show up in Windows XP and Server 2003 all the time.</P>
+<P mce_keep="true">The reason that Rick doesn't see them is that he is not installing support for East Asian and Complex Script languages, even though his users might -- and that means that perhaps there is not enough international&nbsp;testing going on here. :-(</P>
+<P mce_keep="true">Now I have talked previously about the big ticket items in those two little checkboxes (like in <STRONG><A class="" href="http://archives.miloush.net/michkap/archive/2005/05/27/422458.html" mce_href="http://archives.miloush.net/michkap/archive/2005/05/27/422458.html">this</A></STRONG> post), and about how in Vista the checkboxes are gone so that support will always be there (like in <STRONG><A class="" href="http://archives.miloush.net/michkap/archive/2006/10/10/813347.html" mce_href="http://archives.miloush.net/michkap/archive/2006/10/10/813347.html">this</A></STRONG> post).&nbsp;I have even talked about this right-click menu before (in <STRONG><A class="" href="http://archives.miloush.net/michkap/archive/2005/12/06/500475.html" mce_href="http://archives.miloush.net/michkap/archive/2005/12/06/500475.html">this</A></STRONG> post, for example).</P>
+<P mce_keep="true">A read-only control in this case is just a .NET abstraction that the <A class="" href="http://msdn2.microsoft.com/en-us/library/system.windows.forms.textbox.aspx" mce_href="http://msdn2.microsoft.com/en-us/library/system.windows.forms.textbox.aspx">TextBox class</A> provides in its <A class="" href="http://msdn2.microsoft.com/en-us/library/system.windows.forms.textboxbase.readonly.aspx" mce_href="http://msdn2.microsoft.com/en-us/library/system.windows.forms.textboxbase.readonly.aspx">TextBox.ReadOnly property</A>. As the docs explain:</P>
+<BLOCKQUOTE><FONT face="Times New Roman,Times" size=2>
+<P mce_keep="true">When this property is set to <B>true</B>, the contents of the control cannot be changed by the user at runtime. With this property set to <B>true</B>, you can still set the value of the <A onclick="javascript:Track('ctl00_LibFrame_ctl10|ctl00_LibFrame_ctl11',this);" href="http://msdn2.microsoft.com/en-us/library/system.windows.forms.textboxbase.text.aspx">Text</A> property in code. You can use this feature instead of disabling the control with the <A onclick="javascript:Track('ctl00_LibFrame_ctl10|ctl00_LibFrame_ctl12',this);" href="http://msdn2.microsoft.com/en-us/library/system.windows.forms.control.enabled.aspx">Enabled</A> property to allow the contents to be copied and ToolTips to be shown.&nbsp;</P></FONT></BLOCKQUOTE>
+<P mce_keep="true">So clearly you can still modify the&nbsp;contents in code, and so can any right-click menu you add that runs code. So why&nbsp;wouldn't the code that the Shell adds be able to do&nbsp;as&nbsp;well?</P>
+<P mce_keep="true">From a developer standpoint, an application one writes has no reason to look for changes in the control; there is in fact no need to take the performance hit of binding a control that cannot change. So one could just look at the small number of changes that a user could make here as a bit of ineffectual puttering, or one could even replace the menu with one's own right-click menu and simply not support these options.</P>
+<P mce_keep="true">But don't just do it <STRONG>only</STRONG> on Vista, since there are some users, many of whom read this very blog,&nbsp;who enable international support when it is an option! :-)</P>
+<P mce_keep="true">&nbsp;</P>
+<P mce_keep="true"><FONT color=#ff00ff><EM>This post brought to you by</EM>&nbsp;<FONT size=5>Ꮚ</FONT> <EM>(<A class="" href="http://www.fileformat.info/info/unicode/char/13ca" mce_href="http://www.fileformat.info/info/unicode/char/13ca">U+13ca</A>, a.k.a. CHEROKEE LETTER QUU)</EM></FONT></P></FONT>
+<hr/><p><strong>tzagotta</strong> on 19 Nov 2006 7:27 AM:</p><div style="margin-left: 1em"><p>Well, I think you are skirting the issue, which is that there appears to be a bug in the text control. Clearly, if the control is set to read-only, then this means the user shouldn't be able to change its context regardless of the method used. It is irrelevant whether the Shell is doing this-or-that - it is still wrong.</p>
+<p>And I also disagree with your apparent conclusion that the programmer should just live with the small changes that the user might make. It is against the intention of the developer that the text can be modified.</p>
+</div>
+<p><strong>James Hancock</strong> on 19 Nov 2006 7:41 AM:</p><div style="margin-left: 1em"><p>Excellent Example... </p>
+<p>Of why MS doesn't get UI design and security!</p>
+<p>Readonly is readonly TO THE USER. That measn tha the USER may not change the text in any way. &nbsp;Thus anything that allows the user to directly change the text should be disabled. Period.</p>
+<p>Readonly. Very simple concept of &quot;CANNOT CHANGE&quot; and as per the docs, programmers can chnage stuff, users can't. You're by definition changing things with these two settings.</p>
+<p>This is a bug in the textbox control and should be fixed on all affected OSes.</p>
+<p>Wakeup MS. &nbsp;This is why you suck at security still (UAC anyone?). &nbsp;You just don't get it.</p></div>
+<p><strong>Michael S. Kaplan</strong> on 19 Nov 2006 8:07 AM:</p><div style="margin-left: 1em"><p>Hmmmmm....</p>
+<p>Well, one could certainly note that the Shell EDIT control has no such thing, and the fact that the .NET Framework (which wraps it) *does* implies a contract that it is violating by allowing it. </p>
+<p>In which case one can call it a .NET Framework bug.</p>
+<p>But one can also feel the same way about other .NET wrappers, an excellent example being around the Shell common controls and common dialogs. It seems to be more the rule than the exception, and being unhappy with any one of these while ignoring that the general trend of sloppy wrappers is kind of over-idealistic and more than a bit naive.....</p>
+</div>
+<p><strong>JohnGalt</strong> on 19 Nov 2006 11:31 AM:</p><div style="margin-left: 1em"><p>The Shell Edit control does have a readonly property...</p>
+<p><a rel="nofollow" target="_new" href="http://msdn2.microsoft.com/en-us/library/ms672100.aspx">http://msdn2.microsoft.com/en-us/library/ms672100.aspx</a></p>
+<p>Thus this is NOT the responsiblity of the .NET team at all, it's a bug in the common controls produced by the Shell people and should be fixed by them, because this is clearly a bug and a security bug at that.</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 19 Nov 2006 12:03 PM:</p><div style="margin-left: 1em"><p>You assume they are setting it, right? :-)</p>
+<p>I'm kind of iffy on it as a security bug, in any case.... especially in an EDIT control, where no one who understand edit styles in Windows would consider it to be a security setting!</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 19 Nov 2006 12:09 PM:</p><div style="margin-left: 1em"><p>And then of course the original question was also about the RTL setting, which inserts nothing into the control and there is no way to believe that some kind of &quot;readonly&quot; setting should be required to block it....</p>
+</div>
+<p><strong>Dean Harding</strong> on 19 Nov 2006 5:32 PM:</p><div style="margin-left: 1em"><p>It's definitely not a security-related issue. Even if the edit control really was &quot;read-only&quot; the user could still write a simple app that just does a SendMessage() to the control to set the text.</p>
+<p>If you're relying on the &quot;read-only&quot; (or the ES_PASSWORD style) property for proper security, then you've got bigger problems than just the user being able to set the RTL property!</p>
+<p>Of course, it is rather strange that the .NET framework doesn't just use the ES_READONLY style (or EM_SETREADONLY message) to set the control to read-only.</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 19 Nov 2006 8:13 PM:</p><div style="margin-left: 1em"><p>Perhaps they do, Dean -- perhaps they do. :-)</p>
+</div>
+<hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2006/11/19 <a href="http://archives.miloush.net/michkap/archive/2006/11/19/1103636.html">'Son, your TextBox is writing checks that your EDIT control can't cash'</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2006/11/19/1103636.html" title="&#39;Son, your TextBox is writing checks that your EDIT control can&#39;t cash&#39;">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2006/11/17/1097666.html" title="What happened on Thursday morning?">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2006-11">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2006-11-18">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2006/11/18/1102236.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:39 GMT -->
+</html>

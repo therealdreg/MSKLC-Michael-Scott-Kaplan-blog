@@ -1,0 +1,380 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2008/03/27/8338664.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:36 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>The disunification of Norwegian and Danish sorting ( SQL Server 2008 Edition!)</title></head><body>
+<h1>The disunification of Norwegian and Danish sorting ( SQL Server 2008 Edition!)</h1>
+<p><em>by Michael S. Kaplan, published on 2008/03/27 07:01 -07:00, original URI: http://blogs.msdn.com/michkap/archive/2008/03/27/8338664.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostOld -->
+<P><EM><FONT color=#ff0000 size=1>Content of </FONT></EM><A class="" href="http://blogs.msdn.com/michkap" mce_href="http://blogs.msdn.com/michkap"><EM><FONT size=1>Michael Kaplan's personal blog</FONT></EM></A><EM><FONT color=#ff0000 size=1> not approved by Microsoft (see </FONT></EM><A class="" href="http://archives.miloush.net/michkap/archive/2008/02/28/7934999.html" mce_href="http://archives.miloush.net/michkap/archive/2008/02/28/7934999.html"><EM><FONT size=1>disclaimer</FONT></EM></A><EM><FONT color=#ff0000 size=1>)!</FONT></EM>&nbsp;</P>
+<P>The story behind today's blog post started in <A class="" href="http://archives.miloush.net/michkap/archive/2006/04/25/583307.html" mce_href="http://archives.miloush.net/michkap/archive/2006/04/25/583307.html"><STRONG>Why do we call w 'double u' -- doesn't it look more like a 'double v'?</STRONG></A>, where I talked about the Swedish Academy's change to the way the letters&nbsp;<STRONG>W</STRONG> and <STRONG>V</STRONG> were to be handled in collation, and the impact on Microsoft software when this change eventually makes it to the point where it needs to be integrated.</P>
+<P>In particular I discussed the implications for software such as Jet [Red] and SQL Server, which&nbsp;unify&nbsp;Swedish and Finnish collations together into one single collation, when the two collations become different. Obviously there are far-reaching implications here that have to be carefully considered.</P>
+<P>And that one day this "theoretical" issue that is a punch line in a blog post from <A class="" href="http://blogs.msdn.com/oldnewthing" mce_href="http://blogs.msdn.com/oldnewthing">Raymond</A> or <A class="" href="http://blogs.msdn.com/michkap" mce_href="http://blogs.msdn.com/michkap">I</A> would have far reaching design consequences....</P>
+<P>A couple of days later, I noted in <A class="" href="http://archives.miloush.net/michkap/archive/2006/04/27/584439.html" mce_href="http://archives.miloush.net/michkap/archive/2006/04/27/584439.html"><STRONG>The disunification of Norwegian and Danish sorting</STRONG></A> that there was actually already such a change in Vista -- a change in Norwegian collation that was not happening in Danish (two collations which had also been unified in Jet [Red] and SQL Server), a change that had already gone into Vista.</P>
+<P>Obviously with each of these changes it is only a matter of time before the&nbsp;issue has to actually be addressed, but neither is theoretical -- like pregnancy, at some point the situation will force itself on people and cannot be ignored. And to continue the ridiculous pregnancy analogy for just one this one more sentence you are reading now, the Norwegian "baby" is much further along than the Swedish one....</P>
+<P>Now on top of all of this, factor in <A class="" href="http://archives.miloush.net/michkap/archive/2007/10/25/5686727.html" mce_href="http://archives.miloush.net/michkap/archive/2007/10/25/5686727.html"><STRONG>Not all in sync quite yet (aka SQL and the CLR and Windows and .NET)</STRONG></A>, which spent some time talking about the consequences of these various collation solutions that move further and further apart. And in particular looked more specifically at the Danish/Norwegian disunification issue and SQL Server, at the collations covering the two languages in SQLS 2005, and what to worry about going forward....</P>
+<P>Now of course if you care about SQL Server, you probably noticed (though when I say this it is with full knowledge that at least one regular reader to whom it is crucial missed it!) my blog <A class="" href="http://archives.miloush.net/michkap/archive/2008/03/16/8238240.html" mce_href="http://archives.miloush.net/michkap/archive/2008/03/16/8238240.html"><STRONG>On changing the world, or at least the way people order things in it</STRONG></A>, where the <STRONG>Windows Server 2008 collation support in SQL Server 2008</STRONG> feature had achieved line item status, and obviously the whole Danish/Norwegian disunification issue must have been solved!</P>
+<P>And indeed it has.</P>
+<P>If you take the query I used in <A class="" href="http://archives.miloush.net/michkap/archive/2007/10/25/5686727.html" mce_href="http://archives.miloush.net/michkap/archive/2007/10/25/5686727.html"><STRONG>this</STRONG></A>&nbsp;post:</P>
+<BLOCKQUOTE>
+<P><STRONG><FONT face="consolas,lucida console,courier new,courier">SELECT <BR>&nbsp;&nbsp;&nbsp; name, <BR>&nbsp;&nbsp;&nbsp; COLLATIONPROPERTY(name, 'CodePage') as CodePage, <BR>&nbsp;&nbsp;&nbsp; CONVERT(binary(4), COLLATIONPROPERTY(name, 'LCID')) as LCID, <BR>&nbsp;&nbsp;&nbsp; CONVERT(binary(4), COLLATIONPROPERTY(name, 'ComparisonStyle')) as ComparisonStyle, <BR>&nbsp;&nbsp;&nbsp; description <BR>FROM ::fn_helpcollations() <BR>WHERE <BR>&nbsp;&nbsp;&nbsp; COLLATIONPROPERTY(name, 'LCID') = 1030 OR<BR>&nbsp;&nbsp;&nbsp; COLLATIONPROPERTY(name, 'LCID') = 1044 OR<BR>&nbsp;&nbsp;&nbsp; COLLATIONPROPERTY(name, 'LCID') = 2068</FONT></STRONG></P></BLOCKQUOTE>
+<P mce_keep="true">(this query that returns 20 rows in SQL Server 2005) and run it that CTP of&nbsp;SQL Server 2008 to see what it says.</P>
+<P mce_keep="true">And here it is:</P>
+<TABLE class="" border=1>
+<TBODY>
+<TR>
+<TD class=""><STRONG>name</STRONG></TD>
+<TD class=""><STRONG>codepage</STRONG></TD>
+<TD class=""><STRONG>lcid</STRONG></TD>
+<TD class=""><STRONG>comparisonstyle</STRONG></TD>
+<TD class=""><STRONG>description</STRONG></TD></TR>
+<TR>
+<TD class="">Danish_Greenlandic_100_BIN</TD>
+<TD class="">1252</TD>
+<TD class="">0x00000406</TD>
+<TD class="">0x00000000</TD>
+<TD class="">Danish-Greenlandic-100, binary sort</TD></TR>
+<TR>
+<TD class="">Danish_Greenlandic_100_BIN2</TD>
+<TD class="">1252</TD>
+<TD class="">0x00000406</TD>
+<TD class="">0x00000000</TD>
+<TD class="">Danish-Greenlandic-100, binary code point comparison sort</TD></TR>
+<TR>
+<TD class="">Danish_Greenlandic_100_CI_AI</TD>
+<TD class="">1252</TD>
+<TD class="">0x00000406</TD>
+<TD class="">0x00030003</TD>
+<TD class="">Danish-Greenlandic-100, case-insensitive, accent-insensitive, kanatype-insensitive, width-insensitive</TD></TR>
+<TR>
+<TD class="">Danish_Greenlandic_100_CI_AI_WS</TD>
+<TD class="">1252</TD>
+<TD class="">0x00000406</TD>
+<TD class="">0x00010003</TD>
+<TD class="">Danish-Greenlandic-100, case-insensitive, accent-insensitive, kanatype-insensitive, width-sensitive</TD></TR>
+<TR>
+<TD class="">Danish_Greenlandic_100_CI_AI_KS</TD>
+<TD class="">1252</TD>
+<TD class="">0x00000406</TD>
+<TD class="">0x00020003</TD>
+<TD class="">Danish-Greenlandic-100, case-insensitive, accent-insensitive, kanatype-sensitive, width-insensitive</TD></TR>
+<TR>
+<TD class="">Danish_Greenlandic_100_CI_AI_KS_WS</TD>
+<TD class="">1252</TD>
+<TD class="">0x00000406</TD>
+<TD class="">0x00000003</TD>
+<TD class="">Danish-Greenlandic-100, case-insensitive, accent-insensitive, kanatype-sensitive, width-sensitive</TD></TR>
+<TR>
+<TD class="">Danish_Greenlandic_100_CI_AS</TD>
+<TD class="">1252</TD>
+<TD class="">0x00000406</TD>
+<TD class="">0x00030001</TD>
+<TD class="">Danish-Greenlandic-100, case-insensitive, accent-sensitive, kanatype-insensitive, width-insensitive</TD></TR>
+<TR>
+<TD class="">Danish_Greenlandic_100_CI_AS_WS</TD>
+<TD class="">1252</TD>
+<TD class="">0x00000406</TD>
+<TD class="">0x00010001</TD>
+<TD class="">Danish-Greenlandic-100, case-insensitive, accent-sensitive, kanatype-insensitive, width-sensitive</TD></TR>
+<TR>
+<TD class="">Danish_Greenlandic_100_CI_AS_KS</TD>
+<TD class="">1252</TD>
+<TD class="">0x00000406</TD>
+<TD class="">0x00020001</TD>
+<TD class="">Danish-Greenlandic-100, case-insensitive, accent-sensitive, kanatype-sensitive, width-insensitive</TD></TR>
+<TR>
+<TD class="">Danish_Greenlandic_100_CI_AS_KS_WS</TD>
+<TD class="">1252</TD>
+<TD class="">0x00000406</TD>
+<TD class="">0x00000001</TD>
+<TD class="">Danish-Greenlandic-100, case-insensitive, accent-sensitive, kanatype-sensitive, width-sensitive</TD></TR>
+<TR>
+<TD class="">Danish_Greenlandic_100_CS_AI</TD>
+<TD class="">1252</TD>
+<TD class="">0x00000406</TD>
+<TD class="">0x00030002</TD>
+<TD class="">Danish-Greenlandic-100, case-sensitive, accent-insensitive, kanatype-insensitive, width-insensitive</TD></TR>
+<TR>
+<TD class="">Danish_Greenlandic_100_CS_AI_WS</TD>
+<TD class="">1252</TD>
+<TD class="">0x00000406</TD>
+<TD class="">0x00010002</TD>
+<TD class="">Danish-Greenlandic-100, case-sensitive, accent-insensitive, kanatype-insensitive, width-sensitive</TD></TR>
+<TR>
+<TD class="">Danish_Greenlandic_100_CS_AI_KS</TD>
+<TD class="">1252</TD>
+<TD class="">0x00000406</TD>
+<TD class="">0x00020002</TD>
+<TD class="">Danish-Greenlandic-100, case-sensitive, accent-insensitive, kanatype-sensitive, width-insensitive</TD></TR>
+<TR>
+<TD class="">Danish_Greenlandic_100_CS_AI_KS_WS</TD>
+<TD class="">1252</TD>
+<TD class="">0x00000406</TD>
+<TD class="">0x00000002</TD>
+<TD class="">Danish-Greenlandic-100, case-sensitive, accent-insensitive, kanatype-sensitive, width-sensitive</TD></TR>
+<TR>
+<TD class="">Danish_Greenlandic_100_CS_AS</TD>
+<TD class="">1252</TD>
+<TD class="">0x00000406</TD>
+<TD class="">0x00030000</TD>
+<TD class="">Danish-Greenlandic-100, case-sensitive, accent-sensitive, kanatype-insensitive, width-insensitive</TD></TR>
+<TR>
+<TD class="">Danish_Greenlandic_100_CS_AS_WS</TD>
+<TD class="">1252</TD>
+<TD class="">0x00000406</TD>
+<TD class="">0x00010000</TD>
+<TD class="">Danish-Greenlandic-100, case-sensitive, accent-sensitive, kanatype-insensitive, width-sensitive</TD></TR>
+<TR>
+<TD class="">Danish_Greenlandic_100_CS_AS_KS</TD>
+<TD class="">1252</TD>
+<TD class="">0x00000406</TD>
+<TD class="">0x00020000</TD>
+<TD class="">Danish-Greenlandic-100, case-sensitive, accent-sensitive, kanatype-sensitive, width-insensitive</TD></TR>
+<TR>
+<TD class="">Danish_Greenlandic_100_CS_AS_KS_WS</TD>
+<TD class="">1252</TD>
+<TD class="">0x00000406</TD>
+<TD class="">0x00000000</TD>
+<TD class="">Danish-Greenlandic-100, case-sensitive, accent-sensitive, kanatype-sensitive, width-sensitive</TD></TR>
+<TR>
+<TD class="">Danish_Norwegian_BIN</TD>
+<TD class="">1252</TD>
+<TD class="">0x00000406</TD>
+<TD class="">0x00000000</TD>
+<TD class="">Danish-Norwegian, binary sort</TD></TR>
+<TR>
+<TD class="">Danish_Norwegian_BIN2</TD>
+<TD class="">1252</TD>
+<TD class="">0x00000406</TD>
+<TD class="">0x00000000</TD>
+<TD class="">Danish-Norwegian, binary code point comparison sort</TD></TR>
+<TR>
+<TD class="">Danish_Norwegian_CI_AI</TD>
+<TD class="">1252</TD>
+<TD class="">0x00000406</TD>
+<TD class="">0x00030003</TD>
+<TD class="">Danish-Norwegian, case-insensitive, accent-insensitive, kanatype-insensitive, width-insensitive</TD></TR>
+<TR>
+<TD class="">Danish_Norwegian_CI_AI_WS</TD>
+<TD class="">1252</TD>
+<TD class="">0x00000406</TD>
+<TD class="">0x00010003</TD>
+<TD class="">Danish-Norwegian, case-insensitive, accent-insensitive, kanatype-insensitive, width-sensitive</TD></TR>
+<TR>
+<TD class="">Danish_Norwegian_CI_AI_KS</TD>
+<TD class="">1252</TD>
+<TD class="">0x00000406</TD>
+<TD class="">0x00020003</TD>
+<TD class="">Danish-Norwegian, case-insensitive, accent-insensitive, kanatype-sensitive, width-insensitive</TD></TR>
+<TR>
+<TD class="">Danish_Norwegian_CI_AI_KS_WS</TD>
+<TD class="">1252</TD>
+<TD class="">0x00000406</TD>
+<TD class="">0x00000003</TD>
+<TD class="">Danish-Norwegian, case-insensitive, accent-insensitive, kanatype-sensitive, width-sensitive</TD></TR>
+<TR>
+<TD class="">Danish_Norwegian_CI_AS</TD>
+<TD class="">1252</TD>
+<TD class="">0x00000406</TD>
+<TD class="">0x00030001</TD>
+<TD class="">Danish-Norwegian, case-insensitive, accent-sensitive, kanatype-insensitive, width-insensitive</TD></TR>
+<TR>
+<TD class="">Danish_Norwegian_CI_AS_WS</TD>
+<TD class="">1252</TD>
+<TD class="">0x00000406</TD>
+<TD class="">0x00010001</TD>
+<TD class="">Danish-Norwegian, case-insensitive, accent-sensitive, kanatype-insensitive, width-sensitive</TD></TR>
+<TR>
+<TD class="">Danish_Norwegian_CI_AS_KS</TD>
+<TD class="">1252</TD>
+<TD class="">0x00000406</TD>
+<TD class="">0x00020001</TD>
+<TD class="">Danish-Norwegian, case-insensitive, accent-sensitive, kanatype-sensitive, width-insensitive</TD></TR>
+<TR>
+<TD class="">Danish_Norwegian_CI_AS_KS_WS</TD>
+<TD class="">1252</TD>
+<TD class="">0x00000406</TD>
+<TD class="">0x00000001</TD>
+<TD class="">Danish-Norwegian, case-insensitive, accent-sensitive, kanatype-sensitive, width-sensitive</TD></TR>
+<TR>
+<TD class="">Danish_Norwegian_CS_AI</TD>
+<TD class="">1252</TD>
+<TD class="">0x00000406</TD>
+<TD class="">0x00030002</TD>
+<TD class="">Danish-Norwegian, case-sensitive, accent-insensitive, kanatype-insensitive, width-insensitive</TD></TR>
+<TR>
+<TD class="">Danish_Norwegian_CS_AI_WS</TD>
+<TD class="">1252</TD>
+<TD class="">0x00000406</TD>
+<TD class="">0x00010002</TD>
+<TD class="">Danish-Norwegian, case-sensitive, accent-insensitive, kanatype-insensitive, width-sensitive</TD></TR>
+<TR>
+<TD class="">Danish_Norwegian_CS_AI_KS</TD>
+<TD class="">1252</TD>
+<TD class="">0x00000406</TD>
+<TD class="">0x00020002</TD>
+<TD class="">Danish-Norwegian, case-sensitive, accent-insensitive, kanatype-sensitive, width-insensitive</TD></TR>
+<TR>
+<TD class="">Danish_Norwegian_CS_AI_KS_WS</TD>
+<TD class="">1252</TD>
+<TD class="">0x00000406</TD>
+<TD class="">0x00000002</TD>
+<TD class="">Danish-Norwegian, case-sensitive, accent-insensitive, kanatype-sensitive, width-sensitive</TD></TR>
+<TR>
+<TD class="">Danish_Norwegian_CS_AS</TD>
+<TD class="">1252</TD>
+<TD class="">0x00000406</TD>
+<TD class="">0x00030000</TD>
+<TD class="">Danish-Norwegian, case-sensitive, accent-sensitive, kanatype-insensitive, width-insensitive</TD></TR>
+<TR>
+<TD class="">Danish_Norwegian_CS_AS_WS</TD>
+<TD class="">1252</TD>
+<TD class="">0x00000406</TD>
+<TD class="">0x00010000</TD>
+<TD class="">Danish-Norwegian, case-sensitive, accent-sensitive, kanatype-insensitive, width-sensitive</TD></TR>
+<TR>
+<TD class="">Danish_Norwegian_CS_AS_KS</TD>
+<TD class="">1252</TD>
+<TD class="">0x00000406</TD>
+<TD class="">0x00020000</TD>
+<TD class="">Danish-Norwegian, case-sensitive, accent-sensitive, kanatype-sensitive, width-insensitive</TD></TR>
+<TR>
+<TD class="">Danish_Norwegian_CS_AS_KS_WS</TD>
+<TD class="">1252</TD>
+<TD class="">0x00000406</TD>
+<TD class="">0x00000000</TD>
+<TD class="">Danish-Norwegian, case-sensitive, accent-sensitive, kanatype-sensitive, width-sensitive</TD></TR>
+<TR>
+<TD class="">Norwegian_100_BIN</TD>
+<TD class="">1252</TD>
+<TD class="">0x00000414</TD>
+<TD class="">0x00000000</TD>
+<TD class="">Norwegian-100, binary sort</TD></TR>
+<TR>
+<TD class="">Norwegian_100_BIN2</TD>
+<TD class="">1252</TD>
+<TD class="">0x00000414</TD>
+<TD class="">0x00000000</TD>
+<TD class="">Norwegian-100, binary code point comparison sort</TD></TR>
+<TR>
+<TD class="">Norwegian_100_CI_AI</TD>
+<TD class="">1252</TD>
+<TD class="">0x00000414</TD>
+<TD class="">0x00030003</TD>
+<TD class="">Norwegian-100, case-insensitive, accent-insensitive, kanatype-insensitive, width-insensitive</TD></TR>
+<TR>
+<TD class="">Norwegian_100_CI_AI_WS</TD>
+<TD class="">1252</TD>
+<TD class="">0x00000414</TD>
+<TD class="">0x00010003</TD>
+<TD class="">Norwegian-100, case-insensitive, accent-insensitive, kanatype-insensitive, width-sensitive</TD></TR>
+<TR>
+<TD class="">Norwegian_100_CI_AI_KS</TD>
+<TD class="">1252</TD>
+<TD class="">0x00000414</TD>
+<TD class="">0x00020003</TD>
+<TD class="">Norwegian-100, case-insensitive, accent-insensitive, kanatype-sensitive, width-insensitive</TD></TR>
+<TR>
+<TD class="">Norwegian_100_CI_AI_KS_WS</TD>
+<TD class="">1252</TD>
+<TD class="">0x00000414</TD>
+<TD class="">0x00000003</TD>
+<TD class="">Norwegian-100, case-insensitive, accent-insensitive, kanatype-sensitive, width-sensitive</TD></TR>
+<TR>
+<TD class="">Norwegian_100_CI_AS</TD>
+<TD class="">1252</TD>
+<TD class="">0x00000414</TD>
+<TD class="">0x00030001</TD>
+<TD class="">Norwegian-100, case-insensitive, accent-sensitive, kanatype-insensitive, width-insensitive</TD></TR>
+<TR>
+<TD class="">Norwegian_100_CI_AS_WS</TD>
+<TD class="">1252</TD>
+<TD class="">0x00000414</TD>
+<TD class="">0x00010001</TD>
+<TD class="">Norwegian-100, case-insensitive, accent-sensitive, kanatype-insensitive, width-sensitive</TD></TR>
+<TR>
+<TD class="">Norwegian_100_CI_AS_KS</TD>
+<TD class="">1252</TD>
+<TD class="">0x00000414</TD>
+<TD class="">0x00020001</TD>
+<TD class="">Norwegian-100, case-insensitive, accent-sensitive, kanatype-sensitive, width-insensitive</TD></TR>
+<TR>
+<TD class="">Norwegian_100_CI_AS_KS_WS</TD>
+<TD class="">1252</TD>
+<TD class="">0x00000414</TD>
+<TD class="">0x00000001</TD>
+<TD class="">Norwegian-100, case-insensitive, accent-sensitive, kanatype-sensitive, width-sensitive</TD></TR>
+<TR>
+<TD class="">Norwegian_100_CS_AI</TD>
+<TD class="">1252</TD>
+<TD class="">0x00000414</TD>
+<TD class="">0x00030002</TD>
+<TD class="">Norwegian-100, case-sensitive, accent-insensitive, kanatype-insensitive, width-insensitive</TD></TR>
+<TR>
+<TD class="">Norwegian_100_CS_AI_WS</TD>
+<TD class="">1252</TD>
+<TD class="">0x00000414</TD>
+<TD class="">0x00010002</TD>
+<TD class="">Norwegian-100, case-sensitive, accent-insensitive, kanatype-insensitive, width-sensitive</TD></TR>
+<TR>
+<TD class="">Norwegian_100_CS_AI_KS</TD>
+<TD class="">1252</TD>
+<TD class="">0x00000414</TD>
+<TD class="">0x00020002</TD>
+<TD class="">Norwegian-100, case-sensitive, accent-insensitive, kanatype-sensitive, width-insensitive</TD></TR>
+<TR>
+<TD class="">Norwegian_100_CS_AI_KS_WS</TD>
+<TD class="">1252</TD>
+<TD class="">0x00000414</TD>
+<TD class="">0x00000002</TD>
+<TD class="">Norwegian-100, case-sensitive, accent-insensitive, kanatype-sensitive, width-sensitive</TD></TR>
+<TR>
+<TD class="">Norwegian_100_CS_AS</TD>
+<TD class="">1252</TD>
+<TD class="">0x00000414</TD>
+<TD class="">0x00030000</TD>
+<TD class="">Norwegian-100, case-sensitive, accent-sensitive, kanatype-insensitive, width-insensitive</TD></TR>
+<TR>
+<TD class="">Norwegian_100_CS_AS_WS</TD>
+<TD class="">1252</TD>
+<TD class="">0x00000414</TD>
+<TD class="">0x00010000</TD>
+<TD class="">Norwegian-100, case-sensitive, accent-sensitive, kanatype-insensitive, width-sensitive</TD></TR>
+<TR>
+<TD class="">Norwegian_100_CS_AS_KS</TD>
+<TD class="">1252</TD>
+<TD class="">0x00000414</TD>
+<TD class="">0x00020000</TD>
+<TD class="">Norwegian-100, case-sensitive, accent-sensitive, kanatype-sensitive, width-insensitive</TD></TR>
+<TR>
+<TD class="">Norwegian_100_CS_AS_KS_WS</TD>
+<TD class="">1252</TD>
+<TD class="">0x00000414</TD>
+<TD class="">0x00000000</TD>
+<TD class="">Norwegian-100, case-sensitive, accent-sensitive, kanatype-sensitive, width-sensitive</TD></TR>
+<TR>
+<TD class="">SQL_Danish_Pref_CP1_CI_AS</TD>
+<TD class="">1252</TD>
+<TD class="">0x00000406</TD>
+<TD class="">0x00030001</TD>
+<TD class="">Danish-Norwegian, case-insensitive, accent-sensitive, kanatype-insensitive, width-insensitive for Unicode Data</TD></TR>
+<TR>
+<TD class="">SQL_EBCDIC277_CP1_CS_AS</TD>
+<TD class="">1252</TD>
+<TD class="">0x00000406</TD>
+<TD class="">0x00030000</TD>
+<TD class="">Danish-Norwegian, case-sensitive, accent-sensitive, kanatype-insensitive, width-insensitive for Unicode Data</TD></TR></TBODY></TABLE>
+<P mce_keep="true">So the old <STRONG>Danish_Norwegian</STRONG> collation still exists, but two new 10.0 collations (<STRONG>Danish_Greenlandic_100</STRONG> and <STRONG>Norwegian_100</STRONG>)&nbsp;were also added, bringing the total number of rows this query returns to 56.</P>
+<P mce_keep="true">Now accidentally, the SQLS folks managed to work around an interesting conceptual backwards compatibility issue, too.</P>
+<P mce_keep="true">I'll explain. :-)</P>
+<P mce_keep="true">Now not every version of Windows will necessarily have an updated Unicode version that would require an updated default table. Which means that in theory had there not needed to be a new default table that as simple <STRONG>Norwegian</STRONG> collation would have been needed to be added.</P>
+<P mce_keep="true">If you look at the <STRONG>Danish_Norwegian</STRONG> collation, you will see how it is associates with LCID 0x00000406, aka MAKELANGID(LANG_DANISH, SUBLANG_DANISH_DENMARK), so the new collation could be added with&nbsp;the different&nbsp;LCID and the old one left right in place -- thus no change in behavior would be required for the existing collation!</P>
+<P mce_keep="true">But I imagine that the name (<STRONG>Danish_Norwegian</STRONG>) was likely based on the random chance of alphabetical order, as was the LCID they chose. So there was a 50% chance that this behavior-preserving change would not have been possible and that the same LCID would have required a behavior change while the newly added LCID wouldn't....</P>
+<P mce_keep="true">Luckily, Vista took a long time to ship and some pretty hefty Unicode updates made it in. So it was a non-issue, since two new collations ended up being needed irregardless of this issue.</P>
+<P mce_keep="true">Of course as it turns out they will get lucky again on the Finnish/Swedish disunification whenever that happens, since <STRONG>Finnish_Swedish</STRONG> uses 0x0000040b, aka MAKELANGID(LANG_FINNISH, SUBLANG_FINNISH_FINLAND) -- so the Swedish change in some unknown future version would just be&nbsp;a single additional set of collations, rather than two sets.</P>
+<P mce_keep="true">Two near misses, though. Though perhaps this is a good time to bring up that it may not have been the best design in the world to do all of this unification work, given how things can disunify over time. And perhaps one day the disunification will fall on the wrong side of random chance....</P>
+<P mce_keep="true">&nbsp;</P>
+<P mce_keep="true"><FONT color=#ff00ff><EM>This blog brought to you by</EM><FONT size=5> å </FONT><EM>(<A class="" href="http://www.fileformat.info/info/unicode/char/00e5" mce_href="http://www.fileformat.info/info/unicode/char/00e5">U+00e5</A>, aka LATIN SMALL LETTER A WITH RING ABOVE)</EM></FONT></P>
+<hr/><p><a id="8340019" href="#8340019">#</a> <strong>Ben Bryant</strong> on Thursday, March 27, 2008 1:04 PM:</p><div style="margin-left: 1em"><p>irregardless? I don't have a problem with it, just a bit surprised...</p></div>
+<p><a id="8340034" href="#8340034">#</a> <strong>Michael S. Kaplan</strong> on Thursday, March 27, 2008 1:16 PM:</p><div style="margin-left: 1em"><p>It is a word I use from time to time to tweak language mavens. :-)</p></div>
+<hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2010/03/03 <a href="http://archives.miloush.net/michkap/archive/2010/03/03/9971878.html">Nordic duck duck goose -- Bokmål, Bokmål, Bokmål, Nynorsk!</a></p><p>2009/02/18 <a href="http://archives.miloush.net/michkap/archive/2009/02/18/9430335.html">In search of the Swedish Tipping Point....</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2008/03/28/8340751.html" title="Word custom dictionaries: 2003 to 2007, Exclude to Exclusions, ANSI to Unicode, sucks to ROCKS!">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2008/03/27/8332472.html" title="Hebrew Vistas (aka And that&#39;s where I found Vista, was on the way to Jerusalem)">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2008-03">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2008-03-27">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2008/03/27/8338664.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:36 GMT -->
+</html>

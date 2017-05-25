@@ -1,0 +1,55 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2012/09/11/10348081.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:26 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Inconsistencies aren't as important when they're irrelevant</title></head><body>
+<h1>Inconsistencies aren't as important when they're irrelevant</h1>
+<p><em>by Michael S. Kaplan, published on 2012/09/11 07:01 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2012/09/11/10348081.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<p>If you look at Unicode as it is today, it is a hugely complex standard that defines more than 100,000 characters and has defined complex algorithms for using, displaying, sorting, and storing them.</p>
+<p>Though there were simpler times, too.</p>
+<p>I mean, before the <strong>Unicode Collation Algorithm</strong> defined in&nbsp;<a href="http://www.unicode.org/reports/tr10/">UTS #10</a>, no way to sort the character was defined.</p>
+<p>Every company had their own way to do it themselves -- it's not like Sybase or Oracle or IBM or Microsoft was going to build databases one could query via SQL without defining something useful for the <span style="font-family: courier new,courier;"><strong>ORDER BY</strong></span> clause to do, after all!</p>
+<p>Some of those companies picked up UTS #10 as an option for collations.</p>
+<p>And some companies that came along later vchose to use it once it was there.</p>
+<p>But when one considers the fact that every character needs a position in the DUCET so it can have a place to go in the order of characfers, there are two kinds or characters to consider:</p>
+<ul>
+<li>the ones defined before UAX #10 existed, and</li>
+<li>the ones added after.</li>
+</ul>
+<p>The first category is easy -- as huge push in the UTS definition to decide the order.</p>
+<p>The second category is obviously a bit more complicated -- every set of characters proposed gives some suggestions about the collation of them, and the UTC places them all somewhere bases on that feedback, their expertise, and their knowledge of how the UAX and Unicode work.</p>
+<p>Bugs are sometimes found; they are fixed in future versions (after they have been identified).</p>
+<p>Old versions are left alone; no wants to break existing behavior, or database indexes....</p>
+<p>Now the entire Unicode Standard works that way.</p>
+<p>Even the Standard Annexes, like the Unicode Bidirectional Algorithm defined in <a href="http://www.unicode.org/reports/tr9/">UAX #9</a>.</p>
+<p>Now ordering is needed in the UCA, even when it makes no real sense -- like ordering Emoji or other symbols.</p>
+<p>And the UBA has such cases too.</p>
+<p>Because if you want to have a formal standard that defines how everything in Unicode behaves in bidirectional contexts, you have to also include that special category of characters.</p>
+<p>I refer, of course, to the set of characters that no reasonable human ever expects to use in bidirectional contexts!</p>
+<p>Enter these two characters:</p>
+<ul>
+<li><span style="font-size: x-large;"><span style="font-size: small;">U+fd3e</span>&nbsp; ﴾&nbsp;&nbsp; <span style="font-size: small;">ORNATE LEFT PARENTHESIS</span></span></li>
+<li><span style="font-size: x-large;"><span style="font-size: small;">U+fd3f</span>&nbsp;&nbsp; ﴿&nbsp;&nbsp; <span style="font-size: small;">ORNATE RIGHT PARENTHESIS</span></span></li>
+</ul>
+<p>These two characters, these two symbols, have the same properties as 0028 and 0029 -- and every other bracket pair that exists in Unicode.</p>
+<p>But the Bidi "mirroring" property is not defined for them like it is for every other pair of brackets.</p>
+<p>So they never mirror.</p>
+<p>Why would they? Their purpose in the standard is for a legacy character in an East Asian standard,and a place where Bidi is for most of the users and potential users, irrelevant to consider for Bidi.</p>
+<p>Eventually, this issue was discovered, but it was discovered too late.</p>
+<p>The attempt to fix it led to problems in actual usage.</p>
+<p>No wanted wanted to break existing usage that way.</p>
+<p>And thus, a permanent exception was born.</p>
+<p>Every once in a while, someone notices the problem again.</p>
+<p>It happened just the other day, in fact.</p>
+<p>And the issue was explained yet again. :-)</p>
+<p>How bad the problem is depends on how to look at Unicode, and which you think is more important -- the intuitive global behavior of the algorithms, or the realization that when a scenario is not relevant you don't care so much about leaving a case alone....</p>
+<hr/><p><strong>Nick</strong> on 11 Sep 2012 7:56 AM:</p><div style="margin-left: 1em"><p>So if I made a &quot;:﴿&quot; with the ornate parenthesis, bidi could turn it into a &quot;:﴾&quot;?</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 11 Sep 2012 9:10 AM:</p><div style="margin-left: 1em"><p>Actually, these are the only two parens that *won&#39;t* ever mirror!</p>
+</div>
+<p><strong>Joshua</strong> on 11 Sep 2012 9:33 AM:</p><div style="margin-left: 1em"><p>Exactly. It would turn into ): instead of (:. Now why does database collation have to care about that one?</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 11 Sep 2012 5:33 PM:</p><div style="margin-left: 1em"><p>Database collation doesn&#39;t. But if you use ORNATE PAR$ENTHESES in your ASCII art, then any pain you feel would be self-inflicted!</p>
+</div>
+<hr/><p><em>go to <a id="newer" href="../13/10348936.html" title="Do you have the [short] time for this? Part #1: The intro">newer</a> or <a id="older" href="../10/10347728.html" title="The downside to feeling untouchable">older</a> post, or back to <a href="../../../index-2.html">index</a> or <a href="../../../index-2.html#2012-09">month</a> or <a href="../../../index-2.html#2012-09-11">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2012/09/11/10348081.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:26 GMT -->
+</html>

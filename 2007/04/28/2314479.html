@@ -1,0 +1,46 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2007/04/28/2314479.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:38 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Testing MSLU</title></head><body>
+<h1>Testing MSLU</h1>
+<p><em>by Michael S. Kaplan, published on 2007/04/28 15:01 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2007/04/28/2314479.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P>I had someone ask me the other day what kind of testing was done for MSLU. </P>
+<P>I told him that the whole project&nbsp;was an interesting example of how the places you expect to find bugs are fine while the places you think are fun have many bugs!</P>
+<P>As a starting point, I actually took&nbsp;lots of the actual tests run on NT on all of the functions that MSLU covered, compiled them to use MSLU, and ran them on Win9x with MSLU on the machine. This found a few bugs in the beginning, though most of them related to determining the ideal settings for unicows.lib/unicows.dll integration, which ultimately helped defined the instructions. There were very few bugs found through those tests.</P>
+<P>From there I downloaded all of the&nbsp;VC++ samples I could get my hands on like CTRLTEST and HELLO and HELLOAPP and MDIDOCVW and OCLIENT and like about&nbsp;sixty others, and converted them all to integrate with MSLU. This was an educational experience for me since I was always much more of a command line builder than someone to use Visual Studio, and I ended up having good instructions that worked with all of the samples I tried -- including features like function overrides and even MSLU loader overrides (required for MFC applications).</P>
+<P>Now&nbsp;with these samples I did find some bugs (surprisingly enough to me more than the actual tests), but again, most of what was learned related to integration, not bugs in actual functions.</P>
+<P>I was given&nbsp;ten machines to set up a small test lab in. After discussion with Julie and others about the fact that we were dealing with three different versions of Windows with three major flavors (SBCS, DBCS, RTL), the machines&nbsp;were set up a follows:</P>
+<UL>
+<LI>English Windows 98 (the first machine I was running&nbsp;all the tests on, later switched to Russian)&nbsp;</LI>
+<LI>German Windows 95 (later switched to Greek)</LI>
+<LI>Italian Windows 98 (later switched to Turkish, still later switched to&nbsp;Thai)</LI>
+<LI>French Windows Me (later switched to Polish)</LI>
+<LI>Japanese Windows 95 (switched to Korean halfway through)</LI>
+<LI>Korean Windows 98 (switched to Simplified Chinese halfway through)</LI>
+<LI>Traditional Chinese Windows Me (switched to Japanese halfway through)</LI>
+<LI>Arabic Windows 95</LI>
+<LI>Hebrew Windows 98</LI>
+<LI>Hebrew Windows Me (The Arabic failed with an error I couldn't read)</LI></UL>
+<P>I was given the lab&nbsp;as my office which was amusing since the A/C was broken in some kind of "always on" way that required me to wear a winter coat when I was in there. Any time I had to talk to people they asked me to meet them in their offices due to the ambient temperature. :-)</P>
+<P>The&nbsp;SBCS machines found&nbsp;very few&nbsp;bugs, the DBCS ones found a bunch of bugs in buffer sizes, and the RTL ones found a few GDI bugs early on but then none afterward.</P>
+<P>Other than being able to verify that a few things worked on Win95 vs. Win98 vs. WinMe that had special case code for the platform (to handle functions that existed in the later but had to be faked in the earlier), there was really no case where either Win95 or Win98 were needed -- the whole thing could have been handled with one Win95, one Win98, and eight WinMe machines with good coverage....</P>
+<P>The source for lots of the code that made its way into MSLU came from various Unicode layers all over Microsoft, from the VSAnsi layer to the MSO functions to the Access ones to many many others (something like 32 in all). In the beginning they were f great help, toward the end I was usually sending people email about all of the things that were broken in their layers!</P>
+<P>Starting in the middle of that time and then continuing on past the initial release, I worked with ISVs and&nbsp;internal devs at Microsoft&nbsp;who were building huge projects and who wanted to consider using MSLU -- from an early version of Product Studio to projects being produced by the then-named Crystal Reports that were going into the VS box to several other, similar applications.</P>
+<P>There were even a few cases where existing applications had link re-run on them to make them MSLU-ized (something I never even considered until "linker god" Dan Spalding suggested it), like Paint, Notepad, Wordpad, both NT4 and Win2000 Character Map,&nbsp;and even a few third party apps I had on my machine. I even got permission from Asmus Freytag to run a copy of UniBook compiled MSLU-style, and at his request made some "code review" suggestions as "payment"....</P>
+<P>I can honestly say that this is where the bulk of the bug reports came from -- on real applications. Which actually makes a lot of sense, when you think about it.</P>
+<P>So, would it all have been done differently had we known at the beginning what we learned by the end? </P>
+<P>Probably. </P>
+<P>But we did cover a lot of ground between that first lunch interview with Julie I described <STRONG><A class="" href="http://archives.miloush.net/michkap/archive/2005/02/12/371650.html" mce_href="http://archives.miloush.net/michkap/archive/2005/02/12/371650.html">here</A></STRONG> and the time that Win9x as a platform fell out of support (described <STRONG><A class="" href="http://archives.miloush.net/michkap/archive/2006/07/11/662550.html" mce_href="http://archives.miloush.net/michkap/archive/2006/07/11/662550.html">here</A></STRONG>). I probably got to learn more about all of these different projects than I ever would have been able to, otherwise.</P>
+<P>Was it a fun project to work on?</P>
+<P>Indubitably!</P>
+<P mce_keep="true">&nbsp;</P>
+<P><FONT color=#ff00ff><EM>This post brought to you by</EM> <FONT size=5>Ｗ</FONT> <EM>(<A class="" href="http://www.fileformat.info/info/unicode/char/ff37" mce_href="http://www.fileformat.info/info/unicode/char/ff37">U+ff37</A>, a.k.a. FULLWIDTH LATIN CAPITAL LETTER W)</EM></FONT></P>
+<hr/><p><a id="2325989" href="#2325989">#</a> <strong>Pavanaja U B</strong> on 29 Apr 2007 11:12 AM:</p><div style="margin-left: 1em"><p>Does MSLU support Indic? AFAIK, it doesn't. Need the confirmation from you.</p>
+<p>Regards,</p>
+<p>Pavanaja</p></div>
+<p><a id="2327706" href="#2327706">#</a> <strong>Michael S. Kaplan</strong> on 29 Apr 2007 2:29 PM:</p><div style="margin-left: 1em"><p>For most of the functions in it, no -- since the DLL's job is to provide a Unicode interface but make it look like a non-Unicode client when talking to the OS.</p>
+<p>But several functions (like GDI ones that support Unicode versions on Win9x) will still work just fine.</p>
+</div>
+<hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2007/04/29/2322357.html" title="What type to use for code page values">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2007/04/28/2311321.html" title="When the system locale is the display language">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2007-04">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2007-04-28">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2007/04/28/2314479.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:38 GMT -->
+</html>

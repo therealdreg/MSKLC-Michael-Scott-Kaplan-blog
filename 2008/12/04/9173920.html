@@ -1,0 +1,44 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2008/12/04/9173920.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:35 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>ImmGetDescription: another casualty of the IMM to TSF migration</title></head><body>
+<h1>ImmGetDescription: another casualty of the IMM to TSF migration</h1>
+<p><em>by Michael S. Kaplan, published on 2008/12/04 03:01 -05:00, original URI: http://blogs.msdn.com/b/michkap/archive/2008/12/04/9173920.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<p>VB expert and long time compatriot/comrade <a href="http://msmvps.com/bill" mce_href="http://msmvps.com/bill">Bill McCarthy</a> asked over in the Suggestion Box:</p>
+<blockquote>
+<p><i><font face="times new roman,times">Hey Michka,<br><br>Can you tell us why ImmGetDescription seems to return zero length on Vista ?&nbsp; Is it broken ?<br><br>Thanks.</font></i></p>
+</blockquote>
+<p>It's funny how many people still know me as Michka</p>
+<p><img src="http://trigeminal.fmsinc.com/images/ibot_standard_back.png" title="IBOT standard mode, from the back" alt="IBOT standard mode, from the back" mce_src="http://trigeminal.fmsinc.com/images/ibot_standard_back.png" width="262" border="0" height="442"></p>
+<p>Including me. :-)</p>
+<p>Questions like this might bring up a "greatest hits" kind of issue in your mind. </p>
+<p>I mean, after blogs like <b><a href="http://archives.miloush.net/michkap/archive/2007/04/26/2281645.html" mce_href="http://archives.miloush.net/michkap/archive/2007/04/26/2281645.html">Sprechen Sie IME?</a></b> and <b><a href="http://archives.miloush.net/michkap/archive/2008/07/27/8781762.html" mce_href="http://archives.miloush.net/michkap/archive/2008/07/27/8781762.html">And you think finding presidential candidates is hard? Try getting the Vista IME candidate list!</a></b>, it is obvious that I have tried to make a point of pointing out how TSF broke a bunch of IMM stuff.</p>
+<p>Since it did break a couple of interesting edge cases....<br></p>
+<p>This case is due to an issue I somewhat indirectly described in <b><a href="http://archives.miloush.net/michkap/archive/2008/03/20/8326152.html" mce_href="http://archives.miloush.net/michkap/archive/2008/03/20/8326152.html">That's no gap, dear; that's a huge freaking chasm!</a></b>, where I said:</p>
+<blockquote>
+<p><font face="times new roman,times"><i>There are now a huge ton of IMEs that do not follow that "E" prefix rule, since their support is entirely through TSF now.</i></font></p>
+</blockquote>
+<p>You may wonder why I am pointing out this in particular.... </p>
+<p>I'll explain by revealing secret information. You know, like in the spirit of <b><a href="http://archives.miloush.net/michkap/archive/2005/02/06/368232.html" mce_href="http://archives.miloush.net/michkap/archive/2005/02/06/368232.html">15 million lines of Windows code revealed....</a></b>, Here are two lines olf source from the ImmGetDescriptionW function:</p>
+<p><b><font face="consolas,lucida console,courier new,courier,fixed">&nbsp;&nbsp;&nbsp; if (!IS_IME_KBDLAYOUT(hKL))<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; return 0;</font></b></p>
+<p>Wait, that won't help. I'll have to reveal one more line of source -- the definition of the IS_IME_KBDLAYOUT function: </p>
+<blockquote>
+<p><font face="consolas,lucida console,courier new,courier,fixed"><b>#define IS_IME_KBDLAYOUT(hkl) ((HIWORD((ULONG_PTR)(hkl)) &amp; 0xf000) == 0xe000)</b></font></p>
+</blockquote>
+<p>Ah, so we have that same 0xE0000000 problem in our code too! :-(</p>
+<p>And now that every single inbox IME uses TSF -- the Text Services Framework -- (one way or another), unless you install a version of Office that includes those hooks to make Text Service Framework TIPs look like old style IMEs, the <a href="http://msdn.microsoft.com/library/ms776190.aspx" mce_href="http://msdn.microsoft.com/library/ms776190.aspx">ImmGetDescription function</a> is pretty much gonna be determined to fail, since there is a lack of a process that tries to artificially put the HKL values into the place that the old architecure used to put them as a design principle.</p>
+<p>In the end, the <a href="http://msdn.microsoft.com/library/ms776190.aspx" mce_href="http://msdn.microsoft.com/library/ms776190.aspx">ImmGetDescription function</a> looks like just another victim on the IMM side of the IMM to TSF migration....</p>
+<p>&nbsp;</p>
+<p><font color="#ff00ff"><i>This blog brought to you by</i><font size="6"> ! </font><i>(<a href="http://www.fileformat.info/info/unicode/char/0021" mce_href="http://www.fileformat.info/info/unicode/char/0021">U+0021</a>, aka EXCLAMATION MARK, aka Exclamation Point, aka Bang)</i></font><br></p>
+<hr/><p><strong>Bill_McC</strong> on 4 Dec 2008 10:13 PM:</p><div style="margin-left: 1em"><p>Thanks Michka :) &nbsp;</p>
+<p>That's weird. If I call ImmIsIME it returns true, yet ImmGetDescription calls to IS_IME_KBDLAYOUT which says it isn't IME. &nbsp;And this is on Vista, where I select Japanese keyboard with Microsoft IME, I think GetKeyboardLayoutList gives me the hKL as 0x04110411. &nbsp;No &quot;E&quot; there. &nbsp;Sure does seem broken.</p>
+<p>But the good news now is if anyone searches for ImmGetDescription google lists this blog entry first (currently). &nbsp; ;) </p>
+<p>Thanks again :)</p></div>
+<p><strong>Michael S. Kaplan</strong> on 5 Dec 2008 12:49 AM:</p><div style="margin-left: 1em"><p>It (kind of) makes sense since ImmIsIME uses other techniques. But it does seem like (if nothing else) they horribly broke expectations in the move to make all the IMEs uses TSF instead of IMM (given the huge amount of IMM-based code out there)....</p>
+<p>The fun part is that it looks like this broke because it never was changed -- this code pretty much looks the same from back when its assumptions were always true. Just goes to show us as great object lesson in software dependencies!</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 5 Dec 2008 1:14 AM:</p><div style="margin-left: 1em"><p>And of course, any time! :-)</p>
+</div>
+<hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2008/12/05/9177695.html" title="It isn&#39;t really RED versus GREEN">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2008/12/04/9173687.html" title="UCS-2 to UTF-16, Part 7: If it makes the SQL Server columns too small then it made the Oracle columns either too smallER or too smallEST">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2008-12">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2008-12-04">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2008/12/04/9173920.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:35 GMT -->
+</html>

@@ -1,0 +1,49 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2010/06/01/10017368.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:35 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>It is with a tenge of sorrow that I say this</title></head><body>
+<h1>It is with a tenge of sorrow that I say this</h1>
+<p><em>by Michael S. Kaplan, published on 2010/06/01 07:01 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2010/06/01/10017368.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<p>It put me in mind of <a href="http://archives.miloush.net/michkap/archive/2010/04/12/9993605.html"><strong>The elusive G-sign said to exist in South America may not be in Windows, says a customer who has hunted for it</strong></a>, it did.</p>
+<p>You know, with the Paraguay <strong>Guaran&iacute;</strong> currency symbol (₲, aka U+20b2, aka GUARANI SIGN).</p>
+<p>And how Microsoft had added the character to many fonts but had not added it to the locale data.</p>
+<p>It would be easy to claim that I'm no longer on the team that is the custodian of the locale data (since I'm not).</p>
+<p>It would be easy to claim I hadn't heard about the move to get the currency sign into fonts (since I hadn't).</p>
+<p>It would be easy to claim that even when I was on that team I&nbsp;didn't do much&nbsp;of the work in the "data maintenance" space (since I didn't).</p>
+<p>And it would be easy to claim that I&nbsp;could not even really recall hearing about this currency sign when it was added to Unicode 4.1&nbsp;(since I couldn't).</p>
+<p>Even so, if one is a part of a company it is easy to feel bad about it. I mean given that it is quite possible if I had involved myself in the right conversation or the right meeting or the right email thread, I could have maybe helped fix this one. I mean, it would have been an alteration to some established procedures, but if I'm gonna be out there anyway I may as well spend a little time <strong>above the line</strong> trying to change a process/procedure or two when it make sense.</p>
+<p>It has happened before, after all.</p>
+<p>Perhaps sometimes this Blog is a way of offering up such "flaws" as an attempt to be transparent about them, hoping to be forgiven for the "sin" of not being able to solve every international problem, get every international bug fixed.</p>
+<p>Weird the way my mind works, huh? Trust me, I'm a mystery. I really am.</p>
+<p>Anyway, today's blog is not about the GUARANI SIGN or about the tinge of regret I feel about missing the chance to fix it before either Vista or Windows 7 shipped, despite the fact that all of the text up until now essentially has been.</p>
+<p>Today's blog is about something different.</p>
+<p>Remember early last month, when I wrote my blog <a href="http://archives.miloush.net/michkap/archive/2010/05/02/10005857.html"><strong>Kazakhstan (a country 4 times the size of Texas) has its own Windows 7 LIP!</strong></a>?</p>
+<p>Well, not too long before that particular Language Interface Pack was released, stakeholders pointed out something amiss.</p>
+<p>Looking at the Kazakh locale data:</p>
+<p><img src="http://trigeminal.fmsinc.com/images/tenge01.jpg" border="0" /></p>
+<p>It has <strong><span style="font-size: xx-large;">Т</span></strong> (aka U+0422, CYRILLIC CAPITAL LETTER TE) as its currency symbol.</p>
+<p>however,&nbsp;you see, the&nbsp;<a href="http://en.wikipedia.org/wiki/Kazakhstani_tenge">Kazakhstani tenge</a> (теңге), which was introduced in November of 1993, wasn't using the<strong>&nbsp;Т</strong> anymore.</p>
+<p>In March of 2007 they came up with a new symbol to act as the currency sign, and in March 2008 it was proposed as a new character in Unicode. And in Unicode 5.2, it became ₸&nbsp;(U+20b8, TENGE SIGN), with a note in <a href="http://www.unicode.org/charts/PDF/U20A0.pdf">the Currency block in Unicode</a> of its relation to other similar Unicode characters like ⍑ (aka U+2351, APL FUNCTIONAL SYMBOL UP TACK OVERBAR), ╤ (aka U+2564, BOX DRAWINGS DOWN SINGLE AND HORIZONTAL DOUBLE), and 〒 (aka U+3012, POSTAL MARK).</p>
+<p>It looks like this (thanks Wikimedia for the SVG, click on it to get to them!):</p>
+<p><a href="http://upload.wikimedia.org/wikipedia/commons/1/18/Kazakhstani_tenge_symbol.svg"><img height="100" width="78" src="http://upload.wikimedia.org/wikipedia/commons/thumb/1/18/Kazakhstani_tenge_symbol.svg/314px-Kazakhstani_tenge_symbol.svg.png" alt="Kazakhstani tenge symbol, from Wikimedia" border="0" /></a></p>
+<p>This currency sign, added to Unicode in (as I said) version 5.2, was added too late for it to get into Windows 7 and Windows Server 2008 R2.</p>
+<p>It was therefore (unlike with ₲) not present in any of the fonts on the system. </p>
+<p>Changing the locale to point to the new character would have consigned the TENGE SIGN to look like an empty square box rather than a currency sign people could use. And a last minute change to multiple fonts would have also been a huge undertaking and would have delayed the LIP's release by an unknown amount of time while solutions were put together for the font and the locale.</p>
+<p>Even then it would be missing on the keyboard, in the Unicode property data, in the collation data. Being an "unknown" character like that leads to huge number of strange compatibility problems, believe me. Even when its not a currency sign.</p>
+<p>And it likely wouldn't have been in Office either -- neither 2007 (too early!) or even 2010 (which had largely snapped on the Windows 7 data and would have just as many problems with an unknown character as a currency sign).</p>
+<p>So in the end, the LIP had to be released without the change, even though one day all of the software pieces and fonts can be in a better position to do the right thing than this currency sign that had the misfortune to be created and encoded in exactly the wrong timeframe to be included in the&nbsp;current&nbsp;generation of products.</p>
+<p>Thus it is with a tenge of sorrow that I explain how the tenge is not in Windows 7, or's its Kazakh LIP. </p>
+<p>Because even the fact that there was no possible way that it could have happened makes me feel no less gulty about the whole thing.</p>
+<p>As amazing DJ Samantha Ronson might say, I wonder if I'm just built this way....</p>
+<hr/><p><strong>Charles</strong> on 3 Jun 2010 11:42 AM:</p><div style="margin-left: 1em"><p>Thanks for all the work you have been doing, Michael, even the non-Unicode stuff, whatever that may be.</p></div>
+<p><strong>James</strong> on 23 Jun 2010 11:14 PM:</p><div style="margin-left: 1em"><p>Hello Michael. &nbsp;On a related note. &nbsp; The philippine peso sign has been available as unicode 20b1 for ages now (unicode 3). &nbsp;yet the localization keeps using the international symbol Php. &nbsp;</p>
+<p>(Other localization related requests. </p>
+<p>- Our own time zone &nbsp;(gmt +8 Manila) &nbsp;we keep having to use Taipei. (i hate that)</p>
+<p>- legal size paper, ours is 8.5 inches by 13 inches vs. &nbsp;14 inches in the U.S.</p>
+<p>- Our own keyboard. &nbsp;we just need two, the peso sign cited above and the enye (ñ)</p>
+<p>which is used in many Spanish proper names. (places, surnames). &nbsp;Maybe use the altGr N combination.</p>
+<p>thanks for listening</p>
+</div>
+<hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2011/06/20 <a href="http://archives.miloush.net/michkap/archive/2011/06/20/10176769.html">There's a ™ joke in here somewhere, I just don't know what is (aka And if a 't' turned out to be 'm'…)</a></p><p>2010/10/15 <a href="http://archives.miloush.net/michkap/archive/2010/10/15/10076268.html">"Breaking changes" are mostly about potential, not realization</a></p><p>2010/07/15 <a href="http://archives.miloush.net/michkap/archive/2010/07/15/10038526.html">If it was me, I'd say "I love the Rupee, and it was my idea!"</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2010/06/02/10018725.html" title="What is a Character? (this Thursday)">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2010/05/31/10017323.html" title="BUG SPOTTING: Identify 1) what the code does, and 2) what they wanted it to do">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2010-06">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2010-06-01">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2010/06/01/10017368.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:35 GMT -->
+</html>

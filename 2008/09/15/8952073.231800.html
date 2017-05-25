@@ -1,0 +1,74 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2008/09/15/8952073.231800.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:35 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>UCS-2 to UTF-16, Part 2: A&P of a 'linguistic character'</title></head><body>
+<h1>UCS-2 to UTF-16, Part 2: A&P of a 'linguistic character'</h1>
+<p><em>by Michael S. Kaplan, published on 2008/09/15 07:01 -07:00, original URI: http://blogs.msdn.com/michkap/archive/2008/09/15/8952073.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostOld -->
+Previous blogs in this series of blogs on this Blog:
+
+<ul>
+<li><b><a href="http://archives.miloush.net/michkap/archive/2008/08/30/8907667.html" mce_href="http://archives.miloush.net/michkap/archive/2008/08/30/8907667.html">Part 0: 
+The intro, sans content</a></b></li>
+
+<li><b><a href="http://archives.miloush.net/michkap/archive/2008/09/08/8931641.html" mce_href="http://archives.miloush.net/michkap/archive/2008/09/08/8931641.html">Part 1: Getting the obvious out of the way</a></b><br></li>
+</ul>
+
+<p><small><font color="#ff0000"><i>A&amp;P in the title stands for Anatomy and Physiology, since in some alternate universe I went ahead and got a medical degree and made a good friend (a friend who, in that alternate universe, is still alive) proud of me. Ignore it, the deeper meaning of the title, even when it exists, isn't really important. :-)<br></i></font></small>
+</p>
+<p>Now that I've made everyone thinking "Let's update to support UTF-16 instead of UCS-2" they need to just back the hell off a few steps with the previous blog, I thought it might be good to go a little deeper in so you can see that even though you may have been completely and totally wrong, that there is a good basis for you thinking the way you were, and that you can use that knowledge to feel better about future steps. :-)</p>
+
+<p>In theory, there is very little difference between the general case of <b>linguistic character</b> as I defined it last time and the specific case that got everyone freaking out about UCS-2 (surrogate pairs).</p>
+
+<p>In practice, all <b>linguistic characters</b> fall into one of <font color="#999999"><strike>two</strike></font>three categories:</p>
+
+<ul>
+<li>A <b>Surrogate Pair</b> (two code units, a high and a low surrogate), neither of which is itself a character, linguistic or otherwise. The cheese may stand alone, but surrogate code units didn't teach it how, if you know what I mean;</li>
+
+<li>A <b>Grapheme Cluster</b> (to use Unicode's term) aka <b>Text Element</b> (to use Microsoft's in the .NET Framework), made of two or more code units, at least some though not all of which can be independently thought of as being <b>linguistic characters</b> themselves;</li>
+
+<li>A <b>Sort Element</b> (to use my term, via this blog) aka <b>Compression</b> (to use Microsoft's term) aka <b>Contraction</b> (to use Microsoft's), made up of two or more code units, all of which can be independently thought of as being <b>linguistic characters</b> themselves.</li>
+</ul>
+To show an example of each:
+<ul>
+<li><font size="4">𐎀</font>, aka UGARITIC LETTER ALPA, aka U+10380, aka U+d800 U+df80 -- this one is four bytes in UTF-8, two code units in UTF-16, and one code unit in UTF-32 -- interestingly, always four bytes!</li>
+
+<li><font size="4">Ṹ</font>, aka the fully decomposed form of U+1e78 (LATIN CAPITAL LETTER U WITH TILDE AND ACUTE), aka U+0055 U+0303 U+0301 -- this one is five bytes in UTF-8, three code units or six bytes in UTF-16, and three code units or 12 bytes in UTF-32;</li>
+
+<li><font size="4">dzs</font>, a sequence of letters that collates together in Hungarian, aka U+0064 U+007a U+0073 -- this one is three bytes in UTF-8, three code units or six bytes in UTF-16, and three code units or 12 bytes in UTF-32.</li>
+</ul>
+
+<p>Now one can argue at length on relative consequences of truncation of any of these sequences of code units. You might even make an argument that truncation is most serious in the first case and then gets less and less serious as you go down the list.</p>
+
+<p><i>Truncation in this case is a superset of any operation that splits apart the component pieces before a user's eyes, including cursor movement through the string, deletion of a single "character" via the delete key, cutting off the end to fit in a buffer, or whatever. Anything that would show a lack of respect for a <b>linguistic character</b>'s boundaries. Everyone gets involved here -- fonts, keyboards, you name it...</i><br></p>
+
+<p>From one point of view you might be right if that is your argument. <br></p>
+
+<p>But as long as we are choosing to call them <b>linguistic characters</b> I am going to channel that <i>Spock-with-a-beard</i> version of me that managed to avoid the scandal with the Dean's daughter and got a PhD in linguistics, and claim that they each have the potential to have unique meaning to a user who took the time and effort to put them into data.</p>
+<p>In my opinion, you get no points for vicious truncation just because it doesn't look as bad.<br></p>
+
+<p>And in which case anyone with eager willingness to truncate should consider themselves to be a bloodthirsty linguistic character murderer. Sentence suspended by me since there really isn't a competent court with the authority to punish for this crime. :-)</p>
+
+<p>Because if you are working on or using a computer program displaying or storing or in any way using data then you have a right to not have someone change the meaning of that data in the name of expediency.</p>
+
+<p>And truncating a linguistic character has the potential to do just that.<br></p>
+
+<p>Okay, now that I have been all crazy about this, I'll point out that only the first two of these three categories have any supported way for a program looking for safe truncation points to detect them.</p>
+
+<p>Which means if I made you feel guilty, you can take some solace in the fact that just about everyone is going to be doing it some of the time....</p>
+
+<p>But it is worth considering that fact when one carefully does one's best avoiding problems with the categories that you can easily help with.<br></p>
+
+<p>Okay, that's it for now, next time I'll talk about those various operations an how to go about them....</p>
+
+<p><br></p>
+
+<p><font color="#ff00ff"><i>This blog brought to ou by</i><font size="7"> Ṹ </font><i>(<a href="http://www.fileformat.info/info/unicode/char/1e78" mce_href="http://www.fileformat.info/info/unicode/char/1e78">U+1e78</a>, aka LATIN CAPITAL LETTER U WITH TILDE AND ACUTE)</i><br></font></p>
+<hr/><p><a id="8952894" href="#8952894">#</a> <strong>Mihai</strong> on Monday, September 15, 2008 1:29 PM:</p><div style="margin-left: 1em"><p>And let's not forget the IVS (Ideographic Variation Sequences) :-)</p></div>
+<p><a id="8952911" href="#8952911">#</a> <strong>Michael S. Kaplan</strong> on Monday, September 15, 2008 1:35 PM:</p><div style="margin-left: 1em"><p>No worries there -- for our present purposes, they fall into Category #2. :-)</p></div>
+<p><a id="8952946" href="#8952946">#</a> <strong>John Cowan</strong> on Monday, September 15, 2008 2:17 PM:</p><div style="margin-left: 1em"><p>&quot;[...] at least some though not all of which can be independently thought of as being linguistic characters themselves&quot; isn't strictly true. &nbsp;Decomposed Korean syllables are grapheme clusters, but each component is a linguistic character.</p></div>
+<p><a id="8952976" href="#8952976">#</a> <strong>Michael S. Kaplan</strong> on Monday, September 15, 2008 2:54 PM:</p><div style="margin-left: 1em"><p>Ah yes, that is true. Though most users would consider the net effect of truncation to be just as destructive to meaning....</p></div>
+<p><a id="8953369" href="#8953369">#</a> <strong>John Cowan</strong> on Monday, September 15, 2008 10:23 PM:</p><div style="margin-left: 1em"><p>Well, the same is true of almost any sort of trunca</p></div>
+<p><a id="8953444" href="#8953444">#</a> <strong>Michael S. Kaplan</strong> on Tuesday, September 16, 2008 12:18 AM:</p><div style="margin-left: 1em"><p>Exactly my point. :-)</p></div>
+<hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2009/06/29 <a href="http://archives.miloush.net/michkap/archive/2009/06/29/9800913.html">UCS-2 to UTF-16, Part 11: Turning it up to Eleven!</a></p><p>2009/06/10 <a href="http://archives.miloush.net/michkap/archive/2009/06/10/9723321.html">UCS-2 to UTF-16, Part 10: Variation[ Selector] on a theme...</a></p><p>2008/12/16 <a href="http://archives.miloush.net/michkap/archive/2008/12/16/9223301.html">UCS-2 to UTF-16, Part 9: The torrents of breaking CharNext/CharPrev</a></p><p>2008/12/09 <a href="http://archives.miloush.net/michkap/archive/2008/12/09/9187379.html">UCS-2 to UTF-16, Part 8: It's the end of the string as we know it (and I feel ellipses)</a></p><p>2008/12/04 <a href="http://archives.miloush.net/michkap/archive/2008/12/04/9173687.html">UCS-2 to UTF-16, Part 7: If it makes the SQL Server columns too small then it made the Oracle columns either too smallER or too smallEST</a></p><p>2008/11/24 <a href="http://archives.miloush.net/michkap/archive/2008/11/24/9134826.html">UCS-2 to UTF-16, Part 6: An exercise left for whoever needs some exercise</a></p><p>2008/10/15 <a href="http://archives.miloush.net/michkap/archive/2008/10/15/9000371.html">UCS-2 to UTF-16, Part 5: What's on the Next Level?</a></p><p>2008/10/06 <a href="http://archives.miloush.net/michkap/archive/2008/10/06/8977552.html">UCS-2 to UTF-16, Part 4: Talking about the ask</a></p><p>2008/09/18 <a href="http://archives.miloush.net/michkap/archive/2008/09/18/8956650.html">UCS-2 to UTF-16, Part 3: It starts with cursor movement (where MS simultaneously gets better and worse)</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2008/09/15/8952073.html" title="UCS-2 to UTF-16, Part 2: A&amp;P of a &#39;linguistic character&#39;">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2008/09/15/8951496.html" title="Hi, I&#39;m a PC. And I have a MAC. Wait, isn&#39;t that backwards? No worries, we&#39;re talking Bidi here!">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2008-09">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2008-09-15">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2008/09/15/8952073.231800.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:35 GMT -->
+</html>

@@ -1,0 +1,33 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2008/12/08/9183424.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:35 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>The "plate of shrimp" theory explains it</title></head><body>
+<h1>The "plate of shrimp" theory explains it</h1>
+<p><em>by Michael S. Kaplan, published on 2008/12/08 10:01 -05:00, original URI: http://blogs.msdn.com/b/michkap/archive/2008/12/08/9183424.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<p>There is an old expression about how when it is time to railroad, people railroad (I've mentioned this issue <b><a href="http://archives.miloush.net/michkap/archive/2006/09/13/752377.html" mce_href="http://archives.miloush.net/michkap/archive/2006/09/13/752377.html">before</a></b>).</p>
+<p>Others think of this as the <b>plate of shrimp</b> theory (if they are fans of the movie <b>Repo Man</b>, that is -- if so, they are cool).</p>
+<p>Anyway, Marc had a question from a customer, <b>back in the beginning of October of this year</b>:<br></p>
+<blockquote>
+<p><font face="times new roman,times">Customer wants to display the Era string of the Japanese Imperial Calendar in formatted date string. <br><br>If the user default language is set to Japanese with the Japanese Imperial Calendar selected as the calendar in the regional and language options control panel applet then the following highlighted line of code works fine.&nbsp; It provides the formatted Imperial Japanese date.<br><br>int nLen = GetDateFormat(0x411,0,0,_T("MM/dd/yyyy gg"),NULL,0);<br><br>TCHAR* ptszNewDate = new TCHAR[nLen];<br><br>ret = GetDateFormat(0x411,0,0, _T("MM/dd/yyyy gg"),ptszNewDate, nLen);<br><br>but if the user default language is set to US English then this no longer works.<br><br>If I replace the highlighted line with the following code,<br><br>ret = GetDateFormat(0x411,DATE_USE_ALT_CALENDAR,0, _T("MM/dd/yyyy gg"),ptszNewDate, nLen);<br><br>Then I get the Imperial Date along with the Era string.&nbsp; But the problem with this is that the docs say (see http://msdn.microsoft.com/en-us/library/ms776293.aspx )&nbsp; you should only use dwFlags (2nd parameter) that are zero with an lpFormat (4th parameter) that is not null.<br><br>But in the above case I am using non-zero dwFlags with non null lpFormat.&nbsp; Is this a bug in the API or the Docs or just coincindence?<br><br>The following line returns the complete date in the default format of the Imperial Japanese calendar.<br><br>ret = GetDateFormat(0x411,DATE_USE_ALT_CALENDAR,0, NULL, ptszNewDate, nLen);</font><br></p>
+</blockquote>
+<p>Now you might wonder why I emphasized when the question was asked.</p>
+<p>Well, if you go back to <b>the end of September of this year</b> and find my <b><a href="http://archives.miloush.net/michkap/archive/2008/09/24/8963238.html" mce_href="http://archives.miloush.net/michkap/archive/2008/09/24/8963238.html">It used to be right, dammit!</a></b>, which answers the question -- it is a bug in the documentation.</p>
+<p>Now as I mentioned in <b><a href="http://archives.miloush.net/michkap/archive/2008/09/24/8963238.html" mce_href="http://archives.miloush.net/michkap/archive/2008/09/24/8963238.html">It used to be right, dammit!</a></b>,this bug has been present for years. and no one ever noticed it. </p>
+<p>Or if they did, they never reported the documentation bug.</p>
+<p>I myself have probably reviewed that topic a half dozen times myself over the years for doc reviews, and never noticed the problem.</p><p>And I am not the only one in that position.<br></p>
+<p>So how is it that two entirely separate cases of people working with a function find the same bug within ten days that thousands (tens of thousands? more?) never saw before?</p><p>A lattice of coincidences? <br></p>
+<p>I guess it was time to run over a plate of shrimp with a train.</p>
+<p><br></p>
+<p><font color="#ff00ff"><i>This blog brought to you by</i><font size="6"> 𒀁 </font><i>(<a href="http://www.fileformat.info/info/unicode/char/12001" mce_href="http://www.fileformat.info/info/unicode/char/12001">U+12001</a>, aka CUNEIFORM SIGN A TIMES A)</i><br></font></p>
+<hr/><p><strong>Mihai</strong> on 8 Dec 2008 12:57 PM:</p><div style="margin-left: 1em"><p>Let's hope that it will come a time when the calendars story will be cleaned in the Windows world.</p>
+<p>The current APIs are more than insufficient (let's remember Office setting the calendar for all the application just to be able to do some work).</p>
+<p>And not only is the API insufficient, but even the existing one is &quot;damaged&quot;.</p>
+<p>What do you get when using DATE_USE_ALT_CALENDAR with a Japanese customized to use imperial date? And Imperial formatted date (not an &quot;imperial date&quot; :-) !</p>
+<p>It looks like the &quot;alt_calendar&quot; means &quot;the calendar other than the Gregorian one&quot;, not &quot;the calendar other than the current one&quot;</p>
+<p>Yes people, if I set my system to Japanese - Imperial calendar, I have no way to get a Gregorian format!</p>
+<p>:-)</p></div>
+<p><strong>Michael S. Kaplan</strong> on 8 Dec 2008 3:28 PM:</p><div style="margin-left: 1em"><p>Actually, the calendar story in the managed world is also horked (albeit in different ways). I hope one day both are fixed, though this seems to be staying horked for now....</p>
+</div>
+<hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2008/12/09 <a href="http://archives.miloush.net/michkap/archive/2008/12/09/9186642.html">Yes, Virginia, there is a plate of shrimp</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2008/12/09/9186642.html" title="Yes, Virginia, there is a plate of shrimp">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2008/12/08/9183280.html" title="Lt is TC (and TC is Title Case, or Total Crap -- take your pick!)">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2008-12">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2008-12-08">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2008/12/08/9183424.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:35 GMT -->
+</html>

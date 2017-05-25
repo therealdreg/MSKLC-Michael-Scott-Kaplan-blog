@@ -1,0 +1,29 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2006/11/17/1097532.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:39 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Korean + French == ????</title></head><body>
+<h1>Korean + French == ????</h1>
+<p><em>by Michael S. Kaplan, published on 2006/11/17 20:24 -05:00, original URI: http://blogs.msdn.com/b/michkap/archive/2006/11/17/1097532.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P>I was having a conversation with someone at the 30th Internationalization and Unicode Conference earlier today, and I realized after thinking about design consequences beyond his questions that I&nbsp;found&nbsp;a design flaw.</P>
+<P>It was one of those cool kind of issues that I did not even have to try out to realize it exists. :-)</P>
+<P>Try to compare the following two strings: "<STRONG><FONT size=4>가㉮</FONT></STRONG>" vs "<STRONG><FONT size=4>㉮가</FONT></STRONG>".</P>
+<P>Basically try the following three calls:</P>
+<BLOCKQUOTE><FONT face="Consolas,Lucida Console,Courier New,Courier" size=2><B>
+<P>WCHAR wz1[] = L"\uAC00\u326E";<BR>WCHAR wz2[] = L"\u326E\uAC00;<BR><BR>printf(%d, CompareStringW(MAKELANGID(LANG_ENGLISH, SUBLANG_DEFAULT), 0, wz1, -1, wz2, -1));<BR>printf(%d, CompareStringW(MAKELANGID(LANG_KOREAN, SUBLANG_DEFAULT), 0, wz1, -1, wz2, -1));<BR>printf(%d, CompareStringW(MAKELANGID(LANG_FRENCH, SUBLANG_DEFAULT), 0, wz1, -1, wz2, -1));</B></FONT></P>
+<P mce_keep="true">&nbsp;</P></BLOCKQUOTE>
+<P>The results will be:</P>
+<BLOCKQUOTE><FONT face="Consolas,Lucida Console,Courier New,Courier" size=2><B>
+<P>1<BR>1<BR>3</P></B></FONT></BLOCKQUOTE>
+<P>In other words, using French turned a CSTR_LESS_THAN into a CSTR_GREATER_THAN.</P>
+<P>Can you guess why?</P>
+<P>Hint #1: <STRONG><A class="" href="http://archives.miloush.net/michkap/archive/2004/11/30/272207.html" mce_href="http://archives.miloush.net/michkap/archive/2004/11/30/272207.html">They ask me "why is my Korean text in random order?"</A></STRONG></P>
+<P>Hint #2: <STRONG><A class="" href="http://archives.miloush.net/michkap/archive/2004/12/31/344739.html" mce_href="http://archives.miloush.net/michkap/archive/2004/12/31/344739.html">French collation: When diacritical becomes diabolical</A></STRONG></P>
+<P>Yes, that is right --&nbsp;On all locales, the circled version of Hangul is considered to have a secondary difference when compared to the non-circled one, and on French the diacritics (secondary) weights are sorted in reverse order. </P>
+<P>So when you&nbsp;use a French sort to look at Hangul, the order will end up being reversed!</P>
+<P>Clearly the reverse diacritics sort would not be expected&nbsp;to apply&nbsp;to&nbsp;Hangul, but just as clearly reversing the diacritic weights has to affect the whole string and there is no&nbsp;good way to separate the two (other than to not handle those Korean differences using seconary weights even though they have a seconday difference).</P>
+<P>Anyway, it seemed lilke an interesting issue to me, so I thought I'd share it!</P>
+<P mce_keep="true">&nbsp;</P>
+<P><FONT color=#ff00ff><EM>This post brought to you by</EM>&nbsp;<FONT size=6>㉮</FONT> <EM>(<A class="" href="http://www.fileformat.info/info/unicode/char/326e" mce_href="http://www.fileformat.info/info/unicode/char/326e">U+326e</A>, a.k.a. CIRCLED HANGUL KIYEOK A)</EM></FONT></P>
+<hr/><div style="margin-left: 1em"><em>no comments</em></div><hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2006/11/17/1097666.html" title="What happened on Thursday morning?">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2006/11/16/1086283.html" title="The problem of string comparisons, WORD sorts, and the minus that is treated like the hyphen">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2006-11">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2006-11-17">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2006/11/17/1097532.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:39 GMT -->
+</html>

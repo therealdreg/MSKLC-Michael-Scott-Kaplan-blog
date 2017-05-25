@@ -1,0 +1,45 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2010/08/20/10052314.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:35 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>The song^H^H^H^Hbug remains the same</title></head><body>
+<h1>The song^H^H^H^Hbug remains the same</h1>
+<p><em>by Michael S. Kaplan, published on 2010/08/20 07:01 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2010/08/20/10052314.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<p><em><span style="color: #ff0000;">In the background, <strong>The Song Remains the Same</strong> is playing. Ironic much?</span></em></p>
+<p>The question came up the other day:</p>
+<p style="padding-left: 30px;"><span style="font-family: times new roman,times;">{REDACTED} uses notepad to look at info from text files that contain redirect output from commands when troubleshooting user systems.&nbsp; This has worked for them until they added Russian and Greek to their multilang images.</span></p>
+<p style="padding-left: 30px;"><span style="font-family: times new roman,times;">In Windows 7 (and probably all other versions) on Russian </span></p>
+<p style="padding-left: 30px;"><span style="font-family: times new roman,times;">If you pipe the output of a command to a text file such as ipconfig.txt</span></p>
+<p style="padding-left: 30px;"><br /><span style="font-family: times new roman,times;">Настройка протокола IP для Windows</span></p>
+<p style="padding-left: 30px;"><span style="font-family: times new roman,times;">&nbsp;&nbsp; Имя компьютера&nbsp; . . . . . . . . . : Xx<br />&nbsp;&nbsp; Основной DNS-суффикс&nbsp; . . . . . . : <br />&nbsp;&nbsp; Тип узла. . . . . . . . . . . . . : Гибридный<br />&nbsp;&nbsp; IP-маршрутизация включена . . . . : Нет<br />&nbsp;&nbsp; WINS-прокси включен . . . . . . . : Нет<br />&nbsp;&nbsp; Порядок просмотра суффиксов DNS . : redmond.corp.microsoft.com</span></p>
+<p style="padding-left: 30px;"><span style="font-family: times new roman,times;">&hellip;&hellip;</span></p>
+<p style="padding-left: 30px;"><span style="font-family: times new roman,times;">Opening the file in notepad gives</span></p>
+<p style="padding-left: 30px;"><span style="font-family: times new roman,times;"><img src="http://trigeminal.fmsinc.com/images/messedupnotepadtext.jpg" border="0" /></span></p>
+<p style="padding-left: 30px;"><span style="font-family: times new roman,times;">I have tried various fonts and Cyrillic script option in notepad but have not gotten complete Russian output.</span></p>
+<p style="padding-left: 30px;"><span style="font-family: times new roman,times;">Is there a combination that works for notepad?&nbsp; Word can display these correctly but Office will not be available on all of their systems.</span></p>
+<p style="padding-left: 30px;"><span style="font-family: times new roman,times;">Greek has similar issues.</span></p>
+<p style="padding-left: 30px;"><span style="font-family: times new roman,times;">Thanks,</span></p>
+<p>Regular readers probably know what is going on already.</p>
+<p>Though the mention of fonts in the question may throw people off a scosh!</p>
+<p>It is that the console is using the OEM code page and Notepad reads non-Unicode files as if they are in ANSI code page.</p>
+<p>Personally, the part of the message that excited me most was the fact that more companies that buikd lots of Windows images are moving into building other language images. :-)</p>
+<p>To be honest, it makes me wonder whether adding one more encoding choice to the Notepad load list&nbsp;and save list </p>
+<p style="padding-left: 30px;"><img src="http://trigeminal.fmsinc.com/images/notepadlistofencodings.jpg" border="0" /></p>
+<p>for the CP_OEMCP would make sense.</p>
+<p>I mean, given how many commonly used command line tools will have output in these code pages, how much would it really cost to add?</p>
+<p>I think they really ought to add this. For the sake of this very scenario.</p>
+<p>Now on the other hand a fuller work item, adding it to the detection list (described in <a href="http://archives.miloush.net/michkap/archive/2007/04/22/2239345.html"><strong>this blog post</strong></a>), would be a bit more problematic, though.</p>
+<p>I'm going to see if any of the regular readers want to guess why detection based on simple "stupid byte tricks" (apologies to David Letterman!) would be complicated (I'll answer too in the comments, eventually)....</p>
+<hr/><p><strong>Yuri Khan</strong> on 20 Aug 2010 11:05 AM:</p><div style="margin-left: 1em"><p>Every professional troubleshooter worth their salt would have a console-based text file viewer that supported the OEM code page. There is absolutely no reason to view ipconfig output in notepad.</p>
+</div>
+<p><strong>Yuhong Bao</strong> on 20 Aug 2010 2:47 PM:</p><div style="margin-left: 1em"><p>Yep, when I discussed the UTF-8 BOM problem in another thread, I mentioned this issue too.</p>
+</div>
+<p><strong>Evan</strong> on 20 Aug 2010 4:32 PM:</p><div style="margin-left: 1em"><p>I don&#39;t think it should be a matter of adding encodings to the load list, as it would become awkward if you don&#39;t know the encoding from the start, and you need to reöpen the file endlessly until you find the right encoding, but more of an encoding menu option similar to IE or Firefox, this way, one can see what the file looks like in various encodings, with out being required to use a different app for viewing it in a different encoding, ie. Notepad and Internet Explorer.</p>
+</div>
+<p><strong>Doug Ewell</strong> on 24 Aug 2010 8:46 AM:</p><div style="margin-left: 1em"><p>&gt; detection based on simple &quot;stupid byte tricks&quot;</p>
+<p>As it turns out, it isn&#39;t that hard to detect the encoding of known Cyrillic text (of non-trivial length) based on some fairly simple tables. The trap, of course, is how far into the weeds this effort goes when the text isn&#39;t Cyrillic after all.</p>
+</div>
+<p><strong>Alkaline Champ</strong> on 14 Sep 2010 8:35 AM:</p><div style="margin-left: 1em"><p>A KB article of it was published: <a rel="nofollow" target="_new" href="http://support.microsoft.com/kb/2360394">support.microsoft.com/.../2360394</a></p>
+</div>
+<hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2010/08/21/10052532.html" title="That Effing font is Not Safe For Work">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2010/08/19/10051301.html" title="A bit about some Arabic script but not Arabic language stuff...">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2010-08">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2010-08-20">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2010/08/20/10052314.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:35 GMT -->
+</html>

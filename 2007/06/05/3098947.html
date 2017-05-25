@@ -1,0 +1,48 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2007/06/05/3098947.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:38 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>The consequences of picking the wrong font #1</title></head><body>
+<h1>The consequences of picking the wrong font #1</h1>
+<p><em>by Michael S. Kaplan, published on 2007/06/05 11:42 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2007/06/05/3098947.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P>Have you ever played volleyball?</P>
+<P>I have, in a past life (back when I was able to stand upright!). and I was most struck by the pattern of using three hits -- receive it, setting it up, and spiking it.</P>
+<P>I was not a professional player or anything, and obviously not all the terms are right (the actual terms are&nbsp;more&nbsp;like the bump, set, and spike). But the descriptions should be comprehensible and I am trying to frame things here....</P>
+<P>I am going to try that pattern for a moment here. I already don't think it will work terribly well, but it won't hurt to give it a try, I figure.</P>
+<P>First, the the receiving -- easy enough, I get questions all the time. This one comes from Dansk and was asked first in the microsoft.public.vc.mfc newsgroup and then in the microsoft.public.win32.programmer.international newsgroup:</P>
+<BLOCKQUOTE>
+<P><EM><FONT face="times new roman,times">Hi all,<BR><BR>You might be interested (and even give more info) about a discussion I had on microsoft.public.vc.mfc, thread named "CListCtrl unicode doesn't display korean characters correctly"<BR><BR>I had a problem with an MFC unicode-compiled application.<BR><BR>Description of the problem:<BR>- The application is a dialog box vith a CListCtrl and a CEdit<BR>- The application has to display strings in various languages in the CListCtrl.<BR>- Once the user selects an entry ni the CListCtrl, the string is also displayed in the CEdit<BR>- Both CEdit and CListCtrl have their default font changed to "Arial Unicode MS"<BR>- The CListCtrl is owner data and the data is in a memory structure (a list of strings).<BR>- Strings are correctly displayed in many languages (chinese, japanese, thai, english, greek, russian, ...) *except* in korean. In that case, I just get squares instead of characters.<BR>- when I select an entry in the list, the string is *correctly* displayed in the CEdit (ie no squares, just korean characters)<BR>- when the string is too long to be displayed in the CListCtrl, the tooltip displayed by the control has corect characters (not the same squares displayed below it)<BR><BR>Workaround:<BR>Thanks to MrAsm, I could solve the problem.<BR>The workaround is to prefix *every* string with a BOM (0xFF, 0xFE)<BR><BR>So, the question is : "Why?"<BR>Why the ListCtrl needs the BOM, why the Edit does not, and why korean?<BR><BR>Thank you<BR>Dansk<BR><BR>Environnement:<BR>Windows XpSp2 pro - French - IE7 - VC6 (all service packs)</FONT></EM></P></BLOCKQUOTE>
+<P>Now there are a lot of things that could be said about Arial Unicode MS. some of them might even be positive, and when you get down to it Microsoft paid Agfa Monotype a buttload of money to have this huge font designed to cover so many characters.</P>
+<P>Though to be perfectly honest, there is very little you can say about it that is good when you are talking about support for some languages, <EM>such as Korean, for instance</EM>.</P>
+<P><STRONG>Even without the particular problem being reported here.</STRONG></P>
+<P>And even&nbsp;not specific to anything other than the conflict between the font's design and important typographic principles in other languages.&nbsp;</P>
+<P>So anyway, if you are in the newsgroups or if you look now and see the thread, you should say nothing (since solutions were discussed and&nbsp;we are not there&nbsp;yet), but....</P>
+<P>Does anyone have any thoughts about this they'd like to suggest? Beyond the vague sense that Arial Unicode MS is particularly ill-suited to this task (though the above is my subtle attempt at a volleyball "bump" or hint or whatever).</P>
+<P>Next I'll post the "set" that gets into what is going on here, along with maybe another fun example of the problem....</P>
+<P mce_keep="true">&nbsp;</P><EM>
+<P><FONT color=#ff00ff><EM>This post brought to you by</EM> ᄀ <EM>(<A class="" href="http://www.fileformat.info/info/unicode/char/1100" mce_href="http://www.fileformat.info/info/unicode/char/1100">U+1100</A>, a.k.a. HANGUL CHOSEONG KIYEOK)</EM></FONT></P></EM>
+<hr/><p><a id="3119696" href="#3119696">#</a> <strong>Maurits [MSFT]</strong> on 6 Jun 2007 12:01 PM:</p><div style="margin-left: 1em"><p>Technical terms: &quot;dig&quot;, set, spike (can ya dig it?)</p>
+</div>
+<p><a id="3120323" href="#3120323">#</a> <strong>Mihai</strong> on 6 Jun 2007 12:29 PM:</p><div style="margin-left: 1em"><p>When text in several scripts is displayed at the same time (and in the same control), switching the fonts for each language might not be possible (or might even look ugly).</p>
+<p>The &quot;one font fits all&quot; solution is not really a good solution (you cannot really use the same font for Japanese/Chinese Simplified/Chinese Traditional).</p>
+<p>On the other side, Arial Unicode MS seems to be designed for this kind of scenario, and there is a need to support such scenarios.</p>
+<p>Idea 1.</p>
+<p>But in this case we are talking about Korean, and the code points used for Korean are not shared with other scripts (like the code points in the CKJ Unified Ideographs block).</p>
+<p>So there is no real excuse for the Korean in Arial Unicode MS to not respect the proper Korean look.</p>
+<p>Idea 2.</p>
+<p>As a programmer I hate when I ask for something, it is technically possible, but someone decides that they know better.</p>
+<p>In this case I ask for Arial Unicode MS, it contains the proper Korean glyphs, but I get squares.</p>
+<p>Idea 3.</p>
+<p>OpenType fonts have the possibility to store language-specific glyphs, so this might be a way to use the same font for Chinese Simplified/Traditional (for instance), but this would mean that each item in the list should be tagged with a language ID. Not easy.</p>
+<p>Idea 4.</p>
+<p>The support for languages gets better and better, it is more and more common to see applications in one language running on OS with UI in second language and processing data in a third language (or multilingual content).</p>
+<p>This opened some new cans of worms:</p>
+<p> - the UI font (&quot;MS Shell Dlg&quot; and &quot;MS Shell Dlg2&quot; fail to solve the problem)</p>
+<p> - the common controls, common dialogs, and the buttons for MessageBox</p>
+<p> - MUI API for incomplete 3rt party applications</p>
+<p>Ok, I don't think this matches the request:</p>
+<p>&quot;Does anyone have any thoughts about this they'd like to suggest?&quot;</p>
+<p>because there is nothing I suggest (yet :-) That part needs some more thinking.</p>
+<p>But these are some thoughts :-)</p></div>
+<hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2008/09/14 <a href="http://archives.miloush.net/michkap/archive/2008/09/14/8950506.html">Johab to be kidding me!</a></p><p>2007/06/09 <a href="http://archives.miloush.net/michkap/archive/2007/06/09/3174676.html">Guilt by [font ]association (aka The consequences of picking the wrong font #3)</a></p><p>2007/06/07 <a href="http://archives.miloush.net/michkap/archive/2007/06/07/3155261.html">The consequences of picking the wrong font #2</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2007/06/05/3111075.html" title="Launching the keyboard layouts dialog directly?">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2007/06/04/3089802.html" title="Who&#39;s down with F.T.P. (All the RFCs)">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2007-06">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2007-06-05">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2007/06/05/3098947.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:38 GMT -->
+</html>

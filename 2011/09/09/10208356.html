@@ -1,0 +1,26 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2011/09/09/10208356.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>You can't always blame the IME....</title></head><body>
+<h1>You can't always blame the IME....</h1>
+<p><em>by Michael S. Kaplan, published on 2011/09/09 07:01 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2011/09/09/10208356.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<p>Over in the Suggestion Box, Matthew Oakley asked:</p>
+<p style="padding-left: 60px;"><em><span style="font-family: times new roman,times; font-size: medium;">Hi. I am using Ms Access as a front end to a mysql database for a web testing system. As far as I can tell, everything is set to use utf-8. However, when I type the korean character which is unicode c548 (using IME), it ends up stored in the database as ec95. When I type the same character in the webpage, it is stored in the same database as bec8. I have no idea what is going on! English is stored perfectly, ime seems to be creating a nightmare. Could you make a topic explaining what IME does in depth?</span></em></p>
+<p>Interesting.</p>
+<p>The character in question, U+c548, is also known as HANGUL SYLLABLE IEUNG A NIEUN.</p>
+<p>This one:</p>
+<p style="padding-left: 30px;"><span style="font-size: xx-large;">안</span></p>
+<p>Now the bytes in UTF-8 for this character would be:</p>
+<p style="padding-left: 30px;"><span style="font-size: xx-large;">EC 95 88</span></p>
+<p>Notice the first two bytes.</p>
+<p>They look a lot like the two bytes Matthew said were ending up in the database.</p>
+<p>I don't know aabout you, but I'm wth Leroy Jethro Gibbs -- I don't believe in coincidences!</p>
+<p>Now&nbsp;the IME works just fine (you can get the letter in question by typing&nbsp; D K S or IEUNG A NIEUN that is interpreted as ᄋ ᅡ ᆫ , which gets assembled the right way on any version of Access).</p>
+<p><em>I just tried it here.</em>&nbsp;</p>
+<p>But something else is at work here, something that is corrupting the text....</p>
+<p>Maybe something along the lines of custom processing code?</p>
+<p>Or the data layer? Access is not a paragon of UTF-8 support.</p>
+<p>It isn't the IME....</p>
+<hr/><div style="margin-left: 1em"><em>no comments</em></div><hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2011/09/10/10208823.html" title="It may be one of the reasons there are different Arabic locales">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2011/09/08/10207673.html" title="en-IN on XP SP3?">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2011-09">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2011-09-09">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2011/09/09/10208356.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+</html>

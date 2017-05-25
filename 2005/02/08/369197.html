@@ -1,0 +1,46 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2005/02/08/369197.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:42 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Why ACP != OEMCP (usually)</title></head><body>
+<h1>Why ACP != OEMCP (usually)</h1>
+<p><em>by Michael S. Kaplan, published on 2005/02/08 11:57 -05:00, original URI: http://blogs.msdn.com/b/michkap/archive/2005/02/08/369197.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P>One thing people may notice right away when dealing with the command console is that the default ANSI code page (ACP) does not match the OEM code page (OEMCP) for most locales.</P>
+<P>It all goes back to DOS (as many things do!)....</P>
+<P>When there was DOS, the code page story was much more controlled by IBM than by Microsoft. Many "original" code pages came out of this time, from the interesting to the downright weird (yes, I am thinking of code page 437, <A id=Comments href="http://weblogs.asp.net/michkap/archive/2005/01/31/363007.aspx#363929" target=_blank>G*</A>!), though some of them may even predate IBM (not sure on this point).</P>
+<P>Then, with Windows came the Windows code pages, engineered (if one can say that about data) to handle more languages at one time. Modeled after the ISO-8859 series but plugging in characters useful to more languages, for various markets (like basic support of French in the Arabic code page):</P>
+<UL>
+<LI><A href="http://www.microsoft.com/globaldev/reference/sbcs/1250.htm">1250</A> - Central Europe 
+<LI><A href="http://www.microsoft.com/globaldev/reference/sbcs/1251.htm">1251</A> - Cyrillic 
+<LI><A href="http://www.microsoft.com/globaldev/reference/sbcs/1252.htm">1252</A> - Latin 1 (sometimes called Western European) 
+<LI><A href="http://www.microsoft.com/globaldev/reference/sbcs/1253.htm">1253</A> - Greek 
+<LI><A href="http://www.microsoft.com/globaldev/reference/sbcs/1254.htm">1254</A> - Turkish 
+<LI><A href="http://www.microsoft.com/globaldev/reference/sbcs/1255.htm">1255</A> - Hebrew 
+<LI><A href="http://www.microsoft.com/globaldev/reference/sbcs/1256.htm">1256</A> - Arabic 
+<LI><A href="http://www.microsoft.com/globaldev/reference/sbcs/1257.htm">1257</A> - Baltic 
+<LI><A href="http://www.microsoft.com/globaldev/reference/sbcs/1258.htm">1258</A> - Vietnam</LI></UL>
+<P>The idea was that DOS applications (not considered "legacy" then due to their prevalence) would have the same old code pages to fall back on, and Windows applications would have their own code pages to support more languages. They even added APIs to affect the base file system functions to work in one mode or the other, since the file system is the one thing both applications would have to access. And <A title=AreFileApisANSI href="http://msdn.microsoft.com/library/en-us/fileio/base/arefileapisansi.asp" target=_blank>AreFileApisANSI</A>, <A title=SetFileApisToOEM href="http://msdn.microsoft.com/library/en-us/fileio/base/setfileapistooem.asp" target=_blank>SetFileApisToOEM</A>, and SetFileApisToANSI were born<SUP><FONT size=1>1</FONT></SUP>.</P>
+<P>So they are not the same for reasons of backwards compatibility.</P>
+<P>Ah, you say -- but why are the ACP and the OEMCP the same for the CJK locales? We have:</P>
+<UL>
+<LI><A href="http://www.microsoft.com/globaldev/reference/dbcs/932.htm">932</A> - Japanese (Shift-JIS) 
+<LI><A href="http://www.microsoft.com/globaldev/reference/dbcs/936.htm">936</A> - Simplified Chinese (GBK) 
+<LI><A href="http://www.microsoft.com/globaldev/reference/dbcs/949.htm">949</A> - Korean 
+<LI><A href="http://www.microsoft.com/globaldev/reference/dbcs/950.htm">950</A> - Traditional Chinese (Big5)</LI></UL>
+<P>And they act as both the ANSI code page and the OEM code page for locales in most East Asian locales.</P>
+<P>There are many reasons for this. One&nbsp;of&nbsp;the obvious reason that these four code pages, being originally based on specific standards (governmental or industrial) had no additional backcompat issue. And no one wanted to gratuitously start making up code pages.</P>
+<P>One architectural reason that affects NT is the rules about code pages in kernel mode. APIs like <A title=RtlUnicodeStringToOemString href="http://msdn.microsoft.com/library/en-us/winui/winui/windowsuserinterface/lowlevelclientsupport/misc/rtlunicodestringtooemstring.asp" target=_blank>RtlUnicodeStringToOemString</A> and <A title=RtlUnicodeStringToAnsiString href="http://msdn.microsoft.com/library/en-us/winui/winui/windowsuserinterface/lowlevelclientsupport/misc/rtlunicodestringtoansistring.asp" target=_blank>RtlUnicodeStringToAnsiString</A> have some implicit assumptions in the architecture that the size of the string will never change if you move between the ANSI and the OEM code pages. And for the non-CJK code pages this is no problem since either the character is on the code page and it is one byte or the character is not and you will get a question mark (which is also one byte). But the CJK code pages could be two bytes versus one in many cases. That would have been really bad.</P>
+<P><EM>(These function also assume that every Unicode character is two bytes -- which they are, for ANSI and OEM code pages. And for those who are wondering, the functions in ntdll.dll do not have the question about precomposed versus composite Unicode -- they only support the precomposed form. And Julie takes no responsibility for them, though she did fix bugs at one point in the early days!)</EM></P>
+<P>Anyway, the EA code pages are relieved of needing two different code pages. Which is just as well since they have other things to worry about, such as functions like <A title=IsDBCSLeadByte href="http://msdn.microsoft.com/library/en-us/intl/unicode_0o2t.asp" target=_blank>IsDBCSLeadByte</A>....</P>
+<P>Aren't you glad you are using Unicode and do not need to worry about any of this? :-)</P>
+<P>&nbsp;</P>
+<P><FONT size=1><EM>1 - Don't get me started on a naming convention that has one kind of acronym (API) not fully capitalized and another kind (ANSI, OEM) are. Geez....</EM></FONT></P>
+<P>&nbsp;</P>
+<P><FONT color=#800080><EM>This post brought to you by</EM>&nbsp;"ì" <EM>(<A href="http://www.fileformat.info/info/unicode/char/00ec/index.htm">U+00ec</A>, a.k.a. LATIN SMALL LETTER I WITH GRAVE)</EM></FONT></P>
+<hr/><p><a id="369306" href="#369306">#</a> <strong>Michael Kaplan</strong> on 8 Feb 2005 12:09 PM:</p><div style="margin-left: 1em">Of course I did not include 874 (Thai) but that was not a &quot;125x&quot; series codepage....</div>
+<p><a id="369541" href="#369541">#</a> <strong>Mike</strong> on 8 Feb 2005 5:18 PM:</p><div style="margin-left: 1em">&gt;Aren't you glad you are using Unicode and do not need to worry about any of this? :-)<br><br>... and can instead devote your life to normalization issues!</div>
+<p><strong>Yuhong Bao</strong> on 15 Oct 2010 10:58 PM:</p><div style="margin-left: 1em"><p>&quot;These function also assume that every Unicode character is two bytes -- which they are, for ANSI and OEM code pages. &quot;</p>
+<p>Which is why Shift_JIS-2004 can&#39;t be the ACP, BTW.</p>
+</div>
+<hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2011/11/30 <a href="http://archives.miloush.net/michkap/archive/2011/11/30/10242902.html">On not being well served by the mantra "must support Unicode"</a></p><p>2005/04/28 <a href="http://archives.miloush.net/michkap/archive/2005/04/28/412977.html">Cleaning out the suggestion box a bit</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2005/02/09/369958.html" title="What is the difference between Big Endian and Little Endian Unicode?">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2005/02/07/368570.html" title="Normalization as obfuscation in C#">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2005-02">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2005-02-08">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2005/02/08/369197.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:42 GMT -->
+</html>

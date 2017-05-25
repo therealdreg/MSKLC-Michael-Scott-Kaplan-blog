@@ -1,0 +1,28 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2005/05/07/415376.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:41 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>VB6 isn't using Unicode, most of the time</title></head><body>
+<h1>VB6 isn't using Unicode, most of the time</h1>
+<p><em>by Michael S. Kaplan, published on 2005/05/07 11:01 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2005/05/07/415376.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P>Last month, Christoph Guentner asked in the microsoft.public.win32.programmer.international newsgroup:</P>
+<BLOCKQUOTE dir=ltr>
+<P><FONT face=Tahoma size=2><EM>I use the winapi function ReadFile() to receive strings (bytes) from the serial port in my VB6 program. This works fine in most cases.</EM></FONT></P>
+<P><FONT face=Tahoma size=2><EM>But when I receive binary data on system with languages settings chinese (simple) set as default, the function ReadFile() returns false strings!?</EM></FONT></P>
+<P><FONT face=Tahoma size=2><EM>I use win2k and have set in the control panel-&gt;language settings-&gt; 1st tab: scheme: english (USA)&nbsp; language settings for the system: chinese (simple) as standard</EM></FONT></P>
+<P><FONT face=Tahoma size=2><EM>In this case the string returned by ReadFile() returns e.g. ascii &amp;h00 instead of ascii &amp;h80.</EM></FONT></P>
+<P><FONT face=Tahoma size=2><EM>Is there a ReadFileW() function for wide ascii?</EM></FONT></P>
+<P><FONT face=Tahoma size=2><EM>Or do I have to modify the DCB? In BuildCommDCB I have set in DCB the fBitFields to (&amp;h1011), fBinary is set.</EM></FONT></P>
+<P><FONT face=Tahoma size=2><EM>Sending and receiving text strings does work.<BR><BR>And sending binary data using the ApiFunction WriteFile() seems to work because the device (which is connected at the other side of the serial cable) answers. Well this could be a answer with an error as well, so I am not really sure.</EM></FONT></P>
+<P><FONT face=Tahoma size=2><EM>This is same when I use the VB6 CommCtrl and not the winapi functions.</EM></FONT></P>
+<P><FONT face=Tahoma size=2><EM>Thanks for any hint.</EM></FONT></P>
+<P><FONT face=Tahoma size=2><EM>Christoph</EM></FONT></P></BLOCKQUOTE>
+<P><FONT face=Tahoma>The problem here actually started back in VB 3.0, where the documented way to pass buffers to the Windows API was to use the String datatype. A whole generation of Windows programmers used Strings in this way and everything worked.</FONT></P>
+<P><FONT face=Tahoma>And then Win32 came. </FONT></P>
+<P><FONT face=Tahoma>VB 4.0 (32-bit) made the jump to use Unicode for its String type, but had all API calls convert out of Unicode using the system default code page, so they could use the same code on all platforms. Now that code people used which had Strings as buffers would have weird problems as any String buffer would be converted&nbsp;out of Unicode in the function call. Sometimes it would work, sure. But other times, especially when the default system locale's default systme code page was MBCS, many of the byte seqences would be illegal. This is indeed the problem that Christoph was seeing.</FONT></P>
+<P><FONT face=Tahoma>My response to him was:</FONT></P>
+<BLOCKQUOTE dir=ltr>
+<P><FONT face=Tahoma size=2><EM>The problem is that you are sending the data as a string, and VB is converting that string via the default system code page. This means that some of the conversions will be to illegal byte sequences. This happens more often on an MBCS system, but can randomly happen other places too:<BR><BR></EM></FONT><a href="http://archives.miloush.net/michkap/archive/2005/01/08/349230.html"><FONT face=Tahoma size=2><EM>http://blogs.msdn.com/michkap/archive/2005/01/08/349230.aspx</EM></FONT></A></P></BLOCKQUOTE>
+<P><FONT face=Tahoma>The key in this case is to <EM>not</EM> use a String datatype, but to use a byte array. This will avoid the many times that VB &gt;= 4.0 and &lt;= 6.0 will follow its own rules and convert those Strings&nbsp;which are not really strings at all....</FONT></P>
+<hr/><div style="margin-left: 1em"><em>no comments</em></div><hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2005/05/08/415522.html" title="Similar descriptions does not mean similar methodologies">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2005/05/06/415199.html" title="Making SQL Server index usage a bit more deterministic">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2005-05">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2005-05-07">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2005/05/07/415376.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:41 GMT -->
+</html>

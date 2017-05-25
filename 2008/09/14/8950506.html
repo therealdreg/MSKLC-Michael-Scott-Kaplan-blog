@@ -1,0 +1,53 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2008/09/14/8950506.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:35 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Johab to be kidding me!</title></head><body>
+<h1>Johab to be kidding me!</h1>
+<p><em>by Michael S. Kaplan, published on 2008/09/14 03:01 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2008/09/14/8950506.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<p>From the list of bugs from <b><a href="http://archives.miloush.net/michkap/archive/2008/09/11/8945542.html" mce_href="http://archives.miloush.net/michkap/archive/2008/09/11/8945542.html">that cool presentation</a></b> from the folks over in Intel localization....</p>
+<p>The bug? Well, it seemed that Korean was "randomly" not working!</p>
+<p>By randomly I mean it was not working on some machines but everything was just fine on others.</p>
+<p>No real discernible pattern at first glance, but they tracked it down eventually -- <b>having a particular font installed</b> was causing it.</p>
+<p>Wow, talk about the power of typography, huh? :-)</p>
+<p>The font they found behind the problem was <b>Arial Unicode MS</b>, which I have mentioned before as not being the best possible choice for font in blogs like <b><a href="http://archives.miloush.net/michkap/archive/2007/06/05/3098947.html" mce_href="http://archives.miloush.net/michkap/archive/2007/06/05/3098947.html">this one</a></b> and <b><a href="http://archives.miloush.net/michkap/archive/2007/11/07/5952884.html" mce_href="http://archives.miloush.net/michkap/archive/2007/11/07/5952884.html">this one</a></b> and especially <b><a href="http://archives.miloush.net/michkap/archive/2007/07/15/3890144.html" mce_href="http://archives.miloush.net/michkap/archive/2007/07/15/3890144.html">this one</a></b>.</p>
+<p>Though to be fair, it takes more than just having <b>Arial Unicode MS</b> installed to cause troubles. In fact a unique constellation of attribute is required to cause problems!</p>
+<ul>
+<li>First, it requires code in the application that is setting the <a href="http://msdn.microsoft.com/library/ms533931.aspx" mce_href="http://msdn.microsoft.com/library/ms533931.aspx">LOGFONT</a>.lfCharSet to JOHAB_CHARSET;</li>
+<li>Second, it requires that you have a font on your machine that claims support for code page 1361 (Korean Johab);</li>
+<li>Third, it requires the appropriate support for code page 1361<br></li>
+</ul>
+<p>It turns out that <b>Arial Unicode MS</b> is just such a font:<br><img src="http://trigeminal.fmsinc.com/images/johab01.png"><br><br><br></p>
+<p>The way that a font gets this is setting but 21 in the <a href="http://msdn.microsoft.com/library/ms776441.aspx" mce_href="http://msdn.microsoft.com/library/ms776441.aspx">Code Page Bitfields</a>, and if a font has this set and the code specifically requests the JOHAB_CHARSET then it is aslmost unfair to blame the Font Mapper in GDI for finding a font that matches...</p>
+<p>Of course there are probably other fonts out there that have this bit set, though note that none of the Korean fonts that ship in any version of Windows do this.</p>
+<p>In fact out of the 863 fonts on this machine, only one font other than <b>Arial Unicode MS</b> has this bit set: <b>Code2000</b> from James Kass:</p>
+<p><img src="http://trigeminal.fmsinc.com/images/johab02.png"></p>
+<p>I don't know why mega fonts would do this specifically, though I have a guess.</p>
+<p>For mega fonts, setting bits in the <a href="http://msdn.microsoft.com/library/ms776441.aspx" mce_href="http://msdn.microsoft.com/library/ms776441.aspx">Code Page Bitfields</a> and the <a href="http://msdn.microsoft.com/library/ms776439.aspx" mce_href="http://msdn.microsoft.com/library/ms776439.aspx">Unicode Subset Bitfields</a> with a paint sprayer seems to be their way of saying "we support a lot of stuff!" even though as this point nothing whatsoever is encoded in this specific weird code page....</p>
+<p>To be fair to these two fonts, they are just being promiscuous, and that is not a sin in and of itself.</p>
+<p>For sin to take place, you have to request the JOHAB_CHARSET in your code that is loading the font, which I suppose (to continue the less than appropriate metaphor) requires your code to put the $100 between it's teeth looking for a promiscuous typographical partner, which the GDI Font Mapper then facilitates -- it is only doing its best to see that both provider and customer are both satisfied, after all. :-)</p>
+<p>And there are machines out there that have that code page included on them (I guess this would be an available back seat somewhere or something?):<br></p>
+<p><img src="http://trigeminal.fmsinc.com/images/johab03.png">&nbsp; </p>
+<p>Interestingly, this can happen with Unicode applications as well.</p>
+<p>Because the whole point of the JOHAB_CHARSET processing is more than just a code page or a charset, though please feel free to add 1361 to the list of <b><a href="http://archives.miloush.net/michkap/archive/2007/08/30/4641553.html" mce_href="http://archives.miloush.net/michkap/archive/2007/08/30/4641553.html">code pages that suck</a></b>:</p>
+<p>&nbsp;</p>
+
+<ul>
+<li><b><a href="http://archives.miloush.net/michkap/archive/2005/01/22/358675.html" class="" mce_href="http://archives.miloush.net/michkap/archive/2005/01/22/358675.html">20269</a></b> (also <b><a href="http://archives.miloush.net/michkap/archive/2005/08/24/455446.html" class="" mce_href="http://archives.miloush.net/michkap/archive/2005/08/24/455446.html">here</a></b>)</li>
+<li><b><a href="http://archives.miloush.net/michkap/archive/2005/04/19/409566.html" class="" mce_href="http://archives.miloush.net/michkap/archive/2005/04/19/409566.html">1258</a></b> <br></li>
+<li><b><a href="http://archives.miloush.net/michkap/archive/2005/09/12/464327.html" class="" mce_href="http://archives.miloush.net/michkap/archive/2005/09/12/464327.html">21027</a></b> 
+</li>
+<li><b><a href="http://archives.miloush.net/michkap/archive/2005/11/08/490495.html" class="" mce_href="http://archives.miloush.net/michkap/archive/2005/11/08/490495.html">42</a></b> (aka CP_SYMBOL) 
+</li>
+<li><b><a href="http://archives.miloush.net/michkap/archive/2006/04/22/580636.html" class="" mce_href="http://archives.miloush.net/michkap/archive/2006/04/22/580636.html">864</a></b></li>
+</ul>
+
+<p>But like the ISO 6937-based code page 20269, the Johab code page actually works under a different character encoding philosophy, as described in several places, from Ken Lunde's <b>CJKV Information Processing</b> to Richard Gillam's <b>Unicode Demystified</b>. It basically has the intent of breaking down Hangul into its constituent Jamo in ways that don't really tend to completely match the way Jamo work in Unicode (in the latter case I speak of the code page on Windows, which is conveniently left out of the list on either <a href="http://www.microsoft.com/globaldev/reference/cphome.mspx" mce_href="http://www.microsoft.com/globaldev/reference/cphome.mspx">Microsoft's</a> or <a href="http://www.unicode.org/Public/MAPPINGS/VENDORS/MICSFT/" mce_href="http://www.unicode.org/Public/MAPPINGS/VENDORS/MICSFT/">Unicode</a>'s sites, except one link under obsolete code pages, <a href="http://unicode.org/Public//MAPPINGS/OBSOLETE/EASTASIA/KSC/JOHAB.TXT" mce_href="http://unicode.org/Public//MAPPINGS/OBSOLETE/EASTASIA/KSC/JOHAB.TXT">here</a>).</p>
+<p>Suffice to say that anything that GDI does here, it is only doing because the application has specifically requested it.</p>
+<p>At this point Johab is widely deprecated, though one can suppose that some text editor might still be using it, which makes it harder to just remove the code page from Windows (either on the NLS side or the GDI side -- since the latter can impact Unicoe applications, too!).</p>
+<p>But at a minimum, you should never specify it, either in your dialog resources (via the <a href="http://msdn.microsoft.com/library/aa381013.aspx" mce_href="http://msdn.microsoft.com/library/aa381013.aspx">FONT statement</a>) or in code (using the <a href="http://msdn.microsoft.com/library/ms533931.aspx" mce_href="http://msdn.microsoft.com/library/ms533931.aspx">LOGFONT</a> structure), unless you are specifically expecting things to be processed Johab-style (which is not the same as Unicode Normalization Forms D or KD).</p>
+<p>In any case, a great obscure globalization issue, made harder to track down due to the lack of good documentation describing the behavior of the seldom-used <span style="font-weight: bold;">Johab support on Windows</span>)....<br></p>
+<p>&nbsp;</p>
+<p><font color="#ff00ff"><i>This blog brought to you by</i><font size="7"> 갉 </font><i>(<a href="http://www.fileformat.info/info/unicode/char/ac09" mce_href="http://www.fileformat.info/info/unicode/char/ac09">U+ac09</a>, aka HANGUL SYLLABLE KIYEOK A RIEULKIYEOK)</i></font><br></p>
+<hr/><div style="margin-left: 1em"><em>no comments</em></div><hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2008/09/14/8951009.html" title="About companies and their fonts">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2008/09/13/8950706.html" title="Where the boys aren&#39;t garden path sentences">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2008-09">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2008-09-14">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2008/09/14/8950506.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:35 GMT -->
+</html>

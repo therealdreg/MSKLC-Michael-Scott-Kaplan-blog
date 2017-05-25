@@ -1,0 +1,31 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2007/10/27/5717859.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:37 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>VK_DECIMAL is always valid (except formerly in Serbia)</title></head><body>
+<h1>VK_DECIMAL is always valid (except formerly in Serbia)</h1>
+<p><em>by Michael S. Kaplan, published on 2007/10/27 15:31 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2007/10/27/5717859.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P>Regular reader, comrade, veritable demigod in all things related to keyboards, and the man behind Tavultesoft Keyman, and provider of Australian beer&nbsp;Marc Durdin mentioned to me:</P>
+<BLOCKQUOTE><FONT size=2>
+<P><EM><FONT face="times new roman,times">Hi Michael,<BR><BR>Just an FYI - didn't see a mention of it on your blog...<BR><BR>We had a report recently of a hang in Keyman associated with the Serbian Cyrillic keyboard. After tracing it back to our on screen keyboard, we discovered that the issue was with a ClearKeyboardBuffer function (developed independently, but then updated to use VK_DECIMAL as you suggest in </FONT></EM></FONT><A href="http://archives.miloush.net/michkap/archive/2006/04/06/569632.html"><U><FONT color=#0000ff size=2><EM><FONT face="times new roman,times">http://blogs.msdn.com/michkap/archive/2006/04/06/569632.aspx</FONT></EM></U></FONT></A><FONT size=2><EM><FONT face="times new roman,times">).<BR><BR>With the Serbian Cyrillic layout, ToUnicodeEx(VK_DECIMAL, sc, lpKeyStateNull, sb, sb.Capacity, 0, hkl) returns 0. Unfortunately, ClearKeyboardBuffer can never be terribly robust as we don't know what the keyboard layout is going to give us...<BR><BR>We checked the function against every other layout in XP, and Serbian Cyrillic was the only one to fail. Haven't checked against Vista layouts.<BR><BR>Cheers,<BR><BR>Marc</FONT></EM></P></FONT></BLOCKQUOTE>
+<P>Marc is right. The <STRONG>ClearKeyboardBuffer</STRONG> function, first introduced in <A class="" href="http://archives.miloush.net/michkap/archive/2006/04/06/569632.html" mce_href="http://archives.miloush.net/michkap/archive/2006/04/06/569632.html"><STRONG>Getting all you can out of a keyboard layout, Part #7</STRONG></A>, does have a bug in it.</P>
+<P>A bug that is reproducible in the Serbian (Cyrillic) keyboard layout that ships with Windows NT 4.0, 2000, XP and Server 2003, and only because that keyboard layout contained a bug in it.</P>
+<P>Here is the&nbsp;"broken" layout:</P>
+<P><IMG height=389 src="http://trigeminal.fmsinc.com/images/kbdycc_xp.png" width=800></P>
+<P>Note especially that key for the Decimal Separator -- looks like there is nothing in it, right?</P>
+<P>Looking at the key in all shift states:</P>
+<P><IMG src="http://trigeminal.fmsinc.com/images/decimal_xp.png"></P>
+<P>Indeed, there is nothing in it. </P>
+<P>So much for VK_DECIMAL being the one key that is in literally every layout!</P>
+<P>Now the problem is fixed in the layout in Vista:</P>
+<P><IMG src="http://trigeminal.fmsinc.com/images/kbdycc_vista.png"></P>
+<P><IMG src="http://trigeminal.fmsinc.com/images/decimal_vista.png"></P>
+<P>I&nbsp;just looked&nbsp;at the source code logs, and it turns out that I am the one who checked in the fix for this, back in the end of April 2004. But someone else made the fix, I was just checking it in for him....</P>
+<P>The slightly updated version of the function, which allows for this ZERO case and also the cleared out state where&nbsp;multiple characters are&nbsp;returned&nbsp;(which still means that things are cleared out) is:</P>
+<BLOCKQUOTE>
+<P><STRONG><FONT face="Courier New">private static void ClearKeyboardBuffer(uint vk, uint sc, IntPtr hkl) {<BR>&nbsp;&nbsp;&nbsp;&nbsp;StringBuilder sb = new StringBuilder(10);<BR>&nbsp;&nbsp;&nbsp;&nbsp;do {<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;rc = ToUnicodeEx(vk, sc, lpKeyStateNull, sb, sb.Capacity, 0, hkl);<BR>&nbsp;&nbsp;&nbsp;&nbsp;} while(rc&nbsp;&lt; 0);<BR>}</FONT></STRONG></P></BLOCKQUOTE>
+<P>The broken keyboard, as I mentioned, has been around for some time. And obviously one could create&nbsp;one if they wanted to that was just as broken, which makes this a good fix to put in....</P>
+<P mce_keep="true">&nbsp;</P>
+<P><FONT color=#ff00ff><EM>This post brought to you by</EM> <FONT size=5>,</FONT> <EM>(<A class="" href="http://www.fileformat.info/info/unicode/char/002c" mce_href="http://www.fileformat.info/info/unicode/char/002c">U+002c</A>, a.k.a. COMMA)</EM></FONT></P>
+<hr/><div style="margin-left: 1em"><em>no comments</em></div><hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2007/10/28/5730199.html" title="I am 20 out of 21 and flexible on the capital punishment issue">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2007/10/27/5714341.html" title="Keyboards gone wild, or maybe just French (aka CSI: Text Input)">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2007-10">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2007-10-27">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2007/10/27/5717859.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:37 GMT -->
+</html>

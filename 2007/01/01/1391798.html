@@ -1,0 +1,88 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2007/01/01/1391798.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:38 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Converting a Project to Unicode: Part 5 (Are we there yet? Well, not *just* yet)</title></head><body>
+<h1>Converting a Project to Unicode: Part 5 (Are we there yet? Well, not *just* yet)</h1>
+<p><em>by Michael S. Kaplan, published on 2007/01/01 06:01 -05:00, original URI: http://blogs.msdn.com/b/michkap/archive/2007/01/01/1391798.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P>Previous posts in this series (including today's!): 
+<UL>
+<LI><A href="http://archives.miloush.net/michkap/archive/2006/12/27/1368334.html" mce_href="http://archives.miloush.net/michkap/archive/2006/12/27/1368334.html">Part 0 (The introduction)</A> 
+<LI><A href="http://archives.miloush.net/michkap/archive/2006/12/28/1372747.html" mce_href="http://archives.miloush.net/michkap/archive/2006/12/28/1372747.html">Part 1 (Business before pleasure)</A> 
+<LI><A class="" href="http://archives.miloush.net/michkap/archive/2006/12/29/1377788.html" mce_href="http://archives.miloush.net/michkap/archive/2006/12/29/1377788.html">Part 2 ('Sorry, you're not my type.' 'Um,&nbsp;maybe&nbsp;I could change that?)</A> 
+<LI><A class="" href="http://archives.miloush.net/michkap/archive/2006/12/30/1382886.html" mce_href="http://archives.miloush.net/michkap/archive/2006/12/30/1382886.html">Part 3 (Can I quote you on that?)</A> 
+<LI><A class="" href="http://archives.miloush.net/michkap/archive/2006/12/31/1386486.html" mce_href="http://archives.miloush.net/michkap/archive/2006/12/31/1386486.html">Part 4 (/Delightful, /Delicious, /DUnicode!)</A></LI>
+<LI><A class="" href="http://archives.miloush.net/michkap/archive/2007/12/01/1391798.html" mce_href="http://archives.miloush.net/michkap/archive/2007/12/01/1391798.html">Part 5 (Are we there yet? Well, not just yet)</A></LI></UL>
+<P>(If you are&nbsp;just tuning&nbsp;in and want to start&nbsp;now you can grab the current source from <A class="" href="http://www.trigeminal.com/samples/SETUP_SOURCE/part05.zip" mce_href="http://www.trigeminal.com/samples/SETUP_SOURCE/part05.zip">here</A>.)</P>
+<P><EM>I am delaying the "road not traveled" post until tomorrow. Hang in there, it is coming!</EM></P>
+<P>Now we have a&nbsp;project that compiles and links and produces a setup.exe. Does that&nbsp;mean we're done?</P>
+<P>Well, no. Because&nbsp;the project hasn't been tested yet. Like the <A class="" href="http://archives.miloush.net/michkap/archive/2005/11/12/491519.html" mce_href="http://archives.miloush.net/michkap/archive/2005/11/12/491519.html"><STRONG>First Tester's Axiom</STRONG></A> states,&nbsp;if you have not tested it, assume it is broken.</P>
+<P>Of course testing a bootstrap EXE is a bit tougher than the average project; running the current project gives you a nice error:</P>
+<P><IMG src="http://trigeminal.fmsinc.com/images/cptu11.png"></P>
+<P>You can look at the readme.htm file for information on how to plug in the various special properties that this (and most)&nbsp;SETUP.EXE files look for, settable via <A class="" href="http://search.msdn.microsoft.com/search/Redirect.aspx?title=Msistuff.exe+&amp;url=http://msdn2.microsoft.com/en-us/library/aa370408.aspx" mce_href="http://search.msdn.microsoft.com/search/Redirect.aspx?title=Msistuff.exe+&amp;url=http://msdn2.microsoft.com/en-us/library/aa370408.aspx">msistuff.exe</A>. You could probably even puzzle out how msituff.exe works if you looked closely at the source of setup.exe with an eye to understanding the functionality (as opposed to trying to convert a project to Unicode!).</P>
+<P>So the fact that we see this dialog means at the very least that&nbsp;some of this code works!</P>
+<P>Ah, but when you click that OK button, what happens next suggests a bug is there:</P>
+<P><IMG src="http://trigeminal.fmsinc.com/images/cptu12.png"></P>
+<P>Looks like something crashed. Since this does not happen with the non-Unicode version, common sense forces us to assume it is our bug. Let's take a look....</P>
+<P>The call stack of the crash:</P>
+<BLOCKQUOTE>
+<P><FONT size=1>setup.exe!operator delete(void * pUserData=0xfdfdfdfd)&nbsp; Line 52 + 0x3 bytes&nbsp;C++<BR>setup.exe!wWinMain(HINSTANCE__ * hInst=0x00400000, HINSTANCE__ * hPrevInst=0x00000000, wchar_t * lpszCmdLine=0x0002069c, int nCmdShow=0x00000001)&nbsp; Line 927 + 0x18 bytes&nbsp;C++<BR>setup.exe!__tmainCRTStartup()&nbsp; Line 324 + 0x35 bytes&nbsp;C<BR>setup.exe!wWinMainCRTStartup()&nbsp; Line 196&nbsp;C<BR>kernel32.dll!7c816fd7()&nbsp;&nbsp;</FONT></P></BLOCKQUOTE>
+<P>Obviously the problem would be in our wWinMain, not in operator delete. Let's take a look at the source code right around the crash line:</P>
+<BLOCKQUOTE>
+<P><FONT size=1>if (szInstallPath)<BR>&nbsp;&nbsp;&nbsp; delete [] szInstallPath;</FONT></P></BLOCKQUOTE>
+<P>Hmmm.... the cleanup code is crashing try to delete a string that is allocated on line 539 of setup.cpp:</P>
+<BLOCKQUOTE>
+<P>// canocialize the URL path<BR>cchInstallPath = cchTempPath*2;<BR>szInstallPath = new TCHAR[cchInstallPath];</P></BLOCKQUOTE>
+<P>Yet the actual error happened when "DATABASE" (actually ISETUPPROPNAME_DATABASE) was not found in setup.exe, hundreds of lines earlier (lines that would be run in RED):</P>
+<BLOCKQUOTE>
+<P>&nbsp;&nbsp;&nbsp; // Determine if this is a patch or a normal install.<BR><FONT color=#ff0000>&nbsp;&nbsp;&nbsp; if (ERROR_OUTOFMEMORY == (uiRet = SetupLoadResourceString(hInst, ISETUPPROPNAME_DATABASE, &amp;szMsiFile, dwMsiFileSize)))<BR></FONT>&nbsp;&nbsp;&nbsp; {<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ReportErrorOutOfMemory(hInst, DownloadUI.GetCurrentWindow(), szAppTitle);<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; goto CleanUp;<BR>&nbsp;&nbsp;&nbsp; }<BR><FONT color=#ff0000>&nbsp;&nbsp;&nbsp; else if (ERROR_SUCCESS != uiRet)<BR>&nbsp;&nbsp;&nbsp; {<BR></FONT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // look for patch<BR><FONT color=#ff0000>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; if (ERROR_OUTOFMEMORY == (uiRet = SetupLoadResourceString(hInst, ISETUPPROPNAME_PATCH, &amp;szMsiFile, dwMsiFileSize)))<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {<BR></FONT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ReportErrorOutOfMemory(hInst, DownloadUI.GetCurrentWindow(), szAppTitle);<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; goto CleanUp;<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }<BR><FONT color=#ff0000>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; else if (ERROR_SUCCESS != uiRet)<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; PostResourceNotFoundError(hInst, DownloadUI.GetCurrentWindow(), szAppTitle, ISETUPPROPNAME_DATABASE);<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; goto CleanUp;<BR></FONT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }<BR><BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; fPatch = true;<BR>&nbsp;&nbsp;&nbsp; }&nbsp;</P></BLOCKQUOTE>
+<P>In other words, the code to allocate that buffer was never run!</P>
+<P>We had better take a closer look at the definition of that variable, shouldn't we? :-)</P>
+<P>The&nbsp;intent is&nbsp;straightforward enough:</P>
+<BLOCKQUOTE>
+<P>TCHAR *szInstallPath&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; = 0;</P></BLOCKQUOTE>
+<P>(though I probably would set pointers to NULL rather than 0, just as a matter of personal preference).&nbsp;In&nbsp;any case,&nbsp;clearly something is not working -- something is overwriting stack here, as all of these variables are on the stack.</P>
+<P>Looking at the actual value at the time of the crash, it is 0xfdfdfdfd, which seems a bit too suspicious to be an actual pointer (especially since all of the surrounding string variables have the same value!). Looking at <A class="" href="http://www.samblackburn.com/wfc/technotes/WTN006.htm" mce_href="http://www.samblackburn.com/wfc/technotes/WTN006.htm">Funny Memory Values</A>, this is:</P>
+<BLOCKQUOTE>
+<P><EM>Microsoft Visual C++ compiled code with memory leak detection turned on. Usually, <CODE><B><FONT face="Courier New">DEBUG_NEW</FONT></B></CODE> was defined. Memory with this tag signifies memory that is in "no-mans-land." These are bytes just before and just after an allocated block. They are used to detect array-out-of-bounds errors. This is great for detecting off-by-one errors.&nbsp;&nbsp;</EM></P></BLOCKQUOTE>
+<P>So it does look like perhaps memory leak detection is writing a bit past one place or another. Let's again assume it is us and just debug.</P>
+<P>Stepping through the code and looking at all the surrounding variables that are all on the stack (but whose memory they point to if allocated will be on the heap), szOperation has a bunch of memory set to 0xcdcdcdcd since there is no operation, and this is then deleted and set to 0xdddddddd and so on.before it is finally set to the stringt "DEFAULT." We then go through the same dance for szProductName which is eventually set to "the product" and szTitle which is set to "Please wait while '%s' is downloaded...".</P>
+<P>And here is where we find the problem. It is in this line of code:</P>
+<BLOCKQUOTE>
+<P>&nbsp;&nbsp;&nbsp; StringCchPrintf(szBanner, sizeof(szBanner), szText, szProductName);</P></BLOCKQUOTE>
+<P>In most of the project they are properly using expressions like sizeof(szBanner)/sizeof(szBanner[0]) or at least sizeof(szBanner)/sizeof(TCHAR)&nbsp;for these situations, but in this case the code&nbsp;wasn't. And yes, we have a cb vs. cch bug. Looking in the project there are 11 other occurrences with the <A class="" href="http://msdn2.microsoft.com/library/ms647541.aspx" mce_href="http://msdn2.microsoft.com/library/ms647541.aspx">StringCchPrintf</A> function, so let's fix all of the ones that need it (about seven of them are using sizeof() incorrectly this way).</P>
+<P>Once we do this, the crash goes away.</P>
+<P><STRONG>Root Cause Analysis</STRONG> of the bug:&nbsp;The introduction of the <A class="" href="http://msdn2.microsoft.com/library/ms647541.aspx" mce_href="http://msdn2.microsoft.com/library/ms647541.aspx">StringCchPrintf</A> and related functions was after that of the bootstrap exe, so it is likely fair to say that this is a bug in the bootstrap sample caused by&nbsp;dev error&nbsp;in the port to the safe string functions and exposed by our little conversion project here. :-)</P>
+<P>Looking at the whole project, there are 38 occurrences of safe string handling functions starting with <STRONG>StringCch*</STRONG> and none starting with <STRONG>StringCb*</STRONG>, though all of the others are <A class="" href="http://msdn2.microsoft.com/library/ms647527.aspx" mce_href="http://msdn2.microsoft.com/library/ms647527.aspx">StringCchCopy</A> and <A class="" href="http://msdn2.microsoft.com/library/ms647518.aspx" mce_href="http://msdn2.microsoft.com/library/ms647518.aspx">StringCchCat</A> calls, and none have similar errors. <STRONG>It is worth looking at these cases</STRONG>, under the "where there is one problem there may well be others" theory that works well in so many situations.</P>
+<P>As this problem (which I knew about)&nbsp;and also the problem that regular reader Mihai <A class="" href="http://archives.miloush.net/michkap/archive/2006/12/30/1382886.html#1386470" mce_href="http://archives.miloush.net/michkap/archive/2006/12/30/1382886.html#1386470">pointed out the other day</A>&nbsp;(which I didn't) indicate, it is obviously important to test prior to being sure that everything is correct....</P>
+<P>Plus we'll talk about a few other things in upcoming posts.</P>
+<P>Stay tuned for more on the alternate&nbsp;way parts <A class="" href="http://archives.miloush.net/michkap/archive/2006/12/29/1377788.html" mce_href="http://archives.miloush.net/michkap/archive/2006/12/29/1377788.html">2</A>,&nbsp;<A class="" href="http://archives.miloush.net/michkap/archive/2006/12/30/1382886.html" mce_href="http://archives.miloush.net/michkap/archive/2006/12/30/1382886.html">3</A>, and&nbsp;<A class="" href="http://archives.miloush.net/michkap/archive/2006/12/31/1386486.html" mce_href="http://archives.miloush.net/michkap/archive/2006/12/31/1386486.html">4</A>&nbsp;could have been done, tomorrow!</P>
+<P mce_keep="true">&nbsp;</P>
+<P><FONT color=#ff00ff><EM>This post brought to you by</EM>&nbsp;<FONT size=5>ដ</FONT> <EM>(<A class="" href="http://www.fileformat.info/info/unicode/char/178a" mce_href="http://www.fileformat.info/info/unicode/char/178a">U+178a</A>, a.k.a. KHMER LETTER DA)</EM></FONT></P>
+<hr/><p><a id="1394600" href="#1394600">#</a> <strong>Mihai</strong> on 1 Jan 2007 3:43 PM:</p><div style="margin-left: 1em"><p>To make your life easier, it is very convenient to define something like this:</p>
+<p> #define COUNT(a) (sizeof(a)/sizeof(a[0]))</p>
+<p>This is handy, but does not work well on pointers to characters, only on arrays.</p>
+<p>You can define something that works on both:</p>
+<p> #define CHRCOUNT(a) (sizeof(a)/sizeof(TCHAR))</p>
+<p>A very nice addition to VS2005 is _countof, which will &quot;explode&quot; if you use it on pointers.</p></div>
+<p><a id="1394766" href="#1394766">#</a> <strong>Michael S. Kaplan</strong> on 1 Jan 2007 4:04 PM:</p><div style="margin-left: 1em"><p>Yep, I usually have an ARRAYSIZE() that does exactly this (kbdmsi.dll and kbdutool.exe both define it and use it, for example).</p>
+<p>Just trying to minimize stylistic changes to the sample project. :-)</p>
+</div>
+<p><a id="1395756" href="#1395756">#</a> <strong>Mihai</strong> on 1 Jan 2007 8:22 PM:</p><div style="margin-left: 1em"><p>The note was for other readers, not for you :-)</p>
+<p>For my version of this project I did not switch to that either, since I have also tried to minimize stylistic changes.</p>
+<p>Except for the way I treated MultiByteToWideChar (and, as a result, no crash :-) I am 100% in sync with you.</p></div>
+<p><a id="1395761" href="#1395761">#</a> <strong>Mihai</strong> on 1 Jan 2007 8:26 PM:</p><div style="margin-left: 1em"><p>Additional note:</p>
+<p>_countof &quot;exploding&quot; on pointers is a *good thing*</p>
+<p>If you get a pointer to a bunch of chars, then you should also receive the size of the buffer (usually in characters).</p>
+<p>Then you should use that, not ARRAYSIZE, DIM, _countof or anything else, because there is no way to determine the size of the buffer.</p></div>
+<p><a id="1405336" href="#1405336">#</a> <strong>Erzengel</strong> on 3 Jan 2007 12:28 PM:</p><div style="margin-left: 1em"><p>Using C++ I prefer:</p>
+<p>//Use this for parameters:</p>
+<p>template&lt;typename T, int N&gt;</p>
+<p>int ArraySize(T arr[N])</p>
+<p>{</p>
+<p> &nbsp; &nbsp;return N;</p>
+<p>}</p>
+<p>It will give a compile time error if you try to use it on a pointer, and doesn't make your code compiler dependant (I didn't even know of the VS2k5's _countof, though. Thanks. I've been using this since VS.net, don't know if 6's borked templates could use it).</p>
+<p>The only issue is that you can't use the result in a case statement while you can with ARRAYSIZE. So if you have compile-time asserts or whatnot, you have to use ARRAYSIZE.</p></div>
+<hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2007/12/24 <a href="http://archives.miloush.net/michkap/archive/2007/12/24/6843995.html">VS just got served!, aka The ??? Shift, aka 'Converting a project to Unicode???' No, it's 'Converting a project??? ToUnicode!!!'</a></p><p>2007/01/05 <a href="http://archives.miloush.net/michkap/archive/2007/01/05/1413001.html">Converting a project to Unicode: Part 9 (The project's postpartum postmortem)</a></p><p>2007/01/04 <a href="http://archives.miloush.net/michkap/archive/2007/01/04/1409380.html">Converting a project to Unicode: Part 8 (Fitting MSLU into the mix)</a></p><p>2007/01/03 <a href="http://archives.miloush.net/michkap/archive/2007/01/03/1395788.html">Converting a Project to Unicode: Part 7 (What does it mean to fit things to a 'T', anyway?)</a></p><p>2007/01/02 <a href="http://archives.miloush.net/michkap/archive/2007/01/02/1395703.html">Converting a Project to Unicode: Part 6 (Upon the road not traveled)</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2007/01/02/1395703.html" title="Converting a Project to Unicode: Part 6 (Upon the road not traveled)">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2007/01/01/1388357.html" title="Report of an IME that splits and separates more Hangul by 9 am than most IMEs do all day">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2007-01">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2007-01-01">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2007/01/01/1391798.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:38 GMT -->
+</html>

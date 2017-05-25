@@ -1,0 +1,56 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2008/07/08/8706789.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:36 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>On installing and removing fonts, Part 3: I'll love you forever, or at least for this session.</title></head><body>
+<h1>On installing and removing fonts, Part 3: I'll love you forever, or at least for this session.</h1>
+<p><em>by Michael S. Kaplan, published on 2008/07/08 10:01 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2008/07/08/8706789.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P><EM><FONT color=#ff0000>Dedicated to an Easter Egg poem, and its author...</FONT></EM></P>
+<P>Previous blogs in this series:</P>
+<UL>
+<LI><A class="" href="http://archives.miloush.net/michkap/archive/2008/07/02/8681646.html" mce_href="http://archives.miloush.net/michkap/archive/2008/07/02/8681646.html"><STRONG>0: A long journey begins with the zeroeth step</STRONG></A></LI>
+<LI><A class="" href="http://archives.miloush.net/michkap/archive/2008/07/03/8682763.html" mce_href="http://archives.miloush.net/michkap/archive/2008/07/03/8682763.html"><STRONG>1: Do I know you, or some version of you at least?</STRONG></A></LI>
+<LI><A class="" href="http://archives.miloush.net/michkap/archive/2008/07/07/8699735.html" mce_href="http://archives.miloush.net/michkap/archive/2008/07/07/8699735.html"><STRONG>2: Are you done using me yet?</STRONG></A></LI></UL>
+<P>This blog in the series is a slight detour....</P>
+<P>And&nbsp;I am going to go slightly out of order now.</P>
+<P>The off-course jaunt&nbsp;started in my mind last time in a response to&nbsp;<STRONG><U><FONT color=#800080><A class="" href="http://archives.miloush.net/michkap/archive/2008/07/07/8699735.html" mce_href="http://archives.miloush.net/michkap/archive/2008/07/07/8699735.html"><STRONG>Part 2</STRONG></A></FONT></U></STRONG>, regular reader Andrew West <A class="" href="http://archives.miloush.net/michkap/archive/2008/07/07/8699735.html#8702074" mce_href="http://archives.miloush.net/michkap/archive/2008/07/07/8699735.html#8702074">commented</A>:</P>
+<BLOCKQUOTE>
+<P><EM><FONT face="times new roman,times">Surely the font installer does not need to know who exactly may or may not be using the font; it just broadcasts the WM_FONTCHANGE message and well-behaved applications will handle it and update their font information accordingly.</FONT></EM></P></BLOCKQUOTE>
+<P mce_keep="true">Now Andrew is quite right -- <A class="" href="http://msdn2.microsoft.com/library/ms533930.aspx" mce_href="http://msdn2.microsoft.com/library/ms533930.aspx">WM_FONTCHANGE</A> is just the message that a responsible&nbsp;installer/uninstaller would send here.</P>
+<P mce_keep="true">Unfortunately there are many problems with the architecture -- some the fault of installers/uninstallers that are indirectly the fault of the difficulty of the task, and others the fault of the complex process that nevertheless has failed to keep up with some of the complexities of the underlying platform:</P>
+<UL>
+<LI>
+<DIV mce_keep="true">Lots of installers out there tend to be about as responsible as Nathan Scott's mom when she's bombed;</DIV></LI>
+<LI>
+<DIV mce_keep="true">Even more uninstallers out there tend to be worse;</DIV></LI>
+<LI>
+<DIV mce_keep="true">Since install and uninstall have detectable consequences, forcing this extra step is a little unfair;</DIV></LI>
+<LI>
+<DIV mce_keep="true">Starting in Vista, the work to mitigate shatter attacks keeps a process from communicating with elevated processes -- meaning the more important an application is, the less likely it is to get the message;</DIV></LI>
+<LI>
+<DIV mce_keep="true">The message does not go outside the session, meaning any other session remains unaware of the change -- woe to those who make these changes on a Terminal Server or the world of Fast User Switching!</DIV></LI></UL>
+<P mce_keep="true">You get the idea.</P>
+<P mce_keep="true">The design here is quite sensible for a bygone era, but to be honest something better&nbsp;might really be considered.</P>
+<P mce_keep="true">But I digress.</P>
+<P mce_keep="true">The point is that even a "well-behaved application" that sends the message and a "well-behaved application" that receive it might not ever be able to communicate well enough to be told that something is up.</P>
+<P mce_keep="true">Despite the fact that the contents of a directory and the contents of a registry key were altered.</P>
+<P mce_keep="true">So in the end, the rules (if you work within the framework above) end up being quite simple:</P>
+<OL>
+<LI>
+<DIV mce_keep="true">If the font is there&nbsp;and the new one is determined to be the same font but of&nbsp;a lower or equal version&nbsp;, then you do not have to&nbsp;do anything;</DIV></LI>
+<LI>
+<DIV mce_keep="true">If the font was not there, then you can add it, add the registry information, and send the message; everything is as good as it can be, but other sessions and elevated processes&nbsp;might have to wait until next time;</DIV></LI>
+<LI>
+<DIV mce_keep="true">If the font is there&nbsp;and the new one&nbsp;is determined to be the same font but of a&nbsp;greater version, then you have to do all of the install work but it is much safer to require the reboot and do the actual file replacement at boot time.</DIV></LI></OL>
+<P mce_keep="true">So pretty much the only time that you never have to do anything is when the font in question is already installed. when you didn't have to do anything.</P>
+<P mce_keep="true">Yeesh. Talk about over-engineered! :-)</P>
+<P mce_keep="true">In the next part of the series we'll talk about the mechanics of the install and uninstall that must happen....</P>
+<P mce_keep="true">And in a later blog I will talk about my opinion of regular reader John Cowan's suggested "solution", <A class="" href="http://archives.miloush.net/michkap/archive/2008/07/07/8699735.html#8706644" mce_href="http://archives.miloush.net/michkap/archive/2008/07/07/8699735.html#8706644">here</A>. :-)</P>
+<P mce_keep="true">&nbsp;</P>
+<P mce_keep="true"><FONT color=#ff00ff><EM>This blog brought to you by</EM><FONT size=6> ƒ </FONT></FONT><EM><FONT color=#ff00ff>(</FONT><A class="" href="http://www.fileformat.info/info/unicode/char/0192" mce_href="http://www.fileformat.info/info/unicode/char/0192">U+0192</A><FONT color=#ff00ff>, aka LATIN&nbsp;SMALL LETTER F WITH HOOK)</FONT></EM></P>
+<hr/><p><strong>John Cowan</strong> on 8 Jul 2008 2:13 PM:</p><div style="margin-left: 1em"><p>Shucks, Michael, I didn't know you cared -- so much.</p></div>
+<p><strong>Michael S. Kaplan</strong> on 8 Jul 2008 4:28 PM:</p><div style="margin-left: 1em"><P>For the sake of completeness (and so no one [else] gets the wrong idea!), I suppose I should include the poem....</P>
+<BLOCKQUOTE>
+<P><STRONG>C'mon, Join with Me</STRONG> <BR><BR>Baby, strap yourself onto my new DBEngine - <BR>I'm revvin' my jets, headin' for heaven. <BR>Together, girl, you and I can change the world. <BR>Or at least run an update - let's give it a whirl. <BR>Don't pull that old self-join trick on me. <BR>You need my tables, and my primary key. <BR>I've hurt you before, but I'll make amends, <BR>Or deletes if you want, or selects, or appends. <BR>Once the future looked dim, but now I declare <BR>Our options are endless, no strings to compare. <BR>I'm a dynaset baby, I'm fast and I'm free. <BR>But I'll treat you right - no more DDE. <BR>Hey, I'm grown up, I'm thirty-two-bit. <BR>Bring all your old records, I'll take the hit. <BR>I swear you're more than an object to me - <BR>You're the top of my call stack, my whole MDB. <BR>Girl, you're a user, and you need a group, <BR>So don't get stuck in an infinite loop. <BR>I'll import, secure, analyze, or insert. <BR>I'll do what you want, I'll even convert. <BR>I've got a watch on you baby, and it's about time. <BR>If you don't change your values it'll sure be a crime. <BR>I can't bear to see you in that exclusive lock - <BR>C'mon, open up, we'll drive up the stock. <BR>We'll churn through these records, fast we we're able. <BR>C'mon, lighten up, let's go and make table. <BR>Don't give me that look, don't give me that sigh. <BR>I can't help it, I'm a rows and columns guy. <BR>Our relationship's stable, there's no question. <BR>I'll love you forever, or at least for this session.</P></BLOCKQUOTE></div>
+<hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2008/09/08 <a href="http://archives.miloush.net/michkap/archive/2008/09/08/8932366.html">On installing and removing fonts, Part 8: Sometimes being selfish makes you more trustworthy</a></p><p>2008/07/30 <a href="http://archives.miloush.net/michkap/archive/2008/07/30/8791285.html">On installing and removing fonts, Part 7: What was the question, exactly?</a></p><p>2008/07/15 <a href="http://archives.miloush.net/michkap/archive/2008/07/15/8732674.html">On installing and removing fonts, Part 6: That's your name? What's your real name? Nah. What was it before you changed it?</a></p><p>2008/07/14 <a href="http://archives.miloush.net/michkap/archive/2008/07/14/8730741.html">On installing and removing fonts, Part 5: The takeaway from that is...</a></p><p>2008/07/11 <a href="http://archives.miloush.net/michkap/archive/2008/07/11/8720555.html">On installing and removing fonts, Part 4: The easiest part is the addition!</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2008/07/09/8711234.html" title="The Limonata foil &quot;condoms&quot; are in no way ironic">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2008/07/08/8705722.html" title="$string1 =~ s/file/pack/; (aka What the @#%&amp;*! is a language file?, aka Suits to a т)">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2008-07">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2008-07-08">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2008/07/08/8706789.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:36 GMT -->
+</html>

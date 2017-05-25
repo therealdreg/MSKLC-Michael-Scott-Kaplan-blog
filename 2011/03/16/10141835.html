@@ -1,0 +1,86 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2011/03/16/10141835.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Reporting one casualty in the operation; luckily it was the stupidest member of the unit</title></head><body>
+<h1>Reporting one casualty in the operation; luckily it was the stupidest member of the unit</h1>
+<p><em>by Michael S. Kaplan, published on 2011/03/16 07:01 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2011/03/16/10141835.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<p>Breaking changes suck.</p>
+<p>Even when the thing broken is of limited use and serves limited purpose.</p>
+<p>The suckage still exists.</p>
+<p>Anyway, the report was a clear enough indictment:</p>
+<p style="padding-left: 60px;"><span style="font-family: times new roman,times;"><em>In .NET 2 it used to be that for neutral cultures CultureInfo.KeyboardLayoutId would return some specific culture.<br />For example, new GetCultureInfo(&ldquo;en&rdquo;). KeyboardLayoutId would be 1033, while LCID is 9. Same for other neutral cultures. <br />Not anymore in .NET 4: KeyboardLayoutId is 9 in the case above.</em></span></p>
+<p style="padding-left: 60px;"><span style="font-family: times new roman,times;"><em>I cannot find any information regarding the reasons for this change. The article </em></span><a href="http://msdn.microsoft.com/en-us/netframework/dd890508.aspx"><span style="font-family: times new roman,times;"><em>http://msdn.microsoft.com/en-us/netframework/dd890508.aspx</em></span></a><span style="font-family: times new roman,times;"><em> claims the opposite of what I observed, saying that now we&rsquo;ll get specific values instead of neutral. In reality, we used to get that with .NET 2, now we get neutral values for everything.</em></span></p>
+<p style="padding-left: 120px;"><span style="font-family: times new roman,times;"><strong>Being more specific!<br /></strong><br />Previous releases of the .NET Framework throw an exception if applications try to access some of the neutral culture properties such as the CultureInfo.DateTimeFormat.FirstDayOfWeek property. In .NET Framework 4, all neutral culture properties will return values which will come from the specific culture which is most dominant for that neutral culture. For example, French neutral locale will retrieve the values of most of its properties from French (France). The CultureInfo.DateTimeFormat.FirstDayOfWeek property would return Monday for French which maps to the value in the French (France) culture.<br />Some properties will be an exception to this rule where they will have different values from the dominant culture properties such as the language name. For example, the language name of the Norwegian neutral culture is Norwegian while the language name of the specific culture of Norwegian, Bokm&aring;l (Norway) is Norwegian (Bokm&aring;l).<br />Some properties and methods of neutral cultures will return specific cultures instead of the neutral cultures such as KeyboardLayoutId property and GetConsoleFallbackUICulture method in CultureInfo class.</span></p>
+<table align="center" cellpadding="3" cellspacing="3" border="1">
+<tbody>
+<tr>
+<td><span style="font-family: times new roman,times;">Culture Name</span></td>
+<td><span style="font-family: times new roman,times;">v3.5 KeyboardLayoutId</span></td>
+<td><span style="font-family: times new roman,times;">v4.0 KeyboardLayoutId</span></td>
+</tr>
+<tr>
+<td><span style="font-family: times new roman,times;">ar</span></td>
+<td><span style="font-family: times new roman,times;">1</span></td>
+<td><span style="font-family: times new roman,times;">1025</span></td>
+</tr>
+<tr>
+<td><span style="font-family: times new roman,times;">es</span></td>
+<td><span style="font-family: times new roman,times;">10</span></td>
+<td><span style="font-family: times new roman,times;">1034</span></td>
+</tr>
+<tr>
+<td><span style="font-family: times new roman,times;">fr</span></td>
+<td><span style="font-family: times new roman,times;">12</span></td>
+<td><span style="font-family: times new roman,times;">1036</span></td>
+</tr>
+<tr>
+<td><span style="font-family: times new roman,times;">zh-CHS</span></td>
+<td><span style="font-family: times new roman,times;">4</span></td>
+<td><span style="font-family: times new roman,times;">2052</span></td>
+</tr>
+</tbody>
+</table>
+<p>Every word of this description is true.</p>
+<p>And yes this technically constitutes a breaking change.</p>
+<p>Long time readers or web searchers of the <a href="http://msdn.microsoft.com/library/system.globalization.cultureinfo.keyboardlayoutid.aspx">KeyboardLayoutId</a> may have run across probably the only useful historical discussion of this property, my blog <a href="http://archives.miloush.net/michkap/archive/2008/02/25/7893424.html" title="What the #$!*&amp;amp; is a KeyboardLayoutId, anyway?"><strong>What the #$!*&amp; is a KeyboardLayoutId, anyway?</strong></a>.</p>
+<p>The whole point of this property is to provide a "better than complete and abject failure" case for the <a href="http://msdn.microsoft.com/library/system.windows.forms.inputlanguage.fromculture.aspx">InputLanguage.FromCulture</a> method.</p>
+<p>So by that metric, the .Net 4.0 regression is clearly not so very good.</p>
+<p>From .Net Reflector, looking at the 4.0 framework:</p>
+<pre style="padding-left: 90px;"><span style="color: #1000a0;">public</span> <span style="color: #1000a0;">static</span> <a href="http://www.aisto.com/roeder/dotnet/Default.aspx?Target=code://System.Windows.Forms:4.0.0.0:b77a5c561934e089/System.Windows.Forms.InputLanguage" title="System.Windows.Forms.InputLanguage">InputLanguage</a> <b><a href="http://www.aisto.com/roeder/dotnet/Default.aspx?Target=code://System.Windows.Forms:4.0.0.0:b77a5c561934e089/System.Windows.Forms.InputLanguage/FromCulture(System.Globalization.CultureInfo):System.Windows.Forms.InputLanguage" class="bold">FromCulture</a></b>(<a href="http://www.aisto.com/roeder/dotnet/Default.aspx?Target=code://mscorlib:4.0.0.0:b77a5c561934e089/System.Globalization.CultureInfo" title="System.Globalization.CultureInfo">CultureInfo</a> culture)
+{
+    <a href="http://www.aisto.com/roeder/dotnet/Default.aspx?Target=code://mscorlib:4.0.0.0:b77a5c561934e089/System.Int32" title="System.Int32">int</a> <b>keyboardLayoutId</b> = <a title="CultureInfo culture; // Parameter">culture</a>.<a href="http://www.aisto.com/roeder/dotnet/Default.aspx?Target=code://mscorlib:2.0.0.0:b77a5c561934e089/System.Globalization.CultureInfo/property:KeyboardLayoutId:Int32" title="int System.Globalization.CultureInfo.KeyboardLayoutId { ... }">KeyboardLayoutId</a>;
+    <span style="color: #1000a0;">foreach</span> (<a href="http://www.aisto.com/roeder/dotnet/Default.aspx?Target=code://System.Windows.Forms:4.0.0.0:b77a5c561934e089/System.Windows.Forms.InputLanguage" title="System.Windows.Forms.InputLanguage">InputLanguage</a> <b>language</b> <span style="color: #1000a0;">in</span> <a href="http://www.aisto.com/roeder/dotnet/Default.aspx?Target=code://System.Windows.Forms:4.0.0.0:b77a5c561934e089/System.Windows.Forms.InputLanguage/property:InstalledInputLanguages:System.Windows.Forms.InputLanguageCollection" title="InputLanguageCollection System.Windows.Forms.InputLanguage.InstalledInputLanguages { ... }">InstalledInputLanguages</a>)
+    {
+        <span style="color: #1000a0;">if</span> ((((<a href="http://www.aisto.com/roeder/dotnet/Default.aspx?Target=code://mscorlib:4.0.0.0:b77a5c561934e089/System.Int32" title="System.Int32">int</a>) ((<a href="http://www.aisto.com/roeder/dotnet/Default.aspx?Target=code://mscorlib:4.0.0.0:b77a5c561934e089/System.Int64" title="System.Int64">long</a>) <a title="InputLanguage language // Local Variable">language</a>.<a href="http://www.aisto.com/roeder/dotnet/Default.aspx?Target=code://System.Windows.Forms:4.0.0.0:b77a5c561934e089/System.Windows.Forms.InputLanguage/handle:IntPtr" title="IntPtr System.Windows.Forms.InputLanguage.handle;">handle</a>)) &amp; <span style="color: #800000;">0xffff</span>) == <a title="int keyboardLayoutId // Local Variable">keyboardLayoutId</a>)
+        {
+            <span style="color: #1000a0;">return</span> <a title="InputLanguage language // Local Variable">language</a>;
+        }
+    }
+    <span style="color: #1000a0;">return</span> <span style="color: #800000;">null</span>;
+}</pre>
+<p>Okay, that code will surely fail on all neutrals that the code used to succeed on.</p>
+<p>Regression.</p>
+<p>Now as to why, remember in my older blogs about neutrals from years ago, like <a href="http://archives.miloush.net/michkap/archive/2004/12/29/343557.html" title="What is a neutral culture? What is a neutral locale?"><strong>What is a neutral culture? What is a neutral locale?</strong></a>, where I've talked about so many of the problems of neutrals and how they were implemented.</p>
+<p>In Windows 7, the NLS team worked to fix many of the issues here, such as:</p>
+<ul>
+<li>the inconsistent script problems in many built-in neutrals&nbsp;I talked about in <a href="http://archives.miloush.net/michkap/archive/2007/12/22/6833199.html" title="CultureInfo subsetting attempts that suck"><strong>CultureInfo subsetting attempts that suck</strong></a></li>
+<li>the lack of neutrals in custom cultures I talked about in <a href="http://archives.miloush.net/michkap/archive/2007/12/22/6833199.html" title="CultureInfo subsetting attempts that suck"><strong>CultureInfo subsetting attempts that suck</strong></a></li>
+<li>the way that neutrals in NLS are treated as the default locale of the neutral that I talked about in <a href="http://archives.miloush.net/michkap/archive/2007/07/15/3888681.html" title="Neutral? I do not think that word means what you think it means!"><strong>Neutral? I do not think that word means what you think it means!</strong></a></li>
+<li>the way using neutrals didn't always lead to expected behavior I talked about in <a href="http://archives.miloush.net/michkap/archive/2005/06/13/428570.html" title="Using full locales rather than the neutral ones?"><strong>Using full locales rather than the neutral ones?</strong></a></li>
+</ul>
+<p>and more, and they did a bunch of work.</p>
+<p>As mentioned in <a href="http://msdn.microsoft.com/library/dd319065.aspx">Mapping Locale Data</a>:</p>
+<p style="padding-left: 30px;"><strong>List Neutral Locales</strong></p>
+<p style="padding-left: 30px;">To enumerate neutral locales for Windows&nbsp;7 and later, your application can call <a href="http://msdn.microsoft.com/en-us/library/dd317829.aspx"><strong>EnumSystemLocalesEx</strong></a> with <em>dwFlags</em> set to <a href="http://msdn.microsoft.com/en-us/library/dd373819.aspx">LOCALE_NEUTRALDATA</a>. It can also use <a href="http://msdn.microsoft.com/en-us/library/dd318103.aspx"><strong>GetLocaleInfoEx</strong></a> with <em>LCType</em> set to <a href="http://msdn.microsoft.com/en-us/library/dd373793.aspx">LOCALE_INEUTRAL</a>.</p>
+<p>So they added a way to query for neutrals and get the actual neutrals rather than the defaults -- it is an opt-in flag.</p>
+<p>And they added a bunch of script specific neutrals so that each multi-script language would have such a neutral to fall back on.</p>
+<p>And then, as a part of syncing back up the managed cultures and the native locales, they gutted the old neutrals and made the new .Net 4.0 neutral cultures depend on this new native locales support.</p>
+<p>In the process of this, they broke the <a href="http://msdn.microsoft.com/library/system.globalization.cultureinfo.keyboardlayoutid.aspx">KeyboardLayoutId</a>&nbsp;for neutrals.</p>
+<p>Thus the blog's title, because this blog is indeed&nbsp;reporting one casualty in <strong>Operation Rehabilitate Neutrals</strong>; luckily, it was the stupidest member of the unit....</p>
+<hr/><p><strong>John Cowan</strong> on 16 Mar 2011 7:46 AM:</p><div style="margin-left: 1em"><p>Yes, but what, actually, like, *is* a neutral culture/locale? &nbsp;You give examples, but don&#39;t explain.</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 16 Mar 2011 8:23 AM:</p><div style="margin-left: 1em"><p>Explained long ago. :-)</p>
+<p>The intent is to be like a &quot;LanguageInfo&quot;, but the emphasis is always on how to extend it to a CultureInfo, anyway. From an OO standpoint, it violates some principles, I believe....</p></div>
+<hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2011/05/27 <a href="http://archives.miloush.net/michkap/archive/2011/05/27/10168500.html">If it's overtly over-applied and overarching, it may be an overreach (e.g. in nOrway!)</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2011/03/17/10142495.html" title="Even when everything is in Unicode, some things won&#39;t be in Unicode">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2011/03/15/10141137.html" title="Making TableTextService work for both 32-bit and 64-bit on a 64-bit Windows...">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2011-03">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2011-03-16">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2011/03/16/10141835.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+</html>

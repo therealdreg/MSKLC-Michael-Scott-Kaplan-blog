@@ -1,0 +1,20 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2005/01/01/345190.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:42 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>That is not actually a bug in sort keys....</title></head><body>
+<h1>That is not actually a bug in sort keys....</h1>
+<p><em>by Michael S. Kaplan, published on 2005/01/01 03:48 -05:00, original URI: http://blogs.msdn.com/b/michkap/archive/2005/01/01/345190.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P>One of the 14 people who read this blog was reading my recent post "<a href="http://archives.miloush.net/michkap/archive/2004/12/30/344389.html">How do sort keys work?</A>"&nbsp;and he thought that he may have found a bug. He didn't, but it was an interesting point that he brought up. So I thought I'd mention it here.</P>
+<P><EM>(Note to all -- never be afraid to post a comment, neither bugs nor mistakes will ever embarass me!)</EM></P>
+<P>His question, and the answer, follow below.</P>
+<BLOCKQUOTE dir=ltr>
+<P><EM>Your post and the Platform SDK list a specific format for sort keys</EM></P>
+<P><STRONG><FONT size=2><FONT face="Courier New"><EM><FONT color=#0000ff>[all Unicode sort weights] 0x01 [all Diacritic weights] 0x01 [all Case weights] 0x01 [all Special weights] 0x00</FONT> </EM></FONT></FONT></STRONG></P>
+<P><EM>But using&nbsp;a single 0x01 byte to separate the different weights seems very dangerous. Couldn't somebody accidentally pick a string that happens to have a single byte in one of the weights that would mimic this section ending marker? This could cause two strings to be considered equal even if they are not, couldn't it?</EM></P></BLOCKQUOTE>
+<P>It is a very good question, but the answer is (thankfully) that it is not possible to hit that situation. The rules for the byte values in the sort key data we provide&nbsp;are such that we never allow a byte with only 0x01 in it. This was the only way we could make sure to always have an unambiguous section terminating marker. </P>
+<P>This is obviously a tough loss. When you only have 256 possible values in each of those bytes, it is expensive to lose one of them (well, actually you lose two since we cannot allow the 0 either!). But its obviously required or else we would hit the very potential bugs that occurred to you....</P>
+<P>&nbsp;</P>
+<P><FONT color=#800080><EM>This post sponsored by </EM>""<EM> (U+0001, a.k.a. &lt;control&gt;, a.k.a. START OF HEADING)<BR><FONT size=1>Note that this control shouldn't really look like much of anything except maybe accidentally a&nbsp;graphical block character on some versions of Windows -- he just did not think he'd have another chance to be relevant!)</FONT></EM></FONT></P>
+<hr/><div style="margin-left: 1em"><em>no comments</em></div><hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2005/01/01/345222.html" title="Does MS pull new keyboard layouts out of their @!#$%?">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2004/12/31/344888.html" title="Unlike LCMapString, the sort keys for English characters precede the sort keys for Korean">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2005-01">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2005-01-01">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2005/01/01/345190.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:42 GMT -->
+</html>

@@ -1,0 +1,39 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2010/10/01/10070128.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Kurdish with an Arabic Accent?</title></head><body>
+<h1>Kurdish with an Arabic Accent?</h1>
+<p><em>by Michael S. Kaplan, published on 2010/10/01 07:01 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2010/10/01/10070128.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<p>The title of this blog was inspired from a blog from a few years ago in Elizabeth Pyatt's <a href="http://www.personal.psu.edu/ejp10/blogs/thinking/">A Linguist in the Wild</a> blog entitled <a href="http://www.personal.psu.edu/ejp10/blogs/thinking/2008/07/arabic-with-a-kurdish-accent.html">Arabic with a Kurdish Accent?</a>. However, this blog has nothing to with accent and is really focused on issues of script and collation..</p>
+<p>It was a litte over 16 months ago in my <a href="http://archives.miloush.net/michkap/archive/2009/05/26/9641049.html" title="The Whey doesn't get a locale, either"><strong>The Whey doesn't get a locale, either</strong></a> blog that I responded to the <a href="http://proceedings.informingscience.org/InSITE2007/IISITv4p353-363Ali323.pdf">It is Time to Add Kurdish Culture to VS .NET Globalization</a> paper, which mentioned me and my work a&nbsp;bit.</p>
+<p>I skipped over several of the (in my opinion) interesting&nbsp;linguistic issues related to Kurdish, with just a hint to the fact that there are multiple scripts involved in a theoretical locale list.</p>
+<p>But one of the linguistic issues touches on the area of</p>
+<ul>
+<li>Collation</li>
+<li>Languages that span scripts</li>
+<li>How people deal with their language before support is added</li>
+</ul>
+<p>and since these topics are all interesting to me, I thought it might make sense to talk about&nbsp;Kurdish and these issues&nbsp;a little.</p>
+<p>I'll start with the two major branches of Kurdish: </p>
+<ol>
+<li>Kurmanji, which is generally written with the Latin script and is principally seen in Turkey and Syria;</li>
+<li>Sorani, which is generally written with the Arabic (some would say Perso-Arabic, though the lack of a Farsi Yeh in most letter lists gives me pause) script and is principally seen in Iraq and Iran.</li>
+</ol>
+<p><em>I won't be talking about Yekgirt&uacute; in this blog, though its unification efforts are also kiind of interesting so I could talk about it some other time!</em></p>
+<p>Now an interesting question comes up when one answers the question of how to sort the language if one is creating a custom culture and must pick a sort order from all the ones that exist.</p>
+<p>If you look at the <a href="http://proceedings.informingscience.org/InSITE2007/IISITv4p353-363Ali323.pdf">It is Time to Add Kurdish Culture to VS .NET Globalization</a>&nbsp;paper, you will see that Azad Ali and Frederick Kohun explicitly use the <strong>ar-IR</strong> (Arabic - Iraq) culture to get their sorting from. Arabic sorting.</p>
+<p>This is obviously not so very Perso-Arabic due to the specific differences in Persian when compared to Arabic. But if one looks at the letters used for Sorani, you may not get the same kind of "Persian", Perso-Arabic sense that languages like Persian and Urdu might give you.</p>
+<p>Whether this is due to worry about support for some letters or is how people want it? That much&nbsp;is unclear, but we'll assume for now that the results are actually correct. So perhaps using <strong>ar-IR</strong> rather than something like <strong>fa-IR</strong> might be okay in this context, if there are no letters that would be different.</p>
+<p>But another problem quickly rears its head, however, one that the Yekgirt&uacute; alphabet&nbsp;I said I wasn't going to talk about helps to highlight.</p>
+<p>You see, the Sorani alphabet for Kurdish has a feature that makes it&nbsp;somewhat unique among languages using the Arabic script.</p>
+<p>That difference? Well, vowels are <strong>required</strong>, and&nbsp;the result&nbsp;becomes&nbsp;a true <strong>alphabet</strong> rather than an <strong>abjad</strong>. </p>
+<p>This factor could lead one to want a sort that is more like the Latin script Kurmanji, because even though it is a different script there is a total mapping between letters in the two cases.</p>
+<p>You can actually find examples of&nbsp;both sorts out there, though without a mechanized solution it is possible that this is more of an anomaly than anything else - a limitation of technology and of sketchy manual labor.</p>
+<p>Now in the Latin script, Kurmanji does not have Turkic rules about either letters or casing. So perhaps the English sort or something like it is good enough for them -- or perhaps they are just using the thing most easy for them to get on computers and if they had their choice they'd want something different.</p>
+<p>Interestingly, both English and Arabic sit in the default collation table of Windows, so assuming one doesn't need the Arabic letters of Sorani in the Latin order of Kurmanji, then collation will simply work (if not, then one would have to work a little harder to get the right results).</p>
+<p>It does seem odd to&nbsp;be placing the vowels in the "Arabic" places when they act like the vowels in Sorani Kurdish do, but perhaps that is indeed what people are used to at this point; perhaps it is what they want.</p>
+<p><em>Note that the "Arabic" sort puts some of these letters in different places than the letter lists for Kurdish typically do. Which makes this question all the more complicated....</em></p>
+<p>What bothers me most here is the thought that perhaps technology has led to changes in language done merely for the expedience of getting on computers. I don't know why exactly, but that bothers me. Like as if there is some issue in language and linguistics that technology should not sully....</p>
+<hr/><div style="margin-left: 1em"><em>no comments</em></div><hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2010/10/02/10070691.html" title="I realized it had very little to do with me; it was all about them...">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2010/09/30/10069631.html" title="Office skipped version &quot;13&quot; (makes you wonder what they will do in 2013!)">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2010-10">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2010-10-01">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2010/10/01/10070128.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+</html>

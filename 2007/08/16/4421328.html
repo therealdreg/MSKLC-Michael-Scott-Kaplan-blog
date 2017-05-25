@@ -1,0 +1,68 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2007/08/16/4421328.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:37 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>The problem with characters stuffing the ballot box</title></head><body>
+<h1>The problem with characters stuffing the ballot box</h1>
+<p><em>by Michael S. Kaplan, published on 2007/08/16 17:16 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2007/08/16/4421328.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P>Standards are great, but sometimes deciding to follow them after the fact can be complicated.</P>
+<P>This post talks about such a situation.&nbsp;</P>
+<P>The bug report that came in was reasonably straightforward (I'll provide the translated version to avoid that extra level of indirection):</P>
+<BLOCKQUOTE>
+<P><EM><FONT face="times new roman,times">In ANSI(MBCS) MFC application, if you write DBCS text to print preview pane using CDC::TextOut, there appears extra space between double-byte characters written in Meiryo font.<BR><BR>Not repro with MS Gothic or MS Mincho families(their internal leading values are zero.)<BR><BR>[Note]<BR>- Same behavior on WinXP. Not a regression.<BR>- Not repro on screen device context (the problem occurs on printer device context only).<BR>- Not repro if you build the application with _UNICODE compile flag (the problem occurs in ANSI MFC application only).<BR>- Not repro if you use CDC::ExtTextOut(without justification weight specified) instead of CDC::TextOut.&nbsp; <BR>- The problem constantly happens regardless of default printer settings<BR>- The extra space does not appear on the actual printout</FONT></EM></P></BLOCKQUOTE>
+<P>Some art was even included so people would be able to understand what was being discussed, with the Vista Meiryo font being used:</P>
+<P><IMG src="http://trigeminal.fmsinc.com/images/Issue1.png"></P>
+<P>and with MS Gothic being used:</P>
+<P><IMG src="http://trigeminal.fmsinc.com/images/Issue2.png"></P>
+<P>You can see the difference with the following test code that repros the metrics difference:</P>
+<BLOCKQUOTE>
+<P class=MsoNormal style="MARGIN-LEFT: 0.5in"><SPAN style="FONT-SIZE: 10pt; FONT-FAMILY: 'Courier New'">LONG GetAvgTextWidth(HWND hWnd, LPCTSTR szFontName) </SPAN><SPAN style="FONT-SIZE: 10pt; FONT-FAMILY: 'Courier New'">{<BR></SPAN><SPAN style="FONT-SIZE: 10pt; FONT-FAMILY: 'Courier New'">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; PAINTSTRUCT ps;<BR></SPAN><SPAN style="FONT-SIZE: 10pt; FONT-FAMILY: 'Courier New'">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; HDC hdc;<BR><BR></SPAN><SPAN style="FONT-SIZE: 10pt; FONT-FAMILY: 'Courier New'">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; hdc = BeginPaint(hWnd, &amp;ps);<BR><BR></SPAN><SPAN style="FONT-SIZE: 10pt; FONT-FAMILY: 'Courier New'">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; HFONT hFont = ::CreateFont(-12*20, 0, 0,0, FW_NORMAL,&nbsp;<BR></SPAN><SPAN style="FONT-SIZE: 10pt; FONT-FAMILY: 'Courier New'">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; FALSE, FALSE, FALSE, SHIFTJIS_CHARSET,&nbsp;<BR></SPAN><SPAN style="FONT-SIZE: 10pt; FONT-FAMILY: 'Courier New'">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; OUT_DEFAULT_PRECIS, CLIP_DEFAULT_PRECIS,&nbsp;<BR></SPAN><SPAN style="FONT-SIZE: 10pt; FONT-FAMILY: 'Courier New'">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; DEFAULT_QUALITY, DEFAULT_PITCH||FF_MODERN, szFontName);<BR><BR></SPAN><SPAN style="FONT-SIZE: 10pt; FONT-FAMILY: 'Courier New'">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; TEXTMETRIC tm;<BR><BR></SPAN><SPAN style="FONT-SIZE: 10pt; FONT-FAMILY: 'Courier New'">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; SelectObject(hdc,hFont);<BR></SPAN><SPAN style="FONT-SIZE: 10pt; FONT-FAMILY: 'Courier New'">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; GetTextMetrics(hdc, &amp;tm);<BR><BR></SPAN><SPAN style="FONT-SIZE: 10pt; FONT-FAMILY: 'Courier New'">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; LONG lAvgTextWidth = tm.tmAveCharWidth;<BR><BR></SPAN><SPAN style="FONT-SIZE: 10pt; FONT-FAMILY: 'Courier New'">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; EndPaint(hWnd, &amp;ps);<BR></SPAN><SPAN style="FONT-SIZE: 10pt; FONT-FAMILY: 'Courier New'">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; TCHAR str[256];<BR></SPAN><SPAN style="FONT-SIZE: 10pt; FONT-FAMILY: 'Courier New'">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; _sntprintf_s(str, 256, _T(<SPAN style="COLOR: #a31515">"%s:%d \n"</SPAN>), szFontName, lAvgTextWidth);<BR></SPAN><SPAN style="FONT-SIZE: 10pt; FONT-FAMILY: 'Courier New'">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; MessageBox(hWnd, str, 0, 0);<BR><BR></SPAN><SPAN style="FONT-SIZE: 10pt; FONT-FAMILY: 'Courier New'">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN style="COLOR: blue">return</SPAN> lAvgTextWidth;<BR></SPAN><SPAN style="FONT-SIZE: 10pt; FONT-FAMILY: 'Courier New'">}<BR><BR></SPAN><SPAN style="FONT-SIZE: 10pt; COLOR: blue; FONT-FAMILY: 'Courier New'">void</SPAN><SPAN style="FONT-SIZE: 10pt; FONT-FAMILY: 'Courier New'"> Test(HWND hWnd) </SPAN><SPAN style="FONT-SIZE: 10pt; FONT-FAMILY: 'Courier New'">{<BR></SPAN><SPAN style="FONT-SIZE: 10pt; FONT-FAMILY: 'Courier New'">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; LONG lMSPGothic = GetAvgTextWidth(hWnd, _T(<SPAN style="COLOR: #a31515">"MSPGothic"</SPAN>));<BR></SPAN><SPAN style="FONT-SIZE: 10pt; FONT-FAMILY: 'Courier New'">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; LONG lMeiryo = GetAvgTextWidth(hWnd, _T(<SPAN style="COLOR: #a31515">"Meiryo"</SPAN>));<BR></SPAN><SPAN style="FONT-SIZE: 10pt; FONT-FAMILY: 'Courier New'">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; LONG lArial = GetAvgTextWidth(hWnd, _T(<SPAN style="COLOR: #a31515">"Arial"</SPAN>));<BR></SPAN><SPAN style="FONT-SIZE: 10pt; FONT-FAMILY: 'Courier New'">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; LONG lOpenTypel = GetAvgTextWidth(hWnd, _T(<SPAN style="COLOR: #a31515">"KaiTi"</SPAN>));<BR></SPAN><SPAN style="FONT-SIZE: 10pt; FONT-FAMILY: 'Courier New'">}</SPAN></P></BLOCKQUOTE>
+<P>Now of course it is easy to dismiss this as just another case of Microsoft screwing with ANSI applications, but that isn't what is happening here, at all (as the above repro code shows, you can have the same problems in Unicode apps too, in some cases).</P>
+<P>The difference is actually with the metrics of the two fonts, specifically that Meiryo is returning about double the size of the <A class="" href="http://msdn2.microsoft.com/library/ms534202.aspx" mce_href="http://msdn2.microsoft.com/library/ms534202.aspx">TEXTMETRIC</A> structure's tmAveCharWidth member, which is simply defined:</P>
+<BLOCKQUOTE>
+<P><EM>Specifies the average width of characters in the font (generally defined as the width of the letter x). This value does not include the overhang required for bold or italic characters. </EM></P></BLOCKQUOTE>
+<P>Now of course one only has to look at Meiryo and MS Gothic to see that one isn't expecting to see a tmAveCharWidth that is double the size.</P>
+<P>So what is going on here?</P>
+<P>Starting from the spec:</P>
+<P>
+<TABLE class="" cellSpacing=0 cellPadding=0 width=464 border=0>
+<TBODY>
+<TR>
+<TD class="" width="10%">&nbsp;</TD>
+<TD class="" width="90%"><FONT face=Georgia>
+<P>xAvgCharWidth </P></FONT><FONT face=Verdana size=1>
+<P>Format:2-byte signed short</P>
+<P>Units:Pels / em units</P>
+<P>Title:Average weighted escapement. </P>
+<P>Description:The Average Character Width parameter specifies the arithmetic average of the escapement (width) of all non-zero width glyphs in the font.</P>
+<P>Comments:<B>The value for xAvgCharWidth is calculated by obtaining the arithmetic average of the width of all non-zero width glyphs in the font. Furthermore, it is strongly recommended that implementers do not rely on this value for computing layout for lines of text. Especially, for cases where complex scripts are used.</B></FONT></P></TD></TR>
+<TR>
+<TD class="" width="10%">&nbsp;</TD>
+<TD class="" width="90%">&nbsp;</TD></TR></TBODY></TABLE></P>
+<P>Well, there has for a long time been kind of a hack built in to a lot of East Asian fonts whereby the metrics behind tmAveCharWidth were not based on every character and dividing by the total number of them. Instead, it was being calculated by&nbsp;averaging all of the non-ideographic characters.</P>
+<P>Perhaps as comments go, they should update to say not to rely on it for East Asian characters, either? :-)</P>
+<P>Now as hacks go this is a fairly decent one, since following the letter of the TrueType spec here makes the value somewhat useless -- the ideographs have a fixed width among themselves that by convention will be bigger than most of the other characters. Dumping thousands (or even tens of thousands) of such characters into the mix to be averaged in does not really make the resultant tmAveCharWidth very useful for most purposes, and for the usage that MFC was trying to do something with in particular. </P>
+<P>If you think of the average width value as an election then this is a great example of&nbsp;<STRONG>characters stuffing the ballot box</STRONG>!</P>
+<P>Now Meiryo does not have this hack -- it&nbsp;contains the actual average width across every character. It is completely conformant to the TrueType specification and its definitions.</P>
+<P>Of course the end result is not entirely pleasant if one tries to use the font:</P>
+<P><IMG src="http://trigeminal.fmsinc.com/images/Issue1.png"></P>
+<P>So, what is an honest developer (or huge framework) to do?</P>
+<P>Well, calculating the value using an explicit subset is one way (this is code that actually is used by Windows in some cases if more complex calls fail):</P>
+<BLOCKQUOTE>
+<P style="MARGIN-LEFT: 1in"><SPAN style="COLOR: #1f497d">static WCHAR wszAvgChars[] = L"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";<BR></SPAN><SPAN style="COLOR: #1f497d">// Change from tmAveCharWidth. We will calculate a true average<BR></SPAN><SPAN style="COLOR: #1f497d">// as opposed to the one returned by tmAveCharWidth. </SPAN><SPAN style="COLOR: #1f497d"><BR></SPAN><SPAN style="COLOR: #1f497d">GetTextExtentPointW(hdc, wszAvgChars,(sizeof(wszAvgChars) / sizeof(WCHAR)) - 1,&amp;size)<BR>iAve = ((size.cx / 26) + 1) / 2; // round up</SPAN></P></BLOCKQUOTE>
+<P>And suddenly by using this value, things start looking right again!</P>
+<P>Now I know from my own Unicode Layer days that making changes to MFC and recompiling it are not easy to do, so in the meantime the easier answer for most people might be to not use Meiryo for these kinds of situations until MFC updates might be available.</P>
+<P>So maybe indirectly it is a problem with Microsoft and ANSI apps.</P>
+<P>Though to be honest it is easier to blame it on piss-poor&nbsp;cross-business unit dogfood efforts (DevDiv not wanting to install Vista, Windows not wanting to use MFC).</P>
+<P>Or you could even blame the lack of solid international app compat testing (that Japanese problem is not hard to hit) on Vista.</P>
+<P>I guess this could be used as an excuse to rail against whatever cause one chooses to take up (well, other than the war in Iraq). :-)</P>
+<P mce_keep="true">&nbsp;</P>
+<P><FONT color=#ff00ff><EM>This post brought to you by</EM> <FONT size=5>ヘ</FONT> <EM>(<A class="" href="http://www.fileformat.info/info/unicode/char/30d8" mce_href="http://www.fileformat.info/info/unicode/char/30d8">U+30d8</A>, a.k.a. KATAKANA LETTER HE)</EM></FONT></P>
+<hr/><p><strong>grant</strong> on 19 Jan 2009 10:43 PM:</p><div style="margin-left: 1em"><p>Still investigating a bug report from a client, but looks like a problem with Meiryo. This blog entry is the closest I have to throwing the light on the matter, until I take a closer look at the code.</p>
+<p>The string "Chassis/Suspension/Wheels" (in English, despite using a Japanese locale) displays in a grid cell with the trailing 's' partly truncated. Would appear to be using a standard TextOut to draw the text in the cell.</p>
+<p>Change the font to anything else works OK. Suspecting the '/' char, I tried a few variations; removing the forward slash and the problem goes away, adding more &amp; more of the last char is truncated. </p>
+<p>So this font (and only this font) mis-reports the length of the string.. maybe something with '/' vs '¥' &nbsp;? </p></div>
+<p><strong>Michael S. Kaplan</strong> on 20 Jan 2009 6:04 PM:</p><div style="margin-left: 1em"><p>That would definitely be a separate issue, unrelated to the tmAveCharWidth/xAveCharWidth value in Meiryo, right?</p>
+</div>
+<hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2007/08/16/4421520.html" title="It doesn&#39;t really support UTF-8">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2007/08/16/4416440.html" title="&#39;crap cartoon font&#39; (Part 2)">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2007-08">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2007-08-16">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2007/08/16/4421328.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:37 GMT -->
+</html>

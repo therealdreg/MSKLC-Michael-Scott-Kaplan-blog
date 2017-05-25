@@ -1,0 +1,45 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2012/08/08/10337799.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:31 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>There's no "I" in IDN, part 14: It turns out there's no "I" in IE, either</title></head><body>
+<h1>There's no "I" in IDN, part 14: It turns out there's no "I" in IE, either</h1>
+<p><em>by Michael S. Kaplan, published on 2012/08/08 08:01 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2012/08/08/10337799.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<p>Previous blogs in this series:</p>
+<ul>
+<li><strong><a title="part 13: Desktop and Managed and Metro; oh my!" href="../../05/18/10305223.html">part 13: Desktop and Managed and Metro; oh my!</a></strong></li>
+<li><strong><a title="part 12: Emoji + IDN == U+1F4A9 (PILE OF POO)" href="../../02/27/10273315.html">part 12: Emoji + IDN == U+1F4A9 (PILE OF POO)</a></strong></li>
+<li><strong><a title="part 11: There's no place like ::1, not even 127.0.0.1!" href="../../../2011/10/25/10229790.html">part 11: There's no place like ::1, not even 127.0.0.1!</a></strong></li>
+<li><strong><a title="part 10: Who needs IDN support? How much? When? (Part 2)" href="../../../2011/09/21/10214081.html">part 10: Who needs IDN support? How much? When? (Part 2)</a></strong></li>
+<li><strong><a title="part 9: Who needs IDN support? How much? When? (Part 2)" href="../../../2011/09/16/10212216.html">part 9: Who needs IDN support? How much? When? (Part 1)</a></strong></li>
+<li><strong><a title="part 8: Punycode don't do the PUA" href="../../../2011/08/12/10195062.html">part 8: Punycode don't do the PUA</a></strong></li>
+<li><strong><a title="part 7: IDN comes to AdWords" href="../../../2011/07/28/10190701.html">part 7: IDN comes to AdWords</a>&nbsp;</strong></li>
+<li><strong><a title="part 6: It isn't like there's an &quot;I&quot; in EAI, either!" href="../../../2011/07/14/10186414.html">part 6: It isn't like there's an "I" in EAI, either!</a></strong></li>
+<li><strong><a title="part 5: Stephen Colbert's job is not in any jeopardy" href="../../../2011/06/29/10181212.html">part 5: Stephen Colbert's job is not in any jeopardy</a></strong></li>
+<li><strong><a title="part 4: the 'path' to Hell is paved with IDN bugs" href="../../../2011/06/17/10173790.html">part 4: the 'path' to Hell is paved with IDN bugs</a></strong></li>
+<li><strong><a title="part 3: There's no &quot;I&quot; in DIY, either!" href="../../../2011/05/25/10168228.html">part 3: There's no "I" in DIY, either!</a></strong></li>
+<li><strong><a title="part 2: Try not to use the wrong functions!" href="../../../2011/04/02/10149149.html">part 2: Try not to use the wrong functions!</a></strong></li>
+<li><strong><a title="part 1: If you're not Unicode, you're just wrong!" href="../../../2011/02/14/10128621.html">part 1: If you're not Unicode, you're just wrong!</a></strong></li>
+</ul>
+<p>I knew at some point I'd have to deconstruct the support of International Domain Names in Internet Explorer.</p>
+<p>In other words, IDN in IE. :-)</p>
+<p>Unfortunately, it is pretty complicated.</p>
+<p>So I was looking forward to it like I'd look forward to a root canal, you know?</p>
+<p>Thankfully, Eric Lawrence saved me the trouble!</p>
+<p>In <a href="http://blogs.msdn.com/b/ieinternals/">EricLaw's IEInternals</a>, he wrote <a title="Brain Dump: International Text" href="http://blogs.msdn.com/b/ieinternals/archive/2012/07/13/internet-explorer-and-international-text-encoding-unicode-punycode-ansi-oh-my.aspx">Brain Dump: International Text</a>&nbsp;last month, he explained the IDN settings in this picture:</p>
+<p><a href="http://msdnshared.blob.core.windows.net/media/MSDNBlogsFS/prod.evol.blogs.msdn.com/CommunityServer.Blogs.Components.WeblogFiles/00/00/00/47/13/metablogapi/2251.image_5F00_2CAC61CC.png"><img border="0" alt="" src="http://blogs.msdn.com/resized-image.ashx/__size/550x0/__key/communityserver-blogs-components-weblogfiles/00-00-00-47-13-metablogapi/2251.image_5F00_2CAC61CC.png" /></a>,</p>
+<p>He also covered all of these "International' settings from the dialog.</p>
+<p>In particular:</p>
+<p style="padding-left: 30px;"><span style="font-family: Calibri; font-size: small;" face="Calibri" size="2"><strong>Send IDN server names </strong>is enabled by default and will force IE to encode hostnames in URLs following the rules of <strong><a href="http://www.ietf.org/rfc/rfc3491.txt">RFC3491</a> </strong>and <a href="http://www.ietf.org/rfc/rfc3492.txt">RFC3492</a>. The user will be shown the URL in the address bar in Unicode form if and only if the URL is deemed non-spoofable. Please see this IEBlog post on the <a href="http://blogs.msdn.com/b/ie/archive/2006/07/31/684337.aspx">rules of IDN Non-spoofability</a>.&nbsp; </span></p>
+<p style="padding-left: 30px;"><span style="font-family: Calibri; font-size: small;" face="Calibri" size="2"><strong>Send IDN server names for Intranet addresses </strong>is disabled by default for compatibility with legacy Windows networks that were using UTF-8 to support non-ASCII hostnames. Other browsers, to the best of my knowledge, do not have special handling for Intranet sites, and I believe that <em>current </em>versions of Active Directory and the Windows DNS server support punycoded hostname registration and lookup.</span></p>
+<p>&nbsp;Since he did all this work, it saves me the trouble!</p>
+<p>Kinda great teamwork, he and I.</p>
+<p>I guess there 's no "I" in IE, either! :-)</p>
+<hr/><p><strong>Daniel Cheng</strong> on 10 Aug 2012 9:25 PM:</p><div style="margin-left: 1em"><p>Quote from your blog:</p>
+<p> &nbsp;He also covered all of these &quot;International&#39; settings from the dialog.</p>
+<p>I guess you choose to use a mixing of single quote &#39; and double quote &quot; here to annoy programmers like me?</p>
+</div>
+<p><strong>Matthew Slyman</strong> on 16 Apr 2013 9:33 AM:</p><div style="margin-left: 1em"><p>Excellent. Now I must get by back-side in gear and finish designing my system for multi-lingual semantic websites where the URLs themselves are localised (I mean &quot;localized&quot;)! (Masochism perhaps, when one encounters &quot;false friend&quot; words that make a legal URL potentially non-unique and ambiguous between the URIs they&#39;re meant to point at... But when one sorts between the possibilities using the HTTP language preferences of the user, everything becomes clear again... I think...)</p>
+</div>
+<hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2013/10/17 <a href="../../../2013/10/17/10453790.html">There's no "I" in IDN, part 19: There's no "I" in IPv6, either!</a></p><p>2013/10/08 <a href="../../../2013/10/08/10454553.html">There's no "I" in IDN, part 18: There isn't even an "I" in John C. Klensin's name!</a></p><p>2013/09/13 <a href="../../../2013/09/13/10448110.html">There's no "I" in IDN, part 17: EAI made it to China, and everybody knows it!</a></p><p>2013/04/19 <a href="../../../2013/04/19/10412471.html">There's no "I" in IDN, part 16: It's a good thing they decided to call it EAI!</a></p><p>2012/10/12 <a href="../../10/12/10359120.html">There's no "I" in IDN, part 15: Still no 'I' in EAI.... but we could use an US sometime soon!</a></p></div><p><em>go to <a id="newer" href="../13/10338914.html" title="Unraveling the job creation issue">newer</a> or <a id="older" href="../07/10337516.html" title="ResolveLocaleName cleans up and flies right">older</a> post, or back to <a href="../../../index-2.html">index</a> or <a href="../../../index-2.html#2012-08">month</a> or <a href="../../../index-2.html#2012-08-08">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2012/08/08/10337799.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:31 GMT -->
+</html>

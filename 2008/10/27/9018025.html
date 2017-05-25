@@ -1,0 +1,56 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2008/10/27/9018025.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:35 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Not only going BACK, but changing how to do it</title></head><body>
+<h1>Not only going BACK, but changing how to do it</h1>
+<p><em>by Michael S. Kaplan, published on 2008/10/27 08:21 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2008/10/27/9018025.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<p>Late last week, Jan Kučera asked over in the Suggestion Box (which I am thinking of renaming to <b>Jan's Place</b>, soon!):</p>
+<blockquote>
+<p><i><font face="times new roman,times">Hello.. I have a short one today: Could I use the MSKLC to make for example the B key to act as backspace key (and if so, how :))?<br><br>Thanks!</font></i><br></p>
+</blockquote>
+<p>Very good question.</p>
+<p>The quickest answer is just two letters and a punctuatuon mark:</p>
+<p><b>No.</b></p>
+<p>The slightly longer answer is:</p>
+<p><b>No, MSKLC cannot be used to muck with the backspace.</b></p>
+<p>But this answer, while technically true, has me making an assumption that most people wouldn't make.</p>
+<p>I am treating <b>MSKLC</b> as meaning <b>msklc.exe</b>, rather than the full <b>Microsoft Keyboard Layout Creator</b> installation, while most people would actually assume the latter and not the former.</p>
+<p>Because just as with other blogs that talk aboput the .KLC file and KBUTOOL.EXE, like <b><a href="http://archives.miloush.net/michkap/archive/2006/10/07/799605.html" mce_href="http://archives.miloush.net/michkap/archive/2006/10/07/799605.html">Pimping your Brazilian keyboard</a></b> and <b><a href="http://archives.miloush.net/michkap/archive/2006/09/26/771554.html" mce_href="http://archives.miloush.net/michkap/archive/2006/09/26/771554.html">In case you have a yen to extend your keyboard (or at least want a yen?)</a></b> and so forth, there is a way to muck around here some.... </p>
+<p>You see, there are certain defaiult entries that evry keyboard has, and KBDUTOOL.EXE automatically adds them at build time if they are not already specified in the .KLC file.</p>
+<p>Which means that you could specify them! </p>
+<p>Some of those entries (with their default values on a US keyboard) are:</p>
+<blockquote>
+<p><b><font face="consolas,lucida condole,courier new,courier">0e &nbsp; VK_BACK&nbsp;&nbsp; 0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 0008&nbsp;&nbsp;&nbsp;&nbsp; 0008<br>01 &nbsp; VK_ESCAPE 0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 001b&nbsp;&nbsp;&nbsp;&nbsp; 001b<br>0d &nbsp; VK_RETURN 0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 000d&nbsp;&nbsp;&nbsp;&nbsp; 000d<br>53 &nbsp; VK_CANCEL 0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 0003&nbsp;&nbsp;&nbsp;&nbsp; 0003<br>0f &nbsp; TAB&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 0009&nbsp;&nbsp;&nbsp;&nbsp; 0009</font></b></p>
+</blockquote>
+<p>and of course you would need to change the scan code in front of each one you wanted to change (like in Jan's case, taking the scan code off the "B" and using that value should do the trick!). </p><p>Make sure to remove any duplicate entries in your own file....</p><p>Now one warning -- since these values tend to <b>never change</b>, the fact that you are changing them may fail in some applications that were assuming they would never change. Whether this is their bug or yours is an interesting philosophical issue but I'm sure you can imagine that you will be at a disadvantage when you argue the point with them.<br></p><p>The moral of the story of the whole blog is that sometimes it is worth waiting for the longer answer. :-) </p><p>&nbsp;</p><p><font color="#ff00ff"><i>This blog brought to you by U+0008, aka BACKSPACE<br></i></font></p>
+<hr/><p><strong>Jan Kučera</strong> on 27 Oct 2008 9:59 AM:</p><div style="margin-left: 1em"><p>Hmm...feel quite embarrased now, maybe I should stop promoting the suggestion box for a while... :)</p>
+<p>Here is what led me to this question:</p>
+<p>Imagine I have a key, which is mapped to type &quot;KA&quot;. Now I would like to have kind of modifier O key, so pressing my &quot;KA&quot; key followed by O (and not vice versa) would turn into &quot;KO&quot; typed. So the first - and probably quite stupid - idea was that the O modifier key could consist of &quot;&lt;BACKSPACE&gt;O&quot;...</p>
+<p>I've tried to set-up this in MSKLC and it works in notepad, though not in Word :( where I need it at most.</p>
+<p>I actually treated MSKLC as meaning msklc.exe while stating the question, but I'm glad I have waited for the longer answer! Though the quick one is what probably covers my original idea...</p>
+<p>Thanks for the insight into possibilities of MSKLC in the other meaning!</p>
+<p>Jan</p></div>
+<p><strong>&#216;ystein Bech Gadmar</strong> on 16 Nov 2008 4:15 AM:</p><div style="margin-left: 1em"><p>Interesting!</p>
+<p>So if one wants to, say, turn the CapsLock key into a Backspace *innocent yet somehow slightly nervous smile*, would this line somewhere in the main part of the .klc file do the trick?</p>
+<p>3a	VK_BACK	0	0008	0008</p>
+<p>Could you give a link to a full list of the entries, please? This seems like a most useful trick.</p>
+<p>Would the failure in some applications be due to those applications not using the virtual key but the scancode directly?</p></div>
+<p><strong>Michael S. Kaplan</strong> on 16 Nov 2008 10:13 AM:</p><div style="margin-left: 1em"><p>I am specifically *not* a supporter of the COLEMAK keyboard layout. Thanks for trying though! :-)</p>
+</div>
+<p><strong>&amp;#216;ystein Bech Gadmar</strong> on 20 Nov 2008 5:32 AM:</p><div style="margin-left: 1em"><p>Ah. Sorry if my jest was taken as hidden aggression or anything. It was meant to ease tension, not promote it. I specifically did not intend to promote or proselytize anything and I'm sorry if I gave an impression to that effect.</p>
+<p>Ignoring the hopefully irrelevant point of how my letter keys may happen to be organized (and certainly not trying to stir up anything at all!), please wipe the slate clean and reconsider the question:</p>
+<p>The possibility for support of these additional keys by the MSKLC.exe is intrigueing. Hobby remappers such as myself could for instance put an extra Enter key in a more reachable position (one favourite of mine is to make a pseudo-ergonomic board by shifting ZXCVB and VK_102; the old B position could become an Enter key for instance) or a second AltGr-key that the left hand could reach - is that so?</p>
+<p>I'd need to add a line to the .klc file as exemplified above, and then compile - right? I'm still a bit fuzzy on whether the MSKLC 1.4 itself could compile such a .klc file correctly or whether I'd need to run the kbdutool.exe from the command line (and which switches I'd need to use then) - sorry if I'm being dense.</p>
+<p>Yeah, and the two last questions of my previous post. Pretty please.</p>
+<p>This supplication brought to you by U+00D8, AKA Scandinavian letter Ø</p></div>
+<p><strong>Qwertyist</strong> on 11 Dec 2008 9:20 AM:</p><div style="margin-left: 1em"><p>Hmmm ... </p></div>
+<p><strong>Alexander Knopf</strong> on 21 Oct 2009 2:40 PM:</p><div style="margin-left: 1em"><P>still under a year since the post, i should be good ....</P>
+<P>i have a (very special) keyboard layout that is actually optimized for programmers. it uses 3 levels just like the standard german keyboard layout does. however, it makes very heavy use of the 3rd level (the german one only uses it on the number keys and very few others).</P>
+<P>i have brackets on the home row, the questionmark as well.... either way, not the point.</P>
+<P>the point is that the caps lock key functions as AltGr key, but i still want a caps lock key. there is a second AltGr key right next to the enter key, which would turn on caps lock if pressed at the same time as the other one.</P>
+<P>is that possible with kbdutool ?</P></div>
+<p><strong>Michael S. Kaplan</strong> on 21 Oct 2009 9:15 PM:</p><div style="margin-left: 1em"><p>No, this won't work with msklc or kbdutool....</p>
+</div>
+<hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2008/10/28/9019609.html" title="From I SCOOT to IBOT, #1 of ??">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2008/10/24/9014653.html" title="Silverlight as Esau: selling its implementation for a pot of interface">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2008-10">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2008-10-27">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2008/10/27/9018025.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:35 GMT -->
+</html>

@@ -1,0 +1,54 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2010/03/30/9987288.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:35 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>A modest proposal</title></head><body>
+<h1>A modest proposal</h1>
+<p><em>by Michael S. Kaplan, published on 2010/03/30 07:01 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2010/03/30/9987288.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P><EM><FONT color=#ff0000>Now my modest proposal about fonts&nbsp; obtained in this blog lacks either the brazen absurdity or the sustained irony of Swift's </FONT></EM><A href="http://en.wikipedia.org/wiki/A_Modest_Proposal" mce_href="http://en.wikipedia.org/wiki/A_Modest_Proposal"><STRONG><EM><FONT color=#ff0000>A Modest Proposal</FONT></EM></STRONG></A><FONT color=#ff0000><EM>, but maybe that could be countered by having the folks on the typography team eat the glyphs contained in their fonts they manage?</EM> :-)</FONT></P>
+<P>The other day (well, it was Monday, by which I mean yesterday) I was giving a presentation to a bunch of engineers about font selection and how to do it an appropriate, localizable way.</P>
+<P>I think I managed to make it interesting, which can be a challenge, sometimes. </P>
+<P>Not everyone gets excited about that sort of thing, so you have to make an extra effort sometimes.</P>
+<P>Anyway, at one point I talked about the importance of not using <STRONG>font face names</STRONG> to add font attributes.</P>
+<P>I mean, it doesn't really make sense to make a font name show up in a string table with a name like <STRONG>Tahoma Bold</STRONG>.</P>
+<P>Just for the pleasure of perhaps some Russian localizer calling it <STRONG>Tahoma</STRONG> <STRONG>Полужирный</STRONG>?</P>
+<P>Or a Hungarian localizer to have to change it to <STRONG>Tahoma Kövér</STRONG>?</P>
+<P>Or a Danish localizer to have to change it to <STRONG>Tahoma Fed</STRONG>?</P>
+<P>Or a Norwegian localizer to have to change it to <STRONG>Tahoma Halvfet</STRONG>?</P>
+<P>Or a Swedish localizer to have to change it to <STRONG>Tahoma Fet</STRONG>?</P>
+<P>Or a Dutch localizer to have to change it to <STRONG>Tahoma Vet</STRONG>?</P>
+<P>Or a German localizer to have to change it to <STRONG>Tahoma Fett</STRONG>?</P>
+<P>Or an Italian localizer to have to change it to <STRONG>Tahoma Nero</STRONG>?</P>
+<P>Or a Spanish localizer to have to change it to <STRONG>Tahoma Negrita</STRONG>?</P>
+<P>Or a French localizer to have to change it to <STRONG>Tahoma Gras</STRONG>?</P>
+<P>And so on. You get the idea.</P>
+<P>Can you see why this would be a bad idea?</P>
+<P>I mean, thinking about the following issues raised in&nbsp;<A href="http://archives.miloush.net/michkap/archive/2005/12/12/502463.html" mce_href="http://archives.miloush.net/michkap/archive/2005/12/12/502463.html"><STRONG>Ready... set... Reboot Redux</STRONG></A> and&nbsp;<A href="http://archives.miloush.net/michkap/archive/2008/10/28/9020410.html" mce_href="http://archives.miloush.net/michkap/archive/2008/10/28/9020410.html"><STRONG>Ready... set... Reboot Redux, part Deux!</STRONG></A>,&nbsp;it means all of the following is going on:</P>
+<UL>
+<LI>the actual language that might be used here would ideally be based on system locale in the registry at the time the current session is started (a setting with no documented querying technique)</LI>
+<LI>it may be up to two session initializations before that answer&nbsp;can be deterministically expected, even if it were easy to get</LI>
+<LI>the string table language containing the font will be based on user interface language of the current session</LI></UL>
+<P>It means the likely possibility&nbsp;of not getting the desired font effect is really a problem in a bunch of cases.</P>
+<P>Now I have been railing about the best practices issues here for a while now.</P>
+<P>But code keeps getting written, by Microsoft developers and the ones outside Microsoft. And people keep on making this mistake over and over again.</P>
+<P>For giggles keep the whole related&nbsp;<A href="http://archives.miloush.net/michkap/archive/2005/02/26/380867.html" mce_href="http://archives.miloush.net/michkap/archive/2005/02/26/380867.html"><STRONG>East Asian Font Names....</STRONG></A> issue in mind as well - note how <EM>they</EM> actually did some work to solve that problem. By registering both names.</P>
+<P>Maybe that is what should be done here, as well.</P>
+<P>My humble proposal:</P>
+<P><STRONG>Any time a) the system locale setting that the session level font cache uses and b)&nbsp;the user interface language of that session, and/or c) the actual default system locale&nbsp;do not match, the font names for&nbsp;all of the&nbsp;fonts under these 2 to 3 languages should be registered.</STRONG></P>
+<P>This would guarantee that the fonts would work no matter what setting/configuration the developer might be using to try to get the right name.</P>
+<hr/><p><strong>John Cowan</strong> on 30 Mar 2010 9:58 AM:</p><div style="margin-left: 1em"><p>In fact, no, I don't see why it's a bad idea. &nbsp;The name of a font is not just a name, like &quot;Tahoma&quot;; it contains a part which is meant to be intelligible, so the local form of &quot;bold&quot; should be translated. &nbsp;What's more, I think that Тахома цйтощк is better localization than either Tahoma Bold or Tahoma цйтощк.</p></div>
+<p><strong>GunSmoker</strong> on 30 Mar 2010 10:04 AM:</p><div style="margin-left: 1em"><p>&gt;&gt;&gt; Russian localizer calling it Tahoma цйтощк</p>
+<p>Looks like total garbage to me. Proper name should be &quot;Tahoma Полужирный&quot;.</p></div>
+<p><strong>Michael S. Kaplan</strong> on 30 Mar 2010 10:46 AM:</p><div style="margin-left: 1em"><P>It is now fixed. Oops. :)</P>
+<P>(I got the word from a website as this machine did not have Russian on it at the moment!)</P></div>
+<p><strong>Random832</strong> on 31 Mar 2010 6:17 AM:</p><div style="margin-left: 1em"><p>&quot;John Cowan: In fact, no, I don't see why it's a bad idea.&quot;</p>
+<p>The problem is, it shouldn't be the application's responsibility to use a localized name when asking the system for the font it wants to display text in. Displaying a localized font name to the user in the font selection box isn't what's being argued against here.</p>
+<p>----</p>
+<p>Your proposal only solves half the issue - it makes it _possible_ to reliably localize font face names [which you said &quot;would be a bad idea&quot; anyway], but doesn't save you from the need to actually _do_ it. </p>
+<p>Why isn't it possible to always use the english name? Is this the reason we don't have Тахома (or タホマ or 타호마)? Since there's no way around using the font face name to specify the font family.</p></div>
+<p><strong>Michael S. Kaplan</strong> on 31 Mar 2010 6:25 AM:</p><div style="margin-left: 1em"><P>The pure "Tahoma" case works anyway. The proposal is a way to keep those who *do* this extra thing with attributes from being broken.</P>
+<P>I agree the localized font name is a pain when it happens; it does not happen often....</P></div>
+<p><strong>Random832</strong> on 31 Mar 2010 6:48 PM:</p><div style="margin-left: 1em"><p>My point was more like - if &quot;Tahoma&quot; always works (even if Tahoma were a font that had actual other names like the east asian fonts), why not have &quot;Tahoma Bold&quot; always work - your proposal merely makes sure that you can always use the &quot;Tahoma Полужирный&quot; if that's the language your string table loaded as.</p>
+<p>Basically, why not &quot;and/or d) none of those languages is English&quot;?</p></div>
+<hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2010/03/31/9986458.html" title="OS level support for non-Gregorian calendars?">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2010/03/29/9986413.html" title="What the @!#$% is up with the Tibetan keyboard? (aka To be good enough for government work?)">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2010-03">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2010-03-30">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2010/03/30/9987288.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:35 GMT -->
+</html>

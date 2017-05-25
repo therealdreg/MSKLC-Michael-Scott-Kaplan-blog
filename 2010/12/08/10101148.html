@@ -1,0 +1,53 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2010/12/08/10101148.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Oceania is at war with obcaseinsensitive; Oceania has always been at war with obcaseinsensitive</title></head><body>
+<h1>Oceania is at war with obcaseinsensitive; Oceania has always been at war with obcaseinsensitive</h1>
+<p><em>by Michael S. Kaplan, published on 2010/12/08 07:01 -05:00, original URI: http://blogs.msdn.com/b/michkap/archive/2010/12/08/10101148.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<p>I remember when I first read 1984.</p>
+<p>It was a few years after the original publishing, as I was not born until over two decades later and I was quite lazy in my pre-zygote reading phase....</p>
+<p>Anyway, the thing about 1984 that struck me at the time, that distracted me to no end, was how stupidly it portrayed people.</p>
+<p>I mean the notion that people could yell at the top of their lungs about their longtime&nbsp;enemy Eastasia and their longtime ally Eurasia, only to reverse the roles minutes after a news announcement? </p>
+<p>I remember asking the teacher whether that was like when my mom would say vegetables were good for me when I knew she was dead wrong but to keep the peace I let her false statement stand.</p>
+<p>No, she explained, in 1984 these people truly believed what they were saying.</p>
+<p>"Well then," I concluded, "they were stupid!"</p>
+<p>The teacher pulled a quote out of bumper sticker, suggesting that I never underestimate the power of human stupidity.</p>
+<p>Good advice (probably 50% of the interesting things this teacher ever said to me!). But I digress.....</p>
+<p>Anyway, it turns out I was wrong back then.</p>
+<p>It wasn't stupidity that was at issue here, it was the [possibly subconscious] recognition that the situation has changed and re-aligning themselves with the new situation. Instantly. Since the memory has no benefit in this situation, hanging onto it would be doubleplusungood.</p>
+<p>Which brings me to today's blog.</p>
+<p>And obcaseinsensitive.</p>
+<p>Regular readers might remember my <a href="http://archives.miloush.net/michkap/archive/2008/01/12/7062458.html" title="Blitzkrieging the landscape.NET (aka in this case, two) (aka When is obcaseinsensitive not ObCaseInsensitive?)"><strong>Blitzkrieging the landscape.NET (aka in this case, two) (aka When is obcaseinsensitive not ObCaseInsensitive?)</strong></a> from early 2008.</p>
+<p>It talked about a registry key.&nbsp;A registry key&nbsp;that was always a particular setting unless people changed it - which was rare.</p>
+<p>It explained how for the sake of ASP.Net, the Developer Division's CLR&nbsp;took that registry key&nbsp;and&nbsp;decided to always change it. Even though that broke some people. And essentially made the value entirely useless since it was reseting the people who had changed it andf there was no way back.</p>
+<p><em>I probably wasn't much of a fan of ASP.Net before, but I freaking hated them after that, most of the time....</em></p>
+<p>Then this mail came the other day to one of those DLs I belong to:</p>
+<p style="padding-left: 90px;"><span style="font-family: times new roman,times;">Hi All,<br /><br />I am using the code below to do a case sensitive file search.&nbsp;&nbsp; <br />hFind = FindFirstFileEx(argv[1], FindExInfoStandard, &amp;FindFileData, FindExSearchNameMatch, NULL, FIND_FIRST_EX_CASE_SENSITIVE); statement does not seem to work as documented FindFirstFileEx Function (Windows).<br /><br />File on disk: "D:\TestFindFirstFile\Debug\Test.txt"<br />Input : "D:\TestFindFirstFile\Debug\test.txt"<br /><br />Excepted Result : FindFirstFileEx to fail giving error indicating that the files differs in case.<br />Actual Result : FindFirstFileEx does not fail nor indicate files differs in case.<br /><br />Please clarify if this is behavior by design or if this is issue or am I using the API incorrectly.<br /><br />Thanking you in advance.</span><br /><br /><span style="font-family: courier new,courier;"><strong>#include &lt;windows.h&gt;<br />#include &lt;tchar.h&gt;<br />#include &lt;stdio.h&gt;<br /><br />void _tmain(int argc, TCHAR *argv[]) {<br />&nbsp;&nbsp; WIN32_FIND_DATA FindFileData;<br />&nbsp;&nbsp; HANDLE hFind;<br /><br />&nbsp;&nbsp; if( argc != 2 )&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; _tprintf(TEXT("Usage: %s [target_file]\n"), argv[0]);<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; return;<br />&nbsp;&nbsp; }<br /><br />&nbsp;&nbsp; _tprintf (TEXT("Target file is %s\n"), argv[1]);<br />&nbsp;&nbsp; hFind = FindFirstFileEx(argv[1], FindExInfoStandard, &amp;FindFileData, FindExSearchNameMatch, NULL, FIND_FIRST_EX_CASE_SENSITIVE);<br />&nbsp;&nbsp; if (hFind == INVALID_HANDLE_VALUE)&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; printf ("FindFirstFileEx failed (%d)\n", GetLastError());<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; return;<br />&nbsp;&nbsp; }&nbsp;else&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; _tprintf (TEXT("The first file found is %s\n"), FindFileData.cFileName);<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; FindClose(hFind);<br />&nbsp;&nbsp; }<br />}</strong></span></p>
+<p>And then came the reason:</p>
+<p style="padding-left: 60px;"><span style="font-family: times new roman,times;"><em>Is HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\kernel\obcaseinsensitive set to 1?<br /><br />If you want this API to work as documented, you'll need to set this regkey to 0.&nbsp; Setting it to zero has the effect of enabling case sensitivity across the system.&nbsp; Although this is notionally opt-in (Win32 apps tend to opt-in) at the NT layer it's really opt-out (you get case sensitive unless you ask for insensitive.)&nbsp; The practical effect of this is changing the registry key "lights up" latent bugs in NT applications and drivers that are not expecting case sensitive behavior.&nbsp; So if you change this registry key, things might work - but they also might not, because they're probably not tested.<br />&nbsp;<br />You might then assume that seeing this key is 1 means you can ignore case sensitivity.&nbsp; That's not really a valid assumption either.&nbsp; After all, files could have been put on a disk differing only by case when the key was 0, and now it's 1, but those files are still there.&nbsp; Or, you could be talking to a network share where your client promises to not create files differing only by case, but not all clients make the same promise.&nbsp; Etc, etc.</em></span></p>
+<p>At this point, since pretty much every machine has this registry value set to 1, a flag that only works if it is set to 0 is <span style="color: #ff0000;"><strong>a fairly useless bit of documentation</strong></span> in <a href="http://msdn.microsoft.com/library/aa364419.aspx">FindFirstFileEx</a> for the <strong>FIND_FIRST_EX_CASE_SENSITIVE</strong> flag.</p>
+<p>I mean, is there any point in claiming otherwise? It is just a waste of time to pretend one would ever think it was something one might expect to be 0. A developer certainly shouldn't write code against it assuming a 0 will be there....</p>
+<p>Especially since Windows sets obcaseinsensitive to 1, and Windows has always set obcaseinsensitive to 1.</p>
+<p>Well, as far as any of us know.</p>
+<p>And at last, I have won the victory over myself. At last I love obcaseinsensitive.</p>
+<p>Um, hang on, that analogy broke down in the end.</p>
+<p>I'll work on it....</p>
+<hr/><p><strong>ErikF</strong> on 8 Dec 2010 11:33 AM:</p><div style="margin-left: 1em"><p>I have SFU installed on my computer and remember getting asked about this one. It was asked in a very scary way (&quot;If you enable this, your system might blow up and the world will end!&quot;), but I enabled it anyways and it hasn&#39;t affected anything that I can see. My guess as to why this is the case is because in the Windows world case-sensitive files have never been the norm, so few if any programs actually use the FIND_FIRST_EX_CASE_SENSITIVE flag. I actually prefer this behaviour myself: I don&#39;t like having to hunt for oddball configuration files in Unix that I missed because the designers wanted to be different and use uppercase!</p>
+</div>
+<p><strong>Joshua</strong> on 10 Dec 2010 9:58 AM:</p><div style="margin-left: 1em"><p>So installation of ASPNET sets obcaseinsensitive to 1. I&#39;ll have to remember that next time I need case sensitive.</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 10 Dec 2010 10:13 AM:</p><div style="margin-left: 1em"><p>Actually, the update was given to everybody whether they were using ASP.Net or not. They thought that woukd be a good idea.</p>
+</div>
+<p><strong>Maurits [MSFT]</strong> on 11 Dec 2010 7:44 AM:</p><div style="margin-left: 1em"><p>Breaks POSIX compliance, surely.</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 11 Dec 2010 11:34 AM:</p><div style="margin-left: 1em"><p>Maybe not -- since you can change on reg key to get back the way it was. Besides, who cares about POSIX compliance, these days? :-)</p>
+</div>
+<p><strong>Nick Lowe</strong> on 22 Feb 2012 4:37 AM:</p><div style="margin-left: 1em"><p>I have, hopefully, fully explained obcaseinsensitive, FILE_CASE_SENSITIVE_SEARCH and FIND_FIRST_EX_CASE_SENSITIVE in all their gory details on my blog:</p>
+<p><a rel="nofollow" target="_new" href="http://www.nicklowe.org/2012/02/understanding-case-sensitivity-in-windows-obcaseinsensitive-file_case_sensitive_search/">www.nicklowe.org/.../understanding-case-sensitivity-in-windows-obcaseinsensitive-file_case_sensitive_search</a></p>
+<p>Comments gratefully received!</p>
+<p>Cheers,</p>
+<p>Nick</p>
+</div>
+<hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2010/12/09/10102465.html" title="It&#39;s a LIP that won&#39;t cost you an arm[enia] and a leg!">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2010/12/07/10101187.html" title="Anti-Microsoft conspiracy theories are fun #5 (aka Microsoft is not supporting the terrorists, dammit!)">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2010-12">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2010-12-08">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2010/12/08/10101148.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+</html>

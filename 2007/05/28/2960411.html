@@ -1,0 +1,68 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2007/05/28/2960411.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:38 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Nothing stinks worse than the thread locale, other than the thread code page</title></head><body>
+<h1>Nothing stinks worse than the thread locale, other than the thread code page</h1>
+<p><em>by Michael S. Kaplan, published on 2007/05/29 02:01 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2007/05/28/2960411.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P>The piece of mail I got (via the Contact link) from Ken was:</P>
+<BLOCKQUOTE>
+<P><EM><FONT face="times new roman,times">Hi Michael,<BR>I have run into what I believe is a bug in MultibyteToWideChar() and WideCharToMultibyte() when the code page parameter is set to CP_THREAD_ACP, 'default language for non-Unicode applications' had been set to Hebrew.&nbsp;&nbsp; This is seen when using the utility macros in atlconv.h like T2WC.<BR><BR>I've created a simple test app that shows unexpected results on some systems.&nbsp; The code page inferred from CP_THREAD_ACP is not the same as GetACP().&nbsp; I have reproduced this on two different systems set to use Hebrew, but not on two other systems set to use Traditional Chinese - one of which was set to the full Traditional Chinese localized UI.&nbsp; The source is part of a default .net 2003 generated console project.</FONT></EM></P>
+<P><FONT face="consolas,lucida console,courier new,courier"><STRONG>#include "stdafx.h"<BR>#include &lt;ostream&gt;<BR>int _tmain(int argc, _TCHAR* argv[])<BR>{<BR>&nbsp;&nbsp;&nbsp; std::cout &lt;&lt; "default code page is " &lt;&lt; GetACP() &lt;&lt; std::endl;<BR>&nbsp;&nbsp;&nbsp; std::cout &lt;&lt; "_AtlGetConversionACP code page is " &lt;&lt; ATL::_AtlGetConversionACP() &lt;&lt; std::endl;<BR><BR>&nbsp;&nbsp;&nbsp;&nbsp;CPINFOEX cpinfo = {};<BR>&nbsp;&nbsp;&nbsp; GetCPInfoEx(ATL::_AtlGetConversionACP(), 0, &amp;cpinfo);<BR><BR>&nbsp;&nbsp;&nbsp;&nbsp;std::cout &lt;&lt; "Thread code page is " &lt;&lt; cpinfo.CodePage &lt;&lt; std::endl;<BR>&nbsp;&nbsp;&nbsp;&nbsp;return 0;<BR>}</STRONG></FONT></P>
+<P><EM><FONT face="times new roman,times">My results are:<BR>default code page is 1255<BR>_AtlGetConversionACP code page is 3<BR>Thread code page is 1252<BR><BR>When my application calls T2WC, the results are incorrect and the codepoints are extended to 16 bits, but not converted to their Hebrew codepoints.&nbsp; We are getting around this by using _CONVERSION_DONT_USE_THREAD_LOCALE, but I had wondered if others have heard of this problem before.<BR><BR>Thanks for your time,<BR>Ken&nbsp;</FONT></EM></P></BLOCKQUOTE>
+<P>Regular readers may recall when I pointed out <STRONG><A class="" href="http://archives.miloush.net/michkap/archive/2005/08/22/454360.html" mce_href="http://archives.miloush.net/michkap/archive/2005/08/22/454360.html">Why I think the thread locale really stinks</A></STRONG>.</P>
+<P><EM>(In fact, I was asked not too long ago to help clean up some of the bad usages of the thread locale in various parts of Windows in shell32.dll and shlwapi.dll, something I will probably be working on shortly!)</EM></P>
+<P mce_keep="true">Anyway, after Ken pointed out that the use of _CONVERSION_DONT_USE_THREAD_LOCALE works around the problem, it seems pretty obvious that CP_THREAD_ACP is none other than the LOCALE_IDEFAULTANSICODEPAGE as returned by <A class="" href="http://msdn2.microsoft.com/library/ms776270.aspx" mce_href="http://msdn2.microsoft.com/library/ms776270.aspx">GetLocaleInfo</A> with the return of <A class="" href="http://msdn2.microsoft.com/library/ms776331.aspx" mce_href="http://msdn2.microsoft.com/library/ms776331.aspx">GetThreadLocale</A> as the LCID.</P>
+<P mce_keep="true">Now the thread&nbsp;code page&nbsp;is&nbsp;a pretty shaky thing, and not only for the reason that make me feel like the thread locale <A class="" href="http://archives.miloush.net/michkap/archive/2005/08/22/454360.html" mce_href="http://archives.miloush.net/michkap/archive/2005/08/22/454360.html"><STRONG>stinks</STRONG></A>. Imagine basing code page conversions on something that any code running in the thread can change any time. Yuck!</P>
+<P mce_keep="true">In fact, it is downright nasty that ATL and MFC made a breaking change in version 7.0 in this area (as described <A class="" href="http://msdn2.microsoft.com/en-us/library/w1sc4t4k(VS.80).aspx" mce_href="http://msdn2.microsoft.com/en-us/library/w1sc4t4k(VS.80).aspx">here</A>):</P>
+<BLOCKQUOTE>
+<BLOCKQUOTE>
+<P mce_keep="true">String Conversions<BR><BR><A class="" title=sectionToggle2 name=sectionToggle2></A>In versions of ATL up to and including ATL 3.0 in Visual C++ 6.0, string conversions using the macros in atlconv.h were always performed using the ANSI code page of the system (CP_ACP). Starting with ATL 7.0 in Visual C++ .NET, string conversions are performed using the default ANSI code page of the current thread, unless <B>_CONVERSION_DONT_USE_THREAD_LOCALE</B> is defined, in which case the ANSI code page of the system is used as before.<BR><BR>Note that the string conversion classes, such as <B>CW2AEX</B>, allow you to pass a code page to use for the conversion to their constructors. If a code page is not specified, the classes use the same code page as the macros.<BR><BR>For more information, see <A href="http://msdn2.microsoft.com/library/87zae4a3(VS.80).aspx">ATL and MFC String Conversion Macros</A>. </P></BLOCKQUOTE></BLOCKQUOTE>
+<P mce_keep="true">Yuck. I hate breaking changes that are bad. And this is definitely one of them. :-(</P>
+<P>Sorry Ken, the strange differences here are kind of by [bad] design. And your workaround is actually the fix here -- it works around what I consider a breaking change that breaks a little bit of ATL here.</P>
+<P>In the end,&nbsp;my best advice is to NEVER use either the thread locale or the thread code page. For anything. Ever....</P>
+<P mce_keep="true">&nbsp;</P>
+<P><FONT color=#ff00ff><EM>This post brought to you by</EM> <FONT face=tahoma,arial,helvetica,sans-serif size=6>װ</FONT> <EM>(<A class="" href="http://www.fileformat.info/info/unicode/char/05f0" mce_href="http://www.fileformat.info/info/unicode/char/05f0">U+05f0</A>, a.k.a. HEBREW LIGATURE YIDDISH DOUBLE VAV)</EM></FONT></P>
+<hr/><p><a id="3705999" href="#3705999">#</a> <strong>Bob Smith</strong> on 5 Jul 2007 9:19 AM:</p><div style="margin-left: 1em"><p>Thanks for your explanation and warning. We fell into this hole in a big way resulting in finding your materials.</p>
+<p>Do you know why the ATL &amp; MFC team did this? </p>
+<p>It would be interesting to know as breaking changes are normally not approved lightly and particularly the change does not seem to be appreciated and producing the desirable result.</p></div>
+<p><a id="3707381" href="#3707381">#</a> <strong>Michael S. Kaplan</strong> on 5 Jul 2007 11:16 AM:</p><div style="margin-left: 1em"><p>Well, perhaps they had gotten feedback about how bad the non-updatability of CP_ACP is within apps was for some people. I'm not entirely sure, though I am also curious about it....</p>
+</div>
+<p><a id="3816246" href="#3816246">#</a> <strong>John Swartzentruber</strong> on 11 Jul 2007 11:19 AM:</p><div style="margin-left: 1em"><p>_CONVERSION_DONT_USE_THREAD_LOCALE didn't work for me. We're using MFC from mfc80.dll, so it appears that the CString::LoadString() code always uses the thread locale code page. Should this work? Are there any other work-arounds?</p></div>
+<p><a id="3816646" href="#3816646">#</a> <strong>Michael S. Kaplan</strong> on 11 Jul 2007 11:43 AM:</p><div style="margin-left: 1em"><p>Workaround for CString::LoadString()? </p>
+<p>Use Unicode and then no code page gets used or mis-used. :-)</p>
+<p>I'll probably blog about why this case fails though, it is interesting....</p>
+</div>
+<p><a id="3834122" href="#3834122">#</a> <strong>jswartzen</strong> on 12 Jul 2007 12:54 PM:</p><div style="margin-left: 1em"><p>I've recommended the Unicode &quot;workaround&quot;, and that's what we will use in the next release. Meanwhile, I'm stuck trying to make sure the current release works. It sucks because I know that whatever I do now will all be wasted effort when everything is Unicode.</p>
+</div>
+<p><a id="3834154" href="#3834154">#</a> <strong>Michael S. Kaplan</strong> on 12 Jul 2007 12:58 PM:</p><div style="margin-left: 1em"><p>Well, you can load the string yourself via LoadstringW and not use the method, right?</p>
+</div>
+<p><a id="3834886" href="#3834886">#</a> <strong>jswartzen</strong> on 12 Jul 2007 2:06 PM:</p><div style="margin-left: 1em"><p>I can. And I probably will, but we're talking about over 1600 calls in about 300 different files. And then probably putting it all back again when we're in &nbsp;Unicode.</p>
+</div>
+<p><a id="3857828" href="#3857828">#</a> <strong>Michael S. Kaplan</strong> on 13 Jul 2007 9:51 PM:</p><div style="margin-left: 1em"><p>You could just override the one method though, couldn't you? Or you could even change the thread locale they sre using to one that will work better for you?</p>
+<p>There are definitely cheaper options....</p>
+</div>
+<p><a id="3900945" href="#3900945">#</a> <strong>jswartzen</strong> on 16 Jul 2007 4:44 PM:</p><div style="margin-left: 1em"><p>It turns out we're going to solve this problem by ignoring it. Our next release won't be translated, so the code page issue won't be a factor. Our next release after that will be in Unicode, so the problem will go away for real then. Thanks for your help.</p>
+</div>
+<p><a id="6646139" href="#6646139">#</a> <strong>St&#229;le L. Hansen</strong> on 3 Dec 2007 10:22 AM:</p><div style="margin-left: 1em"><p>You can solve this by using SetThreadLocale(LOCALE_SYSTEM_DEFAULT), and then never touch the thread locale again. But be careful with setting CurrentThread.CurrentCulture, because that also changes the native thread locale.</p>
+</div>
+<p><a id="8445976" href="#8445976">#</a> <strong>Mike</strong> on 30 Apr 2008 10:47 PM:</p><div style="margin-left: 1em"><p>Setting the thread code page would be really useful for us.</p>
+<p>We have a specific set of threads that handle communication with various external systems, which must use UTF8. &nbsp;The rest of our system uses the system/user code page and/or UCS2. &nbsp;It would be really, really handy if I could set our communications threads' code pages to UTF8 (65001), so that all those implicit conversions between MBCS and UCS2 done by _bstr_t would `just work' in the comms threads... saving me from converting a lot of legacy (non-MBCS-aware) messaging code to handle it explicitly.</p>
+<p>In fact, that's how I reached this page (googling for a cheap way to do this). &nbsp;You tease.</p></div>
+<p><a id="8503036" href="#8503036">#</a> <strong>mac</strong> on 14 May 2008 7:29 AM:</p><div style="margin-left: 1em"><P>Hi,</P>
+<P>We have a non-unicode application written in VC5. Recently we migrated it to VC8. This application includes MFC, ATL, C++, C tech.</P>
+<P>Once I change language for non-unicode programs to 'chinese (prc)' on win xp and run the application, user is able to enter chinese characters in the text field. This is being stored and retrieved in the database. </P>
+<P>This works fine in VC5. After migration to VC8 it started failing. User provided user input 我耳鼻喉科 is being converted to ÎÒ¶ú±Çºí¿Æ. </P>
+<P>Research shows that CString to BSTR string conversion causes this problem.</P>
+<P>CString strTemp = _T("我耳鼻喉科");</P>
+<P>BSTR bstrTemp = strTemp.AllocSysString();</P>
+<P>MSDN says - </P>
+<P>In versions of ATL up to and including ATL 3.0 in Visual C++ 6.0, string conversions using the macros in atlconv.h were always performed using the ANSI code page of the system (CP_ACP). Starting with ATL 7.0 in Visual C++ .NET, string conversions are performed using the default ANSI code page of the current thread.</P>
+<P>I tried using SetThreadLocale(LOCALE_SYSTEM_DEFAULT); which resolved my problem.</P>
+<P>In our application there are several threads being forked by many dlls. </P>
+<P>1) How many times I need to call this API? Where? </P>
+<P>2) Does it have any side effect if switched back to 'ENGLISH' system locale?</P>
+<P>Testing will be cumbersome. As my product contains 15 exe and 100 dlls (ATL/COM, C++).</P>
+<P>-Mac</P></div>
+<hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2010/07/25 <a href="http://archives.miloush.net/michkap/archive/2010/07/25/10028168.html">Which code page to use? The right one, of course!</a></p><p>2008/06/19 <a href="http://archives.miloush.net/michkap/archive/2008/06/19/8620349.html">How do[es what] the common controls [call ]convert between ANSI and Unicode?</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2007/05/29/2982638.html" title="Cutting the cord while someone else is shoring it up">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2007/05/28/2954171.html" title="Usage (customer intent) vs. Design (developer intent)">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2007-05">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2007-05-28">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2007/05/28/2960411.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:38 GMT -->
+</html>

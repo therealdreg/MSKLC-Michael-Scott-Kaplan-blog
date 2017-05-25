@@ -1,0 +1,230 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2007/10/31/5800258.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:37 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Script and Font Support in Windows</title></head><body>
+<h1>Script and Font Support in Windows</h1>
+<p><em>by Michael S. Kaplan, published on 2007/10/31 12:01 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2007/10/31/5800258.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P>This is some info that Peter Constable put together which I am re-posting with permission... good stuff! :-)</P>
+<BLOCKQUOTE>
+<BLOCKQUOTE>
+<P><FONT face=tahoma,arial,helvetica,sans-serif size=4><STRONG>Script and Font Support In Windows</STRONG></FONT></P>
+<P><FONT face=tahoma,arial,helvetica,sans-serif>Since before Windows 2000, new script support has been added in each major release of Windows. The following describes changes made in each major release.</FONT></P>
+<P><FONT face=tahoma,arial,helvetica,sans-serif>Note that support for a script may require certain changes to text stack components as well as changes to fonts. Windows has many different text stack components: GDI, Uniscribe, GDI+, WPF, RichEdit, ComCtl32… The information provided here pertains to GDI and Uniscribe.</FONT></P>
+<P><FONT face=tahoma,arial,helvetica,sans-serif>Comments on language usage are included in cases in which associations between scripts and languages may not be well known. The list of languages for any given script is not necessarily exhaustive.</FONT></P>
+<P><FONT face=tahoma,arial,helvetica,sans-serif></FONT>&nbsp;</P>
+<P><STRONG><FONT face=tahoma,arial,helvetica,sans-serif size=3>Windows 2000</FONT></STRONG></P>
+<DIV><FONT face=tahoma,arial,helvetica,sans-serif>This was the first version of Windows that included the Uniscribe component (usp10.dll).&nbsp;Functional benefits included:&nbsp;</FONT></DIV>
+<UL>
+<LI><FONT face=tahoma,arial,helvetica,sans-serif>Shaping support for complex scripts such as Arabic and Thai were brought together in a single library, allowing all language version of Windows to be built from a single source and to display text in any supported script. (Previously, enablement support for particular languages was added to localized versions.) </FONT>
+<LI><FONT face=tahoma,arial,helvetica,sans-serif>Some new complex scripts were&nbsp;supported. </FONT>
+<LI><FONT face=tahoma,arial,helvetica,sans-serif>Font fallback for different scripts was provided. (This is done in Uniscribe ScriptString* APIs that are typically used in UI components.)</FONT></LI></UL>
+<P><FONT face=tahoma,arial,helvetica,sans-serif>Support for basic Latin, Greek and Cyrillic (without combining marks) existed with W APIs in Windows NT 4 and Windows ME. In relation to complex scripts, support for Arabic, Hebrew and Thai existed in previous versions and was consolidated in Windows 2000 in the Uniscribe component. The following are new scripts supported in Windows 2000 and associated fonts:</FONT></P>
+<BLOCKQUOTE dir=ltr style="MARGIN-RIGHT: 0px">
+<P>
+<TABLE class="" style="DISPLAY: inline; FONT-SIZE: 1em; BORDER-COLLAPSE: collapse" border=1>
+<TBODY>
+<TR>
+<TD class=ms-rtetablecells style="VERTICAL-ALIGN: top" class="ms-rtetablecells">
+<P dir=ltr style="MARGIN-RIGHT: 0px"><STRONG><FONT face=tahoma,arial,helvetica,sans-serif>New scripts</FONT></STRONG></P></TD>
+<TD class=ms-rtetablecells style="VERTICAL-ALIGN: top" class="ms-rtetablecells"><STRONG><FONT face=tahoma,arial,helvetica,sans-serif>Region where script is from</FONT></STRONG></TD>
+<TD class=ms-rtetablecells style="VERTICAL-ALIGN: top" class="ms-rtetablecells">
+<DIV><STRONG><FONT face=tahoma,arial,helvetica,sans-serif>Fonts</FONT></STRONG></DIV></TD>
+<TD class=ms-rtetablecells style="VERTICAL-ALIGN: top" class="ms-rtetablecells"><STRONG><FONT face=tahoma,arial,helvetica,sans-serif>Comments on language usage</FONT></STRONG></TD></TR>
+<TR>
+<TD class=ms-rtetablecells style="VERTICAL-ALIGN: top" class="ms-rtetablecells"><FONT face=tahoma,arial,helvetica,sans-serif>Armenian</FONT></TD>
+<TD class=ms-rtetablecells style="VERTICAL-ALIGN: top" class="ms-rtetablecells"><FONT face=tahoma,arial,helvetica,sans-serif>Eurasia</FONT></TD>
+<TD class=ms-rtetablecells style="VERTICAL-ALIGN: top" class="ms-rtetablecells">
+<DIV><FONT face=tahoma,arial,helvetica,sans-serif>Sylfaen</FONT></DIV></TD>
+<TD class=ms-rtetablecells style="VERTICAL-ALIGN: top" class="ms-rtetablecells"><FONT face=tahoma,arial,helvetica,sans-serif></FONT></TD></TR>
+<TR>
+<TD class=ms-rtetablecells style="VERTICAL-ALIGN: top" class="ms-rtetablecells"><FONT face=tahoma,arial,helvetica,sans-serif>Devanagari</FONT></TD>
+<TD class=ms-rtetablecells style="VERTICAL-ALIGN: top" class="ms-rtetablecells"><FONT face=tahoma,arial,helvetica,sans-serif>South Asia</FONT></TD>
+<TD class=ms-rtetablecells style="VERTICAL-ALIGN: top" class="ms-rtetablecells"><FONT face=tahoma,arial,helvetica,sans-serif>Mangal</FONT></TD>
+<TD class=ms-rtetablecells style="VERTICAL-ALIGN: top" class="ms-rtetablecells"><FONT face=tahoma,arial,helvetica,sans-serif>Used for many langauges including Hindi, Marathi, Sanskrit.</FONT></TD></TR>
+<TR>
+<TD class=ms-rtetablecells style="VERTICAL-ALIGN: top" class="ms-rtetablecells"><FONT face=tahoma,arial,helvetica,sans-serif>Georgian</FONT></TD>
+<TD class=ms-rtetablecells style="VERTICAL-ALIGN: top" class="ms-rtetablecells"><FONT face=tahoma,arial,helvetica,sans-serif>Eurasia</FONT></TD>
+<TD class=ms-rtetablecells style="VERTICAL-ALIGN: top" class="ms-rtetablecells"><FONT face=tahoma,arial,helvetica,sans-serif>Sylfaen</FONT></TD>
+<TD class=ms-rtetablecells style="VERTICAL-ALIGN: top" class="ms-rtetablecells"><FONT face=tahoma,arial,helvetica,sans-serif></FONT></TD></TR>
+<TR>
+<TD class=ms-rtetablecells style="VERTICAL-ALIGN: top" class="ms-rtetablecells"><FONT face=tahoma,arial,helvetica,sans-serif>Tamil</FONT></TD>
+<TD class=ms-rtetablecells style="VERTICAL-ALIGN: top" class="ms-rtetablecells"><FONT face=tahoma,arial,helvetica,sans-serif>South Asia</FONT></TD>
+<TD class=ms-rtetablecells style="VERTICAL-ALIGN: top" class="ms-rtetablecells"><FONT face=tahoma,arial,helvetica,sans-serif>Latha</FONT></TD>
+<TD class=ms-rtetablecells style="VERTICAL-ALIGN: top" class="ms-rtetablecells"><FONT face=tahoma,arial,helvetica,sans-serif></FONT></TD></TR></TBODY></TABLE></P></BLOCKQUOTE>
+<P><FONT face=tahoma,arial,helvetica,sans-serif></FONT>&nbsp;</P>
+<P><FONT face=tahoma,arial,helvetica,sans-serif size=3><STRONG>Windows XP</STRONG></FONT></P>
+<P><FONT face=tahoma,arial,helvetica,sans-serif>New scripts supported and associated fonts:</FONT></P>
+<BLOCKQUOTE dir=ltr style="MARGIN-RIGHT: 0px">
+<P>
+<TABLE class="" style="DISPLAY: inline; FONT-SIZE: 1em; BORDER-COLLAPSE: collapse" border=1>
+<TBODY>
+<TR>
+<TD class=ms-rtetablecells style="VERTICAL-ALIGN: top" class="ms-rtetablecells">
+<DIV><STRONG><FONT face=tahoma,arial,helvetica,sans-serif>New scripts</FONT></STRONG></DIV></TD>
+<TD class=ms-rtetablecells style="VERTICAL-ALIGN: top" class="ms-rtetablecells"><STRONG><FONT face=tahoma,arial,helvetica,sans-serif>Region where script is from</FONT></STRONG></TD>
+<TD class=ms-rtetablecells style="VERTICAL-ALIGN: top" class="ms-rtetablecells">
+<DIV><STRONG><FONT face=tahoma,arial,helvetica,sans-serif>Fonts</FONT></STRONG></DIV></TD>
+<TD class=ms-rtetablecells style="VERTICAL-ALIGN: top" class="ms-rtetablecells"><STRONG><FONT face=tahoma,arial,helvetica,sans-serif>Comments on language usage</FONT></STRONG></TD></TR>
+<TR>
+<TD class=ms-rtetablecells style="VERTICAL-ALIGN: top" class="ms-rtetablecells"><FONT face=tahoma,arial,helvetica,sans-serif>Gujarati</FONT></TD>
+<TD class=ms-rtetablecells style="VERTICAL-ALIGN: top" class="ms-rtetablecells"><FONT face=tahoma,arial,helvetica,sans-serif>South Asia</FONT></TD>
+<TD class=ms-rtetablecells style="VERTICAL-ALIGN: top" class="ms-rtetablecells"><FONT face=tahoma,arial,helvetica,sans-serif>Shruti</FONT></TD>
+<TD class=ms-rtetablecells style="VERTICAL-ALIGN: top" class="ms-rtetablecells"><FONT face=tahoma,arial,helvetica,sans-serif></FONT></TD></TR>
+<TR>
+<TD class=ms-rtetablecells style="VERTICAL-ALIGN: top" class="ms-rtetablecells"><FONT face=tahoma,arial,helvetica,sans-serif>Gurmukhi</FONT></TD>
+<TD class=ms-rtetablecells style="VERTICAL-ALIGN: top" class="ms-rtetablecells"><FONT face=tahoma,arial,helvetica,sans-serif>South Asia</FONT></TD>
+<TD class=ms-rtetablecells style="VERTICAL-ALIGN: top" class="ms-rtetablecells"><FONT face=tahoma,arial,helvetica,sans-serif>Raavi</FONT></TD>
+<TD class=ms-rtetablecells style="VERTICAL-ALIGN: top" class="ms-rtetablecells"><FONT face=tahoma,arial,helvetica,sans-serif>Used in India for the Punjabi language.</FONT></TD></TR>
+<TR>
+<TD class=ms-rtetablecells style="VERTICAL-ALIGN: top" class="ms-rtetablecells"><FONT face=tahoma,arial,helvetica,sans-serif>Kannada</FONT></TD>
+<TD class=ms-rtetablecells style="VERTICAL-ALIGN: top" class="ms-rtetablecells"><FONT face=tahoma,arial,helvetica,sans-serif>South Asia</FONT></TD>
+<TD class=ms-rtetablecells style="VERTICAL-ALIGN: top" class="ms-rtetablecells"><FONT face=tahoma,arial,helvetica,sans-serif>Tunga</FONT></TD>
+<TD class=ms-rtetablecells style="VERTICAL-ALIGN: top" class="ms-rtetablecells"><FONT face=tahoma,arial,helvetica,sans-serif></FONT></TD></TR>
+<TR>
+<TD class=ms-rtetablecells style="VERTICAL-ALIGN: top" class="ms-rtetablecells"><FONT face=tahoma,arial,helvetica,sans-serif>Syriac</FONT></TD>
+<TD class=ms-rtetablecells style="VERTICAL-ALIGN: top" class="ms-rtetablecells"><FONT face=tahoma,arial,helvetica,sans-serif>Middle East</FONT></TD>
+<TD class=ms-rtetablecells style="VERTICAL-ALIGN: top" class="ms-rtetablecells"><FONT face=tahoma,arial,helvetica,sans-serif>Estrangelo Edessa</FONT></TD>
+<TD class=ms-rtetablecells style="VERTICAL-ALIGN: top" class="ms-rtetablecells"><FONT face=tahoma,arial,helvetica,sans-serif></FONT></TD></TR>
+<TR>
+<TD class=ms-rtetablecells style="VERTICAL-ALIGN: top" class="ms-rtetablecells"><FONT face=tahoma,arial,helvetica,sans-serif>Telugu</FONT></TD>
+<TD class=ms-rtetablecells style="VERTICAL-ALIGN: top" class="ms-rtetablecells"><FONT face=tahoma,arial,helvetica,sans-serif>South Asia</FONT></TD>
+<TD class=ms-rtetablecells style="VERTICAL-ALIGN: top" class="ms-rtetablecells"><FONT face=tahoma,arial,helvetica,sans-serif>Gautami</FONT></TD>
+<TD class=ms-rtetablecells style="VERTICAL-ALIGN: top" class="ms-rtetablecells"><FONT face=tahoma,arial,helvetica,sans-serif></FONT></TD></TR>
+<TR>
+<TD class=ms-rtetablecells style="VERTICAL-ALIGN: top" class="ms-rtetablecells">
+<DIV><FONT face=tahoma,arial,helvetica,sans-serif>Thaana</FONT></DIV></TD>
+<TD class=ms-rtetablecells style="VERTICAL-ALIGN: top" class="ms-rtetablecells"><FONT face=tahoma,arial,helvetica,sans-serif>South Asia</FONT></TD>
+<TD class=ms-rtetablecells style="VERTICAL-ALIGN: top" class="ms-rtetablecells">
+<DIV><FONT face=tahoma,arial,helvetica,sans-serif>MV Boli</FONT></DIV></TD>
+<TD class=ms-rtetablecells style="VERTICAL-ALIGN: top" class="ms-rtetablecells"><FONT face=tahoma,arial,helvetica,sans-serif>Used for the Divehi language.</FONT></TD></TR></TBODY></TABLE></P></BLOCKQUOTE>
+<P><FONT face=tahoma,arial,helvetica,sans-serif>A <EM>surrogates</EM> shaping engine was also added to Uniscribe to allow display of Unicode supplementary-plane characters in the GDI text stack. (GDI supports wide characters, but does not understand UTF-16 surrogate pairs.) Also, Uniscribe's font fallback mechanism was extended to support fallback for Unicode supplementary planes: for each plane from 1 to 16, a single fallback font can be specified in the registry.</FONT></P>
+<P><FONT face=tahoma,arial,helvetica,sans-serif>The changes in Uniscribe to support supplementary-plane characters allow Windows XP to support CJK Extension B characters.</FONT></P>
+<P><FONT face=tahoma,arial,helvetica,sans-serif></FONT>&nbsp;</P>
+<P><STRONG><FONT face=tahoma,arial,helvetica,sans-serif size=3>Windows XP SP2</FONT></STRONG></P>
+<P><FONT face=tahoma,arial,helvetica,sans-serif>New scripts supported and associated fonts:</FONT></P>
+<BLOCKQUOTE dir=ltr style="MARGIN-RIGHT: 0px">
+<P>
+<TABLE class="" style="DISPLAY: inline; FONT-SIZE: 1em; BORDER-COLLAPSE: collapse" border=1>
+<TBODY>
+<TR>
+<TD class=ms-rtetablecells style="VERTICAL-ALIGN: top" class="ms-rtetablecells">
+<DIV><STRONG><FONT face=tahoma,arial,helvetica,sans-serif>New scripts</FONT></STRONG></DIV></TD>
+<TD class=ms-rtetablecells style="VERTICAL-ALIGN: top" class="ms-rtetablecells"><STRONG><FONT face=tahoma,arial,helvetica,sans-serif>Region where script is from</FONT></STRONG></TD>
+<TD class=ms-rtetablecells style="VERTICAL-ALIGN: top" class="ms-rtetablecells"><STRONG><FONT face=tahoma,arial,helvetica,sans-serif>Fonts</FONT></STRONG></TD>
+<TD class=ms-rtetablecells style="VERTICAL-ALIGN: top" class="ms-rtetablecells"><STRONG><FONT face=tahoma,arial,helvetica,sans-serif>Comments on language usage</FONT></STRONG></TD></TR>
+<TR>
+<TD class=ms-rtetablecells style="VERTICAL-ALIGN: top" class="ms-rtetablecells"><FONT face=tahoma,arial,helvetica,sans-serif>Bengali</FONT></TD>
+<TD class=ms-rtetablecells style="VERTICAL-ALIGN: top" class="ms-rtetablecells"><FONT face=tahoma,arial,helvetica,sans-serif>South Asia</FONT></TD>
+<TD class=ms-rtetablecells style="VERTICAL-ALIGN: top" class="ms-rtetablecells"><FONT face=tahoma,arial,helvetica,sans-serif>Vrinda</FONT></TD>
+<TD class=ms-rtetablecells style="VERTICAL-ALIGN: top" class="ms-rtetablecells"><FONT face=tahoma,arial,helvetica,sans-serif>Used for the Assamese language as well as Bengali.</FONT></TD></TR>
+<TR>
+<TD class=ms-rtetablecells style="VERTICAL-ALIGN: top" class="ms-rtetablecells"><FONT face=tahoma,arial,helvetica,sans-serif>Malayalam</FONT></TD>
+<TD class=ms-rtetablecells style="VERTICAL-ALIGN: top" class="ms-rtetablecells"><FONT face=tahoma,arial,helvetica,sans-serif>South Asia</FONT></TD>
+<TD class=ms-rtetablecells style="VERTICAL-ALIGN: top" class="ms-rtetablecells"><FONT face=tahoma,arial,helvetica,sans-serif>Kartika</FONT></TD>
+<TD class=ms-rtetablecells style="VERTICAL-ALIGN: top" class="ms-rtetablecells"><FONT face=tahoma,arial,helvetica,sans-serif></FONT></TD></TR></TBODY></TABLE></P></BLOCKQUOTE>
+<P><STRONG><FONT face=tahoma,arial,helvetica,sans-serif size=1></FONT></STRONG>&nbsp;</P>
+<P><STRONG><FONT face=tahoma,arial,helvetica,sans-serif size=3>Windows Vista</FONT></STRONG></P>
+<P><FONT face=tahoma,arial,helvetica,sans-serif>New scripts supported and associated fonts:</FONT></P>
+<BLOCKQUOTE dir=ltr style="MARGIN-RIGHT: 0px">
+<P>
+<TABLE class="" style="DISPLAY: inline; FONT-SIZE: 1em; BORDER-COLLAPSE: collapse" border=1>
+<TBODY>
+<TR>
+<TD class=ms-rtetablecells style="VERTICAL-ALIGN: top" class="ms-rtetablecells">
+<DIV><STRONG><FONT face=tahoma,arial,helvetica,sans-serif>New scripts</FONT></STRONG></DIV></TD>
+<TD class=ms-rtetablecells style="VERTICAL-ALIGN: top" class="ms-rtetablecells"><STRONG><FONT face=tahoma,arial,helvetica,sans-serif>Region where script is from</FONT></STRONG></TD>
+<TD class=ms-rtetablecells style="VERTICAL-ALIGN: top" class="ms-rtetablecells">
+<DIV><STRONG><FONT face=tahoma,arial,helvetica,sans-serif>Fonts</FONT></STRONG></DIV></TD>
+<TD class=ms-rtetablecells style="VERTICAL-ALIGN: top" class="ms-rtetablecells"><STRONG><FONT face=tahoma,arial,helvetica,sans-serif>Comments on language usage</FONT></STRONG></TD></TR>
+<TR>
+<TD class=ms-rtetablecells style="VERTICAL-ALIGN: top" class="ms-rtetablecells"><FONT face=tahoma,arial,helvetica,sans-serif>Canadian Syllabics</FONT></TD>
+<TD class=ms-rtetablecells style="VERTICAL-ALIGN: top" class="ms-rtetablecells"><FONT face=tahoma,arial,helvetica,sans-serif>North America</FONT></TD>
+<TD class=ms-rtetablecells style="VERTICAL-ALIGN: top" class="ms-rtetablecells"><FONT face=tahoma,arial,helvetica,sans-serif>Euphemia</FONT></TD>
+<TD class=ms-rtetablecells style="VERTICAL-ALIGN: top" class="ms-rtetablecells"><FONT face=tahoma,arial,helvetica,sans-serif>Used for several languages including&nbsp;Inuktitut and&nbsp;Cree.</FONT></TD></TR>
+<TR>
+<TD class=ms-rtetablecells style="VERTICAL-ALIGN: top" class="ms-rtetablecells"><FONT face=tahoma,arial,helvetica,sans-serif>Cherokee</FONT></TD>
+<TD class=ms-rtetablecells style="VERTICAL-ALIGN: top" class="ms-rtetablecells"><FONT face=tahoma,arial,helvetica,sans-serif>North America</FONT></TD>
+<TD class=ms-rtetablecells style="VERTICAL-ALIGN: top" class="ms-rtetablecells"><FONT face=tahoma,arial,helvetica,sans-serif>Plantagenet</FONT></TD>
+<TD class=ms-rtetablecells style="VERTICAL-ALIGN: top" class="ms-rtetablecells"><FONT face=tahoma,arial,helvetica,sans-serif></FONT></TD></TR>
+<TR>
+<TD class=ms-rtetablecells style="VERTICAL-ALIGN: top" class="ms-rtetablecells"><FONT face=tahoma,arial,helvetica,sans-serif>Ethiopic</FONT></TD>
+<TD class=ms-rtetablecells style="VERTICAL-ALIGN: top" class="ms-rtetablecells"><FONT face=tahoma,arial,helvetica,sans-serif>Africa</FONT></TD>
+<TD class=ms-rtetablecells style="VERTICAL-ALIGN: top" class="ms-rtetablecells"><FONT face=tahoma,arial,helvetica,sans-serif>Nyala</FONT></TD>
+<TD class=ms-rtetablecells style="VERTICAL-ALIGN: top" class="ms-rtetablecells"><FONT face=tahoma,arial,helvetica,sans-serif>Used for Amharic and other languages.</FONT></TD></TR>
+<TR>
+<TD class=ms-rtetablecells style="VERTICAL-ALIGN: top" class="ms-rtetablecells"><FONT face=tahoma,arial,helvetica,sans-serif>Khmer</FONT></TD>
+<TD class=ms-rtetablecells style="VERTICAL-ALIGN: top" class="ms-rtetablecells"><FONT face=tahoma,arial,helvetica,sans-serif>Southeast Asia</FONT></TD>
+<TD class=ms-rtetablecells style="VERTICAL-ALIGN: top" class="ms-rtetablecells">
+<P><FONT face=tahoma,arial,helvetica,sans-serif>DaunPenh<BR>MoolBoran</FONT></P></TD>
+<TD class=ms-rtetablecells style="VERTICAL-ALIGN: top" class="ms-rtetablecells"><FONT face=tahoma,arial,helvetica,sans-serif></FONT></TD></TR>
+<TR>
+<TD class=ms-rtetablecells style="VERTICAL-ALIGN: top" class="ms-rtetablecells"><FONT face=tahoma,arial,helvetica,sans-serif>Lao</FONT></TD>
+<TD class=ms-rtetablecells style="VERTICAL-ALIGN: top" class="ms-rtetablecells"><FONT face=tahoma,arial,helvetica,sans-serif>Southeast Asia</FONT></TD>
+<TD class=ms-rtetablecells style="VERTICAL-ALIGN: top" class="ms-rtetablecells"><FONT face=tahoma,arial,helvetica,sans-serif>DokChampa</FONT></TD>
+<TD class=ms-rtetablecells style="VERTICAL-ALIGN: top" class="ms-rtetablecells"><FONT face=tahoma,arial,helvetica,sans-serif></FONT></TD></TR>
+<TR>
+<TD class=ms-rtetablecells style="VERTICAL-ALIGN: top" class="ms-rtetablecells">
+<DIV><FONT face=tahoma,arial,helvetica,sans-serif>Mongolian</FONT></DIV></TD>
+<TD class=ms-rtetablecells style="VERTICAL-ALIGN: top" class="ms-rtetablecells"><FONT face=tahoma,arial,helvetica,sans-serif>North Asia</FONT></TD>
+<TD class=ms-rtetablecells style="VERTICAL-ALIGN: top" class="ms-rtetablecells">
+<DIV><FONT face=tahoma,arial,helvetica,sans-serif>Mongolian Baiti</FONT></DIV></TD>
+<TD class=ms-rtetablecells style="VERTICAL-ALIGN: top" class="ms-rtetablecells"><FONT face=tahoma,arial,helvetica,sans-serif></FONT></TD></TR>
+<TR>
+<TD class=ms-rtetablecells style="VERTICAL-ALIGN: top" class="ms-rtetablecells"><FONT face=tahoma,arial,helvetica,sans-serif>Oriya</FONT></TD>
+<TD class=ms-rtetablecells style="VERTICAL-ALIGN: top" class="ms-rtetablecells"><FONT face=tahoma,arial,helvetica,sans-serif>South Asia</FONT></TD>
+<TD class=ms-rtetablecells style="VERTICAL-ALIGN: top" class="ms-rtetablecells"><FONT face=tahoma,arial,helvetica,sans-serif>Kalinga</FONT></TD>
+<TD class=ms-rtetablecells style="VERTICAL-ALIGN: top" class="ms-rtetablecells"><FONT face=tahoma,arial,helvetica,sans-serif></FONT></TD></TR>
+<TR>
+<TD class=ms-rtetablecells style="VERTICAL-ALIGN: top" class="ms-rtetablecells"><FONT face=tahoma,arial,helvetica,sans-serif>Sinhala</FONT></TD>
+<TD class=ms-rtetablecells style="VERTICAL-ALIGN: top" class="ms-rtetablecells"><FONT face=tahoma,arial,helvetica,sans-serif>South Asia</FONT></TD>
+<TD class=ms-rtetablecells style="VERTICAL-ALIGN: top" class="ms-rtetablecells"><FONT face=tahoma,arial,helvetica,sans-serif>Iskoola Pota</FONT></TD>
+<TD class=ms-rtetablecells style="VERTICAL-ALIGN: top" class="ms-rtetablecells"><FONT face=tahoma,arial,helvetica,sans-serif></FONT></TD></TR>
+<TR>
+<TD class=ms-rtetablecells style="VERTICAL-ALIGN: top" class="ms-rtetablecells"><FONT face=tahoma,arial,helvetica,sans-serif>Tibetan</FONT></TD>
+<TD class=ms-rtetablecells style="VERTICAL-ALIGN: top" class="ms-rtetablecells"><FONT face=tahoma,arial,helvetica,sans-serif>Central Asia</FONT></TD>
+<TD class=ms-rtetablecells style="VERTICAL-ALIGN: top" class="ms-rtetablecells"><FONT face=tahoma,arial,helvetica,sans-serif>Microsoft Himalaya</FONT></TD>
+<TD class=ms-rtetablecells style="VERTICAL-ALIGN: top" class="ms-rtetablecells"><FONT face=tahoma,arial,helvetica,sans-serif></FONT></TD></TR>
+<TR>
+<TD class=ms-rtetablecells style="VERTICAL-ALIGN: top" class="ms-rtetablecells"><FONT face=tahoma,arial,helvetica,sans-serif>Yi</FONT></TD>
+<TD class=ms-rtetablecells style="VERTICAL-ALIGN: top" class="ms-rtetablecells"><FONT face=tahoma,arial,helvetica,sans-serif>China</FONT></TD>
+<TD class=ms-rtetablecells style="VERTICAL-ALIGN: top" class="ms-rtetablecells"><FONT face=tahoma,arial,helvetica,sans-serif>Microsoft Yi Baiti</FONT></TD>
+<TD class=ms-rtetablecells style="VERTICAL-ALIGN: top" class="ms-rtetablecells"><FONT face=tahoma,arial,helvetica,sans-serif></FONT></TD></TR></TBODY></TABLE></P></BLOCKQUOTE>
+<P><FONT face=tahoma,arial,helvetica,sans-serif>Character coverage for several already-supported scripts was extended to Unicode 4.1 or 5.0. Several fonts were updated accordingly. In particular, support for Latin, Greek, Cyrillic, Hebrew and Arabic was extended in the following fonts:</FONT></P>
+<UL>
+<LI><FONT face=tahoma,arial,helvetica,sans-serif>Arial </FONT>
+<LI><FONT face=tahoma,arial,helvetica,sans-serif>Courier New </FONT>
+<LI><FONT face=tahoma,arial,helvetica,sans-serif>Microsoft Sans Serif </FONT>
+<LI><FONT face=tahoma,arial,helvetica,sans-serif>Tahoma </FONT>
+<LI><FONT face=tahoma,arial,helvetica,sans-serif>Times New Roman</FONT></LI></UL>
+<P dir=ltr style="MARGIN-RIGHT: 0px"><FONT face=tahoma,arial,helvetica,sans-serif>The new Aero-theme UI font, Segoe UI, also provides Unicode 5.0 support for Latin, Greek, Cyrillic and Arabic.</FONT></P>
+<P dir=ltr style="MARGIN-RIGHT: 0px"><FONT face=tahoma,arial,helvetica,sans-serif>Extension B fonts for the SimSun and MingLiU families were added, as well as a variation of MingLiU with HKSCS support.</FONT></P>
+<P dir=ltr style="MARGIN-RIGHT: 0px"><FONT face=tahoma,arial,helvetica,sans-serif>The Uighur language uses Arabic script, which was already supported. However, a different font is required for Uighur typography. The Microsoft Uighur font was added to support this.</FONT></P>
+<P><FONT face=tahoma,arial,helvetica,sans-serif>Uniscribe's font fallback mechanism for Unicode supplementary planes was enhanced to support different fallback fonts depending on the starting font. In this way, fallback for CJK Extension B characters uses appropriate fonts for the given language. For example, for UI displayed using the SimSun font (Simplified Chinese), the fallback font for Extension B is SimSun-ExtB.</FONT></P>
+<P><FONT face=tahoma,arial,helvetica,sans-serif>New APIs were added to Uniscribe to support OpenType advanced typographic functionality in non-complex scripts. This provides a way for clients to expose advanced font capabilities such as language-specific glyphs; discretionary ligatures; true&nbsp;typographic small caps, superscripts and subscripts; old-style as well as tabular digits.</FONT></P>
+<P><FONT face=tahoma,arial,helvetica,sans-serif>Windows Vista includes the Cambria Math font, which has additional tables used to support layout of mathematical formulas. Special software support is also required to render math formulas, however. This is provided in Office 2007, but not in Windows Vista text-stack components.</FONT></P></BLOCKQUOTE></BLOCKQUOTE>
+<P>Of course the obvious question is what's coming next, but it is a bit early for that at the moment.</P>
+<P>We should spend at least a little time revelling in what we have, right? :-)</P>
+<P mce_keep="true">&nbsp;</P>
+<P><FONT color=#ff00ff><EM>This post brought to you by</EM><FONT size=5> ༂ </FONT><EM>(<A class="" href="http://www.fileformat.info/info/unicode/char/0f02" mce_href="http://www.fileformat.info/info/unicode/char/0f02">U+0f02</A>, a.k.a. TIBETAN MARK GTER YIG MGO -UM RNAM BCAD MA)</EM></FONT></P>
+<hr/><p><a id="5807327" href="#5807327">#</a> <strong>Mihai</strong> on 31 Oct 2007 8:26 PM:</p><div style="margin-left: 1em"><p>Great summary, nice to have it all in one place (forward thanks to Peter :-)</p>
+<p>But &quot;of course the obvious question is&quot;: where can we see samples of the &quot;new APIs ... added to Uniscribe to support OpenType advanced typographic functionality in non-complex scripts.&quot;</p>
+<p>See, it was not that obvious :-)</p></div>
+<p><a id="5859297" href="#5859297">#</a> <strong>Michael S. Kaplan</strong> on 3 Nov 2007 10:02 AM:</p><div style="margin-left: 1em"><P>I think I just lost some comments. Grrrr.</P>
+<P>Tom, if you wanted to re-post your comment I'll do my best to make sure I do not over-prune spam again....</P></div>
+<p><a id="5927070" href="#5927070">#</a> <strong>Peter Constable</strong> on 5 Nov 2007 11:06 PM:</p><div style="margin-left: 1em"><P>Re Mihai's question: The following Uniscribe APIs were added in Vista to support OpenType functionality:</P>
+<UL>
+<LI>ScriptGetFontAlternateGlyphs()</LI>
+<LI>ScriptGetFontFeatureTags()</LI>
+<LI>ScriptGetFontLanguageTags()</LI>
+<LI>ScriptGetFontScriptTags()</LI>
+<LI>ScriptItemizeOpenType()</LI>
+<LI>ScriptPlaceOpenType()</LI>
+<LI>ScriptPositionSingleGlyph()</LI>
+<LI>ScriptShapeOpenType()</LI>
+<LI>ScriptSubstituteSingleGlyph()</LI></UL></div>
+<p><a id="8414472" href="#8414472">#</a> <strong>Mangat Bhardwaj</strong> on 21 Apr 2008 7:58 AM:</p><div style="margin-left: 1em"><p>I have no experience of Microsoft Office 2008 for Mac. But no other Mac software, including Apple's own iWork, can properly handle (compose words from) the excellent Unicode fonts of Indian scripts freely downloadable from ildc.gov.in. On the other hand, even the FREE Windows program Open Office can do this.</p></div>
+<p><strong>Jan Kučera</strong> on 22 Aug 2011 4:06 AM:</p><div style="margin-left: 1em"><p>Should not be that early now, any summary of what has come next? :-)</p>
+</div>
+<hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2007/11/01/5770097.html" title="The 100 Posts of Bartholomew Kaplan (aka I&#39;ll Teach My Blog 100 Posts)">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2007/10/31/5796846.html" title="The L word (Limonata, I mean - the *other* L word)">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2007-10">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2007-10-31">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2007/10/31/5800258.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:37 GMT -->
+</html>

@@ -1,0 +1,102 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2012/02/21/10270502.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>The evolving Story of Locale Support, part 19: In honor of International Mother Language Day...</title></head><body>
+<h1>The evolving Story of Locale Support, part 19: In honor of International Mother Language Day...</h1>
+<p><em>by Michael S. Kaplan, published on 2012/02/21 07:11 -05:00, original URI: http://blogs.msdn.com/b/michkap/archive/2012/02/21/10270502.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<p>Previous blogs from this series:</p>
+<ul>
+<li><strong><a title="part 18 (Two scripts that share ten digits can be trouble)" href="http://archives.miloush.net/michkap/archive/2012/02/15/10268235.html">part 18 (Two scripts that share ten digits can be trouble)</a></strong></li>
+<li><strong><a title="part 17 (Today I feel like translating you more than before)" href="http://archives.miloush.net/michkap/archive/2012/02/02/10263136.html">part 17 (Today I feel like translating you more than before)</a></strong></li>
+<li><strong><a title="part 16 (We can't scale to a Xishuangbanna Dai locale, but&hellip;)" href="http://archives.miloush.net/michkap/archive/2012/01/24/10259941.html">part 16 (We can't scale to a Xishuangbanna Dai locale, but&hellip;)</a></strong></li>
+<li><strong><a title="part 15 (Fixing our listings up in Windows 8!)" href="http://archives.miloush.net/michkap/archive/2012/01/17/10256884.html">part 15 (Fixing our listings up in Windows 8!)</a></strong></li>
+<li><strong><a title="part 14 (Tifinagh, Tamazight, and Berber? Oh my!)" href="http://archives.miloush.net/michkap/archive/2011/12/22/10250349.html">part 14 (Tifinagh, Tamazight, and Berber? Oh my!)</a></strong></li>
+<li><strong><a title="part 13 (Divvying up locales, yet again!)" href="http://archives.miloush.net/michkap/archive/2011/12/21/10249983.html">part 13 (Divvying up locales, yet again!)</a></strong></li>
+<li><strong><a title="part 12 (Logic dictates that we keep a sense of proportion about the RATIO)" href="http://archives.miloush.net/michkap/archive/2011/12/09/10246051.html">part 12 (Logic dictates that we keep a sense of proportion about the RATIO)</a></strong></li>
+<li><strong><a title="part 11: What language is that keyboard for?)" href="http://archives.miloush.net/michkap/archive/2011/11/23/10240896.html">part 11 (What language is that keyboard for?)</a></strong></li>
+<li><strong><a title="part 10 (Perhaps it is best to think of it as unintelligent design?)" href="http://archives.miloush.net/michkap/archive/2011/11/22/10239572.html">part 10 (Perhaps it is best to think of it as unintelligent design?</a></strong></li>
+<li><strong><a title="part 9 (Nastaleeq vs. Nastaliq? Either way, Windows 8 has got it!)" href="http://archives.miloush.net/michkap/archive/2011/11/16/10237715.html">part 9 (Nastaleeq vs. Nastaliq? Either way, Windows 8 has got it!</a></strong></li>
+<li><strong><a title="part 8 ([Finally] taking care of some [more] languages in Pakistan)" href="http://archives.miloush.net/michkap/archive/2011/11/15/10237317.html">part 8 ([Finally] taking care of some [more] languages in Pakistan</a></strong></li>
+<li><strong><a title="part 7 (That would be a 'call and a raise' for Hawaiian" href="http://archives.miloush.net/michkap/archive/2011/11/11/10236194.html">part 7 (That would be a 'call and a raise' for Hawaiian)</a></strong></li>
+<li><strong><a title="part 6 (Behind the Cherokee Phonetic layout in Windows 8)" href="http://archives.miloush.net/michkap/archive/2011/11/09/10235391.html">part 6 (Behind the Cherokee Phonetic layout in Windows 8)</a></strong></li>
+<li><strong><a title="part 5 (...until the decision was made to not refuse to add it)" href="http://archives.miloush.net/michkap/archive/2011/11/08/10234995.html">part 5 (...until the decision was made to not refuse to add it)</a></strong></li>
+<li><strong><a title="part 4 (working beyond one's bugs, and the case for an MSKLC update)" href="http://archives.miloush.net/michkap/archive/2011/11/04/10233999.html">part 4 (working beyond one's bugs, and the case for an MSKLC update)</a></strong></li>
+<li><strong><a title="part 3 (working beyond one's bugs, the setup)" href="http://archives.miloush.net/michkap/archive/2011/11/03/10233591.html">part 3 (working beyond one's bugs, the setup)</a> </strong></li>
+<li><strong><a title="part 2 (raising the roof on keyboards)" href="http://archives.miloush.net/michkap/archive/2011/11/02/10232468.html">part 2 (raising the roof on keyboards)</a></strong></li>
+<li><strong><a title="part 1 (Some people don't want to double-d's)" href="http://archives.miloush.net/michkap/archive/2011/11/01/10232070.html">part 1 (Some people don't want to double-d's)</a></strong></li>
+<li><strong><a title="part 0 (The introduction)" href="http://archives.miloush.net/michkap/archive/2011/10/31/10231661.html">part 0 (The introduction)</a></strong></li>
+</ul>
+<p>Remember that third rule I mentioned in Part 0?</p>
+<p style="padding-left: 30px;"><strong>I have neither inclination nor desire to violate either non-disclosure agreements or marketing news cycles related to Windows 8.</strong></p>
+<p style="padding-left: 30px;">This last rule seems obvious, but I don't want anyone to misunderstand my intent here, or what I want to accomplish. Any time I talk about stuff you haven't heard before, it is only due the fact that they are doing other things right now, not because I am disclosing anything that you couldn't have found yourself by spelunking through the //Build Developer Preview, or eventually the Beta.</p>
+<p>This blog you are reading today will in no way violate this rule!</p>
+<p>Now of the many blogs above, for some it was <strong><a title="Part 5 (...until the decision was made to not refuse to add it)" href="http://archives.miloush.net/michkap/archive/2011/11/08/10234995.html">Part&nbsp;5</a></strong> that was the most interesting.</p>
+<p>Because it listed the locales that were scheduled to be added in Windows 8.</p>
+<p>That list:</p>
+<ul>
+<li>Central Kurdish (Arabic) - Iraq</li>
+<li>Cherokee (Cherokee) - United States</li>
+<li>Fulah (Latin) - Senegal</li>
+<li>Hawaiian - United States</li>
+<li>Punjabi (Arabic) - Pakistan</li>
+<li>Setswana - Botswana</li>
+<li>Sindhi (Arabic) - Pakistan</li>
+<li>Tamil - Sri Lanka</li>
+<li>Tigrinya - Ethiopia</li>
+<li>Tigrinya - Eritrea</li>
+<li>Valencian - Spain</li>
+</ul>
+<p>That list was for locales, not UI languages, as I said.</p>
+<p>So it was nominally listing items that were to be added to <strong>Table 3 (Locales whose identifiers are not directly associated with any localizations of Windows, even if a related identifier might make for one representing a suitable localization)</strong>&nbsp;of <strong><a title="The Locales of Windows 7, all divvied up" href="http://archives.miloush.net/michkap/archive/2011/05/24/10167604.html">The Locales of Windows 7, all divvied up</a></strong>.</p>
+<p><em>As initially reported in the <a href="http://blogs.msdn.com/b/b8/">Building Windows 8</a> Blog a short time ago, in a blog entitled <a href="http://blogs.msdn.com/b/b8/archive/2012/02/21/using-the-language-you-want.aspx">Using the Language You Want</a>.</em></p>
+<p>So I have bad news,&nbsp;worse&nbsp;news, and really good news!</p>
+<p>The bad news will get you mad at me for over-promising and under-delivering. The worse news will get you mad at Microsoft for removing features. And the really good news will make you realize that I was just playing with your emotions!</p>
+<p>The bad news: Many of those locales will not in fact be added to <strong>Table 3 (Locales whose identifiers are not directly associated with any localizations of Windows, even if a related identifier might make for one representing a suitable localization)</strong>.</p>
+<p>The worse news: Even some of the locales that used to be in <strong>Table 3 (Locales whose identifiers are not directly associated with any localizations of Windows, even if a related identifier might make for one representing a suitable localization)</strong>. will be removed in Windows 8.</p>
+<p>And the really good news: Every locale discussed earlier will actually be added to&nbsp;<strong>Table 2 (The locales representing languages for which Windows creates Language Interface Packs, aka LIPs)</strong> and occasionally even&nbsp;<strong>Table 1 (The locales representing languages into which Windows localizes)</strong> in Windows 8!</p>
+<p>The official list of planned Windows 8 User Interface language additions:</p>
+<ul>
+<li><strong>en-GB</strong> aka&nbsp;English (United Kingdom)</li>
+<li><strong>pa-Arab-PK</strong>&nbsp;aka Punjabi (Islamic Republic of Pakistan)</li>
+<li><strong>sd-Arab-PK</strong> aka Sindhi (Islamic Republic of Pakistan)</li>
+<li><strong>ku-Arab-IQ</strong> aka Central Kurdish (Iraq)</li>
+<li><strong>ug-CN</strong> aka Uyghur (People's Republic of China)</li>
+<li><strong>be-BY</strong> aka Belarusian - Belarus</li>
+<li><strong>rw-RW</strong> aka Kinyarwanda - Rwanda</li>
+<li><strong>ti-ET</strong> aka Tigrinya - Ethiopia</li>
+<li><strong>tg-Cyrl-TJ</strong> aka Tajik - Tajikistan</li>
+<li><strong>wo-SN</strong> aka Wolof - Senegal</li>
+<li><strong>qut-GT</strong> aka K'iche - Guatemala</li>
+<li><strong>gd-GB</strong> aka Scottish Gaelic - United Kingdom</li>
+<li><strong>chr-Cher-US</strong> aka Cherokee (Cherokee, United States)</li>
+<li><strong>ca-ES-valencia</strong> aka Valencian - Valencia</li>
+</ul>
+<p>I am going to pretend for a moment that is not amazing or incredible, okay?</p>
+<p>Oh, screw that. I can't even pretend to be calm and dignified here.</p>
+<p><span style="color: #ff0000;"><strong><span style="font-size: x-large;">This is amazing and in-freaking-credible!</span></strong></span></p>
+<p>In future blogs, I will dig in further to many of the exciting, interesting, and cool technical/linguistic/cultural issues that have come up here in the process of all of this very cool and&nbsp;interesting work.</p>
+<p>And the awesome new story of Language Pack installation that finally fixes the problems some users have noticed since Windows 2000!</p>
+<p>And the new UI paradigm!</p>
+<p>Not to mention the coolness of an en-GB User Interface language in Windows 8 that is just begging to tell more!</p>
+<p>Plus all of the other cool stuff the announcement over in the <a href="http://blogs.msdn.com/b/b8/">Building Windows 8</a> blog <a href="http://blogs.msdn.com/b/b8/archive/2012/02/21/using-the-language-you-want.aspx">Using the Language You Want</a>.</p>
+<p>And all of the cool&nbsp;stuff about the Consumer Preview that you can try out yourself once you get your hands on it! :-)</p>
+<p>But for now let me close with a personal note to Roy Bonny&nbsp;(ᎧᏂᎦ ᎪᎳᎭ) and Joseph Erb&nbsp;of Cherokee Nation: no more secrets, the President of Windows put the information into his Blog! :-)</p>
+<hr/><p><strong>Michael S. Kaplan</strong> on 21 Feb 2012 7:25 AM:</p><div style="margin-left: 1em"><p>The comments on the SteveSi blog are already going strong, check them out if you&#39;re curious. </p>
+<p>And feel free to post here if you are afraid of getting lost in the list, of course! :-)</p>
+</div>
+<p><strong>John Cowan</strong> on 21 Feb 2012 8:56 AM:</p><div style="margin-left: 1em"><p>Well, the Valencian localization was cheap enough to provide, I&#39;m sure: just s/Catala/Valencia/ in suitable places!</p>
+</div>
+<p><strong>Quppa</strong> on 22 Feb 2012 9:27 AM:</p><div style="margin-left: 1em"><p>Great to see en-GB at last.</p>
+<p>Can you share any information about the licensing story? Will display language switching still be limited to the high-end SKUs? The B8 post mentions selling en-GB as boxed software.</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 22 Feb 2012 9:33 AM:</p><div style="margin-left: 1em"><p>There will be more, hang in there!</p>
+</div>
+<p><strong>Quppa</strong> on 22 Feb 2012 10:16 AM:</p><div style="margin-left: 1em"><p>I&#39;m waiting patiently :)</p>
+<p>I&#39;d love to hear about the improvements to the Segoe UI font family in Windows 8. I noticed that the Light variant has been hinted at various sizes and that characters and glyphs have been added to all variants, particularly Segoe UI Symbol:</p>
+<p><a rel="nofollow" target="_new" href="http://blog.quppa.net/2012/02/17/segoe-ui-light-improvements-in-windows-8/">blog.quppa.net/.../segoe-ui-light-improvements-in-windows-8</a></p>
+<p><a rel="nofollow" target="_new" href="http://blog.quppa.net/2012/02/17/more-on-segoe-ui-in-windows-8/">blog.quppa.net/.../more-on-segoe-ui-in-windows-8</a></p>
+</div>
+<p><strong>kamiljan</strong> on 5 Jun 2012 2:10 AM:</p><div style="margin-left: 1em"><p>windows8 ning uyghur tilini qollighanliqiuyghurlar uchun nahayti ehmiyetlik bir ish &nbsp;mana bu uyghurche torni korup biqing</p></div>
+<hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2012/10/26 <a href="http://archives.miloush.net/michkap/archive/2012/10/26/10362603.html">The evolving Story of Locale Support, part 28: We finally fixed that 'Install New Languages' thing!</a></p><p>2012/10/02 <a href="http://archives.miloush.net/michkap/archive/2012/10/02/10354988.html">The evolving Story of Locale Support, part 27: No, the T and the H aren't silent...</a></p><p>2012/09/20 <a href="http://archives.miloush.net/michkap/archive/2012/09/20/10351244.html">Those keys that are so hot -- which ones should they be?</a></p><p>2012/08/20 <a href="http://archives.miloush.net/michkap/archive/2012/08/20/10341516.html">The evolving Story of Locale Support, part 26: Hey Windows 8, there's someone on the phone for you.</a></p><p>2012/07/11 <a href="http://archives.miloush.net/michkap/archive/2012/07/11/10327775.html">The evolving Story of Locale Support, part 25: Something old, something new, something repurposed, and something...</a></p><p>2012/06/07 <a href="http://archives.miloush.net/michkap/archive/2012/06/07/10316511.html">The evolving Story of Locale Support, part 24: I Adar you! Hell, I Double Adar you! (Windows 8 ed.)</a></p><p>2012/06/05 <a href="http://archives.miloush.net/michkap/archive/2012/06/05/10315033.html">The evolving Story of Locale Support, part 23: Tamazight? Outta sight!</a></p><p>2012/04/12 <a href="http://archives.miloush.net/michkap/archive/2012/04/12/10292952.html">The evolving Story of Locale Support, part 22: Digit Substitution 2.0</a></p><p>2012/03/08 <a href="http://archives.miloush.net/michkap/archive/2012/03/08/10278921.html">The evolving Story of Locale Support, part 21: The Windows 8 Hijripalooza extraordinaire!</a></p><p>2012/03/07 <a href="http://archives.miloush.net/michkap/archive/2012/03/07/10278935.html">And now? There are Language Packs!</a></p><p>2012/03/02 <a href="http://archives.miloush.net/michkap/archive/2012/03/02/10276258.html">The evolving Story of Locale Support, part 20: Yes, it's Bangla. Not Bengali!</a></p><p>2012/02/23 <a href="http://archives.miloush.net/michkap/archive/2012/02/23/10271491.html">It may be Inside Baseball, but I've never been so proud to Throw an Elbow as this time....</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2012/02/22/10271073.html" title="If it&#39;s incorrect and out of sync, someone should step up and try to fix it...">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2012/02/20/10269748.html" title="Where short file names can fail">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2012-02">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2012-02-21">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2012/02/21/10270502.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+</html>

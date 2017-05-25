@@ -1,0 +1,38 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2008/07/03/8682763.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:36 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>On installing and removing fonts, Part 1: Do I know you, or some version of you at least?</title></head><body>
+<h1>On installing and removing fonts, Part 1: Do I know you, or some version of you at least?</h1>
+<p><em>by Michael S. Kaplan, published on 2008/07/03 10:01 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2008/07/03/8682763.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P>Previous blogs in this series:</P>
+<BLOCKQUOTE>
+<P><A class="" href="http://archives.miloush.net/michkap/archive/2008/07/02/8681646.html" mce_href="http://archives.miloush.net/michkap/archive/2008/07/02/8681646.html"><STRONG>0: A long journey begins with the zeroeth step</STRONG></A></P></BLOCKQUOTE>
+<P>One of the first things&nbsp;people do when they enter the room is make themselves known.</P>
+<P>If everyone knows everyone else they don't even need names, otherwise they give their name.</P>
+<P>If they are twins (and this has happened to me, within the last few years!) the twin who is there will identify which "version" they are.</P>
+<P>The version thing is pretty important, as you can see.</P>
+<P>Now version information is pretty straightforward in Windows....</P>
+<P>Hell, I can't even say that with a straight face. </P>
+<P>You can look at <A class="" href="http://blogs.msdn.com/oldnewthing/" mce_href="http://blogs.msdn.com/oldnewthing/">Raymond Chen's Blog</A>, and blogs like <A class="" href="http://blogs.msdn.com/oldnewthing/archive/2006/12/20/1332035.aspx" mce_href="http://blogs.msdn.com/oldnewthing/archive/2006/12/20/1332035.aspx">this one</A> and <A class="" href="http://blogs.msdn.com/oldnewthing/archive/2006/12/21/1340571.aspx" mce_href="http://blogs.msdn.com/oldnewthing/archive/2006/12/21/1340571.aspx">that one</A> and <A class="" href="http://blogs.msdn.com/oldnewthing/archive/2006/12/22/1348663.aspx" mce_href="http://blogs.msdn.com/oldnewthing/archive/2006/12/22/1348663.aspx">this other one</A> if you want a hint about how complicated it is.</P>
+<P>If you are internal to MS you might have seen the dozens of small&nbsp;utilities put up by developers and testers over the years, almost all of which properly update at a maximum just <STRONG>one</STRONG> of the two items to update (the string version of the resources and the binary one), and some did not even get one of them right.</P>
+<P>So version stuff on binaries is tough in Windows.</P>
+<P>But tough as it is, it is actually a lot easier than the version information in fonts, unless you are writing an application that walks through the font file data ad its purpose in life.</P>
+<P>Because in order to get the font version information, you have to walk through font file data.</P>
+<P>Specifically, you are looking for the <STRONG>name</STRONG> table.</P>
+<P>This table, this <STRONG>name</STRONG> table, has an entry in it that specifies the version.</P>
+<P>The entry might just be <STRONG>1.0</STRONG>. Or it might be <STRONG>1.0.3</STRONG>. Or it might be <STRONG>867.5309</STRONG>. Or even <STRONG>3.1415926</STRONG>.</P>
+<P>Crap, it could be <STRONG>Version 3.14</STRONG>. Or it could use the word <STRONG>Versio</STRONG>, or <STRONG>Versión</STRONG>, or <STRONG>Versione</STRONG>. You get the point.</P>
+<P>Or really anything -- it is a string, after all.</P>
+<P>Maybe we can hope for valid characters....</P>
+<P>The exact format of the string can be anything, and a font vendor/foundry can even change the format they use between versions, if they want. If they do they might even have&nbsp;a good reason for wanting to do that. But even if they did not, they can still do it.</P>
+<P>Hell, two different fonts from two different places can have the same name and the first of many comparisons you might do is with the name and the version. Just dig right in, like I did in <A class="" href="http://archives.miloush.net/michkap/archive/2006/02/13/530814.html" mce_href="http://archives.miloush.net/michkap/archive/2006/02/13/530814.html"><STRONG>Getting all of the localized names of a font</STRONG></A> but perhaps much more efficiently. :-)</P>
+<P>If you are building something that has the job to install a font and you need to know if a font already there is a prior version or a later version, you have to be able to parse that information so you can compare the two (and decide which one is newer).</P>
+<P><EM>I find myself grateful about the fact that the twins I referred to previously were in two different disciplines - development and test -- and therefore I did not fancy heuristics to tell them apart; merely listening to what they opinions were would often quickly identify the one present, if the meeting itself did not!</EM></P>
+<P>No such boon can be assumed with fonts. Your generic awesome font installation code needs to assume the worst.</P>
+<P>Since the worst can indeed happen.</P>
+<P mce_keep="true">Okay, this seems like a fair enough start, hinting at inner depths. Next time I'll dig into some of those depths a bit....</P>
+<P mce_keep="true">&nbsp;</P>
+<P><FONT color=#ff00ff><EM>This blog brought to you by</EM><FONT size=5> ｆ </FONT><EM>(<A class="" href="http://www.fileformat.info/info/unicode/char/ff46" mce_href="http://www.fileformat.info/info/unicode/char/ff46">U+FF46</A>, aka FULLWIDTH LATIN&nbsp;SMALL LETTER F)</EM></FONT></P>
+<hr/><div style="margin-left: 1em"><em>no comments</em></div><hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2008/09/08 <a href="http://archives.miloush.net/michkap/archive/2008/09/08/8932366.html">On installing and removing fonts, Part 8: Sometimes being selfish makes you more trustworthy</a></p><p>2008/07/30 <a href="http://archives.miloush.net/michkap/archive/2008/07/30/8791285.html">On installing and removing fonts, Part 7: What was the question, exactly?</a></p><p>2008/07/15 <a href="http://archives.miloush.net/michkap/archive/2008/07/15/8732674.html">On installing and removing fonts, Part 6: That's your name? What's your real name? Nah. What was it before you changed it?</a></p><p>2008/07/14 <a href="http://archives.miloush.net/michkap/archive/2008/07/14/8730741.html">On installing and removing fonts, Part 5: The takeaway from that is...</a></p><p>2008/07/11 <a href="http://archives.miloush.net/michkap/archive/2008/07/11/8720555.html">On installing and removing fonts, Part 4: The easiest part is the addition!</a></p><p>2008/07/08 <a href="http://archives.miloush.net/michkap/archive/2008/07/08/8706789.html">On installing and removing fonts, Part 3: I'll love you forever, or at least for this session.</a></p><p>2008/07/07 <a href="http://archives.miloush.net/michkap/archive/2008/07/07/8699735.html">On installing and removing fonts, Part 2: Are you done using me yet?</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2008/07/04/8686369.html" title="The exception that proves the rule">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2008/07/03/8682656.html" title="Ignore what the label says -- it&#39;s Japanese">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2008-07">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2008-07-03">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2008/07/03/8682763.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:36 GMT -->
+</html>

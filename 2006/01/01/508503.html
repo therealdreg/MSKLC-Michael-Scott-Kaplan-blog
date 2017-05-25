@@ -1,0 +1,28 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2006/01/01/508503.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:40 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Sorting multilingual data</title></head><body>
+<h1>Sorting multilingual data</h1>
+<p><em>by Michael S. Kaplan, published on 2006/01/01 23:08 -05:00, original URI: http://blogs.msdn.com/b/michkap/archive/2006/01/01/508503.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P><FONT face=Tahoma>Benski asked me</FONT></P><FONT face=Tahoma><FONT size=2>
+<BLOCKQUOTE dir=ltr style="MARGIN-RIGHT: 0px">
+<BLOCKQUOTE dir=ltr style="MARGIN-RIGHT: 0px">
+<P><FONT face="Times New Roman"><EM>Hi Michael,</EM></FONT></P>
+<P><FONT face="Times New Roman"><EM>I found your blog recently (while searching for how FAT32 &amp; NTFS deal with case insensitivity). I've been reading non-stop for a few days now, but still have a lot of archives to go through :) Love it so far. </EM></FONT></P>
+<P><FONT face="Times New Roman"><EM>I've got a question for you. It's something I've been thinking about as I overhaul a software product for "proper" unicode support.</EM></FONT></P>
+<P><FONT face="Times New Roman"><EM>What is the best approach for dealing with strings from multiple languages? Display is simple, but I'm a little unsure about sorting and searching.</EM></FONT></P>
+<P><FONT face="Times New Roman"><EM>Imagine an inventory management system. There are English, German, and Swedish products in the system. If a user with an English locale lists items alphabetical, what should happen with diacritics, since the sorting rules are different for German and Swedish? </EM></FONT></P>
+<P><FONT face="Times New Roman"><EM>If the system were to know which products were Swedish and which were German, does this help out? If I generate sort keys with LCMapString on two strings, but call once with a German locale and the other with a Swedish locale, will the two sorts keys be "compatible". I would think the correct sorting order would be for German diacritical letters to sort near their non-marked cousin, while Swedish diacritics would sort at the end of the alphabet. Is this correct?</EM></FONT></P></BLOCKQUOTE></BLOCKQUOTE></FONT></FONT>
+<P><FONT face=Tahoma>Thanks for the kind words! :-)</FONT></P>
+<P><FONT face=Tahoma>I sort of hinted at the answer in <a href="http://archives.miloush.net/michkap/archive/2005/05/06/415199.html">this post</A>, but did not explicitly state the answer there. Cathy Wissink and I covered it in a few of the Unicode talks <A href="http://www.unicode.org/iuc/iuc23/a322.html">that</A> <A href="http://www.unicode.org/iuc/iuc22/a015.html">we</A> <A href="http://www.unicode.org/iuc/iuc21/a354.html">did</A>. But I don't think I have covered it here, except a little bit in directly in <a href="http://archives.miloush.net/michkap/archive/2005/11/18/492339.html">this other post</A>.</FONT></P>
+<P><FONT face=Tahoma>So I think I will do so now....</FONT></P>
+<P><FONT face=Tahoma>The rule is simple -- the person who is looking at the data has a specific expectation, and it is a single collation, the one that they know. They do not expect data in a different language to sort like a user of that other language would.</FONT></P>
+<P><FONT face=Tahoma>This is one of the reasons that collation on Windows handles all of Unicode, from the point of view of a given language.</FONT></P>
+<P><FONT face=Tahoma>To answer the other question, if you pick up sort keys from two different locales, they are not&nbsp;for most purposes&nbsp;'compatible' in the sense of being able to be meaningfully compared. So generating indexes in that kind of a way will not produce meaningful indexes....</FONT></P>
+<P><FONT face=Tahoma></FONT>&nbsp;</P>
+<P><FONT face=Tahoma color=#ff1493><EM>This post brought to you by</EM> "Ö"<EM>&nbsp;(<A href="http://www.fileformat.info/info/unicode/char/00d6">U+00d6</A>, a.k.a. LATIN CAPITAL LETTER O WITH DIARESIS)</EM></FONT></P>
+<hr/><p><a id="508545" href="#508545">#</a> <strong>Serge Wautier</strong> on 2 Jan 2006 7:35 AM:</p><div style="margin-left: 1em">Out of curiosity, how are the other scripts weighted compared to the 'local' script ?<br><br>And who decides it ? I'd be surprised that the Acad&#233;mie fran&#231;aise defines sort rules for greek or japanese characters.</div>
+<p><a id="508550" href="#508550">#</a> <strong>Michael S. Kaplan</strong> on 2 Jan 2006 8:20 AM:</p><div style="margin-left: 1em">They do not, thank goodness!<br><br>The relative ordering between them is something we define, and that definition does not really change in most cases when the LCID does.</div>
+<hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2006/01/02/508514.html" title="Paste me in from last year">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2005/12/31/508290.html" title="Popularity hurts objectivity">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2006-01">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2006-01-01">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2006/01/01/508503.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:40 GMT -->
+</html>

@@ -1,0 +1,35 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2011/03/10/10139120.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>A resource segue, #1</title></head><body>
+<h1>A resource segue, #1</h1>
+<p><em>by Michael S. Kaplan, published on 2011/03/10, original URI: http://blogs.msdn.com/b/michkap/archive/2011/03/10/10139120.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNewMonth -->
+<p>So it started with a discussion of the Win32 resource model and how it was affected by the world of MUI (both the earlier MUI model and the one of Vista and beyond).</p>
+<p>The most important principle in the conversation&nbsp;relates to the resource enumeration functions -- they are mostly unable to really distinguish between the following two cases:</p>
+<ul>
+<li>A single DLL containing mutliple languages, and</li>
+<li>Multiple DLLs laid out in one of the&nbsp;documented name- or LCID-based directory schemes</li>
+</ul>
+<p>Thus let's say I am on one of my Windows 7 machines&nbsp;with many languages installed:</p>
+<p><img src="http://blogs.msdn.com/cfs-file.ashx/__key/CommunityServer-Blogs-Components-WeblogFiles/00-00-00-33-81/0410.mui01.jpg" /></p>
+<p>Now if I open up NOTEPAD.EXE in Visual Studio as a resource, the view appears like it is one file containing all the resources, despite the fact that the language-specific resources are all in separate, individual files:</p>
+<p><img src="http://blogs.msdn.com/cfs-file.ashx/__key/CommunityServer-Blogs-Components-WeblogFiles/00-00-00-33-81/8863.mui02.jpg" /></p>
+<p>Now there are several interesting things to note here beyond this virtual view I mentioned.</p>
+<p>For example, there is the unknown Bengali sublanguage (SUBLANG_BENGALI_BANGLADESH).</p>
+<p>And there are the various unknown languages: </p>
+<ul>
+<li>LANG_MALTESE (0x3A)</li>
+<li>LANG_WELSH (0x52)</li>
+<li>LANG_KHMER (0x53)</li>
+<li>LANG_NEPALI (0x61)\</li>
+</ul>
+<p>Of course Visual Studio could have queried the locale names from the OS any time, so the only time there "unknown" items should show up is when the locales in question are unknownon th OS upon which you are runninfg.</p>
+<p><em>Thus if Visual Studio were designed properly here and not duplicating the exact same resources all over again (and dealing with the same geopol review issues all over again, etc.), the problem should only happen when lookng at (for example) these Windows 7&nbsp;files when looking at&nbsp;them on a Vista machine. Perhaps they could have saved the money and used it to localize something else.</em> :-)</p>
+<p>If you so ahead and save the resource block as either .RES or .RC, it combines all languages in one file.</p>
+<p>I guess this kind of underscores how the underlying layout of the resources is largely not visible to where the resources are coming from.</p>
+<p>Now of course anyone can do the same here through use of the <a href="http://msdn.microsoft.com/library/ms648039.aspx">EnumResourceTypes</a>/<a href="http://msdn.microsoft.com/library/ms648037.aspx">EnumResourceNames</a>/<a href="http://msdn.microsoft.com/library/ms648035.aspx">EnumResourceLanguages</a> functions.</p>
+<p>Or maybe the <a href="http://msdn.microsoft.com/library/ms648040.aspx">EnumResourceTypesEx</a>/<a href="http://msdn.microsoft.com/library/ms648038.aspx">EnumResourceNamesEx</a>/<a href="http://msdn.microsoft.com/library/ms648036.aspx">EnumResourceLanguagesEx</a> functions. Though I doubt Visual Studio is calling the new functions, though doing so gives a few more options to help determine where the resources might be coming from or filtering them if desired. In a way the old functions are the ones that are transparent here; it might be interesting to consider the most efficient algorithm one could use <a href="http://msdn.microsoft.com/library/ms648040.aspx">EnumResourceTypesEx</a>/<a href="http://msdn.microsoft.com/library/ms648038.aspx">EnumResourceNamesEx</a>/<a href="http://msdn.microsoft.com/library/ms648036.aspx">EnumResourceLanguagesEx</a>&nbsp;with to mark language neutral and language-specific resources....</p>
+<p>There's more, but I'll cover it next time.</p>
+<hr/><div style="margin-left: 1em"><em>comments not archived</em></div><hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2011/03/11 <a href="http://archives.miloush.net/michkap/archive/2011/03/11/10139662.html">A resource segue, #2 (architecting the wheels off the wagon, a bit)</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2011/03/11/10139662.html" title="A resource segue, #2 (architecting the wheels off the wagon, a bit)">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2011/03/09/10138478.html" title="Hidden in plain site: a purloined letter kind of a bug report">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2011-03">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2011-03-10">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2011/03/10/10139120.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+</html>

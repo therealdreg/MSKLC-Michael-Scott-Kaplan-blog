@@ -1,0 +1,151 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2010/09/09/10059644.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:35 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Latvian. Genitive. Oops.</title></head><body>
+<h1>Latvian. Genitive. Oops.</h1>
+<p><em>by Michael S. Kaplan, published on 2010/09/09 07:01 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2010/09/09/10059644.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<p><span style="color: #ff0000;"><em>This blog is about an issue a customer forwaded to me recently, but I found out (just after I had it mostly written) that there was a bug reported already. I still give the reader credit for bringing it to my attention (I can't always be randomly scrubbing the bug database for blog topics!).</em></span></p>
+<p>For the past several years that have been some topics that have come up over and over again. One of those topics is <strong>genitive dates</strong>, where all of the following blogs and more have brought up various issues:</p>
+<ul>
+<li><a href="http://archives.miloush.net/michkap/archive/2004/12/25/332259.html" title="What the %$#! are genitive dates?"><strong>What the %$#! are genitive dates?</strong></a></li>
+<li><a href="http://archives.miloush.net/michkap/archive/2005/11/10/491187.html" title="Genitive dates, revisited"><strong>Genitive dates, revisited</strong></a></li>
+<li><a href="http://archives.miloush.net/michkap/archive/2005/07/15/439223.html" title="Don't roll your own GetDateFormat"><strong>Don't roll your own GetDateFormat</strong></a></li>
+<li><a href="http://archives.miloush.net/michkap/archive/2005/11/11/491211.html" title="Any Sami speakers reading this blog? :-)"><strong>Any Sami speakers reading this blog? :-)</strong></a></li>
+<li><a href="http://archives.miloush.net/michkap/archive/2005/11/10/491199.html" title="Do genitive dates always work properly for Greek?"><strong>Do genitive dates always work properly for Greek?</strong></a></li>
+<li><a href="http://archives.miloush.net/michkap/archive/2007/08/04/4218583.html" title="A re-genitive post"><strong>A re-genitive post</strong></a></li>
+<li><a href="http://archives.miloush.net/michkap/archive/2005/11/12/491274.html" title="One last post about genitive dates"><strong>One last post about genitive dates</strong></a></li>
+<li><a href="http://archives.miloush.net/michkap/archive/2006/04/08/571353.html" title="It may not always end with ի"><strong>It may not always end with ի</strong></a></li>
+<li><a href="http://archives.miloush.net/michkap/archive/2006/04/09/571628.html" title="It may not always end with ის or ისა, either"><strong>It may not always end with ის or ისა, either</strong></a></li>
+<li><a href="http://archives.miloush.net/michkap/archive/2007/08/04/4218583.html" title="Practical Uses for Replacement Cultures/Locales"><strong>Practical Uses for Replacement Cultures/Locales</strong></a></li>
+</ul>
+<p>Now in many of these blogs I have hinted at the underlying fact that a language which would have different spellings for the&nbsp;nominative and genitive spellings of month names has actual grammatical rules that control when each spelling would be expected to be used.</p>
+<p>Thus there are grammatical rules that help one determine whether one should be using </p>
+<p style="padding-left: 30px;"><span style="font-size: large;"><strong>Сентябрь</strong></span></p>
+<p>or </p>
+<p style="padding-left: 30px;"><strong><span style="font-size: large;">сентября</span></strong> </p>
+<p>for <strong>September</strong> when one is writing something out in Russian.</p>
+<p>Now in many cases, indeed in most cases involving the date formats in question, the rules are almost simple enough that the code used in Windows and the .Net Framework can properly discern which one to use.</p>
+<p>But not always in all of them....</p>
+<p>One example where we do not so well here is Latvian (lv-LV, aka 0x0426). </p>
+<p>We have the two different forms:</p>
+<table cellpadding="5" cellspacing="5" border="1">
+<tbody>
+<tr>
+<td></td>
+<td>nominative form</td>
+<td>genitive form</td>
+</tr>
+<tr>
+<td>January</td>
+<td>janvāris</td>
+<td>janvārī</td>
+</tr>
+<tr>
+<td>February</td>
+<td>februāris</td>
+<td>februārī</td>
+</tr>
+<tr>
+<td>March</td>
+<td>marts</td>
+<td>martā</td>
+</tr>
+<tr>
+<td>April</td>
+<td>aprīlis</td>
+<td>aprīlī</td>
+</tr>
+<tr>
+<td>May</td>
+<td>maijs</td>
+<td>maijā</td>
+</tr>
+<tr>
+<td>June</td>
+<td>jūnijs</td>
+<td>jūnijā</td>
+</tr>
+<tr>
+<td>July</td>
+<td>jūlijs</td>
+<td>jūlijā</td>
+</tr>
+<tr>
+<td>August</td>
+<td>augusts</td>
+<td>augustā</td>
+</tr>
+<tr>
+<td>September</td>
+<td>septembris</td>
+<td>septembrī</td>
+</tr>
+<tr>
+<td>October</td>
+<td>oktobris</td>
+<td>oktobrī</td>
+</tr>
+<tr>
+<td>November</td>
+<td>novembris</td>
+<td>novembrī</td>
+</tr>
+<tr>
+<td>December</td>
+<td>decembris</td>
+<td>decembrī</td>
+</tr>
+</tbody>
+</table>
+<p sizset="0" sizcache="70">That part is easy.</p>
+<p sizset="0" sizcache="70">But then if you look at the default long date format for Latvian, it is:</p>
+<p sizset="0" sizcache="70" style="padding-left: 30px;"><strong><span style="font-size: large;">dddd, yyyy'. gada 'd. MMMM</span></strong></p>
+<p sizset="0" sizcache="70">and GetDateFormat will change that into:</p>
+<p sizset="0" sizcache="70" style="padding-left: 30px;"><span style="font-size: large;"><strong>tre&scaron;diena, 2010. gada 8. septembr&icirc;</strong></span></p>
+<p sizset="0" sizcache="70">Now in this form, with the month&nbsp;name isolated that way, the genitive form of the month name is much less obviously what one might expect to be there (and I think it is technically grammatically incorrect). But really there are only four ways to "fix" this problem:</p>
+<ol>
+<li>
+<div sizset="0" sizcache="70">Build a much more intelligent algorithm to determine which form to use, depending on the date format, or</div>
+</li>
+<li>
+<div sizset="0" sizcache="70">Remove the genitive forms entirely from the locale data, or</div>
+</li>
+<li>
+<div sizset="0" sizcache="70">Change the default long date format, or</div>
+</li>
+<li>
+<div sizset="0" sizcache="70">Add a new token for months and abbreviated months that means "use genitive form&nbsp;if it exists".</div>
+</li>
+</ol>
+<p sizset="0" sizcache="70">But each of these solutions has problems with it:</p>
+<p sizset="0" sizcache="70">#1 is a hugely complicated work item that would be very unlikely be done -- the rules may even be language specific! And as I have poinetd out previously, may also technically apply to day names when day names are part of the format!</p>
+<p sizset="0" sizcache="70">#2 is great for this default long date format, but will cause the date to be wrong again if anyone customizes the forrmat to be more like what locales like Russian use in terms of word order/placement ("d MMMM yyyy 'г.'").</p>
+<p sizset="0" sizcache="70">#3 is great if the format is wrong, but if it is what people generally expect then it is not so great.</p>
+<p sizset="0" sizcache="70">#4 is probably the most versatile of the solutions in terms of how much work it would be, but it adds whole new complicated works items in .Net, Windows, Regional Options,&nbsp;and the data of many locales&nbsp;that simply make it kind of unlikely (and it breaks anyone who would be depending on the existing behavior unless a new token was also added for "always use nominative form". It is less work than #1 but still it ends up probably being too much work for anyone to do.</p>
+<p sizset="0" sizcache="70">The question is a hard one. </p>
+<p sizset="0" sizcache="70">I suppose ultimately #2&nbsp;may be&nbsp;the "best" answer of these four, though when&nbsp;I say that sentence aloud the word <strong>best</strong> leaves a rather bad taste in my mouth.</p>
+<p sizset="0" sizcache="70">In the meantime, Latvian isn't any less broken, and who knows of this problem applies to other locales (especially when the format changes). :-(</p>
+<hr/><p><strong>John Cowan</strong> on 9 Sep 2010 8:33 AM:</p><div style="margin-left: 1em"><p>Mojibake alert! &nbsp;There is no &eth; (eth) in Latvian orthography. &nbsp;In fact the word for &#39;Wednesday&#39; is &#39;tre&scaron;diena&#39;.</p>
+<p>I&#39;ll comment here rather than on the other posts.</p>
+<p>Sami: There are actually six functioning Sami languages, five of which are listed in your post; Kildin Sami is presumably omitted because it&#39;s written in Cyrillic. &nbsp;Speaking of &quot;the Sami language&quot; is a misnomer, and people who do it usually refer to Northern Sami only, which is far and away the biggest and the most thriving of the group (20,000 Northern Sami speakers, 2000 Lule Sami speakers, and a few hundred for the other four; three more Sami languages have 10-20 older adult speakers only).</p>
+<p>Inflected weekdays: &nbsp;The point is that the name of a weekday is a noun, and in languages that inflect nouns for case, it may well be inflected too. &nbsp;So if you need to say &quot;from Monday, April 21 to Thursday, April 24&quot;, the words for &quot;Monday&quot; and &quot;Thursday&quot; may well need appropriate case inflections put on them, with or without prepositions or postpositions. &nbsp;But of course no multilingual API can reasonably do that, as there are too many different ways to use dates in sentences and too many conflicting and overlapping case systems.</p>
+<p>By the same token, a numeric API might know that 1000 is spelled &quot;thousand&quot; in English, but it&#39;s not going to be able to deal with the fact that we say &quot;a thousand men&quot; and &quot;five thousand men&quot; but &quot;thousands of men&quot; in running text. &nbsp;Older varieties of English would say &quot;a thousand of men&quot; and &quot;five thousands of men&quot;, and this hung on till the 19th century with &quot;million&quot; and larger number words: an 1829 grammar is still saying that &quot;a million men&quot; is un-English, whereas both &quot;a thousand of men&quot; and &quot;a thousand men&quot; are acceptable.</p></div>
+<p><strong>Michael S. Kaplan</strong> on 9 Sep 2010 8:39 AM:</p><div style="margin-left: 1em"><p>Oops -- problem with the tool I grabbed stuff out of. :-)</p>
+<p>Clearly that full situation cannot be handled, but a better job is theoretically possible for month names in date formats, given their nature. Certainly the 90% could could be hit with method #4, for example. But it is unlikely that can really happen....</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 9 Sep 2010 8:40 AM:</p><div style="margin-left: 1em"><p>For Sami, I have talked about why we don&#39;t support the Cyrillic Samis (and why there are nine Sami locales in Windows) in the past....</p>
+</div>
+<p><strong>John Cowan</strong> on 9 Sep 2010 9:54 AM:</p><div style="margin-left: 1em"><p>You have? &nbsp;I couldn&#39;t find any references to Cyrillic Sami locales with either the blog search or site-limited Google search.</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 9 Sep 2010 2:22 PM:</p><div style="margin-left: 1em"><p>Oh, I hint at it <a href="http://archives.miloush.net/michkap/archive/2006/04/25/583307.html"><strong>here</strong></a>, but I guess I never talked about it. Ok, look for an upcoming blog on Sami!</p></div>
+<p><strong>Alex Cohn</strong> on 13 Sep 2010 12:51 PM:</p><div style="margin-left: 1em"><p>I guess the trouble of #4 is exaggerated slightly. Anyway, the long date format should, IMHO, depend most and foremost on the current input language, and not on the &quot;regional settings&quot;. When I am writing in English, the month names should naturally be January, February, etc. But when I want to insert a timestamp (it&#39;s only F5 away) to my note written in Hebrew, I expect the system to use Hebrew names of the months, if not the Hebrew dates altogether (but that&#39;s a different story).</p>
+<p>Well, people have problems with the date format in plain English: <a rel="nofollow" target="_new" href="http://www.xpheads.com/forums/microsoft-public-windowsxp-customize/160540-notepad-timestamp-yyyy-mm-dd-hh-mm.html">www.xpheads.com/.../160540-notepad-timestamp-yyyy-mm-dd-hh-mm.html</a>.</p>
+<p>Furthermore, the DD-MMMM-YYYY or whatever &#39;format&#39; which is relevant for one language, makes no sense in another. In English, I would choose September 13, 2010 while in Russian it must be 13 сентября 2010 года (yes, genitive for month name and for the word &quot;year&quot;). Such &#39;cultural&#39; setting is pretty stable, and could be hardcoded with other keyboard preferences. It may be easy (for somebody who speaks the language) to choose the nominative or genitive form from a drop-down box, without ever worrying about the underlying tokens. And for the happy users of English or Hebrew, where no separate genitive forms exist, the drop-down choice will simply be shorter.</p>
+<p>Oh, and this way you could use the same UI to easily choose between יום ג&#39;&rlm; and יום שלישי, which are both legitimate ways to express Tuesday. Or Tue and Tuesday. Or even between ספטמבר and תשרי.</p>
+<p>Which reminds me to wish you happy New Year. שנה טובה!</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 13 Sep 2010 12:54 PM:</p><div style="margin-left: 1em"><p>Well, this is an interesting model, but not the one that Windows ever uses....</p>
+</div>
+<hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2011/10/14 <a href="http://archives.miloush.net/michkap/archive/2011/10/14/10225146.html">Improving genitive. Or not.... (part 1)</a></p><p>2010/09/15 <a href="http://archives.miloush.net/michkap/archive/2010/09/15/10062047.html">How to format? What locale?</a></p><p>2010/09/13 <a href="http://archives.miloush.net/michkap/archive/2010/09/13/10060986.html">Olive, the other reindeer, gets to Sort it all Out too....</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2010/09/10/10060138.html" title="Doing the minimum isn&#39;t always the best plan...">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2010/09/08/10059151.html" title="64 bits of awesomesauce, delivered!">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2010-09">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2010-09-09">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2010/09/09/10059644.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:35 GMT -->
+</html>

@@ -1,0 +1,38 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2005/10/15/481281.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:40 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>You'd think the two teams were communicating...</title></head><body>
+<h1>You'd think the two teams were communicating...</h1>
+<p><em>by Michael S. Kaplan, published on 2005/10/15 03:01 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2005/10/15/481281.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P><FONT face=Tahoma>The other day, Murtuza Shakir (an SDET on the Office team here at Microsoft) asked:</FONT></P>
+<BLOCKQUOTE dir=ltr style="MARGIN-RIGHT: 0px">
+<P><SPAN style="FONT-SIZE: 10pt; COLOR: black; FONT-FAMILY: Arial"><FONT face="Times New Roman"><EM>GetLocaleInfo accepted LOCALE_SLANGUAGE and returned the localized name. Is there something similar for CultureInfo in System.Globalization?</EM></FONT></SPAN></P></BLOCKQUOTE>
+<P><FONT face=Tahoma>The LOCALE_SLANGUAGE lctyps is described as:</FONT></P>
+<BLOCKQUOTE dir=ltr style="MARGIN-RIGHT: 0px">
+<P><FONT face="Courier New" size=2>Full localized name of the language. This name is based on the localization of the product, thus the value changes for each localized version.</FONT></P></BLOCKQUOTE>
+<P><FONT face=Tahoma>Now t</FONT><FONT face=Tahoma>his is a fascinating question, which has an answer -- the <A href="http://msdn.microsoft.com/library/en-us/cpref/html/frlrfsystemglobalizationcultureinfoclassdisplaynametopic.asp">CultureInfo.DisplayName</A> property:</FONT></P>
+<BLOCKQUOTE dir=ltr style="MARGIN-RIGHT: 0px">
+<P><FONT face="Courier New" size=2>The culture name in the format "&lt;languagefull&gt; (&lt;country/regionfull&gt;)" in the language of the localized version of .NET Framework, where &lt;languagefull&gt; is the full name of the language and &lt;country/regionfull&gt; is the full name of the country/region.</FONT></P></BLOCKQUOTE>
+<P><FONT face=Tahoma>When I answered the question, I described these two properties as being roughly analagous. Now of course, this led Murtuza to ask a perfectly reasonable question:</FONT></P>
+<BLOCKQUOTE dir=ltr style="MARGIN-RIGHT: 0px">
+<P><EM><FONT face="Times New Roman"><FONT size=2>Thanks for the reply Michael.</FONT></EM></P>
+<P><EM><FONT face="Times New Roman" size=2>"roughly analagous" = Does it always return the same value as for SLANGUAGE? If not , why is the difference?</FONT></EM></P></BLOCKQUOTE>
+<P><FONT face=Tahoma>I guess I did give a leading answer. Perhaps I imagined I'd be writing this up in the blog. :-)</FONT></P>
+<P><FONT face=Tahoma>The truth is that they are not always the same, for a myriad of reasons:</FONT></P>
+<UL dir=ltr style="MARGIN-RIGHT: 0px">
+<LI><FONT face=Tahoma>they are two entirely different pieces of locale data, internally (SLANGUAGE and SDISPLAYNAME)</FONT> 
+<LI><FONT face=Tahoma>they are stored in two different places (one in a .RC file that is built into kernel32.dll, one in the culture data and built into the BCL's resource strings)</FONT> 
+<LI><FONT face=Tahoma>they are two different products&nbsp;(Windows and the .NET Framework)</FONT> 
+<LI><FONT face=Tahoma>they are produced by two different divisions of Microsoft (Windows vs. Developer Tools)</FONT> 
+<LI><FONT face=Tahoma>They are translated by two entrirely different localization teams that handle these two different products</FONT> 
+<LI><FONT face=Tahoma>They use two different localization glossaries (since they have different terminologies, this makes some sense)</FONT></LI></UL>
+<P dir=ltr><FONT face=Tahoma>In fact, the only reason that match more often than they do not is that there is the same general intent in both cases. But there is currently not even a process that gets the original strings coming from the same source, letalone matching up the localized strings....</FONT></P>
+<P dir=ltr><FONT face=Tahoma>This of course leads to the subject line (<STRONG>You'd think the two teams were communicating...</STRONG>), which is kind of tongue in cheek since in this case those two teams are actually the same team -- the GIFT team! So perhaps the problem is that we do not talk to ourselves enough?</FONT></P>
+<P dir=ltr><FONT face=Tahoma>Ideally these two strings would have the same source and we would work out a process to have the localized strings shared between the two products. We really ought to do that someday, but in the meantime, we just manage to luck out since they really are intended to be the same across the two products. :-)</FONT></P>
+<P dir=ltr><FONT face=Tahoma></FONT>&nbsp;</P>
+<P dir=ltr><FONT face=Tahoma color=#ff1493><EM>This post brought to you by</EM> "α" <EM>(<A href="http://www.fileformat.info/info/unicode/char/03b1/index.htm">U+03b1</A>, a.k.a. GREEK SMALL LETTER ALPHA)</EM></FONT></P></FONT>
+<hr/><p><a id="481501" href="#481501">#</a> <strong>Jonathan Wilson</strong> on 15 Oct 2005 9:34 PM:</p><div style="margin-left: 1em">Why does .NET even need its own string resources for this?<br><br>Why cant the .NET function just call GetLocaleInfo? (with LOCALE_SLANGUAGE or whatever other flag it needs to pass)<br></div>
+<p><a id="481502" href="#481502">#</a> <strong>Michael S. Kaplan</strong> on 15 Oct 2005 9:43 PM:</p><div style="margin-left: 1em">Good question, Jonathan. Remember that the .NET Framework has three things to keep in mind that Windows does not:<br><br>1) Neutral cultures<br>2) Cultures that do not exist on Windows<br>3) loaclized version of .NET does not have to match localized version of Windows.</div>
+<hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2005/10/15/481314.html" title="If you are using INVARIANT then you are probably MISusing it, #1">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2005/10/14/481324.html" title="My caption would have been....">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2005-10">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2005-10-15">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2005/10/15/481281.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:40 GMT -->
+</html>

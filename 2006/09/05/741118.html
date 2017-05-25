@@ -1,0 +1,24 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2006/09/05/741118.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:39 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Don't quote me on this!</title></head><body>
+<h1>Don't quote me on this!</h1>
+<p><em>by Michael S. Kaplan, published on 2006/09/05 07:08 -07:00, original URI: http://blogs.msdn.com/michkap/archive/2006/09/05/741118.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostOld -->
+<FONT face=Tahoma>
+<P>So you take some simple bit of managed code using <A href="http://msdn2.microsoft.com/en-us/library/1k1skd40.aspx">DateTime.Parse</A>, like the following:</P>
+<BLOCKQUOTE dir=ltr style="MARGIN-RIGHT: 0px"><B><FONT face="Consolas,Courier New" size=2>
+<P>using System;</P>
+<P>public class Test { <BR>&nbsp;&nbsp;&nbsp; public static void Main() {<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; DateTime dt1 = DateTime.Parse("3/15/2007");<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Console.WriteLine(dt1);<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; DateTime dt2 = DateTime.Parse("'3/15/2007'");<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Console.WriteLine(dt2);<BR>&nbsp;&nbsp;&nbsp; }<BR>}</P></FONT></B></BLOCKQUOTE>
+<P>Now if you compile this with version 1.1 of the .NET Framework and run it, the output is as follows:</P>
+<BLOCKQUOTE dir=ltr style="MARGIN-RIGHT: 0px">
+<P><FONT face="Consolas,Courier New" size=2><STRONG>3/15/2007 12:00:00 AM<BR>3/15/2007 12:00:00 AM</STRONG></FONT></P></BLOCKQUOTE>
+<P>And if you do the same with version 2.0 of the .NET Framework and run it, and you escape out of the error dialog that comes up, the following output happens:</P>
+<BLOCKQUOTE dir=ltr style="MARGIN-RIGHT: 0px"><FONT face="Consolas,Courier New" size=2><STRONG>
+<P>3/15/2007 12:00:00 AM</P>
+<P>Unhandled Exception: System.FormatException: String was not recognized as a valid DateTime.<BR>&nbsp;&nbsp; at System.DateTimeParse.Parse(String s, DateTimeFormatInfo dtfi, DateTimeStyles styles)<BR>&nbsp;&nbsp; at System.DateTime.Parse(String s)<BR>&nbsp;&nbsp; at Test.Main()</P></STRONG></FONT></BLOCKQUOTE>
+<P>Yikes! I guess you really can tell people not to quote you on this one, huh? :-)</P>
+<P>&nbsp;</P>
+<P><FONT color=#ff1493><EM>This post broughtto you by</EM> <FONT size=6>ऱ</FONT> <EM>(<A href="http://www.fileformat.info/info/unicode/char/0931">U+0931</A>, a.k.a. DEVANAGARI LETTER RRA)</EM></FONT></P></FONT>
+<hr/><div style="margin-left: 1em"><em>no comments</em></div><hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2006/09/06/742073.html" title="IsSortable() == false? Well, sometimes it may be lying....">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2006/09/05/740606.html" title="At the TONE, it will not be TUNE, but TANE">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2006-09">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2006-09-05">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2006/09/05/741118.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:39 GMT -->
+</html>

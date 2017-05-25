@@ -1,0 +1,147 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2005/02/27/381189.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:42 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Some suggested updates to the Win32-->.NET mapping for NLS functions....</title></head><body>
+<h1>Some suggested updates to the Win32-->.NET mapping for NLS functions....</h1>
+<p><em>by Michael S. Kaplan, published on 2005/02/27 08:25 -05:00, original URI: http://blogs.msdn.com/b/michkap/archive/2005/02/27/381189.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P>The other day I posted about the <A id=_16f431a2c22fefc7_HomePageDays_DaysList__ctl3_DayItem_DayList__ctl0_TitleUrl href="http://archives.miloush.net/michkap/archive/2005/02/23/379320.html" mce_href="http://archives.miloush.net/michkap/archive/2005/02/23/379320.html">Microsoft Win32 to Microsoft .NET Framework API Map</A>&nbsp;and commented that there were some mistakes in the NLS functions there. </P>
+<P>Here is a quick list of things I would change (I will send the link as feedback, too). The key to the changed table:</P>
+<OL>
+<LI>If I had no suggested changes, I did not include it in the table. 
+<LI>If the .NET suggestion was wrong or inaccurate enough, it is <FONT color=#808080><STRIKE><STRONG>grayed and struck out</STRONG></STRIKE></FONT>. 
+<LI>If the .NET suggestion was close enough to right but needed more info, it is just&nbsp;<FONT color=#808080><STRONG>grayed out</STRONG></FONT>.</LI></OL>
+<P>The APIs that were not included here but were put elsewhere, or not included at all:</P>
+<UL>
+<LI><STRONG><A title=CompareString href="http://msdn.microsoft.com/library/en-us/winui/winui/windowsuserinterface/resources/strings/stringreference/stringfunctions/comparestring.asp" target=_blank mce_href="http://msdn.microsoft.com/library/en-us/winui/winui/windowsuserinterface/resources/strings/stringreference/stringfunctions/comparestring.asp">CompareString</A></STRONG> -- see also the <STRONG><A title=System href="http://msdn.microsoft.com/library/en-us/cpref/html/frlrfsystemglobalization.asp" target=_blank mce_href="http://msdn.microsoft.com/library/en-us/cpref/html/frlrfsystemglobalization.asp">System.Globalization</A>.CompareInfo</STRONG> class, which gives the full functionality of thae API; 
+<LI><STRONG>lstrcmp</STRONG> -- see also <STRONG>System.Globalization.CultureInfo.CurrentCulture.CompareInfo</STRONG>; 
+<LI><STRONG>lstrcmpi</STRONG> -- see also <STRONG>System.Globalization.CultureInfo.CurrentCulture.CompareInfo</STRONG> with <STRONG><A title=CompareOptions href="http://msdn.microsoft.com/library/en-us/cpref/html/frlrfsystemglobalizationcompareoptionsclasstopic.asp" target=_blank mce_href="http://msdn.microsoft.com/library/en-us/cpref/html/frlrfsystemglobalizationcompareoptionsclasstopic.asp">CompareOptions</A>.IgnoreCase</STRONG>; 
+<LI><STRONG>Foldstring</STRONG> -- not included in the page, no support in 1.1, but&nbsp;in 2.0 <STRONG>String.Normalize()</STRONG> and <STRONG>CharUnicodeInfo.GetDecimalDigitValue()</STRONG> can do quite a good job on them, as described <A href="http://archives.miloush.net/michkap/archive/2005/01/31/363701.html" mce_href="http://archives.miloush.net/michkap/archive/2005/01/31/363701.html">here</A> and <A href="http://archives.miloush.net/michkap/archive/2005/01/28/362305.html" mce_href="http://archives.miloush.net/michkap/archive/2005/01/28/362305.html">here</A>.</LI></UL>
+<H3>UPDATED National Language Functions -- only ones with additions and changes listed:</H3>
+<P>
+<TABLE class="" border=1>
+<TBODY>
+<TR vAlign=top>
+<TH class=data align=left width="20%" class="data">Win32 function</TH>
+<TH class=data align=left width="25%" class="data">Description</TH>
+<TH class=data align=left width="55%" class="data">.NET Framework API</TH></TR>
+<TR vAlign=top>
+<TD class=""><B><A title=ConvertDefaultLocale href="http://msdn.microsoft.com/library/en-us/intl/nls_80o5.asp" target=_blank mce_href="http://msdn.microsoft.com/library/en-us/intl/nls_80o5.asp"><FONT size=2>ConvertDefaultLocale</FONT></A></B></TD>
+<TD class=""><FONT size=2>Converts a default locale value to an actual locale identifier.</FONT></TD>
+<TD class="">
+<P><B><STRIKE><FONT color=#808080 size=2>System.Globalization.CultureInfo.CurrentCulture<BR>System.Globalization.CultureInfo.InstalledUICulture</FONT></STRIKE></B></P>
+<P><STRONG><FONT size=2>Actually, you would use the static System.Globalization.CultureInfo.CreateSpecificCulture() method to create a specific culture from a neutral one, which is what that API does.</FONT></STRONG></P></TD></TR>
+<TR vAlign=top>
+<TD class=""><B><A title=EnumCalendarInfo href="http://msdn.microsoft.com/library/en-us/intl/nls_4zn3.asp" target=_blank mce_href="http://msdn.microsoft.com/library/en-us/intl/nls_4zn3.asp"><FONT size=2>EnumCalendarInfo</FONT></A></B></TD>
+<TD class=""><FONT size=2>Enumerates calendar information for a specified locale.</FONT></TD>
+<TD class="">
+<P><FONT color=#808080 size=2>Access the <B>System.Globalization.CultureInfo.DateTimeFormat</B> property to get a <B>System.Globalization.DateTimeFormatInfo </B>object, and then access its properties:</FONT><B><BR><FONT color=#808080 size=2>System.Globalization.DateTimeFormatInfo.AbbreviatedDayNames<BR>System.Globalization.DateTimeFormatInfo.AbbreviatedMonthNames<BR>System.Globalization.DateTimeFormatInfo.DayNames<BR>System.Globalization.DateTimeFormatInfo.LongDatePattern<BR>System.Globalization.DateTimeFormatInfo.MonthNames<BR>System.Globalization.DateTimeFormatInfo.ShortDatePattern</FONT></B></P>
+<P><STRONG><FONT size=2>Let's not forget the most important part -- you need to look at the information after setting the desired </FONT><A title=Calendar href="http://msdn.microsoft.com/library/en-us/cpref/html/frlrfsystemglobalizationcalendarclasstopic.asp" target=_blank mce_href="http://msdn.microsoft.com/library/en-us/cpref/html/frlrfsystemglobalizationcalendarclasstopic.asp"><FONT size=2>Calendar</FONT></A><FONT size=2> on the culture, first!</FONT></STRONG></P></TD></TR>
+<TR vAlign=top>
+<TD class=""><B><A title=EnumDateFormats href="http://msdn.microsoft.com/library/en-us/intl/nls_5ucz.asp" target=_blank mce_href="http://msdn.microsoft.com/library/en-us/intl/nls_5ucz.asp"><FONT size=2>EnumDateFormats</FONT></A></B></TD>
+<TD class=""><FONT size=2>Enumerates the long or short date formats that are available for a specified locale.</FONT></TD>
+<TD class="">
+<P><B><FONT color=#808080 size=2>System.DateTime.GetDateTimeFormats(System.Globalization.CultureInfo)</FONT></B></P>
+<P><STRONG><FONT size=2>Or alternately, </FONT><A title=DateTimeFormatInfo href="http://msdn.microsoft.com/library/en-us/cpref/html/frlrfsystemglobalizationdatetimeformatinfoclasstopic.asp" target=_blank mce_href="http://msdn.microsoft.com/library/en-us/cpref/html/frlrfsystemglobalizationdatetimeformatinfoclasstopic.asp"><FONT size=2>DateTimeFormatInfo</FONT></A><FONT size=2>.GetAllDateTimePatterns()</FONT></STRONG></P></TD></TR>
+<TR vAlign=top>
+<TD class=""><B><A title=EnumDateFormatsEx href="http://msdn.microsoft.com/library/en-us/intl/nls_4h14.asp" target=_blank mce_href="http://msdn.microsoft.com/library/en-us/intl/nls_4h14.asp"><FONT size=2>EnumDateFormatsEx</FONT></A></B></TD>
+<TD class=""><FONT size=2>Enumerates the long or short date formats that are available for a specified locale, including date formats for any alternate calendars.</FONT></TD>
+<TD class="">
+<P><FONT color=#808080 size=2>Iterate through the calendars:</FONT><B><BR><FONT color=#808080 size=2>System.Globalization.CultureInfo.DateTimeFormat.Calendar = System.Globalization.CultureInfo.OptionalCalendars[i];<BR>System.DateTime.GetDateTimeFormats(System.Globalization.CultureInfo)</FONT></B></P>
+<P><STRONG><FONT size=2>Or alternately, DateTimeFormatInfo.GetAllDateTimePatterns()</FONT></STRONG></P></TD></TR>
+<TR>
+<TD class=""><B><A title=EnumSystemCodePages href="http://msdn.microsoft.com/library/en-us/intl/nls_65rn.asp" target=_blank mce_href="http://msdn.microsoft.com/library/en-us/intl/nls_65rn.asp"><FONT size=2>EnumSystemCodePages</FONT></A></B></TD>
+<TD class=""><FONT size=2>Enumerates the code pages that are either installed on or supported by a system.</FONT></TD>
+<TD class=""><FONT color=#808080><STRIKE><FONT size=2><B>System.Globalization.CultureInfo.GetCultures(System.Globalization.CultureTypes.AllCultures)</B> returns an array of <B><A title=CultureInfo href="http://msdn.microsoft.com/library/en-us/cpref/html/frlrfsystemglobalizationcultureinfoclasstopic.asp" target=_blank mce_href="http://msdn.microsoft.com/library/en-us/cpref/html/frlrfsystemglobalizationcultureinfoclasstopic.asp">CultureInfo</A></B> </FONT></STRIKE></FONT>
+<P><FONT color=#808080><STRIKE><FONT size=2>The various code page properties of<B> System.Globalization.CultureInfo.TextInfo</B></FONT></STRIKE></FONT></P>
+<P><STRONG><FONT size=2>This will not get all of the code pages and will show many repeats of those it does get -- it will also sometimes retrieve IDs that are not supported. There is not a good enumeration methodology for the supported code pages in .NET 1.1 -- but look for new enumeration methods in 2.0!</FONT></STRONG></P></TD></TR>
+<TR vAlign=top>
+<TD class=""><B><A title=EnumSystemGeoID href="http://msdn.microsoft.com/library/en-us/intl/nls_3i90.asp" target=_blank mce_href="http://msdn.microsoft.com/library/en-us/intl/nls_3i90.asp"><FONT size=2>EnumSystemGeoID</FONT></A></B></TD>
+<TD class=""><FONT size=2>Enumerates all GeoIDs on the system.</FONT></TD>
+<TD class="">
+<P><FONT color=#808080 size=2><STRIKE>Retrieve an array of <B>CultureInfo</B> by calling <B>System.Globalization.CultureInfo.GetCultures(System.Globalization.CultureTypes.AllCultures)</B>, and then access the following <B>CultureInfo</B> properties: <BR></STRIKE></FONT><B><FONT color=#808080 size=2><STRIKE>System.Globalization.CultureInfo.ThreeLetterISOLanguageName<BR>System.Globalization.CultureInfo.ThreeLetterWindowsLanguageName<BR>System.Globalization.CultureInfo.TwoLetterISOLanguageName</STRIKE></FONT></B></P>
+<P><STRONG><FONT size=2>GeoID is not supported in .NET 1.1 and it is actually region-based, not language based. .NET 2.0 will support a </FONT><A title=RegionInfo href="http://msdn.microsoft.com/library/en-us/cpref/html/frlrfsystemglobalizationregioninfoclasstopic.asp" target=_blank mce_href="http://msdn.microsoft.com/library/en-us/cpref/html/frlrfsystemglobalizationregioninfoclasstopic.asp"><FONT size=2>RegionInfo</FONT></A><FONT size=2>.GeoId property.</FONT></STRONG></P></TD></TR>
+<TR vAlign=top>
+<TD class=""><B><A title=EnumSystemLocales href="http://msdn.microsoft.com/library/en-us/intl/nls_9qk3.asp" target=_blank mce_href="http://msdn.microsoft.com/library/en-us/intl/nls_9qk3.asp"><FONT size=2>EnumSystemLocales</FONT></A></B></TD>
+<TD class=""><FONT size=2>Enumerates the locales that are either installed on or supported by a system.</FONT></TD>
+<TD class="">
+<P><B><FONT color=#808080 size=2>System.Globalization.CultureInfo.GetCultures(System.Globalization.CultureTypes.SpecificCultures)<BR>System.Globalization.CultureInfo.GetCultures(System.Globalization.CultureTypes.InstalledWin32Cultures)</FONT></B></P>
+<P><STRONG><FONT size=2>Note that there is no method that can be used to get the alternate sorts, one of the important features this API supports.</FONT></STRONG></P></TD></TR>
+<TR vAlign=top>
+<TD class=""><B><A title=EnumTimeFormats href="http://msdn.microsoft.com/library/en-us/intl/nls_1tv7.asp" target=_blank mce_href="http://msdn.microsoft.com/library/en-us/intl/nls_1tv7.asp"><FONT size=2>EnumTimeFormats</FONT></A></B></TD>
+<TD class=""><FONT size=2>Enumerates the time formats that are available for a specified locale.</FONT></TD>
+<TD class="">
+<P><B><FONT color=#808080 size=2>System.DateTime.GetDateTimeFormats</FONT></B></P>
+<P><STRONG><FONT size=2>Or alternately, DateTimeFormatInfo.GetAllDateTimePatterns()</FONT></STRONG></P></TD></TR>
+<TR vAlign=top>
+<TD class=""><B><A title=GetACP href="http://msdn.microsoft.com/library/en-us/intl/nls_21bk.asp" target=_blank mce_href="http://msdn.microsoft.com/library/en-us/intl/nls_21bk.asp"><FONT size=2>GetACP</FONT></A></B></TD>
+<TD class=""><FONT size=2>Retrieves the current ANSI code-page identifier for the system.</FONT></TD>
+<TD class="">
+<P><B><STRIKE><FONT color=#808080 size=2>System.Globalization.CultureInfo.InstalledUICulture.TextInfo.ANSICodePage</FONT></STRIKE></B></P>
+<P><STRONG><FONT size=2>Try Encoding.Default.CodePage, instead.</FONT></STRONG></P></TD></TR>
+<TR vAlign=top>
+<TD class=""><B><A title=GetCalendarInfo href="http://msdn.microsoft.com/library/en-us/intl/nls_3hf3.asp" target=_blank mce_href="http://msdn.microsoft.com/library/en-us/intl/nls_3hf3.asp"><FONT size=2>GetCalendarInfo</FONT></A></B></TD>
+<TD class=""><FONT size=2>Retrieves information about a calendar.</FONT></TD>
+<TD class="">
+<P><B><FONT color=#808080 size=2>System.Globalization.CultureInfo.DateTimeFormat</FONT></B></P>
+<P><STRONG><FONT size=2>This will only work for the currently selected Calendar -- make sure to set the Calendar from which you would like information, first.</FONT></STRONG></P></TD></TR>
+<TR vAlign=top>
+<TD class=""><B><A title=GetLocaleInfo href="http://msdn.microsoft.com/library/en-us/intl/nls_34rz.asp" target=_blank mce_href="http://msdn.microsoft.com/library/en-us/intl/nls_34rz.asp"><FONT size=2>GetLocaleInfo</FONT></A></B></TD>
+<TD class=""><FONT size=2>Retrieves information about a locale.</FONT></TD>
+<TD class="">
+<P><B><FONT color=#808080 size=2><STRIKE>System.Globalization.CultureInfo.DateTimeFormat<BR>System.Globalization.CultureInfo.NumberFormat<BR>System.Globalization.CultureInfo.TextInfo</STRIKE></FONT></B></P>
+<P><STRONG><FONT size=2>Well, instead of that, how about everything under:<BR></FONT></STRONG><STRONG><FONT size=2>System.Globalization.CultureInfo<BR>System.Globalization.RegionInfo</FONT></STRONG></P></TD></TR>
+<TR vAlign=top>
+<TD class=""><B><A title=GetOEMCP href="http://msdn.microsoft.com/library/en-us/intl/nls_7q5s.asp" target=_blank mce_href="http://msdn.microsoft.com/library/en-us/intl/nls_7q5s.asp"><FONT size=2>GetOEMCP</FONT></A></B></TD>
+<TD class=""><FONT size=2>Retrieves the current original equipment manufacturer (OEM) code-page identifier for the system.</FONT></TD>
+<TD class="">
+<P><B><FONT color=#808080 size=2><STRIKE>System.Globalization.CultureInfo.InstalledUICulture.TextInfo.OEMCodePage</STRIKE></FONT></B></P>
+<P><STRONG><FONT size=2>The real OEMCP of a system is based on the default system locale, which can be changed. The Installed UI language cannot be.</FONT></STRONG></P></TD></TR>
+<TR vAlign=top>
+<TD class=""><B><A title=GetSystemDefaultLangID href="http://msdn.microsoft.com/library/en-us/intl/nls_4ppg.asp" target=_blank mce_href="http://msdn.microsoft.com/library/en-us/intl/nls_4ppg.asp"><FONT size=2>GetSystemDefaultLangID</FONT></A></B></TD>
+<TD class=""><FONT size=2>Retrieves the language identifier of the system locale.</FONT></TD>
+<TD class="">
+<P><B><FONT color=#808080 size=2><STRIKE>System.Globalization.CultureInfo.InstalledUICulture</STRIKE></FONT></B></P>
+<P><STRONG><FONT size=2>The default LANGID of a system is based on the default system locale, which can be changed. The Installed UI language cannot be.</FONT></STRONG></P></TD></TR>
+<TR vAlign=top>
+<TD class=""><B><A title=GetSystemDefaultLCID href="http://msdn.microsoft.com/library/en-us/intl/nls_85yc.asp" target=_blank mce_href="http://msdn.microsoft.com/library/en-us/intl/nls_85yc.asp"><FONT size=2>GetSystemDefaultLCID</FONT></A></B></TD>
+<TD class=""><FONT size=2>Retrieves the system default locale identifier.</FONT></TD>
+<TD class="">
+<P><B><STRIKE><FONT color=#808080 size=2>System.Globalization.CultureInfo.InstalledUICulture</FONT></STRIKE></B></P>
+<P><STRONG><FONT size=2>The system default LCID is the default system locale, which can be changed. The Installed UI language cannot be.</FONT></STRONG></P></TD></TR>
+<TR vAlign=top>
+<TD class=""><B><A title=GetThreadLocale href="http://msdn.microsoft.com/library/en-us/intl/nls_9ko5.asp" target=_blank mce_href="http://msdn.microsoft.com/library/en-us/intl/nls_9ko5.asp"><FONT size=2>GetThreadLocale</FONT></A></B></TD>
+<TD class=""><FONT size=2>Retrieves the current locale for the calling thread.</FONT></TD>
+<TD class="">
+<P><FONT color=#808080 size=2>Either of the following:</FONT><B><BR><FONT color=#808080 size=2>System.Globalization.CultureInfo.CurrentCulture<BR>System.Threading.Thread.CurrentCulture</FONT></B></P>
+<P><STRONG><FONT size=2>The most important change that occurs when the thread locale is changed is the resource language in the thread, meaning System.Threading.Thread.CurrentUICulture may be more accurate here.</FONT></STRONG></P></TD></TR>
+<TR vAlign=top>
+<TD class=""><B><A title=GetUserGeoID href="http://msdn.microsoft.com/library/en-us/intl/nls_6884.asp" target=_blank mce_href="http://msdn.microsoft.com/library/en-us/intl/nls_6884.asp"><FONT size=2>GetUserGeoID</FONT></A></B></TD>
+<TD class=""><FONT size=2>Gets information about the user's location.</FONT></TD>
+<TD class="">
+<P><B><FONT color=#808080 size=2>System.Globalization.RegionInfo</FONT></B></P><STRONG>
+<P><STRONG><FONT size=2>GeoID is not supported in .NET 1.1, but 2.0 will support a RegionInfo.GeoId property.</FONT></STRONG></P></STRONG></TD></TR>
+<TR vAlign=top>
+<TD class=""><B><A title=IsValidCodePage href="http://msdn.microsoft.com/library/en-us/intl/nls_2o11.asp" target=_blank mce_href="http://msdn.microsoft.com/library/en-us/intl/nls_2o11.asp"><FONT size=2>IsValidCodePage</FONT></A></B></TD>
+<TD class=""><FONT size=2>Determines whether a specified code page is valid.</FONT></TD>
+<TD class=""><FONT color=#808080 size=2><STRIKE>Use an array of <B>CultureInfo </B>objects returned by: </STRIKE></FONT><B><BR><FONT color=#808080 size=2><STRIKE>System.Globalization.CultureInfo.GetCultures(System.Globalization.CultureTypes.AllCultures)</STRIKE></FONT></B><FONT color=#808080 size=2><STRIKE> </STRIKE></FONT>
+<P><FONT color=#808080><STRIKE><FONT size=2>Compare to the code page properties of <B>System.Globalization.CultureInfo.TextInfo</B></FONT></STRIKE></FONT></P>
+<P><STRONG><FONT size=2>Yikes! This is time consuming and will not detect all valid code pages, and will claim some are valid that may not be supported. How about calling Encoding.GetEncoding() with a CodePage identifier and trapping both ArgumentException and NotSupportedException, instead?</FONT></STRONG></P></TD></TR>
+<TR vAlign=top>
+<TD class=""><B><A title=LCMapString href="http://msdn.microsoft.com/library/en-us/intl/nls_5s2v.asp" target=_blank mce_href="http://msdn.microsoft.com/library/en-us/intl/nls_5s2v.asp"><FONT size=2>LCMapString</FONT></A></B></TD>
+<TD class=""><FONT size=2>Maps one character string to another, performing a specified locale-dependent transformation.</FONT></TD>
+<TD class="">
+<P><B><FONT color=#808080 size=2>System.Globalization.SortKey</FONT></B></P>
+<P><STRONG><FONT size=2>This is only one of the many possible uses of LCMapString, which also supports uppercase/lowercase, Hiragana/Katakana, fullwidth/halfwidth, traditional/simplified mappings. Of these, only the case mappings are supported in .NET.</FONT></STRONG></P></TD></TR>
+<TR vAlign=top>
+<TD class=""><B><A title=SetThreadLocale href="http://msdn.microsoft.com/library/en-us/intl/nls_52lh.asp" target=_blank mce_href="http://msdn.microsoft.com/library/en-us/intl/nls_52lh.asp"><FONT size=2>SetThreadLocale</FONT></A></B></TD>
+<TD class=""><FONT size=2>Sets the current locale for the calling thread.</FONT></TD>
+<TD class=""><FONT color=#808080><FONT size=2><B>System.Threading.Thread.CurrentCulture</B> </FONT></FONT>
+<P><FONT color=#808080><FONT size=2><B class=le>Note</B>&nbsp;&nbsp;&nbsp;Sets <B>langid</B> only.</FONT></FONT></P>
+<P><STRONG><FONT size=2>The most important change that occurs when the thread locale is changed is the resource language in the thread, meaning System.Threading.Thread.CurrentUICulture may be more accurate here.</FONT></STRONG></P></TD></TR></TBODY></TABLE></P>
+<P mce_keep="true">&nbsp;</P>
+<P><FONT color=#ff0000><EM>This post brought to you by </EM>"E"<EM> (</EM><A href="http://www.fileformat.info/info/unicode/char/0045/index.htm" mce_href="http://www.fileformat.info/info/unicode/char/0045/index.htm"><EM>U+0045</EM></A><EM>, a.k.a. LATIN CAPITAL LETTER E)</EM></FONT></P>
+<hr/><p><a id="381195" href="#381195">#</a> <strong>AC</strong> on 27 Feb 2005 5:51 AM:</p><div style="margin-left: 1em">That is not so bad. It looks like they mostly had it right.</div>
+<p><a id="381346" href="#381346">#</a> <strong>Michael Kaplan</strong> on 27 Feb 2005 4:06 PM:</p><div style="margin-left: 1em">Very true, it is not so bad. Plus they will likely pick up a bunch of this stuff (though probably not the 2.0 stuff), and then they will be even better.</div>
+<hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2008/03/20 <a href="http://archives.miloush.net/michkap/archive/2008/03/20/8326152.html">That's no gap, dear; that's a huge freaking chasm!</a></p><p>2005/04/15 <a href="http://archives.miloush.net/michkap/archive/2005/04/15/408422.html">From Win32 to .NET (and vice versa)</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2005/02/27/381318.html" title="How long can I keep up this pace?">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2005/02/26/381020.html" title="What the &amp;%#$ does MB_USEGLYPHCHARS do?">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2005-02">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2005-02-27">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2005/02/27/381189.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:42 GMT -->
+</html>

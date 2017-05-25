@@ -1,0 +1,28 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2006/01/17/513651.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:40 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Getting the language of Office</title></head><body>
+<h1>Getting the language of Office</h1>
+<p><em>by Michael S. Kaplan, published on 2006/01/17 05:01 -05:00, original URI: http://blogs.msdn.com/b/michkap/archive/2006/01/17/513651.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P><FONT face=Tahoma>Sunil Virami asked in the microsoft.public.win32.programmer.international newsgroup:</FONT></P>
+<BLOCKQUOTE dir=ltr style="MARGIN-RIGHT: 0px">
+<P><EM><FONT size=2>Hi,</FONT></EM></P>
+<P><EM><FONT size=2>Is it possible to find out which language version of MS office is installed on the current system.<BR>i.e whether it is japanese office, english office, chinese office or some other language.</FONT></EM></P>
+<P><EM><FONT size=2>How can i find it out using the code ?</FONT></EM></P>
+<P><EM><FONT size=2>Regards,<BR>Sunil Virmani</FONT></EM></P></BLOCKQUOTE>
+<P><FONT face=Tahoma>There is actually a property that was added to the Application object of all of the Office applications back in the Office 2000 timeframe&nbsp;</FONT><FONT face=Tahoma>-- the LanguageSettings property. It returns a copy of the <a href="http://blogs.msdn.com/admin/blogs/msdn.microsoft.com/library/en-us/ vbaof11/html/ofobjLanguageSettings_HV05250883.asp">LanguageSettings object</A> which can be used to retrieve any of the following:</FONT></P>
+<UL>
+<LI><STRONG>Application.LanguageSettings.LanguagePreferredForEditing(</STRONG><EM>msoLanguageID</EM><STRONG>)</STRONG> -- Returns True if the value for the msoLanguageID constant has been identified in the Windows registry as a preferred language for editing (you must test all valid <EM>msoLanguageID</EM> values to enumerate the set of preferred languages.).</LI>
+<LI><STRONG>Application.LanguageSettings.LanguageID(msoLanguageIDExeMode)</STRONG> -- The language mode that the application is using. This setting applies only to Microsoft Excel and Microsoft Access. This setting affects languages that can be displayed and edited, available language-specific features, number styles, currency settings, and so forth. If none of the languages supported by Excel and Access are used, the host application will not be configured to support right-to-left and East Asian languages. The supported languages are as follows: Arabic, Farsi, Hebrew, Japanese, Korean, Simplified Chinese, Traditional Chinese, Urdu, Yiddish.</LI>
+<LI><STRONG>Application.LanguageSettings.LanguageID(msoLanguageIDHelp)</STRONG> -- The language used for online Help.</LI>
+<LI><STRONG>Application.LanguageSettings.LanguageID(msoLanguageIDInstall)</STRONG> -- The language settings used by Microsoft Office to set up defaults. For example, Microsoft Word uses this setting to determine the layout of toolbars and the default types of bullets and numbers on a language-by-language basis.</LI>
+<LI><STRONG>Application.LanguageSettings.LanguageID(msoLanguageIDUI)</STRONG> -- The language used by the host application's user interface.</LI>
+<LI><STRONG>Application.LanguageSettings.LanguageID(msoLanguageIDUIPrevious)</STRONG> -- The language setting for the user interface when a given computer was last rebooted. A program or add-in can use this to determine whether the user interface language has changed.</LI></UL>
+<P><FONT face=Tahoma>Pretty much more than you ever needed to know about the language version of Office (though the heavy dependence on LCIDs is a little disappointing; we'll need to work on that!).</FONT></P>
+<P><FONT face=Tahoma></FONT>&nbsp;</P>
+<P><FONT face=Tahoma color=#ff1493><EM>This post brought to you by</EM> "<FONT size=6>O</FONT>" <EM>(<A href="http://www.fileformat.info/info/unicode/char/004f">U+004f</A>, a.k.a. LATIN CAPITAL LETTER O)</EM></FONT></P>
+<hr/><p><a id="514137" href="#514137">#</a> <strong>Luke Amery</strong> on 17 Jan 2006 10:59 PM:</p><div style="margin-left: 1em">Pardon my ignorance, but why so down on LCIDs? is it a human readable thing? or is there a technical problem with them - like ELKs don't use them or some such?</div>
+<p><a id="514150" href="#514150">#</a> <strong>Michael S. Kaplan</strong> on 17 Jan 2006 11:45 PM:</p><div style="margin-left: 1em">Hi Luke!<br><br>I would not call it ignorance. There are lots of problems with LCIDs, like their proprietary nature and the lack of extensibility (plus we are running out of room -- see <a rel="nofollow" target="_new" href="http://archives.miloush.net/michkap/archive/2005/03/02/383458.html">http://blogs.msdn.com/michkap/383458.aspx</a> for more on that issue!).<br><br>In the long run, we need people to move away from them to deal with all of the issues.</div>
+<hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2006/01/18/514171.html" title="Digits -- there is no substitute">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2006/01/17/513635.html" title="They don&#39;t make Null Glyphs like they used to!">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2006-01">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2006-01-17">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2006/01/17/513651.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:40 GMT -->
+</html>

@@ -1,0 +1,33 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2010/11/30/10098113.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>If you lie, that replacement character might pop in (the one that isn't Paul Westerberg)</title></head><body>
+<h1>If you lie, that replacement character might pop in (the one that isn't Paul Westerberg)</h1>
+<p><em>by Michael S. Kaplan, published on 2010/11/30 07:01 -05:00, original URI: http://blogs.msdn.com/b/michkap/archive/2010/11/30/10098113.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<p>Late last month, JC Ahangama sent me the following question via email (to the trigeminal.com webmaster address):</p>
+<p style="padding-left: 60px;"><span style="font-family: times new roman,times;"><em>Hi,<br /><br />I am writing to this address because I could not find the address of great<br />Guru Michael Kaplan. The attached file explains my question as well as my<br />complaint. I do not have high connections to Unicode to do this but sure Dr.<br />Kaplan is the man for it.<br /><br />It is about European characters getting step-motherly treatment.<br /><br />Thanks.<br /><br />JC (Ahangma)</em></span></p>
+<p>The attachment was an HTML file that had two simple features. It had:</p>
+<ul>
+<li>a charset meta tag set to UTF-8, and</li>
+<li>some of the so-called "High ANSI" characters (characters between 0xA1 to 0xFF)</li>
+</ul>
+<p>Those characters would some up as square boxes (notdef glyphs) in Internet Explorer, and the diamond question mark character in FireFox.</p>
+<p>Here is the page in FireFox:</p>
+<p><img src="http://trigeminal.fmsinc.com/images/charsetdeclared.jpg" border="0" /></p>
+<p>Contrary to the claim at the bottom of the page, <strong>this is not a bug</strong>.</p>
+<p>Browsers must explicitly make some choices, and in this case, both Internet Explorer and FireFox are choosing to trust the charset meta tag.</p>
+<p>They both dutifully convert this non-UTF-8 data as if it was UTF-8.</p>
+<p>And since the bytes from 0xA1 to 0xFF are illegal in UTF-8, each successive byte is converted to the replacement character (U+fffd).</p>
+<p>As he noted, the problem is fixed if you change the charset meta tag -- at which point the page is no longer lying about how it is encoded....</p>
+<p>The moral of the story is not to put the wrong charset meta tag in the page -- if you want it to be tagged as UTF-8, make sure it is saved as UTF-8.</p>
+<p>The fact is that according to Mark Davis of Google, there are a lot of incorrectly tagged web&nbsp;pages out there, which they index using the correct encoding that the page is actually believed to be in. Now this leads to interesting problems since so many browsers will not display the page in the same way that Google indexed it (meaning you may not be able to see the text that you were searching for and Google claimed to find on such a page).</p>
+<p>I wish that it were so easy to get, rather than U+fffd Replacement Character,&nbsp;the "Replacements characteer, Paul Westerberg. </p>
+<p>Though if Mark is right about the amount of incorrectly tagged pages then that would mean one hell of a touring schedule (and a lot more common than saying 'Biggie Smalls' three times!)....</p>
+<hr/><p><strong>Alex Cohn</strong> on 30 Nov 2010 12:14 PM:</p><div style="margin-left: 1em"><p>I think that Google do the right thing to index the pages with their true charset. Both IE and FF allow the user to override the declared character encoding, and for Russian webpages this has for many years been the panacea, because of the koi8 fight against win1251 (and others). Recently I find the pages render much better, not only due to the wide acceptance of UTF8, but also better educaton of Web masters and easier i18 configuration of ppular servers.</p>
+<p>Anyway, both browsers display the high-ascii symbols of JC&#39;s example corectly as soon as the encoding menu is not auto.</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 30 Nov 2010 2:03 PM:</p><div style="margin-left: 1em"><p>I might agree if it was not so easy to misunderstand how to fix or the need to fix -- people are easily confused here; the browsers could all do better.</p>
+</div>
+<hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2010/12/13 <a href="http://archives.miloush.net/michkap/archive/2010/12/13/10103924.html">I swear the Romanian bug is fixed; it was fixed 4.5 years ago!</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2010/12/01/10098812.html" title="The IN door can go a different way than the OUT door">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2010/11/29/10097446.html" title="Math is hard, let&#39;s do keyboards...that do math.">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2010-11">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2010-11-30">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2010/11/30/10098113.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+</html>

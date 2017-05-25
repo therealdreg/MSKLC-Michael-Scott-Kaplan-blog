@@ -1,0 +1,31 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2007/04/17/2159574.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:38 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>In case of conflict, dump the indexes! (a.k.a. A day in the life of Jet)</title></head><body>
+<h1>In case of conflict, dump the indexes! (a.k.a. A day in the life of Jet)</h1>
+<p><em>by Michael S. Kaplan, published on 2007/04/17 03:01 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2007/04/17/2159574.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P>You may not use Microsoft Access much, and if you do use Access you may not use DAO much.</P>
+<P>So if you want to skip this post you should feel free to do so. :-)</P>
+<P>Here is some code:</P>
+<BLOCKQUOTE><FONT face="Consolas,Lucida Console,Courier New,Courier" size=2><B>
+<P>Sub WhatAreYouTryingToProveAnyway()<BR>&nbsp;&nbsp;&nbsp; Dim db As DAO.Database<BR>&nbsp;&nbsp;&nbsp; Dim rs As DAO.Recordset<BR>&nbsp;&nbsp;&nbsp; Dim tdf As DAO.TableDef<BR>&nbsp;&nbsp;&nbsp; Dim idx As DAO.Index<BR>&nbsp;&nbsp;&nbsp; <BR>&nbsp;&nbsp;&nbsp; Debug.Print "Creating database with Turkish collation."<BR>&nbsp;&nbsp;&nbsp; Set db = DBEngine(0).CreateDatabase("test.mdb", dbLangTurkish)<BR>&nbsp;&nbsp;&nbsp; Debug.Print "Creating a table with one text field and making it the primary key."<BR>&nbsp;&nbsp;&nbsp; Set tdf = db.CreateTableDef("Table1")<BR>&nbsp;&nbsp;&nbsp; tdf.Fields.Append tdf.CreateField("Field1", dbText, 255)<BR>&nbsp;&nbsp;&nbsp; Set idx = tdf.CreateIndex("PrimaryKey")<BR>&nbsp;&nbsp;&nbsp; idx.Fields.Append idx.CreateField("Field1")<BR>&nbsp;&nbsp;&nbsp; idx.Primary = True<BR>&nbsp;&nbsp;&nbsp; tdf.Indexes.Append idx<BR>&nbsp;&nbsp;&nbsp; db.TableDefs.Append tdf<BR>&nbsp;&nbsp;&nbsp; Debug.Print db.TableDefs("Table1").Indexes.Count &amp; " index(es) in Table1."<BR>&nbsp;&nbsp;&nbsp; Set rs = db.OpenRecordset("Table1", dbOpenTable)<BR>&nbsp;&nbsp;&nbsp; Debug.Print "Adding two rows to the table, one with U+0069 and the other with U+0049."<BR>&nbsp;&nbsp;&nbsp; rs.AddNew<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; rs!Field1 = ChrW$(&amp;H69)<BR>&nbsp;&nbsp;&nbsp; rs.Update<BR>&nbsp;&nbsp;&nbsp; rs.AddNew<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; rs!Field1 = ChrW$(&amp;H49)<BR>&nbsp;&nbsp;&nbsp; rs.Update<BR>&nbsp;&nbsp;&nbsp; db.Close<BR>&nbsp;&nbsp;&nbsp; Debug.Print "Compacting database into dbLangGeneral collation."<BR>&nbsp;&nbsp;&nbsp; DBEngine.CompactDatabase "test.mdb", "test1.mdb", dbLangGeneral<BR>&nbsp;&nbsp;&nbsp; Kill "test.mdb"<BR>&nbsp;&nbsp;&nbsp; Name "test1.mdb" As "test.mdb"<BR>&nbsp;&nbsp;&nbsp; Set db = DBEngine(0).OpenDatabase("test.mdb")<BR>&nbsp;&nbsp;&nbsp; Debug.Print db.TableDefs("Table1").Indexes.Count &amp; " index(es) in Table1."<BR>&nbsp;&nbsp;&nbsp; db.Close<BR>End Sub</P></B></FONT></BLOCKQUOTE>
+<P>If you run this procedure in Access, here is what will show up in the ipane (the debug window):</P>
+<BLOCKQUOTE><FONT face="Consolas,Lucida Console,Courier New,Courier" size=2><B>
+<P>Creating database with Turkish collation.<BR>Creating a table with one text field and making it the primary key.<BR>1 index(es) in Table1.<BR>Adding two rows to the table, one with U+0069 and the other with U+0049.<BR>Compacting database into dbLangGeneral collation.<BR>0 index(es) in Table1.</P></B></FONT></BLOCKQUOTE>
+<P>Hmmm... what happened to the index?</P>
+<P>Well,&nbsp;Jet is always case insensitive, but due to a fortuitous and unintentionally well-timed&nbsp;bit of data/code theft, it fully supports proper Turkic casing (discussed previously).</P>
+<P>So, with a database created with Turkic collation, you can put U+0069 and U+0049 in the same column without getting any kind of error.</P>
+<P>Unfortunately, when you compact into a new collation that is not quite so understanding, Jet has two choices:</P>
+<P>1) It could fail the compact, or</P>
+<P>2) It could drop the index.</P>
+<P>Clearly they chose to go with the the prize behind curtain #2....</P>
+<P>For what it's worth, this is not what happens with Jet [Red]'s cousin, ESE (Jet Blue). For that engine, the indexes are themselves per language, and should you want to change the language you would have to drop the index and then add a new one.</P>
+<P>As a behavior, I understand why&nbsp;the Jet Red folks&nbsp;might have made this choice, especially given how hard of a time people would have trying to fix the problem. But since this could break applications in regard to both behavioral expectations and actual runtime errors based on code assuming indexes were there when they suddenly weren't.</P>
+<P>(This behavior is not specific to Turkic, but that was the easiest&nbsp;repro to show off here!)</P>
+<P>Probably worthy of a KB article, maybe it could even re-use the title of this post, what do you think? :-)</P>
+<P>Now I will leave the SQL Server behavior in this case&nbsp;(which does not match the Jet behavior) as an exercise for the reader. If it helps muddy the waters and plague SQL developers with self-doubt, they inherited that same fortuitous data change supporting Turkic collations....</P>
+<P mce_keep="true">&nbsp;</P>
+<P><FONT color=#ff00ff><EM>This post brought to you by</EM> <FONT face="times new roman,times" size=6>İ</FONT> <EM>(U+0130, a.k.a. LATIN CAPITAL LETTER I WITH DOT ABOVE)</EM></FONT></P>
+<hr/><div style="margin-left: 1em"><em>no comments</em></div><hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2007/04/17/2166496.html" title="The problem with using ordinal (a.k.a. lexicographic, a.k.a. binary) type comparisons?">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2007/04/16/2154397.html" title="Before jumping into the stream, you might want to peek at it">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2007-04">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2007-04-17">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2007/04/17/2159574.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:38 GMT -->
+</html>

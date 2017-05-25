@@ -1,0 +1,29 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2006/08/20/707045.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:39 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>You're doing it wrong.</title></head><body>
+<h1>You're doing it wrong.</h1>
+<p><em>by Michael S. Kaplan, published on 2006/08/20 03:01 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2006/08/20/707045.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<FONT face=Tahoma>
+<P><EM><FONT size=2>(Title inspired by that Michael Keaton/Teri Garr movie, the one with all the role reversal!)</FONT></EM></P>
+<P>Regular reader KJK:Hyperion mentioned in the Suggestion Box: </P>
+<BLOCKQUOTE dir=ltr style="MARGIN-RIGHT: 0px">
+<P><FONT face="Times New Roman" size=2>Hey Michael, can you please spank the Application Verifier people for me? thanks. <BR><BR>Their logging is broken. <BR><BR>Not only they use locale id instead of user UI language for display strings, but they can't even really handle it correctly: they produce an XML log that proudly declares itself UTF-8, but actually contains strings in the current ANSI codepage. <BR><BR>This breaks Standard User Analyzer (an Application Verifier front end) horribly because apparently (shock! horror!) the .NET XML parser actually uses the encoding specified in the file header.</FONT></P></BLOCKQUOTE>
+<P>Well, I am not sure I have the temperament to be Microsoft's CSO (Corporate Spanking Officer), or even the Technical Lead reporting in to the CSO (in charge of international issues, of course!).</P>
+<P>But I think I'll talk about the problem a bit here, and maybe that can be enough of a virtual spanking.... :-)</P>
+<P>There are obviously many sins here:</P>
+<UL>
+<LI>Using the locale instead of the UI language -- which really is the right&nbsp;setting to be using here for log files (well, either that or ID values that Standard User Analyzer uses&nbsp;to look up strings in the appropriate UI language!) 
+<LI>Using the system default code page (isn't Application Verifier a Unicode application?) 
+<LI>Mislabeling the encoding of the log file</LI></UL>
+<P>Now everyone knows that XML is sexy and if you are writing any kind of file then it has to be some sort of markup language. But the support for using it right is built into both the unmanaged MSXML and the managed System.Xml. So there really never is a good excuse to do it wrong.</P>
+<P>So, cheers to tools like the Standard User Analyzer for its virtues.</P>
+<P>And jeers to <A href="http://www.microsoft.com/downloads/info.aspx?na=47&amp;p=1&amp;SrcDisplayLang=en&amp;SrcCategoryId=&amp;SrcFamilyId=DF59B474-C0B7-4422-8C70-B0D9D3D2F575&amp;u=details.aspx%3ffamilyid%3dBD02C19C-1250-433C-8C1B-2619BD93B3A2%26displaylang%3den">Application Verifier</A> for its sins. Welcome to the <STRONG><A href="#12973">Unicode Lame List</A></STRONG>!</P>
+<P>&nbsp;</P>
+<P><FONT color=#ff1493><EM>This post brought to you by</EM> <FONT size=6><STRONG>ꉕ</STRONG></FONT> <EM>(<A href="http://www.fileformat.info/info/unicode/char/a255">U+a255</A>, YI SYLLABLE HXUOP)</EM></FONT></P></FONT>
+<hr/><p><a id="709344" href="#709344">#</a> <strong>BlakeHandler</strong> on 20 Aug 2006 11:00 AM:</p><div style="margin-left: 1em">With strange Microsoft product names like &quot;Phlat&quot; or &quot;Snarf&quot; -- did you ever think that maybe &quot;Spank&quot; is an acronym, or one of those new services over at Windows Live? ha ha</div>
+<p><a id="709474" href="#709474">#</a> <strong>Heath Stewart</strong> on 20 Aug 2006 1:17 PM:</p><div style="margin-left: 1em">I'd bet it's writing out XML as simple text, without using MSXML or System.Xml. It's one of the beauties and risks of XML.</div>
+<p><a id="709605" href="#709605">#</a> <strong>Michael S. Kaplan</strong> on 20 Aug 2006 3:28 PM:</p><div style="margin-left: 1em">Ugh, why can't people use the tools and utilities people go to so much trouble to write?!?</div>
+<hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2006/08/20/707726.html" title="Avrupalılaştıramadıklarımızdanmışsınızcasına">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2006/08/19/708250.html" title="Who I [supposedly] look like">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2006-08">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2006-08-20">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2006/08/20/707045.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:39 GMT -->
+</html>

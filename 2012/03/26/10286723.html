@@ -1,0 +1,84 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2012/03/26/10286723.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>The Unicode train left the station YEARS ago, in fact! (2012 edition)</title></head><body>
+<h1>The Unicode train left the station YEARS ago, in fact! (2012 edition)</h1>
+<p><em>by Michael S. Kaplan, published on 2012/03/26 07:01 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2012/03/26/10286723.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<p>The other day, in <strong><a title="Sacrificing the 'A' func to make Romanian better? aka There's Something About Marţi&hellip;" href="http://archives.miloush.net/michkap/archive/2012/03/22/10286210.html">Sacrificing the 'A' func to make Romanian better? aka There's Something About Marţi&hellip;</a></strong>, I laid out a bold move to look into two possible courses for the Romanian locale:</p>
+<ul>
+<li>Better support Unicode apps by using the letter ț in Marți, or</li>
+<li>Better support legacy ANSI apps by using the letter ţ in Marţi.</li>
+</ul>
+<p>Now for some, Tuesday is just another day.</p>
+<p>But if you are Romanian, or at least Romanian&nbsp;enough to worry about the Marţi/Mar?i/Marți issues, this question&nbsp;becomes crucial.</p>
+<p>Some suggestions were made in comments, like Jesse, who suggested:</p>
+<p style="padding-left: 60px;"><em>Could you make a compatibility shim for applications that call GetLocaleInfoA under the Romanian language to get the original string back?&nbsp; It's a hack, but it's probably the best solution if you want the best of both worlds (proper localization and supporting legacy apps).</em></p>
+<p>This is an interesting idea, but there are some strong technical challenges to creating such a a shim (which would also have to support other NLS functions like <a href="http://msdn.microsoft.com/library/windows/desktop/dd318086.aspx">GetDateFormatA</a> and <a href="http://msdn.microsoft.com/library/windows/desktop/dd318072.aspx">GetCalendarInfoA</a> and so on).</p>
+<p>And there are even low-pri potenial security risks of having the Unicode and ANSI functions returning different results that look almost the same.</p>
+<p>Not to mention performance issues that such a shim might introduce.</p>
+<p>Or the suggestion of our good friend Cristian, who opined:</p>
+<p style="padding-left: 60px;"><em>There is a way to have "Marți" also in ANSI apps, but you don't like it :) Namely adding support for ISO/IEC 8859-16:2001 as CP28606.<br />&nbsp;<br />Please, pretty please add support from this last ISO codepage! Please add Windows to the list of operating systems which support it (MacOS, Linux, ReactOS)</em></p>
+<p>Now there are numerous problems that this would introduce:</p>
+<ol>
+<li>We are not supporting any new code pages;</li>
+<li>We are not adding any more ANSI code pages;</li>
+<li>Our ANSI/OEM code pages have never been an ISO code page;</li>
+<li>We have never ever ever ever ever ever changed&nbsp;a locale's ACP or OEMCP.</li>
+</ol>
+<p>No matter how strongly I may feel trying to make progress in&nbsp;Marţi vs. Marți, I would not be terribly willing to change all of the rules here.</p>
+<p>And even if I were so inclined, the team that owns decisions 1-3 would not want to go down that road.</p>
+<p>Of course, as I warned in <strong><a href="http://archives.miloush.net/michkap/archive/2005/10/02/476213.html">this</a></strong> blog and <strong><a href="http://archives.miloush.net/michkap/archive/2006/10/24/867880.html">this</a></strong> blog and <strong><a href="http://archives.miloush.net/michkap/archive/2007/05/07/2464778.html">this</a></strong> blog and <strong><a href="http://archives.miloush.net/michkap/archive/2010/01/11/9946618.html">this</a></strong> one, the Unidode train has left the station.</p>
+<p>In the past (eg in those other blogs, you can see people arguing that it's time to move forward.</p>
+<p>And if taty's true, it really has to apply to Romanian, too.</p>
+<p>Clearly if we go the Unicode route, there will be at least one KB article, wth a title something like:</p>
+<p style="padding-left: 30px;"><strong><span style="font-size: x-large;">Some older programs show Mar?i instead of Marți in formatted Romanian dates</span></strong></p>
+<p>With the recommended solution being to update the older program!</p>
+<p>And if CSS couldn't find an author I'd volunteer my services. :-)</p>
+<p>So anyway,&nbsp;if it really is not possible to make it work well for both cases and one had to choose, I know what I would do.</p>
+<p>What would you do?</p>
+<p><span style="font-size: x-large;">What would <strong>YOU</strong> do? :-)</span></p>
+<hr/><p><strong>Cristian</strong> on 26 Mar 2012 9:02 AM:</p><div style="margin-left: 1em"><p>Unicode all the way - Marți.</p>
+<p>I understand the reluctance of touching code pages, but what about keyboard layouts? Can we get a Romanian &quot;Legacy&quot; keyboard with s and t comma below? But this might be for another blog post.</p>
+</div>
+<p><strong>Andrei</strong> on 26 Mar 2012 11:33 AM:</p><div style="margin-left: 1em"><p>Unicode please, otherwise it will take waaaay to long to get rid of &quot;ş&quot; and &quot;ţ&quot;.</p>
+</div>
+<p><strong>Random832</strong> on 26 Mar 2012 12:22 PM:</p><div style="margin-left: 1em"><p>I would add a best fit mapping to codepage 1250. Ideally, this should have been done when Windows first claimed to support Unicode 3.0. If necessary, declare that new best fit mappings for characters added to Unicode after a codepage was first defined do not in fact constitute a new codepage or an alteration to a codepage.</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 26 Mar 2012 1:12 PM:</p><div style="margin-left: 1em"><p>Since we have published the files, it would be considered a change. :-(</p>
+</div>
+<p><strong>Joshua</strong> on 26 Mar 2012 3:33 PM:</p><div style="margin-left: 1em"><p>What I would do: add support for UTF-8 as an ANSI codepage. There&#39;s already a number reserved for it (I think it is 65002). This would fix something like 99% of remaining programs that refuse to change.</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 26 Mar 2012 5:22 PM:</p><div style="margin-left: 1em"><p>There are a host of reasons why we can&#39;t do *that*, previously discussed....</p>
+</div>
+<p><strong>mpz</strong> on 26 Mar 2012 8:10 PM:</p><div style="margin-left: 1em"><p>Just force the change. It has to be done sooner or later, and when you do it later, you&#39;ll find yourself wondering why you didn&#39;t make the change sooner.</p>
+</div>
+<p><strong>Nicu</strong> on 26 Mar 2012 10:41 PM:</p><div style="margin-left: 1em"><p>Go with Marți, you should not go on forever supporting a mistake from the past, is the time to move to the better and more correct version.</p>
+</div>
+<p><strong>Azarien</strong> on 27 Mar 2012 2:09 AM:</p><div style="margin-left: 1em"><p>Couldn&#39;t you just make Unicode character ț map into ANSI character ţ for Romanian locale?</p>
+</div>
+<p><strong>Azarien</strong> on 27 Mar 2012 2:18 AM:</p><div style="margin-left: 1em"><p>and just a thought: i think that Marti would still be better than Mar?i. Either way, go with Marți for Unicode API.</p>
+</div>
+<p><strong>Random832</strong> on 27 Mar 2012 6:27 AM:</p><div style="margin-left: 1em"><p>&quot;Since we have published the files, it would be considered a change.&quot; So was the Euro. And the reasons that the Euro change was bad aren&#39;t obviously applicable to adding a best fit mapping: it doesn&#39;t actually change the semantics of any data _in_ the codepage, or [if this were done back when 3.0 was first supported] any unicode character that already existed. It&#39;d be more analogous to adding character properties and sorting table support for the new unicode characters themselves.</p>
+</div>
+<p><strong>Cristian</strong> on 27 Mar 2012 6:59 AM:</p><div style="margin-left: 1em"><p>Not having s and t comma bellow in any Windows code page restricts fully Unicode aware applications from other operating systems to be used on Windows without some code change.</p>
+<p>For example Putty, Emacs, Vim cannot be used with s and t comma bellow characters because they use UTF-8 Unicode and not UTF-16 Unicode.</p>
+<p>It&#39;s not just old ANSI applications which do not work on Windows, but also fully Unicode aware applications :-(</p>
+<p>The title of the post should be: &quot;The UTF-16 Unicode train left the station YEARS ago, in fact! (2012 edition)&quot;</p>
+</div>
+<p><strong>Mihai</strong> on 27 Mar 2012 5:13 PM:</p><div style="margin-left: 1em"><p>Of course I would like to eat the cake and have it too.</p>
+<p>But &quot;if it really is not possible to make it work well for both cases and one had to choose&quot;, then I would force the change and go with comma.</p>
+</div>
+<p><strong>Mihai</strong> on 27 Mar 2012 5:17 PM:</p><div style="margin-left: 1em"><p>@Cristian</p>
+<p>&quot;For example Putty, Emacs, Vim cannot be used with s and t comma bellow characters because they use UTF-8 Unicode and not UTF-16 Unicode.&quot;</p>
+<p>s/t with comma is the last of their problem.</p>
+<p>If they want to handle Unicode they have to &quot;convert at the edge&quot; like everything else. They might even have that already.</p>
+<p>But I have seen them misbehaving quite a bit on Linux too.</p>
+<p>I would not really call them &quot;fully Unicode aware&quot; but more like &quot;agnostic&quot;, since they (more often than not) just move a bunch of bytes around. If the CRT does the right thing (and often it does), they work. If they try to &quot;optimize&quot; around the CRT, they fail.</p>
+</div>
+<p><strong>mpz</strong> on 28 Mar 2012 8:51 AM:</p><div style="margin-left: 1em"><p>@Cristian</p>
+<p>What are you talking about? PuTTY etc. support Unicode just fine. The standard in terminal communications is UTF-8, and PuTTY understands that, while talking UTF-16 to the Windows APIs. I just tried copying and pasting Marți in a terminal session, and it worked fine.</p>
+<p>Please stop spouting garbage.</p>
+</div>
+<hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2012/03/27/10287870.html" title="How to localize a product very wrongly like">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2012/03/23/10286854.html" title="Every character has a story #37: U+2407 (♩ You Can Ring My [SYMBOL FOR] BELL ♩)">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2012-03">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2012-03-26">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2012/03/26/10286723.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+</html>

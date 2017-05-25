@@ -1,0 +1,41 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2011/12/08/10245601.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Sort keys - answers to several questions</title></head><body>
+<h1>Sort keys - answers to several questions</h1>
+<p><em>by Michael S. Kaplan, published on 2011/12/08 07:01 -05:00, original URI: http://blogs.msdn.com/b/michkap/archive/2011/12/08/10245601.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<p>In a comment on a blog I wrote nearly 7 years ago (<strong><a title="How do sort keys work?" href="http://archives.miloush.net/michkap/archive/2011/12/01/344389.html">How do sort keys work?</a></strong>), Alexander Savin asked another bunch of questions:</p>
+<p style="padding-left: 60px;"><span style="font-family: times new roman,times;">If I need to generate a sort key for the string I have to call LCMapString twice:</span></p>
+<p style="padding-left: 60px;"><span style="font-family: times new roman,times;">bufferSize = LCMapStringW(..., 0);</span></p>
+<p style="padding-left: 60px;"><span style="font-family: times new roman,times;">...Allocate buffer...</span></p>
+<p style="padding-left: 60px;"><span style="font-family: times new roman,times;">LCMapStringW(..., bufferSize);</span></p>
+<p style="padding-left: 60px;"><span style="font-family: times new roman,times;">Is there a performance flaw in this approach? Doesn't this imply that LCMapString does a double work? Does LCMapString need to scan an input string to determine the sort key size?</span></p>
+<p style="padding-left: 60px;"><span style="font-family: times new roman,times;">If it does, I would very much prefer having an ability to pass, in a single call, the pre-allocated buffer size and having LCMapString return the required buffer size if the input one appears to be not large enough.</span></p>
+<p style="padding-left: 60px;"><span style="font-family: times new roman,times;">What about the following approach (if I don't need a sort key itself but only its hash code)?</span></p>
+<p style="padding-left: 60px;"><span style="font-family: times new roman,times;">...Allocate 512 bytes on stack...</span></p>
+<p style="padding-left: 60px;"><span style="font-family: times new roman,times;">sortKeySize = LCMapStringW(..., 512);</span></p>
+<p style="padding-left: 60px;"><span style="font-family: times new roman,times;">if (sortKeySize == 0)</span></p>
+<p style="padding-left: 60px;"><span style="font-family: times new roman,times;">{</span></p>
+<p style="padding-left: 60px;"><span style="font-family: times new roman,times;">sortKeySize = LCMapStringW(..., 0);</span></p>
+<p style="padding-left: 60px;"><span style="font-family: times new roman,times;">...Allocate buffer...</span></p>
+<p style="padding-left: 60px;"><span style="font-family: times new roman,times;">LCMapStringW(..., sortKeySize);</span></p>
+<p style="padding-left: 60px;"><span style="font-family: times new roman,times;">}</span></p>
+<p style="padding-left: 60px;"><span style="font-family: times new roman,times;">...Calc hash...</span></p>
+<p style="padding-left: 60px;"><span style="font-family: times new roman,times;">It does a triple work in the worst case but should work faster in most cases. Shouldn't it?</span></p>
+<p style="padding-left: 60px;"><span style="font-family: times new roman,times;">Also, having to estimate the worst sort key size, considering an input string has the length of N, is it true that its sort key is no longer than (2*N + 1)*4?</span></p>
+<p style="padding-left: 60px;"><span style="font-family: times new roman,times;">And if IgnoreCase is specified, for example, will the [all Case weights] section be empty?</span></p>
+<p style="padding-left: 60px;"><span style="font-family: times new roman,times;">Michael, it would be very helpful if you could clarify all this? Thanks.</span></p>
+<p>Giving answers to each question consecutively:</p>
+<ol>
+<li>I wouldn't say flaw so much as penalty.</li>
+<li>No imply, it *does* double work.</li>
+<li>Yes, it does.</li>
+<li>This is not provided.</li>
+<li>Maybe -- it depends on the strings in your scenaro.</li>
+<li>Just about, yes. Though that is subject to change, and may have changed since I left the team that owns it.</li>
+<li>Yes.</li>
+</ol>
+<p>Hey, that was easy. :-)</p>
+<hr/><div style="margin-left: 1em"><em>no comments</em></div><hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2011/12/09/10246051.html" title="The evolving Story of Locale Support, part 12: Logic dictates that we keep a sense of proportion about the RATIO">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2011/12/07/10244934.html" title="I plan to go somewhere that starts with a &quot;T&quot;.">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2011-12">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2011-12-08">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2011/12/08/10245601.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+</html>

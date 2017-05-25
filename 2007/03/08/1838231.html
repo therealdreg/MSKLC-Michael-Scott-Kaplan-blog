@@ -1,0 +1,60 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2007/03/08/1838231.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:38 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Double Secret ANSI, part 1 (Somewhere between ANSI and Unicode)</title></head><body>
+<h1>Double Secret ANSI, part 1 (Somewhere between ANSI and Unicode)</h1>
+<p><em>by Michael S. Kaplan, published on 2007/03/08 13:15 -05:00, original URI: http://blogs.msdn.com/b/michkap/archive/2007/03/08/1838231.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P>Anyone who reads here regularly knows that I'd always prefer to see applications support Unicode.</P>
+<P>But obviously there are a few applications out there that don't support Unicode. At least not yet.</P>
+<P>Some of those applications have been around for a long time, and they manage to do ANSI quite well.</P>
+<P>A few of them even handle ANSI brilliantly -- to the level of <STRONG>Double Secret ANSI</STRONG>.</P>
+<P><EM>(By the way, these applications shouldn't sprain their wrists patting themselves on the back -- because for more than&nbsp;40% of the locales that ship in Vista, their application will brilliantly force users to see some or all of their text converted to question marks, a dialect that no one really knows all that well!)</EM></P>
+<P>But alas, I digress.</P>
+<P>I was going to explain what I mean when I talk about an application supporting Double Secret ANSI.</P>
+<P>Let's think about Windows 95/98/Me for a moment.</P>
+<P>A lot of Unicode there, from Shell interfaces to fonts to most of the GDI internals and so on. But cursed with a bunch of ANSI interfaces. And to add insult to serious injury, you can't ever change the default system locale, the "Language for non-Unicode programs" as it was later known.</P>
+<P>So why&nbsp;is it that Windows Me&nbsp;has a locale list of over 100 languages, many of which use entirely different code pages?</P>
+<P>Perhaps&nbsp;<STRONG>why</STRONG> is too&nbsp;existential of a question for a technical blog. So let's try an easier one.</P>
+<P><STRONG>How</STRONG>&nbsp;is it Windows Me&nbsp;can support&nbsp;a locale list of over 100 languages, many of which use entirely different code pages?</P>
+<P>Let's break that down and start with something easy, like keyboard layouts. How does the en-US Windows Me support a Russian keyboard layout?</P>
+<P>(Keep in mind that the same answer will extend to the non-Unicode applications that run on the NT-based versions of Windows, too!)</P>
+<P>It turns out that keyboard layouts in a non-Unicode application are given the opportunity to express themselves -- using the default system code page of the&nbsp;LANGID that comes out of the keyboard layout's KLID value (<EM>not its HKL value!</EM>).</P>
+<P>Now most applications don't really give a fig about any of this, and pop either garbled text or question marks into their application.</P>
+<P>But let's think for a minute about the ones that would choose to do something with this data. They can get a lot further than you might think, given the opportunity to do so....</P>
+<P>You can display text using TextOutW/ExtTextOutW, you can convert it to Unicode or store it with its code page. You can&nbsp;put it on the clipboard and stick a&nbsp;CF_LOCALE tag on it so others can know what code page it is. You can call NLS API functions with the right LCID to get data to use and manipulate text via that code page.&nbsp;You can put it in an email and send it to someone else. And so on.</P>
+<P>It's not Unicode, but it does give you the ability to support more languages than just the ones covered by the default system code page of your machine.</P>
+<P>Like I said, most people don't care bout this kind of crap. And those are the applications that <STRONG>aren't</STRONG> Double Secret ANSI applications.</P>
+<P>I'll be talking more about how these work in the NT-based world&nbsp;in the next post in this series....</P>
+<P mce_keep="true">&nbsp;</P>
+<P><FONT color=#ff00ff><EM>This post brought to you by</EM> A <EM>(<A class="" href="http://www.fileformat.info/info/unicode/char/0041" mce_href="http://www.fileformat.info/info/unicode/char/0041">U+0041</A>, LATIN CAPITAL LETTER A)</EM></FONT></P>
+<hr/><p><a id="1840556" href="#1840556">#</a> <strong>Mikkin</strong> on 8 Mar 2007 6:45 PM:</p><div style="margin-left: 1em"><p>&gt; Perhaps why is too existential of a question for a technical blog.</p>
+<p>I appreciate the sentiment, but &quot;why?&quot; is not really an existential question. &nbsp;Existentialism does not seek reasons for the absurd so much as it seeks to create meaning in response. </p></div>
+<p><a id="1841098" href="#1841098">#</a> <strong>Michael S. Kaplan</strong> on 8 Mar 2007 9:04 PM:</p><div style="margin-left: 1em"><p>Hmmmm.... but when one asks &quot;why does software do this or that?&quot; one starts slipping into &quot;Why are we all here?&quot; and so foth. Things get existential quite quickly! :-)</p>
+</div>
+<p><a id="1846441" href="#1846441">#</a> <strong>Mihai</strong> on 9 Mar 2007 1:05 PM:</p><div style="margin-left: 1em"><p>&lt;&lt;for more than 40% of the locales that ship in Vista&gt;&gt;</p>
+<p>I have tried all the possible EnumSystemLocales (with LCID_INSTALLED, LCID_SUPPORTED, LCID_ALTERNATE_SORTS),</p>
+<p>then GetLocaleInfo with LOCALE_IDEFAULTANSICODEPAGE.</p>
+<p>And I only get 32 Unicode-only locales (code page 0) out of 215.</p>
+<p>This is more than 14, not more than 40.</p>
+<p>How is that counted?</p>
+<p>Did you count &quot;not *properly*&quot; supported (including, for instance, Romanian, which is listed with 1250, but the s/t with comma below cannot be represented without Unicode?)</p>
+<p>Or is just a mis-understanding between fourteen / forty? :-)</p>
+<p>Thanks</p></div>
+<p><a id="1846533" href="#1846533">#</a> <strong>Michael S. Kaplan</strong> on 9 Mar 2007 1:24 PM:</p><div style="margin-left: 1em"><p>I am indeed including ones that technically have a default system locale but which have no way to represent particular letters, even with workarounds (for example Urdu)....</p>
+<p>It was meant in the post to be over 40%. :-)</p>
+</div>
+<p><strong>El Se&#241;or.</strong> on 15 Oct 2008 9:51 PM:</p><div style="margin-left: 1em"><p>"A lot of Unicode there, from Shell interfaces to fonts to most of the GDI internals and so on. But cursed with a bunch of ANSI interfaces. And to add insult to serious injury, you can't ever change the default system locale, the "Language for non-Unicode programs" as it was later known."</p>
+<p>Sure you could, I used to do it all the time (and I was like 14 at the time) - There was a registry entry under HKEY_Local_macine/system/????? I can't remember where exactly, but you could change the system code page, though if you were to change it to a DBCS CP such as Japanese 936, it would become very unstable, but it still worked. </p>
+<p>It failed miserably when trying to use 65001 but created some interesting results, 1 being that a MsgBox would pop up at start-up and the text would be rotated by 45°.</p></div>
+<p><strong>Yuhong Bao</strong> on 13 Feb 2011 2:19 PM:</p><div style="margin-left: 1em"><p>In fact, I just read that English Win98 and later let you choose the ACP during install.</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 13 Feb 2011 4:04 PM:</p><div style="margin-left: 1em"><p>Yes, I chose my language with care:</p>
+<p>&quot;And to add insult to serious injury, you can&#39;t ever change the default system locale, the &quot;Language for non-Unicode programs&quot; as it was later known.&quot;</p>
+<p>The setting in question was halfway added to NT4 and fully added to Windows 2000.</p>
+</div>
+<p><strong>Yuhong Bao</strong> on 5 Jun 2011 9:50 PM:</p><div style="margin-left: 1em"><p>&quot;You can display text using TextOutW/ExtTextOutW&quot;</p>
+<p>Or change the font charset to match the keyboard.</p>
+</div>
+<hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2011/04/04 <a href="http://archives.miloush.net/michkap/archive/2011/04/04/10149502.html">UXTheme in the non-Unicode world isn't "Double Secret ANSI"</a></p><p>2010/08/25 <a href="http://archives.miloush.net/michkap/archive/2010/08/25/10053944.html">Yet another cost to not supporting Unicode?</a></p><p>2008/10/15 <a href="http://archives.miloush.net/michkap/archive/2008/10/15/9000666.html">What is the freaking point of LOCALE_USE_CP_ACP?</a></p><p>2008/10/01 <a href="http://archives.miloush.net/michkap/archive/2008/10/01/8971160.html">What do you get when you put a Hebrew on top of a Russian? (aka What lies beneath can bite you on the ass)</a></p><p>2007/05/07 <a href="http://archives.miloush.net/michkap/archive/2007/05/07/2464778.html">The Unicode train? It left the station....</a></p><p>2007/03/25 <a href="http://archives.miloush.net/michkap/archive/2007/03/25/1945659.html">Will the real Unicode character message please stand up?</a></p><p>2007/03/20 <a href="http://archives.miloush.net/michkap/archive/2007/03/20/1917161.html">Double Secret ANSI, part 2 (the brokenest one yet, sorry 'bout that!)</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2007/03/09/1842581.html" title="But is it mnemonical?">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2007/03/06/1812744.html" title="The T&#39;s are crossed, but not all of the I&#39;s are dotted...">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2007-03">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2007-03-08">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2007/03/08/1838231.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:38 GMT -->
+</html>

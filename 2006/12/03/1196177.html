@@ -1,0 +1,32 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2006/12/03/1196177.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:39 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Strangely Symbolic font issues</title></head><body>
+<h1>Strangely Symbolic font issues</h1>
+<p><em>by Michael S. Kaplan, published on 2006/12/03 09:01 -05:00, original URI: http://blogs.msdn.com/b/michkap/archive/2006/12/03/1196177.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P>Chad's question was simple enough: </P>
+<BLOCKQUOTE><FONT face="Times New Roman,Times"><I>
+<P>Hello. I am trying to output character 0x80 from font Wingdings 3. <BR><BR>I add the text as: </P>
+<P></I><FONT face="Consolas,Lucida Console,Courier New,Courier" size=1><STRONG>tszText[2] = {0x80, '\0'}; </STRONG></FONT><I></P>
+<P>I create the font as: </P>
+<P></I><FONT face="Consolas,Lucida Console,Courier New,Courier" size=1><STRONG>HFONT hFont = CreateFont(14, 0, 0, 0, 0, 0, 0, 0, SYMBOL_CHARSET, OUT_DEFAULT_PRECIS, CLIP_DEFAULT_&shy;PRECIS, NONANTIALIASED_QUALITY, FF_DONTCARE, _T("WingDings 3")); </STRONG></FONT><I></P>
+<P>I output the text as: </P>
+<P></I><FONT face="Consolas,Lucida Console,Courier New,Courier" size=1><STRONG>TextOut(hDC, iLeft, iTop, tszText, 1); </STRONG></FONT><I></P>
+<P>This produces the square that shows that the character isn't found.&nbsp; However, if you look at the character map, it is there. <BR><BR>If I change the text to output something like 0x21, then it has no&nbsp; problem displaying the character. Yes, the Wingdings 3 character is&nbsp; properly picked. <BR><BR>Any ideas what the problem may be? &nbsp;</P></I></FONT></BLOCKQUOTE>
+<P mce_keep="true">Indeed, if you look at the font, the character clearly appears to be where Chad was expecting&nbsp;it:</P>
+<P mce_keep="true"><IMG src="http://trigeminal.fmsinc.com/images/randomsymbol.png"></P>
+<P mce_keep="true">The key to understanding the problem here is something I covered last year in <A class="" href="http://archives.miloush.net/michkap/archive/2005/11/08/490495.html" mce_href="http://archives.miloush.net/michkap/archive/2005/11/08/490495.html"><STRONG>More than you ever wanted to know about CP_SYMBOL</STRONG></A>.</P>
+<P mce_keep="true">Basically, within the font itself, this symbol may be at position 0x80.</P>
+<P mce_keep="true">But to NLS (and thus any attempt to convert the text via CP_SYMBOL), it is actually going to be at U+f080. Which of course points to the easy workaround....</P>
+<P mce_keep="true">Interestingly, fileformat.info (the provider of all those Unicode links) claims that U+F080 is not a valid unicode character, depite the fact that it returns data about the Unicode block it is in. I also noticed that it is not using CharUnicodeInfo to get its Microsoft data, which I suppose might be a cool enhancement to that site. :-)</P>
+<P mce_keep="true">But in the meantime it causes interesting problems if you don't use those PUA assignments, especially given all of the random places in GDI, GDI+, RichEdit, Word, and Avalon where sometimes 0x80 will work, and other times it won't, up to and including random problems like the one I pointed out in <A class="" href="http://archives.miloush.net/michkap/archive/2005/10/26/484481.html" mce_href="http://archives.miloush.net/michkap/archive/2005/10/26/484481.html"><STRONG>U+0080 is not the Euro!</STRONG></A>. You may see tht currency symbol popping up in random places if the font isn't Wingdings 3!</P>
+<P mce_keep="true">For what it's worth, there are suggestions in the Unicode community to encode many of the widely available symbols not already in Unicode, such as ones contained in the Webdings/Wingdings fonts. It is unknown whether that will happen or not (and even if it did it is unlikely that the fonts would be changed; only new fonts would use the new code points if they were added), but one advantage to this approach is that it removes the problems that symbol fonts can so easily run into.</P>
+<P mce_keep="true">&nbsp;</P>
+<P mce_keep="true"><FONT color=#ff00ff><EM>This post brought to you by</EM>&nbsp; <EM>(<A class="" href="http://www.fileformat.info/info/unicode/char/f080" mce_href="http://www.fileformat.info/info/unicode/char/f080">U+f080</A>, a character in the PRIVATE USE AREA)</EM></FONT></P>
+<hr/><p><a id="1200273" href="#1200273">#</a> <strong>Ben Cooke</strong> on 3 Dec 2006 11:18 AM:</p><div style="margin-left: 1em"><p>I actually made my own unicode version of Wingdings, because I'm weird like that. Obviously it only included the symbols that have unicode code-points in the Symbols and Dingbats range. The rest all live in the private use area.</p>
+<p>It does seem a bit odd to me to have what is basically clip-art stored inside font files, though.</p></div>
+<p><a id="1201920" href="#1201920">#</a> <strong>Jonathan Wilson</strong> on 3 Dec 2006 7:54 PM:</p><div style="margin-left: 1em"><p>I dont see that you could ever encode ALL of wingdings/webdings as characters (would microsoft allow 0xFF in Wingdings to be enoded for example)</p>
+<p>Interestingly enough, the &quot;Dingbats&quot; block of unicode seems to be an almost verbatim encoding of Zapf Dingbats minus those that are encoded elsewhere. I wonder if there is a story behind that somewhere :)</p></div>
+<hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2007/03/21 <a href="http://archives.miloush.net/michkap/archive/2007/03/21/1924167.html">Warning: when private is used in public, it can really suck</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2006/12/04/1203795.html" title="SQL and the CLR: Part 0">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2006/12/03/1194970.html" title="UTF-8 in the Visual Studio 6.0 Debugger?">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2006-12">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2006-12-03">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2006/12/03/1196177.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:39 GMT -->
+</html>

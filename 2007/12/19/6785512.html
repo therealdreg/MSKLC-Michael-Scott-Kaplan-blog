@@ -1,0 +1,54 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2007/12/19/6785512.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:36 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>An Encoding.DisplayName property would have made way too much sense</title></head><body>
+<h1>An Encoding.DisplayName property would have made way too much sense</h1>
+<p><em>by Michael S. Kaplan, published on 2007/12/19 10:01 -05:00, original URI: http://blogs.msdn.com/b/michkap/archive/2007/12/19/6785512.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P>Sometimes when dealing with internationalization issues, questions come in where it is clear that person is confused about the results being observed.</P>
+<P>Now it is true that in some cases the confusion is entirely on their side and it is just a matter of pointing them to the right answer.</P>
+<P>However,&nbsp;in many cases it is actually the fault of the underlying functionality&nbsp;or to be more precise&nbsp;the way it was exposed -- it was done so in&nbsp;a way that helped cause the confusion. Not a huge glaring bug, mind you -- just a divot in the design where a decision just made things a little bit harder to suss out what is happening.</P>
+<P>Of course I am no longer on the team that owns the functionality in either managed or unmanaged code. And even when I was not working in every area, and&nbsp;I was not some kind of architect who approved every design decision, or for that matter even knew about every design decision.</P>
+<P>I admit I know a couple of "important" people, but none in my own management chain, really<FONT size=1><SUP>1</SUP></FONT>.</P>
+<P>But when a question comes in that really does boil down to one of those minor design flawlets, those inspirations for confusion, I am self-consciously aware of the fact that I was on the team that designed that, whether I was involved or not. A sort of <STRONG>shame of [former ]ownership and/or membership</STRONG>? :-)</P>
+<P>Like the other day, when the question was:</P>
+<BLOCKQUOTE>
+<P><EM><FONT face="times new roman,times">Hi,<BR><BR>I used the Encoding class. When I ran our test on different language, we got different behavior. I define the encoding as follows:<BR></FONT></EM><BR><FONT face="courier new,courier"><STRONG>&nbsp;&nbsp;&nbsp; encoding = new UnicodeEncoding(true, false);<BR></STRONG></FONT><BR><FONT face="times new roman,times"><EM>When I get the EncodingName on CHT and KOR machine, their values (shown below) are different from those on other machines: <BR></EM></FONT><BR>
+<TABLE class="" style="WIDTH: 449px; HEIGHT: 93px" border=1>
+<TBODY>
+<TR>
+<TD class=""><STRONG>Language</STRONG></TD>
+<TD class=""><STRONG>encoding.EncodingName value</STRONG></TD></TR>
+<TR>
+<TD class="">CHT</TD>
+<TD class="">Unicode (位元組由大到小)</TD></TR>
+<TR>
+<TD class="">KOR</TD>
+<TD class="">유니코드(Big-Endian)</TD></TR>
+<TR>
+<TD class="">Most machines</TD>
+<TD class="">(Unicode (Big-Endian)</TD></TR></TBODY></TABLE><BR><FONT face="times new roman,times"><EM>Any idea for the difference? Is this expected?<BR><BR>Thanks</EM></FONT></P></BLOCKQUOTE>
+<P mce_keep="true">The problem? Well, the problem is that the <A class="" href="http://msdn2.microsoft.com/library/system.text.encoding.encodingname.aspx" mce_href="http://msdn2.microsoft.com/library/system.text.encoding.encodingname.aspx">Encoding.EncodingName property</A>, described in documentation as:</P>
+<BLOCKQUOTE>
+<P mce_keep="true"><EM>When overridden in a derived class, gets the human-readable description of the current encoding. </EM></P></BLOCKQUOTE>
+<P mce_keep="true">This is okay as far as it goes, but none of those derived classes like <A class="" href="http://msdn2.microsoft.com/en-us/library/system.text.unicodeencoding_members.aspx" mce_href="http://msdn2.microsoft.com/en-us/library/system.text.unicodeencoding_members.aspx">UnicodeEncoding</A> document that they override the name, and the vague description above does not make it clear that it is is actually the localized name -- localized into the language of the .NET Framework, usually called the something more like the Encoding.DisplayName.</P>
+<P mce_keep="true">Of course there is no Encoding.EnglishName either....</P>
+<P mce_keep="true">So again, this is one of those cases where the&nbsp;interface does not lead one to an intuitive understanding of the design, and the documentation, while misleading, is not outright wrong enough to necessarily be high on the list of things to fix.</P>
+<P mce_keep="true">The application probably won't crash. But it just makes things seem inconsistent.</P>
+<P mce_keep="true">Incomplete.</P>
+<P mce_keep="true">Sloppy.</P>
+<P mce_keep="true">The fact that <STRONG>they aren't</STRONG> is kind of irrelevant, especially in this class that for most code pages<SUP><FONT size=1>2</FONT></SUP> went from a thin wrapper around Win32 in .NET 1.0/1.1 that could perhaps be forgiven as handling <A class="" href="http://msdn2.microsoft.com/library/ms776243.aspx" mce_href="http://msdn2.microsoft.com/library/ms776243.aspx">CPINFOEX.CodePageName</A>&nbsp;(which <STRONG>is</STRONG> documented as as being localized)&nbsp;as best as it perhaps can to a full-fledged implementation in .NET 2.0 and beyond and never managed to outgrow the childish appearance it inherited when its innards were redone pretty much from scatch<SUP><FONT size=1>3</FONT></SUP>.</P>
+<P mce_keep="true">So now it is just a footnote, an embarrassing inconsistency that will sometimes resemble the <A class="" href="http://msdn2.microsoft.com/library/991f4a78.aspx" mce_href="http://msdn2.microsoft.com/library/991f4a78.aspx">EncodingInfo.DisplayName</A>&nbsp;and other times <A class="" href="http://msdn2.microsoft.com/library/sfcyhcs3.aspx" mce_href="http://msdn2.microsoft.com/library/sfcyhcs3.aspx">EncodingInfo.Name</A>, though will probably continue to confuse people asking simple questions about what to call an instance....</P>
+<P mce_keep="true">&nbsp;</P>
+<P><FONT size=1><EM>1 - The only exception to this rule I know of is a VP who suggested at one point that I should not be working for Microsoft; ironically enough that VP no longer is? :-)<BR>2 - It should be noted that UnicodeEncoding is not one of them and never was -- it was always independent of Win32 even though it wore the Win32 wrapper framework as part of its derivation from&nbsp;the Encoding class.<BR>3 - In fairness, the <A class="" href="http://msdn2.microsoft.com/library/shkct5h3.aspx" mce_href="http://msdn2.microsoft.com/library/shkct5h3.aspx">EncodingInfo class</A> <STRONG>was</STRONG> added in 2.0 which did strive for more consistency, though without a whole lot of documentation links from these other, less consistent properties....</EM></FONT></P>
+<P mce_keep="true">&nbsp;</P>
+<P mce_keep="true"><FONT color=#ff00ff><EM>This post brought to you by</EM><FONT size=5> 유 </FONT><EM>(<A class="" href="http://www.fileformat.info/info/unicode/char/c720" mce_href="http://www.fileformat.info/info/unicode/char/c720">U+c720</A>, aka HANGUL SYLLABLE IEUNG YU)</EM></FONT></P>
+<hr/><p><strong>JM</strong> on 20 Dec 2007 4:38 AM:</p><div style="margin-left: 1em"><P>Talk about making a mountain out of a molehill. Yes, the name is localized, yes, it's sloppy that they didn't document that. But that's it. You're devoting a whole post to that documentation omission, when it can hardly be called critical. Or even very important -- if you ask for the "human-readable" name, you shouldn't be surprised that the results could vary wildly. Asking a framework to just give you a name you can show the user allows for a lot of leeway. And, of course, you cannot use the resulting name as program input.</P>
+<P>That's why Encoding.EnglishName makes no sense either. It's not supposed to be a name you can use across cultures, platforms, releases -- if you're looking for that, use Encoding.BodyName or Encoding.HeaderName or Encoding.WebName... OK, so this deserves no beauty prize either, and it's a good thing they came up with EncodingInfo. For maximum usability that ought to have a method allowing you to get the display name for any language you want. Other than that, though, I see this as a minor omission in the documentation.</P></div>
+<p><strong>Michael S. Kaplan</strong> on 20 Dec 2007 9:05 AM:</p><div style="margin-left: 1em"><p>Actually, I was focusing on the inconsistency in the implementation.</p>
+<p>Most of the rest of the globalization support has a specific name for the localized name. If that were correct, then one would not need documentation to make up for the lack.</p>
+<p>Better documentation? Sure, I am a fan.</p>
+<p>Better, more consistent, more intuitive design in the first place? I am an even bigger far. Because even better than having someone save you from mistakes is not making the mistakes in the first place....</p>
+</div>
+<hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2007/12/19/6792635.html" title="NO doesn&#39;t mean maybe, and it certainly doesn&#39;t means NB!">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2007/12/18/6794321.html" title="Of as little account as sparrows&#39; tears">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2007-12">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2007-12-19">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2007/12/19/6785512.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:36 GMT -->
+</html>

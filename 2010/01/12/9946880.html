@@ -1,0 +1,96 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2010/01/12/9946880.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:35 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>On my "Vietnamese Plus" and "pseudo-Form V" constructs</title></head><body>
+<h1>On my "Vietnamese Plus" and "pseudo-Form V" constructs</h1>
+<p><em>by Michael S. Kaplan, published on 2010/01/12 08:01 -05:00, original URI: http://blogs.msdn.com/b/michkap/archive/2010/01/12/9946880.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P>Developer Jason (an enthusiastic reader of the Blog) asked:</P>
+<BLOCKQUOTE>
+<P><FONT face="times new roman,times"><EM>We need to be able to convert UCS-2/UTF-16 to a user-specified SBCS/DBCS/MBCS code page. Currently, we achieve this by simply taking the UCS-2 string and passing it on to WideCharToMultiByte with dwFlags set to zero. When converting to the Vietnamese code page 1258, this process can’t find a representation for the Vietnamese character U+1ec5 (Latin e with circumflex and tilde) even though one actually does exist (albeit with a combining diacritic from code page 1258: 0xea 0xde).</EM></FONT></P>
+<P><FONT face="times new roman,times"><EM>Converting Vietnamese glyphs from the Unicode BMP to the corresponding glyph representation in the Vietnamese code page seems like a reasonable thing for us to be doing. My question is, should I be expecting WideCharToMultiByte to know this and successfully convert the character? I can’t be the first person to hit this issue and I imagine the mapping tables have been reasonably static, so it seems like perhaps there is something more that I should be doing. Is there, for instance, an expectation that the input string is normalized into some canonical form before calling WCToMB? Presumably decomposed form?</EM></FONT></P></BLOCKQUOTE>
+<P>An interesting question that will really draw on information from several different blogs from this Blog:</P>
+<OL>
+<LI><A href="http://archives.miloush.net/michkap/archive/2005/04/19/409566.html" mce_href="http://archives.miloush.net/michkap/archive/2005/04/19/409566.html"><STRONG>A few of the gotchas of MultiByteToWideChar</STRONG></A></LI>
+<LI><STRONG><A href="http://archives.miloush.net/michkap/archive/2007/06/26/3558548.html" mce_href="http://archives.miloush.net/michkap/archive/2007/06/26/3558548.html">The MB_PRECOMPOSED flag is stupid, and the MB_COMPOSITE ain't no genius either</A></STRONG></LI>
+<LI><A href="http://archives.miloush.net/michkap/archive/2005/07/09/437063.html" mce_href="http://archives.miloush.net/michkap/archive/2005/07/09/437063.html"><STRONG>Getting intermediate forms</STRONG></A></LI>
+<LI><A href="http://archives.miloush.net/michkap/archive/2006/05/14/597198.html" mce_href="http://archives.miloush.net/michkap/archive/2006/05/14/597198.html"><STRONG>Harder intermediate forms of characters</STRONG></A></LI>
+<LI><A href="http://archives.miloush.net/michkap/archive/2008/12/15/9215772.html" mce_href="http://archives.miloush.net/michkap/archive/2008/12/15/9215772.html"><STRONG>Frost's The Form Not Taken</STRONG></A> </LI></OL>
+<P>There are several people who tend to be dismissive about this code page, calling it at best incomplete and at worst broken. From a Unicode standpoint it certainly is, and arbitrary, to boot!</P>
+<P>But there is a reasoning behind the code page, a point to which regular reader John Cowan's <A href="http://archives.miloush.net/michkap/archive/2008/12/15/9215772.html#9221200" mce_href="http://archives.miloush.net/michkap/archive/2008/12/15/9215772.html#9221200">comment to blog #5 above</A> is particularly relevant:</P>
+<BLOCKQUOTE>
+<P><FONT face="times new roman,times">There's a Vietnamese-specific logic to CP 1258 that transcends the arbitrary Unicode normalization rules.&nbsp; The breve, circumflex, and horn accents, unlike the rest, affect vowel quality.&nbsp; If you look at a Vietnamese alphabet like the one at Wikipedia, you'll see that A WITH BREVE, A WITH CIRCUMFLEX, E WITH CIRCUMFLEX, O WITH CIRCUMFLEX, O WITH HORN, and U WITH HORN (as well as D WITH STROKE, which isn't Unicode-decomposable) are considered separate letters from their unaccented correspondents. Consequently, in 1258 they are encoded using seven precomposed characters.</FONT></P>
+<P><FONT face="times new roman,times">On the other hand, the grave, acute, hook above, tilde, and dot below accents are tone marks, conceptually not part of the letters they appear on.&nbsp; They're encoded using combining characters, since encoding them using precomposed characters would create a combinatorial explosion of 12 x 6 x 2 = 144 distinct vowel characters.&nbsp; (The VISCII encoding actually does that, at the expense of filling the whole 0x80-0xFF space with letters and even usurping six of the control characters!)</FONT></P>
+<P><FONT face="times new roman,times">Unsurprisingly, Vietnamese conventions always place the tone mark outside any breve, circumflex, or horn diacritic (and therefore following it according to Unicode rules).</FONT></P></BLOCKQUOTE>
+<P>Thus it is incorrect to say that U+1ec5 is not supported by cp1258; it may be true that U+1ec5 (ễ, aka LATIN SMALL LETTER E WITH CIRCUMFLEX AND TILDE) is not supported as a discrete single code point, but U+00ea U+0303 (ễ, aka LATIN SMALL LETTER E WITH CIRCUMFLEX +&nbsp;COMBINING TILDE) is - and according to Unicode those two things are to be treated as the same thing. Given that the tilde is a tone mark in this particular&nbsp;case the language-specific way in which the various components of the letter are used makes sense whether the form follows Unicode normalization rules or not.</P>
+<P>Which is this case it doesn't.</P>
+<P>Thus the wider question of which Unicode normalization form to use that was one of the main points of Jason's inquiry is in fact a trick question: the answer is <STRONG>neither</STRONG>!</P>
+<P>Instead, the Microsoft-specific normalization pseudo-Form V mentioned in #5 above&nbsp;is what would be needed here if one wanted to convert.</P>
+<P>Now that is a big <STRONG>if</STRONG> in that last sentence.</P>
+<P>Since Microsoft's Vietnamese keyboard layout produces text that will be perfectly represented on code page 1258, there are only&nbsp;three scenarios where&nbsp;one would that "pseudo-Form V" to convert out of Unicode:</P>
+<UL>
+<LI>when one gets the data from some other source than Microsoft's keyboard that encodes the data by one of the other means, be it Form C, Form D, or one of the other partial or alternate non- forms that Unicode normalization can convert out of but not into, or</LI>
+<LI>when some external source that converts the data to some other form, or</LI>
+<LI>when some Microsoft component converts it Form C or D itself.</LI></UL>
+<P>For the third point the quick answer is to just not do that, if it is possible.</P>
+<P>But of course even that is not always possible, so if the sad truth is that some component that cannot be changed is putting the data in some other form then some type of conversion between [probably] normalization Form C would be needed.</P>
+<P>This is something that does not exist though the only requirement that a single byte code page such as 1258 cannot handle is the times when one code point would need to be converted to two, e.g.</P><FONT face="Consolas,Lucida Console,Courier New,Courier,Fixed"><B>
+<UL>
+<LI>U+1ea4 --&gt; 0xC2 0xEC&nbsp;&nbsp;&nbsp; // LATIN CAPITAL LETTER A WITH CIRCUMFLEX AND ACUTE</LI>
+<LI>U+1ea5 --&gt; 0xE2 0xEC&nbsp;&nbsp;&nbsp; // LATIN SMALL LETTER A WITH CIRCUMFLEX AND ACUTE</LI>
+<LI>U+1ea6 --&gt; 0xC2 0xCC&nbsp;&nbsp;&nbsp; // LATIN CAPITAL LETTER A WITH CIRCUMFLEX AND GRAVE</LI>
+<LI>U+1ea7 --&gt; 0xE2 0xCC&nbsp;&nbsp;&nbsp; // LATIN SMALL LETTER A WITH CIRCUMFLEX AND GRAVE</LI>
+<LI>U+1ea8 --&gt; 0xC2 0xD2&nbsp;&nbsp;&nbsp; // LATIN CAPITAL LETTER A WITH CIRCUMFLEX AND HOOK ABOVE</LI>
+<LI>U+1ea9 --&gt; 0xE2 0xD2&nbsp;&nbsp;&nbsp; // LATIN SMALL LETTER A WITH CIRCUMFLEX AND HOOK ABOVE</LI>
+<LI>U+1eaa --&gt; 0xC2 0xDE&nbsp;&nbsp;&nbsp; // LATIN CAPITAL LETTER A WITH CIRCUMFLEX AND TILDE</LI>
+<LI>U+1eab --&gt; 0xE2 0xDE&nbsp;&nbsp;&nbsp; // LATIN SMALL LETTER A WITH CIRCUMFLEX AND TILDE</LI>
+<LI>U+1eac --&gt; 0xC2 0xF2&nbsp;&nbsp;&nbsp; // LATIN CAPITAL LETTER A WITH CIRCUMFLEX AND DOT BELOW</LI>
+<LI>U+1ead --&gt; 0xE2 0xF2&nbsp;&nbsp;&nbsp; // LATIN SMALL LETTER A WITH CIRCUMFLEX AND DOT BELOW</LI>
+<LI>U+1eae --&gt; 0xC3 0xEC&nbsp;&nbsp;&nbsp; // LATIN CAPITAL LETTER A WITH BREVE AND ACUTE</LI>
+<LI>U+1eaf --&gt; 0xE3 0xEC&nbsp;&nbsp;&nbsp; // LATIN SMALL LETTER A WITH BREVE AND ACUTE</LI>
+<LI>U+1eb0 --&gt; 0xC3 0xCC&nbsp;&nbsp;&nbsp; // LATIN CAPITAL LETTER A WITH BREVE AND GRAVE</LI>
+<LI>U+1eb1 --&gt; 0xE3 0xCC&nbsp;&nbsp;&nbsp; // LATIN SMALL LETTER A WITH BREVE AND GRAVE</LI>
+<LI>U+1eb2 --&gt; 0xC3 0xD2&nbsp;&nbsp;&nbsp; // LATIN CAPITAL LETTER A WITH BREVE AND HOOK ABOVE</LI>
+<LI>U+1eb3 --&gt; 0xE3 0xD2&nbsp;&nbsp;&nbsp; // LATIN SMALL LETTER A WITH BREVE AND HOOK ABOVE</LI>
+<LI>U+1eb4 --&gt; 0xC3 0xDE&nbsp;&nbsp;&nbsp; // LATIN CAPITAL LETTER A WITH BREVE AND TILDE</LI>
+<LI>U+1eb5 --&gt; 0xE3 0xDE&nbsp;&nbsp;&nbsp; // LATIN SMALL LETTER A WITH BREVE AND TILDE</LI>
+<LI>U+1eb6 --&gt; 0xC3 0xF2&nbsp;&nbsp;&nbsp; // LATIN CAPITAL LETTER A WITH BREVE AND DOT BELOW</LI>
+<LI>U+1eb7 --&gt; 0xE3 0xF2&nbsp;&nbsp;&nbsp; // LATIN SMALL LETTER A WITH BREVE AND DOT BELOW</LI>... 
+<LI>U+1ebe --&gt; 0xCA 0xEC&nbsp;&nbsp;&nbsp; // LATIN CAPITAL LETTER E WITH CIRCUMFLEX AND ACUTE</LI>
+<LI>U+1ebf --&gt; 0xEA 0xEC&nbsp;&nbsp;&nbsp; // LATIN SMALL LETTER E WITH CIRCUMFLEX AND ACUTE</LI>
+<LI>U+1ec0 --&gt; 0xCA 0xCC&nbsp;&nbsp;&nbsp; // LATIN CAPITAL LETTER E WITH CIRCUMFLEX AND GRAVE</LI>
+<LI>U+1ec1 --&gt; 0xEA 0xCC&nbsp;&nbsp;&nbsp; // LATIN SMALL LETTER E WITH CIRCUMFLEX AND GRAVE</LI>
+<LI>U+1ec2 --&gt; 0xCA 0xD2&nbsp;&nbsp;&nbsp; // LATIN CAPITAL LETTER E WITH CIRCUMFLEX AND HOOK ABOVE</LI>
+<LI>U+1ec3 --&gt; 0xEA 0xD2&nbsp;&nbsp;&nbsp; // LATIN SMALL LETTER E WITH CIRCUMFLEX AND HOOK ABOVE</LI>
+<LI>U+1ec4 --&gt; 0xCA 0xDE&nbsp;&nbsp;&nbsp; // LATIN CAPITAL LETTER E WITH CIRCUMFLEX AND TILDE</LI>
+<LI>U+1ec5 --&gt; 0xEA 0xDE&nbsp;&nbsp;&nbsp; // LATIN SMALL LETTER E WITH CIRCUMFLEX AND TILDE</LI>
+<LI>U+1ec6 --&gt; 0xCA 0xF2&nbsp;&nbsp;&nbsp; // LATIN CAPITAL LETTER E WITH CIRCUMFLEX AND DOT BELOW</LI>
+<LI>U+1ec7 --&gt; 0xEA 0xF2&nbsp;&nbsp;&nbsp; // LATIN SMALL LETTER E WITH CIRCUMFLEX AND DOT BELOW</LI>... 
+<LI>U+1ed0 --&gt; 0xD4 0xEC&nbsp;&nbsp;&nbsp; // LATIN CAPITAL LETTER O WITH BREVE AND ACUTE</LI>
+<LI>U+1ed1 --&gt; 0xF4 0xEC&nbsp;&nbsp;&nbsp; // LATIN SMALL LETTER O WITH BREVE AND ACUTE</LI>
+<LI>U+1ed2 --&gt; 0xD4 0xCC&nbsp;&nbsp;&nbsp; // LATIN CAPITAL LETTER O WITH BREVE AND GRAVE</LI>
+<LI>U+1ed3 --&gt; 0xF4 0xCC&nbsp;&nbsp;&nbsp; // LATIN SMALL LETTER O WITH BREVE AND GRAVE</LI>
+<LI>U+1ed4 --&gt; 0xD4 0xD2&nbsp;&nbsp;&nbsp; // LATIN CAPITAL LETTER O WITH BREVE AND HOOK ABOVE</LI>
+<LI>U+1ed5 --&gt; 0xF4 0xD2&nbsp;&nbsp;&nbsp; // LATIN SMALL LETTER O WITH BREVE AND HOOK ABOVE</LI>
+<LI>U+1ed6 --&gt; 0xD4 0xDE&nbsp;&nbsp;&nbsp; // LATIN CAPITAL LETTER O WITH BREVE AND TILDE</LI>
+<LI>U+1ed7 --&gt; 0xF4 0xDE&nbsp;&nbsp;&nbsp; // LATIN SMALL LETTER O WITH BREVE AND TILDE</LI>
+<LI>U+1ed8 --&gt; 0xD4 0xF2&nbsp;&nbsp;&nbsp; // LATIN CAPITAL LETTER O WITH BREVE AND DOT BELOW</LI>
+<LI>U+1ed9 --&gt; 0xF4 0xF2&nbsp;&nbsp;&nbsp; // LATIN SMALL LETTER O WITH BREVE AND DOT BELOW</LI></UL></B></FONT>
+<P>and so on through all the other various letters covered by the code page. </P>
+<P>Unfortunately a simple, table-based double byte code page could not properly support such a custom "Vietnamese Plus"&nbsp;code page&nbsp;mapping. </P>
+<P><STRONG><FONT color=#ff0000>EXTRA CREDIT: </FONT></STRONG>Can anyone here discern and/or explain&nbsp;why, exactly? :-)</P>
+<P>Thus one could build a DLL-based mapping (as in <A href="http://archives.miloush.net/michkap/archive/2007/05/19/2735895.html" mce_href="http://archives.miloush.net/michkap/archive/2007/05/19/2735895.html"><STRONG>Custom code pages? Redux</STRONG></A>) and just keep these tables around in code if one wanted to. But one would obviously have to have some vested interest in wanting to (e.g. a need to support cp1258 data with data in Unicode that isn't currently in pseudo-form V.</P>
+<P>I was most of the way to having this done (auto-generated) to post as a sample before it occurred to me that there might be very good reasons for a full-time Microsoft employee, even a pain in the ass one like me, to post such a thing.</P>
+<P>Though if anyone wants to do it, note that I was using cp 51258, for obvious reasons. </P>
+<P>If you wanted to create such a DLL-based code page and there is any way to create a standard usage out of a non-standard/unsupported code page, I would encourage you to do the same! :-)</P>
+<P>Now for the record let me say this is an area where I do not really tend to agree with the Microsoft party line completely. I mean, I truly believe that Unicode is the best answer here in the long run, but I am hardly naive enough to believe that everyone has made that change yet and surprisingly [to some] not obnoxious enough to think it is acceptable to do nothing further to assist customers. Especially when we expect people to migrate and we know we <STRONG>aren't</STRONG> the most popular non-Unicode solution, the fact that we provide no assistance here and aren't even remotely apologetic as we vote to make Unicode less and less compatible with our own solution even as we make it harder to use is really not my style. To be honest, the fact that we do not have a better solution for integrating with Unicode in the Vietnamese case is also pretty bad -- not even the excuse of backcompat, the only explanation is that no wants to do the work because supporting Vietnamese correctly and more consistently with Unicode just doen't hit anyone's radar. So no one wantsd to use us and the problem perpetutates itself.</P>
+<P>When you consider in particular the history of Microsoft in regard to VNI, it just makes Microsoft look worse. Perhaps there are even legal reasons related to the VNI thing that we are requitred to suck here that no one has told me about?</P>
+<P>But anyway and either way, that is how things are right now, so my dissenting opinion is unlikely to reach any higher level than the blog post you are reading....</P>
+<hr/><p><a id="9947592" href="#9947592">#</a> <strong>John Cowan</strong> on 12 Jan 2010 11:03 PM:</p><div style="margin-left: 1em"><p>Answer: in a DBCS it has to be possible to distinguish lead bytes of a multi-byte sequence from stand-alone bytes. &nbsp;Unfortunately, &quot;a&quot; is not always a lead byte: sometimes (when there is no tone mark, indicating the mid-level tone) it's a stand-alone byte.</p>
+<p>The nasty question: Given Unicode text that isn't in normalization form V, can it still be converted to CP1258 &nbsp;by a Windows interface, and if so, which interface?</p></div>
+<p><a id="9947824" href="#9947824">#</a> <strong>Michael S. Kaplan</strong> on 13 Jan 2010 7:41 AM:</p><div style="margin-left: 1em"><P>John - exactly!</P>
+<P>Unfortunately, there is no way to convert the non form V text to cp1258, which is why I think this code page should, in fact, exist.</P></div>
+<p><strong>Matthew Slyman</strong> on 16 Apr 2013 4:07 AM:</p><div style="margin-left: 1em"><p>...This is why we need chained dead keys, arranged into a sort of directed-graph type system that allows the logical composition of characters (code-points) via various alternative key-sequences. Until we have that kind of functionality in a keyboard, these kinds of accents and diacritics are always going to be difficult to learn and manage!</p>
+</div>
+<hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2012/10/03 <a href="http://archives.miloush.net/michkap/archive/2012/10/03/10355394.html">The temptation to channel Grumpy Code Reviewer can be almost overwhelming!</a></p><p>2012/09/18 <a href="http://archives.miloush.net/michkap/archive/2012/09/18/10350350.html">How would *you* define debacle?</a></p><p>2012/02/29 <a href="http://archives.miloush.net/michkap/archive/2012/02/29/10274340.html">What's the difference between Tiếng Việt, Tiếng Việt, and Tiếng Việt? (other than the obvious, I mean)</a></p><p>2010/08/17 <a href="http://archives.miloush.net/michkap/archive/2010/08/17/10050816.html">It would be like spelling it Anerica or something.</a></p><p>2010/06/04 <a href="http://archives.miloush.net/michkap/archive/2010/06/04/10018681.html">Vietnam or Viet Nam or Việt Nam or ???</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2010/01/13/9947855.html" title="And then there is China....">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2010/01/11/9946618.html" title="The Unicode train is leaving the station, 2010 edition (aka How to do a feature in two versions)">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2010-01">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2010-01-12">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2010/01/12/9946880.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:35 GMT -->
+</html>

@@ -1,0 +1,22 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2012/01/31/10261506.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Sometimes things are extended in the wrong direction....</title></head><body>
+<h1>Sometimes things are extended in the wrong direction....</h1>
+<p><em>by Michael S. Kaplan, published on 2012/01/31 07:01 -05:00, original URI: http://blogs.msdn.com/b/michkap/archive/2012/01/31/10261506.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<p>SQL Server's code page, collation, casing, locale, and resource model are all direct attempts to extend the things that Windows provides in ways that make sense for SQL Server.</p>
+<p>This sentence bears repeating, I think. Because it seems (in the words of&nbsp;the late, great George Carlin, <strong>vaguely important</strong>.</p>
+<p><span style="font-size: large;"><strong>SQL Server's code page, collation, casing locale, and resource model are all direct attempts to extend the things that Windows provides in ways that make sense for SQL Server.</strong></span></p>
+<p>Okay, I feel better now.</p>
+<p>Now generally speaking I find the model to be supportable -- for example the way they snapshot the casing table in a given collation version rather than relying on the OS&nbsp;table (which could have disastrous compatibility concerns as they cover multiple versions of collations).</p>
+<p>To be honest, even in those cases when I don't agree with what they do at all -- like the way they split user locale/UI language/formatting/collation differently. Or the way they combine "redundant" collations that can&nbsp;cause geopolitical discomfort/technical challenges -- I still respect their choices because, after all, the own the choices and the consequences thereof.</p>
+<p>There are two problems that I really think they should fix though, in&nbsp;some future version of theirs:</p>
+<p><strong>The fact that the Hosted CLR (aka SQLCLR) doesn't use the SQL Server collations of the server they&nbsp;are on</strong>, which truly limits the usefulness of managed code in stored procedures, since you can't code against&nbsp;the server's own behavior.</p>
+<p><strong>The fact that SQL Server makes its "server collation" setting based on a DEFAULT_SYSTEM_LOCALE analogue instead of a UI language of the LOCALSYSTEM account analogue</strong>, which blocks collations that are from "Unicode only" locales -- e.g. Hindi -- from working as sever collations.</p>
+<p>There is no good reason for the limitation itself -- what better reason is there to remove it? :-)</p>
+<p>More about this setting <strong><a href="http://archives.miloush.net/michkap/archive/2006/05/05/590504.html">here</a></strong>....</p>
+<p>Maybe it's our fault; we did, after all, call it <strong>DEFAULT_SYSTEM_LOCALE</strong>.</p>
+<p>I guess they just were just extending our naming mistake of yore....</p>
+<hr/><div style="margin-left: 1em"><em>no comments</em></div><hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2012/02/01/10262583.html" title="Changing the world, 0.1 steps at a time!">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2012/01/30/10261662.html" title="An SDK for the OSK? No way. Though if I may, I&#39;ll just say...">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2012-01">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2012-01-31">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2012/01/31/10261506.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+</html>

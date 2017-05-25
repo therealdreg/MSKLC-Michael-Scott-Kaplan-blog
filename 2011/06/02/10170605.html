@@ -1,0 +1,34 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2011/06/02/10170605.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>One of the coolest parts of my job is when I don't have to do it</title></head><body>
+<h1>One of the coolest parts of my job is when I don't have to do it</h1>
+<p><em>by Michael S. Kaplan, published on 2011/06/02 07:01 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2011/06/02/10170605.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<p>Maybe I should explain the tite&nbsp;statement before it ends up having an effect on my upcoming review....</p>
+<p>You see, the other day, Dan asked:</p>
+<p style="padding-left: 60px;"><span style="font-family: times new roman,times; font-size: medium;">Subject: What are the F4 80 80 80 bytes in a UTF-8 HTML email body for?</span></p>
+<p style="padding-left: 60px;"><span style="font-family: times new roman,times; font-size: medium;">Hello;</span></p>
+<p style="padding-left: 60px;"><span style="font-family: times new roman,times; font-size: medium;">I&rsquo;m working on an issue involving UTF-8 encoding.&nbsp; The customer is seeing these bits coming back from an Exchange EAS call which contains utf-8 encoded content which contains: F4 80 80 80. This content is in the HTML of an email body which contains simplified Chinese and English characters.&nbsp;&nbsp; The customer is saying that these bits are not valid.&nbsp; Are these some sort of special marker in UTF-8 encoding?</span></p>
+<p style="padding-left: 60px;"><span style="font-family: times new roman,times; font-size: medium;">Thank you, </span><br /><span style="font-family: times new roman,times; font-size: medium;">Dan</span></p>
+<p>I saw the message on my phone, but I was at a late lunch (it was 1:34pm on a Wednesday). I figured I could answer it when I got back to my office.</p>
+<p>But there really was no need....</p>
+<p>Because at 2:08pm, just 34 minutes later, colleague Laurentiu resonded:</p>
+<p style="padding-left: 90px;"><em><span style="font-family: times new roman,times; font-size: medium;">Hello Dan,</span></em></p>
+<p style="padding-left: 90px;"><em><span style="font-family: times new roman,times; font-size: medium;">&lt;F4, 80, 80, 80&gt; is a well-formed UTF-8 sequence that represents the Unicode character U+100000 (five zeros), which is a Unicode supplementary private-use character.&nbsp; Unicode contains three private-use areas: U+E000&ndash;U+F8FF in Plane 0 (Basic Multilingual Plane), and two supplementary planes, Planes 15 and 16 (Supplementary Private Use Area-A and -B).&nbsp; U+100000 is the first character of Plane 16.</span></em></p>
+<p style="padding-left: 90px;"><em><span style="font-family: times new roman,times; font-size: medium;">Although they can contain anything the user defines, supplementary private-use areas are typically used for CJK ideographs that are not encoded in Unicode.&nbsp; So it looks like somebody is using a PUA character, possibly a private CJK ideograph.</span></em></p>
+<p style="padding-left: 90px;"><em><span style="font-family: times new roman,times; font-size: medium;">Regards,</span></em><br /><em><span style="font-family: times new roman,times; font-size: medium;">L.</span></em></p>
+<p>And there it is -- knowing that there are other people who know the answers to many of the random globalization, localizability, world-readiness, and other issues to help out when many of these questions come up, and who are willing and able to respond is a huge help as more and more people are trying to do the right thing in their projects and products and support cases.</p>
+<p>I still do answer many questions. But there are many others who help out as well.</p>
+<p>And that is one of the coolest parts of my job -- the fact that so many others are around to help do it! :-)</p>
+<p>There are still questions that no one else seems to know the answers to, so I still have some utility. But its nice to know that there are others around with knowledge and interest....</p>
+<hr/><p><strong>Andrew West</strong> on 2 Jun 2011 7:10 AM:</p><div style="margin-left: 1em"><p>Not TUTF now ;-)</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 2 Jun 2011 8:29 AM:</p><div style="margin-left: 1em"><p>Ah, there are still those areas I have unique and indispensible knowledge in that no one else seems to want to take the time to learn. :-)</p>
+</div>
+<p><strong>Raymond Chen - MSFT</strong> on 2 Jun 2011 12:13 PM:</p><div style="margin-left: 1em"><p>I like how the customer claimed the bytes were invalid by fiat. &quot;These bytes are not valid because I say they aren&#39;t valid.&quot;</p>
+</div>
+<p><strong>Van</strong> on 6 Jun 2011 7:24 AM:</p><div style="margin-left: 1em"><p>I wonder if by &quot;invalid&quot;, the customer means &quot;showing up as a little box (or four)&quot;?</p>
+</div>
+<hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2011/06/03/10171014.html" title="Oops! (aka Locking yourself out of Windows)">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2011/06/01/10170165.html" title="One man&#39;s intentional design is another man&#39;s heinous bug: GDI+ edition">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2011-06">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2011-06-02">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2011/06/02/10170605.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+</html>

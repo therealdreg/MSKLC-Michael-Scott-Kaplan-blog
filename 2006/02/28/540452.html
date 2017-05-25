@@ -1,0 +1,141 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2006/02/28/540452.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:40 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>[Localized] Date/Time format tokens</title></head><body>
+<h1>[Localized] Date/Time format tokens</h1>
+<p><em>by Michael S. Kaplan, published on 2006/02/28 04:38 -05:00, original URI: http://blogs.msdn.com/b/michkap/archive/2006/02/28/540452.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P><FONT face=Tahoma>When functions like <A href="http://msdn.microsoft.com/library/en-us/intl/nls_5w6s.asp">GetDateFormat</A> and <A href="http://msdn.microsoft.com/library/en-us/intl/nls_6at0.asp">GetTimeFormat</A> work with format picture </FONT><FONT face=Tahoma>strings, there is a very limited set of tokens that is considered legal:</FONT></P>
+<P><FONT face=Tahoma>
+<TABLE width="60%" border=1>
+<TBODY>
+<TR vAlign=top>
+<TH align=left width="16%">Picture</TH>
+<TH align=left width="84%">Meaning</TH></TR>
+<TR vAlign=top>
+<TD width="16%">d</TD>
+<TD width="84%">Day of month as digits with no leading zero for single-digit days.</TD></TR>
+<TR vAlign=top>
+<TD width="16%">dd</TD>
+<TD width="84%">Day of month as digits with leading zero for single-digit days.</TD></TR>
+<TR vAlign=top>
+<TD width="16%">ddd</TD>
+<TD width="84%">Day of week as a three-letter abbreviation. The function uses the LOCALE_SABBREVDAYNAME value associated with the specified locale.</TD></TR>
+<TR vAlign=top>
+<TD width="16%">dddd</TD>
+<TD width="84%">Day of week as its full name. The function uses the LOCALE_SDAYNAME value associated with the specified locale.</TD></TR>
+<TR vAlign=top>
+<TD width="16%">M</TD>
+<TD width="84%">Month as digits with no leading zero for single-digit months.</TD></TR>
+<TR vAlign=top>
+<TD width="16%">MM</TD>
+<TD width="84%">Month as digits with leading zero for single-digit months.</TD></TR>
+<TR vAlign=top>
+<TD width="16%">MMM</TD>
+<TD width="84%">Month as a three-letter abbreviation. The function uses the LOCALE_SABBREVMONTHNAME value associated with the specified locale.</TD></TR>
+<TR vAlign=top>
+<TD width="16%">MMMM</TD>
+<TD width="84%">Month as its full name. The function uses the LOCALE_SMONTHNAME value associated with the specified locale.</TD></TR>
+<TR vAlign=top>
+<TD width="16%">y</TD>
+<TD width="84%">Year as last two digits, but with no leading zero for years less than 10.</TD></TR>
+<TR vAlign=top>
+<TD width="16%">yy</TD>
+<TD width="84%">Year as last two digits, but with leading zero for years less than 10.</TD></TR>
+<TR vAlign=top>
+<TD width="16%">yyyy</TD>
+<TD width="84%">Year represented by full four <I>or five</I> digits, depending on the calendar used. Thai Buddhist and Korean calendars both have five digit years. The "yyyy" pattern will show five digits for these two calendars, and four digits for all other supported calendars. </TD></TR>
+<TR vAlign=top>
+<TD width="16%">yyyyy</TD>
+<TD width="84%">Behaves identically to "yyyy". </TD></TR>
+<TR vAlign=top>
+<TD width="16%">gg</TD>
+<TD width="84%">Period/era string. The function uses the CAL_SERASTRING value associated with the specified locale. This element is ignored if the date to be formatted does not have an associated era or period string.</TD></TR></TBODY></TABLE></FONT></P>
+<P><FONT face=Tahoma>
+<TABLE width="60%" border=1>
+<TBODY>
+<TR vAlign=top>
+<TH align=left width="13%">Picture</TH>
+<TH align=left width="87%">Meaning</TH></TR>
+<TR vAlign=top>
+<TD width="13%">h</TD>
+<TD width="87%">Hours with no leading zero for single-digit hours; 12-hour clock.</TD></TR>
+<TR vAlign=top>
+<TD width="13%">hh</TD>
+<TD width="87%">Hours with leading zero for single-digit hours; 12-hour clock.</TD></TR>
+<TR vAlign=top>
+<TD width="13%">H</TD>
+<TD width="87%">Hours with no leading zero for single-digit hours; 24-hour clock.</TD></TR>
+<TR vAlign=top>
+<TD width="13%">HH</TD>
+<TD width="87%">Hours with leading zero for single-digit hours; 24-hour clock.</TD></TR>
+<TR vAlign=top>
+<TD width="13%">m</TD>
+<TD width="87%">Minutes with no leading zero for single-digit minutes.</TD></TR>
+<TR vAlign=top>
+<TD width="13%">mm</TD>
+<TD width="87%">Minutes with leading zero for single-digit minutes.</TD></TR>
+<TR vAlign=top>
+<TD width="13%">s</TD>
+<TD width="87%">Seconds with no leading zero for single-digit seconds.</TD></TR>
+<TR vAlign=top>
+<TD width="13%">ss</TD>
+<TD width="87%">Seconds with leading zero for single-digit seconds.</TD></TR>
+<TR vAlign=top>
+<TD width="13%">t</TD>
+<TD width="87%">One character time-marker string, such as A or P.</TD></TR>
+<TR vAlign=top>
+<TD width="13%">tt</TD>
+<TD width="87%">Multicharacter time-marker string, such as AM or PM.</TD></TR></TBODY></TABLE></FONT></P>
+<P><FONT face=Tahoma>And it is easy enough to see them in Regional and Language Options:</FONT></P>
+<P><FONT face=Tahoma><IMG src="http://trigeminal.fmsinc.com/images/time0409.jpg">&nbsp; <IMG src="http://trigeminal.fmsinc.com/images/date0409.jpg"></FONT></P>
+<P><FONT face=Tahoma>Of course, if you have ever worked with a language version of Windows other than English, you may know that is only part of the story.</FONT></P>
+<P><FONT face=Tahoma>Many other language versions of Windows will have different letters defined for the format strings according to Regional and Language Options (for examples you can look <A HREF="http://archives.miloush.net/michkap/archive/2006/02/28/540429.html">here</A>).</FONT></P>
+<P><FONT face=Tahoma>But note that this is not locale data, and there is no way to query <A href="http://msdn.microsoft.com/library/en-us/intl/nls_34rz.asp">GetLocaleInfo</A> for what tags are being used in Regional and Language Options.</FONT></P>
+<P><FONT face=Tahoma>Now&nbsp;trial and error with the LoadString function being called on the Regional Options binary (intl.cpl) finds the tags rather easily:</FONT></P>
+<TABLE width="30%" border=1>
+<TBODY>
+<TR>
+<TD><FONT face="Courier New">ID</FONT></TD>
+<TD><FONT face="Courier New">String</FONT></FONT></TD></TR>
+<TR>
+<TD><FONT face="Courier New">55</FONT></TD>
+<TD><FONT face="Courier New">H</FONT></FONT></TD></TR>
+<TR>
+<TD><FONT face="Courier New">56</FONT></TD>
+<TD><FONT face="Courier New">h</FONT></FONT></TD></TR>
+<TR>
+<TD><FONT face="Courier New">57</FONT></TD>
+<TD><FONT face="Courier New">M</FONT></FONT></TD></TR>
+<TR>
+<TD><FONT face="Courier New">58</FONT></TD>
+<TD><FONT face="Courier New">m</FONT></FONT></TD></TR>
+<TR>
+<TD><FONT face="Courier New">59</FONT></TD>
+<TD><FONT face="Courier New">s</FONT></FONT></TD></TR>
+<TR>
+<TD><FONT face="Courier New">60</FONT></TD>
+<TD><FONT face="Courier New">t</FONT></FONT></TD></TR>
+<TR>
+<TD><FONT face="Courier New">61</FONT></TD>
+<TD><FONT face="Courier New">d</FONT></FONT></TD></TR>
+<TR>
+<TD><FONT face="Courier New">62</FONT></TD>
+<TD><FONT face="Courier New">y</FONT></FONT></TD></TR></TBODY></TABLE>
+<P><FONT face=Tahoma>Although this has not changed since the functionality was added to Windows, there is of course no guarantee that this will be true of future versions. Just in case you wnted to start using it, be sure to keep that fact in mind. :-)</FONT></P>
+<P><FONT face=Tahoma>Now it is hard to imagine the functionality going away since it would break all of the users who have seeing those <A HREF="http://archives.miloush.net/michkap/archive/2006/02/28/540429.html">localized format strings</A> for so long.</FONT></P>
+<P><FONT face=Tahoma>And it is&nbsp;perhaps even&nbsp;harder to imagine the format strings returned by <A href="http://msdn.microsoft.com/library/en-us/intl/nls_34rz.asp">GetLocaleInfo</A>&nbsp;or&nbsp;consumed by <A href="http://msdn.microsoft.com/library/en-us/intl/nls_5w6s.asp">GetDateFormat</A> and <A href="http://msdn.microsoft.com/library/en-us/intl/nls_6at0.asp">GetTimeFormat</A>&nbsp;changing either, since this would break all of the existing applications.</FONT></P>
+<P><FONT face=Tahoma>The "market" for using these localized format pictures is also pretty limited -- basically people writing Regional Options replacements. And how many people are really doing that, anyway?</FONT></P>
+<P><FONT face=Tahoma>The one time such a feature might be interesting is in a custom UI language, but at the point where such a thing as that is supported, these strings in Regional Options will of course be availabl to localizers just as they are today (hopefully with some instructions on how to translate these particular strings!).</FONT></P>
+<P><FONT face=Tahoma>Of course, not all languages would translate these particular token strings, though it is completely understandable why the English strings may be too confusing for&nbsp;some languages.</FONT></P>
+<P><FONT face=Tahoma>But this is one of those interesting features that is well known to many people who use the localized versions of Windows that no one else really knows about....</FONT></P>
+<P><FONT face=Tahoma></FONT>&nbsp;</P>
+<P><FONT face=Tahoma color=#ff1493><EM>This post brought to you by</EM> "d" <EM>(<A href="http://www.fileformat.info/info/unicode/char/0064">U+0064</A>, a.k.a LATIN SMALL LETTER D)</EM></FONT></P>
+<hr/><p><a id="540510" href="#540510">#</a> <strong>Anutthara MSFT</strong> on 28 Feb 2006 7:08 AM:</p><div style="margin-left: 1em">Hi Mike - it is interesting to note that the settings support for different locales is limited to date, time, currency and numbers and very minimal string based stuff (if you consider the date manipulation as string based i.e.) Now, we know that addresses and even names are represented differently in different countries like (FirstName, LastName or LastName, FirstName or FirstName.MiddleName.LastName) Is there any reason why these settings are not specific per a defined locale? I am sure apps like One Note or Outlook would require these settings. Is there an API to set/get this kind of format?</div>
+<p><a id="540546" href="#540546">#</a> <strong>Michael S. Kaplan</strong> on 28 Feb 2006 8:33 AM:</p><div style="margin-left: 1em">Hi Anutthara,<br><br>If you asking why address formats are not a part of the Windows locale data, I will be talking about that soon in another post. There is not a function that will set or retrieve this data, though....</div>
+<p><a id="540597" href="#540597">#</a> <strong>Serge Wautier</strong> on 28 Feb 2006 10:34 AM:</p><div style="margin-left: 1em">Oddly enough, according to your screenshots, the Turkish translation seems to use the same letter (s) for hours and seconds!</div>
+<p><a id="540614" href="#540614">#</a> <strong>Michael S. Kaplan</strong> on 28 Feb 2006 10:55 AM:</p><div style="margin-left: 1em">Not just looks like Serge -- is!</div>
+<p><a id="540687" href="#540687">#</a> <strong>Roozbeh Pournader</strong> on 28 Feb 2006 1:00 PM:</p><div style="margin-left: 1em">Well, in the CLDR project (<a rel="nofollow" target="_new" href="http://www.cldr.info/">http://www.cldr.info/</a>) we tried to make something out of the very similar mess that CLDR has somehow inherited, that is a string to specify what the locale may prefer for 'h', 'm', 's', etc. Apparently this feature was also available in products from other companies (Apple's Mac OS? IBM's ICU?)<br><br>After discussions, we came to the decision that we need to deprecate this altogether and recommend using the original values (that had an English background), since normal users should not really be exposed to something this geeky (the CLDR version is much more complicated: <a rel="nofollow" target="_new" href="http://www.unicode.org/reports/tr35/#Date_Format_Patterns">http://www.unicode.org/reports/tr35/#Date_Format_Patterns</a>).<br><br>We agreed that if the user is fine with such geeky strings, we can usually safely assume he can learn the mnemonics that have the English background.</div>
+<p><a id="541104" href="#541104">#</a> <strong>Mihai</strong> on 1 Mar 2006 2:17 AM:</p><div style="margin-left: 1em">Actually, I liked that CLDR feature.<br>But I was using it in a constructive way (I hope).<br>The scenario: when accepting a date/time as input, you can use the localized abbreviations for UI (making clear to the user what is expected. Example:<br><br>Date of birth: [ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ]<br> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; (jjjj/mm/tt)<br><br>And using &quot;dd/mm/yyyy&quot; for validation.<br><br>I think having the posibility to retrieve the localized pattern (but not use it for validation or formatting) is a good compromise, usefull, yet with little or no way to abuse it.<br><br>Yet, CLDR is just a collection of data, so the potential of abuse is there, is not like an API can restrict what you can do with it.</div>
+<hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2008/11/25 <a href="http://archives.miloush.net/michkap/archive/2008/11/25/9140376.html">y? Because it's documented that way!</a></p><p>2006/02/28 <a href="http://archives.miloush.net/michkap/archive/2006/02/28/540641.html">A little bit of Turkish delight</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2006/02/28/540641.html" title="A little bit of Turkish delight">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2006/02/28/540429.html" title="Some localized Regional and Language Options tags">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2006-02">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2006-02-28">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2006/02/28/540452.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:40 GMT -->
+</html>

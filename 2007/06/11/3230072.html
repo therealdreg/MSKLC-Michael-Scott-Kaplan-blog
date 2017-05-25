@@ -1,0 +1,81 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2007/06/11/3230072.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:38 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>The difference between C1_SPACE-ing out and drawing a C1_BLANK</title></head><body>
+<h1>The difference between C1_SPACE-ing out and drawing a C1_BLANK</h1>
+<p><em>by Michael S. Kaplan, published on 2007/06/11 11:39 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2007/06/11/3230072.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P>Over in the microsoft.public.win32.programmer.international newsgroup, PLS asked the following question:</P>
+<BLOCKQUOTE>
+<P><FONT face="times new roman,times"><EM>Can someone please explain the difference between C1_SPACE and <BR>C1_BLANK in the character types returned from GetStringTypeEx? <BR>What characters fall in either catagory?</EM></FONT></P>
+<P><FONT face="times new roman,times"><EM>&nbsp; Thanks,<BR>&nbsp;&nbsp;&nbsp; ++PLS</EM></FONT></P></BLOCKQUOTE>
+<P mce_keep="true">Microsoft can't really take credit for the meaning of the C1_CTYPE flags that <A class="" href="http://msdn2.microsoft.com/library/ms647481.aspx" mce_href="http://msdn2.microsoft.com/library/ms647481.aspx">GetStringTypeW</A> returns (remember not to call <A class="" href="http://msdn2.microsoft.com/library/ms647480.aspx" mce_href="http://msdn2.microsoft.com/library/ms647480.aspx">GetStringTypeEx</A>, as I pointed out in <STRONG><A class="" href="http://archives.miloush.net/michkap/archive/2005/10/31/486870.html" mce_href="http://archives.miloush.net/michkap/archive/2005/10/31/486870.html">To Ex or not to Ex? THAT is the question</A></STRONG>!).</P>
+<P mce_keep="true">The original meaning comes from that whole POSIX internationalization world, where the actual definition you can find if you really look for it is:</P>
+<UL>
+<LI>
+<DIV mce_keep="true">C1_SPACE -- White-space characters. Characters also specified as C1_UPPER, C1_LOWER, C1_ALPHA, C1_DIGIT, or C1_XDIGIT are not allowed. The characters &lt;space&gt;, &lt;form-feed&gt;, &lt;newline&gt;, &lt;carriage-return&gt;, &lt;tab&gt;, and &lt;vertical-tab&gt; are automatically included.</DIV></LI>
+<LI>
+<DIV mce_keep="true">C1_BLANK -- Characters classified as blank. The characters &lt;space&gt; and &lt;tab&gt; are automatically included.</DIV></LI></UL>
+<P mce_keep="true">Now given these slightly odd sorts of definitions, the script that Microsoft uses to figure out what to do with it's implementation is:</P>
+<UL>
+<LI>
+<DIV mce_keep="true">C1_SPACE -- Unicode code values with the White_Space property, and code values with a general category of <A class="" href="http://www.fileformat.info/info/unicode/category/Zs" mce_href="http://www.fileformat.info/info/unicode/category/Zs">Zs (Separator, Space)</A></DIV></LI>
+<LI>
+<DIV mce_keep="true">C1_BLANK -- There is a comment in the Perl script that says "# Grandfather properties that are too strange or ill-defined to derive from Unicode.", and a hard-coded list is used.</DIV></LI></UL>
+<P mce_keep="true">Here is where most of the relevant characters fall (note the C1_DEFINED, which was added in XP and convinced us as a team to be much more cautious about adding ctype values!):</P>
+<UL>
+<UL>
+<LI>
+<DIV mce_keep="true"><A class="" href="http://www.fileformat.info/info/unicode/char/0009" mce_href="http://www.fileformat.info/info/unicode/char/0009">U+0009</A> (CHARACTER TABULATION) -- C1_SPACE | C1_BLANK | C1_CTRL | C1_DEFINED</DIV></LI>
+<LI>
+<DIV mce_keep="true"><A class="" href="http://www.fileformat.info/info/unicode/char/000a" mce_href="http://www.fileformat.info/info/unicode/char/000a">U+000a</A> (LINE FEED) -- C1_SPACE | | C1_CTRL | C1_DEFINED</DIV></LI>
+<LI>
+<DIV mce_keep="true"><A class="" href="http://www.fileformat.info/info/unicode/char/000b" mce_href="http://www.fileformat.info/info/unicode/char/000b">U+000b</A> (LINE TABULATION) -- C1_SPACE | | C1_CTRL | C1_DEFINED</DIV></LI>
+<LI>
+<DIV mce_keep="true"><A class="" href="http://www.fileformat.info/info/unicode/char/000c" mce_href="http://www.fileformat.info/info/unicode/char/000c">U+000c</A> (FORM FEED) -- C1_SPACE | | C1_CTRL | C1_DEFINED</DIV></LI>
+<LI>
+<DIV mce_keep="true"><A class="" href="http://www.fileformat.info/info/unicode/char/000d" mce_href="http://www.fileformat.info/info/unicode/char/000d">U+000d</A> (CARRIAGE RETURN) -- C1_SPACE | | C1_CTRL | C1_DEFINED</DIV></LI>
+<LI>
+<DIV mce_keep="true"><A class="" href="http://www.fileformat.info/info/unicode/char/0020" mce_href="http://www.fileformat.info/info/unicode/char/0020">U+0020</A> (SPACE) -- C1_SPACE | C1_BLANK | C1_DEFINED</DIV></LI>
+<LI>
+<DIV mce_keep="true"><A class="" href="http://www.fileformat.info/info/unicode/char/00a0" mce_href="http://www.fileformat.info/info/unicode/char/00a0">U+00a0</A> (NO-BREAK SPACE) --&nbsp;C1_SPACE | C1_BLANK | C1_DEFINED</DIV></LI>
+<LI>
+<DIV mce_keep="true"><A class="" href="http://www.fileformat.info/info/unicode/char/1680" mce_href="http://www.fileformat.info/info/unicode/char/1680">U+1680</A> (OGHAM SPACE MARK) -- C1_SPACE | C1_DEFINED</DIV></LI>
+<LI>
+<DIV mce_keep="true"><A class="" href="http://www.fileformat.info/info/unicode/char/180e" mce_href="http://www.fileformat.info/info/unicode/char/180e">U+180e</A> (MONGOLIAN VOWEL SEPARATOR) -- C1_SPACE | C1_DEFINED</DIV></LI>
+<LI>
+<DIV mce_keep="true"><A class="" href="http://www.fileformat.info/info/unicode/char/2000" mce_href="http://www.fileformat.info/info/unicode/char/2000">U+2000</A> (EN QUAD) -- C1_SPACE | C1_DEFINED</DIV></LI>
+<LI>
+<DIV mce_keep="true"><A class="" href="http://www.fileformat.info/info/unicode/char/2001" mce_href="http://www.fileformat.info/info/unicode/char/2001">U+2001</A> (EM&nbsp;QUAD)&nbsp;--&nbsp;C1_SPACE | C1_DEFINED</DIV></LI>
+<LI>
+<DIV mce_keep="true"><A class="" href="http://www.fileformat.info/info/unicode/char/2002" mce_href="http://www.fileformat.info/info/unicode/char/2002">U+2002</A> (EN SPACE) -- C1_SPACE | C1_DEFINED</DIV></LI>
+<LI>
+<DIV mce_keep="true"><A class="" href="http://www.fileformat.info/info/unicode/char/2003" mce_href="http://www.fileformat.info/info/unicode/char/2003">U+2003</A> (EM SPACE) -- C1_SPACE | C1_DEFINED</DIV></LI>
+<LI>
+<DIV mce_keep="true"><A class="" href="http://www.fileformat.info/info/unicode/char/2004" mce_href="http://www.fileformat.info/info/unicode/char/2004">U+2004</A> (THREE-PER-EM SPACE) -- C1_SPACE | C1_DEFINED</DIV></LI>
+<LI>
+<DIV mce_keep="true"><A class="" href="http://www.fileformat.info/info/unicode/char/2005" mce_href="http://www.fileformat.info/info/unicode/char/2005">U+2005</A> (FOUR-PER-EM SPACE) -- C1_SPACE | C1_DEFINED</DIV></LI>
+<LI>
+<DIV mce_keep="true"><A class="" href="http://www.fileformat.info/info/unicode/char/2006" mce_href="http://www.fileformat.info/info/unicode/char/2006">U+2006</A> (SIX-PER-EM SPACE) -- C1_SPACE | C1_DEFINED</DIV></LI>
+<LI>
+<DIV mce_keep="true"><A class="" href="http://www.fileformat.info/info/unicode/char/2007" mce_href="http://www.fileformat.info/info/unicode/char/2007">U+2007</A> (FIGURE SPACE) -- C1_SPACE | C1_DEFINED</DIV></LI>
+<LI>
+<DIV mce_keep="true"><A class="" href="http://www.fileformat.info/info/unicode/char/2008" mce_href="http://www.fileformat.info/info/unicode/char/2008">U+2008</A> (PUNCTUATION SPACE) -- C1_SPACE | C1_DEFINED</DIV></LI>
+<LI>
+<DIV mce_keep="true"><A class="" href="http://www.fileformat.info/info/unicode/char/2009" mce_href="http://www.fileformat.info/info/unicode/char/2009">U+2009</A> (THIN SPACE) -- C1_SPACE | C1_DEFINED</DIV></LI>
+<LI>
+<DIV mce_keep="true"><A class="" href="http://www.fileformat.info/info/unicode/char/200a" mce_href="http://www.fileformat.info/info/unicode/char/200a">U+200A</A> (HAIR SPACE) -- C1_SPACE | C1_DEFINED</DIV></LI>
+<LI>
+<DIV mce_keep="true"><A class="" href="http://www.fileformat.info/info/unicode/char/202f" mce_href="http://www.fileformat.info/info/unicode/char/202f">U+202F</A> (NARROW NO-BREAK SPACE) -- C1_SPACE | C1_DEFINED</DIV></LI>
+<LI>
+<DIV mce_keep="true"><A class="" href="http://www.fileformat.info/info/unicode/char/205f" mce_href="http://www.fileformat.info/info/unicode/char/205f">U+205F</A> (MEDIUM MATHEMATICAL SPACE) -- C1_SPACE | C1_DEFINED</DIV></LI>
+<LI>
+<DIV mce_keep="true"><A class="" href="http://www.fileformat.info/info/unicode/char/3000" mce_href="http://www.fileformat.info/info/unicode/char/3000">U+3000</A> (IDEOGRAPHIC SPACE) -- C1_SPACE | C1_BLANK | C1_DEFINED</DIV></LI></UL></UL>
+<P mce_keep="true">I even got to learn something when I built this table -- I always assumed that the&nbsp;implementation&nbsp;of <A class="" href="http://msdn2.microsoft.com/en-us/library/system.char.iswhitespace.aspx" mce_href="http://msdn2.microsoft.com/en-us/library/system.char.iswhitespace.aspx">char.IsWhiteSpace</A> that added some other random characters (ref: <A class="" href="http://forums.microsoft.com/MSDN/ShowPost.aspx?PostID=367780&amp;SiteID=1" mce_href="http://forums.microsoft.com/MSDN/ShowPost.aspx?PostID=367780&amp;SiteID=1">here</A>) was due to to silly VB backward compatibility issues.</P>
+<P mce_keep="true">Which it is.</P>
+<P mce_keep="true">However, it is clear to me now that the original VB silliness was due to an attempt to support POSIX (probably because internally it used the CRT&nbsp;<A class="" href="http://msdn2.microsoft.com/library/y13z34da.aspx" mce_href="http://msdn2.microsoft.com/library/y13z34da.aspx">isspace function</A>, which in turn is dependent on the NLS data returned by <A class="" href="http://msdn2.microsoft.com/library/ms647481.aspx" mce_href="http://msdn2.microsoft.com/library/ms647481.aspx">GetStringTypeW</A>, above.</P>
+<P mce_keep="true">It is the down side of assuming anything is silly -- it usually turns out to be the fault of code you used to own at one point!</P>
+<P mce_keep="true">&nbsp;</P>
+<P mce_keep="true"><FONT color=#ff00ff><EM>This post brought to you by</EM>&nbsp;<FONT size=5> </FONT> <EM>(<A class="" href="http://www.fileformat.info/info/unicode/char/1680" mce_href="http://www.fileformat.info/info/unicode/char/1680">U+1680</A>, a.k.a. OGHAM SPACE MARK)</EM></FONT></P>
+<hr/><div style="margin-left: 1em"><em>no comments</em></div><hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2008/07/26 <a href="http://archives.miloush.net/michkap/archive/2008/07/26/8776572.html">Don't sneak a BOM in on someone who promises to ignore free space</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2007/06/11/3238175.html" title="Unicode did it&#39;s thing, and we got served? That&#39;s right, now its on[line]!">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2007/06/11/3221177.html" title="LCID vs. Powerman and the Locale-name-go-round">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2007-06">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2007-06-11">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2007/06/11/3230072.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:38 GMT -->
+</html>

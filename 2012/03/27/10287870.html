@@ -1,0 +1,63 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2012/03/27/10287870.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>How to localize a product very wrongly like</title></head><body>
+<h1>How to localize a product very wrongly like</h1>
+<p><em>by Michael S. Kaplan, published on 2012/03/27 07:01 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2012/03/27/10287870.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<p>First i'll explain how to localize software brilliantly right.</p>
+<p>It's a two-step process:</p>
+<ol>
+<li>Make sure all elements that may need to work or appear differently in a different market are either</li>
+<ol>
+<li>able to properly handle whatever the different market may require, or</li>
+<li>exposed to localization (i.e. make it localizable).</li>
+</ol>
+<li>Translate the product to a specific target market -- localize it!</li>
+</ol>
+<p>Note that if you do #2 without doing #1 fully, you can have a fairly uneven experience.</p>
+<p>Like showing movie times that cover 100 languages yet only handle movie theaters in Kalamazoo, Michigan.</p>
+<p>Or Woonsocket, Rhode Island.</p>
+<p>Or showing the weather forecast in 600 languages but only predicting the weather in Dothan, Alabama.</p>
+<p>Or Yakima, Washington.</p>
+<p>Or the issue BrautKrautBleibtBlauKleid <a href="http://answers.microsoft.com/en-us/windows/forum/windows_7-windows_programs/wrong-windows-7-calculator-convert-function-for/9380a2d4-5e37-4f68-849c-02d0155ebb82">referenced</a> in the Suggestion Box:</p>
+<p style="padding-left: 90px;"><span style="font-family: times new roman,times; font-size: medium;"><strong>Wrong Windows 7 calculator convert function for German Horsepower</strong></span></p>
+<p style="padding-left: 90px;"><span style="font-family: times new roman,times; font-size: medium;">In my Windows 7 Ultimate the german version of the calculator convert function gives the possibiliy to convert power measurement Kilowatt to PS (Pferdest&auml;rke) which is the german version of Horsepower. I noticed that it does not show the right values. It shows the values of HP (horsepower) which is used in USA and GB. Actually one German PS&nbsp; is 0,986320 HP and one HP is 1,013870 PS. So, does anybody know if this is a failure of the country specific calculator routine? If yes, what needs to be done to correct it?</span></p>
+<p>Sigh.</p>
+<p>Now in Vista, the Calculator was seriously revised.</p>
+<p>It was given Standard, Scientific, Programmer, and Statistics views.</p>
+<p>And then given support for unit conversion, date calculation, and mortgage/vehicle lease/fuel economy figuring.</p>
+<p>And of course they exposed every string to localization.</p>
+<p>All of this was awesome.</p>
+<p>Well, with an exception or two.</p>
+<p>Like the simple fact that either:</p>
+<ul>
+<li>The fundamental difference between the way different units of measurements are defined in different locales cannot be handled by localization, or</li>
+<li>This difference is exposed but is done so in a way that was either not properly described or not properly tested.</li>
+</ul>
+<p>I can't say for sure which one, though I have my suspicions.</p>
+<p>Especially since there are also some unrelated UI problems that make localization of the UI difficult.</p>
+<p>Perhaps someone on the Shell team can weigh in on&nbsp;the actual root cause of this bug that apples to Vista, Server 2008, Windows 7, Server 2008 R2, and (according to BrautKrautBleibtBlauKleid) Windows 8 in the Consumer Preview.</p>
+<p>From there, determining if someone is in a position to fix the bug may be an interesting exercise (though I suspect it is too much work for anyone to pick up any time soon).</p>
+<p>Very unfortunate, I'll tell you that much.</p>
+<p>Maybe localization can work around this by making it clear it is the US units? Not great, but we have to lie in the bed that is made for us, sometimes.</p>
+<hr/><p><strong>Wyatt</strong> on 27 Mar 2012 7:19 AM:</p><div style="margin-left: 1em"><p>The date conversions have problems too. &nbsp;They don&#39;t take into account the missing days when various countries switch from Julian to Gregorian calendars. &nbsp;Except of course for the catholic countries, which switched before 1600 (which the UI doesn&#39;t allow, must use FileTime under the hood).</p>
+</div>
+<p><strong>Raymond Chen - MSFT</strong> on 27 Mar 2012 2:16 PM:</p><div style="margin-left: 1em"><p>It&#39;s actually case 2 (the conversion formula is localizable, but localization was not done).</p>
+</div>
+<p><strong>John Cowan</strong> on 27 Mar 2012 2:31 PM:</p><div style="margin-left: 1em"><p>There are evidently two separate bugs:</p>
+<p>1) There are multiple definitions of &quot;horsepower&quot;, which should be handled as separate units: &nbsp;see <a rel="nofollow" target="_new" href="http://en.wikipedia.org/wiki/Horsepower">en.wikipedia.org/.../Horsepower</a> for details. &nbsp;All except the boiler horsepower are approximately 745 watts, but the differences can be significant.</p>
+<p>2) However many units are defined then each need to be localized (with appropriate qualifying words such as &quot;mechanical&quot; and &quot;metric&quot;) into each supported language. &nbsp;In en-us, &quot;horsepower&quot; unqualified should be an alias for &quot;mechanical horsepower&quot;, but in Germany the unit should be called &quot;mechanischen Pferdestärke&quot;, and plain &quot;Pferdestärke&quot; should be an alias for the metric variety.</p>
+</div>
+<p><strong>WhoCares</strong> on 27 Mar 2012 5:31 PM:</p><div style="margin-left: 1em"><p>&quot;...work around this by making it clear it is the US units&quot; WTF !? MS should do THIS _AND_ ADD Pferdestärken ;-) I doubt MS is capable of introduing such a change into Win 8 RTM.</p>
+</div>
+<p><strong>Quppa</strong> on 28 Mar 2012 3:39 AM:</p><div style="margin-left: 1em"><p>Though the Windows Calculator was revised in Vista*, the big UI update (including the unit conversion) came with Windows 7.</p>
+<p>* <a rel="nofollow" target="_new" href="http://blogs.msdn.com/b/oldnewthing/archive/2004/05/25/141253.aspx">blogs.msdn.com/.../141253.aspx</a></p>
+</div>
+<p><strong>Kwpolska</strong> on 31 Mar 2012 12:27 AM:</p><div style="margin-left: 1em"><p>&gt; Now in Vista, the Calculator was seriously revised.</p>
+<p>Vista? &nbsp;Didn&#39;t you mean 7?</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 31 Mar 2012 4:24 AM:</p><div style="margin-left: 1em"><p>Yes, Windows 7 -- as Quppa already pointed out. :-)</p>
+</div>
+<hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2012/03/30 <a href="http://archives.miloush.net/michkap/archive/2012/03/30/10289279.html">I guess it might have been more to do with localization than localizability after all!</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2012/03/28/10288341.html" title="Despite my typos and snark, I&#39;m not really a Rebel Without a Clause...">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2012/03/26/10286723.html" title="The Unicode train left the station YEARS ago, in fact! (2012 edition)">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2012-03">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2012-03-27">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2012/03/27/10287870.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+</html>

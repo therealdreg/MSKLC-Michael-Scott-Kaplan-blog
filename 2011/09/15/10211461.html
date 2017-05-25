@@ -1,0 +1,50 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2011/09/15/10211461.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>I Won't Cry For Thee, Argentina</title></head><body>
+<h1>I Won't Cry For Thee, Argentina</h1>
+<p><em>by Michael S. Kaplan, published on 2011/09/15 07:01 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2011/09/15/10211461.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<p>A segue -- a wonderful performance of Andrew Lloyd Webber's Don't Cry For Me Argentina (from Evita, sung by Elaine Page):</p>
+<p><iframe height="315" src="http://www.youtube.com/embed/g1yih-p6uiw" frameborder="0" width="420" allowfullscreen=""></iframe></p>
+<p>Okay, this&nbsp;should get you in the mood for today's blog.... :-)</p>
+<p>The question was straightforward enough:</p>
+<p style="padding-left: 120px;"><span style="font-family: times new roman,times;">Hope you are doing well , I m needing a help with a customer in Argentina, they are using a unantend.xml to install Windows 7, the part of the XML that is showing the issue is pasted below, the customer wants to use the Spanish Argentina Layout on the XML file, so they are putting &ldquo;es-ar&rdquo; as User Locale , and UIlanguage , as per my research those are non documented values&nbsp;(ref: <a href="http://technet.microsoft.com/en-us/library/dd744369(WS.10).aspx">Available Language Packs</a>)&nbsp;, so I would like to confirm If I m right ? and if I m right , is the only solution to use &ldquo;es-ES&rdquo;. Do we have any way to configure the Layout as Spanish Argentina ?</span></p>
+<p style="padding-left: 120px;"><span style="font-family: times new roman,times;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;InputLocale&gt;0000080a&lt;/InputLocale&gt;</span><br /><span style="font-family: times new roman,times;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;SystemLocale&gt;es-es&lt;/SystemLocale&gt;</span><br /><span style="font-family: times new roman,times;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;UILanguage&gt;es-es&lt;/UILanguage&gt;</span><br /><span style="font-family: times new roman,times;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;UILanguageFallback&gt;es-es&lt;/UILanguageFallback&gt;</span><br /><span style="font-family: times new roman,times;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;UserLocale&gt;es-AR&lt;/UserLocale&gt;</span></p>
+<p style="padding-left: 120px;"><span style="font-family: times new roman,times;">When we are using the code above, this window is displayed and the customer want to answer that from the XML file, if its possible to select Spanish Argentina from the XML.</span></p>
+<p style="padding-left: 120px;"><span style="font-family: times new roman,times;"></span></p>
+<p>Well, as the link to the <a href="http://technet.microsoft.com/en-us/library/dd744369(WS.10).aspx">Available Language Packs</a>&nbsp;indicates, the only Spanish Language Pack we have is es-ES -- there is no es-AR.</p>
+<p>So if you put an unknown value in the answer file, you'll be prompted by setup.</p>
+<p>Though I'll admit there is some doc confusion -- like in the fact that the &lt;User Locale&gt; info points to the UI Langauage list. The whole area can be confusing enough that fixing the weird links might make sense....</p>
+<p>Now as <a href="http://technet.microsoft.com/en-us/library/cc766299(WS.10).aspx">this link</a> indicates, UILanguageFallback only makes sense when two conditions are met:</p>
+<ol>
+<li>When the UILanguage isn't fully localized (which does not apply to Spanish)</li>
+<li>When resources aren't available in the UILanguage and you want to know what language to fall back to (which makes no sense to fall back itself)</li>
+</ol>
+<p>But of the other values, the <a href="http://technet.microsoft.com/en-us/library/cc748926(WS.10).aspx">InputLocale</a>&nbsp;looks wrong. It is documented as follows:</p>
+<p style="padding-left: 90px;">Specifies the input language and keyboard layout for a Windows installation.</p>
+<p style="padding-left: 90px;">Input_locale can be one of two values:</p>
+<p style="padding-left: 90px;">To use the default input locale for a language, you can specify the language identifier. For example, to use the default keyboard for English (United States) that corresponds with the QWERTY keyboard, you can specify the value en-US.</p>
+<p style="padding-left: 90px;">Specify the locale ID and keyboard layout hexadecimal values. For example, for en-US, use 0409:00000409. The first value (0409) is the locale ID that represents the input language and the second value (00000409) is the keyboard layout value.</p>
+<p style="padding-left: 90px;">If you want to specify more than one input locale to add support for more than one keyboard type, you can specify multiple values separated by semicolons. For example, you can specify &lt;InputLocale&gt;en-US; fr-FR; es-ES&lt;/InputLocale&gt; to add support for English (US), French (France) and Spanish (Spain) keyboards. The first value listed is used as the default keyboard.</p>
+<p style="padding-left: 90px;">The valid keyboard layouts that can be configured on your system are listed in the following registry key. HKEY_LOCAL_MACHINE\SYSTEM\ControlSet001\Control\Keyboard Layouts</p>
+<p style="padding-left: 90px;">For a list of the default input locale values, see Supported Language Packs and Default Settings.&nbsp;</p>
+<p>So&nbsp;while putting in either</p>
+<p style="padding-left: 30px;"><strong><span style="font-family: courier new,courier;">&lt;InputLocale&gt;2c0a:000008a&lt;/InputLocale&gt;</span></strong></p>
+<p>or</p>
+<p style="padding-left: 30px;"><strong><span style="font-family: courier new,courier;">&lt;InputLocale&gt;es-AR&lt;/InputLocale&gt;</span></strong></p>
+<p>is legal, clearly</p>
+<p style="padding-left: 30px;"><strong><span style="font-family: courier new,courier;">&lt;InputLocale&gt;000008a&lt;/InputLocale&gt;</span></strong></p>
+<p>is not....</p>
+<p>The final text in the answer file:</p>
+<p style="padding-left: 30px;"><strong><span style="font-family: courier new,courier;">&lt;InputLocale&gt;2c0a:0000080a&lt;/InputLocale&gt;</span></strong><br /><strong><span style="font-family: courier new,courier;">&lt;SystemLocale&gt;es-es&lt;/SystemLocale&gt;</span></strong><br /><strong><span style="font-family: courier new,courier;">&lt;UILanguage&gt;es-es&lt;/UILanguage&gt;</span></strong><br /><strong><span style="font-family: courier new,courier;">&lt;UserLocale&gt;es-AR&lt;/UserLocale&gt;</span></strong></p>
+<p>should do much better, and get you this keyboard:</p>
+<p><img src="http://msdnshared.blob.core.windows.net/media/MSDNBlogsFS/prod.evol.blogs.msdn.com/CommunityServer.Blogs.Components.WeblogFiles/00/00/00/33/81/5164.es_2D00_AR_2D00_kbd.jpg" width="417" height="386" /></p>
+<p>If you use the other syntax, all of the keyboards in the LOCALE_SKEYBOARDSTOINSTALL will be added.</p>
+<p>Beyond that, Martin had some great advice to help out in these kinds of situations:</p>
+<p style="padding-left: 30px;"><em><span style="font-family: times new roman,times;">An easy way to find out such a (sometimes complicated!) syntax is to use the Microsoft Deployment ToolKit (MDT 2010).</span></em><br /><em><span style="font-family: times new roman,times;">You can use the GUI to select your values and MDT creates a summary page showing the details to enter into the unattend.xml file.</span></em></p>
+<p style="padding-left: 30px;"><em><span style="font-family: times new roman,times;">Quite helpful and safes a lot of troubleshooting time.</span></em></p>
+<p>MDT? It's <a href="http://technet.microsoft.com/en-us/solutionaccelerators/dd407791">right here</a>. Good advice!</p>
+<p>So I Won't Cry For Thee Argentina,&nbsp; because&nbsp;you can still use es-ES for the Spanish Language Pack, and if you put in the InputLocale properly, you should get what you're expecting. And for all such situations there is a way to find out exactly what you need....</p>
+<hr/><div style="margin-left: 1em"><em>no comments</em></div><hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2011/09/16/10212216.html" title="There&#39;s no &quot;I&quot; in IDN, part 9: Who needs IDN support? How much? When? (Part 1)">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2011/09/14/10210525.html" title="If you don&#39;t like the way it looks, try something plainer...">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2011-09">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2011-09-15">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2011/09/15/10211461.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+</html>

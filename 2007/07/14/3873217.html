@@ -1,0 +1,30 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2007/07/14/3873217.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:38 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Code pages don't overlap all that much</title></head><body>
+<h1>Code pages don't overlap all that much</h1>
+<p><em>by Michael S. Kaplan, published on 2007/07/14 23:21 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2007/07/14/3873217.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P>It was over two years ago that I mentioned how <A class="" href="http://archives.miloush.net/michkap/archive/2005/03/01/382289.html" mce_href="http://archives.miloush.net/michkap/archive/2005/03/01/382289.html"><STRONG>code pages are really not enough</STRONG></A>.&nbsp;But it is still&nbsp;a problem that comes up all the time....</P>
+<P>Ahmet's question is very representative of the situation:</P>
+<BLOCKQUOTE>
+<P><FONT face="times new roman,times"><EM>I need help for an encoding issue while creating a text file. A customer of mine is creating a text file with some strings and integer values. He is calculating byte representation of the integer and writing it to a text file.<BR><BR>For example, integer value is 222 and string contains “ĞİÜ”. If the customer uses ISO-8859-9 to keep Turkish characters unchanged, binary repr. of 222 changes to question mark, instead of Ş. However, if he uses ISO-8859-1, 222 is written as Ş but the Turkish characters are changed to nearest characters, for example, Ğ changes to G, İ changes to I (however, strangely, Ü stands same).</EM></FONT></P></BLOCKQUOTE>
+<P>This really shows the most fundamental problem with&nbsp;code pages and multilingual text, doesn't it?</P>
+<P>There is no one code page that contain all the characters in Unicode, with the exception of:</P>
+<UL>
+<LI>GB18030 (which promises a 1-to-1 mapping with Unicode), </LI>
+<LI>UTF-16 (which is what Microsoft calls "Unicode"), and</LI>
+<LI>UTF-8/UTF-32 (the other encoding forms of Unicode)</LI></UL>
+<P>Any time you try to use some other code page, there are tens of thousands of characters that will not be able to survive the operation....</P>
+<P>One last point of interest -- Ahmet's observation that <STRONG>Ü</STRONG> strangely is not affected. This is not all that strange, since both <A class="" href="http://www.microsoft.com/globaldev/reference/iso/28591.mspx" mce_href="http://www.microsoft.com/globaldev/reference/iso/28591.mspx">ISO 8859-1</A> and <A class="" href="http://www.microsoft.com/globaldev/reference/iso/28599.mspx" mce_href="http://www.microsoft.com/globaldev/reference/iso/28599.mspx">ISO 8859-9</A> both contain Ü in them -- these code pages really were designed to support various languages and that is a letter that happens to be used by several languages (in the case of this letter at a minimum both German and Turkish use it, though there are several others!).</P>
+<P mce_keep="true">&nbsp;</P>
+<P><FONT color=#ff00ff><EM>This post brought to you by</EM> Ü <EM>(<A class="" href="http://www.fileformat.info/info/unicode/char/00dc" mce_href="http://www.fileformat.info/info/unicode/char/00dc">U+00dc</A>, a.k.a. LATIN CAPITAL LETTER U WITH DIAERESIS)</EM></FONT></P>
+<hr/><p><strong>Joku</strong> on 15 Jul 2007 4:28 AM:</p><div style="margin-left: 1em"><p>Is there something I'm missing here, why would you &quot;calculate byte representation of the integer and write it to a text file&quot;?</p></div>
+<p><strong>Christoph P&#228;per</strong> on 15 Jul 2007 6:27 AM:</p><div style="margin-left: 1em"><p>Amongst ISO 8859, German is really well supported. The umlauts and eszett are not only included in every Latin variant, they even stay in the same places.</p></div>
+<p><strong>Michael S. Kaplan</strong> on 15 Jul 2007 7:13 AM:</p><div style="margin-left: 1em"><P>Hey Christoph, </P>
+<P>Subconscious efforts on the part of German standards folks? :-)</P></div>
+<p><strong>Cristian Secară</strong> on 16 Jul 2007 12:28 PM:</p><div style="margin-left: 1em"><p>Codepoint 222 (DE hex) is Ş (S with cedilla below) in ISO-8859-9 (Latin 5), but &#222; (Latin capital letter Thorn) in ISO-8859-1 (Latin 1).</p>
+<p>Not that this would changes much the rest :)</p>
+<p>Cristi</p></div>
+<hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2007/07/15/3888681.html" title="Neutral? I do not think that word means what you think it means!">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2007/07/14/3869052.html" title="Fractions may be your friends, but they won&#39;t pick you up at the airport!">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2007-07">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2007-07-14">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2007/07/14/3873217.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:38 GMT -->
+</html>

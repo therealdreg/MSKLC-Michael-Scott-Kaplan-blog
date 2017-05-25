@@ -1,0 +1,29 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2007/08/30/4639083.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:37 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>When it is harder to fit your calendar into things than things into your calendar</title></head><body>
+<h1>When it is harder to fit your calendar into things than things into your calendar</h1>
+<p><em>by Michael S. Kaplan, published on 2007/08/30 03:01 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2007/08/30/4639083.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P>Support Engineer Scott Heim had a question he asked yesterday:</P>
+<BLOCKQUOTE>
+<BLOCKQUOTE>
+<P>Hi all,<BR><BR>I have the MonthCalendar control on a form and when this is displayed in XP, the calendar displays correctly; however, on Vista machines the calendar appears larger and the “Saturday” dates are cut off. Has anyone seen this before? Is there a way around this?<BR><BR>The form the control is on is not much larger than the control itself. I have a small repro here:<BR><BR><STRONG><FONT color=#ff0000>[I compiled the repro and ran it on both Server 2003 and Vista to take the screen shots below -- michkap]</FONT></STRONG><BR><BR><IMG src="http://trigeminal.fmsinc.com/images/MonthCal01.png">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <IMG src="http://trigeminal.fmsinc.com/images/MonthCal02.png"><BR><BR>Thanks,<BR><BR>Scott</P></BLOCKQUOTE></BLOCKQUOTE>
+<P>And support engineer Dave Anderson came to the rescue with the following response:</P>
+<BLOCKQUOTE>
+<BLOCKQUOTE>
+<P>Yes, the MonthCalendar control is larger when using the V6 common controls on Windows Vista. You can adjust the size of the form based on the size of the control at runtime. I added the following code for the form’s Load event handler:</P>
+<P>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; private void Form1_Load(object sender, EventArgs e)<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; this.ClientSize = monthCalendar1.PreferredSize;<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }</P>
+<P>-Dave</P></BLOCKQUOTE></BLOCKQUOTE>
+<P>And indeed, when you add this code things fit once again:</P>
+<BLOCKQUOTE>
+<P><IMG src="http://trigeminal.fmsinc.com/images/MonthCal03.png"></P></BLOCKQUOTE>
+<P>Perfect. :-)</P>
+<P>Now obviously this is a special case (a form that is meant to be the same size as the calendar) but the general principle can be applied in situations where controls are packed too tightly and changing the size might affect localized form by causing controls to overlap (definitely something to avoid).</P>
+<P>One thing developers should be very careful about any time they are building dynamic UI metrics this way in projects that are going to be localized is to make sure that the fact that the UI metrics change at runtime is communicated to the localizer -- there are few things more frustrating than truncation bugs that a localizer can't do anything about but that they have to go through multiple iterations to discover that fact!</P>
+<P>And now that I have hijacked the question to get up on my localizability soapbox, I'll close with a message of more general use. :-)</P>
+<P>The messge?&nbsp;The&nbsp;fact that the Shell common controls do not guarantee backward compatibility with their metrics is an important issue to keep in mind -- or you could find yourself getting truncated, too....</P>
+<P mce_keep="true">&nbsp;</P>
+<P><FONT color=#ff00ff><EM>This post brought to you by</EM> <FONT size=5>⺦</FONT> <EM>(<A class="" href="http://www.fileformat.info/info/unicode/char/2ea6" mce_href="http://www.fileformat.info/info/unicode/char/2ea6">U+2ea6</A>, a.k.a. CJK RADICAL SIMPLIFIED HALF TREE TRUNK)</EM></FONT></P>
+<hr/><div style="margin-left: 1em"><em>no comments</em></div><hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2007/08/30/4641553.html" title="The main criteria in determing whether a code page sucks? Suckage, of course!">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2007/08/29/4633356.html" title="Are you Mr. Kaplan?">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2007-08">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2007-08-30">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2007/08/30/4639083.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:37 GMT -->
+</html>

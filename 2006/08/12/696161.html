@@ -1,0 +1,55 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2006/08/12/696161.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:39 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>You think that's bad? Just wait, it gets worse...</title></head><body>
+<h1>You think that's bad? Just wait, it gets worse...</h1>
+<p><em>by Michael S. Kaplan, published on 2006/08/12 03:11 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2006/08/12/696161.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<FONT face=Tahoma>
+<P>The story I am telling here is completely true. I have only omitted project and people names to protect the guilty, and perhaps also the [rightfully] embarrassed....</P>
+<P>The original mail that came to me was from someone who was getting some unexpected results from <A href="http://msdn.microsoft.com/library/en-us/winui/winui/windowsuserinterface/resources/strings/stringreference/stringfunctions/comparestring.asp">CompareString</A>. The mail&nbsp;eventually boiled&nbsp;down to a simple&nbsp;question:</P>
+<BLOCKQUOTE dir=ltr style="MARGIN-RIGHT: 0px">
+<P><FONT face="Times New Roman" size=2>...CHT Vista build, I am passed an lcid of 0x10804 with the query. Is that correct? I can’t find that value on MSDN.</FONT></P></BLOCKQUOTE>
+<P>I admit I felt like I was being the teacher in <A href="http://imdb.com/title/tt0097530/">How I Got Into College</A> who looked at Marlon Browne's ungraded SAT (the bunch of dots on the page) and immediately expressed concern as his score, but the problem here was obvious -- calling the LCID value&nbsp;"for Traditional Chinese"&nbsp;a huge crap bag would have been an insult to large bags filled with crap!</P>
+<P>You think that's bad? Just wait, it gets worse...</P>
+<P>I immediately explained that this LCID value was completely bogus in&nbsp;two senses:</P>
+<UL>
+<LI>The LANGID portion is for PRC, which would be for Simplified Chinese; 
+<LI>The SORTID portion is invalid for any CJK sort.</LI></UL>
+<P>They forwarded on to me the way that they were constucting the various Chinese LCIDs:</P>
+<BLOCKQUOTE dir=ltr style="MARGIN-RIGHT: 0px">
+<P><FONT face="Consolas,Courier New" size=2><STRIKE><STRONG>MAKELCID( MAKELANGID(LANG_CHINESE,&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // Chinese<BR></STRONG></FONT><FONT face="Consolas,Courier New" size=2><STRONG>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; SUBLANG_CHINESE_SIMPLIFIED),<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </STRONG></FONT><FONT face="Consolas,Courier New" size=2><STRONG>SORT_CHINESE_UNICODE )</STRONG></FONT></P>
+<P><FONT face="Consolas,Courier New" size=2><STRONG>MAKELCID( MAKELANGID(LANG_CHINESE,&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // Chinese/china<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</STRONG></FONT><FONT face="Consolas,Courier New" size=2><STRONG>SUBLANG_CHINESE_SIMPLIFIED),<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </STRONG></FONT><FONT face="Consolas,Courier New" size=2><STRONG>SORT_CHINESE_UNICODE )</STRONG></FONT></P>
+<P><FONT face="Consolas,Courier New" size=2><STRONG>MAKELCID( MAKELANGID(LANG_CHINESE,&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // Chinese/taiwan<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </STRONG></FONT><FONT face="Consolas,Courier New" size=2><STRONG>SUBLANG_CHINESE_TRADITIONAL),<BR></STRONG></FONT><FONT face="Consolas,Courier New" size=2><STRONG>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; SORT_CHINESE_UNICODE )</STRONG></STRIKE></FONT></P></BLOCKQUOTE>
+<P>Yikes! This was getting worse and worse.</P>
+<P>(The values are all struck out so that no one tries to use them!)</P>
+<P>Now that first one was the source of the problem -- they were assuming there was a generic "Chinese" that was neither Simplified nor Traditional, and that by passing it they would get some nice generic results -- especially when they plunked in that Unicode support.</P>
+<P>You think that's bad? Just wait, it gets worse...</P>
+<P>They were also constructing their Japanese and Korean LCIDs in a similar way:</P>
+<BLOCKQUOTE dir=ltr style="MARGIN-RIGHT: 0px">
+<P><FONT face="Consolas,Courier New" size=2><STRIKE><STRONG>MAKELCID( MAKELANGID(LANG_JAPANESE,&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // Japanese<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SUBLANG_DEFAULT),<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SORT_JAPANESE_UNICODE )</STRONG></STRIKE></FONT></P>
+<P><FONT face="Consolas,Courier New" size=2><STRIKE><STRONG>MAKELCID( MAKELANGID(LANG_KOREAN,&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // Korean<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SUBLANG_DEFAULT),<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SORT_KOREAN_UNICODE )</STRONG></STRIKE></FONT></P></BLOCKQUOTE>
+<P>Again, nice use of a generic, friendly sounding flag involving the word Unicode and all would be good. Nice generic results, right?</P>
+<P>Well, I can answer that question with a question. Would failure of the function with GetLastError() returning ERROR_INVALID_PARAMETER be generic enough of a result? :-(</P>
+<P>Perhaps looking at the definition of these flags with the latest winnt.h might shed some light here:</P>
+<BLOCKQUOTE dir=ltr style="MARGIN-RIGHT: 0px">
+<P><FONT face="Courier New" size=2><STRONG>#define SORT_JAPANESE_UNICODE&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 0x1&nbsp;&nbsp;&nbsp;&nbsp; // Japanese Unicode order (no longer supported)</STRONG></FONT></P>
+<P><FONT face="Courier New" size=2><STRONG>#define SORT_CHINESE_UNICODE&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 0x1&nbsp;&nbsp;&nbsp;&nbsp; // Chinese Unicode order (no longer supported)</STRONG></FONT></P>
+<P><FONT face="Consolas,Courier New" size=2><STRONG>#define SORT_KOREAN_UNICODE&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 0x1&nbsp;&nbsp;&nbsp;&nbsp; // Korean Unicode order (no longer supported)</STRONG></FONT></P></BLOCKQUOTE>
+<P>The Japanese and Korean Unicode sorts are those awful abominations I discussed earlier (<A href="http://archives.miloush.net/michkap/archive/2004/12/14/284838.html"><STRONG>here</STRONG></A> and <A href="http://archives.miloush.net/michkap/archive/2004/12/14/307152.html"><STRONG>here</STRONG></A>), and they were removed back in Windows XP, and the "Chinese Unicode sort" didn't exist even then (I think it was removed&nbsp;before NT 4.0 shipped, if not sooner?) -- and lacking the whole yen/won thing I imagine it had even less reason for being. </P>
+<P>You think that's bad? Just wait, it gets worse...</P>
+<P>After I straightened out their LCID story for these came the scariest part of all:</P>
+<BLOCKQUOTE dir=ltr style="MARGIN-RIGHT: 0px">
+<P><FONT face="Times New Roman" size=2>I’m wondering though why I didn’t get any complaints for these languages. In fact Korean was tested and works correctly.</FONT></P></BLOCKQUOTE>
+<P>It of course scared me for two reasons:</P>
+<UL>
+<LI>I had suspected, but now it was obviously confirmed, that they were not checking the return value of their <A href="http://msdn.microsoft.com/library/en-us/winui/winui/windowsuserinterface/resources/strings/stringreference/stringfunctions/comparestring.asp">CompareString</A>&nbsp;call. <STRONG>Why does nobody ever check the return value?</STRONG> 
+<LI>Whoever was testing the results wasn't really doing any real testing of the language. Some new use the word tested of which I was previously unaware?</LI></UL>
+<P>As&nbsp;I look to the future I think it is important to spend a lot more time evangelizing how to not only call the NLS functions, but to call them correctly!</P>
+<P>&nbsp;</P>
+<P><FONT color=#ff1493><EM>This post brought to you by</EM> <FONT size=6><STRONG>₩</STRONG></FONT> <EM>(<A href="http://www.fileformat.info/info/unicode/char/20a9">U+20a9</A>, a.k.a. WON SIGN)</EM></FONT></P></FONT>
+<hr/><p><a id="696346" href="#696346">#</a> <strong>oidon</strong> on 12 Aug 2006 4:48 AM:</p><div style="margin-left: 1em">&gt; Why does nobody ever check the return value?<br><br>Why was the API designed in such a way to indicate error with a return value when it should really throw an exception? Yeah, I know, legacy C-based API...<br><br>The idea behind GetLastError() is even worse.<br><br>There is a lot of poorly written code, but the APIs are often just as poor. Their only excuss is when the documentation is clearly written, as in this case.<br></div>
+<p><a id="696573" href="#696573">#</a> <strong>Michael S. Kaplan</strong> on 12 Aug 2006 10:49 AM:</p><div style="margin-left: 1em">Hi oidon, <br><br>Exceptions 15 years ago were a lot more expensive than they are now. Even now they are not entirely free. Creating code that throws at such a low level often requires one to sacrifice much in the way of performance; it is much better at higher levels than this.... <br><br>If people write code poorly than they will do so whether you throw or make 'em return error values. People who write bad code will simply do so, as it is their nature.</div>
+<p><a id="697278" href="#697278">#</a> <strong>Dean Harding</strong> on 13 Aug 2006 7:51 AM:</p><div style="margin-left: 1em">Exceptions are also very language-specific. By using a simple C-based API, the API can be called directly by C, C++, C#, VB, and possibly more languages. If they'd used C++ exceptions, then only C++ would be able to directly call it. And only Microsoft C++ at that - C++ exceptions aren't part of the ABI of standard C++.</div>
+<hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2006/08/27 <a href="http://archives.miloush.net/michkap/archive/2006/08/27/727607.html">It has not always been so invariant</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2006/08/12/696284.html" title="Getting string comparisons of file names right">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2006/08/11/695147.html" title="Are ligatures supposed to be thought of as &#39;single characters&#39; ?">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2006-08">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2006-08-12">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2006/08/12/696161.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:39 GMT -->
+</html>

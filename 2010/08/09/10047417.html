@@ -1,0 +1,320 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2010/08/09/10047417.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:35 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>{Insert a pun about the word Serbian here, I can't think of one}</title></head><body>
+<h1>{Insert a pun about the word Serbian here, I can't think of one}</h1>
+<p><em>by Michael S. Kaplan, published on 2010/08/09 07:01 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2010/08/09/10047417.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<p>The other day in I put up a table covering all of the Serbian, Bosnian, and Croatian locales on Windows:</p>
+<table cellpadding="10" cellspacing="10" border="1">
+<tbody>
+<tr>
+<td style="text-align: center;">Locale Name</td>
+<td style="text-align: center;">Locale ID,<br />hexadecimal<br />(Windows)</td>
+<td>Locale ID,<br />decimal<br />(Office, SQL)</td>
+<td style="text-align: center;">Language<br />Name</td>
+<td style="text-align: center;">Region<br />Name</td>
+<td>Script</td>
+</tr>
+<tr>
+<td>bs-Cyrl-BA</td>
+<td>0x201a</td>
+<td>8218</td>
+<td>Bosnian</td>
+<td>Bosnia and Herzegovina</td>
+<td>Cyrillic</td>
+</tr>
+<tr>
+<td>bs-Latn-BA</td>
+<td>0x141a</td>
+<td>5146</td>
+<td>Bosnian</td>
+<td>Bosnia and Herzegovina</td>
+<td>Latin</td>
+</tr>
+<tr>
+<td>hr-BA</td>
+<td>0x101a</td>
+<td>4122</td>
+<td>Croatian</td>
+<td>Bosnia and Herzegovina</td>
+<td>Latin</td>
+</tr>
+<tr>
+<td>hr-HR</td>
+<td>0x041a</td>
+<td>1050</td>
+<td>Croatian</td>
+<td>Croatia</td>
+<td>Latin</td>
+</tr>
+<tr>
+<td>sr-Cyrl-BA</td>
+<td>0x1c1a</td>
+<td>7194</td>
+<td>Serbian</td>
+<td>Bosnia and Herzegovina</td>
+<td>Cyrillic</td>
+</tr>
+<tr>
+<td>sr-Latn-BA</td>
+<td>0x181a</td>
+<td>6170</td>
+<td>Serbian</td>
+<td>Bosnia and Herzegovina</td>
+<td>Latin</td>
+</tr>
+<tr>
+<td>(not assigned)</td>
+<td>(not assigned)</td>
+<td>(not assigned)</td>
+<td>Serbian</td>
+<td>Croatia</td>
+<td>Latin</td>
+</tr>
+<tr>
+<td>sr-Cyrl-CS</td>
+<td>0x0c1a</td>
+<td>3098</td>
+<td>Serbian</td>
+<td>Serbia and Montenegro (former)</td>
+<td>Cyrl</td>
+</tr>
+<tr>
+<td>sr-Latn-CS</td>
+<td>0x081a</td>
+<td>2074</td>
+<td>Serbian</td>
+<td>Serbia and Montenegro (former)</td>
+<td>Latn</td>
+</tr>
+</tbody>
+</table>
+<p>Now this list is complete according to many of the sites on MSDN, including</p>
+<ul>
+<li><a href="http://msdn.microsoft.com/en-us/goglobal/bb964664.aspx">Locale IDs Assigned by Microsoft</a>&nbsp;on GoGlobal (which includes things that aren't even in Windows yet but are simply reserved because someone wanted them for their own purposes), and</li>
+<li><a href="http://msdn.microsoft.com/library/dd318693.aspx">Language Identifier Constants and Strings</a> (which is a part of the Windows NLS&nbsp;documentation).</li>
+</ul>
+<p>I did note the whole Serbia/Montenegro issue and pointed to some other blogs, but seeing no info or update on plans here my assumption was that there was none....</p>
+<p>So anyway, I figured it ought to be pretty solid. In theory.</p>
+<p>But then if you look at Regional and Language Options in Windows 7:</p>
+<p><img src="http://trigeminal.fmsinc.com/images/serbia01.jpg" border="0" /></p>
+<p>There are clearly at least four missing from this 'full" list:</p>
+<ul>
+<li>Serbian (Latin, Serbia)</li>
+<li>Serbian (Cyrillic, Serbia)</li>
+<li>Serbian (Latin, Montenegro)</li>
+<li>Serbian (Cyrillic, Montenegro)</li>
+</ul>
+<p>Probably a good idea since the word <strong>FORMER</strong> is on the ones for Serbia and Montenegro....</p>
+<p><em>By the way I hate the new name structure&nbsp;since I don't think the alphabetical order that comes out of the names is necessarily more intuitive!</em></p>
+<p>But anyway,&nbsp;what are the constants for these four new locales?</p>
+<p>Oops.</p>
+<p>Lucky for us that someone wrote a document about <a href="http://msdn.microsoft.com/en-us/netframework/dd890508.aspx">Microsoft .NET Framework 4: What is New in Globalization</a>, which tells the rest of the story.</p>
+<p><em>I'll get into that document more another day, for now I'll just stay in this one part of the world!</em></p>
+<p>So here are the additional table items:</p>
+<table cellpadding="10" cellspacing="10" border="1">
+<tbody>
+<tr>
+<td style="text-align: center;">Locale Name</td>
+<td style="text-align: center;">Locale ID,<br />hexadecimal<br />(Windows)</td>
+<td>Locale ID,<br />decimal<br />(Office, SQL)</td>
+<td style="text-align: center;">Language<br />Name</td>
+<td style="text-align: center;">Region<br />Name</td>
+<td>Script</td>
+</tr>
+<tr>
+<td>sr-Cyrl-ME</td>
+<td>0x301a</td>
+<td>12314</td>
+<td>Serbian</td>
+<td>Montenegro</td>
+<td>Cyrillic</td>
+</tr>
+<tr>
+<td>sr-Cyrl-RS</td>
+<td>0x281a</td>
+<td>10266</td>
+<td>Serbian</td>
+<td>Serbian</td>
+<td>Cyrillic</td>
+</tr>
+<tr>
+<td>sr-Latn-ME</td>
+<td>0x2c1a</td>
+<td>11290</td>
+<td>Serbian</td>
+<td>Montenegro</td>
+<td>Latin</td>
+</tr>
+<tr>
+<td>sr-Latn-RS</td>
+<td>0x241a</td>
+<td>9242</td>
+<td>Serbian</td>
+<td>Serbian</td>
+<td>Latin</td>
+</tr>
+</tbody>
+</table>
+<p>&nbsp;And as I noted in the Bosnian blog:</p>
+<p style="padding-left: 60px;">Note that there is still no unique ISO code for Montenegrin (Montenegro), so that the situation Kieran described back in <a href="http://blogs.msdn.com/b/kierans/archive/2006/09/18/761211.aspx"><strong><span style="color: #0066dd;">What's in a name? Part two</span></strong></a> back in 2006 is still not clarified.</p>
+<p style="padding-left: 60px;">The issues I mentioned in <a href="http://archives.miloush.net/michkap/archive/2007/03/12/1862502.html" title="Ask 'em if their language is Montenegrin; their answer may surprise you"><strong><span style="color: #0066dd;">Ask 'em if their language is Montenegrin; their answer may surprise you</span></strong></a> are not all that further along either.</p>
+<p>So there is the problem that there was time to write a new .Net white paper but not time to update core lists that contain the information that both native and managed developers might want.</p>
+<p>The only other place that has the updated&nbsp;locales is the protocol site (<a href="http://msdn.microsoft.com/en-us/library/cc233982(PROT.10).aspx">here</a>) though since it lists some different values, somebody may want to update that since that means the Protocol docs are wrong!</p>
+<p>Their take on Serbian:</p>
+<table cellpadding="10" cellspacing="10" border="1">
+<tbody>
+<tr>
+<td>
+<p><strong>Language</strong></p>
+</td>
+<td>
+<p><strong>Location (or type)</strong></p>
+</td>
+<td>
+<p><strong>LCID</strong></p>
+</td>
+<td>
+<p><strong>Releases available in </strong></p>
+</td>
+</tr>
+<tr>
+<td>
+<p>Serbian (Cyrillic) sr-Cyrl-CS</p>
+</td>
+<td>
+<p>Serbia and Montenegro (Former)</p>
+</td>
+<td>
+<p>0x0c1a</p>
+</td>
+<td>
+<p>Windows NT 4.0, Windows 2000, Windows Server 2003, Windows Server 2008, Windows Vista, Windows XP, Windows 7, Windows Server 2008 R2</p>
+</td>
+</tr>
+<tr>
+<td>
+<p>Serbian (Cyrillic) sr-Cyrl-RS</p>
+</td>
+<td>
+<p>Serbia</p>
+</td>
+<td>
+<p>0x281a</p>
+</td>
+<td>
+<p>Windows 7, Windows Server 2008 R2</p>
+</td>
+</tr>
+<tr>
+<td>
+<p>Serbian(Cyrillic) sr-Cyrl-ME</p>
+</td>
+<td>
+<p>Montenegro</p>
+</td>
+<td>
+<p>0x301a</p>
+</td>
+<td>
+<p>Windows 7, Windows Server 2008 R2</p>
+</td>
+</tr>
+<tr>
+<td>
+<p>Serbian (Cyrillic)</p>
+</td>
+<td>
+<p>Bosnia and Herzegovina</p>
+</td>
+<td>
+<p>0x1c1a</p>
+</td>
+<td>
+<p>Windows XP ELK v1, Windows XP SP2, Windows Server 2003 SP2, Windows Server 2008, Windows Vista, Windows 7, Windows Server 2008 R2</p>
+</td>
+</tr>
+<tr>
+<td>
+<p>Serbian (Latin) sr-Latn-CS</p>
+</td>
+<td>
+<p>Serbia and Montenegro (Former)</p>
+</td>
+<td>
+<p>0x081a</p>
+</td>
+<td>
+<p>Windows NT 4.0, Windows 2000, Windows Server 2003, Windows Server 2008, Windows Vista, Windows XP, Windows 7, Windows Server 2008 R2</p>
+</td>
+</tr>
+<tr>
+<td>
+<p>Serbian (Latin) sr-Latn-RS</p>
+</td>
+<td>
+<p>Serbia</p>
+</td>
+<td>
+<p>0x241a</p>
+</td>
+<td>
+<p>Windows 7, Windows Server 2008 R2</p>
+</td>
+</tr>
+<tr>
+<td>
+<p>Serbian (Latin) Sr-Latn-ME</p>
+</td>
+<td>
+<p>Montenegro</p>
+</td>
+<td>
+<p>0x2c1a</p>
+</td>
+<td>
+<p>Windows 7, Windows Server 2008 R2</p>
+</td>
+</tr>
+<tr>
+<td>
+<p>Serbian (Latin)</p>
+</td>
+<td>
+<p>Montenegro</p>
+</td>
+<td>
+<p>0x081a</p>
+</td>
+<td>
+<p>Windows NT 4.0, Windows 2000, Windows Server 2003, Windows Server 2008, Windows Vista, Windows XP, Windows 7, Windows Server 2008 R2</p>
+</td>
+</tr>
+<tr>
+<td>
+<p>Serbian (Latin)</p>
+</td>
+<td>
+<p>Bosnia and Herzegovina</p>
+</td>
+<td>
+<p>0x181a</p>
+</td>
+<td>
+<p>Windows XP ELK v1, Windows XP SP2, Windows Server 2003 SP2, Windows Server 2008, Windows Vista, Windows 7, Windows Server 2008 R2</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Like I said, someone may want to fix the discrepancies here!</strong></p>
+<p>Anyway, I guess I should thanks for <a href="http://msdn.microsoft.com/en-us/netframework/dd890508.aspx">Microsoft .NET Framework 4: What is New in Globalization</a>, or else nobody would ever be able to get information on the latest story here.</p>
+<p>Though I'd rather the other docs weren't inaccurate, if I had my choice here....</p>
+<p>Oh wait. I do. Since my group has some responsibilities around GoGlobal, I can do a little insisting on better information for documentation they provide like <a href="http://msdn.microsoft.com/en-us/goglobal/bb964664.aspx">Locale IDs Assigned by Microsoft</a>. I can also suggest they clean up their own docs like <a href="http://msdn.microsoft.com/library/dd318693.aspx">Language Identifier Constants and Strings</a>, but that is really more up to them, I guess. :-)</p>
+<p>Now there are a few remaining issues to talk about, though that will have to wait for another day. Stay tuned....</p>
+<hr/><p><strong>Carl</strong> on 10 Aug 2010 3:14 AM:</p><div style="margin-left: 1em"><p>The pun to insert is &quot;Bulky Balkanization in the Balkans Bloats the Board.&quot; :-)</p>
+</div>
+<p><strong>Maurits [MSFT]</strong> on 24 Aug 2010 1:36 PM:</p><div style="margin-left: 1em"><p>Looking for some a-Serbic humor?</p>
+</div>
+<hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2011/03/26 <a href="http://archives.miloush.net/michkap/archive/2011/03/26/10146218.html">An over-complexity worthy of an ISO standard</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2010/08/10/10047945.html" title="What&#39;s up with the name of the &quot;Print Screen&quot; key?">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2010/08/08/10047395.html" title="Download languages for Windows">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2010-08">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2010-08-09">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2010/08/09/10047417.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:35 GMT -->
+</html>

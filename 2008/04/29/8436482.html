@@ -1,0 +1,46 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2008/04/29/8436482.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:36 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>JScript's ultimate globalization hero: VBScript</title></head><body>
+<h1>JScript's ultimate globalization hero: VBScript</h1>
+<p><em>by Michael S. Kaplan, published on 2008/04/29 03:01 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2008/04/29/8436482.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P>David asked:</P>
+<BLOCKQUOTE>
+<P><FONT face="times new roman,times"><EM>Hi,<BR><BR>Does anyone know how to setLocale in Jscript? It seems like JS assumes that everything gets localized in current locale.<BR>Also, how do we convert string “1,234” into double 1234 (taking comma into consideration)<BR><BR>The reason I am asking this is that I am trying to resolve a globalization issue.<BR>I think UK locale tends to have “1.234,56” format for their currency while we have “1,234.56” for currency.<BR>If anyone can knows how this can be resolved would be great.<BR><BR>The problem can easily be solved in VBScript:<BR>--There is a SetLocale function (I just use it to test)<BR>--And Cdbl() converts “12,34” correctly to 12.34 in UK Locale<BR>--Also converts “1,234” correctly to 1234 in US Locale<BR><BR>Wondering if there’s a solution in JScript.<BR><BR>Thank you very much!</EM></FONT></P></BLOCKQUOTE>
+<P>Luckily, inestimable developer Paul was there with the best tongue-in-cheek response this month:</P>
+<BLOCKQUOTE>
+<P><FONT face="times new roman,times">You can write your conversion functions in vbscript and call them from jscript.</FONT></P></BLOCKQUOTE>
+<P>JScript and JavaScript (aka ECMAScript) all have in common this particular lack of the kind of support for internationalization that people like me consider to be pretty important. </P>
+<P>It is kind of fun when the lack is described in terms less likely to lead to diatribes about that lack, which are seldom placed so as to foster a solution.</P>
+<P>Paul's answer, on the other hand, in light of the just sipped bit Limonata, just inspires a <STRONG>YOMANK</STRONG> from me. :-)</P>
+<P>The situation is fairly unfortunate, given how much more ubiquitous ECMAScript is, especially for client side scripting in the browser, but also in general. But no one seems eager to jump in and see it enhanced at this point....</P>
+<P mce_keep="true">&nbsp;</P>
+<P><FONT color=#ff0099><EM>This blog brought to you by</EM><FONT size=5> , </FONT><EM>(<A class="" href="http://www.fileformat.info/info/unicode/char/002c" mce_href="http://www.fileformat.info/info/unicode/char/002c">U+002c</A>, aka COMMA)</EM></FONT></P>
+<hr/><p><strong>jmdesp</strong> on 29 Apr 2008 6:53 AM:</p><div style="margin-left: 1em"><p>Your comment seems to be darkening the js situation more than necessary.</p>
+<p>Do you know about toLocaleString ?</p>
+<p><a rel="nofollow" target="_new" href="http://developer.mozilla.org/en/docs/Core_JavaScript_1.5_Reference:Global_Objects:Object:toLocaleString">http://developer.mozilla.org/en/docs/Core_JavaScript_1.5_Reference:Global_Objects:Object:toLocaleString</a></p>
+<p>It is a stated objective for Mozilla to enhance the current state of things :</p>
+<p><a rel="nofollow" target="_new" href="http://www.mozilla.org/projects/intl/locale-model.html">http://www.mozilla.org/projects/intl/locale-model.html</a></p>
+<p>Current implementation suffers mostly on this point &quot;it is necessary to allow the page author to select the locale for scripts and formatting for many instances&quot; and also non-support for dynamic language switching (instantiated by the user) but that's more a browser than a language limitation.</p></div>
+<p><strong>Michael S. Kaplan</strong> on 29 Apr 2008 8:44 AM:</p><div style="margin-left: 1em"><p>A minor number of methods compared to the extensive globalization support built in to the other language? The darkening is well deserved....</p>
+</div>
+<p><strong>Mihai</strong> on 29 Apr 2008 12:41 PM:</p><div style="margin-left: 1em"><p>toLocaleString would be nice, if implement right (in several browsers the result is the same as toString).</p>
+<p>Useless.</p>
+<p>When it works, it uses the language of the browser's UI, which has nothing to do with the language of the document I am looking at, or the language preferences the user sets for the browser.</p>
+<p>Another one: there is no way to query the language preferences, only the browser UI locale.</p></div>
+<p><strong>Ben Cooke</strong> on 29 Apr 2008 12:52 PM:</p><div style="margin-left: 1em"><p>Incidentally, David's initial premise was false: In the UK we use a period as the decimal separator and a comma to separate thousands.</p>
+<p>It's true that several countries in Europe do this the other way around, though. It's generally best to assume that whatever Europe does, the UK will do the opposite. :)</p></div>
+<p><strong>Paul Dempsey</strong> on 29 Apr 2008 6:57 PM:</p><div style="margin-left: 1em"><p>Glad to be good for a chuckle (what's a yomank?). Love the Limonata myself.</p>
+<p>If all you have is a hammer, go to the hardware store when you need a screwdriver, and don't try to get the hammer to do the job. I was merely suggesting that there are a few more tools available. But then, I tend to explore assumptions, rather than taking it as given that only an hammer-based solution would be acceptable, even when they asked if they could do it with a hammer.</p>
+<p>The poster never gave a context for where they were trying to solve this problem. For jscript, even though often likely to be on a web page, it could just as easily be in a wsf script where vbscript is a good candidate for the solution. For web apps, less so if you want portability - which is where life gets much sadder.</p>
+<p>Intl support is always a messy thing &nbsp;to get into. I think it really belongs in a processing module separate from the programming language, and language designers should stay out of it. There should standard objects to do these conversions, available for whatever language you like to use.</p>
+<p>cheers,</p>
+<p>-- P</p></div>
+<p><strong>Michael S. Kaplan</strong> on 29 Apr 2008 7:15 PM:</p><div style="margin-left: 1em"><p>YOMANK == You Owe Me A New Keyboard. :-)</p>
+<p>I agree with you on the separate processing module, though no one seems interested in pursuing that line of thought....</p>
+</div>
+<p><strong>Bulletmagnet</strong> on 30 Apr 2008 6:57 AM:</p><div style="margin-left: 1em"><p>I think the technical term is</p>
+<p>C | N &gt; K</p></div>
+<hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2010/11/23 <a href="http://archives.miloush.net/michkap/archive/2010/11/23/10095182.html">Perhaps not evil, but certainly getting hella snarky</a></p><p>2010/06/16 <a href="http://archives.miloush.net/michkap/archive/2010/06/16/10025478.html">JavaScript's got a whole new ultimate globalization hero</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2008/04/29/8436742.html" title="User overrides are read/write, by definition">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2008/04/28/8435937.html" title="Much ado about zero, aka These zeroes won&#39;t ever amount to anything">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2008-04">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2008-04-29">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2008/04/29/8436482.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:36 GMT -->
+</html>

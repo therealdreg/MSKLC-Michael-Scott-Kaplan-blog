@@ -1,0 +1,271 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2012/02/03/10263576.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Sometimes MMM is MMMM, other times MMM is M! (aka Not all abbreviations are created equal)</title></head><body>
+<h1>Sometimes MMM is MMMM, other times MMM is M! (aka Not all abbreviations are created equal)</h1>
+<p><em>by Michael S. Kaplan, published on 2012/02/03 07:01 -05:00, original URI: http://blogs.msdn.com/b/michkap/archive/2012/02/03/10263576.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<p>There are several <a href="http://msdn.microsoft.com/library/windows/desktop/dd464799.aspx">LCTYPE</a> values suitable for use by <a href="http://msdn.microsoft.com/library/windows/desktop/dd318101.aspx">GetLocaleInfo</a> and <a href="http://msdn.microsoft.com/library/windows/desktop/dd318103.aspx">GetLocaleInfoEx</a> that act as abbreviations.</p>
+<p>Like the seven <a href="http://msdn.microsoft.com/library/windows/desktop/dd373831.aspx">LOCALE_SABBREVDAYNAME*</a> values representing the days, which&nbsp;are documented as:</p>
+<p style="padding-left: 60px;"><em>Native abbreviated name for [Day]. The maximum number of characters allowed for this string is 80, including a terminating null character.</em></p>
+<p>Or like the twelve <a href="http://msdn.microsoft.com/library/windows/desktop/dd373831.aspx">LOCALE_SABBREVMONTHNAME*</a> values representing the months, which are documented as:</p>
+<p style="padding-left: 60px;"><em>Native abbreviated name for [Month]. The maximum number of characters allowed for this string is 80, including a terminating null character.</em></p>
+<p>And there are helpful doc topics like <a href="http://msdn.microsoft.com/library/windows/desktop/dd317787.aspx">Day, Month, Year, and Era Format Pictures</a> that say things like:</p>
+<table border="1">
+<tbody>
+<tr>
+<td>d</td>
+<td>Day of the month as digits without leading zeros for single-digit days.</td>
+</tr>
+<tr>
+<td>dd</td>
+<td>Day of the month as digits with leading zeros for single-digit days.</td>
+</tr>
+<tr>
+<td>ddd</td>
+<td>Abbreviated day of the week as specified by a <a href="http://msdn.microsoft.com/en-us/library/windows/desktop/dd373831.aspx">LOCALE_SABBREVDAYNAME*</a>value, for example, "Mon" in English (United States).</td>
+</tr>
+<tr>
+<td>dddd</td>
+<td>Day of the week as specified by a <a href="http://msdn.microsoft.com/en-us/library/windows/desktop/dd373839.aspx">LOCALE_SDAYNAME*</a> value.</td>
+</tr>
+<tr>
+<td>M</td>
+<td>Month as digits without leading zeros for single-digit months.</td>
+</tr>
+<tr>
+<td>MM</td>
+<td>Month as digits with leading zeros for single-digit months.</td>
+</tr>
+<tr>
+<td>MMM</td>
+<td>Abbreviated month as specified by a <a href="http://msdn.microsoft.com/en-us/library/windows/desktop/dd373831.aspx">LOCALE_SABBREVMONTHNAME*</a> value, for example, "Nov" in English (United States).</td>
+</tr>
+<tr>
+<td>MMMM</td>
+<td>Month as specified by a <a href="http://msdn.microsoft.com/en-us/library/windows/desktop/dd373856.aspx">LOCALE_SMONTHNAME*</a> value, for example, "November" for English (United States), and "Noviembre" for Spanish (Spain).</td>
+</tr>
+</tbody>
+</table>
+<p>Very helpful, right? :-)</p>
+<p>Well, they might have done a&nbsp;few abbreviated other language examples, but I suppose we can guess what they might be. No harm, no foul....</p>
+<p>Any developer can wrap their head around these examples and this information.</p>
+<p>Go for it, developers!</p>
+<p>Oh, wait -- before I forget, there are some problems with going forward with this knowledege here.</p>
+<p>Like the not insignificant number of locales that don't have abbreviated names that are any different than the regular month names.</p>
+<p>So (for example) many locales will have a LOCALE_SABBREVDAYNAME5 that is identical to LOCALE_SDAYNAME5, a LOCALE_SABBREVMONTHNAME10 that is identical to LOCALE_SMONTHNAME10. And so on.</p>
+<p>They don't want to mention that? Seems like oit ought to be in there somewhere....</p>
+<p>It&nbsp;may certainly put a cat among the pigeons for some unususpecting developers!</p>
+<p>Oh yeah, and it gets worse.</p>
+<p>Like let's look at the Japanese abbreviated month names:</p>
+<table border="1" cellspacing="2" cellpadding="2">
+<tbody>
+<tr>
+<td>1</td>
+</tr>
+<tr>
+<td>2</td>
+</tr>
+<tr>
+<td>3</td>
+</tr>
+<tr>
+<td>4</td>
+</tr>
+<tr>
+<td>5</td>
+</tr>
+<tr>
+<td>6</td>
+</tr>
+<tr>
+<td>7</td>
+</tr>
+<tr>
+<td>8</td>
+</tr>
+<tr>
+<td>9</td>
+</tr>
+<tr>
+<td>10</td>
+</tr>
+<tr>
+<td>11</td>
+</tr>
+<tr>
+<td>12</td>
+</tr>
+</tbody>
+</table>
+<p>Um, wait.</p>
+<p>Isn't that what <strong>M</strong>&nbsp;(Month as digits without leading zeros for single-digit months) is supposed to be for? That's just unexpected.</p>
+<p>We do not' document that either -- even though we've been doing it for years!</p>
+<p>And there are other strange examples, too. Perhaps you have a favorite?</p>
+<p>There is of course what we do for zh-CN abbreviated and full month&nbsp;names:</p>
+<table border="1" cellspacing="3" cellpadding="3">
+<tbody>
+<tr>
+<td style="text-align: right;">1月</td>
+<td style="text-align: right;">一月</td>
+</tr>
+<tr>
+<td style="text-align: right;">2月</td>
+<td style="text-align: right;">二月</td>
+</tr>
+<tr>
+<td style="text-align: right;">3月</td>
+<td style="text-align: right;">三月</td>
+</tr>
+<tr>
+<td style="text-align: right;">4月</td>
+<td style="text-align: right;">四月</td>
+</tr>
+<tr>
+<td style="text-align: right;">5月</td>
+<td style="text-align: right;">五月</td>
+</tr>
+<tr>
+<td style="text-align: right;">6月</td>
+<td style="text-align: right;">六月</td>
+</tr>
+<tr>
+<td style="text-align: right;">7月</td>
+<td style="text-align: right;">七月</td>
+</tr>
+<tr>
+<td style="text-align: right;">8月</td>
+<td style="text-align: right;">八月</td>
+</tr>
+<tr>
+<td style="text-align: right;">9月</td>
+<td style="text-align: right;">九月</td>
+</tr>
+<tr>
+<td style="text-align: right;">10月</td>
+<td style="text-align: right;">十月</td>
+</tr>
+<tr>
+<td style="text-align: right;">11月</td>
+<td>十一月</td>
+</tr>
+<tr>
+<td style="text-align: right;">12月</td>
+<td style="text-align: right;">十二月</td>
+</tr>
+</tbody>
+</table>
+<p>Just keep in mind in that 月 is "month" and you are pretty much reading Chinese now, right? :-)</p>
+<p>Now I'm not saying it's wrong -- it is <strong>right</strong>, but it <strong>is</strong> odd if you are not Chinese to think of the difference here as being abbreviated&nbsp;versus full month names.</p>
+<p>Remember what we have for the <strong>Japanese</strong> abbreviated month names? We have the same thing for <strong>Korean</strong> -- oh, and also <strong>Czech</strong> and <strong>Slovak</strong>, too!</p>
+<table border="1" cellspacing="2" cellpadding="2">
+<tbody>
+<tr>
+<td>1</td>
+</tr>
+<tr>
+<td>2</td>
+</tr>
+<tr>
+<td>3</td>
+</tr>
+<tr>
+<td>4</td>
+</tr>
+<tr>
+<td>5</td>
+</tr>
+<tr>
+<td>6</td>
+</tr>
+<tr>
+<td>7</td>
+</tr>
+<tr>
+<td>8</td>
+</tr>
+<tr>
+<td>9</td>
+</tr>
+<tr>
+<td>10</td>
+</tr>
+<tr>
+<td>11</td>
+</tr>
+<tr>
+<td>12</td>
+</tr>
+</tbody>
+</table>
+<p>I am fully prepared to assume that this different approach might be expected in East Asia.</p>
+<p>But that it might also be in Slovakia and the Czech Republic too? That's new information!</p>
+<p>It is hardly my first intuitive guess that those are the expected abbreviations for these Czech and Slovak month names, right?</p>
+<table border="1" cellspacing="3" cellpadding="3">
+<tbody>
+<tr>
+<td>leden</td>
+<td>janu&aacute;r</td>
+</tr>
+<tr>
+<td>&uacute;nor</td>
+<td>febru&aacute;r</td>
+</tr>
+<tr>
+<td>březen</td>
+<td>marec</td>
+</tr>
+<tr>
+<td>duben</td>
+<td>apr&iacute;l</td>
+</tr>
+<tr>
+<td>květen</td>
+<td>m&aacute;j</td>
+</tr>
+<tr>
+<td>červen</td>
+<td>j&uacute;n</td>
+</tr>
+<tr>
+<td>červenec</td>
+<td>j&uacute;l</td>
+</tr>
+<tr>
+<td>srpen</td>
+<td>august</td>
+</tr>
+<tr>
+<td>z&aacute;ř&iacute;</td>
+<td>september</td>
+</tr>
+<tr>
+<td>ř&iacute;jen</td>
+<td>okt&oacute;ber</td>
+</tr>
+<tr>
+<td>listopad</td>
+<td>november</td>
+</tr>
+<tr>
+<td>prosinec</td>
+<td>december</td>
+</tr>
+</tbody>
+</table>
+<p>Now all I know is that if I am a developer I have a somewhat foggy notion of what <strong>MMM</strong> means.</p>
+<p>Any developer or designer trying to create a calendar might.</p>
+<p>But for many locales,&nbsp;it clearly ought to be documented in some conceptual topic that I should be ready&nbsp;to assume that <strong>MMM</strong> might be <strong>MMMM</strong>. Or even <strong>M</strong>!</p>
+<hr/><p><strong>Jan Kučera</strong> on 3 Feb 2012 7:35 AM:</p><div style="margin-left: 1em"><p>(reposting)</p>
+<p>Hi Michael, yes, except the first typo (should be &#39;leden&#39;) these are the full month names here and in Slovakia as well.</p>
+<p>There are no official abbreviated names in Czech (although I have seen some attempts on translations from English). You can either try to take the first syllable, which yields strange results (with ú·nor, zá·ří, ří·jen at the very least) as I am aware of only two specific abbreviations ending with vowels (one of which is accuted). The more common attempt is to just take three letters (čvc for červenec) but this yields the horrible úno|r. This seams to be more feasible with the Slovak words (at least you can have 3 letters and always end with a consonant) but I have some doubts they would like it.</p>
+<p>No, this just does not work. Your guess seems to be correct to me. :)</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 3 Feb 2012 8:25 AM:</p><div style="margin-left: 1em"><p>Exactly! But at the very least we need to not lead developers down the wrong path. Not everyone reads my Blog. :-)</p>
+</div>
+<p><strong>Alex Cohn</strong> on 5 Feb 2012 10:03 AM:</p><div style="margin-left: 1em"><p>Which only proves again (cf. your previous post about &quot;today&quot;) that localization of a calendar application (or even widget) goes far beyond applying another locale. There should actually be a lot of culture-dependent logic, even if it does not go beyond the Gregorian calendar.</p>
+</div>
+<p><strong>Alex Cohn</strong> on 5 Feb 2012 10:05 AM:</p><div style="margin-left: 1em"><p>BTW, ddd for Hebrew are also cool: א, ב, ג...</p>
+</div>
+<hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2013/04/02 <a href="http://archives.miloush.net/michkap/archive/2013/04/02/10406831.html">All abbreviated days of week are created equal. But some are less equal than others!</a></p><p>2012/02/08 <a href="http://archives.miloush.net/michkap/archive/2012/02/08/10265404.html">The awkward insert of shortest day names...</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2012/02/04/10263076.html" title="Latest about the &quot;post-iBot&quot; world....">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2012/02/02/10263136.html" title="The evolving Story of Locale Support, part 17: Today I feel like translating you more than before">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2012-02">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2012-02-03">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2012/02/03/10263576.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+</html>

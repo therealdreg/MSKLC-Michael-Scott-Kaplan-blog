@@ -1,0 +1,55 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2010/12/18/10106789.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Short-sighted text processing #1: Uniscribe filters nothing</title></head><body>
+<h1>Short-sighted text processing #1: Uniscribe filters nothing</h1>
+<p><em>by Michael S. Kaplan, published on 2010/12/18 07:01 -05:00, original URI: http://blogs.msdn.com/b/michkap/archive/2010/12/18/10106789.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<p>It was just the other day&nbsp;that regular reader Random832&nbsp;commented to my <a href="http://archives.miloush.net/michkap/archive/2010/12/17/10105168.html" title="I think MaxLength needs protection to assure safer text"><strong>I think MaxLength needs protection to assure safer text</strong></a>:</p>
+<p style="padding-left: 60px;"><em><span style="font-family: times new roman,times;">Who decided that cutting off your string and beeping at you was good UI, anyway? Surely it'd be better to just not let the user submit the form until they delete enough stuff to fit [and provide interactive feedback about the limit, a la twitter]<br /><br />Well, I'm only half-serious - i'm sure this was easier with the limitations programmers had to work with in 1983 - but surely no new programs should be using this "feature".</span></em></p>
+<p>Now there's a question.</p>
+<p>It is in fact an excellent point, though.</p>
+<p>I mean, for all the bold talk about one of the possible indicatons for "complex script support" is indeed <strong>Filters out illegal character combinations</strong> -- and this is called out in Thai, specifically. GoGlobal goes a bit further in its <a href="http://msdn.microsoft.com/goglobal/bb688172.aspx">Complex Scripts FAQ</a>:</p>
+<p style="padding-left: 30px;"><strong>Why do we need to filter illegal character combinations? </strong><br />Since Thai syllables consist of a consonant optionally followed by one vowel and/or one tone mark, some character combinations (e.g., two vowel marks in succession) are nonsensical. Thus, one of the tasks of complex script enabling is to filter out or disallow illegal character combinations.</p>
+<p>Interestingly, it makes me&nbsp;think of the prototypical example of this behavior:</p>
+<ol>
+<li>Open Notepad</li>
+<li>Switch to the That Kedmanee keyboard</li>
+<li>Type the "J" key, which tries to type U+0e48, aka THAI CHARACTER MAI EK</li>
+</ol>
+<p>Every time you hit the key, the computer will beep and insert nothing.</p>
+<p>But can I tell you a secret?</p>
+<p>You have to promise that you won't tell anyone. It is kind of embarrassing.</p>
+<p>Uniscribe isn't doing that.</p>
+<p>Seriously.</p>
+<p>I can put a bunch of those characters in a row just fine, in text, in an applicaion other than Notepad. And Uniscribe will display them.</p>
+<p>I can even paste lines of them into Notepad:</p>
+<p><img src="http://trigeminal.fmsinc.com/images/illegalthai.jpg" border="0" /></p>
+<p>or here:</p>
+<p>่่่่่่่่่่่่่่่่่่่่่่่่<br />่่่่่่่่่่่่่่่่่่่่่่่่<br />่่่่่่่่่่่่่่่่่่่่่่่่<br />่่่่่่่่่่่่่่่่่่่่่่่่</p>
+<p>and guess what? There's no problem with doing it.</p>
+<p>The code that "filters" these characters sits in code called by the EDIT control that checks for two things:</p>
+<ul>
+<li>Does the script of the given text "disallow illegal sequences" as described by the&nbsp;<a href="http://msdn.microsoft.com/library/dd374042.aspx">SCRIPT_PROPERTIES</a>-&gt;fRejectInvalid from <a href="http://msdn.microsoft.com/library/dd368553.aspx">GetScriptProperties</a>&nbsp;TRUE, and</li>
+<li>is the <a href="http://msdn.microsoft.com/library/dd374041.aspx">SCRIPT_LOGATTR</a>-&gt;fInvalid of the given character also TRUE?</li>
+</ul>
+<p>If both are, <em>while you are typing</em>, this code <strong>that is not in Uniscribe itself</strong> will fail the attempt to insert the text, and it will beep.</p>
+<p>Obviously that doesn't work so well for text that is already present (how do you scold someone for illegal text alreay typed?), so in that case Uniscribe will just do as it is told. And it will of course include the 'empty circle" that implies a missing base character.</p>
+<p>Now there are several problems inherent in this direction for the text processin engine to go, and I am going to get into that more tomorrow.</p>
+<p>But I wanted to start by saying that it is a limited number of dumb controls that screw with the input stream while you are typing that is doing the work here -- <strong>Uniscribe filters nothing</strong>.</p>
+<p>There are some&nbsp;folks who will like upcoming parts to this series, so I hope that (for example) Andrew West and Martin Hosken&nbsp;are around. Because both of&nbsp;them and a few folks like them, are gonna like this one....</p>
+<hr/><p><strong>Andrew West</strong> on 18 Dec 2010 4:48 PM:</p><div style="margin-left: 1em"><p>I&#39;m always around, and if the upcoming parts are anything like this one then I am sure I will like them. &nbsp;I never knew about this edit control issue before, and it pained me to test clicking on U+0E48 in BabelMap and hear the edit control beep at me (the edit control is the Achilles heel of BabelMap, and something that I have long wanted to replace, but you can get round it by selecting UCN or NCR mode before clicking on U+0E48, and then reselecting character mode afterwards). &nbsp;Why would anyone write such evil code?</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 18 Dec 2010 11:31 PM:</p><div style="margin-left: 1em"><p>If it&#39;s any consolation, this one spot is the only bit of code in the entire Windows code base that uses SCRIPT_PROPERTIES-&gt;fRejectInvalid, which mens it is unlikely that anyone else is doing it (its not like Uniscribe gave directions to help others do it anyway!)....</p>
+</div>
+<p><strong>Doug Ewell</strong> on 20 Dec 2010 8:00 AM:</p><div style="margin-left: 1em"><p>&gt; Uniscribe isn&#39;t doing that.</p>
+<p>Uniscribe is a rendering engine. Why would anyone suspect it is filtering input?</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 20 Dec 2010 9:13 AM:</p><div style="margin-left: 1em"><p>Yet filtering illegal character combinations has long been pointed out as one of the central bullet points regarding complex scripts that Uniscribe is designed to deal with....</p></div>
+<p><strong>Doug Ewell</strong> on 20 Dec 2010 10:50 AM:</p><div style="margin-left: 1em"><p>On input?</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 20 Dec 2010 10:57 AM:</p><div style="margin-left: 1em"><p>Hey, I&#39;m not defending it in the blog that points out it is not true. But without proof it was listed as one of five points requiring Uniscribe support. The docs are clear on this [falshood]....</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 20 Dec 2010 11:10 AM:</p><div style="margin-left: 1em"><p>See for example the <a href="http://msdn.microsoft.com/library/dd317698.aspx">About Complex Scripts</a> topic in MSDN -- note that there are now *six* points, including the one <a href="http://archives.miloush.net/michkap/archive/2005/10/18/481654.html">I recommended back in 2005</a>, and Unicribe relates to an implementation of all of them....</p></div>
+<hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2011/08/15 <a href="http://archives.miloush.net/michkap/archive/2011/08/15/10195601.html">If you change the behavior of typing sequences you should never type, is it a bug?</a></p><p>2011/04/28 <a href="http://archives.miloush.net/michkap/archive/2011/04/28/10159111.html">The Sally Kimball Addition To The Dead Keys Conundrum: An Encyclopedia Brown Mystery</a></p><p>2011/01/06 <a href="http://archives.miloush.net/michkap/archive/2011/01/06/10111881.html">Short-sighted text processing #6: OpenType and Apple and OpenType</a></p><p>2011/01/05 <a href="http://archives.miloush.net/michkap/archive/2011/01/05/10111348.html">Short-sighted text processing #5: PU[A]! That pad THAI is pretty spicy....</a></p><p>2011/01/04 <a href="http://archives.miloush.net/michkap/archive/2011/01/04/10110938.html">Short-sighted text processing #4: Squeezing every bit of text you possibly can out of MacOffice 2011</a></p><p>2010/12/30 <a href="http://archives.miloush.net/michkap/archive/2010/12/30/10110184.html">Short-sighted text processing #3: The Protcols of the EDIT for i18n</a></p><p>2010/12/20 <a href="http://archives.miloush.net/michkap/archive/2010/12/20/10107008.html">Short-sighted text processing #2: Getting hurt while playing on the bleeding edge</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2010/12/19/10106871.html" title="One of the cool uses of 4-AP (the main drug in Ampyra) is to give birds seizures. Well not cool, but....">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2010/12/17/10106288.html" title="Dude, you forgot to fflush! (aka toilet humor is undignified, as are flush puns)">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2010-12">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2010-12-18">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2010/12/18/10106789.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+</html>

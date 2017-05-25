@@ -1,0 +1,55 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2006/12/28/1371979.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:38 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Changing MUI settings from MUISETUP command line?</title></head><body>
+<h1>Changing MUI settings from MUISETUP command line?</h1>
+<p><em>by Michael S. Kaplan, published on 2006/12/28 03:01 -05:00, original URI: http://blogs.msdn.com/b/michkap/archive/2006/12/28/1371979.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P>The other day Paul asked me: </P>
+<BLOCKQUOTE><FONT face="times new roman,times" size=2>
+<P><EM>Hi Michael,<BR><BR>Been playing around with MUISETUP from XP SP2 (with just Australian English installed), trying to get Japanese installed as the default language. I'm running the following from the command line:<BR></EM><BR><FONT face="courier new,courier"><STRONG>muisetup /i 0411 /d 0411 /l /f /r /s</STRONG></FONT><BR><BR><EM>Followed by a reboot, which changes the logoff/logon screens to Japanese, but when I log back on as the same user I ran MUISETUP as, the menus are in English.<BR><BR>I'm sure I'm missing something, but how do I change this for that user so all the menus etc change to Japanese from the command line?<BR><BR>Rgds<BR><BR>Paul</EM></P></FONT></BLOCKQUOTE>
+<P mce_keep="true">Paul, you aren't missing anything -- the documented MUISETUP.EXE&nbsp;command line parameters do not support setting the user default UI language of the user in whose context the code is run. Per the documentation, here are all the supported command line parameters for Windows 2000/XP/Server 2003:</P>
+<BLOCKQUOTE>
+<P mce_keep="true"><FONT size=1><STRONG>Command Prompt Setup</STRONG></FONT></P>
+<P mce_keep="true"><FONT size=1>To enable quiet mode installations, Muisetup.exe accepts parameters entered at the command line. This can be useful either during an unattended installation of the Windows&nbsp;2000 MultiLanguage Version or simply during the addition and/or removal of user interface languages.<BR>To use the command line parameters, use the command prompt to navigate to the directory containing the Muisetup program, and then type: </FONT></P>
+<P mce_keep="true"><FONT size=1><STRONG>&nbsp;&nbsp;&nbsp; muisetup.exe</STRONG></FONT></P>
+<P mce_keep="true"><FONT size=1>followed by any of the following switches: </FONT></P>
+<P mce_keep="true"><FONT size=1>&nbsp;&nbsp;&nbsp; /i&nbsp;(specifies the user interface language(s) to be installed) <BR>&nbsp;&nbsp;&nbsp; /d&nbsp;(specifies the default user interface language that will be applied to all new user accounts)<BR>&nbsp;&nbsp;&nbsp; /u&nbsp;(specifies the user interface language(s) to be uninstalled)<BR>&nbsp;&nbsp;&nbsp; /r&nbsp;(specifies that the reboot message should not be displayed) <BR>&nbsp;&nbsp;&nbsp; /s&nbsp;(specifies that the installation complete message should not be displayed) </FONT></P>
+<P mce_keep="true"><FONT size=1>When using the /i, /d, and /u switches, the languages must be entered using their four-digit hexadecimal Language ID values. Language IDs should be separated by a space, as in the following example:</FONT></P>
+<P mce_keep="true"><FONT size=1>&nbsp;&nbsp;&nbsp;&nbsp;<STRONG>muisetup.exe /i 0411 0409 0c0a /d 0411 /u 0414 040c</STRONG></FONT></P></BLOCKQUOTE>
+<P mce_keep="true">Kind of says it all -- you can&nbsp;install/uninstall UI languages and you&nbsp;can change the&nbsp;UI language for new accounts (which also handles .DEFAULT which does the logon screen UI&nbsp;language).&nbsp;No integrated logon user UI language changing.&nbsp;</P>
+<P mce_keep="true">For that setting Paul is looking for, you have to go the route of the unattend file and intl.cpl....</P>
+<P mce_keep="true">Now of course in Vista there must be a whole lot of changes -- I'll have to cover those changes soon!</P>
+<P mce_keep="true">&nbsp;</P>
+<P mce_keep="true"><FONT color=#ff00ff><EM>This post brought to you by</EM>&nbsp;<FONT size=5>М</FONT> <EM>(<A class="" href="http://www.fileformat.info/info/unicode/char/041c" mce_href="http://www.fileformat.info/info/unicode/char/041c">U+041c</A>, a.k.a. CYRILLIC CAPITAL LETTER EM)</EM></FONT></P>
+<hr/><p><a id="1376504" href="#1376504">#</a> <strong>Paul</strong> on 28 Dec 2006 5:03 PM:</p><div style="margin-left: 1em"><p>Since sending my email, I found the references to regopts.txt and intl.cpl (support.microsoft.com/kb/289125 if anyone else is looking) but struggled to get this working. I did find that that adding the following registry keys did the job though:</p>
+<p>[HKEY_CURRENT_USER\Control Panel\Desktop]</p>
+<p>&quot;MUILanguagePending&quot;=&quot;00000411&quot;</p>
+<p>[HKEY_CURRENT_USER\Keyboard Layout\Preload]</p>
+<p>&quot;4&quot;=&quot;e0010411&quot;</p>
+<p>[HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\MUILanguages\FileVersions\0411\comdlg32.dll]</p>
+<p>&quot;000600000b540884&quot;=dword:00000001</p>
+<p>&quot;MUIVer&quot;=hex(b):00,00,28,0a,00,00,06,00</p>
+<p>[HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\MUILanguages\FileVersions\0411\CRYPTUI.dll]</p>
+<p>&quot;000500830a280884&quot;=dword:00000001</p>
+<p>&quot;MUIVer&quot;=hex(b):00,00,28,0a,83,00,05,00</p>
+<p>[HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\MUILanguages\FileVersions\0411\MPR.dll]</p>
+<p>&quot;000500010a280884&quot;=dword:00000001</p>
+<p>&quot;MUIVer&quot;=hex(b):00,00,28,0a,01,00,05,00</p>
+<p>[HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\MUILanguages\FileVersions\0411\MSCTF.dll]</p>
+<p>&quot;000500010a280884&quot;=dword:00000001</p>
+<p>&quot;MUIVer&quot;=hex(b):00,00,28,0a,01,00,05,00</p>
+<p>[HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\MUILanguages\FileVersions\0411\SHLWAPI.dll]</p>
+<p>&quot;000600000b540a99&quot;=dword:00000001</p>
+<p>&quot;MUIVer&quot;=hex(b):00,00,28,0a,00,00,06,00</p>
+<p>[HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\MUILanguages\FileVersions\0411\USER32.dll]</p>
+<p>&quot;000500010a280a3e&quot;=dword:00000001</p>
+<p>&quot;MUIVer&quot;=hex(b):00,00,28,0a,01,00,05,00</p>
+<p>Though I'm sure thats not exactly the best way to get it done :) I'll continue plugging away with regopts.txt - currently my regopts.txt file has:</p>
+<p>[RegionalSettings]</p>
+<p>MUILanguage=0411</p>
+<p>but its not taking.</p></div>
+<p><a id="1377976" href="#1377976">#</a> <strong>Michael S. Kaplan</strong> on 28 Dec 2006 9:08 PM:</p><div style="margin-left: 1em"><P>I highly reccomend <STRONG>against</STRONG> adding registry keys/values -- please dump to a log file so you can find out exactly what is failing when you use intl.cpl to do the job here....</P></div>
+<p><a id="1378016" href="#1378016">#</a> <strong>Paul</strong> on 28 Dec 2006 9:38 PM:</p><div style="margin-left: 1em"><p>I thought you might recommend against that :) The client no longer wants the Japanese dialogs/menus for the user that is running the changes, but I had a look at the log file and realised (naturally) I had a typographic error, so I did get it working. Sorry about wasting your time with that last post!</p></div>
+<hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2006/12/28/1372747.html" title="Converting a project to Unicode: Part 1 (Business before pleasure)">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2006/12/27/1368334.html" title="Converting a project to Unicode: Part 0 (The introduction)">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2006-12">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2006-12-28">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2006/12/28/1371979.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:38 GMT -->
+</html>

@@ -1,0 +1,54 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2007/03/16/1894023.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:38 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Creating keyboards in C#?</title></head><body>
+<h1>Creating keyboards in C#?</h1>
+<p><em>by Michael S. Kaplan, published on 2007/03/16 07:59 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2007/03/16/1894023.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P>In theory, you can create just about any program using any programming language. And in my time I have seen a lot of tasks that many considered to be impossible happen. But that fact alone does not make it always a good reason to try to do such a thing.</P>
+<P>Just the other day, Sumon asked me:</P>
+<BLOCKQUOTE>
+<P><FONT face="times new roman,times"><EM>hi!<BR><BR>i want to make a program using c#.net which will convert my keyboard into my mother language keyboard. <BR><BR>such as if i press "J" letter then it will show one of the letter of my mother language (bangla) in text file.<BR><BR>thanks<BR>sumon</EM></FONT></P></BLOCKQUOTE>
+<P>Certainly one could create such a program, inject it into any or indeed every UI thread, and use it to try to create a keyboard layout.</P>
+<P>But such a solution would be very unstable, very resource intensive, and is really using the wrong tool to get the job done....</P>
+<P>The first answer I would always give here is <A class="" href="http://www.microsoft.com/globaldev/tools/msklc.mspx" mce_href="http://www.microsoft.com/globaldev/tools/msklc.mspx">Microsoft Keyboard Layout Creator</A>. :-)</P>
+<P>For keyboards which need to go a bit beyond what MSKLC can do (since as I pointed out&nbsp;<STRONG><A class="" href="http://archives.miloush.net/michkap/archive/2007/02/11/1657463.html" mce_href="http://archives.miloush.net/michkap/archive/2007/02/11/1657463.html">previously</A></STRONG> not even MSKLC 1.4 can do everything!), Keyman Developer from <A class="" href="http://www.tavultesoft.com/" mce_href="http://www.tavultesoft.com/">Tavultesoft</A> is what next comes to mind for me.</P>
+<P>But developing keyboards in C# is definitely an effective use of neither the C# language nor the .NET runtime. It just isn't the kind of approach I would ever recommend....</P>
+<P mce_keep="true">&nbsp;</P>
+<P><FONT color=#ff00ff><EM>This post brought to you by</EM> জ <EM>(<A class="" href="http://www.fileformat.info/info/unicode/char/099c" mce_href="http://www.fileformat.info/info/unicode/char/099c">U+099c</A>, a.k.a. BENGALI LETTER JA)</EM></FONT></P>
+<hr/><p><strong>Jeffrey L. Whitledge</strong> on 16 Mar 2007 2:48 PM:</p><div style="margin-left: 1em"><p>But C# is such a joy to use that I want to write my checks, shopping lists, monthly reports, and Christmas cards in it.</p></div>
+<p><strong>Michael S. Kaplan</strong> on 16 Mar 2007 5:53 PM:</p><div style="margin-left: 1em"><p>That has to be one of the scariest things I have read today, Jeffrey!</p>
+</div>
+<p><strong>Srinivas K</strong> on 25 May 2008 9:06 AM:</p><div style="margin-left: 1em"><p>hi</p>
+<p>But the point is- I want to implement a keyboard only for one language. Lot less features than Tavultesoft .</p>
+<p> &nbsp;- Budget doest let me buy Tavultesoft.</p>
+<p> &nbsp;- Need a map for my keyboard</p>
+<p> &nbsp;- MSKLC is not enough..</p>
+<p> &nbsp;- I think I'm a programmer.</p>
+<p>That leads one to google for ideas as to how to implement keymapping. </p>
+<p>So what do you suggest is the solution. Use something like C for the job?</p>
+<p>-Sv</p></div>
+<p><strong>Michael S. Kaplan</strong> on 25 May 2008 9:51 AM:</p><div style="margin-left: 1em"><p>The keyboarding architecture of Windows is (for the most part) not subject to &quot;programming&quot;.</p>
+<p>Why not start with the requirements. What makes MSKLC not enough yet Keyman too much?</p>
+<p>On the whole, its is impossible to suggest a solution when the problem has not been defined.</p>
+</div>
+<p><strong>Srinivas K</strong> on 25 May 2008 12:38 PM:</p><div style="margin-left: 1em"><p>Actually, Keyman served my purpose except that I cant afford it. I tried out their trial version and was more than happy with their &quot;language&quot;. (IDL, sort of, to create the mapping). This is the feature that I couldn't find in MSKLC. If I'm wrong, then please point me to it.</p>
+<p>The limitation of MSKLC(I'm using WinXP, MSKLC 1.4):</p>
+<p>1. I cant define a key with, say, six unicode characters. Keyman lets me do it. e.g, assign &quot;\u0c15\u0c4d\u0c37\u0c4d\u0c2e\u0c40&quot; to one key.</p>
+<p>2. MSKLC doesnt let you do context sensitive stuff(change the character depending on the previous characters typed.) &nbsp;It is needed to produce the above sort of characters. </p>
+<p>The keyboard will have \u0c15 as one key and \u0c37 as another key. When pressed first key + link key + second key produces \u0c15\u0c4d\u0c37 ). In keyman I write some statements to achieve this effect using 'store', any(), Index() and other mappings.</p>
+<p>I need a keyboard for the TELUGU language (South Indian). &nbsp;&quot;Can I achieve what keyman does without all the functionality of providing the interface language etc.?&quot; is what motivated me to look at programming solution.</p>
+<p>I'm all ears (or eyes, if you will) for your inputs.</p>
+<p>-Sv</p></div>
+<p><strong>Michael S. Kaplan</strong> on 25 May 2008 2:50 PM:</p><div style="margin-left: 1em"><P>MSKLC does not do it because the Windows input architecture does not -- Keyman works around this by providing several diferent methods, including TSF-based ones.</P>
+<P>Have you looked into <A class="" href="http://archives.miloush.net/michkap/archive/2008/02/25/7884260.html"><STRONG>the series I wrote</STRONG></A> about the Table Driven Text Service? It provides exactly what you are looking for.</P></div>
+<p><strong>Srinivas K</strong> on 26 May 2008 9:57 AM:</p><div style="margin-left: 1em"><p>The series you pointed to is directed at Vista. I'm still in XP and I'll need it to be XP and below(yes...98 to be exact) for a while. &nbsp;</p>
+<p>I still did not quite comprehend the series. I'll give it another read. But tell me, those suggestion boxes popup for all keystrokes.? </p>
+<p>In my case, I'll be giving the keyboard to typists who will be converting large volumes of manuscripts to unicode documents. They won't be able to keep choosing the options!! Second they are used to certain keyboard which is proprietory and &nbsp;non-unicode. So I have to build my own keyboard that uses unicode and matches the keystrokes.</p>
+<p>I have done a transliteration mapping in JS, modifying the wikipedia transliteration script. Not satisfactory(as a temp solution) and that is not the way to go about it. </p>
+<p>So any XP specific ideas!!</p>
+<p>Thanks</p></div>
+<p><strong>Michael S. Kaplan</strong> on 26 May 2008 3:38 PM:</p><div style="margin-left: 1em"><p>For XP, there is no solution here built into Windows other than the full Text Services Framework (TSF). I have never seen anybody create a full TSF Text Input Profile (TIP) in C# and to be honest I doubt this is actually possible....</p>
+</div>
+<hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2007/03/16/1895610.html" title="A way better model for features">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2007/03/15/1890287.html" title="Killing time and brain cells at the DMV">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2007-03">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2007-03-16">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2007/03/16/1894023.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:38 GMT -->
+</html>

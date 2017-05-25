@@ -1,0 +1,97 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2005/12/06/500475.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:40 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Questions about the unit and record separators</title></head><body>
+<h1>Questions about the unit and record separators</h1>
+<p><em>by Michael S. Kaplan, published on 2005/12/06 07:31 -05:00, original URI: http://blogs.msdn.com/b/michkap/archive/2005/12/06/500475.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P><FONT face=Tahoma>Ilya Konstntinov asked in the Suggestion Box:</FONT></P>
+<BLOCKQUOTE dir=ltr style="MARGIN-RIGHT: 0px">
+<P><FONT size=2><EM>When Complex Text Layout is enabled, TEXT controls get additional new items in the context menu, among which is Insert Unicode Control Character. Among the controls characters, you have something called RS and US. I've found those characters in the Unicode specs (looks like something inherited from terminals) but the BiDi TR says nothing about their influence, whereas in practice, they seem to be break the BiDi run, whatever direction it is -- kind-of like you'd get with an RLM-LRM combination. </EM></FONT></P>
+<P><FONT size=2><EM>Now, let's introduce another issue. It's not uncommon for applications to concatenate a couple of strings into a status line of some sort. For example, Internet Explorer might compose its window caption as: </EM></FONT></P>
+<P><FONT size=2><EM>[page title] - [(customizable) IE caption] </EM></FONT></P>
+<P><FONT size=2><EM>and then there's the common issue of the two concatenated strings "blending" according to BiDi reordering rules. This is of course not a good thing, since each of those strings stands on its own and is not a "continuation" of the other. I've noticed that many Microsoft apps *don't* exhibit this problem, and I was wondering: What is the Right way to avoid this problem (besides emiting the text in two different TextOut calls)? Do you insert LRM-RLM (in hope to break the run, whatever it is), increase embedding, or use one of those RS/US characters? </EM></FONT></P>
+<P><FONT size=2><EM>Otherwise, what are RS and US intended for? </EM></FONT></P></BLOCKQUOTE>
+<P><FONT face=Tahoma>Ok, first off so we know what we are talking about, it is this right click menu which you can get to from most EDIT controls:</FONT></P>
+<P><IMG height=596 src="http://trigeminal.fmsinc.com/images/controlchars.jpg" width=554></P>
+<P><FONT face=Tahoma>Now, let me take care of a few misconceptions....</FONT></P>
+<P><FONT face=Tahoma>Every character in Unicode has a Bidirectional class value in the <A href="http://www.unicode.org/ucd/">Unicode Character Database</A>. The possible values (listed in <A href="http://www.unicode.org/Public/UNIDATA/UCD.html">ucd.html</A> and explained in <A href="http://www.unicode.org/reports/tr9/">UAX #9</A> - The Bidirectional Algorithm) are:</FONT></P>
+<P><FONT face=Tahoma>
+<TABLE class=mytables border=1>
+<TBODY>
+<TR>
+<TH vAlign=top align=left>
+<P align=left>Type</P></TH>
+<TH vAlign=top align=left>
+<P align=left>Description</P></TH></TR>
+<TR>
+<TD vAlign=top>L</TD>
+<TD vAlign=top>Left-to-Right</TD></TR>
+<TR>
+<TD vAlign=top>LRE</TD>
+<TD vAlign=top>Left-to-Right Embedding</TD></TR>
+<TR>
+<TD vAlign=top>LRO</TD>
+<TD vAlign=top>Left-to-Right Override</TD></TR>
+<TR>
+<TD vAlign=top>R</TD>
+<TD vAlign=top>Right-to-Left</TD></TR>
+<TR>
+<TD vAlign=top>AL</TD>
+<TD vAlign=top>Right-to-Left Arabic</TD></TR>
+<TR>
+<TD vAlign=top>RLE</TD>
+<TD vAlign=top>Right-to-Left Embedding</TD></TR>
+<TR>
+<TD vAlign=top>RLO</TD>
+<TD vAlign=top>Right-to-Left Override</TD></TR>
+<TR>
+<TD vAlign=top>PDF</TD>
+<TD vAlign=top>Pop Directional Format</TD></TR>
+<TR>
+<TD vAlign=top>EN</TD>
+<TD vAlign=top>European Number</TD></TR>
+<TR>
+<TD vAlign=top>ES</TD>
+<TD vAlign=top>European Number Separator</TD></TR>
+<TR>
+<TD vAlign=top>ET</TD>
+<TD vAlign=top>European Number Terminator</TD></TR>
+<TR>
+<TD vAlign=top>AN</TD>
+<TD vAlign=top>Arabic Number</TD></TR>
+<TR>
+<TD vAlign=top>CS</TD>
+<TD vAlign=top>Common Number Separator</TD></TR>
+<TR>
+<TD vAlign=top>NSM</TD>
+<TD vAlign=top>Non-Spacing Mark</TD></TR>
+<TR>
+<TD vAlign=top>BN</TD>
+<TD vAlign=top>Boundary Neutral</TD></TR>
+<TR>
+<TD vAlign=top>B</TD>
+<TD vAlign=top>Paragraph Separator</TD></TR>
+<TR>
+<TD vAlign=top>S</TD>
+<TD vAlign=top>Segment Separator</TD></TR>
+<TR>
+<TD vAlign=top>WS</TD>
+<TD vAlign=top>Whitespace</TD></TR>
+<TR>
+<TD vAlign=top>ON</TD>
+<TD vAlign=top>Other Neutrals</TD></TR></TBODY></TABLE></FONT></P>
+<P><FONT face=Tahoma>For the two characters in question, the values are:</FONT></P>
+<P><FONT face="Courier New"><A href="http://www.fileformat.info/info/unicode/char/001e">U+001e</A>&nbsp;&nbsp;&nbsp;RECORD SEPARATOR&nbsp;&nbsp;&nbsp;B</FONT></P>
+<P><FONT face="Courier New"><A href="http://www.fileformat.info/info/unicode/char/001f">U+001f</A>&nbsp;&nbsp;&nbsp;UNIT SEPARATOR&nbsp;&nbsp;&nbsp;&nbsp; S</FONT></P>
+<P><FONT face=Tahoma>Now if you look at <A href="http://www.unicode.org/reports/tr9/">UAX #9</A>&nbsp;it does contain clear information on the effect that these two Bidi categories have on bidirectional text.</FONT></P>
+<P><FONT face=Tahoma>The categories can even be useful in the context that Ilya refers to later in his question (mixed runs of LTR and RTL text with surrounding neutral characters such as parentheses), with the added advantage that they are not visible so you do not have to worry about them.</FONT></P>
+<P><FONT face=Tahoma>(Of course this can also be a disadvantage since not even the <STRONG><U>S</U>how Unicode control characters</STRONG> entry on the right click menu will show any visible indication that they are there; like the wind, you can only see the effects -- a small oversight in the functionality, in my opinion!)</FONT></P>
+<P><FONT face=Tahoma>There is unfortunately no good answer to that later question other than try to avoid the situation by creating strings that do not have the neutral characters that might not render the way you would like them to.</FONT></P>
+<P><FONT face=Tahoma>It even indirectly relates to <a href="http://archives.miloush.net/michkap/archive/2005/12/05/499949.html#500347">my concerns about assuming the format of Windows language strings</A>, since they may one day be changed one day to get away from this particular bug popping up at different times with bidirectional text....</FONT></P>
+<P><FONT face=Tahoma></FONT>&nbsp;</P>
+<P><FONT face=Tahoma color=#ff1493><EM>This post brought to you by</EM> "<FONT size=6>Ὗ</FONT>" <EM>(<A href="http://www.fileformat.info/info/unicode/char/1f5f">U+1f5f</A>, a.k.a. GREEK CAPITAL LETTER UPSILON WITH DASIA AND PERISPOMENI)</EM></FONT></P>
+<hr/><p><a id="501486" href="#501486">#</a> <strong>Ilya Konstantinov</strong> on 8 Dec 2005 4:23 AM:</p><div style="margin-left: 1em">&quot;There is unfortunately no good answer to that later question other than try to avoid the situation by creating strings that do not have the neutral characters that might not render the way you would like them to.&quot;<br><br>That's not sufficient to avoid the problem. Even without the dash between the web page's title and the &quot;Microsoft Internet Explorer&quot; branding, the two could blend together in unexpected ways. The only way is to avoid the problem is to break the BiDi run between concatenated strings, by using BiDi Control Characters and such.<br><br>And you didn't cover the other part of my question -- why were RS and US so important as to include them in this context menu?</div>
+<p><a id="501520" href="#501520">#</a> <strong>Michael S. Kaplan</strong> on 8 Dec 2005 7:22 AM:</p><div style="margin-left: 1em">If you read UAX#9 and see what those two Bidi categories can do, then the answer is obbvious -- to have those two different effects on text....</div>
+<hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2006/11/18 <a href="http://archives.miloush.net/michkap/archive/2006/11/18/1102236.html">Read-only, you say? Read-only to whom?</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2005/12/06/500485.html" title="The lack of Uniscribe samples">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2005/12/05/499949.html" title="What&#39;s up with the language names?">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2005-12">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2005-12-06">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2005/12/06/500475.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:40 GMT -->
+</html>

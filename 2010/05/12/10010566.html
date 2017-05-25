@@ -1,0 +1,88 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2010/05/12/10010566.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:35 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Restore/minimize the Language Bar to get it out of the way of a full-screen application?</title></head><body>
+<h1>Restore/minimize the Language Bar to get it out of the way of a full-screen application?</h1>
+<p><em>by Michael S. Kaplan, published on 2010/05/12 07:01 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2010/05/12/10010566.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P>Over in the Suggestion Box, Ben asked:</P>
+<BLOCKQUOTE>
+<BLOCKQUOTE>
+<P><FONT face="times new roman,times">Like many, I am really enjoying Windows 7.</FONT></P>
+<P><FONT face="times new roman,times">However, there is one little issue that I notice almost daily.</FONT></P>
+<P><FONT face="times new roman,times">As I am constantly switching between English, Japanese, Korean, and Chinese, I usually always "Restore the [IME] language bar" on the desktop. Hence, it is not minimized to the tray. This is my preferred setting.</FONT></P>
+<P><FONT face="times new roman,times">Whenever I watch a movie in Media Player, I set the screen to full size. This works well; however, the IME bar never disappears instead overlays the video. As there is not much opportunity to type anything while watching a movie in full screen, I think it would be best if the IME would become invisible.</FONT></P>
+<P><FONT face="times new roman,times">I do not remember anymore, but I do not recall having this type of problem in XP. Other than manually minimizing it, is there anything that can be done to solve this tiny but constant issue? Not sure if this would be an IME or a Media Player issue.</FONT></P></BLOCKQUOTE></BLOCKQUOTE>
+<P>One has to love the "one little issue" questions, you know? :-)</P>
+<P>First we'll take a step back.</P>
+<P>And say that <STRONG>yes, this is a Media Player issue</STRONG>.</P>
+<P>Because Media Player can implement <A href="http://msdn.microsoft.com/library/aa966970.aspx" mce_href="http://msdn.microsoft.com/library/aa966970.aspx">UILess Mode</A> for when it is completely maximized if it wants to.</P>
+<P>But it isn't doing that, so we have to move on now and see what we can do in spite of that fact.</P>
+<P>So we will keep looking, now.</P>
+<P>Of course the easiest thing one can do is the minimize/restore dance....</P>
+<P><IMG style="WIDTH: 773px; HEIGHT: 147px" border=0 src="http://trigeminal.fmsinc.com/images/minimallangbar02.jpg" width=773 height=147 mce_src="http://trigeminal.fmsinc.com/images/minimallangbar02.jpg"></P>
+<P><IMG style="WIDTH: 488px; HEIGHT: 106px" border=0 src="http://trigeminal.fmsinc.com/images/minimallangbar03.jpg" width=488 height=106 mce_src="http://trigeminal.fmsinc.com/images/minimallangbar03.jpg"></P>
+<P>but Ben is already saying that is the thing he's like to avoid.</P>
+<P>Now there ianother option, on that same menu.</P>
+<P>That <STRONG><U>T</U>ransparency</STRONG> item:</P>
+<P><IMG style="WIDTH: 795px; HEIGHT: 160px" border=0 src="http://trigeminal.fmsinc.com/images/minimallangbar04.jpg" width=795 height=160 mce_src="http://trigeminal.fmsinc.com/images/minimallangbar04.jpg"></P>
+<P>If you select it, then the language bar will be a lot less substantial when you aren't interacting with it.</P>
+<P>Like this:</P>
+<P><IMG style="WIDTH: 781px; HEIGHT: 57px" border=0 src="http://trigeminal.fmsinc.com/images/minimallangbar05.jpg" width=781 height=57 mce_src="http://trigeminal.fmsinc.com/images/minimallangbar05.jpg"></P>
+<P>This may or may not be distracting, kind of depends.</P>
+<P>That "Vertical" option can also be worth considering, though most people don't like to go that route.</P>
+<P>Now if you use your IMEs so often that you do all of the interaction via the various keyboard shortcuts, then you have yet another option.</P>
+<P>Hot keys!</P>
+<P>Just assign a different hot key to each IME you want to</P>
+<P><IMG style="WIDTH: 452px; HEIGHT: 520px" border=0 src="http://trigeminal.fmsinc.com/images/minimallangbar01.jpg" width=452 height=520 mce_src="http://trigeminal.fmsinc.com/images/minimallangbar01.jpg"></P>
+<P>and then hide the Language Bar completely!</P>
+<P>But a lot of people (and I am assuming Ben is one of them) want the Language Bar to be there when they might be using the IME.</P>
+<P>And this limits the options a lot more.</P>
+<P>Now at an obvious level there is a user interface that lets one pick the "status" of the Language Bar's interface:</P>
+<P><IMG style="WIDTH: 431px; HEIGHT: 491px" border=0 src="http://trigeminal.fmsinc.com/images/minimallangbar06.jpg" width=431 height=491 mce_src="http://trigeminal.fmsinc.com/images/minimallangbar06.jpg"></P>
+<P>This suggests there must be a way for anyone to make that change.</P>
+<P>Now spulenking around in the exports of various relevant DLLs finds the following:</P>
+<BLOCKQUOTE>
+<BLOCKQUOTE><FONT face="consolas,lucida console,courier new,courier,fixed"><B>
+<P>Microsoft (R) COFF/PE Dumper Version 9.00.30729.01<BR>Copyright (C) Microsoft Corporation.&nbsp; All rights reserved.</P>
+<P><BR>Dump of file c:\Windows\System32\msctf.dll</P>
+<P>File Type: DLL</P>
+<P>&nbsp; Section contains the following exports for MSCTF.dll</P>
+<P>&nbsp;&nbsp;&nbsp; 00000000 characteristics<BR>&nbsp;&nbsp;&nbsp; 4A5BC5DC time date stamp Mon Jul 13 16:40:12 2009<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 0.00 version<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 1 ordinal base<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 71 number of functions<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 71 number of names</P>
+<P>&nbsp;&nbsp;&nbsp; ordinal hint RVA&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; name</P>
+<P>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 2&nbsp;&nbsp;&nbsp; 0 0000382C CtfImeAssociateFocus<BR>...{skip some exports}<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 55&nbsp;&nbsp; 35 0001A05C TF_GetShowFloatingStatus<BR>...{skip some exports}<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 68&nbsp;&nbsp; 43 00072ED0 TF_SetShowFloatingStatus<BR>...{skip some exports}<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 71&nbsp;&nbsp; 46 00041470 TF_WaitForInitialized</P>
+<P>&nbsp; Summary</P>
+<P>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 3000 .data<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; A000 .pdata<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 18000 .rdata<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 2000 .reloc<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 41000 .rsrc<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; A0000 .text<BR></P></B></FONT></BLOCKQUOTE></BLOCKQUOTE>
+<P>But it hardly seems worth it to try to reverse engineer those functions, which are in all likelihood little more than thin wrappers around the <A href="http://msdn.microsoft.com/library/ms628765.aspx" mce_href="http://msdn.microsoft.com/library/ms628765.aspx">ITfLangBarMgr::ShowFloating</A> and <A href="http://msdn.microsoft.com/library/ms628754.aspx" mce_href="http://msdn.microsoft.com/library/ms628754.aspx">ITfLangBarMgr::GetShowFloatingStatus</A> methods on the <A href="http://msdn.microsoft.com/library/ms628748.aspx" mce_href="http://msdn.microsoft.com/library/ms628748.aspx">ITfLangBarMgr</A> interface. </P>
+<P>If the code were any more complicated than something along the lines of:</P>
+<BLOCKQUOTE><FONT face="consolas,lucida console,courier new,courier,fixed"><B>
+<P>&nbsp;&nbsp;&nbsp; HRESULT hr;<BR>&nbsp;&nbsp;&nbsp; ITfLangBarMgr *pLangBarMgr = NULL;</P>
+<P>&nbsp;&nbsp;&nbsp; hr = CoCreateInstance(CLSID_TF_LangBarMgr, NULL, CLSCTX_INPROC_SERVER, IID_ITfLangBarMgr, (LPVOID*)&amp;pLangBarMgr);<BR>&nbsp;&nbsp;&nbsp; if (SUCCEEDED(hr) &amp;&amp; pLangBarMgr)<BR>&nbsp;&nbsp;&nbsp; {<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; pLangBarMgr-&gt;ShowFloating(TF_SFT_MINIMIZED);<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; pLangBarMgr-&gt;Release();<BR>&nbsp;&nbsp;&nbsp; }</P></B></FONT></BLOCKQUOTE>
+<P>(mostly snagged from the interface help topic!) then I would frankly be shocked.</P>
+<P>Is it worth creating some little EXE that when run will detect what the state is and toggle it between TF_SFT_MINIMIZED and TF_SFT_SHOWNORMAL?</P>
+<P>Well, I would leave that up to Ben or whoever is interested here.</P>
+<P>Given an application that doesn't do the work to move the IME out of the way, that would really be the most one can do here....</P>
+<hr/><p><strong>richard</strong> on 12 May 2010 10:31 AM:</p><div style="margin-left: 1em"><p>Related question; I use the standard leftAlt-shift kb shortcut to switch the IME between US English and JP modes. And i leave the IME bar as a docked toolbar(?).</p>
+<p>However, when i switch to JP it seems to pretty much always end up in half-width alpha input mode, and there's not a shortcut i can find to switch to hiragana.</p>
+<p>fwiw - ctrl-shift seems to shift ok between US englisn and intl english keyboards... surely there's an equivalent for input methods? or maybe a default setting i can't find s.t. the input method defaults to hiragana?</p>
+<p>thanks.</p></div>
+<p><strong>ray</strong> on 12 May 2010 12:16 PM:</p><div style="margin-left: 1em"><p>The previous commenter should press Alt+`. *My* question is why US English periodically adds itself back to the Language Bar even though I keep removing it.</p></div>
+<p><strong>Niels</strong> on 12 May 2010 12:18 PM:</p><div style="margin-left: 1em"><p>richard:</p>
+<p>The Japanese IME lets you toggle between half-width alpha and whatever other input mode was last used by left-Alt + the-key-above-tab-left of-1, i.e. backtick on standard US layout. Various combinations of Ctrl, Alt, Shift and CapsLock also switch between input modes.</p>
+<p>A not-very-related issue I've noticed (on Vista 64) is that whenever an Adobe Flash applet has run in fullscreen, hosted in Firefox, it has always switched my Japanese IME into full-width hiragana input mode, even if a different input language was active at the time! It's probably some bug in Flash, I just haven't been able to find mention of it anywhere else.</p></div>
+<p><strong>Ben</strong> on 12 May 2010 3:40 PM:</p><div style="margin-left: 1em"><p>Thanks for the post.</p>
+<p>I should have mentioned that always have my IME set to Transparency.</p>
+<p>I also use the hot keys as well. However, because I am always switching languages, it is nice to glance at the bar to see what the current language is and what mode it is (such as kana, rōmaji, hangul, etc.)</p>
+<p>After sending my initial post, I noticed that Media Player 12 does seem to implement UILess mode, although in a non-intuitive manner and probably not fully tested. When a movie is in full screen, if you click on the screen and wait, the IME will disappear. However, if you move the mouse again, it will reappear and you need to click again to make it disappear. Perhaps this is a focus problem. I checked in earlier versions and this is not an issue.</p></div>
+<p><strong>Michael S. Kaplan</strong> on 12 May 2010 8:38 PM:</p><div style="margin-left: 1em"><p>Well, one could write an app that would automatically toggle the LangBar state and put a global hotkey on it....</p>
+</div>
+<p><strong>richard</strong> on 13 May 2010 9:09 AM:</p><div style="margin-left: 1em"><p>ray and neils, you rock.</p>
+<p>thanks. &nbsp;</p></div>
+<p><strong>jmdesp</strong> on 13 May 2010 3:59 PM:</p><div style="margin-left: 1em"><p>The IME bar !!! Can someone explain to me why on my computer with French (default), English and Japanese, I constantly, after switching from an app to another, find myself with either the English or Japanese keyboard selected &nbsp;?</p>
+<p>I thought for a long time that Alt-Shift is very near Alt-Tab, so I probably was very often hitting Alt-Shift without realizing it. But after I finally decided to disable Alt-Shift, and only allow direct selection of the keyboard, well it still happens just as often.</p></div>
+<p><strong>shiranaize</strong> on 16 May 2010 6:00 PM:</p><div style="margin-left: 1em"><P>jmdesp &gt; From my experience, the language bar will maintain whatever language you were last using with that program. &nbsp;So if you go to Microsoft Office and typed something up in Japanese, then switch to your internet browser, which you last typed French in, the language bar will be in French. &nbsp;It didn't change, it's just left over from the last time you used it.</P>
+<P>The problem I'm having with the language toolbar is that sometimes, while I have it docked in the taskbar, it will randomly disappear when I go to type something on facebook or on an email. &nbsp;I have to leave my internet browser and once more unminimize the toolbar to get it to cooperate. &nbsp;I have Windows 7 and, more often than not, use Google Chrome. &nbsp;Is this a problem with google chrome or what? &nbsp;The language bar will remain displayed while docked most of the time, but then it just disappears when I go to type and will not change languages. &nbsp;Any suggestions?</P></div>
+<p><strong>JFullert</strong> on 26 Jan 2012 2:29 PM:</p><div style="margin-left: 1em"><p>I&#39;m using code similar to the example you provided for the article to display the language bar and select an IME when the user clicks in an RichEdit Box after selecting the language they want to use. &nbsp;I also move the language bar so that it looks like a tool bar of the dialog the control is in. &nbsp;Everything works fine on my development PC (Windows Server 2003), but when I install it on the users PCs (Windows XP). The language bar isn&#39;t visible or won&#39;t move to the correct position. &nbsp;My application runs full screen and Explorer isn&#39;t running. &nbsp;Have any thoughts on how I might resolve that?</p>
+</div>
+<hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2010/05/12/10011402.html" title="Avoiding a Telugu-tubbies ref (out of respect for the 3rd largest language in India)">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2010/05/11/10009925.html" title="Why there is no Iranian standard keyboard in Windows">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2010-05">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2010-05-12">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2010/05/12/10010566.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:35 GMT -->
+</html>

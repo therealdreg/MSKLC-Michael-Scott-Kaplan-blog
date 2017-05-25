@@ -1,0 +1,27 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2007/06/12/3259081.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:38 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Not exactly reverse engineering....</title></head><body>
+<h1>Not exactly reverse engineering....</h1>
+<p><em>by Michael S. Kaplan, published on 2007/06/12 20:23 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2007/06/12/3259081.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P>I had somebody ask me after they read <STRONG><A class="" href="http://archives.miloush.net/michkap/archive/2007/06/05/3111075.html" mce_href="http://archives.miloush.net/michkap/archive/2007/06/05/3111075.html">Launching the keyboard layouts dialog directly?</A></STRONG> how I knew about this. I mean, since it did not seem to be available in the documentation they could find.</P>
+<P>It actually dates back a few years. Like to XP during the beta, some work I was doing for someone else (this is before I started working for Microsoft full-time). </P>
+<P>They had just read that KB article (<A class="" href="http://support.microsoft.com/kb/289125" mce_href="http://support.microsoft.com/kb/289125">289125</A>) and they wanted to know what else could be launched automatically.</P>
+<P>I showed them how the intl.cpl thing worked by showing them the magic export from intl.cpl:</P>
+<P><IMG src="http://trigeminal.fmsinc.com/images/intlcpl.png"></P>
+<P>And I just explained that any DLL that implemented CPlApplet according to the docs could be called this way.</P>
+<P>So I just ran </P>
+<P><FONT face="courier new,courier">link.exe -dump -exports c:\windows\system32\*.dll &gt; dlls.txt<BR>link.exe -dump -exports c:\windows\system32\*.cpl &gt; cpls.txt</FONT></P>
+<P>and then looked at those two files&nbsp;for everyone who had a CPlApplet. This has turned out to be a helpful list on more than one occasion. :-)</P>
+<P>In particular, looking at input.dll showed:</P>
+<P><IMG src="http://trigeminal.fmsinc.com/images/inputdll.png"></P>
+<P>Those [NONAME} entries are always tantalizing, but I wad not too curious about that. I just tried launching the control panel applet and left it at that. :-)</P>
+<P><EM>(In my younger days I spent a bunch of time reverse engineering things like those nameless entries, because of the implied challenge that [NONAME} seemed to imply to&nbsp;me. But I have grown up a bit since then, thankfully!)</EM></P>
+<P>Anyway, that piece of info is just something I had tucked away, and then a few years later (when I was for a very brief time the owner of intl.cpl) I got to notice that Regional and Language Options launched the dialog in that very same way.</P>
+<P>So when Maryam asked me how one would launch, I could be all casual and slick and point out the way to do it (kind of less impressive story than <STRONG><A class="" href="http://archives.miloush.net/michkap/archive/2006/05/05/590465.html" mce_href="http://archives.miloush.net/michkap/archive/2006/05/05/590465.html">this one</A></STRONG> but since Drew was shocked whereas Maryam was just&nbsp;grateful, one could say that I am now aiming a bit higher when it comes to the reactions I am trying to inspire in others....</P>
+<P>I thought this might make a nice story. How did I do? :-)</P>
+<P mce_keep="true">&nbsp;</P>
+<P><FONT color=#ff00ff><EM>This post brought to you by</EM> <FONT size=5>«</FONT> <EM>(<A class="" href="http://www.fileformat.info/info/unicode/char/00ab" mce_href="http://www.fileformat.info/info/unicode/char/00ab">U+00ab</A>, a.k.a. LEFT-POINTING DOUBLE ANGLE QUOTATION MARK)</EM></P></FONT>
+<hr/><div style="margin-left: 1em"><em>no comments</em></div><hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2008/05/23 <a href="http://archives.miloush.net/michkap/archive/2008/05/23/8537281.html">When the LANGID in the LOWORD of the KLID doesn't match the LANGID you want keyboard under?</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2007/06/12/3261440.html" title="I&#39;ve got a fever, and the only prescription is more cowbell....">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2007/06/12/3251648.html" title="The difference between &#39;Dangeous Characters&#39; and &#39;Dangerous Minds&#39; is the lack of Michelle Pfeiffer">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2007-06">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2007-06-12">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2007/06/12/3259081.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:38 GMT -->
+</html>

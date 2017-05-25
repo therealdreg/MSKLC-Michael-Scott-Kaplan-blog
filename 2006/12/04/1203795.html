@@ -1,0 +1,19 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2006/12/04/1203795.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:39 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>SQL and the CLR: Part 0</title></head><body>
+<h1>SQL and the CLR: Part 0</h1>
+<p><em>by Michael S. Kaplan, published on 2006/12/04 04:15 -05:00, original URI: http://blogs.msdn.com/b/michkap/archive/2006/12/04/1203795.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P>There is a <A class="" href="http://blogs.msdn.com/sqlclr" mce_href="http://blogs.msdn.com/sqlclr">SQL Server 2005/CLR integration</A> blog. </P>
+<P>I find this fact impressive, because it means there is a team of people who are working on the difficult and thorny problem of getting these two very different technologies working together.</P>
+<P>They have their work cut out for them, if you ask me. </P>
+<P>I&nbsp;mean, just speaking from the standpoint of internationalization and focusing in particular on locales and collation, there are a ton of things that simply don't match.</P>
+<P>Like when Aldo Donetti asked me:</P>
+<BLOCKQUOTE><FONT face="Times New Roman,Times" size=2><I>
+<P>HI Michael, I’d have to figure out what’s the best collation to match the OS comparison behavior – would you have any clue?<BR><BR>The problem is that one of our teams is storing a path\filename in a table and of course we are clashing with collation issues, since there seem to be none that matches the OS’ file system. <BR><BR>I think it should be something like OrdinalIgnoreCase …</P></I></FONT></BLOCKQUOTE>
+<P>Indeed, OrdinalIgnoreCase, as I have discussed <A class="" href="http://archives.miloush.net/michkap/archive/2006/08/12/696284.html" mce_href="http://archives.miloush.net/michkap/archive/2006/08/12/696284.html"><STRONG>previously</STRONG></A>, is designed for exactly that purpose -- to match the OS notion of handling symbolic identifiers that amounts to an "uppercase and then binary compare" semantic. And SQL Server has nothing like it, unfortunately.</P>
+<P>Each potential solution has its own problems, and over the next few days I'll try to cover the issues and problems that come up with each approach....</P>
+<P><FONT color=#ff00ff><EM>This post brought to you by</EM>&nbsp;<FONT size=5>დ</FONT> <EM>(<A class="" href="http://www.fileformat.info/info/unicode/char/10d3" mce_href="http://www.fileformat.info/info/unicode/char/10d3">U+10d3</A>, a.k.a. GEORGIAN LETTER DON)</EM></FONT></P>
+<hr/><div style="margin-left: 1em"><em>no comments</em></div><hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2006/12/07 <a href="http://archives.miloush.net/michkap/archive/2006/12/07/1232220.html">SQL and the CLR: Part 1 (the things we can make work well)</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2006/12/04/1203808.html" title="Getting the &#39;実&#39; out of word breakers">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2006/12/03/1196177.html" title="Strangely Symbolic font issues">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2006-12">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2006-12-04">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2006/12/04/1203795.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:39 GMT -->
+</html>

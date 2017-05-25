@@ -1,0 +1,42 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2010/10/03/10070787.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>It's always back to ISO-8601 for some reason</title></head><body>
+<h1>It's always back to ISO-8601 for some reason</h1>
+<p><em>by Michael S. Kaplan, published on 2010/10/03 07:01 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2010/10/03/10070787.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<p>It&nbsp;is something I talked about years ago, in my <a href="http://archives.miloush.net/michkap/archive/2005/11/14/492249.html" title="ISO 8601 is asinine"><strong>ISO 8601 is asinine</strong></a>&nbsp;blog. And not long after in <a href="http://archives.miloush.net/michkap/archive/2006/01/26/517734.html" title="ISO 8601 redux"><strong>ISO 8601 redux</strong></a>, which references Shawn's <a href="http://blogs.msdn.com/shawnste/archive/2006/01/24/517178.aspx">ISO 8601 Week of Year format in Microsoft .Net</a> blog and Isaac's <a href="http://blogs.msdn.com/sqlclr/archive/2005/11/11/491981.aspx">Best Week Ever</a> blog.</p>
+<p>Both Shawn and Isaac were trying to work around the fundamental difference between what Microsoft does with its <a href="http://msdn.microsoft.com/library/dd373772.aspx">GetLocaleInfo LOCALE_IFIRSTWEEKOFYEAR flag</a> in native code (its <a href="http://msdn.microsoft.com/library/system.globalization.datetimeformatinfo.calendarweekrule.aspx">DateTimeFormatInfo.CalendarWeekRule</a> in managed code).And how they compare to the ISO 8601 rules, which are used by several different countries.</p>
+<p>Unfortunately, the documentation on the Windows/.Net side doesn't help enough to set expectations.</p>
+<p>Managed code describes it all as </p>
+<p style="padding-left: 60px;"><em>A CalendarWeekRule value that determines the first calendar week of the year.</em></p>
+<table cellpadding="5" cellspacing="5" border="1">
+<tbody>
+<tr>
+<td>Enum member name</td>
+<td>Description</td>
+</tr>
+<tr>
+<td>FirstDay</td>
+<td>Indicates that the first week of the year starts on the first day of the year and ends before the following designated first day of the week. The value is 0.</td>
+</tr>
+<tr>
+<td>FirstFullWeek</td>
+<td>Indicates that the first week of the year begins on the first occurrence of the designated first day of the week on or after the first day of the year. The value is 1.</td>
+</tr>
+<tr>
+<td>FirstFourDayWeek</td>
+<td>Indicates that the first week of the year is the first week with four or more days before the designated first day of the week. The value is 2.</td>
+</tr>
+</tbody>
+</table>
+<p>and native code describes it similarly.</p>
+<p>With these descriptions, even with the cool example tables in the <a href="http://msdn.microsoft.com/library/system.globalization.calendarweekrule.aspx">CalendarWeekRule enumeration</a>, its official statement "<strong>This does not map exactly to ISO 8601</strong>",&nbsp;and its direct link to Shawn's blog (proving once and for all that blogs can indeed be treated as official documentation!), it is still way too easy for a person to:</p>
+<ul>
+<li>Assume that Microsoft is doing ISO 8601, and</li>
+<li>Treat the differences in results as a Microsoft bug.</li>
+</ul>
+<p>Probably we should just add an actual ISO 8601-compliant locale field, though for whatever reason no one seems eager to do that (we can't change the meaning for the existing property). The workaround is pretty easy (since the MS implementation and the ISO standard aren't <em>that</em> different.</p>
+<p>I think we're just going to be stuck with this difference between the two, with people periodically reporting this as a bug....</p>
+<hr/><div style="margin-left: 1em"><em>no comments</em></div><hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2010/10/04/10070978.html" title="Figuring out the applicability of the term &quot;breaking change&quot;">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2010/10/02/10070691.html" title="I realized it had very little to do with me; it was all about them...">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2010-10">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2010-10-03">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2010/10/03/10070787.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+</html>

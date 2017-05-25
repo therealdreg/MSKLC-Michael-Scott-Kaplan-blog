@@ -1,0 +1,42 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2007/07/27/4075592.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:38 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Boot Camp 1.3 and MSKLC (also 1.3) -- excitement, enjoyment, and a wrinkle or three</title></head><body>
+<h1>Boot Camp 1.3 and MSKLC (also 1.3) -- excitement, enjoyment, and a wrinkle or three</h1>
+<p><em>by Michael S. Kaplan, published on 2007/07/27 03:01 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2007/07/27/4075592.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P>It was just a few days ago that I talked about how <STRONG><A class="" href="http://archives.miloush.net/michkap/archive/2007/07/22/4005455.html" mce_href="http://archives.miloush.net/michkap/archive/2007/07/22/4005455.html">my Dell laptops have a new neighbor, who says hello</A></STRONG>, and I foolishly claimed I would not be going the Boot Camp/Vista route with it.</P>
+<P>I only made it&nbsp;a few days before I ended up installing Boot Camp and Vista (both 32-bit and 64-bit, more on this soon!).</P>
+<P>In my defense, I did it after I heard back about the problem I reported yesterday in <STRONG><A class="" href="http://archives.miloush.net/michkap/archive/2007/07/26/4057259.html" mce_href="http://archives.miloush.net/michkap/archive/2007/07/26/4057259.html">Report of blank previews of unknown etiology</A></STRONG>.</P>
+<P>Turns out this is a Boot Camp bug (at least in 1.3, maybe in other versions), and an unsupported Windows configuration involving MSKLC keyboard layouts being installed somewhere other than the system32 directory!</P>
+<P>They add a bunch of keyboards that you can see right in the user interface:</P>
+<P><IMG src="http://trigeminal.fmsinc.com/images/FinnishApple01.png"></P>
+<P>and then if you look at the previews, you get the reported behavior:</P>
+<P><IMG src="http://trigeminal.fmsinc.com/images/FinnishApple02.png"></P>
+<P>Bummer.</P>
+<P>Now if you look in the registry, you'll see where these keyboards are listed:</P>
+<P><IMG height=426 src="http://trigeminal.fmsinc.com/images/FinnishApple03.png" width=912></P>
+<P>(note that this is the install on the 64-bit machine, which is broken for the additional reason that we will get to shortly but is also broken in the 32-bit version)</P>
+<P>The keyboard DLL not being in the appropriate %windir% directory is the reason that the keyboard is not showing up in the preview -- it is failing to load.</P>
+<P>Looking at the properties of the file:</P>
+<P><IMG height=502 src="http://trigeminal.fmsinc.com/images/FinnishApple04.png" width=367></P>
+<P>This is clearly an MSKLC 1.3 DLL (we changed the property name to fit into one of the known Vista properties in 1.4), and as I mentioned the 32-bit version has many problems loading as well as the additional known problems with 1.3 on 64bit that made my experience above even less likely to work....</P>
+<P>Now as a rule, Microsoft doesn't support keyboard layouts that are created with MSKLC but not installed with its setup package.</P>
+<P>But assuming Apple did their due diligence and grabbed all of the settings and put them in their image, then the existing problems are:</P>
+<P>1) They should be installing to the system32 directory (and the syswow64 directory for&nbsp;wow64 on x64), and </P>
+<P>2) They should be using MSKLC 1.4 so they can pick up 64-bit support and better Vista support overall.</P>
+<P>But keep in mind that Boot Camp 1.4 is still in beta and I am technically a beta tester of it, so you can consider this to be a bug report! :-)</P>
+<P>Now, if you fix problem #1 above, then (as Olivier <A class="" href="http://archives.miloush.net/michkap/archive/2007/07/26/4057259.html#4071517" mce_href="http://archives.miloush.net/michkap/archive/2007/07/26/4057259.html#4071517">indicates</A>), all of the problems on 32-bit will be resolved, and the 64-bit can be resolved as above (like many other people, I am assuming 64-bit issues will eventually be resolved!).</P>
+<P>Despite the flaws I think this is a really cool usage of MSKLC and once they fix up the specific issues here I think that this is the kind of usage of MSKLC that really could put <STRONG><A class="" href="http://archives.miloush.net/michkap/archive/2007/07/18/3939791.html" mce_href="http://archives.miloush.net/michkap/archive/2007/07/18/3939791.html">the number of tool downloads</A></STRONG> to shame when compared against the number of MSKLC keyboards.</P>
+<P>So it's like a little piece of work that I was involved with be on a bunch of Macs, too. I am excited!</P>
+<P>If anyone from Apple wants more info on this issue then they can of course contact me here. I'll be around and eager to help make sure that that the Mac/Vista story works well....</P>
+<P><EM><FONT color=#ff0000>(special thanks to Olivier and David Tickle for their hints that helped encourage me to take a closer look!)</FONT></EM></P>
+<P mce_keep="true">&nbsp;</P>
+<P><FONT color=#ff00ff><EM>This post brought to you by</EM> ඉ <EM>(<A class="" href="http://www.fileformat.info/info/unicode/char/0d89" mce_href="http://www.fileformat.info/info/unicode/char/0d89">U+0d89</A>, a.k.a. SINHALA LETTER IYANNA)</EM></FONT></P>
+<hr/><p><a id="4078838" href="#4078838">#</a> <strong>Cristian Secară</strong> on 27 Jul 2007 7:10 AM:</p><div style="margin-left: 1em"><p>Is there any particular reason you refer to (or use here) MSKLC 1.3 instead of 1.4 ?</p>
+<p>Cristi</p></div>
+<p><a id="4079429" href="#4079429">#</a> <strong>Michael S. Kaplan</strong> on 27 Jul 2007 7:46 AM:</p><div style="margin-left: 1em"><p>Because that is what Boot Camp used?</p>
+<p>I recommend they use 1.4, but at the moment they are using 1.3.</p>
+</div>
+<hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2007/11/28 <a href="http://archives.miloush.net/michkap/archive/2007/11/28/6568455.html">There is more to being an OEM for Windows than having the coolest hardware</a></p><p>2007/09/08 <a href="http://archives.miloush.net/michkap/archive/2007/09/08/4825659.html">Detecting ALTGR can only hope to work when AlTGR is in fact there....</a></p><p>2007/08/13 <a href="http://archives.miloush.net/michkap/archive/2007/08/13/4374421.html">Update on the Apple of my I^HWindows</a></p><p>2007/07/27 <a href="http://archives.miloush.net/michkap/archive/2007/07/27/4081784.html">A tiny bit closer to the top of the line</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2007/07/27/4081784.html" title="A tiny bit closer to the top of the line">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2007/07/26/4075990.html" title="No UTF-8 in a VARCHAR column">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2007-07">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2007-07-27">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2007/07/27/4075592.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:38 GMT -->
+</html>

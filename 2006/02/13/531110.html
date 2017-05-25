@@ -1,0 +1,63 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2006/02/13/531110.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:40 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Don't change the font, dammit!</title></head><body>
+<h1>Don't change the font, dammit!</h1>
+<p><em>by Michael S. Kaplan, published on 2006/02/13 15:01 -05:00, original URI: http://blogs.msdn.com/b/michkap/archive/2006/02/13/531110.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P><FONT face=Tahoma>I'll be the first person </FONT><FONT face=Tahoma>to say at a party </FONT><FONT face=Tahoma>that the NULL GLYPH (􏿿) is not going to engender </FONT><FONT face=Tahoma>the </FONT><FONT face=Tahoma>most intuitive user&nbsp;experience when it is displayed in a user interface.</FONT></P>
+<P><FONT face=Tahoma>(It might in fact be why I am not invited to more parties!)</FONT></P>
+<P><FONT face=Tahoma>But even I will admit that there are times when it does not matter whether you call it font fallback, font substitution, font linking, or font <A href="http://8ball.ofb.net/">Magic 8-Ball</A>. It is simply not what you want in every single situation.</FONT></P>
+<P><FONT face=Tahoma>(I suspect this will not cause more party invitations to be forthcoming!)</FONT></P>
+<P><FONT face=Tahoma>I ran across just such a situation the other day when Drew Bliss (a dev on the Windows team) </FONT><FONT face=Tahoma>asked:</FONT></P>
+<BLOCKQUOTE dir=ltr style="MARGIN-RIGHT: 0px">
+<P><FONT face="Times New Roman" size=2><EM>When adding text to a richedit control they appear to use and/or interpret certain characters as formatting control characters.&nbsp; For example, if I have an ANSI string with a 0xe1 character in it the richedit control will switch fonts after hitting the 0xe1 character.</EM></FONT></P>
+<P><FONT face="Times New Roman" size=2><EM>Is there a way to avoid this and add text to the richedit without it scanning for special characters?&nbsp; It was suggested to me that EM_STREAMIN using SF_TEXT would get raw text into the richedit without interpretation, but some quick tests don't appear to support that theory.</EM></FONT></P>
+<P><EM><FONT face="Times New Roman" size=2>I have no idea what richedit is doing internally, I was just guessing that it had something to do with special formatting characters.&nbsp; That could be completely wrong.</FONT></EM></P>
+<P><EM><FONT face="Times New Roman" size=2>The font I've used to repro the problem was Terminal.&nbsp; After the e1 character the font changes from Terminal back to what appears to be one the default system fonts.</FONT></EM></P>
+<P><EM><FONT face="Times New Roman" size=2>My question could be rephrased as "how can I avoid undesired font changes in richedit when putting arbitrary text into a richedit control?"</FONT></EM></P></BLOCKQUOTE>
+<P><FONT face=Tahoma>The particular feature Drew is referring to is the way RichEdit will, if the currently selected font&nbsp;will not display a character, find a&nbsp;font that will support it using its own internal understanding of where to look for the characters.</FONT></P>
+<P><FONT face=Tahoma>(His evalutaion that EM_STREAMIN will not help here was correct!)</FONT></P>
+<P><FONT face=Tahoma>In this particular case, Terminal is a bitmap font that does not have the character -- so all it can do is switch the font. Arguably&nbsp;RichEdit should be smart enough to know when to switch back, but it has a good faith basis to believe that there will be more that does not fit -- and there would be performance implications to attempting to do so.</FONT></P>
+<P><FONT face=Tahoma>There are basically&nbsp;four possible solutions:</FONT></P>
+<UL>
+<LI><FONT face=Tahoma>You can live with the current behavior;</FONT> 
+<LI><FONT face=Tahoma>You can make sure that the font you select contains all of the characters you need without requiring&nbsp;any sort of font switch;</FONT> 
+<LI><FONT face=Tahoma>You can notice at the end of the text whether the font has changed, and if it has you can go back through the text and try to change the font back where you are able to;</FONT> 
+<LI><FONT face=Tahoma>You can turn off the font feature.</FONT></LI></UL>
+<P><FONT face=Tahoma>In this particular case, where the need to have text properly lined up in a fixed width font was the most important one (even if other RichEdit features like color were needed), the last option was the proper&nbsp;solution.</FONT></P>
+<P><FONT face=Tahoma>Hon-Wah Chan, one of the awesome developers on RichEdit who I met a few years ago at a Unicode Conference (we were both speaking there), made that last suggestion, and even gave a code sample to accomplish it, using the <A href="http://msdn.microsoft.com/library/en-us/shellcc/platform/commctls/richedit/richeditcontrols/richeditcontrolreference/richeditmessages/em_getlangoptions.asp">EM_GETLANGOPTIONS</A>/<A href="http://msdn.microsoft.com/library/en-us/shellcc/platform/commctls/richedit/richeditcontrols/richeditcontrolreference/richeditmessages/em_setlangoptions.asp">EM_SETLANGOPTIONS</A> messages:</FONT></P>
+<BLOCKQUOTE dir=ltr style="MARGIN-RIGHT: 0px">
+<P><FONT face=Tahoma><FONT size=2><EM>If you always setup the font correctly and don't want Richedit to switch font on you, you could turn off the auto font feature as follow:</EM></FONT></FONT></P>
+<P><FONT face="Courier New" size=2>LRESULT lres = SendMessage(hRE, EM_GETLANGOPTIONS, 0, 0);<BR>lres &amp;= ~IMF_AUTOFONT;<BR>SendMessage(hRE, EM_SETLANGOPTIONS, 0, lres);</FONT></P></BLOCKQUOTE>
+<P><FONT face=Tahoma>As the notes for these very useful messages point out:</FONT></P><FONT face=Tahoma>
+<BLOCKQUOTE dir=ltr style="MARGIN-RIGHT: 0px">
+<P><FONT size=2>The <B>EM_SETLANGOPTIONS</B> message controls the following: </FONT></P>
+<P><FONT size=2></FONT>
+<UL>
+<LI><FONT size=2>Automatic font binding. </FONT>
+<LI><FONT size=2>Automatic keyboard switching. </FONT>
+<LI><FONT size=2>Automatic font size adjustment. </FONT>
+<LI><FONT size=2>Use of user-interface default fonts instead of document default fonts. </FONT>
+<LI><FONT size=2>Notifications to client during IME composition. </FONT>
+<LI><FONT size=2>How IME aborts composition mode. </FONT></LI></UL>
+<P><FONT size=2></FONT></P>
+<P><FONT size=2>The IMF_AUTOFONT flag is set by default. The IMF_AUTOKEYBOARD and IMF_IMECANCELCOMPLETE flags are clear by default.</FONT></P></BLOCKQUOTE></FONT>
+<P><FONT face=Tahoma>As Hon-Wah suggests, the IMF_AUTOFONT does something a bit different than the docs claim here, since it is not really the keyboard behavior that it controls -- it is the font switching behavior based on the actual text.</FONT></P>
+<P><FONT face=Tahoma>It is actually fascinating to&nbsp;consider the interaction between IMF_AUTOFONT&nbsp;(which is turned on by default) and IMF_AUTOKEYBOARD (which is not), since the latter affects you more when you are typing and the former affects you more when text is loaded into the control later.</FONT></P>
+<P><FONT face=Tahoma><EM>(People who work at Microsoft may have seen this interaction if they enter characters of other&nbsp;scripts like&nbsp;Han ideographs&nbsp;into their Product Studio bug reports -- pasting or typing the text in does not change the font of later text, while reloading the bug later will show all of the text after such an insertion to be changed!)</EM></FONT></P>
+<P><FONT face=Tahoma>Now I don't want to call the general feature here a bad one. I mean, if this whole post looked like 􏿿􏿿􏿿􏿿􏿿􏿿􏿿􏿿􏿿􏿿􏿿􏿿􏿿􏿿􏿿􏿿 and so on, I&nbsp;hope people would be less happy with the change in quality of the blog.</FONT></P>
+<P><FONT face=Tahoma>But that does not mean you always want it to work that way. When you have a good reason to want to turn it off, you can use Hon-Wah's code to make it possible. :-)</FONT></P>
+<P><FONT face=Tahoma></FONT>&nbsp;</P>
+<P><FONT face=Tahoma color=#ff1493><EM>This post brought to you by</EM> "<FONT size=6>𐒅</FONT>" <EM>(<A href="http://www.fileformat.info/info/unicode/char/10485">U+10485</A>, a.k.a. OSMANYA LETTER KHA)</EM></FONT></P>
+<hr/><p><a id="531292" href="#531292">#</a> <strong>Michael Dunn_</strong> on 13 Feb 2006 5:25 PM:</p><div style="margin-left: 1em">Great tip! But you've got a typo in the code, it should be &amp;= not ^=</div>
+<p><a id="531317" href="#531317">#</a> <strong>Michael S. Kaplan</strong> on 13 Feb 2006 6:08 PM:</p><div style="margin-left: 1em">Typo? What typo? I don't see any typo in the code, Mike.<br><br>Don't mind Mike Dunn everyone, he is s regular reader and a classy guy. But sometimes he sees stuff that's not there....<br><br>[any more]<br><br>:-)</div>
+<p><a id="531644" href="#531644">#</a> <strong>Ben Cooke</strong> on 14 Feb 2006 3:27 AM:</p><div style="margin-left: 1em">Hmm. I would expect the default behavior to be to change the font *for display* but not to insert commands into the RTF markup to change it. Why? Because another system is likely to have a different set of fonts with different character coverage, so it should be up to the RTE to figure out at display time what font to use, much like web browsers do when confronted by a codepoint they can't render with the preferred font.<br><br>I'm guessing efficiency reasons are the excuse for this, though.</div>
+<p><a id="531648" href="#531648">#</a> <strong>Michael S. Kaplan</strong> on 14 Feb 2006 3:33 AM:</p><div style="margin-left: 1em">Actually, as far as I know, nothing is inserted there. Were you seeing anything inserted? Isn't it just what the control does when it is displaying?</div>
+<p><a id="531965" href="#531965">#</a> <strong>Ben Cooke</strong> on 14 Feb 2006 1:50 PM:</p><div style="margin-left: 1em">I didn't actually test it. I guess I just misunderstood what you were saying. :)<br><br>Sorry!</div>
+<p><a id="532021" href="#532021">#</a> <strong>Michael S. Kaplan</strong> on 14 Feb 2006 3:03 PM:</p><div style="margin-left: 1em">Whew! :-)</div>
+<p><strong>Seki</strong> on 8 Aug 2008 5:59 AM:</p><div style="margin-left: 1em"><p>It's working, many, many thanks!</p></div>
+<p><strong>haithink</strong> on 19 Dec 2010 6:47 PM:</p><div style="margin-left: 1em"><p>It&#39;s working, many, many thanks!</p>
+</div>
+<hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2007/12/16 <a href="http://archives.miloush.net/michkap/archive/2007/12/16/6780417.html">How best to keep the font switcheroo from happening?</a></p><p>2006/02/17 <a href="http://archives.miloush.net/michkap/archive/2006/02/17/533910.html">What's the latest on the MS front?</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2006/02/14/531572.html" title="Every character has a story #18: U+06cc and U+064a (ARABIC LETTER FARSI YEH and ARABIC LETTER YEH)">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2006/02/13/530814.html" title="Getting all of the localized names of a font">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2006-02">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2006-02-13">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2006/02/13/531110.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:40 GMT -->
+</html>

@@ -1,0 +1,66 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2011/04/08/10151381.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>An unexpected period can even make a disaster even worse</title></head><body>
+<h1>An unexpected period can even make a disaster even worse</h1>
+<p><em>by Michael S. Kaplan, published on 2011/04/08 07:01 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2011/04/08/10151381.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<p><em><span style="color: #ff0000;">The title of this blog is much less mature that I am with its crude 6.9 style humor. I promise the blog itself is much more mature.</span></em></p>
+<p>It starts with what might in other cases have been handled as a KB article.</p>
+<p>I mean, historically speaking, bugs in products are a part of the Microsoft Knowledge Base, not part of the actual documentation.</p>
+<p>This is even true of most hot fixes from WinSE, if you think about it. We just usually are more low key like that about bugs.</p>
+<p>A good exception to that rule (if rule it is?) can be seen in my <a href="http://archives.miloush.net/michkap/archive/2010/07/31/10044476.html" title="They're going the wrong way."><strong>They're going the wrong way</strong></a> -- though that example would tend to underscore that it has to be a pretty serious bug to be handled outside of a version specific KB article. Or about SharePoint!</p>
+<p>Today I am going to talk about another such issue.</p>
+<p>This one is not in IDN. It's not in WCF. It's not in SharePoint.</p>
+<p>Oh wait, it can affect SharePoint. It just isn't a bug <strong>in</strong> SharePoint.</p>
+<p>It is a bug in <a href="http://technet.microsoft.com/library/ff399192.aspx">System Center Data Protection Manager 2010</a>, a product which describes itself quite handily:</p>
+<p style="padding-left: 60px;"><em>System Center Data Protection Manager (DPM) 2010 enables disk-based and tape-based data protection and recovery for servers such as SQL Server, Exchange Server, SharePoint, virtual servers, file servers, and support for Windows desktops and laptops. DPM can also centrally manage system state and Bare Metal Recovery (BMR).</em></p>
+<p>See, SharePoint can kind of be involved here. :-/</p>
+<p>The bug can be found in the article entitled <a href="http://technet.microsoft.com/library/ff399523.aspx">Troubleshooting Disaster Recovery Issues</a>, near the very end of that MSDN documentation:</p>
+<table cellpadding="3" cellspacing="3" border="1">
+<tbody>
+<tr>
+<td>
+<p>BMR and System State backups inaccessible</p>
+</td>
+<td>
+<p>If your computer&rsquo;s localization settings are set to Czech, then the period (.) that DPM adds at the end of directory name where the backups are stored maybe the issue. </p>
+</td>
+<td>
+<p>Rename the directory without the period (.) at the end.</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Now of course we aren't just talking Czech.</p>
+<p>We mostly aren't even talking Czech.</p>
+<p>Because the bug is that the directory name ends with a formatted time based on the locale, and if that time string ends in a period, then there is a certain amount of weirdness in Windows related to directories that end with periods.</p>
+<p>It is, ironically enough, a disaster when you do it, in all kinds of random situations that I may talk about some other time if I want to make fun of Windows Explorer and the Shell and the File System and the CRT and others. For now you can check it out yourself if you're bored or whatever....</p>
+<p><em>For now I'll just say in a very tongue-in-cheek voice that when one has a period placed in this way, on won't be able to perform some actions until the period is dealt with and no longer noticeable. </em><em>And sorry I broke the promise about the more mature thing. I'm done now.</em></p>
+<p>Anyway, my reason for saying it usually isn't a Czech bug is that Czech <strong>uses a 24-hour clock by default</strong>; its terminating period is in the LOCALE_S1159 (<strong>dop.</strong>) and LOCASLE_S2359 (<strong>odp.</strong>)<strong> that never get used unless the time format is changed.</strong></p>
+<p>There are many locales whose formatted time strings <strong>do</strong> end with a period by default in either the long time, the short time, or both:</p>
+<ul>
+<li>bg-BG -- Bulgarian (adds a "<strong>ч.</strong>" to the n of both short time and long time)</li>
+<li>dsv-DE -- Lower Sorbian (adds the word "<strong>goź.</strong>" to the end of the short time)</li>
+<li>en-NZ -- English (in New Zealand, they use <strong>a.m.</strong> and <strong>p.m.</strong> for both long and short time by default)</li>
+<li>es-* -- Spanish (every Spanish uses <strong>a.m.</strong> and <strong>p.m.</strong> for both long and short time by default)</li>
+<li>hsb-DE -- Upper Sorbian (adds&nbsp;the word "<strong>hodz.</strong>"&nbsp;to the end of the short time)</li>
+<li>mi-NZ -- Maori (uses <strong>a.m.</strong> and <strong>p.m.</strong> for both long and short time by default)</li>
+<li>qut-gT -- Kiiche (uses <strong>a.m.</strong> and <strong>p.m.</strong> for both long and short time by default)</li>
+<li>quz-* -- Quechua (all three Quechua locales use <strong>a.m.</strong> and <strong>p.m.</strong> for both long and short time)</li>
+<li>rw-RW -- Kinyarwanda (has a period at the end of its AM (saa moya z.m.) and PM (saa moya z.n.) in both short and long time by default)</li>
+<li>si-LK -- Sinhala (has a period at the end of its AM (පෙ.ව.) and PM (ප.ව.) in both short and long time by default)</li>
+</ul>
+<p>Of course there are other like Czech that will also show the problem if a non-default time shows up.</p>
+<p>In the end, it's just as bug. Though obviously the last tine you want there to be hiccups like this is in disaster recovery. So I expect they will fix this at their earliest opportunity.</p>
+<p>Not just for the folks in the Czech Republic either, given that big list of people likely to see the problem even more often.</p>
+<hr/><p><strong>John Cowan</strong> on 8 Apr 2011 2:23 PM:</p><div style="margin-left: 1em"><p>There&#39;s a reason why Unix man pages have a section callled BUGS. &nbsp;Distributions that have renamed this to LIMITATIONS or some such thing always fail in the marketplace.</p>
+</div>
+<p><strong>Joshua</strong> on 8 Apr 2011 3:41 PM:</p><div style="margin-left: 1em"><p>Always humorous when some low-level rare case causes the higher levels to collapse completely. Example: spaces in filenames on DOS 5.</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 8 Apr 2011 5:58 PM:</p><div style="margin-left: 1em"><p>@John -- On the other hand, Microsoft seems to be getting by so far. ;-)</p>
+<p>@Joshua -- I agree, other fun cases include file names with trailing spaces, still present to this day!</p></div>
+<p><strong>John Cowan</strong> on 11 Apr 2011 8:16 AM:</p><div style="margin-left: 1em"><p>Well, it&#39;s been quite a while since Microsoft last distributed Unix, though apparently the company was still using its distro internally until 1993 or so. &nbsp;I used to run it on my genuine IBM PC AT with the 10 megabyte hard disk. &nbsp;IIRC, the BUGS sections were still called BUGS. &nbsp;So that fate was narrowly averted.</p>
+</div>
+<hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2011/04/09/10151666.html" title="[Keyboard ]Solution Unsatisfactory">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2011/04/07/10150950.html" title="You Go Girl^H^H^HoGlobal! Bring It!">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2011-04">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2011-04-08">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2011/04/08/10151381.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+</html>

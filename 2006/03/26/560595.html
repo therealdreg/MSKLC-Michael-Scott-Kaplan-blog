@@ -1,0 +1,85 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2006/03/26/560595.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:40 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>What the %$#!* is wrong with VkKeyScan[Ex]?</title></head><body>
+<h1>What the %$#!* is wrong with VkKeyScan[Ex]?</h1>
+<p><em>by Michael S. Kaplan, published on 2006/03/26 03:01 -05:00, original URI: http://blogs.msdn.com/b/michkap/archive/2006/03/26/560595.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P><FONT face=Tahoma>The <A href="http://msdn.microsoft.com/library/en-us/winui/winui/windowsuserinterface/userinput/keyboardinput/keyboardinputreference/keyboardinputfunctions/vkkeyscan.asp">VkKeyScanW</A> and <A href="http://msdn.microsoft.com/library/en-us/winui/winui/windowsuserinterface/userinput/keyboardinput/keyboardinputreference/keyboardinputfunctions/vkkeyscanex.asp">VkKeyScanExW</A> functions have a simple, documented functionality:</FONT></P>
+<BLOCKQUOTE dir=ltr style="MARGIN-RIGHT: 0px">
+<P><EM><FONT face="Times New Roman" size=2>...translates a character to the corresponding virtual-key code and shift state...</FONT></EM></P></BLOCKQUOTE>
+<P><FONT face=Tahoma>Not the sort of thing you would need all the time, but it can come in handy.</FONT></P>
+<P><FONT face=Tahoma>They both take a WCHAR as a parameter and (from the documentation):</FONT></P><FONT face=Tahoma>
+<BLOCKQUOTE dir=ltr style="MARGIN-RIGHT: 0px">
+<BLOCKQUOTE dir=ltr style="MARGIN-RIGHT: 0px">
+<P><FONT size=2>If the function succeeds, the low-order byte of the return value contains the virtual-key code and the high-order byte contains the shift state, which can be a combination of the following flag bits. </FONT></P>
+<P><FONT size=2>If the function finds no key that translates to the passed character code, both the low-order and high-order bytes contain –1. </FONT></P>
+<P><FONT size=2></FONT></P>
+<P>
+<TABLE border=1>
+<TBODY>
+<TR>
+<TD><STRONG><FONT size=2>Bit</FONT></STRONG></TD>
+<TD><STRONG><FONT size=2>Meaning</FONT></STRONG></TD></TR>
+<TR>
+<TD><FONT size=2>1</FONT></TD>
+<TD><FONT size=2>Either SHIFT key is pressed.</FONT></TD></TR>
+<TR>
+<TD><FONT size=2>2</FONT></TD>
+<TD><FONT size=2>Either CTRL key is pressed.</FONT></TD></TR>
+<TR>
+<TD><FONT size=2>4</FONT></TD>
+<TD><FONT size=2>Either ALT key is pressed.</FONT></TD></TR>
+<TR>
+<TD><FONT size=2>8</FONT></TD>
+<TD><FONT size=2>The Hankaku key is pressed</FONT></TD></TR>
+<TR>
+<TD><FONT size=2>16</FONT></TD>
+<TD><FONT size=2>Reserved (defined by the keyboard layout driver).</FONT></TD></TR>
+<TR>
+<TD><FONT size=2>32</FONT></TD>
+<TD><FONT size=2>Reserved (defined by the keyboard layout driver).</FONT></TD></TR></TBODY></TABLE></FONT></P></BLOCKQUOTE></BLOCKQUOTE>
+<P><FONT face=Tahoma>Seems simple enough, right? :-)</FONT></P>
+<P><FONT face=Tahoma>Unfortunately, things are never as simple as they seem when it comes to keyboards.</FONT></P>
+<P><FONT face=Tahoma>The other day, friend Gregory called me up to ask me a question about the keyboard he created with <A href="http://www.microsoft.com/globaldev/tools/msklc.mspx">MSKLC</A>.</FONT></P>
+<P><FONT face=Tahoma>On his keyboard, he had added the same letter in two different spots on the keyboard (one on the VK_OEM_102 key, and the other on the ALTGR+VK_OEM1 key).</FONT></P>
+<P><FONT face=Tahoma>So he was looking at some code he had that used the <A href="http://msdn.microsoft.com/library/en-us/winui/winui/windowsuserinterface/userinput/keyboardinput/keyboardinputreference/keyboardinputfunctions/vkkeyscan.asp">VkKeyScan</A>&nbsp;function, and it suddenly occurred to him that he had no idea which VK/SC it would return. After trying it out he found it returned the one he didn't actually want it to (the one on the ALTGR+VK_OEM1 key).</FONT></P>
+<P><FONT face=Tahoma>And now, he figured since he knew the person who did the development work on MSKLC that he could ask what the deal was here.</FONT></P>
+<P><FONT face=Tahoma>After I explained it to him, I thought it might make a nice blog entry!</FONT></P>
+<P><FONT face=Tahoma>I'll start off by saying that <A href="http://msdn.microsoft.com/library/en-us/winui/winui/windowsuserinterface/userinput/keyboardinput/keyboardinputreference/keyboardinputfunctions/vkkeyscan.asp">VkKeyScan</A>&nbsp;has some limitations, starting with the one Gregory ran into -- when a function's purpose is to return the Virtual Key and the shift state, there is only so much it can do when there are two answers to the question, both equally valid.</FONT></P>
+<P><FONT face=Tahoma>And the decision in the case of a keyboard created by <A href="http://www.microsoft.com/globaldev/tools/msklc.mspx">MSKLC</A>&nbsp;is not one that can be controlled within the tool -- it is in essence controlled by the order in which the entries in the&nbsp;LAYOUT table are written (that order is deterministically created by MSKLC as matching the order of the keys in the US keyboard, and then putting the VK_OEM_102 key almost at the end).</FONT></P>
+<P><FONT face=Tahoma>I pointed out to Gregory that he had to pick the one key that would pretty much always lose the battle here. :-)</FONT></P>
+<P><FONT face=Tahoma>Now <A href="http://msdn.microsoft.com/library/en-us/winui/winui/windowsuserinterface/userinput/keyboardinput/keyboardinputreference/keyboardinputfunctions/vkkeyscan.asp">VkKeyScan</A>&nbsp;has other limitations (documented and undocumented).</FONT></P>
+<P><FONT face=Tahoma>Such as the fact that it will not work with ligatures.</FONT></P>
+<P><FONT face=Tahoma>Or dead keys.</FONT></P>
+<P><FONT face=Tahoma>Or SGCAPS.</FONT></P>
+<P><FONT face=Tahoma>Or anything on the numeric keypad.</FONT></P>
+<P><FONT face=Tahoma>There is&nbsp;also </FONT><FONT face=Tahoma>that it does not distinguish between the left and the right SHIFT/CTRL/ALT keys, which rules out all of those more complex shift states like the RIGHT CTRL key on the Canadian&nbsp;Multilingual Standard keyboard layout. Or any other complex shift states you can set up.</FONT></P>
+<P><FONT face=Tahoma>Now&nbsp;that last paragraph talks about features not in MSKLC, but that I'll be covering soon enough in that series I am working on about interrogating keyboard layouts....</FONT></P>
+<P><FONT face=Tahoma>But in any case, you get the point -- <A href="http://msdn.microsoft.com/library/en-us/winui/winui/windowsuserinterface/userinput/keyboardinput/keyboardinputreference/keyboardinputfunctions/vkkeyscan.asp">VkKeyScan</A>&nbsp;and <A href="http://msdn.microsoft.com/library/en-us/winui/winui/windowsuserinterface/userinput/keyboardinput/keyboardinputreference/keyboardinputfunctions/vkkeyscanex.asp">VkKeyScanEx</A>&nbsp;will definitely never be able to be confused with functions that have all the answers. Since&nbsp;they have been around since Windows 95/NT 3.1,&nbsp;I can think of&nbsp;two possible reasons for this problem. Either</FONT></P>
+<UL>
+<LI><FONT face=Tahoma>much of this additional functionality grew around them and after them, or</FONT> 
+<LI><FONT face=Tahoma>they were written to handle a specific limited&nbsp;scenario needed by Windows and were only exposed due to someone thinking they might be useful.</FONT></LI></UL>
+<P><FONT face=Tahoma>The obvious question that comes up at this point is whether the limitation in MSKLC is one that would be considered a bug to fix.</FONT></P>
+<P><FONT face=Tahoma>Interesting question, and from a triage standpoint an interesting issue to consider. There are a lot of relevant facts here:</FONT></P>
+<UL>
+<LI><FONT face=Tahoma>There is no shortage of unfixable limitations of what would be useful functionality in <A href="http://msdn.microsoft.com/library/en-us/winui/winui/windowsuserinterface/userinput/keyboardinput/keyboardinputreference/keyboardinputfunctions/vkkeyscan.asp">VkKeyScan</A>&nbsp;and <A href="http://msdn.microsoft.com/library/en-us/winui/winui/windowsuserinterface/userinput/keyboardinput/keyboardinputreference/keyboardinputfunctions/vkkeyscanex.asp">VkKeyScanEx</A>, which&nbsp;makes&nbsp;fixing this issue&nbsp;of limited use (this is sometimes thought of as the "why fix the screen door when the roof has blown off the house" theory of bug triage!);</FONT> 
+<LI><FONT face=Tahoma>The fact that keyboards with duplicate entries for letters is on the whole relatively uncommon;</FONT> 
+<LI><FONT face=Tahoma>Exposing the "solution" here is fairly complicated&nbsp;when one tries to consider what the user interface for such a change would be;</FONT> 
+<LI><FONT face=Tahoma>Addressing the issue would involve some&nbsp;decidely non-trivial&nbsp;changes to the way that keyboard layouts are loaded from and persisted to .KLC files.</FONT></LI></UL>
+<P><FONT face=Tahoma>But maybe it would make a nice KB article at some point. Or a blog entry up here, some day....</FONT></P>
+<P><FONT face=Tahoma>If it helps, the sample I am putting together in that other series of posts will not suffer from any of those limitations from either <A href="http://msdn.microsoft.com/library/en-us/winui/winui/windowsuserinterface/userinput/keyboardinput/keyboardinputreference/keyboardinputfunctions/vkkeyscan.asp">VkKeyScan</A>&nbsp;or <A href="http://msdn.microsoft.com/library/en-us/winui/winui/windowsuserinterface/userinput/keyboardinput/keyboardinputreference/keyboardinputfunctions/vkkeyscanex.asp">VkKeyScanEx</A>! :-)</FONT></P>
+<P><FONT face=Tahoma>Though I am sure those who are following that series will understand why a new version of those functions that addressed the limitations might not be likely. It is pretty difficult to extract that info!</FONT></P>
+<P><FONT face=Tahoma>Which is not to say that a generic function that took and end result of one or more UTF-16 code units and returned the exact set (or sets) of keystrokes that would produce it would not be useful....</FONT></P>
+<P><FONT face=Tahoma>But conceptually where does one draw the line between requiring two or more keystrokes for dead key entry but not allowing the typing of two or more separate characters for combining forms? Perhaps keyboard authors would be willing to make the distinction, but what about the rest of the world?</FONT></P>
+<P><FONT face=Tahoma></FONT>&nbsp;</P>
+<P><FONT face=Tahoma color=#ff1493><EM>This post brought to you by</EM> "<FONT size=6>ĩ</FONT>" <EM>(<A href="http://www.fileformat.info/info/unicode/char/0129">U+0129</A>, a.k.a. LATIN SMALL LETTER I WITH TILDE)</EM></FONT></P>
+<hr/><p><a id="561380" href="#561380">#</a> <strong>Michael S. Kaplan</strong> on 26 Mar 2006 2:01 PM:</p><div style="margin-left: 1em">Notice how I did not even get into the issue of the awful name of this function -- I'll be talking about that soon, though. :-)</div>
+<p><a id="8408598" href="#8408598">#</a> <strong>Todd</strong> on 18 Apr 2008 2:00 PM:</p><div style="margin-left: 1em"><p>It seems that VkKeyScan might suck more than you've actually let on. &nbsp;For some reason, in my application, I try to run a string through VkKeyScan one character at a time and collect the VkKeys. &nbsp;However, the function returns the correct value only on the first character. &nbsp;After that, it continuously returns -1.</p>
+<p>What's up with that?</p></div>
+<p><a id="8408760" href="#8408760">#</a> <strong>Michael S. Kaplan</strong> on 18 Apr 2008 2:55 PM:</p><div style="margin-left: 1em"><p>I'd want to know the code, the keyboard, and the string that repros that....</p>
+<p>Though note the follow-up comments poiinting to other VkKeyScan[Ex] problems.</p>
+</div>
+<p><a id="8408855" href="#8408855">#</a> <strong>Todd</strong> on 18 Apr 2008 3:28 PM:</p><div style="margin-left: 1em"><p>My apologies. &nbsp;I was calling VkKeyScanW from C#. &nbsp;I was under the assumption that C# characters were unicode. &nbsp;I thought I needed to call the wide version. &nbsp;If I cast the C# characters to shorts then it works every time. &nbsp;If I just call VkKeyScan (without specifying wide), it works as well (without casting to shorts).</p></div>
+<hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2010/12/27 <a href="http://archives.miloush.net/michkap/archive/2010/12/27/10109107.html">You have to deal with Hebrew periods where they come up</a></p><p>2008/09/03 <a href="http://archives.miloush.net/michkap/archive/2008/09/03/8921419.html">Need to know the VK for A, ay?</a></p><p>2006/09/10 <a href="http://archives.miloush.net/michkap/archive/2006/09/10/748742.html">Further proof that VkKeyScanEx sucks</a></p><p>2006/04/12 <a href="http://archives.miloush.net/michkap/archive/2006/04/12/575080.html">Getting all you can out of a keyboard layout, Part #9a</a></p><p>2006/03/27 <a href="http://archives.miloush.net/michkap/archive/2006/03/27/561353.html">Getting all you can out of a keyboard layout, Part #4</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2006/03/26/561016.html" title="Non-default paths and instructions....">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2006/03/25/560869.html" title="Unicode Character Names">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2006-03">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2006-03-26">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2006/03/26/560595.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:40 GMT -->
+</html>

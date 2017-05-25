@@ -1,0 +1,61 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2007/05/29/2982638.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:38 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Cutting the cord while someone else is shoring it up</title></head><body>
+<h1>Cutting the cord while someone else is shoring it up</h1>
+<p><em>by Michael S. Kaplan, published on 2007/05/30 02:42 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2007/05/29/2982638.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P>Vista ships with a bunch of IMEs, as previous versions of Windows did.</P>
+<P>And even though they use the Text Services Framework (TSF)&nbsp;rather than the venerable Input Method&nbsp;Manager (IMM), there was no big set of "fake KLID" values added to the registry to make them easy to load via a call to <A class="" href="http://msdn2.microsoft.com/library/ms646305.aspx" mce_href="http://msdn2.microsoft.com/library/ms646305.aspx">LoadKeyboardLayout</A>.</P>
+<P>Which is technically a breaking change from Windows XP and Server 2003 (which had&nbsp;several IMEs using this "bootstrap" methods of loading via <A class="" href="http://msdn2.microsoft.com/library/ms646305.aspx" mce_href="http://msdn2.microsoft.com/library/ms646305.aspx">LoadKeyboardLayout</A>).</P>
+<P>(We can add this break to the one I talked about in <STRONG><A class="" href="http://archives.miloush.net/michkap/archive/2006/05/16/598980.html" mce_href="http://archives.miloush.net/michkap/archive/2006/05/16/598980.html">What broke the input language messages?</A></STRONG>, I suppose....)</P>
+<P>I was thinking about this change a while back when William Rollison asked me:</P>
+<BLOCKQUOTE>
+<P><EM><FONT face="times new roman,times">Do you, or do you know of someone who has some wrappers or examples of how to programmatically switch keyboard layouts and activate the Japanese IME in C#?</FONT></EM></P></BLOCKQUOTE>
+<P>(The question itself is one I'll provide some answers for another time -- since it involves for the IME a <A class="" href="http://archives.miloush.net/michkap/archive/2006/07/13/664497.html" mce_href="http://archives.miloush.net/michkap/archive/2006/07/13/664497.html"><STRONG>TSF</STRONG></A> <STRONG><A class="" href="http://archives.miloush.net/michkap/archive/2006/08/26/725670.html" mce_href="http://archives.miloush.net/michkap/archive/2006/08/26/725670.html">sample</A></STRONG>!)</P>
+<P>An interesting factoid popped up when I installed Office 2007 on my Vista machine though -- it actually added three TSF IMEs and gave them those fake KLID values:</P>
+<UL>
+<LI>Microsoft Pinyin IME 2007 for Simplified Chinese (KLID E0200804)</LI>
+<LI>Microsoft Office IME 2007 for Korean (KLID E0200412)</LI>
+<LI>Microsoft Office IME 2007 for Japanese (KLID E0200411)</LI></UL>
+<P>Interestingly enough, I have been told that all three of these IMEs were developed by the same folks who developed the Vista IMEs and that in all three cases they are minor upgrades. The KLID values are there because Office 2007 also installs on previous versions of Windows, and there was a consistency goal to try and&nbsp;meet.</P>
+<P>So it does make one wonder why these pseudo-KLID values had to be removed if there was no actual architectural reason to do so. Seems like a bug to me, especially when the same team proved that they were able to make it work when they tried....</P>
+<P>It is a little odd for one doctor to cut&nbsp;the cord if another one is going to&nbsp;strengthen&nbsp;the cord for another baby, in any case. Especially if it is doctors in the same hospital basing the decision on different insurance plans.</P>
+<P>Or maybe I took the analogy too far. :-)</P>
+<P mce_keep="true">&nbsp;</P>
+<P><FONT color=#ff00ff><EM>This post brought to you by</EM> <FONT size=5>ポ</FONT> <EM>(<A class="" href="http://www.fileformat.info/info/unicode/char/30dd" mce_href="http://www.fileformat.info/info/unicode/char/30dd">U+30dd</A>, a.k.a. KATAKANA LETTER PO)</EM></FONT></P>
+<hr/><p><a id="3249941" href="#3249941">#</a> <strong>M Henri Day</strong> on 12 Jun 2007 9:49 AM:</p><div style="margin-left: 1em"><p>This is more a query than a comment. I have recently installed Vista Business to a special partition on my computer in order to familiarise myself with the OS, so as to be better able to help my fellow-pensioners when they run into difficulties, as they inevitably do. To my surprise, I find that the Windows IMEs that I've used when running XP (in Ubuntu, I use SCIM) to input CJK directly from my (Scandinavian) keyboard are no longer available to me - I am unable to add other languages - even Western European languages like French, Italian, and UK English - to the default settings of Swedish and US English. IMEs seem only to be available to users of Vista Enterprise and/or Ultimate.</p>
+<p>This greatly reduces the usefullness of my Vista version , thus - finally - my question :</p>
+<p>Is there any way I can install the IMEs you mentioned, i e,</p>
+<p> &nbsp; &nbsp;* Microsoft Pinyin IME 2007 for Simplified Chinese (KLID &nbsp; </p>
+<p> &nbsp; &nbsp; &nbsp; E0200804)</p>
+<p> &nbsp; &nbsp;* Microsoft Office IME 2007 for Korean (KLID E0200412)</p>
+<p> &nbsp; &nbsp;* Microsoft Office IME 2007 for Japanese (KLID E0200411)</p>
+<p>on my Vista system ? I have installed Office Pro 2007, but this doesn't seem to help....</p>
+<p>Thanks.</p>
+<p>Henri</p></div>
+<p><a id="3251045" href="#3251045">#</a> <strong>Michael S. Kaplan</strong> on 12 Jun 2007 10:42 AM:</p><div style="margin-left: 1em"><p>The Office 2007 IMEs may not be in the default install, but they are there -- you have to install them, though....</p>
+</div>
+<p><a id="3258370" href="#3258370">#</a> <strong>M Henri Day</strong> on 12 Jun 2007 7:11 PM:</p><div style="margin-left: 1em"><p>&#171;The Office 2007 IMEs may not be in the default install, but they are there -- you have to install them, though....&#187; How ? Windows tells me that adding extra languages is only possible in the Enterprise or Ultimate versions of Vista, but I should be delighted to learn how to find and install IMEs in Office 2007. Any suggestions ?...</p>
+<p>Henri</p></div>
+<p><a id="3258703" href="#3258703">#</a> <strong>Michael S. Kaplan</strong> on 12 Jun 2007 7:42 PM:</p><div style="margin-left: 1em"><P>Um, huh?</P>
+<P>I am talking about the OFFICE 2007 SETUP, and the Windows UI to add keyboard layouts, which is available in every SKU.</P>
+<P>You are talking about the Vista UI to add user interface languages, an entirely different thing. I think it is ridiculous how this is limited myself, but this doeds not in any way affect the aility to add IMEs or keyboards.</P></div>
+<p><a id="3265771" href="#3265771">#</a> <strong>M Henri Day</strong> on 13 Jun 2007 6:14 AM:</p><div style="margin-left: 1em"><p>Yes, Michael, you're right, when I performed a search for files and maps containing the string &#171;IME&#187;, no less than 166 items (some of which I added myself when, in a vain attempt to gain access to more languages, I downloaded SCIM) turned up. And yes, indeed, I am talking about my difficulties with the Vista UI, but my ambition is in no way to extend the graphic interface, but rather to find a work around so that I can gain access to the languages I need. I had, rather naively, hoped that I could find a single .exe file upon which I could click to install and activate IMEs, but no such luck. Still, I am encouraged when you write that &#171;... this doeds not in any way affect the aility to add IMEs or keyboards&#187; ; can you suggest any ways for me to do just that ? The languages I should like to add are, in addition to CJK, Italian, French, German, Norwegian (both bokm&#229;l and nynorsk), Danish, and UK English. In the event you are willing to help here, please explain the procedure to be followed step-by-step, as I am a rank amateur lacking training in programming, save for a brief course in BASIC a quarter of a century ago....</p>
+<p>Henri </p></div>
+<p><a id="3267804" href="#3267804">#</a> <strong>Michael S. Kaplan</strong> on 13 Jun 2007 8:18 AM:</p><div style="margin-left: 1em"><P>Way to hijack a topic? :-(</P>
+<OL>
+<LI>Regional and Language Options</LI>
+<LI>Keyboards and Languages tab</LI>
+<LI>Hit that keyboards button</LI>
+<LI>Add keyboard button</LI>
+<LI>Expand the item for the language</LI>
+<LI>Choose a keyboard</LI>
+<LI>Hit OK, you will be back in the dialog from step 4</LI>
+<LI>Repeat 4-7 again for each language you want.</LI></OL></div>
+<p><a id="3309133" href="#3309133">#</a> <strong>M Henri Day</strong> on 15 Jun 2007 4:25 AM:</p><div style="margin-left: 1em"><p>Thanks, Michael, and please accept my apologies ; it was not my intention to hijack your topic. If you had tried the procedure you indicate, one which by the way is well-known to all who try to add languages to the default settings in Vista - or, for that matter, in XP - in different Vista versions, you would have realised that step 7 is not available in Vista versions other than Enterprise or Ultimate ; the &#171;OK&#187; button in other versions is grayed out. Thus my desperate search for an alternative method to activate the IMEs. I stumbled upon this thread via Google, and upon reading your posting, thought/hoped that you would have the knowledge and the inclination to help me out. Again, my apologies....</p>
+<p>Henri &nbsp;</p></div>
+<p><a id="5660175" href="#5660175">#</a> <strong>Michael S. Kaplan</strong> on 24 Oct 2007 10:29 PM:</p><div style="margin-left: 1em"><p>FYi to those reading -- Henri's claim that this is &quot;Enterprise only&quot; is not true, I have been able to do it every SKU I have tried....</p>
+</div>
+<hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2008/03/06 <a href="http://archives.miloush.net/michkap/archive/2008/03/06/8026142.html">Getting the IME name (for someone who speaks Chinese, based on code from an article written in Chinese, when you don't speak Chinese)</a></p><p>2008/02/03 <a href="http://archives.miloush.net/michkap/archive/2008/02/03/7413169.html">When exactly will we take a hint about all of that keyboard cord cutting stuff?</a></p><p>2007/12/01 <a href="http://archives.miloush.net/michkap/archive/2007/12/01/6631463.html">Cutting the cord, revisited -- and documenting how to get the job done!</a></p><p>2007/10/25 <a href="http://archives.miloush.net/michkap/archive/2007/10/25/5660239.html">Ding dong, the hack is gone (aka Cutting the hacked cord, too)</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2007/05/31/3019659.html" title="Something .NET does less intuitively than they ought">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2007/05/28/2960411.html" title="Nothing stinks worse than the thread locale, other than the thread code page">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2007-05">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2007-05-29">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2007/05/29/2982638.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:38 GMT -->
+</html>

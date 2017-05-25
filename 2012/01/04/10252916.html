@@ -1,0 +1,62 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2012/01/04/10252916.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>If someone blathers on about how Windows supports Unicode, you can suggest they just ZIP it, if you like!</title></head><body>
+<h1>If someone blathers on about how Windows supports Unicode, you can suggest they just ZIP it, if you like!</h1>
+<p><em>by Michael S. Kaplan, published on 2012/01/04 07:01 -05:00, original URI: http://blogs.msdn.com/b/michkap/archive/2012/01/04/10252916.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<p>At Microsoft, we support Unicode.</p>
+<p>Particularly in Office and Windows - Unicode, Unicode, Unicode.</p>
+<p>Unicode, Unicode, Unicode, Unicode, Unicode, Unicode, Unicode, Unicode, Unicode, Unicode, Unicode, Unicode, Unicode.</p>
+<p>Did I mention that we support Unicode?</p>
+<p>Well, occasionally we do silly stuff in Office, like that "J" smiley emoticon.</p>
+<p>You know, the one I talk about in <strong><a title="Maybe they had a really great experience on J-Date, or really liked Jay Leno" href="http://archives.miloush.net/michkap/archive/2010/07/08/10033725.html">Maybe they had a really great experience on J-Date, or really liked Jay Leno</a></strong>.</p>
+<p>Silly, but not the end of the world.</p>
+<p>I'll tell you a secret, though.</p>
+<p>There is one place in Windows that our support of Unicode bites. And bites huge.</p>
+<p>It is in a feature we added in XP, known as:</p>
+<p><span style="font-size: x-large;"><strong>Compressed Folders. </strong></span></p>
+<p>As Wikipedia says about it in the its <a href="http://en.wikipedia.org/wiki/Zip_(file_format)">Zip (file format)</a> article:</p>
+<p style="padding-left: 60px;"><em><span style="font-family: times new roman,times; font-size: medium;">Versions of Microsoft Windows have included support for zip compression in Explorer since the Plus! pack was released for Windows 98. Microsoft calls this feature "Compressed Folders". Not all zip features are supported by the Windows Compressed Folders capability. For example, AES Encryption, split or spanned archives, and Unicode entry encoding are not known to be readable or writable by the Compressed Folders feature in Windows XP or Windows Vista.</span></em></p>
+<p>I've talked about this problem off and on over the years, e,g. in blogs like <strong><a title="Zipping up Unicode file names" href="http://archives.miloush.net/michkap/archive/2005/05/10/416181.html">Zipping up Unicode file names</a></strong>, <strong><a title="Zipping up Unicode file PATHs" href="http://archives.miloush.net/michkap/archive/2006/12/07/1232365.html">Zipping up Unicode file PATHs</a></strong>, and <strong><a title="WinZip, the [long awaited] Unicode edition!!!" href="http://archives.miloush.net/michkap/archive/2008/05/13/8498184.html">WinZip, the [long awaited] Unicode edition!!!</a></strong>.</p>
+<p>If I were asked to summarize these three blogs, the time-line would go something like this:</p>
+<ul>
+<li>2005: We suck, because we licensed some 3rd party code that can't do the right thing here;</li>
+<li>2006: We suck a little less, by fixing up some of the underlying plumbing supporting compressed folders, leaving the insufficient licensed code intact;</li>
+<li>2008: Our suckage that depends on the inadequate third party licensed code continues apace, but a decent third party proves that at least someone can do it right, if we proven unable to do so n this case!</li>
+</ul>
+<p>Here we are in 2012, so four years after both PKZIP and WinZip have proven ways to support Unicode in ZIP, we're still hiding behind some ancient code we licensed over a decade ago.</p>
+<p>We have the source,&nbsp;we've even fixed bugs in it. But we never fixed this bug, and we never found other (better) code to do it right.</p>
+<p>The only hope is to install WinZip, which will disconnect the [broken] compressed folders file association, and replace it with one that works.</p>
+<p>And the next time someone from Windows goes on abut about our Unicode support, you can (with an ironic intonation)&nbsp;you can just tell them to ZIP it! :-)</p>
+<hr/><p><strong>David</strong> on 4 Jan 2012 7:47 AM:</p><div style="margin-left: 1em"><p>There are still people out there still using WinZip?</p>
+<p>7-zip is such an overall improvement it is hard to consider anything else.</p>
+</div>
+<p><strong>Simon Buchan</strong> on 4 Jan 2012 7:52 AM:</p><div style="margin-left: 1em"><p>Other than suggesting the more flexible and lightweight (and free) 7-zip over WinZip, I&#39;d have to ask who thought licensing Zip file code was a good idea? I wrote a (rather trivial and barebones, I admit) read/write SDK in a day, it&#39;s not like it&#39;s a difficult format (unless you *require* supporting recovery, and even then it&#39;s not that complex). Supporting Unicode is, at least according to the specs, a case of en/decoding as UTF-8 rather than some DOS codepage when a bit is set, so it&#39;s not like it&#39;s a huge code investment there either. In short - from a cowboy coder perspective, that this is even an issue seems confusing!</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 4 Jan 2012 11:52 AM:</p><div style="margin-left: 1em"><p>Well, there is a dearth of cowboy programmers, for one thing!</p>
+</div>
+<p><strong>mpz</strong> on 4 Jan 2012 2:16 PM:</p><div style="margin-left: 1em"><p>Since .zip archives created on Linux (where UTF-8 has been the default character set for years now) will not have the WinZip/PK specified &quot;Unicode&quot; bit set, you&#39;ll still end up with some incompatibilities.</p>
+<p>A way around that would be to simply check whether the filename is a valid UTF-8 string, and if it is, treat it as such. Otherwise decode it according to the current legacy code page.</p>
+<p>This is what IRC clients have been doing for a couple of years now. It works surprisingly well, since natural languages encoded in legacy character sets (like ISO-8859-1) rarely have sequences of characters that are also valid UTF-8.</p>
+<p>But yeah, this is a major annoyance. And even if you fixed it today, there are still billions of ZIP files out there with filenames that do not conform to Unicode :-( This should have been fixed at the introduction of Windows XP really..</p>
+</div>
+<p><strong>Aaron.E</strong> on 4 Jan 2012 2:33 PM:</p><div style="margin-left: 1em"><p>So, what dll do we need to hotpatch to get this working properly? &nbsp;J</p>
+</div>
+<p><strong>Yuhong Bao</strong> on 4 Jan 2012 3:10 PM:</p><div style="margin-left: 1em"><p>&quot;It is in a feature we added in XP,&quot;</p>
+<p>Funny when there is a quote from Wikipedia below saying this is incorrect. In fact, Me was the first version of Windows with it built in.</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 4 Jan 2012 3:13 PM:</p><div style="margin-left: 1em"><p>The Plus! pack is not an official OS release....</p>
+</div>
+<p><strong>Yuhong Bao</strong> on 4 Jan 2012 3:14 PM:</p><div style="margin-left: 1em"><p>But WinMe is.</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 4 Jan 2012 7:36 PM:</p><div style="margin-left: 1em"><p>Doesn&#39;t matter -- the quote is literally accurate. </p>
+<p>And nitpicker proof. :-)</p>
+</div>
+<p><strong>jon</strong> on 5 Jan 2012 12:27 PM:</p><div style="margin-left: 1em"><p>We licenced the same zip library Microsoft did (with source), and found ourselves in the same position (no Unicode support) - the difference in our case was we invested the two or three days it took to add support for it.</p>
+<p>If you&#39;d like to discuss licencing our changes, yell out :)</p>
+</div>
+<p><strong>cron22</strong> on 10 Jan 2012 10:02 PM:</p><div style="margin-left: 1em"><p>Okay that&#39;s hilarious. &nbsp;</p>
+</div>
+<hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2012/01/10 <a href="http://archives.miloush.net/michkap/archive/2012/01/10/10255017.html">It's not that they're putting the Pressure on Windows, but maybe the Pressure.Net? :-)</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2012/01/05/10253370.html" title="Improving genitive. Or not.... (part 5): You can&#39;t make it sexier by giving it a Latin twist...">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2012/01/03/10251600.html" title="Better know an Exec, part 0 (the introduction)">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2012-01">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2012-01-04">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2012/01/04/10252916.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+</html>

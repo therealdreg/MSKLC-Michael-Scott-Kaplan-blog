@@ -1,0 +1,91 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2011/03/19/10142458.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Lack of confidence in a feature can keep me from installng it. Oh yeah, a BSOD can, too.</title></head><body>
+<h1>Lack of confidence in a feature can keep me from installng it. Oh yeah, a BSOD can, too.</h1>
+<p><em>by Michael S. Kaplan, published on 2011/03/19 07:01 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2011/03/19/10142458.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<p>A long time ago, I started a series, with two parts:</p>
+<ul>
+<li><a href="http://archives.miloush.net/michkap/archive/2007/12/23/6843609.html" title="How many ways can a developer say 'File Not Found?' (aka Making your localizer's life easier, Part 1)"><strong>How many ways can a developer say 'File Not Found?' (aka Making your localizer's life easier, Part 1)</strong></a></li>
+<li><a href="http://archives.miloush.net/michkap/archive/2008/02/21/7837478.html" title="We're back and we're embarrassing ourselves? (aka Making your localizer's life easier, Part 2)"><strong>We're back and we're embarrassing ourselves? (aka Making your localizer's life easier, Part 2)</strong></a></li>
+</ul>
+<p>I didn't continue the series, though&nbsp;I think maybe I should have. At some point, I imagine I will.</p>
+<p>Those kinds of issues aren't <strong>"Hug a Localizer" Day</strong>sappy points, they really do make for a better product.</p>
+<p>But today I am going to talk more about the consequences of software engineers not extending the importance of good engineering to include proper localizability at a far more basic level.</p>
+<p>I mean, bad translations are a bad experience, to be sure. And I don't want to minimize that.</p>
+<p>But when&nbsp;I consider issues like the bug described in </p>
+<table align="center" cellpadding="5" cellspacing="1" border="1">
+<tbody>
+<tr>
+<td><a href="http://windows.microsoft.com/en-us/windows7/error-C000009A-installing-windows-7-sp1"><span style="font-size: medium;">Why am I receiving "Error C000009A" after installing Windows 7 Service Pack 1 (SP1)?</span></a></td>
+</tr>
+</tbody>
+</table>
+<p>I almost want to tear my teeth out.</p>
+<p>Do you recall&nbsp;all that rhetoric about most blue screens being due to third party drivers? If I were a third party driver, I would keep this link on speed dial to send every time someone made that claim again. Because this one is all Microsoft, and proof that no one can bluie screen like the big dog can.....</p>
+<p>The article doesn't pull its punches, though it is kind of sparse on the information. An excerpt:</p>
+<table align="center" cellpadding="5" cellspacing="1" border="1">
+<tbody>
+<tr>
+<td>
+<p><span style="font-size: medium;">After installing Windows 7 Service Pack 1 (SP1), you might receive the following error message on a blue screen:</span></p>
+<p><span style="font-size: medium;">"Error C000009A applying update operation {###} of {###} (\Registry...)"</span></p>
+<p><span style="font-size: medium;">To resolve this issue, restore your computer to a point in time before you installed Windows 7 SP1, uninstall any unused language packs, and then reinstall SP1. To restore your computer to a previous point in time, you'll need to use the System Recovery Options menu.</span></p>
+</td>
+</tr>
+</tbody>
+</table>
+<p>
+<p><span style="font-size: medium;"></span></p>
+See why my teeth are getting nervous?</p>
+<p>Lots of questions raised there. Like for example:</p>
+<ul>
+<li>What does <strong>any unused language packs</strong> mean? </li>
+<li>Does it mean "never used language packs? </li>
+<li>Does it mean language packs not used anymore? </li>
+<li>If you are using a specific language pack all the time but it isn't your base install language, will you have to switch back to the base language uninstall your preferred language pack?</li>
+<li>Where do LIPs (Language Interface Packs) fit in here? Are they not involved since the article only ever mentions <strong>Language Packs</strong> (never forget about <a href="http://archives.miloush.net/michkap/archive/2010/08/05/10045710.html" title="When terminology affects satisfaction"><strong>When terminology affects satisfaction</strong></a>!) ?</li>
+</ul>
+<p>After the article goes through the frightening post bluse-screen steps and into system restore and then trying to reinstall SP1, it continues:</p>
+<table align="center" cellpadding="5" cellspacing="1" border="1">
+<tbody>
+<tr>
+<td>
+<p><span style="font-size: medium;">After you reinstall SP1, if you still see the error message, follow the steps again to restore your computer to a previous point in time, and then uninstall more language packs.</span></p>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Now let's ignore the fact that many of the most common MUI scenarios involve machines where you don't really know much about other languages or whether/wen/how they are installed.</p>
+<p>And thus let's also ignore the nightmare helpdesk scenario here -- like what to do if you are an IT person and multiple machines pop up with this error.</p>
+<p>In those nightmare scenarios, the IT person will be cussing at Windows 7 like as if it was Vista until sailors walk out, embarrassed at all the bad language.</p>
+<p>But even in the more ordinary user scenario, the engineering behind language setup, configuration and switching will be very much associated with user pain.</p>
+<p>And past that, the most important of all the unanswered questions:</p>
+<ul>
+<li>Is Microsoft officially calling this a bug?</li>
+<li>Will they replace these steps with more palatable ones that fix the problem rather than forcing non-specific uninstalls?</li>
+<li>Ignoring the people on the front lines of having to work on this bug, is there anyone feeling pain here about what this will do for the users affected?</li>
+</ul>
+<p>Okay, that last question is important to me. Because even if no one else feels it or admits to feeling it, I am feeling some pain here. And although I'm not empowered by Microsoft to apologize on behalf of the company, let me take this opportunity to apologize to anyone who hits this <strong>bug</strong>. Because you deserved better. Further, I will apologize for that article, too. I (by which I mean <strong>we</strong>), ought to know better.</p>
+<p>Now the <a href="http://blogs.technet.com/b/joscon/archive/2011/03/08/general-guidance-before-installing-service-pack-1-for-windows-7-and-windows-2008-r2.aspx">General guidance before installing Service Pack 1 for Windows 7 and Windows 2008 R2</a> article that points to the one above has a little more information:</p>
+<p><span style="font-size: medium;">Remove any unnecessary language packs from your system.&nbsp; We&rsquo;ve seen a lot of issues where customers have installed all of the language packs and are hitting issues installing the service pack because they run out of resources on their machine.&nbsp; Long story short, if you don&rsquo;t need the language pack installed, remove it.</span></p>
+<p>I&nbsp;would love to see metrics on how many people who did have a Language Pack or a Language Interface Pack installed (and who had to uninstall it for this bug) who will choose to&nbsp;reinstall them after their system is back up and running. </p>
+<p>It almost reminds me of a service pack install version of the Vista bug I described in <a href="http://archives.miloush.net/michkap/archive/2007/11/20/6424929.html" title="Install your language packs like you put on your socks -- ONE AT A TIME!"><strong>Install your language packs like you put on your socks -- ONE AT A TIME!</strong></a>. I guess maybe they never got around to fixing it. Sigh....</p>
+<p>I myself am going to uninstall every single language interface pack and language pack on my machines before I try to install SP1. Some may get reinstalled, sure. But not as many and not as quickly. And not as often in the future (given the anticipated impact on a future service pack).</p>
+<p>Not until someone provides some actual answers, and inspires confidence in the MUI feature again.</p>
+<p>That lack of confidence is a blocking issue, to me. Your mileage may vary....</p>
+<hr/><p><strong>Michael S. Kaplan</strong> on 21 Mar 2011 1:07 AM:</p><div style="margin-left: 1em"><p>For those who were curious:</p>
+<p>SP1 failed to install for me. I uninstalled all language packs and LIPs but it still failed. Finally, after downloading the 937mb full offline install (the average online install for people keeping up to date with patches is 80-90mb), rebooting, I was able to install it. Helpdesk was unable to help, and I shudder to think what will happen if external folks start hitting such problems....</p>
+</div>
+<p><strong>.. BAD!</strong> on 22 Mar 2011 2:33 AM:</p><div style="margin-left: 1em"><p>&gt;&gt; Remove any unnecessary language packs from your system. &nbsp;We&rsquo;ve seen a lot of issues where customers have installed all of the language packs and are hitting issues installing the service pack because they run out of resources on their machine. &nbsp;Long story short, if you don&rsquo;t need the language pack installed, remove it.</p>
+<p>Mmh what&#39;s bad isn&#39;t this problem - it can be understandable, and few people really need all language packs installed, and if they have them it&#39;s probably a mistake.</p>
+<p>The real problem is that Windows Update is continuously suggesting to download ALL the language packs (unless you force it not to), so I guess many people have all language packs just to have windows update shut up.</p></div>
+<p><strong>Bruce C</strong> on 22 Mar 2011 8:57 AM:</p><div style="margin-left: 1em"><p>All of the Windows 7 workstations in my department were hit by this bug. &nbsp;I went home that night and disabled the SP1 patch. &nbsp;</p>
+<p>I accept that bugs happen, but the fact that this one was first reported several days before the patch was pushed to the general public drops my confidence in the update process considerably. &nbsp;</p></div>
+<p><strong>Klimax</strong> on 22 Mar 2011 11:40 PM:</p><div style="margin-left: 1em"><p>Interesting troubles. I used ISO as there is more pc to update,so far no troubles at all... (including 1 Server 2008 R2)</p>
+</div>
+<p><strong>Yuhong Bao</strong> on 31 May 2011 7:02 PM:</p><div style="margin-left: 1em"><p>FYI, this is KB2534366.</p>
+</div>
+<hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2011/09/06 <a href="http://archives.miloush.net/michkap/archive/2011/09/06/10206558.html">My advice: Just remove 'em all, then later only add the ones you actually need</a></p><p>2011/03/21 <a href="http://archives.miloush.net/michkap/archive/2011/03/21/10143659.html">See Kim. See Kim run. See Kim run setup and find a bug!</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2011/03/21/10143659.html" title="See Kim. See Kim run. See Kim run setup and find a bug!">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2011/03/18/10142935.html" title="It is totally awesome if they yell &quot;Løp av sted!&quot; in the Norwegian dub of Monty Python and the Holy Grail">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2011-03">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2011-03-19">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2011/03/19/10142458.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+</html>

@@ -1,0 +1,129 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2010/03/21/9980256.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:35 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>How many presidents can you fit in a SQL Server database?</title></head><body>
+<h1>How many presidents can you fit in a SQL Server database?</h1>
+<p><em>by Michael S. Kaplan, published on 2010/03/21 07:01 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2010/03/21/9980256.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P>Over in the Suggestion Box, PerryN Newton asked:</P>
+<BLOCKQUOTE>
+<P><FONT face="times new roman,times"><EM>Michael,</EM></FONT></P>
+<P><FONT face="times new roman,times"><EM>Your blogs are very interesting reads and very informative - thanks! </EM></FONT></P>
+<P><FONT face="times new roman,times"><EM>Observation - you seem very informed on calendars and date functions, and have written several posts relating to them.</EM></FONT></P>
+<P><FONT face="times new roman,times"><EM>Question: &nbsp;Have you ever tried to import Visual FoxPro table data that simply lists U.S. Presidents and their birthdates into SQL-Server?</EM></FONT></P>
+<P><FONT face="times new roman,times"><EM>Suggestion: When I last tried this, using VFP 6.0 and SQL-Server 6.0 I would always get an error and discovered it was a limitation of the beginning date recognized in SQL-Server and I wondered if this limit has been since documented (KB) or modified by subsequent SQL-Server versions.</EM></FONT></P>
+<P><FONT face="times new roman,times"><EM>Thanks for all you do and share!</EM></FONT></P></BLOCKQUOTE>
+<P>Excellent question!</P>
+<P>Now if you look at the latest SQl Server docs, you will get hints as to what might have been going on here originally.</P>
+<P>Specifically, the table comparing the relevant datatypes in <A href="http://msdn.microsoft.com/en-us/library/ms186724.aspx" mce_href="http://msdn.microsoft.com/en-us/library/ms186724.aspx">Date and Time Data Types and Functions (Transact-SQL)</A>:</P>
+<BLOCKQUOTE>
+<BLOCKQUOTE><STRONG>Date and Time Data Types</STRONG> 
+<P>The Transact-SQL date and time data types are listed in the following table. </P>
+<TABLE border=1>
+<TBODY>
+<TR>
+<TH>Data type </TH>
+<TH>Format </TH>
+<TH>Range </TH>
+<TH>Accuracy </TH>
+<TH>Storage size (bytes) </TH>
+<TH>User-defined fractional second precision </TH>
+<TH>Time zone offset </TH></TR>
+<TR>
+<TD>
+<P><A href="http://msdn.microsoft.com/en-us/library/bb677243.aspx">time</A> </P></TD>
+<TD>
+<P>hh:mm:ss[.nnnnnnn]</P></TD>
+<TD>
+<P>00:00:00.0000000 through 23:59:59.9999999</P></TD>
+<TD>
+<P>100 nanoseconds</P></TD>
+<TD>
+<P>3 to 5 </P></TD>
+<TD>
+<P>Yes</P></TD>
+<TD>
+<P>No</P></TD></TR>
+<TR>
+<TD>
+<P><A href="http://msdn.microsoft.com/en-us/library/bb630352.aspx">date</A> </P></TD>
+<TD>
+<P>YYYY-MM-DD</P></TD>
+<TD>
+<P>0001-01-01 through 9999-12-31</P></TD>
+<TD>
+<P>1 day</P></TD>
+<TD>
+<P>3</P></TD>
+<TD>
+<P>No</P></TD>
+<TD>
+<P>No</P></TD></TR>
+<TR>
+<TD>
+<P><A href="http://msdn.microsoft.com/en-us/library/ms182418.aspx">smalldatetime</A> </P></TD>
+<TD>
+<P>YYYY-MM-DD hh:mm:ss</P></TD>
+<TD>
+<P>1900-01-01 through 2079-06-06</P></TD>
+<TD>
+<P>1 minute</P></TD>
+<TD>
+<P>4</P></TD>
+<TD>
+<P>No</P></TD>
+<TD>
+<P>No</P></TD></TR>
+<TR>
+<TD>
+<P><A href="http://msdn.microsoft.com/en-us/library/ms187819.aspx">datetime</A> </P></TD>
+<TD>
+<P>YYYY-MM-DD hh:mm:ss[.nnn]</P></TD>
+<TD>
+<P>1753-01-01 through 9999-12-31</P></TD>
+<TD>
+<P>0.00333 second</P></TD>
+<TD>
+<P>8</P></TD>
+<TD>
+<P>No</P></TD>
+<TD>
+<P>No</P></TD></TR>
+<TR>
+<TD>
+<P><A href="http://msdn.microsoft.com/en-us/library/bb677335.aspx">datetime2</A> </P></TD>
+<TD>
+<P>YYYY-MM-DD hh:mm:ss[.nnnnnnn] </P></TD>
+<TD>
+<P>0001-01-01 00:00:00.0000000 through 9999-12-31 23:59:59.9999999</P></TD>
+<TD>
+<P>100 nanoseconds</P></TD>
+<TD>
+<P>6 to 8</P></TD>
+<TD>
+<P>Yes</P></TD>
+<TD>
+<P>No</P></TD></TR>
+<TR>
+<TD>
+<P><A href="http://msdn.microsoft.com/en-us/library/bb630289.aspx">datetimeoffset</A> </P></TD>
+<TD>
+<P>YYYY-MM-DD hh:mm:ss[.nnnnnnn] [+|-]hh:mm</P></TD>
+<TD>
+<P>0001-01-01 00:00:00.0000000 through 9999-12-31 23:59:59.9999999 (in UTC)</P></TD>
+<TD>
+<P>100 nanoseconds</P></TD>
+<TD>
+<P>8 to 10</P></TD>
+<TD>
+<P>Yes</P></TD>
+<TD>
+<P>Yes</P></TD></TR></TBODY></TABLE></BLOCKQUOTE></BLOCKQUOTE>
+<P>Now obviously there are some datatypes that would not handle the full range of presidents, and others that have way more detail than one might need.</P>
+<P>But one can find one or two that are just right!</P>
+<hr/><p><strong>Mike</strong> on 21 Mar 2010 8:19 AM:</p><div style="margin-left: 1em"><p>Ah, but how do we handle the fact that George Washington (and John Adams, and Thomas Jefferson, ...) was born before 1753, the first full year that the colonies were on the Gregorian calendar?</p>
+<p>Obviously we could give their birthdates in terms of the proleptic Gregorian calendar, and the various doc pages you link to seem to suggest this convention. &nbsp;But that just brings up another question - how do we support finding Washington under both 1732 (new calendar) and 1731 (old calendar)? &nbsp;Or do we even support that at all? &nbsp;You could go mad just trying to keep all these things straight in your code!</p></div>
+<p><strong>Michael S. Kaplan</strong> on 21 Mar 2010 9:24 AM:</p><div style="margin-left: 1em"><p>Software products tend to ignore the whole issue, actually -- and talk about a Gregorian calendar date in 100 AD as if such a thing ever existed. SQL Server is hardly the worst of the offenders on that score, though -- pretty much all software sucks in that regard, on all platforms.</p>
+</div>
+<hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2010/03/21/9982732.html" title="My thoughts on the health care thing (given my life, my multiple sclerosis, and my iBot)">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2010/03/20/9978451.html" title="Watch your language, Michael! (aka What the @#%&amp;*! is an Elevated Command Prompt?)">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2010-03">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2010-03-21">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2010/03/21/9980256.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:35 GMT -->
+</html>

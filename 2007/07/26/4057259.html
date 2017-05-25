@@ -1,0 +1,43 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2007/07/26/4057259.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:38 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Report of blank previews of unknown etiology</title></head><body>
+<h1>Report of blank previews of unknown etiology</h1>
+<p><em>by Michael S. Kaplan, published on 2007/07/26 03:01 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2007/07/26/4057259.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P>Over in the Suggestion Box, Olivier asked:</P>
+<BLOCKQUOTE>
+<P><EM><FONT face="times new roman,times">We created Keyboard layouts for our own specific keyboards, and on Windows Vista when we look at the Keyboard Layout Preview in the Add Input language dialog, the preview is mostly empty (only tab, Caps, Shift, Enter and BackSp keys show up). Is it because the keyboard layouts are custom and define extra keys??<BR><BR>Thanks for any suggestion or help.<BR><BR>Olivier</FONT></EM></P></BLOCKQUOTE>
+<P>That preview dialog is one I have talked about before, if you will recall (just this last March in <STRONG><A class="" href="http://archives.miloush.net/michkap/archive/2007/03/06/1812744.html" mce_href="http://archives.miloush.net/michkap/archive/2007/03/06/1812744.html">The T's are crossed, but not all of the I's are dotted...</A></STRONG>).</P>
+<P>In that post I actually described how the preview get its data:</P>
+<BLOCKQUOTE>
+<P><EM>...the same&nbsp;info that feeds the&nbsp;</EM><A class="" href="http://msdn2.microsoft.com/library/ms646300.aspx" mce_href="http://msdn2.microsoft.com/library/ms646300.aspx"><EM>GetKeyNameText function</EM></A><EM>, which itself depends on the data that&nbsp;feeds the&nbsp;</EM><A class="" href="http://msdn2.microsoft.com/library/ms646307.aspx" mce_href="http://msdn2.microsoft.com/library/ms646307.aspx"><EM>MapVirtualKeyEx function</EM></A><EM>. In fact, when dealing&nbsp;with the function itself&nbsp;</EM><A class="" href="http://msdn2.microsoft.com/library/ms646300.aspx" mce_href="http://msdn2.microsoft.com/library/ms646300.aspx"><EM>GetKeyNameText</EM></A><EM>&nbsp;calls </EM><A class="" href="http://msdn2.microsoft.com/library/ms646307.aspx" mce_href="http://msdn2.microsoft.com/library/ms646307.aspx"><EM>MapVirtualKeyEx</EM></A><EM>&nbsp;twice:</EM></P>
+<UL>
+<LI><EM>First&nbsp;with the MAPVK_VSC_TO_VK flag, mapping the scan code to a virtual key on the given keyboard </EM>
+<LI><EM>Second with the MAPVK_VK_TO_CHAR flag, mapping the virtual key to a character</EM></LI></UL></BLOCKQUOTE>
+<P>Interestingly enough (as I pointed out in that post), ignoring the odd bug the data it gets back is probably better than the more complex things pulled out by MSKLC. But then that preview's needs are different, so no shame in being better at its own needs!</P>
+<P>In the particular case of Olivier's question, I am not sure what might be happening. The keys that work are of course ones that it populates from its own resources, but I don't know of a reason that the created keyboards would not have their keys showing....</P>
+<P>I then had a chilling thought. Could it be a keyboard based on a custom culture created in <A class="" href="http://www.microsoft.com/globaldev/tools/msklc.mspx" mce_href="http://www.microsoft.com/globaldev/tools/msklc.mspx">MSKLC 1.4</A>? Due to that&nbsp;strange LCID?&nbsp;Yikes, I hope not!</P>
+<P>Okay, just tested that scenario out and everything worked. </P>
+<P>Whew! That would have been&nbsp;pretty ugly if MSKLC were to break <A class="" href="http://msdn2.microsoft.com/library/ms646300.aspx" mce_href="http://msdn2.microsoft.com/library/ms646300.aspx">GetKeyNameText</A>.</P>
+<P>On the other hand, MSKLC was not explicitly mentioned so perhaps I am being paranoid. :-)</P>
+<P>I guess I'll need some more details from Olivier at this point -- like the keyboard that repros the problem, or at least more details on how it was created.</P>
+<P>Or is anyone else seeing this problem?</P>
+<P mce_keep="true">&nbsp;</P>
+<P><FONT color=#ff00ff><EM>This post brought to you by</EM> <FONT size=7>៘</FONT> <EM>(<A class="" href="http://www.fileformat.info/info/unicode/char/17d8" mce_href="http://www.fileformat.info/info/unicode/char/17d8">U+17d8</A>, a.k.a. KHMER SIGN BEYYAL)</EM></FONT></P>
+<hr/><p><a id="4059063" href="#4059063">#</a> <strong>David Tickle</strong> on 26 Jul 2007 5:10 AM:</p><div style="margin-left: 1em"><p>I can reproduce the very same behaviour (minimal details displayed in the preview) with the keyboard layout provided by the free-to-download Apple Bootcamp.</p></div>
+<p><a id="4067265" href="#4067265">#</a> <strong>Michael S. Kaplan</strong> on 26 Jul 2007 11:48 AM:</p><div style="margin-left: 1em"><P>Wow, that is interesting, and maybe gives some hints here....</P>
+<P>That preview pane is relying on GetKeyNameText and scan codes, so if that hardware keyboard is doing anything different there, then the preview might not be able to see characters in the keys it checks.</P>
+<P>I guess I might actually have to consider installing Boot Camp and Vista on <A class="" href="http://archives.miloush.net/michkap/archive/2007/07/22/4005455.html"><STRONG>my Mac</STRONG></A> now....</P></div>
+<p><a id="4068800" href="#4068800">#</a> <strong>Olivier</strong> on 26 Jul 2007 1:49 PM:</p><div style="margin-left: 1em"><p>After more testing, it seems that this might be caused by the location where we install our layout DLLs. We install them somewhere under the Program Files folder and we correctly set the Layout File path in the registry.</p>
+<p>Aftere mooving the layout DLLs to Windows\system32 and updating the Layout File path in the registry, the preview of the layout now works!</p>
+<p>I thought that the layout DLLs could be installed anywhere, as long as the Layout File path was set the the DLL path. Can you confirm that the layout DLLs need to be installed in Windows\system32?</p>
+<p>Thanks for your help!</p>
+<p>Olivier</p></div>
+<p><a id="4069465" href="#4069465">#</a> <strong>Michael S. Kaplan</strong> on 26 Jul 2007 2:26 PM:</p><div style="margin-left: 1em"><P>It is always better to install them there, and in some cases it is required. So I would probably recommend it (also, the only supported way to install MSKLC-generated layouts is via the installer we provide, which puts them there).</P></div>
+<p><a id="4071085" href="#4071085">#</a> <strong>Michael S. Kaplan</strong> on 26 Jul 2007 6:09 PM:</p><div style="margin-left: 1em"><p>David, do you ahev any other info about the Boot Camp download keyboard repro? Or will it happen will all keyboards?</p>
+</div>
+<p><a id="4071517" href="#4071517">#</a> <strong>Olivier</strong> on 26 Jul 2007 6:57 PM:</p><div style="margin-left: 1em"><p>Bootcamp installs the keyboard layout DLLs under the Program Files\Boot Camp\Layout folder, so you will see this issue with Boot Camp. It also seems that the keyboard layout installed this way will not work at all in Vista. They will not show up in the language bar, even if you add them from the control panel. Changing the location to system32 for the keyboard layout DLLs fixes these issues.</p>
+<p>Olivier</p></div>
+<hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2007/08/10 <a href="http://archives.miloush.net/michkap/archive/2007/08/10/4322536.html">I've been to the desert on a dead key with no name</a></p><p>2007/07/27 <a href="http://archives.miloush.net/michkap/archive/2007/07/27/4075592.html">Boot Camp 1.3 and MSKLC (also 1.3) -- excitement, enjoyment, and a wrinkle or three</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2007/07/26/4075990.html" title="No UTF-8 in a VARCHAR column">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2007/07/25/4037989.html" title="Not a YES man, but maybe a YEH man">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2007-07">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2007-07-26">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2007/07/26/4057259.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:38 GMT -->
+</html>

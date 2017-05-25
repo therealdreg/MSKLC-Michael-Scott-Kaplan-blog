@@ -1,0 +1,124 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2005/09/13/464416.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:41 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>The Is* Unicode script ranges in .NET's RegEx</title></head><body>
+<h1>The Is* Unicode script ranges in .NET's RegEx</h1>
+<p><em>by Michael S. Kaplan, published on 2005/09/13 10:31 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2005/09/13/464416.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P><FONT face=Tahoma>You'd think they would have a help topic that would list these, wouldn't you? I mean, since topics like <A href="http://msdn.microsoft.com/library/en-us/cpgenref/html/cpconcharacterclasses.asp">Character Classes</A> documents that they exist....</FONT></P>
+<P><FONT face=Tahoma>Ah well, I'll just do it now. Here are the ones as of Whidbey. Note that they are only up to Unicode 4.0, so that blocks added in Unicode 4.1 such as <a href="http://archives.miloush.net/michkap/archive/2004/12/02/273619.html">the new Georgian Nushkui range</A>&nbsp;(U+2d00 to U+2d2f). There might also be a few ranges that are a kittle smaller than they ought to be due to additions....</FONT></P>
+<P><FONT face=Tahoma>The final thing to keep in mind -- it uses full ranges so if you have a Unicode code unit that is not yet assigned in the middle of one of these blocks, it will be considered part of one the block.</FONT></P>
+<P><FONT face=Tahoma>Without further adieu, here are the names that you can use in .NET regular expressions:</FONT></P>
+<UL>
+<LI><FONT face=Tahoma size=2>IsAlphabeticPresentationForms</FONT> 
+<LI><FONT face=Tahoma size=2>IsArabic</FONT> 
+<LI><FONT face=Tahoma size=2>IsArabicPresentationForms-A</FONT> 
+<LI><FONT face=Tahoma size=2>IsArabicPresentationForms-B</FONT> 
+<LI><FONT face=Tahoma size=2>IsArmenian</FONT> 
+<LI><FONT face=Tahoma size=2>IsArrows</FONT> 
+<LI><FONT face=Tahoma size=2>IsBasicLatin</FONT> 
+<LI><FONT face=Tahoma size=2>IsBengali</FONT> 
+<LI><FONT face=Tahoma size=2>IsBlockElements</FONT> 
+<LI><FONT face=Tahoma size=2>IsBopomofo</FONT> 
+<LI><FONT face=Tahoma size=2>IsBopomofoExtended</FONT> 
+<LI><FONT face=Tahoma size=2>IsBoxDrawing</FONT> 
+<LI><FONT face=Tahoma size=2>IsBraillePatterns</FONT> 
+<LI><FONT face=Tahoma size=2>IsBuhid</FONT> 
+<LI><FONT face=Tahoma size=2>IsCJKCompatibility</FONT> 
+<LI><FONT face=Tahoma size=2>IsCJKCompatibilityForms</FONT> 
+<LI><FONT face=Tahoma size=2>IsCJKCompatibilityIdeographs</FONT> 
+<LI><FONT face=Tahoma size=2>IsCJKRadicalsSupplement</FONT> 
+<LI><FONT face=Tahoma size=2>IsCJKSymbolsandPunctuation</FONT> 
+<LI><FONT face=Tahoma size=2>IsCJKUnifiedIdeographs</FONT> 
+<LI><FONT face=Tahoma size=2>IsCJKUnifiedIdeographsExtensionA</FONT> 
+<LI><FONT face=Tahoma size=2>IsCherokee</FONT> 
+<LI><FONT face=Tahoma size=2>IsCombiningDiacriticalMarks</FONT> 
+<LI><FONT face=Tahoma size=2>IsCombiningDiacriticalMarksforSymbols</FONT> 
+<LI><FONT face=Tahoma size=2>IsCombiningHalfMarks</FONT> 
+<LI><FONT face=Tahoma size=2>IsCombiningMarksforSymbols</FONT> 
+<LI><FONT face=Tahoma size=2>IsControlPictures</FONT> 
+<LI><FONT face=Tahoma size=2>IsCurrencySymbols</FONT> 
+<LI><FONT face=Tahoma size=2>IsCyrillic</FONT> 
+<LI><FONT face=Tahoma size=2>IsCyrillicSupplement</FONT> 
+<LI><FONT face=Tahoma size=2>IsDevanagari</FONT> 
+<LI><FONT face=Tahoma size=2>IsDingbats</FONT> 
+<LI><FONT face=Tahoma size=2>IsEnclosedAlphanumerics</FONT> 
+<LI><FONT face=Tahoma size=2>IsEnclosedCJKLettersandMonths</FONT> 
+<LI><FONT face=Tahoma size=2>IsEthiopic</FONT> 
+<LI><FONT face=Tahoma size=2>IsGeneralPunctuation</FONT> 
+<LI><FONT face=Tahoma size=2>IsGeometricShapes</FONT> 
+<LI><FONT face=Tahoma size=2>IsGeorgian</FONT> 
+<LI><FONT face=Tahoma size=2>IsGreek</FONT> 
+<LI><FONT face=Tahoma size=2>IsGreekExtended</FONT> 
+<LI><FONT face=Tahoma size=2>IsGreekandCoptic</FONT> 
+<LI><FONT face=Tahoma size=2>IsGujarati</FONT> 
+<LI><FONT face=Tahoma size=2>IsGurmukhi</FONT> 
+<LI><FONT face=Tahoma size=2>IsHalfwidthandFullwidthForms</FONT> 
+<LI><FONT face=Tahoma size=2>IsHangulCompatibilityJamo</FONT> 
+<LI><FONT face=Tahoma size=2>IsHangulJamo</FONT> 
+<LI><FONT face=Tahoma size=2>IsHangulSyllables</FONT> 
+<LI><FONT face=Tahoma size=2>IsHanunoo</FONT> 
+<LI><FONT face=Tahoma size=2>IsHebrew</FONT> 
+<LI><FONT face=Tahoma size=2>IsHighPrivateUseSurrogates</FONT> 
+<LI><FONT face=Tahoma size=2>IsHighSurrogates</FONT> 
+<LI><FONT face=Tahoma size=2>IsHiragana</FONT> 
+<LI><FONT face=Tahoma size=2>IsIPAExtensions</FONT> 
+<LI><FONT face=Tahoma size=2>IsIdeographicDescriptionCharacters</FONT> 
+<LI><FONT face=Tahoma size=2>IsKanbun</FONT> 
+<LI><FONT face=Tahoma size=2>IsKangxiRadicals</FONT> 
+<LI><FONT face=Tahoma size=2>IsKannada</FONT> 
+<LI><FONT face=Tahoma size=2>IsKatakana</FONT> 
+<LI><FONT face=Tahoma size=2>IsKatakanaPhoneticExtensions</FONT> 
+<LI><FONT face=Tahoma size=2>IsKhmer</FONT> 
+<LI><FONT face=Tahoma size=2>IsKhmerSymbols</FONT> 
+<LI><FONT face=Tahoma size=2>IsLao</FONT> 
+<LI><FONT face=Tahoma size=2>IsLatin-1Supplement</FONT> 
+<LI><FONT face=Tahoma size=2>IsLatinExtended-A</FONT> 
+<LI><FONT face=Tahoma size=2>IsLatinExtended-B</FONT> 
+<LI><FONT face=Tahoma size=2>IsLatinExtendedAdditional</FONT> 
+<LI><FONT face=Tahoma size=2>IsLetterlikeSymbols</FONT> 
+<LI><FONT face=Tahoma size=2>IsLimbu</FONT> 
+<LI><FONT face=Tahoma size=2>IsLowSurrogates</FONT> 
+<LI><FONT face=Tahoma size=2>IsMalayalam</FONT> 
+<LI><FONT face=Tahoma size=2>IsMathematicalOperators</FONT> 
+<LI><FONT face=Tahoma size=2>IsMiscellaneousMathematicalSymbols-A</FONT> 
+<LI><FONT face=Tahoma size=2>IsMiscellaneousMathematicalSymbols-B</FONT> 
+<LI><FONT face=Tahoma size=2>IsMiscellaneousSymbols</FONT> 
+<LI><FONT face=Tahoma size=2>IsMiscellaneousSymbolsandArrows</FONT> 
+<LI><FONT face=Tahoma size=2>IsMiscellaneousTechnical</FONT> 
+<LI><FONT face=Tahoma size=2>IsMongolian</FONT> 
+<LI><FONT face=Tahoma size=2>IsMyanmar</FONT> 
+<LI><FONT face=Tahoma size=2>IsNumberForms</FONT> 
+<LI><FONT face=Tahoma size=2>IsOgham</FONT> 
+<LI><FONT face=Tahoma size=2>IsOpticalCharacterRecognition</FONT> 
+<LI><FONT face=Tahoma size=2>IsOriya</FONT> 
+<LI><FONT face=Tahoma size=2>IsPhoneticExtensions</FONT> 
+<LI><FONT face=Tahoma size=2>IsPrivateUse</FONT> 
+<LI><FONT face=Tahoma size=2>IsPrivateUseArea</FONT> 
+<LI><FONT face=Tahoma size=2>IsRunic</FONT> 
+<LI><FONT face=Tahoma size=2>IsSinhala</FONT> 
+<LI><FONT face=Tahoma size=2>IsSmallFormVariants</FONT> 
+<LI><FONT face=Tahoma size=2>IsSpacingModifierLetters</FONT> 
+<LI><FONT face=Tahoma size=2>IsSpecials</FONT> 
+<LI><FONT face=Tahoma size=2>IsSuperscriptsandSubscripts</FONT> 
+<LI><FONT face=Tahoma size=2>IsSupplementalArrows-A</FONT> 
+<LI><FONT face=Tahoma size=2>IsSupplementalArrows-B</FONT> 
+<LI><FONT face=Tahoma size=2>IsSupplementalMathematicalOperators</FONT> 
+<LI><FONT face=Tahoma size=2>IsSyriac</FONT> 
+<LI><FONT face=Tahoma size=2>IsTagalog</FONT> 
+<LI><FONT face=Tahoma size=2>IsTagbanwa</FONT> 
+<LI><FONT face=Tahoma size=2>IsTaiLe</FONT> 
+<LI><FONT face=Tahoma size=2>IsTamil</FONT> 
+<LI><FONT face=Tahoma size=2>IsTelugu</FONT> 
+<LI><FONT face=Tahoma size=2>IsThaana</FONT> 
+<LI><FONT face=Tahoma size=2>IsThai</FONT> 
+<LI><FONT face=Tahoma size=2>IsTibetan</FONT> 
+<LI><FONT face=Tahoma size=2>IsUnifiedCanadianAboriginalSyllabics</FONT> 
+<LI><FONT face=Tahoma size=2>IsVariationSelectors</FONT> 
+<LI><FONT face=Tahoma size=2>IsYiRadicals</FONT> 
+<LI><FONT face=Tahoma size=2>IsYiSyllables</FONT> 
+<LI><FONT face=Tahoma size=2>IsYijingHexagramSymbols</FONT></LI></UL>
+<P><EM><FONT face=Tahoma color=#ff0000></FONT></EM>&nbsp;</P>
+<P><EM><FONT face=Tahoma color=#ff1493>This post brought to you by every single character in Unicode 4.0</FONT></EM></P>
+<hr/><div style="margin-left: 1em"><em>no comments</em></div><hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2007/12/05 <a href="http://archives.miloush.net/michkap/archive/2007/12/05/6648893.html">No way to get that script info I was looking for earlier</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2005/09/13/464733.html" title="Now available: Extend Your Code&#39;s Global Reach With New Features In The .NET Framework 2.0">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2005/09/13/464393.html" title="Confusion about HttpRequest.UserLanguages">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2005-09">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2005-09-13">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2005/09/13/464416.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:41 GMT -->
+</html>

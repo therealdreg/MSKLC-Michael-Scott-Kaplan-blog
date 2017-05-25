@@ -1,0 +1,40 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2007/07/05/3693510.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:38 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>How locale aware is that function? #1</title></head><body>
+<h1>How locale aware is that function? #1</h1>
+<p><em>by Michael S. Kaplan, published on 2007/07/05 10:01 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2007/07/05/3693510.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P><EM>(This could potentially be a very exciting new series -- I&nbsp;am optimistic enough about this idea that I suffixed the title with a #1!)</EM></P>
+<P>One of the things I like about this blog is that people often point me at things that&nbsp;I might never&nbsp;have known about otherwise....</P>
+<P>Like&nbsp;earlier today, when over in the Suggestion Box, Frederic Delhoume asked:</P>
+<BLOCKQUOTE>
+<P><EM><FONT face="times new roman,times">Hi,<BR><BR></FONT></EM><EM><FONT face="times new roman,times">I have been unable to find any information related to locale aware memory formatting.<BR><BR></FONT></EM><EM><FONT face="times new roman,times">I use <A class="" href="http://msdn2.microsoft.com/library/ms538649.aspx" mce_href="http://msdn2.microsoft.com/library/ms538649.aspx">StrFormatByteSize</A> but how does it get its formatting information ?<BR><BR></FONT></EM><EM><FONT face="times new roman,times">I have not found any Win32 API related to this topic.<BR><BR></FONT></EM><EM><FONT face="times new roman,times">Thanks,<BR></FONT></EM><EM><FONT face="times new roman,times">Frederic.</FONT></EM></P></BLOCKQUOTE>
+<P>This function is a fascinating bit of code, in both good and bad ways.</P>
+<P>Here is how it works:</P>
+<OL>
+<LI>First, it works to find out what&nbsp;size value would best describe the size in the most compact form - bytes, kilobytes (10³), megabytes (10⁶), gigabytes (10⁹), terabytes (10¹²), petabytes (10¹⁵), or exabytes (10¹⁸).</LI>
+<LI>Figure out if the number is between 1 and 1000 or not.</LI>
+<OL>
+<LI>If it isn't, then add commas to it as appropriate given the LOCALE_SGROUPING/LOCALE_STHOUSAND&nbsp;values&nbsp;from <A class="" href="http://msdn2.microsoft.com/library/ms776270.aspx" mce_href="http://msdn2.microsoft.com/library/ms776270.aspx">GetLocaleInfo</A> and a <A class="" href="http://msdn2.microsoft.com/library/ms776317.aspx" mce_href="http://msdn2.microsoft.com/library/ms776317.aspx">GetNumberFormat</A> call, all using LOCALE_USER_DEFAULT.</LI>
+<LI>If it is, then get the LOCALE_SDECIMAL value of LOCALE_USER_DEFAULT from <A class="" href="http://msdn2.microsoft.com/library/ms776270.aspx" mce_href="http://msdn2.microsoft.com/library/ms776270.aspx">GetLocaleInfo</A> and insert it appropriately.</LI></OL>
+<LI>Get the localized size string based on the default user UI language and add the number to the string (note that the localizer can position the size value as either prefix or suffix, as needed).</LI></OL>
+<P>So you end up with a string that is partially formatted based on the default user locale and partially formatted based on the default user UI language.</P>
+<P>In my opinion the same setting could (perhaps&nbsp;should?)&nbsp;be used throughout.</P>
+<P>But even more importantly,&nbsp;a function should take the locale/locales to use and then perhaps a simpler version could pre-fill the information for the Shell usage.</P>
+<P>With the current code, any other settings are inaccessible, which does close down a whole bunch of scenarios.</P>
+<P>This could be an interesting feature to consider adding to a&nbsp;<A class="" href="http://msdn2.microsoft.com/library/ms776317.aspx" mce_href="http://msdn2.microsoft.com/library/ms776317.aspx">GetNumberFormat</A>/<A class="" href="http://msdn2.microsoft.com/library/ms776367.aspx" mce_href="http://msdn2.microsoft.com/library/ms776367.aspx">GetNumberFormatEx</A> extension or new function that could take the info about units to use. I see lots of interesting complications that may not make it practical, but I think given the extensive work behind <A class="" href="http://msdn2.microsoft.com/library/ms538649.aspx" mce_href="http://msdn2.microsoft.com/library/ms538649.aspx"><EM>StrFormatByteSize</EM></A>, there is clearly a scenario worth thinking about....</P>
+<P mce_keep="true">&nbsp;</P>
+<P><FONT color=#ff00ff><EM>This post brought to you by</EM> <FONT size=5>∑</FONT> <EM>(<A class="" href="http://www.fileformat.info/info/unicode/char/2211" mce_href="http://www.fileformat.info/info/unicode/char/2211">U+2211</A>, a.k.a. N-ARY SUMMATION)</EM></FONT></P>
+<hr/><p><a id="3708101" href="#3708101">#</a> <strong>pcooper</strong> on 5 Jul 2007 12:33 PM:</p><div style="margin-left: 1em"><p>Is there also a bug in it determining its formatting behavior by looking to see if the number is between 1 and 1000? I'm not quite getting what that step is doing there.</p></div>
+<p><a id="3708732" href="#3708732">#</a> <strong>Michael S. Kaplan</strong> on 5 Jul 2007 1:01 PM:</p><div style="margin-left: 1em"><p>That is not so much a bug as just making sure that they will have a compact little number to use. It helps them determine whether to have anything in a decimal place or go for whole numbers....</p>
+</div>
+<p><a id="3710254" href="#3710254">#</a> <strong>James Matthews</strong> on 5 Jul 2007 2:19 PM:</p><div style="margin-left: 1em"><P>Couldn't you just show us the sourcecode =) Thanks for the explanation!</P></div>
+<p><a id="3712234" href="#3712234">#</a> <strong>Mihai</strong> on 5 Jul 2007 4:57 PM:</p><div style="margin-left: 1em"><p>&quot;So you end up with a string that is partially formatted based on the default user locale and partially formatted based on the default user UI language.&quot;</p>
+<p>My old topic: which should also happen for currency formatting :-) (and adding an extra level, the currency itself) </p>
+<p>So:</p>
+<p> - use a user-provided currency</p>
+<p> - use the UI locale for currency translation</p>
+<p> - use user locale for number formatting and currency positioning</p></div>
+<hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2007/07/05/3693610.html" title="It isn&#39;t always practical to port features downlevel">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2007/07/04/3697289.html" title="They have broken what cannot be broken; hope is broken.">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2007-07">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2007-07-05">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2007/07/05/3693510.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:38 GMT -->
+</html>

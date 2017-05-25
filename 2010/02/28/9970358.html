@@ -1,0 +1,66 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2010/02/28/9970358.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:35 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Silly money equivalency games work both ways (aka Making your localizer's life easier, Part 3)</title></head><body>
+<h1>Silly money equivalency games work both ways (aka Making your localizer's life easier, Part 3)</h1>
+<p><em>by Michael S. Kaplan, published on 2010/02/28 07:01 -05:00, original URI: http://blogs.msdn.com/b/michkap/archive/2010/02/28/9970358.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P>As series go, this one is not happening nearly as fast as I might have liked.</P>
+<P>The first one, <A href="http://archives.miloush.net/michkap/archive/2007/12/23/6843609.html" mce_href="http://archives.miloush.net/michkap/archive/2007/12/23/6843609.html"><STRONG>How many ways can a developer say 'File Not Found?' (aka Making your localizer's life easier, Part 1)</STRONG></A>, happened in the end of December, 2007.</P>
+<P>The follow-up, <A href="http://archives.miloush.net/michkap/archive/2008/02/21/7837478.html" mce_href="http://archives.miloush.net/michkap/archive/2008/02/21/7837478.html"><STRONG>We're back and we're embarrassing ourselves? (aka Making your localizer's life easier, Part 2)</STRONG></A>, didn't get made public until the end of February, 2008.</P>
+<P>Now we are to part three, and it took two years to get there.</P>
+<P>This seems like too slow of a place for a regular series. I'll see what I can do about that....</P>
+<P>Anyway, if memory serves it was Shakespeare who said</P>
+<P><FONT size=5><STRONG>Brevity is the Soul of Wit.</STRONG></FONT></P>
+<P>Now in modern times we have such busy lives that we often take a specific subset of the meaning here, along the lines of</P>
+<P><FONT size=5><STRONG>Don't Waste My Time.</STRONG></FONT></P>
+<P>and when a software developer finds themselves doing the same thing over and over again, they feel like they are doing something wrong, something inefficient.</P>
+<P>Like if they are putting a word, like say <STRONG>Music</STRONG> into several places in the user interface, it offends some sense of developer tidiness to have the word repeated over and over, perhaps in separate binaries, loaded over and over from these different places.</P>
+<P>If they stumbled across part 1 of this very series they might ask themselves&nbsp;<A href="http://archives.miloush.net/michkap/archive/2007/12/23/6843609.html" mce_href="http://archives.miloush.net/michkap/archive/2007/12/23/6843609.html"><STRONG>How many ways can a developer say 'File Not Found?'</STRONG></A> and feel silly saying a simple word over and over again, the same way. The word is the same every time - <STRONG>Music</STRONG>. What could be simpler than that?</P>
+<P>They may even be thinking about all those reminders of the cost per word per language to localize and think they might be saving Microsoft a few dollars if they just have the resource once and loaded into those various places.</P>
+<P>Occasionally, a true geek calculate it. You know,&nbsp;take their salary, divide it into the time spent doing this little exercise, and compare it with that per word per language cost to figure out if they literally saved Microsoft some money that afternoon.</P>
+<P>On a Friday? I could totally see that happening.</P>
+<P>Of course there is a small problem here. a problem with this "improvement" the developer has figured into the user interface with the saving all the repeats of the word <STRONG>Music</STRONG>.</P>
+<P>The problem is that the developer is dead wrong.</P>
+<P>Regular reader Mihai actually spoke to this issue a bit in a <A href="http://archives.miloush.net/michkap/archive/2007/12/23/6843609.html#6855996" mce_href="http://archives.miloush.net/michkap/archive/2007/12/23/6843609.html#6855996">comment</A> to that very first blog in the series:</P>
+<BLOCKQUOTE>
+<P><FONT face="times new roman,times"><EM>It is a good idea to make a difference between "reuse" (or duplication) and "consistency."</EM></FONT></P>
+<P><FONT face="times new roman,times"><EM>Duplication is good, consistency is good, reuse is bad.</EM></FONT></P>
+<P><FONT face="times new roman,times"><EM>Duplication: to have the same string in several places.</EM></FONT></P>
+<P><FONT face="times new roman,times"><EM>Consistency: to have all instances be the same.</EM></FONT></P>
+<P><FONT face="times new roman,times"><EM>Reuse: to merge all identical strings into one and use that one (usually "to save money").</EM></FONT></P>
+<P><FONT face="times new roman,times"><EM>It is good to have the same string repeated. You need to say "Print" 50 times? Then have it 50 times! This gives the freedom to the translator to do what it's right for his language. Costs more? Maybe. But it will cost even more if you merge them (work), then you have a bug filed saying that titles and buttons need different translations.</EM></FONT></P>
+<P><FONT face="times new roman,times"><EM>The challenge is to keep strings separate and consistent in the same time.</EM></FONT></P>
+<P><FONT face="times new roman,times"><EM>Usually translated versions end up being more consistent, because are done by linguists, with access to the full set of strings, with proper tools, then edited with consistency as one of the point to check.</EM></FONT></P>
+<P><FONT face="times new roman,times"><EM>The English version is just bunch of strings put together by various programmers, some of them with English as a second language, usually without a spell-check, and over a long period of time.</EM></FONT></P></BLOCKQUOTE>
+<P>and it is a valid point.</P>
+<P>A fix for even that problem with the zillion ways to say "File not found" can easily be to just make sure the same words are used for all of them. How is a user well served by needing to look at so many ways of saying the same thing?</P>
+<P>and getting back to our <STRONG>Music</STRONG> example for a moment.</P>
+<P>And let's look at the Croatian language pack for Windows 7:</P>
+<P><IMG style="WIDTH: 1035px; HEIGHT: 753px" src="http://trigeminal.fmsinc.com/images/croatian1.jpg" width=1035 height=753 mce_src="http://trigeminal.fmsinc.com/images/croatian1.jpg"></P>
+<P>We'll ignore the fact that the word <STRONG>glazbe</STRONG> isn't capitalized; the problem here is that it should be <STRONG>glazba</STRONG>, or actually <STRONG>Glazba</STRONG> in this case.</P>
+<P>There are actually other parts of the user interface where <STRONG>Glazbe</STRONG>, or even <STRONG>glazbe</STRONG>, might be appropriate.</P>
+<P>Oh, and also that <STRONG>radnu površinu</STRONG> in the dialog above should probably be <STRONG>radna površin</STRONG> in this case, and <STRONG>radna površina</STRONG> in others.</P>
+<P>You get the point.</P>
+<P>Now would you like to guess how many times of these strings that are the same appear in the resources?</P>
+<P>Once each.</P>
+<P>Now I have talked about the capitalization issue and the need to let localization be flexible about it <A href="http://archives.miloush.net/michkap/archive/2006/08/22/708503.html" mce_href="http://archives.miloush.net/michkap/archive/2006/08/22/708503.html"><STRONG>before</STRONG></A> so I won't harp in it now.</P>
+<P>But the fact that there is the need to express the same word in different ways in some languages even if not in English? That I will harp on here.</P>
+<P>I will however ask you to recall that geek who figured out that he saved the company a few bucks by sharing that string....</P>
+<P>If you factor in the PR hit when people started complaining about the bad grammar that makes the product look bad (which they did because it did), the cost to investigate the cause, fix it,&nbsp;test the fix, then localize it properly (in other languages too since those are new strings to be added now), if that developer gave back his equivalent salary for a week the score might still not be even.</P>
+<P><EM>Not that he should&nbsp;be charged; it is just that silly money equivalency games work both ways!</EM></P>
+<P>Of course the original notion of wanting to avoid the extra words to get translated has some merit, it is just that the developer does not have the context to understand all of the cases where those strings that are the same strings may not really be the same strings. And no matter how costly it is to translate the same word, it is much more costly to have to fix this kind of problem later when it&nbsp;happens....</P>
+<hr/><p><strong>Jon</strong> on 28 Feb 2010 7:54 AM:</p><div style="margin-left: 1em"><P>A little knowledge is a dangerous thing. If you have no knowledge of the waste of space that duplicated strings causes then you won't cause a problem. If you have a lot of knowledge about string duplication and language issues then you know not to cause a problem. Having a little bit of knowledge is dangerous. This is where managers and mentors and more experienced developers should have come in and stamped down on the naive developers "brilliant" idea. And this developer won't have been the first, nor the last to have a "brilliant" idea. These bright young things need to be controlled to ensure that they don't wreck havoc. </P></div>
+<p><strong>John Cowan</strong> on 28 Feb 2010 10:57 AM:</p><div style="margin-left: 1em"><p>Same saying, generalized version:</p>
+<p>DON'T BE A PIERIANSIPIST.</p></div>
+<p><strong>Josip Medved</strong> on 28 Feb 2010 11:07 AM:</p><div style="margin-left: 1em"><p>&quot;Radna površin&quot; is never a good choice in Croatian. It is root of word that doesn't have meaning. :)</p>
+<p>I strongly support everything else you said. :)</p></div>
+<p><strong>Michael S. Kaplan</strong> on 28 Feb 2010 4:03 PM:</p><div style="margin-left: 1em"><p>John, my objection to the word &quot;pieriansipist&quot; is that it outside of the vocabulary of those to whom it would best apply! :-)</p>
+</div>
+<p><strong>Mihai</strong> on 28 Feb 2010 4:49 PM:</p><div style="margin-left: 1em"><p>It can be worse. There is at least one library (very popular, but I will not name it), where the English string is also the string identifier.</p>
+<p>No duplication &quot;by design&quot;. Also defective by design.</p>
+<p>And it is incredible how much effort it takes to convince someone that it's bad design (I mean, how can such a popular library, used in thousands of applications and tens of languages, be wrong?)</p></div>
+<p><strong>Random User 43792</strong> on 4 Mar 2010 9:05 AM:</p><div style="margin-left: 1em"><p>The obvious solution is to (somehow) require developers to be fluent in all languages, including historical and yet-to-be-invented dialects. Maybe then they would know what strings are truly the same. :-)</p>
+<p>On a more serious note: does that potentially make automated string pooling one of the most ill-advised &quot;optimizations&quot; in a language? (I suppose maybe not as long as it sticks to constant, non-resource strings. Those would be hard/impossible to localize anyway.)</p></div>
+<hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2010/03/01/9970601.html" title="When something is just flipping wrong">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2010/02/27/9970251.html" title="Love those Vietnamese LIPs out there">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2010-02">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2010-02-28">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2010/02/28/9970358.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:35 GMT -->
+</html>

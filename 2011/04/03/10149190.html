@@ -1,0 +1,250 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2011/04/03/10149190.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>It's like a lower class of Lowercase...</title></head><body>
+<h1>It's like a lower class of Lowercase...</h1>
+<p><em>by Michael S. Kaplan, published on 2011/04/03 07:01 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2011/04/03/10149190.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<p>I had somebody asking me about the PRI (Public Review Issue) that just came out from Unicode. It all just seemed kind of confusing to her.</p>
+<p>So I thought I'd talk about it here a bit. :-)</p>
+<p>It is issue <a href="http://www.unicode.org/review/pri181/">#181</a>, and here is the text on it:</p>
+<hr />
+<blockquote sizset="0" sizcache="3">
+<blockquote sizset="0" sizcache="3">
+<blockquote sizset="0" sizcache="3">
+<table cellpadding="4" cellspacing="0" border="0" style="width: 98%; border-collapse: collapse; vert-align: top;">
+<tbody>
+<tr>
+<td align="left" width="20%"><b>180</b></td>
+<td align="left" width="65%"><b>Changing General Category of Twelve Characters</b></td>
+<td align="right" width="15%"><b>2011.05.02</b></td>
+</tr>
+<tr>
+<td align="left" width="20%"><b>Status:</b></td>
+<td align="left" colspan="2">Open</td>
+</tr>
+</tbody></table><!-- UNCOMMENT THIS AND FILL IN WHEN RESOLVED.
+		
+<tr>
+<td align="left" width="20%" style="background-color: #CCCCCC" mce_style="background-color: #CCCCCC"><b>Resolution:</b></td>
+<td align="left" colspan="2" style="background-color: #CCCCCC" mce_style="background-color: #CCCCCC">(pending)</td>
+</tr>
+-->
+<table><tbody><tr>
+<td colspan="3">&nbsp;</td>
+</tr>
+</tbody>
+</table>
+<p><b>Description of Issue:</b></p>
+<p>The UTC has decided to change the general category of twelve characters. The characters in question are these:</p>
+<pre>	U+00AA FEMININE ORDINAL INDICATOR
+	U+00BA MASCULINE ORDINAL INDICATOR
+	U+1D62 LATIN SUBSCRIPT SMALL LETTER I
+	U+1D63 LATIN SUBSCRIPT SMALL LETTER R
+	U+1D64 LATIN SUBSCRIPT SMALL LETTER U
+	U+1D65 LATIN SUBSCRIPT SMALL LETTER V
+	U+1D66 GREEK SUBSCRIPT SMALL LETTER BETA
+	U+1D67 GREEK SUBSCRIPT SMALL LETTER GAMMA
+	U+1D68 GREEK SUBSCRIPT SMALL LETTER RHO
+	U+1D69 GREEK SUBSCRIPT SMALL LETTER PHI
+	U+1D6A GREEK SUBSCRIPT SMALL LETTER CHI
+	U+2C7C LATIN SUBSCRIPT SMALL LETTER J
+</pre>
+<p>The UTC intends to change the general category of these characters from its current value of "Ll" to the value "Lm". The rationale is that superscript or subscript letters with decompositions to a single character should consistently have gc=Lm. Changing the general category for these twelve characters aligns them with the 122 other superscript or subscript letters whose General_Category is already "Lm".</p>
+<p>This change for the General Category property implies some changes for dependent casing properties. In particular, in order to keep the derived Lowercase property values unchanged, each of the twelve characters will have the contributory property Other_Lowercase set to Yes. The property Case_Ignorable, which is a narrow-use property only relevant to some special casing boundary determination (see D136 and Table 3-15 in Chapter 3 of Unicode 6.0 for details), would change from No to Yes for these twelve characters. The changes are summarized in the following table:</p>
+<div sizset="1" sizcache="3" align="center">
+<table border="1">
+<tbody>
+<tr>
+<th style="text-align: center;">Property</th><th style="text-align: center;">Old Value</th><th style="text-align: center;">New Value</th>
+</tr>
+<tr>
+<td>General_Category</td>
+<td style="text-align: center;">Ll</td>
+<td style="text-align: center;">Lm</td>
+</tr>
+<tr>
+<td>Other_Lowercase</td>
+<td style="text-align: center;">No</td>
+<td style="text-align: center;">Yes</td>
+</tr>
+<tr>
+<td>Lowercase</td>
+<td style="text-align: center;">Yes</td>
+<td style="text-align: center;">Yes</td>
+</tr>
+<tr>
+<td>Case_Ignorable</td>
+<td style="text-align: center;">No</td>
+<td style="text-align: center;">Yes</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>The behavior of software may change for these twelve characters if it is dependent on a distinction between gc=Ll versus gc=Lm, or on the value of the Case_Ignorable property.</p>
+<p>Feedback is being requested on the positive and negative effects, if any, these changes would have on existing implementations. A change in behavior may be considered positive, for example, if it results in a more uniform treatment of compatibility super/subscript characters and modifier letters. It may be considered negative if the change in properties produces an unexpected result or forces an unwanted change to software to compensate for the change.</p>
+</blockquote>
+</blockquote>
+</blockquote>
+<hr />
+<p>Bug #1 is of course that the issue at <a href="http://www.unicode.org/review/pri181/">http://www.unicode.org/review/pri181/</a>&nbsp;is claiming to be issue 180 -- though pRI #180 is actually&nbsp;the&nbsp;one I talked a little about in <a href="http://archives.miloush.net/michkap/archive/2011/03/28/10146277.html" title="Address formats are hard, let's go shopping!, revisited (aka To me, 'good enough' just isn't good enough)"><strong>Address formats are hard, let's go shopping!, revisited (aka To me, 'good enough' just isn't good enough)</strong></a>.</p>
+<p>But that is probably a little copy/paste bug that they'll undoubtably fix soon. :-)</p>
+<p>Anyway the questions I was being asked weren't about that....</p>
+<p>They were about the nature of the four properties being discussed:</p>
+<div sizset="2" sizcache="3" style="text-align: left;">
+<table border="1">
+<tbody>
+<tr style="text-align: left;">
+<th style="text-align: center;">Property</th><th style="text-align: center;">Old Value</th><th style="text-align: center;">New Value</th><th style="text-align: left;">Meaning</th>
+</tr>
+<tr style="text-align: left;">
+<td>General_Category</td>
+<td style="text-align: center;">Ll</td>
+<td style="text-align: center;">Lm</td>
+<td style="text-align: left;">&nbsp;This is a useful breakdown into various character types which can be used as a default categorization in implementations.</td>
+</tr>
+<tr style="text-align: left;">
+<td>Other_Lowercase</td>
+<td style="text-align: center;">No</td>
+<td style="text-align: center;">Yes</td>
+<td style="text-align: left;">Used in deriving the Lowercase property.&nbsp;</td>
+</tr>
+<tr style="text-align: left;">
+<td>Lowercase</td>
+<td style="text-align: center;">Yes</td>
+<td style="text-align: center;">Yes</td>
+<td style="text-align: left;">Characters with the Lowercase property. <i>Generated from: Ll + Other_Lowercase</i></td>
+</tr>
+<tr style="text-align: left;">
+<td>Case_Ignorable</td>
+<td style="text-align: center;">No</td>
+<td style="text-align: center;">Yes</td>
+<td style="text-align: left;">Characters which are ignored for casing purposes. <i>Generated from: Mn + Me + Cf + Lm + Sk + Word_Break=MidLetter + Word_Break=MidNumLet</i></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>&nbsp;Of these four properties:</p>
+<ul>
+<li>The first is a part of the core identity of the character;</li>
+<li>The second is a special property used to modulate the basic results of the General_Category so that code that is using this data to determine how to behave will generally behave in the way users expect;</li>
+<li>The third and fourth are calculated properties, derived from the first two in order to make it easier for people to make use of the various properties.</li>
+</ul>
+<p>There is a fundamental identity issue here, of course. These twelve characters each have an obvious analogue in Unicode already:</p>
+<table cellpadding="3" cellspacing="3" border="1">
+<tbody>
+<tr>
+<td><strong>Character</strong></td>
+<td><strong>Code point</strong></td>
+<td><strong>Name</strong></td>
+<td><strong>Similar <br />character</strong></td>
+<td><strong>Similar <br />code point</strong></td>
+<td><strong>Similar name</strong></td>
+</tr>
+<tr>
+<td><span style="font-size: large;">&ordf;</span></td>
+<td>U+00AA</td>
+<td>FEMININE ORDINAL INDICATOR</td>
+<td>a</td>
+<td>U+0061</td>
+<td>LATIN SMALL LETTER A</td>
+</tr>
+<tr>
+<td><span style="font-size: large;">&ordm;</span></td>
+<td>U+00BA</td>
+<td>MASCULINE ORDINAL INDICATOR</td>
+<td>o</td>
+<td>U+006f</td>
+<td>LATIN SMALL LETTER O</td>
+</tr>
+<tr>
+<td><span style="font-size: large;">ᵢ</span></td>
+<td>U+1D62</td>
+<td>LATIN SUBSCRIPT SMALL LETTER I</td>
+<td>i</td>
+<td>U+0069</td>
+<td>LATIN SMALL LETTER I</td>
+</tr>
+<tr>
+<td><span style="font-size: large;">ᵣ</span></td>
+<td>U+1D63</td>
+<td>LATIN SUBSCRIPT SMALL LETTER R</td>
+<td>r</td>
+<td>U+0072</td>
+<td>LATIN SMALL LETTER R</td>
+</tr>
+<tr>
+<td><span style="font-size: large;">ᵤ</span></td>
+<td>U+1D64</td>
+<td>LATIN SUBSCRIPT SMALL LETTER U</td>
+<td>u</td>
+<td>U+0075</td>
+<td>LATIN SMALL LETTER U</td>
+</tr>
+<tr>
+<td><span style="font-size: large;">ᵥ</span></td>
+<td>U+1D65</td>
+<td>LATIN SUBSCRIPT SMALL LETTER V</td>
+<td>v</td>
+<td>U+0076</td>
+<td>LATIN SMALL LETTER V</td>
+</tr>
+<tr>
+<td><span style="font-size: large;">ᵦ</span></td>
+<td>U+1D66</td>
+<td>GREEK SUBSCRIPT SMALL LETTER BETA</td>
+<td>&beta;</td>
+<td>U+03b2</td>
+<td>GREEK SMALL LETTER BETA</td>
+</tr>
+<tr>
+<td><span style="font-size: large;">ᵧ</span></td>
+<td>U+1D67</td>
+<td>GREEK SUBSCRIPT SMALL LETTER GAMMA</td>
+<td>&gamma;</td>
+<td>U+03b3</td>
+<td>GREEK SMALL LETTER GAMMA</td>
+</tr>
+<tr>
+<td><span style="font-size: large;">ᵨ</span></td>
+<td>U+1D68</td>
+<td>GREEK SUBSCRIPT SMALL LETTER RHO</td>
+<td>&rho;</td>
+<td>U+03c1</td>
+<td>GREEK SMALL LETTER RHO</td>
+</tr>
+<tr>
+<td><span style="font-size: large;">ᵩ</span></td>
+<td>U+1D69</td>
+<td>GREEK SUBSCRIPT SMALL LETTER PHI</td>
+<td>&phi;</td>
+<td>U+03c6</td>
+<td>GREEK SMALL LETTER PHI</td>
+</tr>
+<tr>
+<td><span style="font-size: large;">ᵪ</span></td>
+<td>U+1D6A</td>
+<td>GREEK SUBSCRIPT SMALL LETTER CHI</td>
+<td>&chi;</td>
+<td>U+03c7</td>
+<td>GREEK SMALL LETTER CHI</td>
+</tr>
+<tr>
+<td><span style="font-size: large;">ⱼ</span></td>
+<td>U+2C7C</td>
+<td>LATIN SUBSCRIPT SMALL LETTER J</td>
+<td>j</td>
+<td>U+006a</td>
+<td>LATIN SMALL LETTER J</td>
+</tr>
+</tbody>
+</table>
+<p>&nbsp;Pretty much no one would argue the clear relationship between the two characters, or the fact that in rich text one could actually make one look like the other -- e.g. in HTML with the &lt;SUB&lt;/SUB&gt; tag surrounding the letter.</p>
+<p>obviously they are lowercase letters, why wouldn't they be Ll?</p>
+<p>However, and this is where things get a little weird, people don't all feel as strongly about what an&nbsp;uppercasing operation ought to do. </p>
+<p>And thus deciding a formal way is needed to make it '<strong>lowercase, but not</strong>" was created. A caste system of sorts was designed, so that there was now a lower class of&nbsp; lowercase -- one that did not have all of the rights and privileges of normal ordinary lowercase letters.</p>
+<p>To bring enough rigor to this "now complicated though it used to be simple" stuff that anyone using the data of the Unicode Character Database in its entirety would not get unexpected results on characters such as these, characters it had never heard of before.</p>
+<p>On&nbsp;a somewhat regular basis, some automated process notes an anomaly like this one -- characters that seem to not be set up to return correct results. And this suggested change just came when a member company reported such a discontinuity....</p>
+<p>The PRI is so that if anyone will be majorly broken by "fixing" these characters, that they speak up now....</p>
+<hr/><div style="margin-left: 1em"><em>no comments</em></div><hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2011/04/04/10149502.html" title="UXTheme in the non-Unicode world isn&#39;t &quot;Double Secret ANSI&quot;">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2011/04/02/10149149.html" title="There&#39;s no &quot;I&quot; in IDN, part 2: Try not to use the wrong functions!">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2011-04">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2011-04-03">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2011/04/03/10149190.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+</html>

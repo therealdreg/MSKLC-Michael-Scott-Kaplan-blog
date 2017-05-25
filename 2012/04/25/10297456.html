@@ -1,0 +1,42 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2012/04/25/10297456.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:33 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>I know I said 'µ' but I didn't really mean 'µ'. I meant 'μ', you know?</title></head><body>
+<h1>I know I said 'µ' but I didn't really mean 'µ'. I meant 'μ', you know?</h1>
+<p><em>by Michael S. Kaplan, published on 2012/04/25 07:01 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2012/04/25/10297456.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<p>So I recently got an email:</p>
+<p style="padding-left: 60px;"><span style="font-family: times new roman,times;">We recently had a bug filed against our team because on a PS-PS machine we were unable to do a proper search with a greek character. It turned out that the issue was caused because some greek lowercase characters do not compare correctly against their uppercase counterparts (and vice versa). The issue is actually a .Net bug. The attached bug is specifically for a RegEx check but it also fails when using .Net&rsquo;s String.Compare function.</span></p>
+<p style="padding-left: 60px;"><span style="font-family: times new roman,times;">Example:</span></p>
+<p style="padding-left: 60px;"><span style="font-family: times new roman,times;">&lsquo;&micro;&rsquo;.ToUpper() = &lsquo;&Mu;&rsquo;</span></p>
+<p style="padding-left: 60px;"><span style="font-family: times new roman,times;">Theoretically we would then expect that these two characters should compare true against each other when you do &ldquo;IgnoreCase&rdquo;. However they do not.</span></p>
+<p>Ah yes, this is something I had seen before.</p>
+<p>They were looking for <strong><span style="font-size: x-large;">&micro;</span></strong>, aka U+00b5 aka MICRO SIGN.</p>
+<p>And unhappy that regular expressions that were uppercasing the text couldn't find the character again later.</p>
+<p>Of course they were assuming it was <strong><span style="font-size: x-large;">&mu;</span></strong>, aka U+03bc, aka GREEK SMALL LETTER MU.</p>
+<p>Unfortunately, several factors conspire to make things not work:</p>
+<ul>
+<li>The 'linguistic' casing tables, which .NET uses by default, will uppercase convert U+00b5 to <span style="font-size: x-large;">&Mu;</span>, aka&nbsp;U+039c aka GREEK CAPITAL LETTER MU.</li>
+<li>However, the collation tables tell a different story&sup1;, so the three characters are not as interchangeable as one might want:<br /><strong><span style="font-family: courier new,courier;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 0x00b5&nbsp;10&nbsp;11&nbsp;2&nbsp;2&nbsp;;Micro Sign</span></strong><br /><strong><span style="font-family: courier new,courier;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 0x03bc&nbsp;15&nbsp;24&nbsp;2&nbsp;2&nbsp;;Greek Small Mu</span></strong><br /><strong><span style="font-family: courier new,courier;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 0x039c&nbsp;15&nbsp;24&nbsp;2&nbsp;18&nbsp;;Greek Capital Mu</span></strong></li>
+<li>.NET's regular expression engine has some weird rules about matching</li>
+<li>Pseudo tends to do cutesy substitutions like that lowercase Mu for u.</li>
+<li>Unicode has some differences here to from <a href="http://www.unicode.org/Public/UNIDATA/UnicodeData.txt">unicodedata.txt</a>:<br /><strong><span style="font-family: courier new,courier;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 00B5;MICRO SIGN;Ll;0;L;&lt;compat&gt; 03BC;;;;N;;;039C;;039C</span></strong><br /><strong><span style="font-family: courier new,courier;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 039C;GREEK CAPITAL LETTER MU;Lu;0;L;;;;;N;;;;03BC;</span></strong><br /><strong><span style="font-family: courier new,courier;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 03BC;GREEK SMALL LETTER MU;Ll;0;L;;;;;N;;;039C;;039C</span></strong></li>
+</ul>
+<p>Now on the whole, pseudo is pretty cool.</p>
+<p>It lets you find bugs that you usually wouldn't find until much later during the development cycle.</p>
+<p>it does have one downside though&nbsp;- one that makes pseudo pretty annoying.</p>
+<p>When you substitute characters for kinda-lookalike characters with different properties and attributes, then you're going to get unexpected results sometimes....</p>
+<p>Like <strong>this</strong> time!</p>
+<p>&nbsp;</p>
+<p><span style="font-size: xx-small;">1 - One can only speculate why the MICRO SIGN is treated so differently than other similar symbols, e.g. Ω (U+2126, aka OHM SIGN), K (U+212a aka KELVIN SIGN) and&nbsp;Å (U+212b, aka&nbsp;ANGSTROM SIGN). I only know that it has always been done this way. There is one workaround for those troubled by the discontinuity: Unicode normalization....</span></p>
+<hr/><p><strong>Joshua</strong> on 26 Apr 2012 11:10 AM:</p><div style="margin-left: 1em"><p>And those two are actually different glyphs on my screen.</p>
+</div>
+<p><strong>Simon</strong> on 26 Apr 2012 2:07 PM:</p><div style="margin-left: 1em"><p>This calls for a corny friction joke!</p>
+<p>If you toss two kittens on the roof, which will come down first?</p>
+<p>The one with the smaller μ.</p>
+</div>
+<p><strong>Jochen</strong> on 22 Jan 2013 3:39 AM:</p><div style="margin-left: 1em"><p>It seems as if part of the .NET string comparision (nlssorting.dll) went into the Windows 8 / Windows 2012 kernel. Is a potential bug fixed in .NET not making it&#39;s way to the new OS? We found that ::CompareStringEx(LOCALE_NAME_INVARIANT, NORM_LINGUISTIC_CASING, L&quot;aä&quot;, 2, L&quot;Aä&quot;, 2, NULL, NULL, NULL) comes out to be CSTR_LESS_THAN (1) under Windows 2008 R2 but reports CSTR_EQUAL (2) under the newest OS. </p>
+<p>Feels strange!</p>
+</div>
+<hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2012/04/26/10297903.html" title="Michael&#39;s Keyboard Laws for Developers, Part 5">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2012/04/25/10297456.html" title="I know I said &#39;µ&#39; but I didn&#39;t really mean &#39;µ&#39;. I meant &#39;μ&#39;, you know?">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2012-04">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2012-04-25">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2012/04/25/10297456.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:33 GMT -->
+</html>

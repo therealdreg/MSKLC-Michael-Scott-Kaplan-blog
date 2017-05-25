@@ -1,0 +1,118 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2010/03/31/9986458.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:35 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>OS level support for non-Gregorian calendars?</title></head><body>
+<h1>OS level support for non-Gregorian calendars?</h1>
+<p><em>by Michael S. Kaplan, published on 2010/03/31 07:01 -07:00, original URI: http://blogs.msdn.com/michkap/archive/2010/03/31/9986458.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostOld -->
+<P>Regular reader and collation hero of days past Santhosh Pillai asked over in the Suggestion Box:</P>
+<BLOCKQUOTE>
+<P><FONT face="times new roman,times"><EM>Question: Does Windows 7 provide OS level support for any non-Gregorian support, such as switching your calendar?</EM></FONT></P>
+<P><FONT face="times new roman,times"><EM>Also, are there any online calenders that you know of that support non-Gregorian other than (Google Calendar)?</EM></FONT></P></BLOCKQUOTE>
+<P>Of course I am assuming the question goes beyond the calendars mentioned in <A href="http://msdn.microsoft.com/library/dd317732.aspx" mce_href="http://msdn.microsoft.com/library/dd317732.aspx">Calendar Identifiers</A>:</P>
+<BLOCKQUOTE>
+<P>
+<TABLE border=1>
+<TBODY>
+<TR>
+<TH colSpan=2>Calendar identifier</TH>
+<TH>Meaning</TH></TR>
+<TR>
+<TD>&nbsp;1 </TD>
+<TD>&nbsp; CAL_GREGORIAN&nbsp; </TD>
+<TD>&nbsp; Gregorian (localized)&nbsp; </TD></TR>
+<TR>
+<TD>&nbsp;2 </TD>
+<TD>&nbsp; CAL_GREGORIAN_US&nbsp; </TD>
+<TD>&nbsp; Gregorian (English strings always)&nbsp; </TD></TR>
+<TR>
+<TD>&nbsp;3 </TD>
+<TD>&nbsp; CAL_JAPAN&nbsp; </TD>
+<TD>&nbsp; Japanese Emperor Era&nbsp; </TD></TR>
+<TR>
+<TD>&nbsp;4 </TD>
+<TD>&nbsp; CAL_TAIWAN&nbsp; </TD>
+<TD>&nbsp; Taiwan calendar&nbsp; </TD></TR>
+<TR>
+<TD>&nbsp;5 </TD>
+<TD>&nbsp; CAL_KOREA&nbsp; </TD>
+<TD>&nbsp; Korean Tangun Era&nbsp; </TD></TR>
+<TR>
+<TD>&nbsp;6 </TD>
+<TD>&nbsp; CAL_HIJRI&nbsp; </TD>
+<TD>&nbsp; Hijri (Arabic Lunar)&nbsp; </TD></TR>
+<TR>
+<TD>&nbsp;7 </TD>
+<TD>&nbsp; CAL_THAI&nbsp; </TD>
+<TD>&nbsp; Thai&nbsp; </TD></TR>
+<TR>
+<TD>&nbsp;8 </TD>
+<TD>&nbsp; CAL_HEBREW&nbsp; </TD>
+<TD>&nbsp; Hebrew (Lunar)&nbsp; </TD></TR>
+<TR>
+<TD>&nbsp;9 </TD>
+<TD>&nbsp; CAL_GREGORIAN_ME_FRENCH&nbsp; </TD>
+<TD>&nbsp; Gregorian Middle East French&nbsp; </TD></TR>
+<TR>
+<TD>&nbsp;10 </TD>
+<TD>&nbsp; CAL_GREGORIAN_ARABIC&nbsp; </TD>
+<TD>&nbsp; Gregorian Arabic&nbsp; </TD></TR>
+<TR>
+<TD>&nbsp;11 </TD>
+<TD>&nbsp; CAL_GREGORIAN_XLIT_ENGLISH&nbsp; </TD>
+<TD>&nbsp; Gregorian transliterated English&nbsp; </TD></TR>
+<TR>
+<TD>&nbsp;12 </TD>
+<TD>&nbsp; CAL_GREGORIAN_XLIT_FRENCH&nbsp; </TD>
+<TD>&nbsp; Gregorian transliterated French&nbsp; </TD></TR>
+<TR>
+<TD>&nbsp;23 </TD>
+<TD>&nbsp; CAL_UMALQURA&nbsp; </TD>
+<TD><STRONG>&nbsp; <FONT size=1>Windows&nbsp;Vista and later:</FONT> </STRONG>Um Al Qura (Arabic lunar) calendar&nbsp;&nbsp; </TD></TR></TBODY></TABLE></P></BLOCKQUOTE>
+<P>But I'm actually not sure what else there might be.</P>
+<P>Switching the current calendar is as easy as a <A href="http://msdn.microsoft.com/library/dd374049.aspx" mce_href="http://msdn.microsoft.com/library/dd374049.aspx">SetLocaleInfo</A> call with the appropriate&nbsp;<A href="http://msdn.microsoft.com/library/dd373749.aspx" mce_href="http://msdn.microsoft.com/library/dd373749.aspx">LOCALE_ICALENDARTYPE</A> from the table above.</P>
+<P>Beyond that? The pickings are pretty slim.</P>
+<P>I&nbsp;mean, it was over five years ago that I pointed out the whole <A href="http://archives.miloush.net/michkap/archive/2005/01/14/353216.html" mce_href="http://archives.miloush.net/michkap/archive/2005/01/14/353216.html"><STRONG>Calendars on Win32 -- just there for show....</STRONG></A> thing.</P>
+<P>So&nbsp;all of these calendars, they don't have full OS level support, which means parsing and formatting and using even if it's not the current calendar....</P>
+<P>If that is what the question is about, the answer is a simple <STRONG>no</STRONG>. Because no such support exists....</P>
+<P>Well, wait.</P>
+<P>Technically, that isn't completely true.</P>
+<P>There are some functions added to do calendar-type stuff, though they are marked <STRONG><FONT color=#ff0000>deprecated</FONT></STRONG> and no header/lib file information is provided for them. You can see them in the <A href="http://msdn.microsoft.com/library/dd319081.aspx" mce_href="http://msdn.microsoft.com/library/dd319081.aspx">National Language Supporty Functions</A> list:</P>
+<BLOCKQUOTE>
+<P>
+<TABLE border=1>
+<TBODY>
+<TR>
+<TH>Function</TH>
+<TH>Description</TH></TR>
+<TR>
+<TD><A href="http://msdn.microsoft.com/library/dd317715.aspx">AdjustCalendarDate</A> </TD>
+<TD>Deprecated. Adjusts a date by a specified number of years, months, weeks or days.</TD></TR>
+<TR>
+<TD><A href="http://msdn.microsoft.com/library/dd317767.aspx">ConvertCalDateTimeToSystemTime</A> </TD>
+<TD>Deprecated. Converts a specified <STRONG>CALDATETIME</STRONG> structure to a <STRONG>SYSTEMTIME</STRONG> structure.</TD></TR>
+<TR>
+<TD><A href="http://msdn.microsoft.com/library/dd317769.aspx">ConvertSystemTimeToCalDateTime</A> </TD>
+<TD>Deprecated. Converts a specified <STRONG>SYSTEMTIME</STRONG> structure to a <STRONG>CALDATETIME</STRONG> structure.</TD></TR>
+<TR>
+<TD><A href="http://msdn.microsoft.com/library/dd318071.aspx">GetCalendarDateFormatEx</A> </TD>
+<TD>Deprecated. Retrieves a properly formatted date string for the specified locale using the specified date. </TD></TR>
+<TR>
+<TD><A href="http://msdn.microsoft.com/library/dd318077.aspx">GetCalendarSupportedDateRange</A> </TD>
+<TD>Deprecated. Gets the supported date range for a specified calendar. </TD></TR>
+<TR>
+<TD><A href="http://msdn.microsoft.com/library/dd318663.aspx">IsCalendarLeapYear</A> </TD>
+<TD>Deprecated. Identifies whether the specified year is a leap year within the given era for the specific calendar.</TD></TR>
+<TR>
+<TD><A href="http://msdn.microsoft.com/library/dd374097.aspx">UpdateCalendarDayOfWeek</A> </TD>
+<TD>Gets the day of week that corresponds with a specified day and populates the <STRONG>DayOfWeek</STRONG> field in the given <STRONG>CALDATETIME</STRONG> structure.</TD></TR></TBODY></TABLE></P></BLOCKQUOTE>
+<P><EM>That last one is deprecated too, you can see if you look at the topic; they just forgot to mark it in the table like the others.</EM></P>
+<P>Hmmmm. Interesting set of functions, huh? :-)</P>
+<P>These functions were added in Vista, as part of the work to support the <A href="http://archives.miloush.net/michkap/archive/2005/12/21/506427.html" mce_href="http://archives.miloush.net/michkap/archive/2005/12/21/506427.html"><STRONG>updates to clock and calendar</STRONG></A>. </P>
+<P>And presumably they could, by their existence,&nbsp;provide a way for .Net to support the ability to synthesize a calendar if Win32 supported one that .Net didn't know about. Though this might be something of a theoretical thing for now since as stagnant as calendars may be, it is clearly .Net that has gotten more new stuff, more recently....</P>
+<P>These functions are supported in Windows 7, by the way. And in Server 2008 R2.</P>
+<P>They provide a means to avoid one of the only other ways to do calendar stuff on the non-default calendar -- to switch the calendar.</P>
+<P>For now, I'd say this is as close as you can get to the full OS support, though of couse&nbsp;parsing is still needed&nbsp;for "full" to be full enough....&nbsp;</P>
+<hr/><p><a id="9988138" href="#9988138">#</a> <strong>Michael S. Kaplan</strong> on Wednesday, March 31, 2010 6:54 AM:</p><div style="margin-left: 1em"><p>The more functional the title, the less satisfied I am with it. This seems like a valuable prinicple to me....</p></div>
+<hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2010/04/01/9988607.html" title="Is the text in XKCD broken?">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2010/03/30/9987288.html" title="A modest proposal">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2010-03">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2010-03-31">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2010/03/31/9986458.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:35 GMT -->
+</html>

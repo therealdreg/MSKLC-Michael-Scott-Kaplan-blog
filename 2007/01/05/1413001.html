@@ -1,0 +1,75 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2007/01/05/1413001.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:38 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Converting a project to Unicode: Part 9 (The project's postpartum postmortem)</title></head><body>
+<h1>Converting a project to Unicode: Part 9 (The project's postpartum postmortem)</h1>
+<p><em>by Michael S. Kaplan, published on 2007/01/05 06:01 -05:00, original URI: http://blogs.msdn.com/b/michkap/archive/2007/01/05/1413001.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<DIV class=postcontent>
+<P>Previous posts in this series (including today's!): 
+<UL>
+<LI><A href="http://archives.miloush.net/michkap/archive/2006/12/27/1368334.html" mce_href="http://archives.miloush.net/michkap/archive/2006/12/27/1368334.html">Part 0 (The introduction)</A> 
+<LI><A href="http://archives.miloush.net/michkap/archive/2006/12/28/1372747.html" mce_href="http://archives.miloush.net/michkap/archive/2006/12/28/1372747.html">Part 1 (Business before pleasure)</A> 
+<LI><A class="" href="http://archives.miloush.net/michkap/archive/2006/12/29/1377788.html" mce_href="http://archives.miloush.net/michkap/archive/2006/12/29/1377788.html">Part 2 ('Sorry, you're not my type.' 'Um,&nbsp;maybe&nbsp;I could change that?)</A> 
+<LI><A class="" href="http://archives.miloush.net/michkap/archive/2006/12/30/1382886.html" mce_href="http://archives.miloush.net/michkap/archive/2006/12/30/1382886.html">Part 3 (Can I quote you on that?)</A> 
+<LI><A class="" href="http://archives.miloush.net/michkap/archive/2006/12/31/1386486.html" mce_href="http://archives.miloush.net/michkap/archive/2006/12/31/1386486.html">Part 4 (/Delightful, /Delicious, /DUnicode!)</A> 
+<LI><A class="" href="http://archives.miloush.net/michkap/archive/2007/12/01/1391798.html" mce_href="http://archives.miloush.net/michkap/archive/2007/12/01/1391798.html">Part 5 (Are we there yet? Well, not just yet)</A> 
+<LI><A class="" href="http://archives.miloush.net/michkap/archive/2007/01/02/1395703.html" mce_href="http://archives.miloush.net/michkap/archive/2007/01/02/1395703.html">Part 6 (Upon&nbsp;the road not traveled)</A> 
+<LI><A class="" href="http://archives.miloush.net/michkap/archive/2007/01/02/1395788.html" mce_href="http://archives.miloush.net/michkap/archive/2007/01/02/1395788.html">Part&nbsp;7 (What does it mean to fit things to a 'T', anyway?)</A> 
+<LI><A class="" href="http://archives.miloush.net/michkap/archive/2007/01/04/1409380.html" mce_href="http://archives.miloush.net/michkap/archive/2007/01/04/1409380.html">Part 8 (Fitting MSLU into the mix)</A></LI>
+<LI><A class="" href="http://archives.miloush.net/michkap/archive/2007/01/05/1413001.html" mce_href="http://archives.miloush.net/michkap/archive/2007/01/05/1413001.html">Part 9 (The project's postpartum postmortem)</A></LI></UL>
+<P>(If you are just tuning in and want to start now that we are&nbsp;done,&nbsp;you can grab the&nbsp;latest source from <A class="" href="http://www.trigeminal.com/samples/SETUP_SOURCE/part09.zip" mce_href="http://www.trigeminal.com/samples/SETUP_SOURCE/part09.zip">here</A>)</P>
+<P>If you look at the source, you'll see I chickened out of always adding MSLU to Unicode builds, so there is makefile.mslu and a makefile.uni. :-)</P>
+<P>Now that we have gone through and taken an application that is actually useful and converted it to Unicode, I figured for the review it would be good to talk about it a bit.</P>
+<P mce_keep="true">(I honestly did not look at the code until after deciding to do the series, so this is a true postmortem decision about the effort!)</P>
+<P>As projects go, this one was fairly tame, and although there were a few issues that were discussed, it was just a few. Tto compare briefly, the kbdtool.exe --&gt; kbdutool.exe conversion I mentioned back in <A class="" href="http://archives.miloush.net/michkap/archive/2006/12/27/1368334.html" mce_href="http://archives.miloush.net/michkap/archive/2006/12/27/1368334.html">Part 0</A> made extensive use of the C Runtime for its extensive file handling and parsing and creating operations. So the single example of <A class="" href="http://msdn2.microsoft.com/library/5k9xb7x1(VS.80).aspx" mce_href="http://msdn2.microsoft.com/library/5k9xb7x1(VS.80).aspx">strtoul</A> being converted to <A class="" href="http://msdn2.microsoft.com/library/5k9xb7x1(VS.80).aspx" mce_href="http://msdn2.microsoft.com/library/5k9xb7x1(VS.80).aspx">_tcstoul</A> I taked about in <A class="" href="http://archives.miloush.net/michkap/archive/2006/12/31/1386486.html" mce_href="http://archives.miloush.net/michkap/archive/2006/12/31/1386486.html">Part 4</A> would have to be multiplied to the 131 such changes that were required. So the fact is that in the real world of app conversion you could find that the actual effort takes more time even if you do not run into any problems more complex than we dealt with here.</P>
+<P>Another interesting comment that was made by Mike Dimmick to <A class="" href="http://archives.miloush.net/michkap/archive/2006/12/30/1382886.html#1405267" mce_href="http://archives.miloush.net/michkap/archive/2006/12/30/1382886.html#1405267">Part 3</A> talked about an issue related to prinft-esque <A class="" href="http://msdn.microsoft.com/library/en-us/vclib/html/_crt_format_specification_fields_.2d_.printf_and_wprintf_functions.asp" mce_href="http://msdn.microsoft.com/library/en-us/vclib/html/_crt_format_specification_fields_.2d_.printf_and_wprintf_functions.asp">format specifiers</A>, which have outrageous rules in relation to Unicode conversion:</P>
+<P>&nbsp; 
+<TABLE class="" cellSpacing=0 border=1>
+<TBODY>
+<TR vAlign=top>
+<TH class="" width="16%">Character</TH>
+<TH class="" width="21%">Type</TH>
+<TH class="" width="63%">Output format</TH></TR>
+<TR vAlign=top>
+<TD class="" width="16%"><B>c</B></TD>
+<TD class="" width="21%"><B>int</B> or <B>wint_t</B></TD>
+<TD class="" width="63%">When used with <B>printf</B> functions, specifies a single-byte character; when used with <B>wprintf</B> functions, specifies a wide character.</TD></TR>
+<TR vAlign=top>
+<TD class="" width="16%"><B>C</B></TD>
+<TD class="" width="21%"><B>int</B> or <B>wint_t</B></TD>
+<TD class="" width="63%">When used with <B>printf</B> functions, specifies a wide character; when used with <B>wprintf</B> functions, specifies a single-byte character.</TD></TR>
+<TR vAlign=top>
+<TD class="" width="16%"><B>hc, hC</B></TD>
+<TD class="" width="21%"><B>int</B> or <B>wint_t</B></TD>
+<TD class="" width="63%">Specifies a single-byte character; it is always interpreted as type <STRONG>CHAR</STRONG>, even when the calling application uses the #define UNICODE compile flag. </TD></TR>
+<TR vAlign=top>
+<TD class="" width="16%"><B>hs, hS</B></TD>
+<TD class="" width="21%">String</TD>
+<TD class="" width="63%">Specifies a string; it is always interpreted as type <STRONG>LPSTR</STRONG>, even when the calling application uses the #define UNICODE compile flag.</TD></TR>
+<TR vAlign=top>
+<TD class="" width="16%"><B>lc, lC</B></TD>
+<TD class="" width="21%"><STRONG>int</STRONG> or <B>wint_t</B> </TD>
+<TD class="" width="63%">Specifies a wide character; it is always interpreted as type <STRONG>WCHAR</STRONG>, even when the calling application does not use the #define UNICODE compile flag.</TD></TR>
+<TR vAlign=top>
+<TD class="" width="16%"><B>ls, lS</B></TD>
+<TD class="" width="21%">String</TD>
+<TD class="" width="63%">Specifies a string; it is always interpreted as type <STRONG>LPWSTR</STRONG>, even when the calling application does not use the #define UNICODE compile flag.</TD></TR>
+<TR vAlign=top>
+<TD class="" width="16%"><B>s</B></TD>
+<TD class="" width="21%">String </TD>
+<TD class="" width="63%">When used with <B>printf</B> functions, specifies a single-byte–character string; when used with <B>wprintf</B> functions, specifies a wide-character string. Characters are printed up to the first null character or until the <I>precision</I> value is reached.</TD></TR>
+<TR vAlign=top>
+<TD class="" width="16%"><B>S</B></TD>
+<TD class="" width="21%">String</TD>
+<TD class="" width="63%">When used with <B>printf</B> functions, specifies a wide-character string; when used with <B>wprintf</B> functions, specifies a single-byte–character </TD></TR></TBODY></TABLE></P>
+<P mce_keep="true">Now I can completely understand why every single one of these format specifiers exist, but you can see why there is a potential for strange results as one moves a project to Unicode, since one is not only dealing with the conversion of the application but in some cases one is dealing with parsing and manipulating data from other sources that may or may not also be converted at the same time.</P>
+<P mce_keep="true">In our case, the extensive use of formatting strings in the DebugMsg function was alwaysd used by callers with the <STRONG>%s</STRONG> type, so everything worked out. But if you are converting an application that is using anothing other than <STRONG>%c</STRONG> and <STRONG>%s</STRONG> from the above table, one can have a much harder job to decide how to convert the project.</P>
+<P mce_keep="true">Clearly the project was&nbsp;in many ways&nbsp;written in "the right way" to handle the conversion we did -- note especially the mostly consistent use of sizeof() in character buffer lengths, something often missing -- a fact that only came to bite us in a few specific cases that were clearly written later on by other developers. </P>
+<P mce_keep="true">Because of such efforts, it is perhaps better to think of the setup bootstrap EXE project as a fair representative of the type of problems one will hit, if not necessarily the magnitude of those problems.</P>
+<P mce_keep="true">And what has been "delivered" is an EXE that you&nbsp;may well see in&nbsp;<A class="" href="http://archives.miloush.net/michkap/archive/2006/11/17/1097666.html" mce_href="http://archives.miloush.net/michkap/archive/2006/11/17/1097666.html"><STRONG>the upcoming release of MSKLC</STRONG></A>. :-)</P>
+<P mce_keep="true">Now I'll keep my eyes open, and if I run across another example like this of a project to convert that can be shared this way I'd love to do&nbsp;it again some time. I think it would be especially interesting to do one that turns out to be much harder in terms of the amount of effort, just to help give a good sense of how hard people might find the process, in general.</P>
+<P mce_keep="true">&nbsp;</P>
+<P mce_keep="true"><FONT color=#ff00ff><EM>This post brought to you by</EM> <FONT face="Mongolian Baiti" size=5>ᠹ</FONT> <EM>(<A class="" href="http://www.fileformat.info/info/unicode/char/1839" mce_href="http://www.fileformat.info/info/unicode/char/1839">U+1839</A>, a.k.a. MONGOLIAN LETTER FA)</EM></FONT></P></DIV>
+<hr/><div style="margin-left: 1em"><em>no comments</em></div><hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2010/12/03 <a href="http://archives.miloush.net/michkap/archive/2010/12/03/10099877.html">Code as though the Console is as it should be, to show everyone what it can be</a></p><p>2008/02/14 <a href="http://archives.miloush.net/michkap/archive/2008/02/14/7693962.html">More on license plates in Bengalūru, and in India</a></p><p>2007/12/24 <a href="http://archives.miloush.net/michkap/archive/2007/12/24/6843995.html">VS just got served!, aka The ??? Shift, aka 'Converting a project to Unicode???' No, it's 'Converting a project??? ToUnicode!!!'</a></p><p>2007/05/11 <a href="http://archives.miloush.net/michkap/archive/2007/05/11/2547703.html">The CRT and UTF-8</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2007/01/06/1420754.html" title="Sorting The Old New Thing All Out">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2007/01/05/1387397.html" title="How can be changed the keyboard layout name label?">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2007-01">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2007-01-05">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2007/01/05/1413001.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:38 GMT -->
+</html>

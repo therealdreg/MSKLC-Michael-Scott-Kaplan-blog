@@ -1,0 +1,44 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2007/04/10/2071471.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:38 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>When methods use collation to 'disturb the peace' we charge them with being 'out of sorts'</title></head><body>
+<h1>When methods use collation to 'disturb the peace' we charge them with being 'out of sorts'</h1>
+<p><em>by Michael S. Kaplan, published on 2007/04/10 08:05 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2007/04/10/2071471.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P>You know how I talk about best practices here sometimes? And the worst ways to misuse various globalization/internationalization methods and functions?</P>
+<P>Well, believe it or not, sometimes even the Microsoft code gets it wrong.</P>
+<P>(Gasp!)</P>
+<P>Like the other day, when Balsu asked:</P>
+<BLOCKQUOTE><FONT face="Times New Roman,Times" size=2><I>
+<P>Hi<BR><BR>When I call System.Messaging.MessageQueue.Exists("ઽEFGH"), I am getting an ArgumentException saying ‘PathSynatx is invalid’. Looking in to the MessageQueue.Exists() method, I am finding that String.LastIndexOf method is causing the issue.</P></I>
+<BLOCKQUOTE><FONT face="Consolas,Lucida Console,Courier New,Courier"><B>
+<P>int index1 = ".\\PRIVATE$\\ઽEFGH".LastIndexOf("\\PRIVATE$\\",StringComparison.CurrentCultureIgnoreCase);<BR>int index2 = ".\\PRIVATE$\\EFGH".LastIndexOf("\\PRIVATE$\\", StringComparison.CurrentCultureIgnoreCase);</P></B></FONT></BLOCKQUOTE><I>
+<P>When I execute the above statements in en-US culture, I am getting index1 as -1&nbsp; where it should be 1.<BR><BR>I am getting index2 as 1 as expected. <BR><BR>Has anyone faced similar issue? Any work around?</P></I></FONT></BLOCKQUOTE>
+<P mce_keep="true">The problem in the example&nbsp;can be traced to&nbsp;that <FONT size=4>ઽ</FONT>, which is&nbsp;a <A class="" href="http://www.fileformat.info/info/unicode/char/0abd" mce_href="http://www.fileformat.info/info/unicode/char/0abd">U+0abd</A> (a.k.a. GUJARATI SIGN AVAGRAHA).&nbsp;Which it just so happens that in linguistic comparisons is treated as&nbsp;a combining character given its tendency to make the previous character a little bit heavier.</P>
+<P mce_keep="true">Regular readers might immediately spot the problem here, and immediately remember <STRONG><A class="" href="http://archives.miloush.net/michkap/archive/2006/09/19/762106.html" mce_href="http://archives.miloush.net/michkap/archive/2006/09/19/762106.html">Put in on my Tab, please</A></STRONG> from last September. With the only real&nbsp;difference being that in this case the example is building up on a REVERSE SOLIDUS instead of a TAB.</P>
+<P mce_keep="true">In both cases, a character that is not really a combining character is treated as if it were one in collation in order to get a specific linguistically appropriate&nbsp;result. Which is really not a bug, though it does end up causing one.</P>
+<P mce_keep="true"><EM>(I'll talk more about THAT issue another day!)</EM></P>
+<P mce_keep="true">If we&nbsp;stay focused and&nbsp;try to figure out in&nbsp;a bit of Root Cause Analysis the reason for the problem in <A class="" href="http://msdn2.microsoft.com/library/system.messaging.messagequeue.exists.aspx" mce_href="http://msdn2.microsoft.com/library/system.messaging.messagequeue.exists.aspx">System.Messaging.MessageQueue.Exists</A>, we are just getting started....</P>
+<P mce_keep="true">There is of&nbsp;course the fact that <STRONG><A class="" href="http://archives.miloush.net/michkap/archive/2006/01/11/511557.html" mce_href="http://archives.miloush.net/michkap/archive/2006/01/11/511557.html">Collation != Case (a.k.a. Collation &lt;&gt; Case)</A></STRONG>. </P>
+<P mce_keep="true">And the misuse of <A class="" href="http://msdn2.microsoft.com/library/system.globalization.cultureinfo.currentculture.aspx" mce_href="http://msdn2.microsoft.com/library/system.globalization.cultureinfo.currentculture.aspx">CurrentCulture</A>, of course, since one would never want the behavior to change based on user settings.</P>
+<P mce_keep="true">But even more important is the fact that when one is dealing with the file system as they are here, one should never be using a linguistic comparison method (something I first pointed out back in <STRONG><A class="" href="http://archives.miloush.net/michkap/archive/2004/12/29/344136.html" mce_href="http://archives.miloush.net/michkap/archive/2004/12/29/344136.html">Comparison confusion: INVARIANT vs. ORDINAL</A></STRONG>). This scenario simply screams for the use of OrdinalIgnoreCase, to help match the behavior of the file system.</P>
+<P mce_keep="true">So the fix here&nbsp;would be (in that <A class="" href="http://msdn2.microsoft.com/library/ms224422.aspx" mce_href="http://msdn2.microsoft.com/library/ms224422.aspx">String.LastIndexOf(String, StringComparison)</A> call) to use StringComparison.OrdinalIgnoreCase, rather than StringComparison.CurrentCultureIgnoreCase....</P>
+<P mce_keep="true">&nbsp;</P>
+<P mce_keep="true"><FONT color=#ff00ff><EM>This post brought to you by</EM>&nbsp;<FONT size=6>ઽ</FONT> <EM>(<A class="" href="http://www.fileformat.info/info/unicode/char/0abd" mce_href="http://www.fileformat.info/info/unicode/char/0abd">U+0abd</A>, a.k.a. GUJARATI SIGN AVAGRAHA)</EM></FONT></P>
+<hr/><p><a id="2078190" href="#2078190">#</a> <strong>Mihai</strong> on 10 Apr 2007 6:21 PM:</p><div style="margin-left: 1em"><p>&lt;&lt;use of OrdinalIgnoreCase, to help match the behavior of the file system&gt;&gt;</p>
+<p>Is this really the case?</p>
+<p>Does OrdinalIgnoreCase use the NTFS case mapping table?</p>
+<p>Because if it does not, then there is no way it will &quot;match the behavior of the file system&quot; :-)</p>
+<p>And even if the NTFS table is user, then for what volume? What if my system volume is formated under Win 2003 but the data volume was formated under NT 4.0?</p></div>
+<p><a id="2078298" href="#2078298">#</a> <strong>Michael S. Kaplan</strong> on 10 Apr 2007 6:31 PM:</p><div style="margin-left: 1em"><p>Well, it is either a 100% match, or a reboot away from a 100% match....</p>
+</div>
+<p><a id="2078345" href="#2078345">#</a> <strong>Dean Harding</strong> on 10 Apr 2007 6:38 PM:</p><div style="margin-left: 1em"><p>&gt; So the fix here would be [... snip]</p>
+<p>Not that that helps Balsu at all! :-) I guess all he can do is cut'n'paste the code from Reflector into his own file, fix the bug and use that version instead. At least, until a &quot;real&quot; fix is provided (but even then, he'd probably want to keep his cut'n'pasted version around in case he ever finds his code is running on an older version of the runtime).</p>
+</div>
+<p><a id="2078544" href="#2078544">#</a> <strong>Michael S. Kaplan</strong> on 10 Apr 2007 7:02 PM:</p><div style="margin-left: 1em"><p>Yep, it is sad to have to admit it -- but sometimes even Microsoft code has the odd bug in it. :-(</p>
+</div>
+<p><a id="2079116" href="#2079116">#</a> <strong>Dean Harding</strong> on 10 Apr 2007 7:57 PM:</p><div style="margin-left: 1em"><p>&gt; Yep, it is sad to have to admit it -- but sometimes even Microsoft code has the odd bug in it. :-(</p>
+<p>Sure, but at least with .NET, you can always work around the problem with a bit of Reflector'ing -- in the unmanaged world, its usually a lot harder ;)</p>
+</div>
+<hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2007/04/11 <a href="http://archives.miloush.net/michkap/archive/2007/04/11/2087685.html">Microsoft is not uncaron^H^Hing about the issue!</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2007/04/10/2073530.html" title="Win9x keyboard file source?">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2007/04/04/2024843.html" title="Some new Vista LIPs have been released!">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2007-04">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2007-04-10">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2007/04/10/2071471.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:38 GMT -->
+</html>

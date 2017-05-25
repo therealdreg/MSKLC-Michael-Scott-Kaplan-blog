@@ -1,0 +1,29 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2005/09/22/472596.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:41 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>The casing table case (.NET)</title></head><body>
+<h1>The casing table case (.NET)</h1>
+<p><em>by Michael S. Kaplan, published on 2005/09/22 03:31 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2005/09/22/472596.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P><FONT face=Tahoma>When I was in elementary school, I read a book entitled <A href="http://www.amazon.com/exec/obidos/ASIN/0525419926/">The Violin Case Case</A>. To be honest, I remember very little about it other than the title, as well as an hour long conversation we had about the title (which now that I think about it may have been my introduction to things linguistic).</FONT></P>
+<P><FONT face=Tahoma>The title of this post is a somewhat lame attempt at an allusion. Just FYI....</FONT></P>
+<P><FONT face=Tahoma>Anyway, an anonymous&nbsp;person going by the handle CN asked in the Suggestion Box:</FONT></P>
+<BLOCKQUOTE dir=ltr style="MARGIN-RIGHT: 0px">
+<P><a href="http://blogs.msdn.com/greggm/archive/2005/09/21/472453.aspx" target=_new rel=nofollow><EM>http://blogs.msdn.com/greggm/archive/2005/09/21/472453.aspx</EM></A><EM> <BR><BR>This post, and others, state that the new .NET features for ignoring case in comparisons matches the behavior of the OS. Is that really true? I was under the impression that the casing tables were defined on each partition, for NTFS. (and that you've blogged about this tiny difference before) </EM></P></BLOCKQUOTE>
+<P><FONT face=Tahoma>I thought it would be nice to explain what was going on here....</FONT></P>
+<P><FONT face=Tahoma>Now if you are a regular reader you will know how I have talked about OrdinalIgnoreCase and how it does thing that are not found in nature (unleww you consider the NT filename/object space to be natural, of course!).</FONT></P>
+<P><FONT face=Tahoma>Anyway, in Windows Vista we are doing the casing table update I was hoping we would do. And the folks in the .NET Framework were very concerned that their efforts to provide the OrdinalIgnoreCase comparison type would have been in naught since the OS might have a different idea of what ignoring case means for ordinal comparisons.</FONT></P>
+<P><FONT face=Tahoma>The solution? Well, make sure that OrdinalIgnoreCase uses the OS casing table's rules, so you can get the expected behavior when comparing against filenames, named pipes, mutexes, environment variables, and so on.</FONT></P>
+<P><FONT face=Tahoma>Of course that does not expose the casing results to developers using the .NET Framework, at least not without a pinvoke....</FONT></P>
+<P><FONT face=Tahoma>Which brought on the extra part of the solution to take care of this small&nbsp;discontinuity -- the casing results when you use the InvariantCulture will also match the OS results, so that you can duplicate what the .NET Framework is doing here if you need to.</FONT></P>
+<P><FONT face=Tahoma>Now the casing results for all other cultures will return the ones that the .NET Framework provides -- the change only affects InvariantCulture-type casing operations, and OrdinalIgnoreCase (a new option in Whidbey).</FONT></P>
+<P><FONT face=Tahoma>So CN, I hope this makes the issue&nbsp;clearer -- in summary the changes were to:</FONT></P>
+<OL>
+<LI><FONT face=Tahoma>Support the OS style comparisons via OrdinalIgnoreCase</FONT> 
+<LI><FONT face=Tahoma>Allow developers to mimic the results with Invariant casing plus the Ordinal style comparison</FONT></LI></OL>
+<P><FONT face=Tahoma></FONT>&nbsp;</P>
+<P><FONT face=Tahoma color=#ff1493><EM>This post brought to you by</EM> "￼" <EM>(<A href="http://www.fileformat.info/info/unicode/char/fffc/index.htm">U+fffc</A>, a.k.a. OBJECT REPLACEMENT CHARACTER)</EM></FONT></P>
+<P><FONT face=Tahoma></FONT>&nbsp;</P>
+<P><FONT face=Tahoma></FONT>&nbsp;</P>
+<hr/><div style="margin-left: 1em"><em>no comments</em></div><hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2005/09/22/472614.html" title="Getting the language string">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2005/09/21/472622.html" title="See you at the MVP Summit">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2005-09">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2005-09-22">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2005/09/22/472596.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:41 GMT -->
+</html>

@@ -1,0 +1,89 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2006/11/16/1086283.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:39 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>The problem of string comparisons, WORD sorts, and the minus that is treated like the hyphen</title></head><body>
+<h1>The problem of string comparisons, WORD sorts, and the minus that is treated like the hyphen</h1>
+<p><em>by Michael S. Kaplan, published on 2006/11/16 07:14 -05:00, original URI: http://blogs.msdn.com/b/michkap/archive/2006/11/16/1086283.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<FONT face=Tahoma size=3>
+<P>William Hooper pointed me to an interesting bug report: </P>
+<BLOCKQUOTE><FONT face="Times New Roman,Times" size=2>
+<P>Help Strings in .NET not always transisitve!!!!!!<BR><BR>We need someone to help us!!!!!!<BR><BR>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<BR><BR><A href="https://connect.microsoft.com/feedback/viewfeedback.aspx?FeedbackID=236900&amp;wa=wsignin1.0&amp;siteid=210" target=_new rel=nofollow mce_href="https://connect.microsoft.com/feedback/viewfeedback.aspx?FeedbackID=236900&amp;wa=wsignin1.0&amp;siteid=210">https://connect.microsoft.com/feedback/viewfeedback.aspx?FeedbackID=236900&amp;wa=wsignin1.0&amp;siteid=210</A><BR><BR>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<BR><BR><FONT face="Consolas,Lucida Console,Courier New,Courier"><B>&nbsp;&nbsp; string s1 = "-0.67:-0.33:0.33";<BR>&nbsp;&nbsp; string s2 = "0.67:-0.33:0.33";<BR>&nbsp;&nbsp; string s3 = "-0.67:0.33:-0.33"; <BR>&nbsp;&nbsp; Console.WriteLine(s1.CompareTo(s2));<BR>&nbsp;&nbsp; Console.WriteLine(s2.CompareTo(s3));<BR>&nbsp;&nbsp; Console.WriteLine(s1.CompareTo(s3));<BR><BR></B></FONT>Bug in the hypen logic when there are two hyphens in string...</P></FONT></BLOCKQUOTE>
+<P mce_keep="true">Now I have talked about string sort vs. word sort&nbsp;in <STRONG><A class="" href="http://archives.miloush.net/michkap/archive/2006/05/04/589656.html" mce_href="http://archives.miloush.net/michkap/archive/2006/05/04/589656.html">the</A></STRONG> <STRONG><A class="" href="http://archives.miloush.net/michkap/archive/2005/05/05/414845.html" mce_href="http://archives.miloush.net/michkap/archive/2005/05/05/414845.html">past</A></STRONG>. And this is a problem which appears in both Windows and the .NET Framework, in all versions -- and has for all the versions I checked.</P>
+<P mce_keep="true">Even more interestingly, if you reverse all three comparisons the bug still happens (it is common in these kinds of issues when they come up for there to be a difference!).</P>
+<P mce_keep="true">Let's look at the sort keys to see how things look for the three strings:</P>
+<BLOCKQUOTE><FONT face="Consolas,Lucida Console,Courier New,Courier"><B>
+<P mce_keep="true">0c 03 07 33 0c 7d 0c 90 07 37 0c 03 07 33 0c 46 0c 46 07 37 0c 03 07 33 0c 46 0c 46 01 01 01 01 80 07 06 82 80 1b 06 82 00<BR>0c 03 07 33 0c 7d 0c 90 07 37 0c 03 07 33 0c 46 0c 46 07 37 0c 03 07 33 0c 46 0c 46 01 01 01 01 80 1b 06 82 00<BR>0c 03 07 33 0c 7d 0c 90 07 37 0c 03 07 33 0c 46 0c 46 07 37 0c 03 07 33 0c 46 0c 46 01 01 01 01 80 07 06 82 80 2f 06 82 00&nbsp;</P></B></FONT></BLOCKQUOTE>
+<P mce_keep="true">&nbsp;Now let's focus on that end piece that contains the hyphen info, since the main parts of the string are all identical:</P>
+<BLOCKQUOTE><FONT face="Consolas,Lucida Console,Courier New,Courier"><B>
+<P mce_keep="true">80 07 06 82 80 1b 06 82 00<BR>80 1b 06 82 00<BR>80 07 06 82 80 2f 06 82 00&nbsp;</P></B></FONT></BLOCKQUOTE>
+<P mce_keep="true">&nbsp;Now obviously from a sort key standpoint, s1 &lt; s3 &lt; s2, always. Which is obviously superior to s1 &gt; s2 &gt; s3 &gt; s1 any day of the week, and which points to comparison that has the bug in it -- the comparison of s1 vs s2:</P>
+<BLOCKQUOTE><FONT face="Consolas,Lucida Console,Courier New,Courier"><B>
+<P mce_keep="true">CompareInfo ci = CompareInfo.GetCompareInfo(0x409);<BR>string st1 = "-0.67:-0.33:0.33";<BR>string st2 = "0.67:-0.33:0.33";<BR>string st3 = "-0.67:0.33:-0.33";&nbsp;<BR>SortKey sk1 = ci.GetSortKey(st1);<BR>SortKey sk2 = ci.GetSortKey(st2);<BR>SortKey sk3 = ci.GetSortKey(st3);<BR><BR>Console.WriteLine(ci.Compare(st1, st2));<BR>Console.WriteLine(ci.Compare(st2, st3));<BR>Console.WriteLine(ci.Compare(st1, st3));<BR>Console.WriteLine();<BR>Console.WriteLine(SortKey.Compare(sk1, sk2));<BR>Console.WriteLine(SortKey.Compare(sk2, sk3));<BR>Console.WriteLine(SortKey.Compare(sk1, sk3));</P></B></FONT></BLOCKQUOTE>
+<P mce_keep="true">The results?</P>
+<BLOCKQUOTE><FONT face="Consolas,Lucida Console,Courier New,Courier"><B>
+<P mce_keep="true"><FONT color=#ff0000>1</FONT><BR>1<BR>-1<BR><BR><FONT color=#ff0000>-1</FONT><BR>1<BR>-1&nbsp;</P></B></FONT></BLOCKQUOTE>
+<P mce_keep="true">Definitely a bug in the string comparison, one that has been around for a long time. Perhaps a better reason than ever to keep in mind the importance of linguistically meaningful strings when one is using the NLS/NLS+ collation support? Clearly the intent of the word sort is to handle an entirely different class of usage of <A class="" href="http://www.fileformat.info/info/unicode/char/002d" mce_href="http://www.fileformat.info/info/unicode/char/002d">U+002d</A> -- basically it is meant to handle the hyphen, not the minus. A meaningful comparison of these strings would have to be based on the underlying source of the numeric data.</P>
+<P mce_keep="true">Do we have an NLS tester in the house? Let's make sure that Connect bug makes its way to me when it gets ported. And I suppose we need one for v.Next of Windows, too....</P>
+<P mce_keep="true">It might even be worth treating <A class="" href="http://www.fileformat.info/info/unicode/char/2212" mce_href="http://www.fileformat.info/info/unicode/char/2212">U+2212</A> (MINUS SIGN) as different than <A class="" href="http://www.fileformat.info/info/unicode/char/002d" mce_href="http://www.fileformat.info/info/unicode/char/002d">U+002d</A> (HYPHEN-MINUS), though as a mitigation it won't help since most methods of converting a minus to a string come up with <A class="" href="http://www.fileformat.info/info/unicode/char/002d" mce_href="http://www.fileformat.info/info/unicode/char/002d">U+002d</A>, not <A class="" href="http://www.fileformat.info/info/unicode/char/2212" mce_href="http://www.fileformat.info/info/unicode/char/2212">U+2212</A>. Just as most hyphens&nbsp;do not end up as <A class="" href="http://www.fileformat.info/info/unicode/char/2010" mce_href="http://www.fileformat.info/info/unicode/char/2010">U+2010</A> (HYPHEN). Though of course the <STRONG><A class="" href="http://archives.miloush.net/michkap/archive/2005/02/13/371895.html" mce_href="http://archives.miloush.net/michkap/archive/2005/02/13/371895.html">best fit mappings</A></STRONG> for both characters usully puts them as <A class="" href="http://www.fileformat.info/info/unicode/char/002d" mce_href="http://www.fileformat.info/info/unicode/char/002d">U+002d</A>.&nbsp;Changing all of those string creating definitions would probably create even more problems with compatibility. :-(</P>
+<P mce_keep="true">&nbsp;</P>
+<P mce_keep="true"><FONT color=#ff00ff><EM>This post brought to you by</EM>&nbsp;<FONT size=6>-</FONT> <EM>(U+002d, a.k.a. HYPHEN-MINUS)</EM></FONT></P></FONT>
+<hr/><p><strong>Bart</strong> on 16 Nov 2006 10:16 AM:</p><div style="margin-left: 1em"><p>So how will you work around this ?</p>
+<p>Add code to check if a x2d is followed by 0-9 ? and treat it as a x2212 ?</p></div>
+<p><strong>Michael S. Kaplan</strong> on 16 Nov 2006 9:53 PM:</p><div style="margin-left: 1em"><p>At some level of the code you know that you are passing non-linguistic strings; the key is to know when to not be calling CompareString or its ilk.</p>
+</div>
+<p><strong>Oleg</strong> on 23 Nov 2006 11:17 AM:</p><div style="margin-left: 1em"><p>Look at the sort keys for the three strings again. There are four 01 bytes in front of the end piece that contains the hyphen info.</p>
+<p>According to my local MSDN documentation the sort key is stored as an array of byte values in the following format:</p>
+<p>[all Unicode sort weights] 0x01 [all Diacritic weights] 0x01 [all Case weights] 0x01 [all Special weights] 0x00</p>
+<p>Online documentation (<a rel="nofollow" target="_new" href="http://msdn.microsoft.com/library/default.asp?url=/library/en-us/intl/nls_5s2v.asp">http://msdn.microsoft.com/library/default.asp?url=/library/en-us/intl/nls_5s2v.asp</a>) specifies another format:</p>
+<p>[all Unicode sort weights] 0x01 [all Diacritic weights] 0x01 [all Case weights] 0x01 [all Special weights] 0x01 0x00</p>
+<p>Note one more 0x01.</p>
+<p>Could it be that both documentation sources are incorrect and the format is:</p>
+<p>[all Unicode sort weights] 0x01 [all Diacritic weights] 0x01 [all Case weights] 0x01 0x01 [all Special weights] 0x00</p>
+<p>Can you make it clear?</p></div>
+<p><strong>Michael S. Kaplan</strong> on 23 Nov 2006 10:49 PM:</p><div style="margin-left: 1em"><p>Actually, it is just the punctuation weights are separate outside of the other special weights....</p>
+</div>
+<p><strong>Oleg</strong> on 24 Nov 2006 6:16 AM:</p><div style="margin-left: 1em"><p>Then, do I understand it correctly that the format is:</p>
+<p>[all Unicode sort weights] 0x01 [all Diacritic weights] 0x01 [all Case weights] 0x01 [&quot;Other&quot; Special weights] 0x01 [Punctuation weights] 0x00 ?</p>
+<p>Can you give an example of the string that has &quot;other&quot; special weights piece in the sort key? Does punctuation weights piece contain information only about hyphens and apostrophes?</p></div>
+<p><strong>Michael S. Kaplan</strong> on 24 Nov 2006 9:04 AM:</p><div style="margin-left: 1em"><p>Yes, when I talked about &quot;punctuation weights&quot; I was referring to those hyphen/apostrophe characters affected by word sorts. Those are not &quot;special weights&quot;.</p>
+<p>Special weights are something you'll see when you deal with a lot of Kana....</p>
+</div>
+<p><strong>Oleg</strong> on 24 Nov 2006 11:26 AM:</p><div style="margin-left: 1em"><p>Then example string could be SO-DIMMソケット&#215;2.</p>
+<p>The sort key for this string is:</p>
+<p>0e 91 0e 7c 0e 1a 0e 32 0e 51 0e 51 22 16 22 0d</p>
+<p>22 1c 22 1e 08 1c 0c 33 01 01 12 12 12 12 12 12</p>
+<p>01 c6 c6 c4 ff 02 c4 c4 c4 c4 ff ff 01 80 0f 06</p>
+<p>82 00</p>
+<p>In this key &quot;Special weights&quot; piece is:</p>
+<p>c6 c6 c4 ff 02 c4 c4 c4 c4 ff ff</p>
+<p>and the &quot;punctuation weights&quot; piece is:</p>
+<p>80 0f 06 82</p>
+<p>And the LCMapString with the LCMAP_SORTKEY flag stores a sort key in the buffer, as an array of byte values in the following format:</p>
+<p>[all Unicode sort weights] 0x01 [all Diacritic weights] 0x01 [all Case weights] 0x01 [all Special weights] 0x01 [Punctuation weights] 0x00</p>
+<p>&quot;Punctuation weights&quot; piece is specific for WORD sort and contains </p>
+<p>information about hyphen/apostrophe characters.</p>
+<p>Is this correct description now?</p></div>
+<p><strong>Michael S. Kaplan</strong> on 24 Nov 2006 1:41 PM:</p><div style="margin-left: 1em"><p>Yes, it is. </p>
+</div>
+<p><strong>stefang</strong> on 12 Aug 2009 4:09 AM:</p><div style="margin-left: 1em"><p>I have just spent a whole day chasing a problem where data from an SQL server database was sorted differently by SSIS Sort and SQL Server 2005.</p>
+<p>In both cases I have used the same collation (finnish_swedish_cs_as) Since this is a windows collation the sorts produced by SQL server should (according to SQL Server documentation) be compatible with sorts produced by CompareString.</p>
+<p>After lots of investigation I have identified that the reason for the problem is that SSIS uses CompareString with the above bug, but that SQL server uses something else that has fixed the bug.</p>
+<p>If you ever get a chance to fix this problem in CompareString, please make sure that the result is compatible with the SQL server implementation.</p>
+<p>The strings i have had problems with are:</p>
+<p>a="MX97_5_OE-SMC-24/45"</p>
+<p>b="MX97_5_OESMC-24/45"</p>
+<p>SQL server thinks that a&lt;b while CompareString thinks that a&gt;b</p></div>
+<p><strong>Michael S. Kaplan</strong> on 12 Aug 2009 11:40 AM:</p><div style="margin-left: 1em"><p>Not exactly ontopic here, but version of Windows where the SSIS code is running would also be needed to pin this down....</p>
+</div>
+<p><strong>stefang</strong> on 18 Aug 2009 10:46 AM:</p><div style="margin-left: 1em"><p>I have tested this on XP SP2 and Server 2003 R2. SQL Server 2005</p></div>
+<p><strong>Michael S. Kaplan</strong> on 19 Aug 2009 1:32 AM:</p><div style="margin-left: 1em"><p>The differences here between Windows and SQL Server are more or less expected since the SQLS tables are based on data from Windows 2000 pre-Beta2 and the XP/Server 2003 is based on data from a half &nbsp;decade later that was not based on &nbsp;non-shipping Windows collation data....</p>
+<p>The most comprehensively compatible results between Windows and SQLS are to be found in Windows Server 2008 and SQL Server 2008, as the latter was updated and put largely into sync with the former.</p>
+</div>
+<p><strong>stefang</strong> on 19 Aug 2009 11:19 AM:</p><div style="margin-left: 1em"><p>Does this mean that this bug has been fixed on windows server 2008 ?</p></div>
+<p><strong>Michael S. Kaplan</strong> on 19 Aug 2009 2:31 PM:</p><div style="margin-left: 1em"><p>Depends on your definition of "fixed" to be honest.</p>
+<ul><li>If you mean the different results for this specific class of comparison, then YES, it is;</li><li>If you mean the tendency of SQLS to use different comparison methodologies in different technologies within the same product that lead to the potential for such differences, then NO, it is not;</li><li>If you mean the tendency of SQLS to only periodically update its collations (clearly less often than Windows, causing some divergence), then NO, it is not;</li><li>If you mean the insistence of carrying on offtopic conversations in unrelated blog topics, &nbsp;NO, that will never really be fixed. :-)</li></ul></div>
+<p><strong>stefang</strong> on 20 Aug 2009 3:24 AM:</p><div style="margin-left: 1em"><p>Thank you for the answers. This really makes the situation much clearer.</p>
+<p>Sorry about the slightly offtopic comments.</p></div>
+<hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2010/09/07 <a href="http://archives.miloush.net/michkap/archive/2010/09/07/10058112.html">Refusing to ignore some particular character's width isn't [always] an act of discrimination…</a></p><p>2010/06/10 <a href="http://archives.miloush.net/michkap/archive/2010/06/10/10021417.html">WORD SORT...Why'd it have to be...WORD SORT?</a></p><p>2007/09/20 <a href="http://archives.miloush.net/michkap/archive/2007/09/20/5008305.html">A&P of Sort Keys, part 9 (aka Not always transitive, but punctual and punctuating)</a></p><p>2007/05/06 <a href="http://archives.miloush.net/michkap/archive/2007/05/06/2448753.html">One product's feature is another product's bug -- just ask 'em!</a></p><p>2006/11/25 <a href="http://archives.miloush.net/michkap/archive/2006/11/25/1151550.html">Punctuation... now, isn't that SPECIAL [weights] ?</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2006/11/17/1097532.html" title="Korean + French == ????">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2006/11/14/1074214.html" title="It seems that discrimination is the official policy at the WA Dept. of Licensing">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2006-11">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2006-11-16">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2006/11/16/1086283.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:39 GMT -->
+</html>

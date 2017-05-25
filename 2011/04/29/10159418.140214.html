@@ -1,0 +1,40 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2011/04/29/10159418.140214.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Sometimes the things that used to be different aren't anymore</title></head><body>
+<h1>Sometimes the things that used to be different aren't anymore</h1>
+<p><em>by Michael S. Kaplan, published on 2011/04/29 16:02 +02:00, original URI: http://blogs.msdn.com/b/michkap/archive/2011/04/29/10159418.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostMail -->
+<p>The other day, colleague Tom asked me:</p>
+ <p style="padding-left: 60px;"><span style="font-family: times new roman,times;">Why would LOCALE_IINTLCURRDIGITS ever be different from LOCALE_ICURRDIGITS ?</span></p>
+ <p>This question is a lot more complicated than one might first imagine.</p>
+ <p>We'll start with the definitions:</p>
+ <ul>
+ <li><a href="http://msdn.microsoft.com/library/dd373754.aspx">LOCALE_ICURRDIGITS</a> - Number of fractional digits for the local monetary format. The maximum number of characters allowed for this string is two, including the values 0-9 and a terminating null character. For example, 200.00 has a value of 2 because there are two fractional digits, while 200 has a value of 0 because there are no fractional digits displayed. </li>
+ <li><a href="http://msdn.microsoft.com/library/dd373778.aspx">LOCALE_IINTLCURRDIGITS</a> - Number of fractional digits for the international monetary format. The maximum number of characters allowed for this string is three, including a terminating null character. For example, the number of fractional digits for the international monetary format of US Dollars is 2, as in $345.25. </li>
+ </ul>
+ <p>You may want to read these definitions a few different times each, so you can try to understand the difference.</p>
+ <p>Did it work? Do you understand the difference?</p>
+ <p>Me neither.</p>
+ <p>Without explaining the difference between "local" and "international" in this context, it is not clear that they are any different -- or if so, how they are different.</p>
+ <p>Let's look for other clues.</p>
+ <p>If you look at the big list of <a href="http://msdn.microsoft.com/library/dd464799.aspx">Locale Information Constants</a>, <a href="http://msdn.microsoft.com/library/dd373778.aspx">LOCALE_IINTLCURRDIGITS</a>&nbsp;claims to be a part of <strong>Constants Used by GetLocaleInfo and GetLocaleInfoEx Only</strong>, while <a href="http://msdn.microsoft.com/library/dd373754.aspx">LOCALE_ICURRDIGITS</a>&nbsp;claims to be a part of <strong>Constants Used by Both SetLocaleInfo and GetLocaleInfo/GetLocaleInfoEx</strong>. That's a genuine difference.</p>
+ <p>The <a href="http://msdn.microsoft.com/library/dd317784.aspx">CURRENCYFMT Structure</a>, the <a href="http://msdn.microsoft.com/library/system.globalization.numberformatinfo.aspx">NumberFormatInfo class</a>, and the Microsoft Locale Builder </p>
+ <p><img src="http://msdnshared.blob.core.windows.net/media/MSDNBlogsFS/prod.evol.blogs.msdn.com/CommunityServer.Blogs.Components.WeblogFiles/00/00/00/33/81/1440.mslb01.jpg" /></p>
+ <p>all have one thing in common: just one setting. </p>
+ <p>The underlying data store in locale.nls also has only one item in it, though the original source files still have two items. One just gets ignored when the file is being built.</p>
+ <p>At runtime, the only difference is that one only works for setting while the other works for getting and setting. They are both using the same value (if you set <a href="http://msdn.microsoft.com/library/dd373754.aspx">LOCALE_ICURRDIGITS</a>&nbsp;then <a href="http://msdn.microsoft.com/library/dd373778.aspx">LOCALE_IINTLCURRDIGITS</a>&nbsp;is also changed).</p>
+ <p>So the difference is that there is no actual difference!</p>
+ <p>This was not always the case though, mind you.</p>
+ <p>If you go back to Windows XP and Server 2003, they were two separate items that could be different, and there were two theoretical purposes:</p>
+ <ul>
+ <li>When&nbsp;using a locale with decimal formatting info very different from the values of other locales (e.g. Japanese or Persian, where talk of fractional values is very uncommon), this would make formatting other currency values easier (i.e.g you know how many decimal places to use when you need fractional values even if you usually wouldn't ever need to know);</li>
+ <li>When dealng with locales transitioning to the Euro, <a href="http://msdn.microsoft.com/library/dd373754.aspx">LOCALE_ICURRDIGITS</a>&nbsp;could be used for the locale's currency symbol and <a href="http://msdn.microsoft.com/library/dd373778.aspx">LOCALE_IINTLCURRDIGITS</a>&nbsp;could be used for the other currency.</li>
+ </ul>
+ <p>In practice, purposes such of these were represented in the data for some locales in Server 2003 and earlier -- Japan, for example did indeed have a <a href="http://msdn.microsoft.com/library/dd373754.aspx">LOCALE_ICURRDIGITS</a>&nbsp;of 0 and a <a href="http://msdn.microsoft.com/library/dd373778.aspx">LOCALE_IINTLCURRDIGITS</a>&nbsp;of 2. But this kind of difference vanished by the time Vista's locale data shipped. Note that formatting never used it, the documentation&nbsp;was never clear, and despite disappearing from everywhere as a distinct&nbsp;item there is a real lack of complaining about it.</p>
+ <p>Think of <a href="http://msdn.microsoft.com/library/dd373778.aspx">LOCALE_IINTLCURRDIGITS</a>&nbsp;as an evolutionary blind alley in the development of Windows locale data. </p>
+ <p>And the documentation simply hasn't caught up to describng this vestigial tail (that catchup is slightlf perilous for as long as it reasonable to use the docs for Windows XP/Server 2003 and earlier, unless the full scope of the setting is also documented).</p>
+ <p>Perhaps it just need a kickass KB article.</p>
+ <p>Or a kickass blog. :-)</p>
+<hr/><div style="margin-left: 1em"><em>comments not archived</em></div><hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2011/05/04 <a href="http://archives.miloush.net/michkap/archive/2011/05/04/10160919.html">Regarding the overthinking and underimplementing of names</a></p><p>2011/05/03 <a href="http://archives.miloush.net/michkap/archive/2011/05/03/10160402.html">Leave it to Microsoft to take the most confusing thing and make it worse!</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2011/04/29/10159418.html" title="Sometimes the things that used to be different aren&#39;t anymore">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2011/04/28/10159111.html" title="The Sally Kimball Addition To The Dead Keys Conundrum: An Encyclopedia Brown Mystery">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2011-04">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2011-04-29">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2011/04/29/10159418.140214.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+</html>

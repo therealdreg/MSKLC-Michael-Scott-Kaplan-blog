@@ -1,0 +1,35 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2012/03/13/10281814.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>I don't care what time it was (except when I *really* care about what time it was, I mean)</title></head><body>
+<h1>I don't care what time it was (except when I *really* care about what time it was, I mean)</h1>
+<p><em>by Michael S. Kaplan, published on 2012/03/13 07:01 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2012/03/13/10281814.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<p>One of the best specific consequences of the whole DST weirdness back in 2007 was a design decision to start paying attention to historical time zone information.</p>
+<p>Well, it put a real cat among the pigeons for people like me mwho decided they like Windows behavior better than .NET behavior as <a href="http://blogs.msdn.com/b/oldnewthing/">Raymond</a> described almost a decade ago in seminal&nbsp;<a href="http://blogs.msdn.com/b/oldnewthing/archive/2003/10/24/55413.aspx">Why Daylight Savings Time is nonintuitive</a>.</p>
+<p>You know, the one where he explained how "<em>Win32 always deals with the time zone you are currently in (even if it's not the time zone that corresponds to the timestamp you are manipulating), whereas .NET deals with the time zone that was in effect at the time the timestamp was generated.</em>"</p>
+<p>Now, even though Windows will "ignore" whether the time five months ago was an hour behind or not, it will be able to know whether it is 24 hours different because the Samoa time zone was moved by over 24 hours at the end of last year.</p>
+<p>You know, like I described in blogs like <strong><a title="What do Ian Anderson and Samoa have in common? They're both tired of Living in the Past!" href="http://archives.miloush.net/michkap/archive/2011/05/11/10163240.html">What do Ian Anderson and Samoa have in common? They're both tired of Living in the Past!</a></strong> and <strong><a title="What do Samoa and Seattle have in common? The sun won't shine on either on Dec 30th!" href="http://archives.miloush.net/michkap/archive/2011/12/29/10251662.html">What do Samoa and Seattle have in common? The sun won't shine on either on Dec 30th!</a></strong>.</p>
+<p>Trying to combine the two notions of "I care <strong>tremendously</strong> what you thought the time was two years ago and whether it was DST or not" with "<strong>I don't care</strong> whether or not you thought it wasn't DST five months ago".</p>
+<p>Seriously, try it.</p>
+<p>Especially when&nbsp;you consider the interesting yet strange differences between system times and file times, and then throw the .NET <a href="http://msdn.microsoft.com/library/system.timezoneinfo.aspx">TimeZoneInfo</a> and <a href="http://msdn.microsoft.com/library/system.timezone.aspx">TimeZone</a> and <a href="http://msdn.microsoft.com/library/system.datetimeoffset.aspx">DateTimeOffset</a> and the like, for good measure.</p>
+<p>Then throw in trying to use more than one of them.</p>
+<p>Or&nbsp;converting between one two or more of them.</p>
+<p>If you think about it long enough, it will give you a headache.</p>
+<p>A <strong>serious</strong> headache.</p>
+<p>Oh well, look on the bright side.</p>
+<p>When we first made the Samoa fix, in <a href="http://support.microsoft.com/kb/2633952">MSKB 2633952</a>&nbsp;(December 2011 cumulative time zone update for Windows operating systems), there was a bug.</p>
+<p>It seems they forgot to add the historical info, which required them to release <a href="http://support.microsoft.com/kb/2657025">MSKB 2657025</a>&nbsp;(Update for 2011 calendar history in Windows operating systems), to fix the problem.</p>
+<p>However, if you wanted to take a moment to think of those care free days before everyone decided to start over-thinking the plumbing about time zones before clicking on that update, I shan't fault you.</p>
+<p>Those were simpler times.... :-)</p>
+<hr/><p><strong>John Cowan</strong> on 13 Mar 2012 4:15 PM:</p><div style="margin-left: 1em"><p>That explanation about local-to-UTC and UTC-to-local time converters not being inverses (on Raymond&#39;s blog) doesn&#39;t make any sense. &nbsp;If you have a local time between 2 AM and 3 AM on &quot;spring ahead&quot; day, you made a mistake writing down what time it was. &nbsp;It can&#39;t be converted to UTC because IT DIDN&#39;T EXIST.</p>
+<p>And if you don&#39;t care whether it was DST five years ago or not, why care what time zone it was five years ago at all? &nbsp;Just render everything in current time.</p>
+</div>
+<p><strong>Simon Buchan</strong> on 13 Mar 2012 6:07 PM:</p><div style="margin-left: 1em"><p>Gah. I got a headache just reading those &quot;notions&quot;. I can&#39;t fit even one of them in my head, and I humbly consider myself more informed than most developers working with times (for a weak enough &quot;with&quot;).</p>
+<p>I&#39;m in favor of the Russian abolition of Daylight Saving: it may not fix all timezone woes, but it should help reduce future ones!</p>
+</div>
+<p><strong>Henry Skoglund</strong> on 13 Mar 2012 7:23 PM:</p><div style="margin-left: 1em"><p>I was hoping that Protogon/ReFs had an extra timefield in its metadata, i.e. current offset in seconds from UTC *at the time the file was saved*, but I haven&#39;t seen it yet.</p>
+<p>I mean, instead of switching all your files on C: to another time when you transition PST/PDT, like Win32 does, or trying to recreate the historical timezone in effect at file save, like NET does, one thing that could save you from going bonkers (unless you&#39;re a Time Lord) is to include with each and every file&#39;s metadata the current UTC offset in seconds, both for the last modified date/time and the creation date/time. NTFS cannot be changed now but perhaps still possible with ReFS...</p>
+</div>
+<hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2012/03/14/10282633.html" title="Not the Lira or the New Lira, but a New Turkish Lira, nevertheless">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2012/03/12/10281199.html" title="3 things: 1) there&#39;s a bug in the W8 DP, 2) it&#39;s still in the W8 CP, and 3) what was that third thing?">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2012-03">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2012-03-13">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2012/03/13/10281814.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+</html>

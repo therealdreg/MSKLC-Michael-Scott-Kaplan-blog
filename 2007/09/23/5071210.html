@@ -1,0 +1,67 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2007/09/23/5071210.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:37 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Docs can whet SiaO's appetite, but where's the blog?</title></head><body>
+<h1>Docs can whet SiaO's appetite, but where's the blog?</h1>
+<p><em>by Michael S. Kaplan, published on 2007/09/23 06:31 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2007/09/23/5071210.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P>As I mentioned back in <A class="" href="http://archives.miloush.net/michkap/archive/2007/09/14/4900107.html" mce_href="http://archives.miloush.net/michkap/archive/2007/09/14/4900107.html"><STRONG>How do I feel about lstrcmpi? I think it blows....</STRONG></A>, the Mac <A class="" href="http://developer.apple.com/documentation/CoreFoundation/Reference/CFStringRef/Reference/reference.html" mce_href="http://developer.apple.com/documentation/CoreFoundation/Reference/CFStringRef/Reference/reference.html">CFString</A> stuff has some fascinating issues related to collation that I thought I'd chat about, with me owning a MacBook Pro and with Microsoft making Silverlight run on it and all. :-)</P>
+<P>Here are the <A class="" href="http://developer.apple.com/documentation/CoreFoundation/Reference/CFStringRef/Reference/reference.html" mce_href="http://developer.apple.com/documentation/CoreFoundation/Reference/CFStringRef/Reference/reference.html">CFString</A>&nbsp;methods of interest that I am thinking about:</P>
+<BLOCKQUOTE>
+<UL>
+<LI>
+<DIV mce_keep="true">Searching Strings</DIV></LI>
+<UL>
+<LI>
+<DIV mce_keep="true">CFStringCreateArrayWithFindResults&nbsp; </DIV></LI>
+<LI>
+<DIV mce_keep="true">CFStringFind&nbsp; </DIV></LI>
+<LI>
+<DIV mce_keep="true">CFStringFindCharacterFromSet&nbsp; </DIV></LI>
+<LI>
+<DIV mce_keep="true">CFStringFindWithOptions&nbsp; </DIV></LI>
+<LI>
+<DIV mce_keep="true">CFStringGetLineBounds&nbsp; </DIV></LI></UL>
+<LI>
+<DIV mce_keep="true">Comparing Strings</DIV></LI>
+<UL>
+<LI>
+<DIV mce_keep="true">CFStringCompare&nbsp; </DIV></LI>
+<LI>
+<DIV mce_keep="true">CFStringCompareWithOptions&nbsp; </DIV></LI>
+<LI>
+<DIV mce_keep="true">CFStringHasPrefix&nbsp; </DIV></LI>
+<LI>
+<DIV mce_keep="true">CFStringHasSuffix&nbsp; </DIV></LI></UL></UL></BLOCKQUOTE>
+<P mce_keep="true">First of all, do you see how they split between comparing and searching? In our <A class="" href="http://msdn2.microsoft.com/library/ms776359.aspx" mce_href="http://msdn2.microsoft.com/library/ms776359.aspx">FindNLSString</A>/<A class="" href="http://msdn2.microsoft.com/library/ms776360.aspx" mce_href="http://msdn2.microsoft.com/library/ms776360.aspx">FindNLSStringEx</A> functions, since prefix and suffix matching are a special case of a find operation, they are bundled together with the find, too. Though I can see the argument for the split in this way too....</P>
+<P mce_keep="true">But what actually interested me the most was the list of <A class="" href="http://developer.apple.com/documentation/CoreFoundation/Reference/CFStringRef/Reference/reference.html#//apple_ref/doc/constant_group/String_Comparison_Flags" mce_href="http://developer.apple.com/documentation/CoreFoundation/Reference/CFStringRef/Reference/reference.html#//apple_ref/doc/constant_group/String_Comparison_Flags">String Comparison Flags</A> that all of these functions seem to take:</P>
+<BLOCKQUOTE>
+<P mce_keep="true"><FONT face="courier new,courier">typedef enum {<BR>&nbsp;&nbsp; kCFCompareCaseInsensitive = 1,<BR>&nbsp;&nbsp; kCFCompareBackwards = 4,<BR>&nbsp;&nbsp; kCFCompareAnchored = 8,<BR>&nbsp;&nbsp; kCFCompareNonliteral = 16,<BR>&nbsp;&nbsp; kCFCompareLocalized = 32,<BR>&nbsp;&nbsp; kCFCompareNumerically = 64<BR>};<BR>CFStringCompareFlags;</FONT></P></BLOCKQUOTE>
+<P mce_keep="true">There seem to be some odd interactions between&nbsp;some of the flags and some of the methods, which makes me suspect that not all of them work together in every case, and in other cases the combinations seem redundant&nbsp;(for example, what's the point of CFString::CFStringHasPrefix or CFString:CFStringHasSuffix with functions that have the kCFCompareAnchored flag? Like there is some other way to be a prefix or a suffix that isn't "anchored" by their definition?).</P>
+<P mce_keep="true">And some of the definitions seemed off, like their analogue for StrCmpLogicalW:</P>
+<BLOCKQUOTE>
+<P mce_keep="true">kCFCompareNumerically <BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Specifies that represented numeric values should be used as the basis for comparison and not the actual character values.<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; For example, “version 2” is less than “version 2.5”. Does not work if kCFCompareLocalized is specified on systems before 10.3.</P></BLOCKQUOTE>
+<P mce_keep="true">There is a version where "2" &gt; "2.5" ? Maybe they meant one where "version 10" is greater than "version 2" here, like&nbsp;<A class="" href="http://archives.miloush.net/michkap/archive/2005/01/05/346933.html" mce_href="http://archives.miloush.net/michkap/archive/2005/01/05/346933.html"><STRONG>sorting digits as numbers</STRONG></A> is meant to do?&nbsp;Or did they also extend it to decimals here, as well (in which case the example is still dumb but the functionality is pretty damn cool and I'd love to know how well it works and what else it can do) ?</P>
+<P mce_keep="true">Plus some of the encoding stuff looked unusual, I thought that might be worth a look too.</P>
+<P mce_keep="true">Anyway, after I saw it all, I realized the documentation was really insufficient, and I wanted a <STRONG>Sorting the Mac all Out</STRONG> blog to read so I could find out what was really up with these methods. I couldn't find one in my cursory search, so at some point I may have to start digging in and playing with stuff (unless someone knows of such a blog, of course!).</P>
+<P mce_keep="true">&nbsp;</P>
+<P mce_keep="true"><FONT color=#ff00ff><EM>This post brought to you by</EM> <FONT size=5>ⓐ</FONT> <EM>(<A class="" href="http://www.fileformat.info/info/unicode/char/24d0" mce_href="http://www.fileformat.info/info/unicode/char/24d0">U+24d0</A>, a.k.a. CIRCLED LATIN SMALL LETTER A)</EM></FONT></P>
+<hr/><p><strong>Mihai</strong> on 24 Sep 2007 3:55 AM:</p><div style="margin-left: 1em"><p>&lt;&lt;Plus some of the encoding stuff looked unusual, I thought that might be worth a look too.&gt;&gt;</p>
+<p>This is the part that I don't like at all about CFString: &nbsp;the stuff inside can have various encodings, with little control. The way you put something in with an encoding, and take it out in others, sometimes it can fail (if a conversion happens), sometimes might succeed (if there is no conversion or the conversion succeeds), some encoding can be internal, some cannot.</p>
+<p>It just feels &quot;unclean&quot; and &quot;hacked&quot; together.</p></div>
+<p><strong>Rosyna</strong> on 24 Sep 2007 4:50 AM:</p><div style="margin-left: 1em"><p>The CFStringStringHasSuffix/HasPrefix are simply convenience functions. They only actually call:</p>
+<p> &nbsp; &nbsp; return CFStringFindWithOptions(string, prefix, CFRangeMake(0, CFStringGetLength(string)), kCFCompareAnchored, NULL);</p>
+<p> &nbsp; &nbsp;return CFStringFindWithOptions(string, suffix, CFRangeMake(0, CFStringGetLength(string)), kCFCompareAnchored|kCFCompareBackwards, NULL);</p>
+<p>However, for such simple operations as finding a prefix/suffix, passing all those args is tedious and makes code less readable.</p>
+<p>Also, compare comparing 2 to 2.0 to 2.00 to 2.5 to 2.50 numerically.</p>
+<p>And if you look at the CFString.h header, it lists which options work with which functions (since some can obviously not be used well together). &nbsp;2.5 is a number too.</p>
+<p>Of course, all of this CFString stuff is completely opensource, but I don't recommend anyone look at the source code as it will make you head asplode.</p>
+<p>Note that all of this stuff is toll-free bridged with NSString so you might find some of the documentation in NSString.</p>
+</div>
+<p><strong>Wevah</strong> on 24 Sep 2007 4:51 AM:</p><div style="margin-left: 1em"><p>CFStringHasPrefix/CFStringHasSuffix are just convenience functions that call CFStringFindWithOptions with the kCFCompareAnchored specified (and kCFCompareBackwards in the case of CFStringHasSuffix).</p></div>
+<p><strong>Rosyna</strong> on 24 Sep 2007 8:26 AM:</p><div style="margin-left: 1em"><p>Mihai, this is a design goal of CFString. It's an opaque data type, it is not a bucket of bits. It can contain multiple encodings in one string as well. If you want an explicit encoding, you ask for it. If a character cannot be rendered in an encoding (like a CJK character when you want ASCII) then it will, of course, be a lossy conversion.</p>
+<p>The internal encoding of CFString means diddly crap.</p>
+<p>Do you have a very specific example that fails when it should not?</p>
+</div>
+<hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2007/09/23/5086819.html" title="The lasting effects of interns, aka Can you fix my Vista install, aka Can they blow the Shofar, aka I should have split up this post!">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2007/09/23/5070899.html" title="If it isn&#39;t Unicode, it isn&#39;t ANY code!">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2007-09">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2007-09-23">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2007/09/23/5071210.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:37 GMT -->
+</html>

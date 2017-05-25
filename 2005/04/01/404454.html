@@ -1,0 +1,74 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2005/04/01/404454.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:42 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Simplification is not necessarily grounds for canonization; ask the IMEMode property!</title></head><body>
+<h1>Simplification is not necessarily grounds for canonization; ask the IMEMode property!</h1>
+<p><em>by Michael S. Kaplan, published on 2005/04/01 03:02 -05:00, original URI: http://blogs.msdn.com/b/michkap/archive/2005/04/01/404454.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P>There are times that simplifying a model can make one's life easier. And there are times that it does not....</P>
+<P>In such cases, the motives may be pure (sometimes I have my doubts) but the people who do the work should not feel that they are really fulfilling some sort of&nbsp;higher purpose.</P>
+<P>One of the times that it does not necessarily help is when dealing with font charset values (whether <A href="http://msdn.microsoft.com/library/en-us/vb98/html/vbprocharsetproperty.asp">StdFont.Charset</A>, <A href="http://msdn.microsoft.com/library/en-us/com/htm/ctin_a2o_46no.asp">IFont::get_Charset</A>/<A href="http://msdn.microsoft.com/library/en-us/com/htm/ctin_a2o_3e44.asp">IFont::put_Charset</A>, or <A href="http://msdn.microsoft.com/library/en-us/gdi/fontext_1wmq.asp">LOGFONT.lfCharSet</A>)&nbsp;and code page values, the mapping between them is a huge pain in the ass and the simplified model becomes really hard to map back and forth. Especially when they did not do the few things that they really should have done to support what they were really getting at -- script distinctions -- and they named it after something that everyone else calls a code page in&nbsp;HTTP&nbsp;and other places. More on this another day.</P>
+<P>Another time is the attempt to map code page values and LCIDs, using LCIDs as&nbsp;a way to determine the code page to use for conversion. Whether one does it in the LCID parameter of OLE Automation methods or in Visual Basic's StrComp/StrConv/Split/Filter/Replace/Join/Instr/InstrRev functions, this attempt to overload two very different concepts hurts a lot more than it helps, in core ways. More on this another day, too.</P>
+<P>And yet another time is the actual topic of today's post -- the <A href="http://msdn.microsoft.com/library/en-us/cpref/html/frlrfsystemwindowsformsimemodeclasstopic.asp">IMEMode&nbsp;Enumeration</A> used by WinForms controls (inherited by many other control types).</P>
+<P>The enumeration has a lot of members:</P>
+<DIV class=tablediv>
+<TABLE class=dtTABLE cellSpacing=0>
+
+<TR>
+<TD><B>Member name<B> </B></B>
+<TD><B>Description<B></B></B></TD>
+<TR>
+<TD><B>Alpha</B></TD>
+<TD>Alphanumeric single-byte characters(SBC). This setting is valid for Korean and Japanese IME only.</TD></TR>
+<TR>
+<TD><B>AlphaFull</B></TD>
+<TD>Alphanumeric double-byte characters. This setting is valid for Korean and Japanese IME only.</TD></TR>
+<TR>
+<TD><B>Disable</B></TD>
+<TD>The IME is disabled. With this setting, the users cannot turn the IME on from the keyboard, and the IME floating window is hidden.</TD></TR>
+<TR>
+<TD><B>Hangul</B></TD>
+<TD>Hangul SBC. This setting is valid for the Korean IME only.</TD></TR>
+<TR>
+<TD><B>HangulFull</B></TD>
+<TD>Hangul DBC. This setting is valid for the Korean IME only.</TD></TR>
+<TR>
+<TD><B>Hiragana</B></TD>
+<TD>Hiragana DBC. This setting is valid for the Japanese IME only.</TD></TR>
+<TR>
+<TD><B>Inherit</B></TD>
+<TD>Inherits the IME mode of the parent control.</TD></TR>
+<TR>
+<TD><B>Katakana</B></TD>
+<TD>Katakana DBC. This setting is valid for the Japanese IME only.</TD></TR>
+<TR>
+<TD><B>KatakanaHalf</B></TD>
+<TD>Katakana SBC. This setting is valid for the Japanese IME only.</TD></TR>
+<TR>
+<TD><B>NoControl</B></TD>
+<TD>None (Default).</TD></TR>
+<TR>
+<TD><B>Off</B></TD>
+<TD>The IME is off. This mode indicates that the IME is off, meaning that the object behaves the same as English entry mode. This setting is valid for Japanese, Simplified Chinese, and Traditional Chinese IME only.</TD></TR>
+<TR>
+<TD><B>On</B></TD>
+<TD>The IME is on. This value indicates that the IME is on and characters specific to Chinese or Japanese can be entered. This setting is valid for Japanese, Simplified Chinese, and Traditional Chinese IME only.</TD></TR></TABLE></DIV>
+<P>They are inheriting a whole lot of functionality here, aren't they? It handles turning the IME on or off, whether it is disabled, the mode it sits in, and maybe even the context setting.</P>
+<P>Now whether this is a genuine attempt to simplify a complex area or a desire to put a confusing set of topics in one place to shuffle them to the back of the bus is not the relevant point here (I suspect the former, I have heard at least one&nbsp;EA Microsoft basher who has claimed the latter, but you know how I feel about the bashing types!).</P>
+<P>Say you are porting a legacy application that uses the various functions There are no really good charts that map how these various properties map to <A title=ImmCreateContext href="http://msdn.microsoft.com/library/en-us/intl/ime_5v90.asp" target=_blank>ImmCreateContext</A>, <A title=ImmAssociateContext href="http://msdn.microsoft.com/library/en-us/intl/ime_08s4.asp" target=_blank>ImmAssociateContext</A>, <A title=ImmGetContext href="http://msdn.microsoft.com/library/en-us/intl/ime_3o1g.asp" target=_blank>ImmGetContext</A>,&nbsp;<A href="http://msdn.microsoft.com/library/en-us/intl/ime_1lys.asp">ImmReleaseContext</A>, <A title=ImmDestroyContext href="http://msdn.microsoft.com/library/en-us/intl/ime_5gfo.asp" target=_blank>ImmDestroyContext</A>, <A title=ImmGetOpenStatus href="http://msdn.microsoft.com/library/en-us/intl/ime_6vub.asp" target=_blank>ImmGetOpenStatus</A>, <A title=ImmSetOpenStatus href="http://msdn.microsoft.com/library/en-us/intl/ime_1n3n.asp" target=_blank>ImmSetOpenStatus</A>, <A title=ImmGetConversionStatus href="http://msdn.microsoft.com/library/en-us/intl/ime_8jzn.asp" target=_blank>ImmGetConversionStatus</A>, and <A title=ImmSetConversionStatus href="http://msdn.microsoft.com/library/en-us/intl/ime_5j8z.asp" target=_blank>ImmSetConversionStatus</A>, is there? Remember that WinForms that functionality is really wrapping these APIs, so obviously someone has these mappings somewhere.</P>
+<P>Some of these functions cover topics so complex that the Platform SDK gives them their own topics (like <A href="http://msdn.microsoft.com/library/en-us/intl/ime_6yus.asp">Input Context</A>). Though if you saw the hellacious code the WinForms devs had to write for their simplification, you would likely appreciate their efforts, even if you did need to understand the mappings!</P>
+<P>Say&nbsp;you need to know which flags can be combined and which ones must not be (a crucial issue that you must have the data for when you have a single enumeration that feeds back to multiple different APIs such as this one). Where is the documentation for this? Saying which settings are valid for which IMEs may be interesting to some, but knowing that some cannot interact at all due to their identity (<STRONG>Inherit</STRONG> is -1, <STRONG>NoControl</STRONG> is 0).</P>
+<P>Knowing that none of them can actually in fact&nbsp;<EM>be</EM> combined would also be handy since they are not bitmask values --- the values are -1 to 10. Imagine some slightly-too-clever developer tries to combine <STRONG>NoControl</STRONG> with some other value and a quick cast? Or worse <STRONG>Inherit</STRONG>? Talk about hidden bugs! </P>
+<P>Maybe FxCop needs to get involved here to avoid&nbsp;that sort of&nbsp;problem<FONT size=1><SUP>1 </SUP></FONT>....</P>
+<P>Especially since for some of these values, having a flag value would make a lot of sense -- like for the half/full distinction that splits <STRONG>Alpha</STRONG>/<STRONG>Hangul</STRONG>/<STRONG>KatakanaHalf</STRONG> from&nbsp;<STRONG>AlphaFull</STRONG>/<STRONG>HangulFull</STRONG>/<STRONG>Katakana</STRONG>/<STRONG>Hiragana</STRONG>. Even if they were going to have "summary" members that combined values, they could have had them made up of constituent parts that would make using the members in such a way for people who wanted/needed the information.</P>
+<P>A colleague of mine asked me if I could perhaps point him at some reference that would point out the mapping between this property and the various IMM API functions. I walked into the task thinking about doing a really cool post that did a total mapping between all of the above IMM APIs and the <A href="http://msdn.microsoft.com/library/en-us/cpref/html/frlrfsystemwindowsformsimemodeclasstopic.asp">IMEMode Enumeration</A>-using property, between the various IMM notification messages&nbsp;and the <A href="http://msdn.microsoft.com/library/en-us/cpref/html/frlrfsystemwindowsformscontrolclassimemodechangedtopic.asp">Control.IMEModeChanged</A> event.</P>
+<P>I came up for air and hour later with a headache and decided to write this diatribe of a post, instead. </P>
+<P>I may try to finish up that mapping at some point, but it is a bit too much at the moment. Sorry, Benson!</P>
+<P>So next time you look at simplifying an interface that you feel is too complex, or if you try to map a simplified version of an interface to a new location because you are mapping some of the functionality, please consider <STRONG>not</STRONG> doing this. Use actual inheritance if you can, or just the same interface if you can't, and keep the model consistent. </P>
+<P>Or, if you can't do any of that, at least consider a migration topic that documents the various mappings for those who need them. And do it right when you are writing the code since it is much harder to jump in later and figure it all out.</P>
+<P>(I will give other examples of this issue, with the mappings if I can unravel them, another day. Teasers: controls wrapped by WinForms and the limitations that are inherited like "<A id=CategoryEntryList href="http://archives.miloush.net/michkap/archive/2005/03/28/402839.html">The WinForms DateTimePicker and MonthCalendar do not support culture settings</A>", simplified versions of NLS functionality like lstrcmp)</P>
+<P><FONT size=1>1 - Perhaps they already are; Michael Fanning and the rest of the FxCop team's obsession with trying to root out potential misuses of the .NET Framework has me convinced that anyone not running this tool is unwilling to have a team of managed experts do code reviews of their stuff, for free! Would you want to work with (or worse, for) such a person?</FONT></P>
+<P>&nbsp;</P>
+<P><FONT color=#ff0000><EM>This post brought to you by the term</EM> "이동" </FONT><EM><FONT color=#ff0000>(U+c774&nbsp;and U+b3d9)<BR><FONT size=1>Two Hangul Syllables which together suggest the meaning of "transfer" or "movement"</FONT></FONT></EM></P>
+<hr/><div style="margin-left: 1em"><em>no comments</em></div><hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2005/04/01/404486.html" title="Way nerdier than I thought">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2005/03/31/404404.html" title="Some people should feel ashamed of themselves">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2005-04">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2005-04-01">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2005/04/01/404454.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:42 GMT -->
+</html>

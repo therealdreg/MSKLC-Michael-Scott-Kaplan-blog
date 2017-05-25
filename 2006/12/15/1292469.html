@@ -1,0 +1,55 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2006/12/15/1292469.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:39 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Sometimes both the question and the answer can suck</title></head><body>
+<h1>Sometimes both the question and the answer can suck</h1>
+<p><em>by Michael S. Kaplan, published on 2006/12/15 03:18 -05:00, original URI: http://blogs.msdn.com/b/michkap/archive/2006/12/15/1292469.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P>Some questions that people may ask are good indications that the person asking is about to be making a mistake.</P>
+<P>Like if someone asks how one might build a bomb, the question sucks for all kinds of reasons. And the ready availability of the answer also sucks, to the point where it really is a toss up of which sucks more.</P>
+<P>Or like the other day, when the question was:</P>
+<BLOCKQUOTE>
+<P><EM><FONT face="times new roman,times">Is it possible to get&nbsp;a list of all the date and time formats supported in XP and Vista?</FONT></EM></P></BLOCKQUOTE>
+<P>Now certainly there is technically an answer (at least for all the built in data that Microsoft provides), at sites like <A class="" href="http://www.microsoft.com/globaldev/nlsweb/default.mspx" mce_href="http://www.microsoft.com/globaldev/nlsweb/default.mspx">this one</A>.</P>
+<P>But this is not a very good site to have out there&nbsp;in my opinion, and not a very good way to answer the question, at the end of the day. And to be honest, as a question it generally indicates that some bad engineering is about to take place.</P>
+<P>Because in almost all cases the actual intended use works against the best interests of customers.</P>
+<P>There are&nbsp;six problems with the site in general and how people might try to use it in particular, all of which can&nbsp;(and usually do) apply to the person asking the question:</P>
+<OL>
+<LI>At any time, the current user can modify their date and time formats to something outside of the built-in lists;</LI>
+<LI>The date and time formats can be (and in the past, on&nbsp;occasion have been)&nbsp;updated in service packs or hot fixes;</LI>
+<LI><A class="" href="http://archives.miloush.net/michkap/archive/2005/01/26/360685.html" mce_href="http://archives.miloush.net/michkap/archive/2005/01/26/360685.html">ELKs</A> can be released which&nbsp;would add&nbsp;entirely new&nbsp;locales to the list;</LI>
+<LI>Custom locales can be installed, which once again would add entirely new locales to the list;</LI>
+<LI>One day there will be a new version of Windows that will probably provide new locales if history is any kind of indication;</LI>
+<LI>The specific site above lists neutral locales which really do not currently exist in Windows from an NLS standpoint, which means some of the data there is not an accurate picture of Windows NLS information for the version it purports to be representing.</LI></OL>
+<P>In other words, the list does not (and cannot) provide a fully scoped list of either every single locale on a machine or all of the possible formats within any given locale.</P>
+<P>So it is a really bad idea to rely on this data as either locales to test (since an actual machine's results can and may vary) or locales to rely on for a supported list (since the actual list can and may also vary) or even an attempt top try and provide the range of possibilities (since a hell of a lot more is possible).</P>
+<P>There is no good substitute for using the NLS API to work with whatever the default user locale might be, and there are in fact many bad substitutes one can build with such a list. Relying on such a list is a guaranteed way to have less than complete coverage.</P>
+<P>Since the only other effective purpose is to try to copy Windows data for another platform (which I think is a bit obnoxious if not as illegal as copying a Rand McNally map and selling it, for just about the same reason) will also suffer from this incompleteness problem, I honestly wouldn't even recommend it for THAT. Because if you truly do plan to "steal" the collection of data, the engineer in me would really want to push people to add a bit more rigor to their process and capture the data more fully.</P>
+<P>Does this mean that the data will be taken down?</P>
+<P>Probably not, because:</P>
+<UL>
+<LI>I am not Dr. International and don't own the site, and</LI>
+<LI>If it were taken down, all of the people who are using it will complain even though they probably are misusing it, and</LI>
+<LI>There is an almost un-natural resistance to taking down a "resource" like this even if it is a bad idea.</LI></UL>
+<P>But it really is not a good question, and the answer is to be honest not so good either. SIAO gives them both thumbs down....</P>
+<P mce_keep="true">&nbsp;</P>
+<P><FONT color=#ff00ff><EM>This post brought to you by</EM>&nbsp;<FONT size=6>𒁁</FONT> <EM>(<A class="" href="http://www.fileformat.info/info/unicode/char/12041" mce_href="http://www.fileformat.info/info/unicode/char/12041">U+12041</A>, a.k.a. CUNEIFORM SIGN BAD)</EM></FONT></P>
+<hr/><p><strong>Dean Harding</strong> on 15 Dec 2006 3:45 AM:</p><div style="margin-left: 1em"><p>Looks like one of those questions where the answer should really by &quot;why do you want to know?&quot; rather than a direct answer...</p></div>
+<p><strong>Adam</strong> on 15 Dec 2006 8:50 PM:</p><div style="margin-left: 1em"><P>Sounds like a mild form of the&nbsp;<A class="" href="http://weblogs.asp.net/alex_papadimoulis/archive/2005/05/25/408925.aspx">I'm not sure what to use to pound the nails in. Should I use an old shoe or a glass bottle?</A> question to me.</P></div>
+<p><strong>Michael S. Kaplan</strong> on 15 Dec 2006 9:51 PM:</p><div style="margin-left: 1em"><p>Hey Dean -- I agree! Though in the end that just buys time, since their answer will invariably be something bad (as I put it, bad engineering about to happen!).</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 15 Dec 2006 9:55 PM:</p><div style="margin-left: 1em"><P>Hey Adam -- that is indeed what is going on, though some might argue that since (in the example I gave):</P>
+<UL>
+<LI>the person who asked the question is a Microsoft employee</LI>
+<LI>the person who answered with that web page is also a Microsoft employee</LI>
+<LI>the web page in question was authored by and is being maintained by Microsoft employees</LI></UL>
+<P>that my saying that both the question and the answer suck may not count as "mild" in everyone's mind....</P></div>
+<p><strong>gripper</strong> on 16 Dec 2006 2:24 AM:</p><div style="margin-left: 1em"><p>I agree all software shouldn't blow up or choke when its running on an &quot;unexpected&quot; language...</p>
+<p>However, there are specific cases where such as list could still prove useful - such as authoring an install bootstrapper that calls an installer package that only includes a limited set of translated resources. If someone has Language A, but tries to install a program that only includes resources for Language B, C, and D... it would be helpful to know what the LCIDs are for the included languages... and then building a selection box using these values, and then choosing a &quot;default&quot; language if the system is out of the range of included resources. Unless there is a better way to do it... I'm open to suggestions?</p>
+<p>Just my two cents as someone stuck in the magical and perilous world of installation programs.</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 16 Dec 2006 2:35 AM:</p><div style="margin-left: 1em"><p>Hey gripper -- not sure how the scenario you are talking about requires a list of date formats in every locale, right?</p>
+</div>
+<p><strong>Adam</strong> on 16 Dec 2006 5:25 AM:</p><div style="margin-left: 1em"><p>Michael &gt; I'd say a question that can be described as &quot;sucking&quot; is pretty mild compared to the kind of question that gets a &quot;You need to stop building things for money until you understand the basics of construction.&quot; response :-)</p></div>
+<hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2006/12/15/1299969.html" title="Technical Lead&#39;s Personal Log: Stardate unknown">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2006/12/14/1284914.html" title="Pretty damn close to top of the line">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2006-12">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2006-12-15">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2006/12/15/1292469.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:39 GMT -->
+</html>

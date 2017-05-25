@@ -1,0 +1,65 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2005/10/28/486232.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:40 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>ISCII code pages as Windows ANSI code pages?</title></head><body>
+<h1>ISCII code pages as Windows ANSI code pages?</h1>
+<p><em>by Michael S. Kaplan, published on 2005/10/28 11:01 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2005/10/28/486232.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P><FONT face=Tahoma>In Windows 2000, support for several of the ISCII (Indian Standard Code for Information Interchange) code pages was added to Windows:</FONT></P><FONT face=Tahoma>
+<P>
+<TABLE border=1>
+<TBODY>
+<TR>
+<TD>ISCII Assamese</TD>
+<TD>57006</TD></TR>
+<TR>
+<TD>ISCII Bengali</TD>
+<TD>57003</TD></TR>
+<TR>
+<TD>ISCII Devanagari</TD>
+<TD>57002</TD></TR>
+<TR>
+<TD>ISCII Gujarathi</TD>
+<TD>57010</TD></TR>
+<TR>
+<TD>ISCII Kannada</TD>
+<TD>57008</TD></TR>
+<TR>
+<TD>ISCII Malayalam</TD>
+<TD>57009</TD></TR>
+<TR>
+<TD>ISCII Oriya</TD>
+<TD>57007</TD></TR>
+<TR>
+<TD>ISCII Panjabi</TD>
+<TD>57011</TD></TR>
+<TR>
+<TD>ISCII Tamil</TD>
+<TD>57004</TD></TR>
+<TR>
+<TD>ISCII Telugu</TD>
+<TD>57005</TD></TR></TBODY></TABLE></P>
+<P>It happened in the same release of Windows that support for some of these Indic languages was first added (more were added in XP, still more in XP SP2, with the final ones being added in Vista.</P>
+<P>It leads people to occasionally ask the question that Bob Eaton asked this morning on <A href="http://www.unicode.org/consortium/distlist.html">the Unicode List</A>:</P>
+<BLOCKQUOTE dir=ltr style="MARGIN-RIGHT: 0px">
+<P><FONT face="Times New Roman" size=2><EM>Does anyone know whether (or why not) it is possible to use the ISCII <BR>Devanagari code page (57002) as the default system code page in Windows?<BR><BR>That is, there is no code page support for "Ansi" Devanagari, but with the <BR>ISCII encoding having code page support, why didn't they associate it with <BR>Ansi programs associated with the Hindi locale (c.f. cp. 932 with JIS) ?<BR><BR>The ISCII encoding seemed like a logical choice... but it wasn't used...</EM></FONT></P></BLOCKQUOTE>
+<P>The answer to the first question is that no you can't, because it is technically impossible. The ANSI and OEM code pages on Windows can act as the ACP and OEMCP for a locale (and the CP_ACP and CP_OEMCP of a default system locale. In order for a code page to be used there it has to be a table-based code page that can be used in both kernel and user modes, not one of "DLL-based" ones that are in the 5xxxx range. And the conversion between ISCII and Unicode is not the simple affair that can be done with a table, it requires a more algorithmic approach....</P>
+<P>Additionally, the ANSI Win32 API code throughout Windows has (in many places) a solid "no bigger than two bytes per character" bias, such that any attempt to add a code page that could ever be more than that is not technically possible without updating a great deal of code, code that is provided mainly for backwards compatibility.</P>
+<P>So it would have been a logical choice, had it been possible. Unfortunately, it was not. All of these code pages are provided to help move people in India using them to Unicode by allowing them to convert their legacy data....</P>
+<P>&nbsp;</P>
+<P><FONT color=#ff1493><EM>This post brought to you by</EM> "<FONT size=6>ॠ</FONT>" <EM>(<A href="http://www.fileformat.info/info/unicode/char/0960">U+0960</A>, a.k.a. DEVANAGARI LETTER VOCALIC RR)</EM></FONT></FONT></P>
+<hr/><p><a id="487671" href="#487671">#</a> <strong>Michael S. Kaplan</strong> on 1 Nov 2005 10:43 AM:</p><div style="margin-left: 1em">This is an experiment, feel free to disregard.</div>
+<p><a id="487672" href="#487672">#</a> <strong>Michael S. Kaplan</strong> on 1 Nov 2005 10:43 AM:</p><div style="margin-left: 1em">This is an experiment, feel free to disregard.</div>
+<p><a id="487673" href="#487673">#</a> <strong>Michael S. Kaplan</strong> on 1 Nov 2005 10:43 AM:</p><div style="margin-left: 1em">This is an experiment, feel free to disregard.</div>
+<p><a id="487674" href="#487674">#</a> <strong>Michael S. Kaplan</strong> on 1 Nov 2005 10:43 AM:</p><div style="margin-left: 1em">This is an experiment, feel free to disregard.</div>
+<p><a id="487675" href="#487675">#</a> <strong>Michael S. Kaplan</strong> on 1 Nov 2005 10:43 AM:</p><div style="margin-left: 1em">This is an experiment, feel free to disregard.</div>
+<p><a id="487676" href="#487676">#</a> <strong>Michael S. Kaplan</strong> on 1 Nov 2005 10:43 AM:</p><div style="margin-left: 1em">This is an experiment, feel free to disregard.</div>
+<p><a id="487677" href="#487677">#</a> <strong>Michael S. Kaplan</strong> on 1 Nov 2005 10:44 AM:</p><div style="margin-left: 1em">This is an experiment, feel free to disregard.</div>
+<p><a id="487678" href="#487678">#</a> <strong>Michael S. Kaplan</strong> on 1 Nov 2005 10:44 AM:</p><div style="margin-left: 1em">This is an experiment, feel free to disregard.</div>
+<p><a id="487679" href="#487679">#</a> <strong>Michael S. Kaplan</strong> on 1 Nov 2005 10:44 AM:</p><div style="margin-left: 1em">Ok, now we wait and I'll let you know what the experiment results are in a few days....</div>
+<p><strong>Anurag Rana</strong> on 28 Jan 2012 3:02 AM:</p><div style="margin-left: 1em"><p>I have downloaded Hindi LIP and able to change my Display language but not available in System locale of Window 7 ? How to Do that ? However come to know that beacause ansi code page is 0 and oem code page is 1 for Hindi. How to resolve this problem ?</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 28 Jan 2012 4:55 PM:</p><div style="margin-left: 1em"><p>It cannot be done. Unicode-only locales cannot ever be default system locales....</p>
+</div>
+<hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2005/10/28/486333.html" title="Karaoke, huh?">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2005/10/28/486034.html" title="What is wrong with that web page?">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2005-10">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2005-10-28">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2005/10/28/486232.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:40 GMT -->
+</html>

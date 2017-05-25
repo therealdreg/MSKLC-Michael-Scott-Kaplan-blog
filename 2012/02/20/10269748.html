@@ -1,0 +1,46 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2012/02/20/10269748.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Where short file names can fail</title></head><body>
+<h1>Where short file names can fail</h1>
+<p><em>by Michael S. Kaplan, published on 2012/02/20 07:11 -05:00, original URI: http://blogs.msdn.com/b/michkap/archive/2012/02/20/10269748.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<p>Functions like <a href="http://msdn.microsoft.com/library/windows/desktop/aa364989.aspx">GetShortPathName</a> have been around for a long time.</p>
+<p>Too long, if you ask me.</p>
+<p>Because there are some things that it incorrectly assumes.</p>
+<p>For example, it assumes that any characters that fit within the default system codepage are okay, despite the fact that one change the setting and reboot, leading to different results.</p>
+<p>But perhaps this incorrect assumption is somewhat forgivable since the system seems ot behave the same way, and changing the default system locale and code page is not a common operation.</p>
+<p>And there are some things that it does the wrong way.</p>
+<p>For example, instead of calling <a href="http://msdn.microsoft.com/library/windows/desktop/dd374130.aspx">WideCharToMultiByte</a> with the WC_NO_BEST_FIT_CHARS flag, it instead calls <a href="http://msdn.microsoft.com/library/ms648421.aspx">RtlUnicodeStringToAnsiString</a> which calls <a href="http://msdn.microsoft.com/library/windows/hardware/ff553261.aspx">RtlUnicodeToMultiByteN</a>, neither of which allows one to opt out of the best fit behavior -- something tat befits any file system type functions that want more accurate results!</p>
+<p>Now I've ranted about the problems with best fit mappings over the years:</p>
+<ul>
+<li><a title="If it does [best] fit, it may be off a bit! (aka Parlez-ゔ japonais?)" href="http://archives.miloush.net/michkap/archive/2007/11/22/6463359.html">If it does [best] fit, it may be off a bit! (aka Parlez-ゔ japonais?)</a></li>
+<li><a title="If the shoe [best-]fits..." href="http://archives.miloush.net/michkap/archive/2005/02/13/371895.html">If the shoe [best-]fits...</a></li>
+<li><a title="Better than nothing fit mappings, unleashed, #1" href="http://archives.miloush.net/michkap/archive/2005/02/15/373713.html"><span style="text-decoration: line-through;">Best</span>Better than nothing fit mappings, unleashed, #1</a></li>
+<li><a title="What's up with MB_ERR_INVALID_CHARS?" href="http://archives.miloush.net/michkap/archive/2007/07/25/4037646.html">What's up with MB_ERR_INVALID_CHARS?</a></li>
+<li><a title="ASCII? no questions; I tell UNICODE lies" href="http://archives.miloush.net/michkap/archive/2007/03/12/1862122.html">ASCII? no questions; I tell UNICODE lies</a></li>
+<li><a title="a&ntilde;o del ano, a.k.a. This sentence has several non-skarklish Spanish flutzpahs...." href="http://archives.miloush.net/michkap/archive/2007/06/08/3162451.html">a&ntilde;o del ano, a.k.a. This sentence has several non-skarklish Spanish flutzpahs....</a></li>
+<li><a title="Why an 8-hour day seems to take forever" href="http://archives.miloush.net/michkap/archive/2005/10/29/486617.html">Why an 8-hour day seems to take forever</a></li>
+<li><a title="In hindsight, they may have BEST FIT these files where the sun never shines" href="http://archives.miloush.net/michkap/archive/2008/05/08/8466991.html">In hindsight, they may have BEST FIT these files where the sun never shines</a></li>
+</ul>
+<p>But there is one thing worse than best fit&nbsp;mappings -- and that is file system functions&nbsp;allowing their presence in cases where they&nbsp;shouldn't</p>
+<p>In my opinion, this kind of problem&nbsp;is in&nbsp;some cases a lot less forgivable, since there are some languages that will commonly use letters like đ aka U+0111 aka LATIN SMALL LETTER D WITH STROKE which will best fit map in some code pages to&nbsp;d aka U+0064 aka LATIN SMALL LETTER D.</p>
+<p>Functions that make incorrect assumptions like "everything that best fit maps in a code page fits in the code page" are awful since in the most extreme cases there are more than twice as many characters with best fit mappings as there are with correct mappings.</p>
+<p>&nbsp;In the end, functions that behave this badly should be avoided, for code&nbsp;safety reasons....</p>
+<hr/><p><strong>John Cowan</strong> on 20 Feb 2012 8:18 AM:</p><div style="margin-left: 1em"><p>In hindsight, generated short names should probably have been restricted to the ASCII repertoire.</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 20 Feb 2012 9:31 AM:</p><div style="margin-left: 1em"><p>In some cases, they are -- which makes the situation even more broken!</p>
+</div>
+<p><strong>Simon Buchan</strong> on 20 Feb 2012 1:02 PM:</p><div style="margin-left: 1em"><p>I&#39;m a little confused by the issue, though: as far as I can tell, in the worst case your short names are incomprehensible or misleading... which they can be anyway even without codepages getting involved! To me short names are just a way to get a legal name you have a decent chance of mapping to the true name.</p>
+<p>Wait, what happens when the system code-page changes and a bad program has saved short-names? Does the reinterpretation of the saved name always map to the reinterpretation of the file-system name? My gut says yes, but I&#39;m not super confident.</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 20 Feb 2012 1:29 PM:</p><div style="margin-left: 1em"><p>If you can&#39;t find a filename, that&#39;s a Really Bad Thing™. As is having something that used to work break depending on your system locale!</p>
+</div>
+<p><strong>Simon Buchan</strong> on 20 Feb 2012 3:43 PM:</p><div style="margin-left: 1em"><p>Well, sure, but I can&#39;t figure out how best-fitting is worse than just a mess of &#39;?&#39;s for finding your files in a list of &quot;~1&quot;s. Is that not what you&#39;re saying it&#39;s doing?</p>
+<p>How does the system locale actually break the short names? My intuition tells me a that since decode(bytes, cp) == decode(bytes, cp), no matter what bytes or cp is, that even if files get decoded differently when the ACP changes, programs at least will still find them. Is it that after a locale change that names can clash? E.g. for some str1, str2, cp1, cp2 that decode(encode(str1, cp1), cp2) == decode(encode(str2, cp1), cp2)? That sucks, but it seems unavoidable.</p>
+<p>(sorry if this is a repost)</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 20 Feb 2012 4:06 PM:</p><div style="margin-left: 1em"><p>~1 and ~2 and so on are unreadabe but programatically functional -- an incorrect file name, on the other hand...</p>
+</div>
+<hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2012/02/21/10270502.html" title="The evolving Story of Locale Support, part 19: In honor of International Mother Language Day...">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2012/02/17/10269019.html" title="Every character has a story #36: U+1F648/U+1F649/U+1F648A -- [SEE|HEAR|SPEAK] NO EVIL">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2012-02">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2012-02-20">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2012/02/20/10269748.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+</html>

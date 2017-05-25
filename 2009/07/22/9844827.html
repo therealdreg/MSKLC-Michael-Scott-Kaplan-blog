@@ -1,0 +1,59 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2009/07/22/9844827.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:35 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>The Letter Police can EAT MY SHORTS!</title></head><body>
+<h1>The Letter Police can EAT MY SHORTS!</h1>
+<p><em>by Michael S. Kaplan, published on 2009/07/22 10:01 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2009/07/22/9844827.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<p>Regular reader from way back (and perhaps still regular reader!) Jan Kučera asked over in the Suggestion Box:</p><blockquote><div class="commentsbody">
+		<p><i><font face="times new roman,times">Hi again... I hope there are more
+people going to suggest a topic or place a question, otherwise I would
+feel a bit... alone. Maybe you should keep some fake entries in the
+suggestion list so that some bashful people (like me) don't feel
+annoying when...you know, suggesting a topic. :-)</font></i></p>
+<p><i><font face="times new roman,times">Though obviously I did that step, but this is only because I already
+know you are very kind and cheerful person... and thank you for all
+your help and extraordinary useful posts and advices!</font></i></p>
+<p><i><font face="times new roman,times">Well, I've just started learning Tamil at our university. Now I
+would like to create a document with the individual graphemes (or signs
+in the unicode naming terminology), like ௌ (0x0bcc) for example. I have
+no problems with this in notepad, wordpad, or WPF. However, it seems
+that this is not allowed in any of the Office 2007 applications and
+neither it is in the Visual Studio 2008 text editor, which require me
+to type the consonant first (yet pasting the vowel sign from clipboard
+just works).</font></i></p>
+<p><i><font face="times new roman,times">Besides the general background about this behavior and its
+intuitiveness, there are particularly two questions which I am
+interested in:</font></i></p>
+<p><i><font face="times new roman,times">As an user - is there any way how to type in the individual vowel
+signs in the Office applications besides the clipboard/custom
+keyboard/insert symbol way? &nbsp;(the Alt+X trick does not work on standard
+Tamil keyboard either, which, however, does not surprise me at all :))</font></i></p>
+<p><i><font face="times new roman,times">And as a developer - any chance I could control (or find out) the
+current behavior? Like do not allow the signs in my WPF window (if I
+were that kind of person, of course)?</font></i></p>
+<p><i><font face="times new roman,times">Thanks and wish you lots of good and interesting questions!</font></i> <br></p>
+	</div></blockquote><p>Very good question, that first one. The second one freaks me out a little though. :-)</p><p>The problem is yet another example of one I have blogged about previously, in blogs such as <b><a href="http://archives.miloush.net/michkap/archive/2008/11/06/9046784.html" mce_href="http://archives.miloush.net/michkap/archive/2008/11/06/9046784.html">Being smart, by not trying to be clever</a></b> and <b><a href="http://archives.miloush.net/michkap/archive/2007/03/05/1807683.html" mce_href="http://archives.miloush.net/michkap/archive/2007/03/05/1807683.html">You're not the one out of sequence, and that's the Word</a></b>:</p><p><font size="5"><b>Illegal Sequence Checking</b></font></p><p>This Word-specific extension to Uniscribe's own forays into the same feature in Thai are something I often knock for two specific reasons:</p><ul><li>some of its checks are reportedly incorrect for languages they try to cover;</li><li>some of its checks seem to break other languages that use the same script.</li></ul><p>I suppose we could add a third case to cover Jan's first question:</p><ul><li>some of its checks keep instructional/educational materials from being publishable.</li></ul><p>Now I kind of indirectly discussed some of my own problems with this scenario in <b><a href="http://archives.miloush.net/michkap/archive/2005/01/04/346116.html" mce_href="http://archives.miloush.net/michkap/archive/2005/01/04/346116.html">Why international test is an art (and why there are few fine artists)</a></b>, where I mentioned the challenges in supporting Thai in MSKLC due to the need to be able to display individual letters on keyboard keys that are for most scenarios illegal in isolation (an illegality enforced by Uniscribe).</p><p>Personally I am opposed to this feature on any language for all of the reasons given, and am thankful for the times I can turn it off.</p><p>(And of course the other option is to put in a&nbsp; SPACE or as NO BREAK SPACE and use it as the "base" character" (this is how I solved the problem for Thai in MSKLC, since there is no way to turn off the feature in Uniscribe like there is for Word).</p><p>This is also the workaround for the Visual Studio case or really any attempt at being the <b>LETTER POLICE</b> one may run across....</p><p>And if I could plead with anyone wanting to implement either smart or "unsmart" versions of this feature? Please don't! :-)<br></p>
+<hr/><p><strong>John Cowan</strong> on 22 Jul 2009 3:46 PM:</p><div style="margin-left: 1em"><p>Indeed. &nbsp;Nobody should be using an isolated diacritic, vowel sign, or other combining mark without putting an NBSP in front (space is deprecated, they disappear too often).</p></div>
+<p><strong>Marc Durdin</strong> on 22 Jul 2009 7:04 PM:</p><div style="margin-left: 1em"><p>If you want to have input smarts around a specific language, put it into an input method, not into an application. &nbsp;Three reasons:</p>
+<p>1. Development Cost: The complex language rules only have to be implemented once, not by every application. &nbsp;Don't expect application developers to get the rules right, they are complex and need computational linguists to implement and test.</p>
+<p>2. User Experience: You get consistent input behaviour across all applications on the system. &nbsp;See point 1.</p>
+<p>3. Language Support: You can add another input method to support other languages for a given script relatively easily, but fixing incorrect assumptions about how the script is used in multiple applications can be very difficult and take a long time.</p>
+<p>We have a long way to go in terms of input method support and consistent behaviour across applications.</p>
+<p>A couple of other examples where Office has tried too hard include:</p>
+<p>* Blocking Latin script diacritic combinations it doesn't know about (goodbye Africa!) - finally fixed in Office 2007</p>
+<p>* Automatic (and incorrect) transformation of medial sigma in Polytonic Greek texts</p></div>
+<p><strong>Michael S. Kaplan</strong> on 22 Jul 2009 11:16 PM:</p><div style="margin-left: 1em"><p>Hey John -- the Word functionality has gone a bit further at times, reportedly doing some language specific stuff for Hindi that made stuff expected for other Devanagari-based languages not be enter-able....</p>
+</div>
+<p><strong>Jan Kučera</strong> on 30 Jul 2009 7:45 PM:</p><div style="margin-left: 1em"><p>Hi Michael!</p>
+<p>I'm still here, sure :) thanks for getting into this.</p>
+<p>Couple of thoughts:</p>
+<p>1. In consumer applications like Word I am willing to accept that some &quot;base character&quot; should be used for users creating instructional/educational materials. But what would you suggest in this case? I am not allowed to enter neither SPACE nor NO BREAK SPACE followed by the combining mark in Word. (Not sure if correctly but I also tried to use ZWJ and it did not helped either.)</p>
+<p>(Wouldn't it be more helpful if the input system added such &quot;base&quot; automatically instead of blocking the input completely? ...just asking)</p>
+<p>2. Not sure if I got this one - is it possible to turn this POLICE off in Word?</p>
+<p>3. Maybe off topic, but I've found that Office applications also automatically transforms two consecutive syllables into consonant+syllable pair (eg. பப into ப்ப) which, though it is usually much more likely intended combination, it makes it really tricky to enter words like கட்டடம், especially into Excel cell... I wonder if there is any list available of these &quot;input enhancements&quot;, or if there are based on some international recommendations...</p>
+<p>3. Writing a code working with character or string tables for example requires to not use any helper base, just raw combining characters. I don't know how others, but using 'ௌ' instead of '\u0bcc' makes much more readable code, at least for me. Finally we have new text editor in VS 2010 which no longer has these POLICIES. Cool :]</p>
+<p>4. Well sure I had no intentions to implement any of these &quot;features&quot;. My interest was actually more the other way. So if I got it correctly, I can't turn off this POLICY for any of the available input methods, even as a developer.. right?</p>
+<p>Thanks and have a nice weekend!</p></div>
+<hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2009/07/24/9847607.html" title="Pretty damn closer to top of the line">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2009/07/21/9843391.html" title="No disassemble #5! Redux">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2009-07">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2009-07-22">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2009/07/22/9844827.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:35 GMT -->
+</html>

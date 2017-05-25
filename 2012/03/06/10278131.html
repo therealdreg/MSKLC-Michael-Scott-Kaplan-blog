@@ -1,0 +1,45 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2012/03/06/10278131.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>What do සිංහල and O'zbekcha have in common?</title></head><body>
+<h1>What do සිංහල and O'zbekcha have in common?</h1>
+<p><em>by Michael S. Kaplan, published on 2012/03/06 07:01 -05:00, original URI: http://blogs.msdn.com/b/michkap/archive/2012/03/06/10278131.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<p>When one thinks of&nbsp;සිංහල (Sinhala)&nbsp;and O'zbekcha (Uzbek), the list of all things that apply to both languages and no others would not be a big one.</p>
+<p>Spoken by two different peoples in two different countries, using two different scripts.</p>
+<p>Even within Microsoft Windows, they have two different IPM owners and two different localization vendors. And they ere shipped on two different schedules.</p>
+<p>In fact, I can really only think of one thing that these two languages have in common.</p>
+<p>One quite unique thing.</p>
+<p>Symbolically and ironically in the Teaching Miss Tingle sense,&nbsp;a <strong>Unique Identifier</strong> aka <strong>GUID</strong>:</p>
+<p><strong><span style="font-size: xx-large;">{6E9EB9C-0301-4F3A-80CC-9CF8222282A0}</span></strong></p>
+<p>That's right, they share a GUID.</p>
+<p>It's not just any GUID.</p>
+<p>But the x86 <strong>Language Interface Pack</strong> for each of the languages has the same <strong>ProductCode</strong> GUID.</p>
+<p><span style="font-size: x-small;"><em>{wait for it; I know some readers, e.g. <a href="http://blogs.msdn.com/b/heaths/about.aspx">Heath Stewart</a>, will immediately know the bug that will result from this}</em></span></p>
+<p>Someone found it in the simple process of installing LIP_uz-Latn-UZ.msi from <a href="http://www.microsoft.com/downloads/details.aspx?FamilyID=a1a48de1-e264-48d6-8439-ab7139c9c14d&amp;displaylang=uz">the Windows 7 Uzbek LIP</a> download page and LIP_si-LK-x86.msi from the <a href="http://www.microsoft.com/downloads/details.aspx?FamilyID=a1a48de1-e264-48d6-8439-ab7139c9c14d&amp;displaylang=si">Windows 7 Sinhala LIP</a> download page.</p>
+<p>The second install attempt was unable to do anything more than uninstall the first install attempt.</p>
+<p>Oops!</p>
+<p>Now all the other Windows 7 Language Interface Packs are .MLC files, not .MSI files.</p>
+<p>But because Sinhala was forced to install a custom locale to work around the&nbsp;problem I described in <strong><a title="The subtle difference between ශ්රී ලංකාව and ශ්&amp;zwj;රීලංකාව" href="http://archives.miloush.net/michkap/archive/2007/10/14/5448243.html">The subtle difference between ශ්රී ලංකාව and ශ්&zwj;රීලංකාව</a>.</strong></p>
+<p>And&nbsp;while Uzbek was forced to install a custom locale to work around the problem&nbsp;I described in <strong><a title="Would you install the Emglish language version?" href="http://archives.miloush.net/michkap/archive/2011/01/14/10114517.html">Would you install the Emglish language version?</a></strong>.</p>
+<p><em>Come to think of it, that second blog describes both bugs, as well as indirectly explaining the consequences of the 64-bit Uzbek LIP not being in an MSI file!</em></p>
+<p><strong><em>Oops!</em></strong></p>
+<p><em>If you have <strong>Orca </strong>installed, you can verify the problem with a quick glance of the <strong>Property</strong> table in each .MSI file:</em></p>
+<p><em><a href="http://msdnshared.blob.core.windows.net/media/MSDNBlogsFS/prod.evol.blogs.msdn.com/CommunityServer.Blogs.Components.WeblogFiles/00/00/00/33/81/7120.LIP_5F00_Uzbek.jpg"><img title="The Uzbek LIP MSI Property table, showing the duplicate {6E9EB9C-0301-4F3A-80CC-9CF8222282A0} ProductCode." border="0" alt="The Uzbek LIP MSI Property table, showing the duplicate {6E9EB9C-0301-4F3A-80CC-9CF8222282A0} ProductCode." src="http://blogs.msdn.com/resized-image.ashx/__size/550x0/__key/communityserver-blogs-components-weblogfiles/00-00-00-33-81/7120.LIP_5F00_Uzbek.jpg" /></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; <a href="http://msdnshared.blob.core.windows.net/media/MSDNBlogsFS/prod.evol.blogs.msdn.com/CommunityServer.Blogs.Components.WeblogFiles/00/00/00/33/81/1754.LIP_5F00_Sinhala.jpg"><img title="The Sinhala LIP MSI Property table, showing the duplicate {6E9EB9C-0301-4F3A-80CC-9CF8222282A0} ProductCode." border="0" alt="The Sinhala LIP MSI Property table, showing the duplicate {6E9EB9C-0301-4F3A-80CC-9CF8222282A0} ProductCode." src="http://blogs.msdn.com/resized-image.ashx/__size/550x0/__key/communityserver-blogs-components-weblogfiles/00-00-00-33-81/1754.LIP_5F00_Sinhala.jpg" /></a></em></p>
+<p>I&nbsp;had&nbsp;a conversation with Beth, and after looking more closely at the download statistics for both <strong>Language Interface Pack</strong>, she was able to reassure me regarding my initial instincts about this bug.</p>
+<p>My gut feelimg that perhaps this was not too awful....</p>
+<p>Specifically, that the number of downloads of the <strong>32-bit Windows 7 Uzbek Language Interface Packs</strong> downloaded in the fine country of&nbsp;Sri Lanka was precisely ZERO.</p>
+<p>And that similarly, the number of downloads of the <strong>32-bit Windows 7 Sinhala Language Interface Packs</strong> downloaded in the fine country of Uzbekistan was also precisely ZERO.</p>
+<p>Given the lack of proven&nbsp;in-country overlap (meaning the primary source would be people making many visits to the <a href="http://windows.microsoft.com/en-US/windows/downloads/languages">Download languages for Windows</a> page and treating it a one-stop shopping trip -- a worthy goal of any page, even with the side effect of skewing some language download results)&nbsp;it would be hard to justify re-releasing either or both LIPs.</p>
+<p>Also known as "the fix" for the bug. :-)</p>
+<p>And of course not only are the&nbsp;language name bugs that the MSIs were built to address&nbsp;fixed in Windows 8, but the work to make sure any future .MSI files are not ever again written this way will also be happening.</p>
+<p>And this bug?</p>
+<p>It will be the stuff that may make a great MSKB article, some day.</p>
+<p>And (<em>dare I say it?</em>) a great blog, today! :-)</p>
+<hr/><p><strong>Simon Buchan</strong> on 6 Mar 2012 1:45 PM:</p><div style="margin-left: 1em"><p>I dunno, I guess it&#39;s *okay*. :P</p>
+<p>I&#39;m guessing someone copy-pasted one to get the template for some setup script for the other or something? Seems (seemed?) unfortunately easy to do.</p>
+</div>
+<p><strong>Joshua</strong> on 6 Mar 2012 1:55 PM:</p><div style="margin-left: 1em"><p>Ugh. Just release fixed versions linked from the MSKB article. That way, anybody encountering the problem and searching the internet for the solution finds it and nobody else has to worry about it. As you said, the probably doesn&#39;t happen again.</p>
+</div>
+<hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2012/03/07/10278935.html" title="And now? There are Language Packs!">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2012/03/05/10277433.html" title="Maybe this time they could avoid being on the wrong side of history?">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2012-03">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2012-03-06">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2012/03/06/10278131.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+</html>

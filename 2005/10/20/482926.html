@@ -1,0 +1,25 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2005/10/20/482926.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:40 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Parameter confusion</title></head><body>
+<h1>Parameter confusion</h1>
+<p><em>by Michael S. Kaplan, published on 2005/10/20 03:31 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2005/10/20/482926.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P><FONT face=Tahoma>The <A href="http://msdn.microsoft.com/library/en-us/intl/nls_5s2v.asp">LCMapString</A> function looks like it ought to have a clear and unambiguous meaning for its parameters. Look at the prototype:</FONT></P>
+<BLOCKQUOTE dir=ltr style="MARGIN-RIGHT: 0px">
+<P><FONT face="Courier New"><STRONG>int LCMapString(<BR>&nbsp; LCID Locale,&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // locale identifier<BR>&nbsp; DWORD dwMapFlags,&nbsp; // mapping transformation type<BR>&nbsp; LPCTSTR lpSrcStr,&nbsp; // source string<BR>&nbsp; int cchSrc,&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // number of characters in source string<BR>&nbsp; LPTSTR lpDestStr,&nbsp; // destination buffer<BR>&nbsp; int cchDest&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // size of destination buffer<BR>);</STRONG></FONT></P></BLOCKQUOTE>
+<P><FONT face=Tahoma>And for <a href="http://archives.miloush.net/michkap/archive/2005/06/24/432121.html">most of LCMapString's conversion types</A>&nbsp;it is indeed correct.</FONT></P>
+<P><FONT face=Tahoma>Except when dealing with sort keys.</FONT></P>
+<P><FONT face=Tahoma>When you deal with sort keys, two things change:</FONT></P>
+<UL>
+<LI><FONT face=Tahoma>The meaning of cchDest is no longer a character count, instead the size is a byte count.</FONT></LI>
+<LI><FONT face=Tahoma>The return value is no longer the&nbsp;count of characters written to lpDestStr, it is a count of bytes written.</FONT></LI></UL>
+<P><FONT face=Tahoma>Now obviously those kinds of cch/cb confusion situations can cause problems from a security standpoint (see for example the Platform SDK topic <A href="http://msdn.microsoft.com/library/en-us/intl/sec_intl.asp"><STRONG>Security Considerations: International Features</STRONG></A>).</FONT></P>
+<P><FONT face=Tahoma>I guess if we were writing the function today, it might have been enough to split sort key creation&nbsp;into its own function.</FONT></P>
+<P><FONT face=Tahoma>Though in truth the nature of the confusion here (if there is any) is that buffers will be twice as large as they need to be, which may be a concern for memory consumption/fragmentation or performance. But it is not a security concern like&nbsp;it can be for some of the other NLS APIs.</FONT></P>
+<P><FONT face=Tahoma>I guess the key here is to read the documentation carefully. :-)</FONT></P>
+<P><FONT face=Tahoma>Internally at Microsoft it can cause (and at times has caused!) confusion as well, since the internal routines that handle sort keys will of course call the size parameter cbDest rather than cchDest, and if you are just looking at the code and you see someone pass a parameter like cchDest to another function asking for a cbDest, you will rightfully wonder if there is a huge bug there. But that is our problem to deal with....</FONT></P>
+<P><FONT face=Tahoma></FONT>&nbsp;</P>
+<P><FONT face=Tahoma color=#ff1493><EM>This post brought to you by</EM> "<FONT size=6>ޛ</FONT>" <EM>(<A href="http://www.fileformat.info/info/unicode/char/079b">U+079b</A>, a.k.a. THAANA LETTER THAALU)</EM></FONT></P>
+<hr/><div style="margin-left: 1em"><em>no comments</em></div><hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2005/10/22 <a href="http://archives.miloush.net/michkap/archive/2005/10/22/483573.html">Parameter confusion #2a</a></p><p>2005/10/21 <a href="http://archives.miloush.net/michkap/archive/2005/10/21/483526.html">Parameter confusion #2</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2005/10/21/480898.html" title="Extending collation support in SQL Server and Jet, Part 4 (What about Jet?)">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2005/10/20/482896.html" title="Behold the PersianCalendar class">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2005-10">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2005-10-20">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2005/10/20/482926.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:40 GMT -->
+</html>

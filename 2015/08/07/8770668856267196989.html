@@ -1,0 +1,34 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2015/08/07/8770668856267196989.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:41:50 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Can you tell me how Microsoft keyboard layouts define a ligature and by the way can it be changed?</title></head><body>
+<h1>Can you tell me how Microsoft keyboard layouts define a ligature and by the way can it be changed?</h1>
+<p><em>by Michael S. Kaplan, published on 2015/08/07 13:57 +00:00, original URI: http://www.siao2.com/2015/08/07/8770668856267196989.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostWordpress -->
+<p>Friend and colleague from my Unicode days Doug Ewell wrote to me via email:
+<p style="padding-left: 60px;">Michael,</p>
+<p style="padding-left: 60px;">Below is the latest salvo in an ongoing battle on the Unicode public list.</p>
+<p style="padding-left: 60px;">Does any version of Windows, from 3.1 to 10, support keyboard drivers
+with ligatures of more than four UTF-16 code points?</p>
+<p style="padding-left: 60px;">If so, where is this documented?</p>
+<p style="padding-left: 60px;">Thanks,</p>
+<p style="padding-left: 60px;">--
+Doug Ewell | http://ewellic.org | Thornton, CO 🇺🇸</p>
+Now to be perfectly honest, I would have told almost anyone else to just  get bent, assuming I bothered to respond at all and this is what the lawyers would object since the question is so very asked and answered . But I have known Doug for a long time, and I know he is one of the good guys, fighting the good fight.</p>
+<p>So I decided to answer it in a blog post, the very next day. Here goes..</p>
+<p><img class="alignnone" src="http://www.siao2.com/wp-content/uploads/2015/08/hhk.jpg" alt="The Happy Hacking Keyboard makes for a great metaphor..." width="500" height="196" /></p>
+<p>Short answer NO. Rude answer HELL NO. Explanations <a href="../../../2006/03/24/559169.html" target="_blank">here</a>, which references <a href="../../../2005/04/07/406060.html" target="_blank">here</a>. <strong>More insight into why follows...</strong>.</p>
+<p>A long time ago, a developer colleague I know and respect who is incidentally still at Microsoft wrote a header file that defined what a ligature was. He defined it as an sequence of 2-4 arbitrary UTF-16 code points. However, he realized that it was not strictly speaking how a ligature would be defined by a linguist. So he added a // CONSIDER to the code, suggesting the NLS team might need a function that could provide a more appropriate definition.</p>
+<p>As it turns out, there was no such function or plans to add one, because it would have been a terrible idea, since neither languages nor keyboards really work that way. Thus, we are spared an even more arbitrary limitation than the one than Doug is talking about here.</p>
+<p>But this suggests that perhaps the ceiling could be raised in a future version of Windows.</p>
+<p>To this I have a few suggestions as to why this will never ever happen in basic keyboard layouts:</p>
+<p>• there are no more future versions of Windows;</p>
+<p>• even if there were, such a keyboard layout would not be compatible with any prior version of Windows;</p>
+<p>• allowing such a new thing would require significant changes to user32.dll and the console, and likely lead to many regressions throughout Windows, Office, and other companies that depend on the current behavior;</p>
+<p>• Microsoft may have a tendency to be kinda dumb sometimes, but it isn't stupid.</p>
+<p>I am therefore reasonably certain that the limitation is not ever going to change, and people should just give up on it happening in regular keyboard layouts.</p>
+<p>People who want input methods capable of handling more than four UTF-16 code points really need to look into IMEs (Input Method Editors) which are all now run through TSF (the Text Services Framework), a completely different system of input that allows such things, admittedly at the price of a lot of complexity.</p>
+<p>I will now wait a few hours and then send Doug email in case he isn't following the SiaO2 Blog these days.... ;-)</p>
+<p></p>
+<hr/><div style="margin-left: 1em"><em>no comments</em></div><hr/><p><em>go to <a id="newer" href="../10/8770668856267196979.html" title="What the heck is going on with Microsoft&#39;s MSDN GoGlobal site?">newer</a> or <a id="older" href="../06/8770668856267196971.html" title="Sax and harmonicas...">older</a> post, or back to <a href="../../../index-2.html">index</a> or <a href="../../../index-2.html#2015-08">month</a> or <a href="../../../index-2.html#2015-08-07">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2015/08/07/8770668856267196989.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:41:50 GMT -->
+</html>

@@ -1,0 +1,58 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2008/05/22/8519481.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:36 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>"Fall over" is not the same thing as "fall back"</title></head><body>
+<h1>"Fall over" is not the same thing as "fall back"</h1>
+<p><em>by Michael S. Kaplan, published on 2008/05/22 03:01 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2008/05/22/8519481.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P>The other day, in response to my <A class="" href="http://archives.miloush.net/michkap/archive/2008/05/18/8518476.html" mce_href="http://archives.miloush.net/michkap/archive/2008/05/18/8518476.html"><STRONG>The song[ and the answer] remains the same</STRONG></A> blog where I explained once again how the Uniscribe font fallback list cannot be customized, regular reader/MVP/colleague/friend/Romanian/Adobian Mihai asked in a <A class="" href="http://archives.miloush.net/michkap/archive/2008/05/18/8518476.html#8519327" mce_href="http://archives.miloush.net/michkap/archive/2008/05/18/8518476.html#8519327">comment</A>:</P>
+<BLOCKQUOTE>
+<P><EM><FONT face="times new roman,times">"You can't do it."<BR><BR>Ok, we got it.<BR><BR>But what about a feature request? :-)</FONT></EM></P></BLOCKQUOTE>
+<P>Ordinarily I would say something like <STRONG>Good question!</STRONG> at this point.&nbsp;A colleague Softie on an interminable thread about "filler words" warned&nbsp;everyone against this&nbsp;with a story about a presentation where the questioner responded "<EM>I didn't ask you to rate the question</EM>" which gave me momentary pause.</P>
+<P>But then I decided to say fuck it, I&nbsp;can be&nbsp;a judgmental type of person, and there are enough crap questions sent to this blog that few other than I ever see that I think I can distinguish between:</P>
+<UL>
+<LI>the ultra-stupid questions which I will occasionally post <EM>because</EM> they are so ultra-stupid and I will say as much;</LI>
+<LI>the stupid questions, which I won't ever force anyone else to sit through;</LI>
+<LI>the good or useful or interesting questions, which I will use as the basis of blogs, perhaps without rating them explicitly;</LI>
+<LI>the great questions, which I will formally rate.</LI></UL>
+<P>If this bothers you, then you are likely reading the wrong blog. :-)</P>
+<P>Anyhow, back to Mihai's question.</P>
+<P>I actually asked that very question of the PM who owns a lot of this stuff at a dinner at the Unicode Conference last year (with several other internal/external folks there) and he pointed out the fundamental problem here by starting to answer my question with another question.</P>
+<P>(They say this is a Jewish thing but he is not Jewish so I guess it is just a thing!)</P>
+<P>His question was simple: <STRONG>Where do they want to see this behavior?</STRONG></P>
+<P>It turns out that in most cases the place they want to see this is in documents, not UI -- things like Word, and in RichEdit controls when it is in applications.</P>
+<P>Since Office applications and RichEdit both&nbsp;have their own (somewhat mutually exclusive, and very different)&nbsp;independent scheme for&nbsp;font fallback that largely ignores the one in Windows, a customizable font fallback scheme in Uniscribe as a feature would not really have a whole lot of impact for people outside of those building Windows UI, since</P>
+<UL>
+<LI>Office uses its own fallback scheme that also can't be overridden;</LI>
+<LI>RichEdit by default will in dealing with GDI font linking, when the font changes, keep it changed, like the following screenshot shows (look at the first and third examples on the right):</LI></UL>
+<P><IMG src="http://trigeminal.fmsinc.com/images/vowelsinorder.png"></P>
+<P><EM>Internal Microsoft folks have probably seen this issue countless times in Product Studio, where a small bit of CJK in the middle of a bug description modifies the font of all of the text after the CJK.</EM></P>
+<P>Looking to the one case that could change and have some impact&nbsp;-- application developers who want impact in their own UI, note that only the higher level Uniscribe functions actually do font fallback anyway; the lower level ones require the developers to do it all themselves anyway. And they are the ones who have the most ability to just tell the system what to do and override the behavior any way they like.</P>
+<P>So it would make their lives a little easier, sure. But this is hard to stack up as a crucial work item, under the circumstances.</P>
+<P>Compelling? Sure. But blocking, when all that is really missing is better documentation/samples on how to do the overriding oneself? Not so much.</P>
+<P>Anyway, this is the biggest reason why the feature request is unlikely to have a higher priority than it does&nbsp;-- because most Uniscribe usage probably wouldn't change. The majority of users who don't like font override behavior are complaining about the wrong component when they watch the automatic font&nbsp;choices within Word; nothing Uniscribe does would ever even be visible to them....</P>
+<P><FONT color=#ff00ff><EM>This blog brought to you by</EM><FONT size=7> ご </FONT><EM>(<A class="" href="http://www.fileformat.info/info/unicode/char/3054" mce_href="http://www.fileformat.info/info/unicode/char/3054">U+3054</A>, aka HIRAGANA LETTER GO)</EM></FONT></P>
+<hr/><p><strong>Mihai</strong> on 22 May 2008 5:54 PM:</p><div style="margin-left: 1em"><p>An example unrelated to RTF: enabling support for some scripts that are now &quot;almost supported&quot;</p>
+<p> - stuff like Ethiopic, or Cherokee or Unified Canadian Aborigenal. These are not complex scripts, and having the right font is all that's needed. And even for &quot;slightly complex scripts&quot; (whatever that is :-) badly shaped glyphs are better than noglyph.</p>
+<p> - stuff like SimSun-GB18030 on XP. There is no decent way that I know of to have an application show CJK Supplement A both on Vista and XP. (except for changing the dialog font at runtime/design time, each with it's own set of problems).</p>
+<p>And in general setting the dialog font is not good for non-localized applications. I don't need an application localized into Cherokee in order to use Cherokee in a search dialog.</p></div>
+<p><strong>Michael S. Kaplan</strong> on 23 May 2008 7:11 AM:</p><div style="margin-left: 1em"><p>Okay, not sure where one needs Ethiopic or Cherokee or whatever working -- where are we talking? I don't think the Ethiopic Notepad scenario that doesn't like Nyala is all *that* compelling. :-)</p>
+<p>and if we are talking Word then we're back in that &quot;someone else's world&quot; issue since even if you could override, they would override your override....</p>
+</div>
+<p><strong>Mihai</strong> on 23 May 2008 2:53 PM:</p><div style="margin-left: 1em"><p>We are talking standard edit controls.</p>
+<p>Even when using MS Word, or a proprietary RTF based solution, or even a proprietary Uniscribe-based solution, one still needs support for that script in the Find/Replace box, author name, document summary, all kind of other places.</p>
+<p>And it is not only about Ethiopic. It is about any script that is in Unicode, needs no complex shaping, has a decent 3rd party font, but is not in Windows.</p></div>
+<p><strong>Michael S. Kaplan</strong> on 23 May 2008 5:12 PM:</p><div style="margin-left: 1em"><p>Many of the ones you named (including Ethiopic) *are* supported by the platform now, which might be why I was confused here. I sincerely doubt you will ever see significant backports of these to XP, so keeping the &quot;major improvements&quot; conversation rooted in the next version to come. :-)</p>
+<p>I don't disagree that everything you mention would be NICE -- but document fidelity is hardly at stake when it comes to text in a Find/Replace dialog. It is pretty easy to see why this is considered less important from a triage standpoint (and please note that any application CAN override such font settings if they decide it would be a good idea. The fact that they are not in a hurry to, that they also triage these to be less important, has some significance....</p>
+</div>
+<p><strong>Mihai</strong> on 27 May 2008 12:44 PM:</p><div style="margin-left: 1em"><p>I was looking at XP, so these are not supported.</p>
+<p>But it is the general principle: the ability to set a font for script X before it is officially supported by the OS version Y.</p>
+<p>There are non-complex scripts not supported in Vista.</p>
+<p>The idea that any application can override the font fall-back of it's dialogs is far fetch though. This a complete set of custom controls (labels, edit controls, combo-boxes, buttons etc.). With all the rtl/accessibility/theme support. And that fixes one application only (and stuff will still not work in standard dialogs, or Explorer).</p>
+<p>Now, that's a high bar (way higher than adding it to Uniscribe).</p>
+<p>Well, it would be indeed nice.</p>
+<p>One can dream :-)</p></div>
+<p><strong>Michael S. Kaplan</strong> on 27 May 2008 1:46 PM:</p><div style="margin-left: 1em"><P>Of course, as I described in other posts, there is an undocumented sixth category for CS -- scripts that Uniscribe enables font fallback for. And those must be on Uniscribe's lists! :-)</P>
+<P>In XP, if you&nbsp;know the font you can choose it, and use it. This is likely as good as downlevel support will be....</P></div>
+<hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2011/06/30 <a href="http://archives.miloush.net/michkap/archive/2011/06/30/10181768.html">Falling back can sometimes be falling over</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2008/05/22/8521124.html" title="It&#39;s a known fact (disputed but not disproven) that Clippy&#39;s removal from Office was due to Earl knocking up Scribble">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2008/05/21/8525127.html" title="Summer vacation, the 1st">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2008-05">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2008-05-22">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2008/05/22/8519481.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:36 GMT -->
+</html>

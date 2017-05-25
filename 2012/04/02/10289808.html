@@ -1,0 +1,43 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2012/04/02/10289808.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>When you have two different models, the easiest place to fall short is in the interaction between 'em…</title></head><body>
+<h1>When you have two different models, the easiest place to fall short is in the interaction between 'em…</h1>
+<p><em>by Michael S. Kaplan, published on 2012/04/02 07:01 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2012/04/02/10289808.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<p>The locale-specific&nbsp;formatting support supported&nbsp;by the NLS API in&nbsp;Windows works via&nbsp;two different (semi-complementary) methods:</p>
+<ol>
+<li>POSIX style settings meant to be descriptive of how the formatting works per locale, and</li>
+<li>The actual format string based support meant to give more exact descriptions of behavior.</li>
+</ol>
+<p>For an example of #1 in dates, there are settings like <a title="LOCALE_SDATE" href="http://msdn.microsoft.com/library/windows/desktop/dd373837.aspx">LOCALE_SDATE</a> that tells you what the separator character is between pieces of the short date and <a title="LOCALE_IDATE" href="http://msdn.microsoft.com/library/windows/desktop/dd373782.aspx">LOCALE_IDATE</a> that tells you how the month/day/year pieces are ordered.</p>
+<p>For an example of #2 in dates, there are the many per-locale format strings that are defined.</p>
+<p>Now over time we have heavily de-emphasized category #1 for dates and times.</p>
+<p>Because of how incomplete they are.</p>
+<p>And how easy it is to confuse the NLS API about what the settings are when you use simple yet unexpected custom formats.</p>
+<p>For&nbsp;example,&nbsp;if you use two different separators between hours/minutes and between minutes/seconds, then the <a title="LOCALE_STIME" href="http://msdn.microsoft.com/library/windows/desktop/dd373896.aspx">LOCALE_STIME</a> value has no one single value it can return.</p>
+<p>Or, for another example, if the month, day and year are in some order other than month/day/year or day/month/year or year/month/day, then the <a title="LOCALE_IDATE" href="http://msdn.microsoft.com/library/windows/desktop/dd373757.aspx">LOCALE_IDATE</a> is kind of screwed trying to decide what value to return.</p>
+<p>And so on.</p>
+<p>By now and as of Vista and Windows 7, the bulk of the POSIX fields for date and time formatting have now been removed from the locale data.</p>
+<p>So&nbsp;if you get them or set them then the code under the NLS API deals with the default format strings, converting between the formats and the POSIX&nbsp;settings as needed.</p>
+<p>In either direction.</p>
+<p>A side effect of this design is that bugs that used to be possible when the settings were out of sync go away automatically -- such bugs were not rampant in prior versions, but they did come up from time to time.</p>
+<p>The MS Visual C Runtime largely depends on the POSIX settings for&nbsp;its own date/time parsing and formatting, so I guess in a way it's good that the POSIX support exists.</p>
+<p>And it's even better that the data synchronization bugs were pretty much removed!</p>
+<p>Now even though the format strings are superior to the POSIX settings, they too have limitations. I'll talk about those some other day.</p>
+<p>For now I'll end today's blog on a high note.</p>
+<p>You know, the high note&nbsp;that the current level of support implies and enforces.</p>
+<p>I'll wait until tomorrow to talk about where we still fall a little short....</p>
+<hr/><p><strong>Simon Buchan</strong> on 2 Apr 2012 3:49 PM:</p><div style="margin-left: 1em"><p>I&#39;m a huge believer in minimizing (canonical) data in an application as a way of avoiding bugs, so this does make me happy (after being sad at you saying how it *used* to work) - but I noticed the problems you bring up with LOCALE_* can still be an issue. Not that you can do much about that!</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 2 Apr 2012 4:00 PM:</p><div style="margin-left: 1em"><p>Wait til tomorrow, Simon!</p>
+</div>
+<p><strong>Random832</strong> on 2 Apr 2012 11:41 PM:</p><div style="margin-left: 1em"><p>I really don&#39;t understand your &quot;POSIX&quot; vs not distinction. In the _real_ POSIX world, single character separator settings for dates and times don&#39;t exist at all. There&#39;s no POSIX equivalent to LOCALE_SDATE, LOCALE_IDATE, LOCALE_STIME - what POSIX has is d_fmt and t_fmt, which are... well, format strings. With hard-coded separators within the format string and none of this &quot;/ becomes LOCALE_SDATE&quot; nonsense.</p>
+<p>And it&#39;s not clear what else exists in Windows for, for example, decimal points and thousands separators.</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 3 Apr 2012 12:08 AM:</p><div style="margin-left: 1em"><p>Well, let&#39;s thiink of it as POSIX-style -- to support the CRT style locales. :-)</p>
+<p>I&#39;ll get to numbers soon -- I was just starting with dates and times....</p></div>
+<p><strong>Michael S. Kaplan</strong> on 3 Apr 2012 12:18 AM:</p><div style="margin-left: 1em"><p>Note that the rule was never for one character separators -- just the assumption that only one kind of separator is used for both parts....</p>
+</div>
+<hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2012/04/03 <a href="http://archives.miloush.net/michkap/archive/2012/04/03/10290188.html">When you have just one model, the easiest place to fall short is when something's missing…</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2012/04/03/10290188.html" title="When you have just one model, the easiest place to fall short is when something&#39;s missing…">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2012/03/30/10289279.html" title="I guess it might have been more to do with localization than localizability after all!">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2012-04">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2012-04-02">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2012/04/02/10289808.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+</html>

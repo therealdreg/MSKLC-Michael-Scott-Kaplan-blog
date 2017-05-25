@@ -1,0 +1,49 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2010/01/22/9951970.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:35 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>From TTE to EUF: Possible?</title></head><body>
+<h1>From TTE to EUF: Possible?</h1>
+<p><em>by Michael S. Kaplan, published on 2010/01/22 07:01 -05:00, original URI: http://blogs.msdn.com/b/michkap/archive/2010/01/22/9951970.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P>The question that came in was:</P>
+<BLOCKQUOTE>
+<P><EM><FONT face="times new roman,times">My customer have a questions with EUDCEDIT program on Windows XP.</FONT></EM></P>
+<P><EM><FONT face="times new roman,times">As we know, if we use EUDCEDIT to add some characters on XP. It will create two files: eudc.tte and eudc.euf. </FONT></EM></P>
+<P><EM><FONT face="times new roman,times">The question is, if we lost eudc.euf file, could we restore this file from corresponding eudc.tte? Because even we only have eudc.tte, the new characters still can work well.</FONT></EM></P></BLOCKQUOTE>
+<P>Now I have&nbsp;<A href="http://archives.miloush.net/michkap/archive/2005/06/27/433186.html" mce_href="http://archives.miloush.net/michkap/archive/2005/06/27/433186.html"><STRONG>written</STRONG></A> <A href="http://archives.miloush.net/michkap/archive/2007/04/23/2248563.html" mce_href="http://archives.miloush.net/michkap/archive/2007/04/23/2248563.html"><STRONG>about</STRONG></A> <A href="http://archives.miloush.net/michkap/archive/2005/06/27/433208.html" mce_href="http://archives.miloush.net/michkap/archive/2005/06/27/433208.html"><STRONG>EUDC</STRONG></A> <A href="http://archives.miloush.net/michkap/archive/2007/05/26/2901371.html" mce_href="http://archives.miloush.net/michkap/archive/2007/05/26/2901371.html"><STRONG>before</STRONG></A>, <A href="http://archives.miloush.net/michkap/archive/2007/05/21/2782610.html" mce_href="http://archives.miloush.net/michkap/archive/2007/05/21/2782610.html"><STRONG>on</STRONG></A> several occasions. But knowing something about how it is used and how it interacts with different parts of the system doesn't necessarily make someone knowledgeable about the authoring issues.</P>
+<P>I mean, I had some thoughts on the subject but this seemed like a better one to get some more expertise on....</P>
+<P>Luckily Peter was around to provide the answer that I suspected was true:</P>
+<BLOCKQUOTE>
+<P><FONT face="times new roman,times">I believe the .euf file contains the originally-edited bitmap data from which the .ttf is edited. If the .euf is lost but you still have the .ttf, then you can display those EUDC characters, but any editing of the glyphs would have to be done in a different font-editing tool, such as Fontographer or Fontlab. I don’t know of any way to recover the .euf file from the .ttf file. (In theory, it should be possible to generate an .euf that was approximately the same, but I don’t know of any tools that support that.)</FONT></P></BLOCKQUOTE>
+<P>It is possible that he is being a shade optimistic about tools being able to view/edit the .TTE files, but there aren't a whole lot of technical issues blocking it, so if they don't then they ought to. EUDCEdit itself is primitive enough that sophisticated options such as this seem a little out of scope, but of the many tools out there I assume some must be able to do something with TTE files.</P>
+<P>Any of the regular readers here know for sure?</P>
+<hr/><p><strong>Mihai</strong> on 22 Jan 2010 1:51 PM:</p><div style="margin-left: 1em"><p>The problem is, the .euf contains bitmaps, while the tte is a ttf file, with no bitmaps, and with the characters described in the 'glyf' able.</p>
+<p>So to get back to a bitmap from the glyph table one would have to know how to parse a ttf file, how to interpret a (limited) set of 'glyf' instructions, and to reverse-engineer the euf format.</p>
+<p>A cheat might be to select a font of a certain size so that rendering a character on screen would generate the exact same bitmap (64x64) as the one you see in editor (still to determine what that size is), and capture that bitmap.</p>
+<p>This saves one from parsing the ttf and knowing about the glyf instructions, but still have to figure out the format of the .euf file.</p>
+<p>So doable, but I kind of doubt anyone spent the time to implement such a thing.</p></div>
+<p><strong>Michael S. Kaplan</strong> on 23 Jan 2010 9:31 AM:</p><div style="margin-left: 1em"><p>I assume that EUDCEDIT does not give you TrueType outlines but instread you just get embedded bitmaps in the TTE file, right? Assuming they all come from the EUF file, I guess the trick would be to extract all of them....</p>
+</div>
+<p><strong>Mihai</strong> on 26 Jan 2010 2:31 PM:</p><div style="margin-left: 1em"><P>A cheat that can save one from reverse-engineering undocumented formats:</P>
+<P>1. Go to Photoshop<BR>2. Create a B&amp;W (Color mode: 1 bit) image of 64 x 64<BR>3. Select the font you want and select a size that works for you</P>
+<P>&nbsp; &nbsp;(experiment)</P>
+<P>4. Paste the Unicode value you want</P>
+<P>&nbsp;(can hex-input in write and convert with Alt-X or put it in the clipboard in some programmatic way)</P>
+<P>5. Select-all and cut<BR>6. Paste in EUDCEDIT<BR>7. Advance to next character<BR>8. Back to Photoshop<BR>9. Repeat from 4.</P>
+<P>Photoshop supports Unicode input, and can be controlled with JavaScript or COM automation, but you can use something else if that's what works for you.</P>
+<P>If this is a one-time job it might be faster than reverse-engineering &nbsp;the euf file and writing an application.</P>
+<P>And with a little automation might even work for a big number of characters.</P></div>
+<p><strong>Mihai</strong> on 27 Jan 2010 12:05 PM:</p><div style="margin-left: 1em"><p>Looks like the answer to this did not make it: </p>
+<p>&quot;I assume that EUDCEDIT does not give you TrueType outlines but instread you just get embedded bitmaps in the TTE file, right?&quot;</p>
+<p>Nope, there are outlines, and there are no bitmaps.</p></div>
+<p><strong>Michael S. Kaplan</strong> on 27 Jan 2010 1:49 PM:</p><div style="margin-left: 1em"><p>Okay, I am confused. EUDCEDIT takes bitmaps and makes outlines out of them?</p>
+</div>
+<p><strong>Mihai</strong> on 27 Jan 2010 2:43 PM:</p><div style="margin-left: 1em"><p>&quot;EUDCEDIT takes bitmaps and makes outlines out of them?&quot;</p>
+<p>Short answer: Yep :-)</p>
+<p>It's relatively easy to check: dump the tte file (for instance with ttfdump.exe from <a rel="nofollow" target="_new" href="http://www.microsoft.com/typography/tools/tools.aspx">http://www.microsoft.com/typography/tools/tools.aspx</a>)</p>
+<p>Or select a font in notepad and look at the UDC characters at a huge size.</p>
+<p>Or a hint is the fact that there is a View - Show Outline in EUDCEDIT.</p></div>
+<p><strong>mishra</strong> on 21 Jun 2012 2:59 AM:</p><div style="margin-left: 1em"><p>can i get the hexadecimal values for the bitmap from any of the .euf file or .tte file</p>
+</div>
+<hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2010/01/25/9952980.html" title="Doing a little more in Haiti....">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2010/01/21/9951284.html" title="Can&#39;t I pick the candidate list font if I don&#39;t speak fluent square box?">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2010-01">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2010-01-22">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2010/01/22/9951970.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:35 GMT -->
+</html>

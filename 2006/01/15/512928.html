@@ -1,0 +1,38 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2006/01/15/512928.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:40 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Falling over the edge of a conceptual collation cliff</title></head><body>
+<h1>Falling over the edge of a conceptual collation cliff</h1>
+<p><em>by Michael S. Kaplan, published on 2006/01/15 03:01 -05:00, original URI: http://blogs.msdn.com/b/michkap/archive/2006/01/15/512928.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P><FONT face=Tahoma>With a blog title like <STRONG><a href="http://archives.miloush.net/michkap/">Sorting It All Out</A></STRONG> I make no bones about my somewhat obsessive interest in collation. Well, this is unapologetically one of those interesting collation posts. :-)</FONT></P>
+<P><FONT face=Tahoma>You may recall if you are a regular reader that </FONT><FONT face=Tahoma>I have mentioned our collation tester Ryan Cavalcante <a href="http://archives.miloush.net/michkap/archive/2005/05/19/419981.html"><STRONG>before</STRONG></A>.</FONT></P>
+<P><FONT face=Tahoma>He found an interesting bug very late this last week&nbsp;that exists in managed code and which has been around since the very first version of the .NET Framework.</FONT></P>
+<P><FONT face=Tahoma>Remember&nbsp;when I was talking about <a href="http://archives.miloush.net/michkap/archive/2005/07/20/440842.html"><STRONG>sort elements</STRONG></A> and about how <A href="http://msdn.microsoft.com/library/en-us/winui/winui/windowsuserinterface/resources/strings/stringreference/stringfunctions/comparestring.asp">CompareString</A> would treat&nbsp; <STRONG>Æ</STRONG>, a.k.a. U+00c6 a.k.a. LATIN CAPITAL LETTER AE, as if it were the two characters?</FONT></P>
+<P><FONT face=Tahoma>Well, what would you expect the following two calls to return?</FONT></P>
+<BLOCKQUOTE dir=ltr style="MARGIN-RIGHT: 0px">
+<BLOCKQUOTE dir=ltr style="MARGIN-RIGHT: 0px">
+<P><FONT face="Courier New"><STRONG>int idxA;<BR>int idxE;</STRONG></FONT></P>
+<P><FONT face="Courier New"><STRONG>idxA = CompareInfo.GetCompareInfo("en-US").IndexOf("0123456789Æ123456789", "A");<BR></STRONG></FONT><FONT face="Courier New"><STRONG>idxE = CompareInfo.GetCompareInfo("en-US").IndexOf("0123456789Æ123456789", "E");</STRONG></FONT></P></BLOCKQUOTE></BLOCKQUOTE>
+<P><FONT face=Tahoma>I mean the rules say that if string comparison would treat to things as being equal that an IndexOf call should be able to find the character(s) later.</FONT></P>
+<P><FONT face=Tahoma>And of course in the world of attempting to be consistent there are occasionally times that you have to choose what you want to be consistent <EM>with</EM> (like I pointed out in <a href="http://archives.miloush.net/michkap/archive/2005/05/19/419981.html"><STRONG>The string is freaking empty!</STRONG></A>) but it seems like it would be a good idea to be consistent whenever possible.</FONT></P>
+<P><FONT face=Tahoma>Keeping that in mind, in those two calls above,&nbsp;idxA is&nbsp;10 and&nbsp;idxE is&nbsp;-1 (the call returns the index within the first string where the second string can be found).</FONT></P>
+<P><FONT face=Tahoma>Ok, so there is definitely a bug here.</FONT></P>
+<P><FONT face=Tahoma>But then I stopped and wondered something about what&nbsp;we actually expect to be returned here. <STRONG>Which call has a bug?</STRONG></FONT></P>
+<P><FONT face=Tahoma>It is easy to claim that we should always return an index, but depending on what you are trying to do with the index, it could be useless, since there is no substring to actually find.</FONT></P>
+<P><FONT face=Tahoma>Ok, let's take a step back and look at the unmanaged version of this, <a href="http://archives.miloush.net/michkap/archive/2005/07/31/445819.html">FindNLSString</A> (new in Windows Vista).</FONT></P>
+<P><FONT face=Tahoma>This function has the same bug of course, but then there is the additional OUT parameter that returns the length of the found string. This makes REPLACE operations much easier and more flexible, but imagine what happens when you try to call it with those same strings I ran through IndexOf above.</FONT></P>
+<P><FONT face=Tahoma>You don't have to imagine too long, or even to try it if you running the CTP. I'll tell you, there is another bug there (it is returning a somewhat random negative number at the moment!).</FONT></P>
+<P><FONT face=Tahoma>But what should it return? I mean, it seems like&nbsp;there is no good value to return there other than 0, since you can't ever return half of a character length (and even if you could it would not be useful).</FONT></P>
+<P><FONT face=Tahoma>So looking at both the managed and unmanaged versions, perhaps it is best for them to both fail -- meaning maybe the bug is in the first call returning a value at all. Because if you can't give a length for what you found, how can you say you found something at all?</FONT></P>
+<P><FONT face=Tahoma>As an aside, the call thats you would expect to succeed:</FONT></P>
+<BLOCKQUOTE dir=ltr style="MARGIN-RIGHT: 0px">
+<BLOCKQUOTE dir=ltr style="MARGIN-RIGHT: 0px">
+<P><FONT face=Tahoma><STRONG><FONT face="Courier New">idxAE = CompareInfo.GetCompareInfo("en-US").IndexOf("0123456789Æ123456789", "AE");</FONT></STRONG><BR></FONT><FONT face=Tahoma><FONT face=Tahoma><STRONG><FONT face="Courier New">idxAE = CompareInfo.GetCompareInfo("en-US").LastIndexOf("0123456789Æ123456789", "AE");</FONT></STRONG></FONT></P></BLOCKQUOTE></BLOCKQUOTE>
+<P><FONT face=Tahoma>do in fact succeed, though the unmanaged <a href="http://archives.miloush.net/michkap/archive/2005/07/31/445819.html">FindNLSString</A>&nbsp;analogues still have that bug with the bogus pcchFound value. But I think that is okay (other than the pcchFound bug of course!) since if you have the entire string in a capturable form then it makes sense to return success.</FONT></P>
+<P>I think this might lead to a fairly&nbsp;consistent model....</FONT></P>
+<P><FONT face=Tahoma>Anyway, it was a fun bug to look into and even more fun to think about conceptually, since what the actual behavior should be requires&nbsp;real thought. I suspect this could even lead to some lively debates at work among interested parties next week!</FONT></P>
+<P><FONT face=Tahoma></FONT>&nbsp;</P>
+<P><FONT color=#ff1493><FONT face=Tahoma><EM>This post brought to you by</EM> </FONT><FONT face=Tahoma><STRONG>Æ</STRONG> <EM>(<A href="http://www.fileformat.info/info/unicode/char/00c6">U+00c6</A> a.k.a. LATIN CAPITAL LETTER AE)</EM></FONT></FONT></P>
+<hr/><div style="margin-left: 1em"><em>no comments</em></div><hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2006/01/15/512992.html" title="Installable language components in Internet Explorer">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2006/01/14/512985.html" title="Getting out of the compatibility zone, redux">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2006-01">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2006-01-15">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2006/01/15/512928.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:40 GMT -->
+</html>

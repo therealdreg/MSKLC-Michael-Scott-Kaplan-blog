@@ -1,0 +1,35 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2007/06/19/3396819.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:38 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>IsCharSomethingOrOther?</title></head><body>
+<h1>IsCharSomethingOrOther?</h1>
+<p><em>by Michael S. Kaplan, published on 2007/06/19 03:01 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2007/06/19/3396819.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P>Reader/colleague Aldo Donetti asked:</P>
+<BLOCKQUOTE>
+<P><EM><FONT face="times new roman,times">HI Michael, would you know what Unicode categories are supported in the IsCharAlpha function? (the Unicode version, of course) The MSDN doc doesn’t really specify that…</FONT></EM></P>
+<P><EM><FONT face="times new roman,times">Thanks,<BR>Aldo</FONT></EM></P></BLOCKQUOTE>
+<P>True, the IsCharAlpha topic in the SDK (<A class="" href="http://msdn2.microsoft.com/library/ms647482.aspx" mce_href="http://msdn2.microsoft.com/library/ms647482.aspx">here</A>) doesn't get into any specifics. :-)</P>
+<P>Version wise, it varies with OS version, and generally MSDN has not made version&nbsp;claims in the past.</P>
+<P>If you must know, then it was 3.0 in Win2000, 3.1 in XP/Server 3003, 5.0 in Vista/Server 2008 -- but the properties behind the functions are where it really gets interesting, in the end....</P>
+<P>Now I did hint at that&nbsp;issue in my post from September of 2005 (<STRONG><A class="" href="http://archives.miloush.net/michkap/archive/2005/09/12/463991.html" mce_href="http://archives.miloush.net/michkap/archive/2005/09/12/463991.html">Is Kana 'alphabetic' ? Depends on who you ask....</A></STRONG>) but a more explicit answer with a bit of backstory is probably something that is just about due....</P>
+<P>The rules are simple&nbsp;enough. Both depend on <A class="" href="http://msdn2.microsoft.com/library/ms647481.aspx" mce_href="http://msdn2.microsoft.com/library/ms647481.aspx">GetStringTypeW</A>'s CT_CTYPE1 and CT_CTYPE3, as follows:</P>
+<UL>
+<LI><A class="" href="http://msdn2.microsoft.com/library/ms647482.aspx" mce_href="http://msdn2.microsoft.com/library/ms647482.aspx">IsCharAlphaW</A> -- ((C1_ALPHA &amp;&amp; ! (C3_HIRAGANA | C3_KATAKANA) || C1_DIGIT)</LI>
+<LI><A class="" href="http://msdn2.microsoft.com/library/ms647483.aspx" mce_href="http://msdn2.microsoft.com/library/ms647483.aspx">IsCharAlphaNumericW</A> -- (C1_ALPHA &amp;&amp; ! (C3_HIRAGANA | C3_KATAKANA)</LI></UL>
+<P>There is a comment in the code that is discusses the Kans issue in a manner that baffles me a bit:</P>
+<BLOCKQUOTE>
+<P><FONT face="courier new,courier"><STRONG>/*<BR>&nbsp;* We don't want to return TRUE for halfwidth katakana.<BR>&nbsp;* Katakana is linguistic character (C1_ALPHA), but it is not<BR>&nbsp;* alphabet character.<BR>*/</STRONG></FONT></P></BLOCKQUOTE>
+<P>What is interesting is that the actual check includes full width Katakana and also Hiragana. I guess the comment never got updated.</P>
+<P>And then there was another interesting one too, in <A class="" href="http://msdn2.microsoft.com/library/ms647483.aspx" mce_href="http://msdn2.microsoft.com/library/ms647483.aspx">IsCharAlphaNumericW</A>:</P>
+<BLOCKQUOTE>
+<P><FONT face="courier new,courier"><STRONG>//<BR>// LATER 20 Feb 92<BR>//&nbsp;&nbsp;&nbsp; We may need to check ctype 3 info if we want to check for<BR>//&nbsp;&nbsp;&nbsp; digits other than ASCII '0'-'9' (such as Lao digits or<BR>//&nbsp;&nbsp;&nbsp; Tibetan digits, etc.).<BR>//</STRONG></FONT></P></BLOCKQUOTE>
+<P>Interesting since it isn't true (the other digits count under the C1_DIGIT type, so there is no need to look at the C3_* info....</P>
+<P>Now of course as I said back in&nbsp;<A class="" href="http://archives.miloush.net/michkap/archive/2005/09/12/463991.html" mce_href="http://archives.miloush.net/michkap/archive/2005/09/12/463991.html"><STRONG>Is Kana 'alphabetic' ? Depends on who you ask....</STRONG></A> the whole notion of Hiragana and Katakana are the kind of thing that a lot of people would consider just as wrong as the digit behavior in the other comment would be if the comment weren't wrong.</P>
+<P>I guess a couple of these files could use a little&nbsp;comment cleanup. :-)</P>
+<P>Though on the whole I don't really find either of these functions all that useful. Perhaps that is just me, but if not then you can probably write your own using <A class="" href="http://msdn2.microsoft.com/library/ms647481.aspx" mce_href="http://msdn2.microsoft.com/library/ms647481.aspx">GetStringTypeW</A>....</P>
+<P mce_keep="true">&nbsp;</P>
+<P><FONT color=#ff00ff><EM>This post brought to you by</EM> <FONT size=5>ﾀ</FONT> <EM>(<A class="" href="http://www.fileformat.info/info/unicode/char/ff80" mce_href="http://www.fileformat.info/info/unicode/char/ff80">U+ff80</A>, a.k.a. HALFWIDTH KATAKANA LETTER TA)</EM></FONT></P>
+<hr/><p><strong>Aldo.NET</strong> on 19 Jun 2007 12:35 PM:</p><div style="margin-left: 1em"><p>Excellent, thanks Michael! :-)</p></div>
+<hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2011/11/21 <a href="http://archives.miloush.net/michkap/archive/2011/11/21/10239128.html">One disadvantage to being supplementary...or Japanese?</a></p><p>2008/06/29 <a href="http://archives.miloush.net/michkap/archive/2008/06/29/8666513.html">If they say "it's all relative" then remind them it is not a coincidence that there is a show called Relative Madness on TV</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2007/06/19/3397122.html" title="Why is the NULL GLYPH not the glyph representing NULL?">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2007/06/18/3374502.html" title="If you don&#39;t always preserve case, you don&#39;t always preserve meaning">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2007-06">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2007-06-19">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2007/06/19/3396819.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:38 GMT -->
+</html>

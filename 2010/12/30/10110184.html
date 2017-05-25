@@ -1,0 +1,45 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2010/12/30/10110184.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Short-sighted text processing #3: The Protcols of the EDIT for i18n</title></head><body>
+<h1>Short-sighted text processing #3: The Protcols of the EDIT for i18n</h1>
+<p><em>by Michael S. Kaplan, published on 2010/12/30 07:01 -05:00, original URI: http://blogs.msdn.com/b/michkap/archive/2010/12/30/10110184.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<p>Previous blogs in this series:</p>
+<ul>
+<li><a href="http://archives.miloush.net/michkap/archive/2010/12/18/10106789.html"><strong>#1: Uniscribe filters nothing</strong></a></li>
+<li><a href="http://archives.miloush.net/michkap/archive/2010/12/20/10107008.html"><strong>#2: Getting hurt while playing on the bleeding edge</strong></a></li>
+</ul>
+<p><em>Today would be another case where the role of Uniscribe is misunderstood, and the behavior of the things that aren't Uniscribe might be called into question a bit.</em></p>
+<p>Now over in the Suggestion Box, Shachar Shemesh&nbsp;asked</p>
+<p style="padding-left: 60px;"><span style="font-family: times new roman,times;">I wanted to ask about Uniscribe's suggested policy, of passing strings to have their BiDi levels calculated and reordered only after the word wrap. It seems as that suggestion would create a BiDi display that is compatible with neither the Unicode BiDi algorithm nor common sense. What's worse, it seems like Windows (at least on Windows XP) actually does this this way.</span></p>
+<p style="padding-left: 60px;"><span style="font-family: times new roman,times;">One example is using LRO over the entire text. Windows, at least in an edit control, seems to "forget" the override as soon as the line breaks comes. A more subtle, but also more serious (as it doesn't use any control characters that no one has heard of) is the following. Assume an LTR paragraph:</span></p>
+<p style="padding-left: 60px;"><span style="font-family: times new roman,times;">english HEBREW 123 AND MORE.</span></p>
+<p style="padding-left: 60px;"><span style="font-family: times new roman,times;">If the text fits within a single line, Windows correctly reorders it as:</span></p>
+<p style="padding-left: 60px;"><span style="font-family: times new roman,times;">english EROM DNA 123 WERBEH.</span></p>
+<p style="padding-left: 60px;"><span style="font-family: times new roman,times;">Notice how the "123" is on the right of the "AND MORE". If a line break takes place immediately after the "HEBREW", the text looks like this:</span></p>
+<p style="padding-left: 60px;"><span style="font-family: times new roman,times;">english WERBEH</span></p>
+<p style="padding-left: 60px;"><span style="font-family: times new roman,times;">123 EROM DNA</span></p>
+<p style="padding-left: 60px;"><span style="font-family: times new roman,times;">The 123 is on the left of the "AND MORE", which neither makes sense nor is standard conforming.</span></p>
+<p>Funny how the text went right to talking about Uniscribe policies and Unicode conformance.</p>
+<p>Anyway, it isn't actually Uniscribe.</p>
+<p>It was Andrew who unraveled the mystery for me.</p>
+<p>What he found was that the error seems to be in Notepad, and the simple shell EDIT control. Although both Wordpad/RichEdit and Word retain the directional state, Notepad/EDIT forgets it on a line wrap. Since the String* Uniscribe functions that are being used here are workig at a per-line level, Notepad considering each line to terminate a run, regardless of whether it is a paragraph or not, is not entirely unreasonable.</p>
+<p>Now Wordpad/RichEdit's behavior is slightly different here, though still perhaps less than perfect. It does not consider a new line to be new run, though it does consider a hard line break to be a run boundary. Thus an inserted RLO will&nbsp;e broken across paragraph boundaries, not line boundaries.</p>
+<p>You can see them contrasted here:</p>
+<p><img src="http://blogs.msdn.com/cfs-file.ashx/__key/CommunityServer-Blogs-Components-WeblogFiles/00-00-00-33-81/8780.notepadrichedit1.jpg" /></p>
+<p>And those hard returns can show the different RichEdit behavior, as right here:</p>
+<p><img src="http://blogs.msdn.com/cfs-file.ashx/__key/CommunityServer-Blogs-Components-WeblogFiles/00-00-00-33-81/7776.notepadrichedit2.jpg" /></p>
+<p>Now neither of these things can rightfully be called Uniscribe <strong>policy</strong>, though when one considers that they are in the two core text edit controls (Shell EDIT and RichEdit), these two distinct behaviors are going to be pretty prevalent.</p>
+<p>The different (smarter) behavior in Word of course indicates that anyone can do things their own way and not be required to behave similarly. Though in practice most people won't, so the behaviors of these two controls&nbsp;will be more common.</p>
+<p>The Shell EDIT/Notepad behavior is following a particular design and I wouldn't necessarily feel comfortable trying to push for a change there.</p>
+<p>The RichEdit/Wordpad behavior I am more willing to perhaps consider it a bug since Word compatibility in editing experience is often a goal of the control.</p>
+<p>Though the owners of the control might disagree.</p>
+<p>In general it would make more sense if both behaviors were configurable since a case could be made that neithe is ideal for every case. Though I imagine it would be hard to find anyone willing&nbsp;to spec that work,&nbsp;do it, and test it....</p>
+<p>and Uniscribe isn't doing any of it by is own policies; it is The Protcols of the EDIT of Microsoft....</p>
+<hr/><p><strong>Cheong</strong> on 30 Dec 2010 6:08 PM:</p><div style="margin-left: 1em"><p>I wonder if the missing &#39;o&#39; in Protocal is intented because it&#39;s both wrong in the title and the last paragraph.</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 30 Dec 2010 11:32 PM:</p><div style="margin-left: 1em"><p>Ssshhhh! Don&#39;t mention that, it&#39;s foreshadowing for part 4!</p>
+</div>
+<hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2011/01/06 <a href="http://archives.miloush.net/michkap/archive/2011/01/06/10111881.html">Short-sighted text processing #6: OpenType and Apple and OpenType</a></p><p>2011/01/05 <a href="http://archives.miloush.net/michkap/archive/2011/01/05/10111348.html">Short-sighted text processing #5: PU[A]! That pad THAI is pretty spicy....</a></p><p>2011/01/04 <a href="http://archives.miloush.net/michkap/archive/2011/01/04/10110938.html">Short-sighted text processing #4: Squeezing every bit of text you possibly can out of MacOffice 2011</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2010/12/31/10109814.html" title="Part #1 of &quot;You think this is better. Really?&quot;">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2010/12/29/10109752.html" title="People just want what they want, whether they have permission or not">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2010-12">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2010-12-30">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2010/12/30/10110184.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+</html>

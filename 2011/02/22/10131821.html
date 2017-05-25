@@ -1,0 +1,42 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2011/02/22/10131821.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Look on the bright side: they can probably still read it, at least?</title></head><body>
+<h1>Look on the bright side: they can probably still read it, at least?</h1>
+<p><em>by Michael S. Kaplan, published on 2011/02/22 07:01 -05:00, original URI: http://blogs.msdn.com/b/michkap/archive/2011/02/22/10131821.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<p>Sometimes locale data bugs can go a long time without anyone reporting the bug to Microsoft.</p>
+<p>The many potential reasons for this observable fact may be an interesting topic to blog about someday.</p>
+<p>Interesting by <strong>my</strong> definition, that is. By which I mean I could actually enjoy writing it!</p>
+<p>But not today.</p>
+<p>Today, I'm going to&nbsp;talk about&nbsp;an interesting subgroup of bugs in locale data.</p>
+<p>First, we're going to travel to scenic Afghanistan. Where Dari is the most spoken language, by a long shot.</p>
+<p>We have the Dari locale <strong>prs-AF</strong>, which we created a Language Interface Pack for in Windows 7 (I mentioned this in <a href="http://archives.miloush.net/michkap/archive/2011/02/01/10122912.html" title="I Dari you! Heck, I Double Dari you!"><strong>I Dari you! Heck, I Double Dari you!</strong></a>).</p>
+<p>Now&nbsp;the Dari&nbsp;status as "the last Windows 7 LIP" is quite interesting, actually.</p>
+<p>Because a predecessor LIP, also aimed at Afghanistan, was Pashto (<strong>ps-AF</strong>) -- which&nbsp;had a similar "LIP" status, as&nbsp;I mentioned in an earlier blog (<a href="http://archives.miloush.net/michkap/archive/2007/06/15/3302680.html" title="The last XP LIP? We'll head it off at the Pas[hto]"><strong>The last XP LIP? We'll head it off at the Pas[hto]</strong></a>).</p>
+<p>Now we didn't end up doing a Pashto LIP fo Vista or Windows 7, so in some ways one could think of the Windows 7 Dari LIP as&nbsp;an XP Pashto LIP replacement.</p>
+<p>However, if you found yourself nostalgic about Pashto going away, don't worry; a little bit of Pashto lives on in Dari.</p>
+<p>The Dari locale has the Pashto month names!</p>
+<p>As you can see here by looking at them both in the Locale Builder:</p>
+<p><a target="_blank" href="http://blogs.msdn.com/cfs-filesystemfile.ashx/__key/CommunityServer-Blogs-Components-WeblogFiles/00-00-00-33-81/7573.darimonths.jpg"><img height="431" width="570" src="http://blogs.msdn.com/cfs-file.ashx/__key/CommunityServer-Blogs-Components-WeblogFiles/00-00-00-33-81/7573.darimonths.jpg" border="0" /></a>&nbsp; &nbsp;<a target="_blank" href="http://blogs.msdn.com/cfs-filesystemfile.ashx/__key/CommunityServer-Blogs-Components-WeblogFiles/00-00-00-33-81/7002.pashtomonths.jpg"><img height="431" width="570" src="http://blogs.msdn.com/cfs-file.ashx/__key/CommunityServer-Blogs-Components-WeblogFiles/00-00-00-33-81/7002.pashtomonths.jpg" border="0" /></a></p>
+<p>(you can click on the images to see bigger versions of them)</p>
+<p>Now this is something I have had reported to me from a couple of different sources, including someone who responded to me by emal after my Dari LIP blog.</p>
+<p>But this problem is not unique to Afghanistan.</p>
+<p>Or to month names.</p>
+<p>For an example, you can head to Nigeria.</p>
+<p>We just shipped a few Windlows 7 LIPs for Nigeria, as I mentioned in <a href="http://archives.miloush.net/michkap/archive/2011/02/02/10123448.html" title="In Nigeria? With these three LIPs out, maybe Windows 7 was your idea!"><strong>In Nigeria? With these three LIPs out, maybe Windows 7 was your idea!</strong></a>,</p>
+<p>Well, if you look at the ig-NG (Igbo) and yo-NG (Yoruba) locales, you may notice something.</p>
+<p>They share more than just a country.</p>
+<p>They share day names!</p>
+<p><em>They are the Yoruba day names, showing up in both locales. I only say that for the sake of completeness since I'm sure you all spotted the fact that these aren't Igbo names already and just hadn't sent the mail yet reporting the bug. Right?</em></p>
+<p><a target="_blank" href="http://blogs.msdn.com/cfs-filesystemfile.ashx/__key/CommunityServer-Blogs-Components-WeblogFiles/00-00-00-33-81/1104.igbodays.jpg"><img height="431" width="570" src="http://blogs.msdn.com/cfs-file.ashx/__key/CommunityServer-Blogs-Components-WeblogFiles/00-00-00-33-81/1104.igbodays.jpg" border="0" /></a>&nbsp;&nbsp;&nbsp; <a target="_blank" href="http://blogs.msdn.com/cfs-filesystemfile.ashx/__key/CommunityServer-Blogs-Components-WeblogFiles/00-00-00-33-81/0451.yorubadays.jpg"><img height="431" width="570" src="http://blogs.msdn.com/cfs-file.ashx/__key/CommunityServer-Blogs-Components-WeblogFiles/00-00-00-33-81/0451.yorubadays.jpg" border="0" /></a></p>
+<p>(once again, you can click on the images to see bigger versions of them)</p>
+<p>Now on the bright side, for both of these cases, in the community of people who are using computers, knowledge of both of the languages in question (at least enough to know the day names of the month names) is not as uncommon as it might be in some places.</p>
+<p>And that might be part of the reason for the mistake here.</p>
+<p>It is an interesting one, either way. Why would it be missed?</p>
+<hr/><p><strong>CN</strong> on 23 Feb 2011 1:48 AM:</p><div style="margin-left: 1em"><p>And does it make sense to use one-letter abbreviations for shortest day names? A maps to three days, O to two...</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 23 Feb 2011 4:30 AM:</p><div style="margin-left: 1em"><p>In the context of a calendar grid, M T W T F S S makes sense, too. No one is ever confused by the order days are being displayed....</p>
+</div>
+<hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2011/02/23/10132959.html" title="Turkmen! (for both Turkmen and women of Turkeminstan)">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2011/02/21/10132187.html" title="Unicode 6.0.0 is [actually] released!">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2011-02">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2011-02-22">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2011/02/22/10131821.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+</html>

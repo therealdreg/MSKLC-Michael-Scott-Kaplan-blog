@@ -1,0 +1,222 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2005/10/12/479561.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:40 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>I'd rather call it the path separator</title></head><body>
+<h1>I'd rather call it the path separator</h1>
+<p><em>by Michael S. Kaplan, published on 2005/10/12 03:31 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2005/10/12/479561.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P><FONT face=Tahoma>I am talking about the reverse solidus, U+005c (also known as the backslash to some).</FONT></P>
+<P><FONT face=Tahoma>It is even known as the "whack" to others (when some people talk about UNC paths, they will say 'whack whack servername' when they mean <A href="file:////servername/">\\servername</A>).</FONT></P>
+<P><FONT face=Tahoma>I am sure you may&nbsp;know of other names.</FONT></P>
+<P><FONT face=Tahoma>Though if you are on a Windows system with a Korean system locale, you have another name for&nbsp;it -- Won sign (I talked about this a little bit <a href="http://archives.miloush.net/michkap/archive/2004/12/14/284838.html">here</A>).</FONT></P>
+<P><FONT face=Tahoma>And if you are on a Windows system with a Japanese system locale, you have yet another name for it -- Yen sign (I hinted at this briefly <a href="http://archives.miloush.net/michkap/archive/2004/12/14/307152.html">here</A>).</FONT></P>
+<P><FONT face=Tahoma>The reason?</FONT></P>
+<P><FONT face=Tahoma>Well, <a href="http://blogs.msdn.com/larryosterman/">Larry Osterman</A> talked back in June about <a href="http://blogs.msdn.com/larryosterman/archive/2005/06/24/432386.aspx">why the DOS PATH character is '\'</A>.</FONT></P>
+<P><FONT face=Tahoma>However, in the JIS and KSC standards, 0x5c is where the Yen and the Won are stored. And it is not like you could have a system without paths just because it has a Japanese or Korean configuration, right?</FONT></P>
+<P><FONT face=Tahoma>So in <A href="http://www.microsoft.com/globaldev/reference/dbcs/932.mspx">code page 932</A>, 0x5c (YEN SIGN) has to have a round trip mapping to <A href="http://www.fileformat.info/info/unicode/char/005c/index.htm">U+005c</A> (REVERSE SOLIDUS), with a mere best fit mapping to <A href="http://www.fileformat.info/info/unicode/char/00a5/index.htm">U+00a5</A> (YEN SIGN).</FONT></P>
+<P><FONT face=Tahoma>And in <A href="http://www.microsoft.com/globaldev/reference/dbcs/949.mspx">code page 949</A>, 0x5c (WON SIGN) has to have a round trip mapping to <A href="http://www.fileformat.info/info/unicode/char/005c/index.htm">U+005c</A> (REVERSE SOLIDUS), with a mere best fit mapping to <A href="http://www.fileformat.info/info/unicode/char/20a9/index.htm">U+20a9</A> (WON SIGN).</FONT></P>
+<P><FONT face=Tahoma>In both cases, the importance of money was overshadowed by the importance of a path separator (this is, by the way, yet another reason to be sure to always use Unicode!).</FONT></P>
+<P><FONT face=Tahoma>This all came up yesterday when in a comment to my post <a href="http://archives.miloush.net/michkap/archive/2005/07/22/441633.html"><STRONG>Show me the [small]money</STRONG></A>, Yoshihiro Kawabata mentioned that <A href="http://www.fileformat.info/info/unicode/char/005c/index.htm">U+005c</A> was also being accepted -- he even <A href="http://blogs.sqlpassj.org/yoshihirokawabata/archive/2005/10/11/14516.aspx">ran through every character in the BMP</A> (SQL he ran available online!) to see what else works in SQL Server as a "currency sign". It looks like they did indeed add some more currency symbols in SQL Server 2005, although the Yukon documentation has not completely caught up with the list. The additions in Yukon are:</FONT></P>
+<P><FONT face=Tahoma>
+<TABLE border=1>
+<THEAD>
+<TR>
+<TH>Codepoint</TH>
+<TH>Symbol</TH>
+<TH>Name</TH>
+<TH>Added in SQL 2005</TH></TR></THEAD>
+<TBODY>
+<TR>
+<TD><A href="http://www.fileformat.info/info/unicode/char/0024/">U+0024</A></TD>
+<TD>$</TD>
+<TD>DOLLAR SIGN</TD>
+<TD>&nbsp;</TD></TR>
+<TR>
+<TD><A href="http://www.fileformat.info/info/unicode/char/005C/">U+005C</A></TD>
+<TD>\</TD>
+<TD>REVERSE SOLIDUS</TD>
+<TD>&nbsp;</TD></TR>
+<TR>
+<TD><A href="http://www.fileformat.info/info/unicode/char/00A2/">U+00A2</A></TD>
+<TD>￠</TD>
+<TD>CENT SIGN</TD>
+<TD><STRONG>*</STRONG></TD></TR>
+<TR>
+<TD><A href="http://www.fileformat.info/info/unicode/char/00A3/">U+00A3</A></TD>
+<TD>￡</TD>
+<TD>POUND SIGN</TD>
+<TD>&nbsp;</TD></TR>
+<TR>
+<TD><A href="http://www.fileformat.info/info/unicode/char/00A4/">U+00A4</A></TD>
+<TD>¤</TD>
+<TD>CURRENCY SIGN</TD>
+<TD>&nbsp;</TD></TR>
+<TR>
+<TD><A href="http://www.fileformat.info/info/unicode/char/00A5/">U+00A5</A></TD>
+<TD>¥</TD>
+<TD>YEN SIGN</TD>
+<TD>&nbsp;</TD></TR>
+<TR>
+<TD><A href="http://www.fileformat.info/info/unicode/char/09F2/">U+09F2</A></TD>
+<TD>৲</TD>
+<TD>BENGALI RUPEE MARK</TD>
+<TD>&nbsp;</TD></TR>
+<TR>
+<TD><A href="http://www.fileformat.info/info/unicode/char/09F3/">U+09F3</A></TD>
+<TD>৳</TD>
+<TD>BENGALI RUPEE SIGN</TD>
+<TD>&nbsp;</TD></TR>
+<TR>
+<TD><A href="http://www.fileformat.info/info/unicode/char/0E3F/">U+0E3F</A></TD>
+<TD>฿</TD>
+<TD>THAI CURRENCY SYMBOL BAHT</TD>
+<TD>&nbsp;</TD></TR>
+<TR>
+<TD><A href="http://www.fileformat.info/info/unicode/char/17DB/">U+17DB</A></TD>
+<TD><FONT size=4>៛</FONT></TD>
+<TD>KHMER CURRENCY SYMBOL RIEL</TD>
+<TD><STRONG>*</STRONG></TD></TR>
+<TR>
+<TD><A href="http://www.fileformat.info/info/unicode/char/20A0/">U+20A0</A></TD>
+<TD>₠</TD>
+<TD>EURO-CURRENCY SIGN</TD>
+<TD>&nbsp;</TD></TR>
+<TR>
+<TD><A href="http://www.fileformat.info/info/unicode/char/20A1/">U+20A1</A></TD>
+<TD>₡</TD>
+<TD>COLON SIGN</TD>
+<TD>&nbsp;</TD></TR>
+<TR>
+<TD><A href="http://www.fileformat.info/info/unicode/char/20A2/">U+20A2</A></TD>
+<TD>₢</TD>
+<TD>CRUZEIRO SIGN</TD>
+<TD>&nbsp;</TD></TR>
+<TR>
+<TD><A href="http://www.fileformat.info/info/unicode/char/20A3/">U+20A3</A></TD>
+<TD>₣</TD>
+<TD>FRENCH FRANC SIGN</TD>
+<TD>&nbsp;</TD></TR>
+<TR>
+<TD><A href="http://www.fileformat.info/info/unicode/char/20A4/">U+20A4</A></TD>
+<TD>₤</TD>
+<TD>LIRA SIGN</TD>
+<TD>&nbsp;</TD></TR>
+<TR>
+<TD><A href="http://www.fileformat.info/info/unicode/char/20A5/">U+20A5</A></TD>
+<TD>₥</TD>
+<TD>MILL SIGN</TD>
+<TD><STRONG>*</STRONG></TD></TR>
+<TR>
+<TD><A href="http://www.fileformat.info/info/unicode/char/20A6/">U+20A6</A></TD>
+<TD>₦</TD>
+<TD>NAIRA SIGN</TD>
+<TD>&nbsp;</TD></TR>
+<TR>
+<TD><A href="http://www.fileformat.info/info/unicode/char/20A7/">U+20A7</A></TD>
+<TD>₧</TD>
+<TD>PESETA SIGN</TD>
+<TD>&nbsp;</TD></TR>
+<TR>
+<TD><A href="http://www.fileformat.info/info/unicode/char/20A8/">U+20A8</A></TD>
+<TD>₨</TD>
+<TD>RUPEE SIGN</TD>
+<TD>&nbsp;</TD></TR>
+<TR>
+<TD><A href="http://www.fileformat.info/info/unicode/char/20A9/">U+20A9</A></TD>
+<TD>₩</TD>
+<TD>WON SIGN</TD>
+<TD>&nbsp;</TD></TR>
+<TR>
+<TD><A href="http://www.fileformat.info/info/unicode/char/20AA/">U+20AA</A></TD>
+<TD>₪</TD>
+<TD>NEW SHEQEL SIGN</TD>
+<TD>&nbsp;</TD></TR>
+<TR>
+<TD><A href="http://www.fileformat.info/info/unicode/char/20AB/">U+20AB</A></TD>
+<TD>₫</TD>
+<TD>DONG SIGN</TD>
+<TD>&nbsp;</TD></TR>
+<TR>
+<TD><A href="http://www.fileformat.info/info/unicode/char/20AC/">U+20AC</A></TD>
+<TD>€</TD>
+<TD>EURO SIGN</TD>
+<TD>&nbsp;</TD></TR>
+<TR>
+<TD><A href="http://www.fileformat.info/info/unicode/char/20AD/">U+20AD</A></TD>
+<TD>₭</TD>
+<TD>KIP SIGN</TD>
+<TD>&nbsp;</TD></TR>
+<TR>
+<TD><A href="http://www.fileformat.info/info/unicode/char/20AE/">U+20AE</A></TD>
+<TD>₮</TD>
+<TD>TUGRIK SIGN</TD>
+<TD>&nbsp;</TD></TR>
+<TR>
+<TD><A href="http://www.fileformat.info/info/unicode/char/20AF/">U+20AF</A></TD>
+<TD>₯</TD>
+<TD>DRACHMA SIGN</TD>
+<TD>&nbsp;</TD></TR>
+<TR>
+<TD><A href="http://www.fileformat.info/info/unicode/char/20B0/">U+20B0</A></TD>
+<TD>₰</TD>
+<TD>GERMAN PENNY SIGN</TD>
+<TD>&nbsp;</TD></TR>
+<TR>
+<TD><A href="http://www.fileformat.info/info/unicode/char/20B1/">U+20B1</A></TD>
+<TD>₱</TD>
+<TD>PESO SIGN</TD>
+<TD>&nbsp;</TD></TR>
+<TR>
+<TD><A href="http://www.fileformat.info/info/unicode/char/FDFC/">U+FDFC</A></TD>
+<TD>﷼</TD>
+<TD>RIAL SIGN</TD>
+<TD><STRONG>*</STRONG></TD></TR>
+<TR>
+<TD><A href="http://www.fileformat.info/info/unicode/char/FE69/">U+FE69</A></TD>
+<TD>﹩</TD>
+<TD>SMALL DOLLAR SIGN</TD>
+<TD><STRONG>*</STRONG></TD></TR>
+<TR>
+<TD><A href="http://www.fileformat.info/info/unicode/char/FF04/">U+FF04</A></TD>
+<TD>＄</TD>
+<TD>FULLWIDTH DOLLAR SIGN</TD>
+<TD><STRONG>*</STRONG></TD></TR>
+<TR>
+<TD><A href="http://www.fileformat.info/info/unicode/char/FFE0/">U+FFE0</A></TD>
+<TD>￠</TD>
+<TD>FULLWIDTH CENT SIGN</TD>
+<TD><STRONG>*</STRONG></TD></TR>
+<TR>
+<TD><A href="http://www.fileformat.info/info/unicode/char/FFE1/">U+FFE1</A></TD>
+<TD>￡</TD>
+<TD>FULLWIDTH POUND SIGN</TD>
+<TD><STRONG>*</STRONG></TD></TR>
+<TR>
+<TD><A href="http://www.fileformat.info/info/unicode/char/FFE5/">U+FFE5</A></TD>
+<TD>￥</TD>
+<TD>FULLWIDTH YEN SIGN</TD>
+<TD><STRONG>*</STRONG></TD></TR>
+<TR>
+<TD><A href="http://www.fileformat.info/info/unicode/char/FFE6/">U+FFE6</A></TD>
+<TD>￦</TD>
+<TD>FULLWIDTH WON SIGN</TD>
+<TD><STRONG>*</STRONG></TD></TR></TBODY></TABLE></FONT></P>
+<P><FONT face=Tahoma>(Note that as I talked about in <a href="http://archives.miloush.net/michkap/archive/2005/07/22/441633.html">Show me the [small]money</A>, most of the currency symbols are still not on the list, despite the additions that have been done!)</FONT></P>
+<P><FONT face=Tahoma>I am not going to get into why I think this special relationship between <A href="http://www.fileformat.info/info/unicode/char/005c/index.htm">U+005c</A>, <A href="http://www.fileformat.info/info/unicode/char/00a5/index.htm">U+00a5</A>, and <A href="http://www.fileformat.info/info/unicode/char/20a9/index.htm">U+20a9</A> feels kind of disconnected and odd and awkward, because I understand (given the absolute historical identity and need of the path separator) why it has to be there.</FONT></P>
+<P><FONT face=Tahoma>And I do understand why it would be on SQL Server's magical list of things that are treated as currency symbols (after all, customers adding currency data from non-Unicode Korean and Japanese sources should not fail).</FONT></P>
+<P><FONT face=Tahoma>Given how we as a company try to act like&nbsp;the whole issue&nbsp;not there a lot of the time, I even understand why it would not ever have been documented&nbsp;since documenting feels kind of awkward.</FONT></P>
+<P><FONT face=Tahoma>So I would rather call it a path separator on Windows,&nbsp;since that is true on every language configuration upon which Window is run. It makes the whole situation a lot easier to deal with, conceptually....</FONT></P>
+<P><FONT face=Tahoma><EM>(In the meantime, feel free to vote on Kawabata-san's issue related to the unlisted U+005c in the documentation at the </EM><A href="http://lab.msdn.microsoft.com/productfeedback/viewfeedback.aspx?feedbackid=a519b09d-4e11-4c8a-ba59-d5663e952934"><EM>MSDN Product Feedback Center</EM></A><EM>!)</EM></FONT></P>
+<P><FONT face=Tahoma></FONT>&nbsp;</P>
+<P><FONT face=Tahoma color=#ff1493><EM>This post brought to you by</EM> "<FONT size=6>\</FONT>" <EM>(<A href="http://www.fileformat.info/info/unicode/char/005c/index.htm">U+005c</A>, a.k.a. REVERSE SOLIDUS)</EM></FONT></P>
+<hr/><p><a id="480079" href="#480079">#</a> <strong>Ben Bryant</strong> on 12 Oct 2005 10:19 AM:</p><div style="margin-left: 1em">I agree except for the potential confusion of &quot;path separator&quot; with the &quot;forward slash&quot; especially as URLs become the most commonly seen path-like things and in many cases even in Windows it seems you can use the forward slash for a path separator on the file system too. The backslash path separator seems more and more relegated to DOS and programmers, rather than for common usage. Then again you do see it if you display and use the path in Windows File Explorer. But anyway, it is a good post covering the issue well. Thanks</div>
+<p><a id="480100" href="#480100">#</a> <strong>Michael S. Kaplan</strong> on 12 Oct 2005 11:10 AM:</p><div style="margin-left: 1em">Of course, technically it is too late to change the actual name (and Unicode, which is meant for all platforms, cannot name something that is used that way on just one). But maybe if the issues can be sorted out here then at least they will be less confusing for the next person....</div>
+<p><a id="480243" href="#480243">#</a> <strong>Maurits [MSFT]</strong> on 12 Oct 2005 4:15 PM:</p><div style="margin-left: 1em">So if you're on a Japanese or Korean version of Windows, this means you can't create a folder or file with your currency symbol in the name... and if you do a directory listing, instead of backslashes you see currency symbols?</div>
+<p><a id="480252" href="#480252">#</a> <strong>Michael S. Kaplan</strong> on 12 Oct 2005 4:33 PM:</p><div style="margin-left: 1em">Actually, it is interesting -- you should be able to create the files if you use the non-U+005c code points, but you probably will not be able to access the files from non-Unicode apps with KOR/JPN system locales....</div>
+<p><a id="480486" href="#480486">#</a> <strong>Yoshihiro kawabata</strong> on 13 Oct 2005 5:43 AM:</p><div style="margin-left: 1em">Thank you for pickup this U+005c issue.<br>Yes, U+005c is major issue of unicode.<br>and I see WON SIGN same for the first time.</div>
+<p><a id="481023" href="#481023">#</a> <strong>Nick Lamb</strong> on 14 Oct 2005 8:46 AM:</p><div style="margin-left: 1em">Is it true then that U+005c looks different (as in, it looks like &#165;) on Japanese Windows systems?<br><br>If so, isn't it key to GIFT's mission to deliver replacement fonts that fix this issue (shouldn't be hard, it's just one substitute glyph across maybe a dozen key fonts) ?</div>
+<p><a id="481049" href="#481049">#</a> <strong>Michael S. Kaplan</strong> on 14 Oct 2005 10:13 AM:</p><div style="margin-left: 1em">Hi Nick,<br><br>If it was considered a bug to fix, that would be true. But it is an intentional design decision, so there is nothing to fix.<br><br>You do not need a Japanese copy of Windows to see it. If you change your default system locale (&quot;language for non-Unicode programs&quot;) to Japanese and reboot. You will see it as well in all of the paths in the cmd window, etc.</div>
+<p><a id="481050" href="#481050">#</a> <strong>Michael S. Kaplan</strong> on 14 Oct 2005 10:15 AM:</p><div style="margin-left: 1em">To be clear about GIFT's &quot;mission&quot; here, it is not some neo-imperialistic plan to tell Japanese and Korean users that their expectations built over the last few decades are wrong. It is to deliver that expectation to them....</div>
+<p><a id="487696" href="#487696">#</a> <strong>Massuda</strong> on 1 Nov 2005 11:21 AM:</p><div style="margin-left: 1em">I am Brazilian and I am very surprised with U+20A2... cruzeiro was the Brazilian currency 10-15 years ago!<br><br>Never noticed that it was part of unicode standard.<br><br>The curious thing is that I never saw that sign in my life, because cruzeiro sign was written &quot;Cr$&quot;.<br><br>By the way, Real (R$) is the Brazilian currency since june 1994.</div>
+<hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2013/10/31 <a href="http://archives.miloush.net/michkap/archive/2013/10/31/10460718.html">At long last, explaining the yen/won/backslash bug plausibly</a></p><p>2007/11/09 <a href="http://archives.miloush.net/michkap/archive/2007/11/09/6006868.html">If you get a yen for something a bit wider you might be out of luck</a></p><p>2007/03/28 <a href="http://archives.miloush.net/michkap/archive/2007/03/28/1972239.html">A yen for Yen may be left unsatiated</a></p><p>2006/05/26 <a href="http://archives.miloush.net/michkap/archive/2006/05/26/608230.html">Two chickens in every pot, and an ASCII in every code page</a></p><p>2006/03/17 <a href="http://archives.miloush.net/michkap/archive/2006/03/17/553499.html">On the fuzzier definition of a 'Unicode application' on Win9x....</a></p><p>2005/12/28 <a href="http://archives.miloush.net/michkap/archive/2005/12/28/507759.html">Getting rid of your extra yen</a></p><p>2005/11/09 <a href="http://archives.miloush.net/michkap/archive/2005/11/09/490791.html">Getting around the default system locale</a></p><p>2005/11/07 <a href="http://archives.miloush.net/michkap/archive/2005/11/07/489978.html">SQL Server and the CLR have different ways of getting the money</a></p><p>2005/11/01 <a href="http://archives.miloush.net/michkap/archive/2005/11/01/487665.html">I WON to talk about the YEN</a></p><p>2005/10/14 <a href="http://archives.miloush.net/michkap/archive/2005/10/14/481087.html">The mission of GIFT</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2005/10/12/479817.html" title="Some of GetGeoInfo is sorta broken">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2005/10/11/479716.html" title="The Ten Commandments of MS Access references">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2005-10">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2005-10-12">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2005/10/12/479561.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:40 GMT -->
+</html>

@@ -1,0 +1,97 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2010/05/17/10013731.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:35 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>The problem with maximizing the minimizing issues (by which I mean minimizing the maximizing ones)</title></head><body>
+<h1>The problem with maximizing the minimizing issues (by which I mean minimizing the maximizing ones)</h1>
+<p><em>by Michael S. Kaplan, published on 2010/05/17 07:01 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2010/05/17/10013731.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P>So, where do I start?</P>
+<P>Oh yes, I remember.</P>
+<P>The .Net Framework's first and in the <A href="http://www.charlespetzold.com/blog/2006/03/030335.html" mce_href="http://www.charlespetzold.com/blog/2006/03/030335.html">minds of some</A> still respectable to be using right now UI technology, WinForms.</P>
+<P>Windows Forms.</P>
+<P>There is a particular feature they have, an AutoSize feature. When used (and used properly) it tremendously lightens the burden on localization since it will resize forms and controls to fit the text they contain.</P>
+<P>Note the&nbsp; "<STRONG>used properly</STRONG>" notation there. This is important as I know of a project or two (or ten, or twenty!) that are part of a tiny little product you have never heard of called <STRONG>Windows</STRONG> that didn't really tend to do it right.</P>
+<P>Which is not the end of the world. Not for you, or for me, or for the developers who created the forms, or for the localizers who had to do some resizing when text would truncate.</P>
+<P>Everyone continued to function normally.</P>
+<P>I guess the localizers had to work a little harder.</P>
+<P>So no big deal right?</P>
+<P>Right.</P>
+<P>Oh wait, I forgot something.</P>
+<P>Something about this AutoSize feature.</P>
+<P>Now obviously a developer who was trying to use this feature might want to exert a little control over what it does, right?</P>
+<P>I mean, letting people do stuff with no safety controls over how much they do leads to derivative market inspired economic collapse or unprecedented oil spills. </P>
+<P>We know we don't want our WinForms to be all bankrupt and oily. So some ability to rein in the way that things might want to grow can make a little sense.</P>
+<P>Of course the complexity of those ways to control the unprecedented growth is one of the big reasons why the AutoSize feature was so poorly utilized.</P>
+<P>Why Windows became the son and heir to more than just a shyness that is criminally vulgar; it also inherited a whole bunch of oily, bankrupt WinForms applications.</P>
+<P>The Smiths would be so disappointed.</P>
+<P>But that is not the principal issue I wanted to discuss.</P>
+<P>I really wanted to talk about the localization process, and then a couple of the properties that the original developers have to help rein in AutoSize if they believe they have a need to, and how all of that fits together.</P>
+<P>The process, in a nutshell:</P>
+<UL>
+<LI>Developer makes the form "Localizable" by setting the property of that name;</LI>
+<LI>Visual Studio creates a bunch of language-specific ResX files with all of the form/control size and other data;</LI>
+<LI>Localizers can resize the dialogs and controls as they put in the translated text and see what it will look like using WinRes;</LI>
+<LI>Windows ships those localized components with their localized product.</LI></UL>
+<P>Easy, right?</P>
+<P>Well, there was a problem or two.</P>
+<P>Or more.</P>
+<P>But for the moment I'll just talk about one or two of them.</P>
+<P>Now one way that the developer can exert some control over the AutoSize beast is by use of the <A href="http://msdn.microsoft.com/library/system.windows.forms.control.maximumsize.aspx" mce_href="http://msdn.microsoft.com/library/system.windows.forms.control.maximumsize.aspx">Control.MaximumSize</A> and <A href="http://msdn.microsoft.com/library/system.windows.forms.control.minimumsize.aspx" mce_href="http://msdn.microsoft.com/library/system.windows.forms.control.minimumsize.aspx">Control.MinimumSize</A> properties.</P>
+<P>These properties can be used to keep the difference between the original <A href="http://msdn.microsoft.com/library/system.windows.forms.control.size.aspx" mce_href="http://msdn.microsoft.com/library/system.windows.forms.control.size.aspx">Control.Size</A> and the eventual size from going way beyond what the developer ever really wanted.</P>
+<P>That really does make sense (well, the <A href="http://msdn.microsoft.com/library/system.windows.forms.control.maximumsize.aspx" mce_href="http://msdn.microsoft.com/library/system.windows.forms.control.maximumsize.aspx">Control.MaximumSize</A>&nbsp;more than the <A href="http://msdn.microsoft.com/library/system.windows.forms.control.minimumsize.aspx" mce_href="http://msdn.microsoft.com/library/system.windows.forms.control.minimumsize.aspx">Control.MinimumSize</A>, but they both make at least some sense). And I would never want to imply otherwise.</P>
+<P>Everything still looks okay, right?</P>
+<P>Well, let me include the spanner in the works.</P>
+<P>Those two properties? <A href="http://msdn.microsoft.com/library/system.windows.forms.control.maximumsize.aspx" mce_href="http://msdn.microsoft.com/library/system.windows.forms.control.maximumsize.aspx">Control.MaximumSize</A> and <A href="http://msdn.microsoft.com/library/system.windows.forms.control.minimumsize.aspx" mce_href="http://msdn.microsoft.com/library/system.windows.forms.control.minimumsize.aspx">Control.MinimumSize</A>?</P>
+<P>They are not included in the localizable&nbsp;.ResX.</P>
+<P><FONT size=4><STRONG>This leads to three specific problems</STRONG>:</FONT></P>
+<UL>
+<LI>The dialog that the localizer sees in WinRes may or may not match the actual dialog's layout, since there is another&nbsp;couple of properties&nbsp;affecting the <A href="http://msdn.microsoft.com/library/system.windows.forms.control.size.aspx" mce_href="http://msdn.microsoft.com/library/system.windows.forms.control.size.aspx">Control.Size</A>&nbsp;that WinRes knows nothing about. Before the localizer even touches the dialog or its controls, they may be looking at an inaccurate representation of the layout.</LI></UL>
+<P mce_keep="true">&nbsp;</P>
+<UL>
+<LI>Any time the localizer resizes a dialog or a&nbsp;control (a common occurrence due to the difficulty in implementing the AutoSize feature properly and the known fact that many target languages are, on the average, 30-40% bigger in terms of the amount of text), the localizer's resizing may be partially or fully ignored due to the <A href="http://msdn.microsoft.com/library/system.windows.forms.control.maximumsize.aspx" mce_href="http://msdn.microsoft.com/library/system.windows.forms.control.maximumsize.aspx">Control.MaximumSize</A> and/or <A href="http://msdn.microsoft.com/library/system.windows.forms.control.minimumsize.aspx" mce_href="http://msdn.microsoft.com/library/system.windows.forms.control.minimumsize.aspx">Control.MinimumSize</A>&nbsp;in the main form modifying the sizes at runtime, something that the localizer (using WinRes) never sees. <EM>Note that WinRes, also&nbsp;from .Net, </EM>does<EM> recognize the properties, so someone was thinking this scenario oughtta work!</EM></LI></UL>
+<P>Now the combination of these first two factors often leads (as you can perhaps imagine) to the kind of bug that goes back and forth several times between the localizer fixing the truncation bug and the tester reporting it with the kind of "the problem is fixed"/"no it isn't" kind of argument that so often can come from looking at two different things and thinking they are the same.&nbsp;&nbsp;</P>
+<UL>
+<LI>Even&nbsp;once the localizer finally gets wise to the underlying problems, the fact that the <A href="http://msdn.microsoft.com/library/system.windows.forms.control.maximumsize.aspx" mce_href="http://msdn.microsoft.com/library/system.windows.forms.control.maximumsize.aspx">Control.MaximumSize</A> and <A href="http://msdn.microsoft.com/library/system.windows.forms.control.minimumsize.aspx" mce_href="http://msdn.microsoft.com/library/system.windows.forms.control.minimumsize.aspx">Control.MinimumSize</A>&nbsp;properties are not exposed to them means that <EM>they cannot fix the bug</EM> except by perhaps unreasonably/unreadably truncating the text themselves to avoid the unreasonable/unreadable truncation that the code will do itself later.</LI></UL>
+<P>Or make it a core bug -- perhaps only found after everything has been frozen and no one is willing to make changes.</P>
+<P>Okay.</P>
+<P>Fair enough.</P>
+<P>Now with all that said,&nbsp;in the world of Visual Studio, this bug is not such a big deal.</P>
+<P>I mean, from their point of view it is really quite unreasonable to even set <A href="http://msdn.microsoft.com/library/system.windows.forms.control.maximumsize.aspx" mce_href="http://msdn.microsoft.com/library/system.windows.forms.control.maximumsize.aspx">Control.MaximumSize</A>&nbsp;or <A href="http://msdn.microsoft.com/library/system.windows.forms.control.minimumsize.aspx" mce_href="http://msdn.microsoft.com/library/system.windows.forms.control.minimumsize.aspx">Control.MinimumSize</A>&nbsp;to a size that could break localization; in fact, one of the more senior people I talked to about this bug couldn't even see why anyone would set either property in a form meant to be localizable.</P>
+<P><EM>Of course I don't know of any other reason why one would set it, which means that someone was admitting to me that the property was a bad idea! But that can be a subject for another day...</EM>&nbsp;:-)</P>
+<P>Now the WinForms people are not being arbitrary about this judgment; the bug, which has existed since the very initial 1.0 version of the .Net Framework and WinForms, has (I am told) never ever been reported by any other customer external or internal to Microsoft.</P>
+<P>Just Windows.</P>
+<P>Now to&nbsp;Windows it led to hundreds of bugs (and no, this is not an exaggeration; the actual number is even higher though the "even&nbsp;higher" part&nbsp;is due in part to other problems that I'll talk about in some future blog).</P>
+<P>Pain in the butt bugs with all those back and forth problems and difficulty pinning&nbsp;the problems&nbsp;down. And so forth.</P>
+<P>Windows actually shipped with many of these bugs only partially fixed or worked around.</P>
+<P>And some of the worst of the offenders in the dialogs are known by name to people on the localization team, since they know how many bugs they can expect to have to deal with any time one of them is changed.</P>
+<P>But reportedly no one else has ever complained about the problem. Ever.</P>
+<P>So, okay.</P>
+<P>Eventually there will be a fix for this problem, a fix that I guess no one outside of the internal Windows team even cares about, since no one else apparently ran into the problem.</P>
+<P>And there will be a KB article describing it (I'll link to it once I find it exists). In case it turns out anyone wants it.</P>
+<P>From a social engineering standpoint I wish I had the time, resources, and knowledge to study the factors that can cause a bug to so hugely impact multiple developers spread across teams and groups and divisions and even continents within one large product while never affecting any other project in the entire world.</P>
+<P>I can't even try and fathom that one; in fact I get a headache just thinking about it....</P>
+<hr/><p><strong>John Cowan</strong> on 25 May 2010 9:48 AM:</p><div style="margin-left: 1em"><p>The *real* problem is that developers shouldn&#39;t be in control of the presentation features of apps. &nbsp;</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 25 May 2010 9:56 AM:</p><div style="margin-left: 1em"><p>As opposed to the rodeo clowns passing by? :-) We assume they are working within the spec provided by program managers who have the advice of UI designers....but as long as localizers can change things I&#39;m happy!</p>
+</div>
+<p><strong>Mihai</strong> on 25 May 2010 11:55 AM:</p><div style="margin-left: 1em"><p>In general I recommend against MaximumSize. What&#39;s the point? If forced to some value, then the content is truncated and it is useless. The chances that a tester will notice a truncated string are lower than noticing a dialog that is too big. If one thinks they have to use MaximumSize, and without it content would be too big for the screen, then it is probably bad design to begin with.</p>
+<p>And MinimumSize should be no problem if set, not matter the content. If MinimumSize is used on control1 to accommodate somehow another control (align with it, or something), then the form is probably not designed properly.</p>
+<p>Last: even if there are no bugs filed, don&#39;t assume nobody knows or cares :-)</p>
+<p>Over the years I have found quite a few bugs, and also found workarounds for them. Sometimes reported, sometimes not. The time it takes to file a bug and follow up on it is not trivial, and the way some of the bugs where treated did not encourage me to waste^H^H^H^H^H spend the time to file others.</p>
+</div>
+<p><strong>Miral</strong> on 25 May 2010 4:31 PM:</p><div style="margin-left: 1em"><p>The localisation design we settled on in the end for WinForms apps is that the English version needs to allow ~40% extra blank space in each text control for translation expansion, and translators are utterly forbidden from moving/resizing controls.</p>
+<p>Why? &nbsp;Because if a control is moved in the translation, and then *later* it is moved in the English version, the translation wins. &nbsp;Since we frequently need to move controls around as things are added, and we don&#39;t always do a re-translation pass (we release very frequently, and our customers don&#39;t mind a few things in English) this results in overlapping controls, since some of them will move (the ones the translator didn&#39;t adjust) and some won&#39;t (the ones they did).</p>
+<p>(Admittedly, we haven&#39;t yet had an Arabic or other RTL language to contend with.)</p>
+<p>But I can&#39;t think of any case when we&#39;ve used MinimumSize/MaximumSize for controls -- in general the auto-layout functionality of WinForms is just too weak to be useful. &nbsp;(WPF, on the other hand, excels at auto-layout, as long as you don&#39;t use Cider.)</p></div>
+<p><strong>Mihai</strong> on 27 May 2010 10:10 AM:</p><div style="margin-left: 1em"><p>Related to Miral&#39;s comment: sounds like a lot of fixed position/size going on there :-)</p>
+<p>In my experience the auto-layout features are enough in maybe 95% of the cases.</p>
+<p>They are not very intuitive though, so it takes some time to figure out how to use them properly.</p>
+<p>In general I am able to make pretty much everything use auto-layout.</p>
+<p>But it can also happen to spend a full half-hour on one form to make it work right.</p>
+</div>
+<p><strong>John Cowan</strong> on 26 Nov 2010 11:52 AM:</p><div style="margin-left: 1em"><p>Some UIs were obviously designed by rodeo clowns, yes.</p>
+<p>But what I really meant is that presentation features shouldn&#39;t be expressed by code, but by something else that is easier for non-developers to change.</p></div>
+<p><strong>Michael S. Kaplan</strong> on 26 Nov 2010 11:59 AM:</p><div style="margin-left: 1em"><p>...and certainly not by something that non-developers (like localizers) don&#39;t have exposed to them!</p>
+</div>
+<hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2010/05/18/9997861.html" title="All right, guys, uh, listen. This is a locale in Windows, watch me for the changes, and try and keep up, okay?">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2010/05/15/10013185.html" title="It isn&#39;t that I&#39;m not listening. But soon I won&#39;t be able to hear you!">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2010-05">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2010-05-17">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2010/05/17/10013731.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:35 GMT -->
+</html>

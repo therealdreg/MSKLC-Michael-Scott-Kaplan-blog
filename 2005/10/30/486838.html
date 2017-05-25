@@ -1,0 +1,35 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2005/10/30/486838.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:40 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Getting on people's case</title></head><body>
+<h1>Getting on people's case</h1>
+<p><em>by Michael S. Kaplan, published on 2005/10/30 03:01 -05:00, original URI: http://blogs.msdn.com/b/michkap/archive/2005/10/30/486838.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P><FONT face=Tahoma>It is funny how you can't have a simple discussion about the <a href="http://blogs.msdn.com/486215.aspx">Framework Design Guidelines about Case Sensitivity</A> without bringing out a nearly religious hysteria with the two camps claiming their thoughts on the matter are best.</FONT></P>
+<P><FONT face=Tahoma>Personally, I don't care. Everyone should just do whatever they want and then if they want case insensitivity come back talk to me about how to get the casing figured out....</FONT></P>
+<P><FONT face=Tahoma>But what I think is funniest about one of the VB stances on the whole matter is that they want case insensitivity because it is too easy to confuse people with mixed case but they have no problem with <a href="http://archives.miloush.net/michkap/archive/2005/02/07/368570.html">different normalized forms obfuscating meaning</A>.</FONT></P>
+<P><FONT face=Tahoma>I mean,&nbsp;speaking personally, I have no problem distinguishing these two letters:</FONT></P>
+<P><FONT face=Tahoma size=6><STRONG>A&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; a</STRONG></FONT></P>
+<P><FONT face=Tahoma>But in an application like Visual Studio.NET (which has had&nbsp;complex script support in the designer since v.1), I would have serious trouble distinguishing these two letters:</FONT></P><FONT face=Tahoma size=6>
+<P>ë&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ë</P></FONT>
+<P><FONT face=Tahoma>Of course, it is a lot of fun putting together samples like that <a href="http://archives.miloush.net/michkap/archive/2005/02/07/368570.html">obfuscation</A> one, but that is just to help call attention to the problem.</FONT></P>
+<P><FONT face=Tahoma>I would not object if Visual Studio was bundled with&nbsp;a tack hammer so users tempted to do this sort of thing could hit themselves over the head to cure the temptation. :-)</FONT></P>
+<P><FONT face=Tahoma>Now here is a sample I could put together that might help --&nbsp;a VB sample that had all of the following kinds of characters co-existing in ways that appear to violate the casing rules:</FONT></P>
+<P><FONT face=Tahoma size=6>Ä&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ä</FONT></P>
+<P><FONT face=Tahoma size=6><BR>&nbsp;</P></FONT>
+<P><FONT face=Tahoma size=6>É&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; é</FONT></P>
+<P><FONT face=Tahoma size=6><BR>&nbsp;</P></FONT>
+<P><FONT face=Tahoma size=6>Ì&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ì</FONT></P>
+<P><FONT face=Tahoma size=6><BR>&nbsp;</P></FONT>
+<P><FONT face=Tahoma size=6>Õ&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;õ</FONT></P>
+<P><FONT face=Tahoma size=6><BR>&nbsp;</P></FONT>
+<P><FONT face=Tahoma size=6>Û&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;û<BR></FONT></P>
+<P><FONT face=Tahoma>I am going to have to find Jay Roxe (who was at the <a href="http://archives.miloush.net/michkap/archive/2005/10/28/486333.html">Karaoke Challenge</A> on Friday and sang Great Balls of Fire!) and talk about putting together a "case sensitive VB" sample. Maybe then I could get the VB folks who want case insensitivity interested in getting the issue fixed? :-)</FONT></P>
+<P><FONT face=Tahoma></FONT>&nbsp;</P>
+<P><FONT face=Tahoma color=#ff1493><EM>This post brought to you by</EM> "<FONT color=#ff1493 size=6>ë</FONT>" <EM>(<A href="http://www.fileformat.info/info/unicode/char/00eb/index.htm">U+00eb</A>, a.k.a. LATIN SMALL LETTER E WITH DIARESIS)</EM></FONT></P>
+<hr/><p><a id="486959" href="#486959">#</a> <strong>Nick Lamb</strong> on 30 Oct 2005 5:13 AM:</p><div style="margin-left: 1em">Instead of the hammer, maybe VS could implement NFC and thus reduce the temptation to enter non-canonical characters by silently converting them...<br></div>
+<p><a id="487027" href="#487027">#</a> <strong>Michael S. Kaplan</strong> on 30 Oct 2005 2:30 PM:</p><div style="margin-left: 1em">That is my hope for what the sample might accomplish? :-)</div>
+<p><a id="487057" href="#487057">#</a> <strong>Dean Harding</strong> on 30 Oct 2005 5:31 PM:</p><div style="margin-left: 1em">Did VB &lt;= 6 let you have identifiers outside of ASCII?  It'd probably be hard to chage the case-insensitivity rules after all these years, but I guess if unicode identifiers are still a new thing, then you probably could change them.<br><br>After all, nobody - anywhere, ever - would have code that actually made use of the fact that VB doesn't normalize identifiers... would they?</div>
+<p><a id="487058" href="#487058">#</a> <strong>Michael S. Kaplan</strong> on 30 Oct 2005 5:42 PM:</p><div style="margin-left: 1em">Prior to VB.NET, they were ANSI based (basically default system locale). But VB.Net could support&amp;nbsp;normalized names&amp;nbsp;as an opt-in&amp;nbsp;flag, as could C# and everyone else....</div>
+<hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2005/10/30/487109.html" title="Julie Bennet is on Charmed!">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2005/10/29/486617.html" title="Why an 8-hour day seems to take forever">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2005-10">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2005-10-30">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2005/10/30/486838.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:40 GMT -->
+</html>

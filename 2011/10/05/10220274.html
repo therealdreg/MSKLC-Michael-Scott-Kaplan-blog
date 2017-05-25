@@ -1,0 +1,55 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2011/10/05/10220274.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>The unused case case (i.e. the case of the unused case)</title></head><body>
+<h1>The unused case case (i.e. the case of the unused case)</h1>
+<p><em>by Michael S. Kaplan, published on 2011/10/05 07:01 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2011/10/05/10220274.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<p>So the thing about <strong>Digit Substitution</strong> is that it is generally an all or nothing feature.</p>
+<p>You either have some special digits and you make the change to support them, or you have no special digits and you choose to not support them.</p>
+<p>Oh yeah, and sometimes you occasionally&nbsp;have no special digits yet you change to them anyway.</p>
+<p>That third case is kind of a bug, previously described in <strong><a title="A difference that makes no difference makes a blog" href="http://archives.miloush.net/michkap/archive/2011/05/18/10165599.html">A difference that makes no difference makes a blog</a></strong>.</p>
+<p>Ok, so you have these two settings:</p>
+<p><a href="http://msdn.microsoft.com/library/dd373863.aspx">LOCALE_SNATIVEDIGITS</a>:</p>
+<p style="padding-left: 30px;">Native equivalents of ASCII 0 through 9. The maximum number of characters allowed for this string is eleven, including a terminating null character. For example, Arabic uses "٠١٢٣٤٥ ٦٧٨٩". See also LOCALE_IDIGITSUBSTITUTION.</p>
+<p><a href="http://msdn.microsoft.com/library/dd373769.aspx">LOCALE_IDIGITSUBSTITUTION</a>:</p>
+<table style="width: 95%;" border="1" cellspacing="3" cellpadding="3" align="center">
+<tbody>
+<tr><th>Value</th><th>Meaning</th></tr>
+<tr>
+<td>0</td>
+<td>Context-based substitution. Digits are displayed based on the previous text in the same output. European digits follow Latin scripts, Arabic-Indic digits follow Arabic text, and other national digits follow text written in various other scripts. When there is no preceding text, the locale and the displayed reading order determine digit substitution, as shown in the following table.
+<div class="mtps" xmlns="http://www.w3.org/1999/xhtml">
+<div class="mtps"><span class="mtps">Locale&nbsp;&nbsp;&nbsp;&nbsp; </span><span class="mtps">Reading order&nbsp;&nbsp;&nbsp;&nbsp; </span><span class="mtps">Digits used</span></div>
+<div class="mtps"><span class="mtps">Arabic&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span class="mtps">Right-to-left&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span class="mtps">Arabic-Indic</span></div>
+<div class="mtps"><span class="mtps">Thai&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span class="mtps">Left-to-right&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span class="mtps">Thai digits</span></div>
+<div class="mtps"><span class="mtps">All others </span><span class="mtps">Any&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span class="mtps">No substitution used</span></div>
+</div>
+</td>
+</tr>
+<tr>
+<td>1</td>
+<td>No substitution used. Full Unicode compatibility.</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Native digit substitution. National shapes are displayed according to LOCALE_SNATIVEDIGITS.</td>
+</tr>
+</tbody>
+</table>
+<p>&nbsp;and the three options:</p>
+<ol>
+<li>LOCALE_SNATIVEDIGITS are there, and LOCALE_IDIGITSUBSTITUTION has them turned on!</li>
+<li>LOCALE_SNATIVEDIGITS are not&nbsp;there, but LOCALE_IDIGITSUBSTITUTION has them turned off anyway, so who cares?</li>
+<li>LOCALE_SNATIVEDIGITS are note there, but LOCALE_IDIGITSUBSTITUTION has them turned on -- a classic no-op bug;</li>
+</ol>
+<p>I assume many of my readers know enough about logic to suddenly see the case we've never gotten into&nbsp;before....</p>
+<p>Interesting? I'll tell you, I think so.</p>
+<p>If we did cover this case, where would we use it?</p>
+<p>Would it be a bug like the third case?</p>
+<p>Discuss amongst yourselves; tomorrow I'll jump in with my thoughts....</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<hr/><div style="margin-left: 1em"><em>no comments</em></div><hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2011/10/06 <a href="http://archives.miloush.net/michkap/archive/2011/10/06/10221131.html">The unused case case (i.e. the case of the unused case), part 2</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2011/10/06/10221131.html" title="The unused case case (i.e. the case of the unused case), part 2">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2011/10/04/10219770.html" title="I can&#39;t _____ [an MS rant]">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2011-10">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2011-10-05">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2011/10/05/10220274.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+</html>

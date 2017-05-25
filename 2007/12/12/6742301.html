@@ -1,0 +1,50 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2007/12/12/6742301.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:36 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>SiaO as The Red Carpet (aka Characters just want to be seen)</title></head><body>
+<h1>SiaO as The Red Carpet (aka Characters just want to be seen)</h1>
+<p><em>by Michael S. Kaplan, published on 2007/12/12 10:01 -05:00, original URI: http://blogs.msdn.com/b/michkap/archive/2007/12/12/6742301.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P>Over in the Suggestion Box, Doug asks:</P>
+<BLOCKQUOTE>
+<P><EM><FONT face="times new roman,times">Hi Michael,<BR><BR>Your posts include a "This post brought to you by" character at the bottom of the post.<BR><BR>Often the characters are displayed, but sometimes they just show as a rectangle. For example U+267f on a recent post did not display.<BR><BR>Do you have (one or more of)</FONT></EM></P>
+<UL>
+<LI><EM><FONT face="times new roman,times">a method to diagnose the cause</FONT></EM></LI>
+<LI><EM><FONT face="times new roman,times">links to the fine manual pages on this topic</FONT></EM></LI>
+<LI><EM><FONT face="times new roman,times">the appropriate search engine keywords to find the answer (it would probably return your previous posts)</FONT></EM></LI></UL></BLOCKQUOTE>
+<P>No need to diagnose too much, as the cause is very well known, always:</P>
+<P><STRONG>It means that&nbsp;an appropriate font to display the character was not being used.</STRONG></P>
+<P>Of course it does not exactly end there, because there are several possible reasons that such a thing could happen:</P>
+<P>I mean, it is possible that no font on your machine supports the character in question.</P>
+<P>Or it is possible that the underlying system(s) that find fonts when the characters are not in the font selected could not find the character.</P>
+<P><EM>The fact that I often choose characters off the beaten path does&nbsp;not help either possibility!</EM></P>
+<P>In any&nbsp;case, the end result is a notdef glyph (discussed previously <A class="" href="http://archives.miloush.net/michkap/archive/2007/06/19/3397122.html" mce_href="http://archives.miloush.net/michkap/archive/2007/06/19/3397122.html"><STRONG>here</STRONG></A>).</P>
+<P>One of the main reasons that I tend to provide links from code point values to <A href="http://www.fileformat.info/">http://www.fileformat.info/</A>&nbsp;is that you might be likely to have a chance to view the characters that way! :-)</P>
+<P>I had previously toyed with doing font embedding to allow the viewing, though the fact that it would be limited to specific platforms and browsers&nbsp;kind of soured me on the idea, though I did write up the code to do the building automatically and was pretty excited about the idea at the time. The code got re-purposed into a sample and became that whole "Rhymes with Amharic" series <A class="" href="http://archives.miloush.net/michkap/archive/2007/04/14/2128198.html" mce_href="http://archives.miloush.net/michkap/archive/2007/04/14/2128198.html"><STRONG>I</STRONG></A>&nbsp;<A class="" href="http://archives.miloush.net/michkap/archive/2007/04/14/2133650.html" mce_href="http://archives.miloush.net/michkap/archive/2007/04/14/2133650.html"><STRONG>wrote</STRONG></A> <A class="" href="http://archives.miloush.net/michkap/archive/2007/04/14/2134278.html" mce_href="http://archives.miloush.net/michkap/archive/2007/04/14/2134278.html"><STRONG>earlier</STRONG></A> <A class="" href="http://archives.miloush.net/michkap/archive/2007/04/14/2137215.html" mce_href="http://archives.miloush.net/michkap/archive/2007/04/14/2137215.html"><STRONG>this</STRONG></A> <A class="" href="http://archives.miloush.net/michkap/archive/2007/04/15/2145619.html" mce_href="http://archives.miloush.net/michkap/archive/2007/04/15/2145619.html"><STRONG>year</STRONG></A>.</P>
+<P>The other idea I toyed with and even wrote code for was one to create images containing the characters -- it is a perpetual project I keep putting off to take that code and combine it with a WLW add-in that would let me automatically generate the image for any chosen character and embed the image in the page (while also putting the character itself&nbsp;on the page&nbsp;to make sure clipboard operations were still possible!), to keep people from doing too much hot-linking. </P>
+<P>It moved from GDI+ and then to GDI/Uniscribe and then briefly to WPF&nbsp;before heading over to&nbsp;the managed TextRenderer. You know the type -- code that never stands completely still. :-)</P>
+<P>Again.... most of the code is written, I just have to take the time to finish it (and there always seems to be something else to do!)....</P>
+<P>When I finished, it might be fun to put the whole thing up as a sample and show how I did it, lots of cool technologies that others might find useful in their web applications....</P>
+<P mce_keep="true">&nbsp;</P>
+<P><FONT color=#ff00ff><EM>This post brought to you by</EM><FONT size=5> 𪘀 </FONT><EM>(<A class="" href="http://www.fileformat.info/info/unicode/char/2fa1d" mce_href="http://www.fileformat.info/info/unicode/char/2fa1d">U+2fa1d</A>, aka CJK COMPATIBILITY IDEOGRAPH-2FA1D, stoa <A class="" href="http://www.fileformat.info/info/unicode/char/2a600" mce_href="http://www.fileformat.info/info/unicode/char/2a600">U+2a600</A>)</EM></FONT></P>
+<hr/><p><a id="6751616" href="#6751616">#</a> <strong>John Cowan</strong> on 12 Dec 2007 4:50 PM:</p><div style="margin-left: 1em"><p>Sometimes, however, what shows is U+xxxx. &nbsp;I suppose this is deliberate on your part for inherently invisible characters?</p></div>
+<p><a id="6751696" href="#6751696">#</a> <strong>Michael S. Kaplan</strong> on 12 Dec 2007 4:58 PM:</p><div style="margin-left: 1em"><P>Yes, I used to include them, usually between quotes, but it seemed kind of silly to let people see un-seeable things! :-)</P></div>
+<p><a id="6771646" href="#6771646">#</a> <strong>Andrew Cook</strong> on 14 Dec 2007 1:38 PM:</p><div style="margin-left: 1em"><p>A new feature coming out in Firefox 3 early next year will hopefully make this slightly less confusing.</p>
+<p>At present, when Firefox 2 encounters a character it cannot find a glyph for, it will display either a question mark or the notdef glyph.</p>
+<p>Firefox 3 renders a notdef glyph box, but embeds within it the hexadecimal representation of the Unicode codepoint that the unrenderable character lives at. If the codepoint is on the BMP, it's rendered as four hex digits in a square, going L-&gt;R T-&gt;B. If the codepoint is on another plane, it's rendered as six hex digits in a box three digits wide, two digits tall, L-&gt;R T-&gt;B. </p>
+<p>I don't quite know how this works with base and combining characters...</p></div>
+<p><a id="6773036" href="#6773036">#</a> <strong>Michael S. Kaplan</strong> on 14 Dec 2007 5:40 PM:</p><div style="margin-left: 1em"><P>I shudder to think about the number of people who have never even heard of a code point seeing this exciting feature in random web pages (most of whom will probably call Microsoft support with their questions about this new behavior!)....</P></div>
+<p><a id="6795195" href="#6795195">#</a> <strong>Jan Kučera</strong> on 18 Dec 2007 3:58 AM:</p><div style="margin-left: 1em"><p>Okay Michael, so do _you_ see all the characters which sponsor your posts? If so, what font do you use? :)</p>
+</div>
+<p><a id="6795300" href="#6795300">#</a> <strong>Michael S. Kaplan</strong> on 18 Dec 2007 4:24 AM:</p><div style="margin-left: 1em"><p>Me? Almost always, though I am using all kinds of different fonts to do so....</p>
+</div>
+<p><a id="6795793" href="#6795793">#</a> <strong>Jan Kučera</strong> on 18 Dec 2007 6:24 AM:</p><div style="margin-left: 1em"><p>Oh that's the trick :-) If you can change the sponsor character font on the web, you could adjust it to the font in which you can see the character. If the reader does not have that font, it would then fallback to the current one.</p>
+<p>Though, this won't improve the poor experience in Pocket Internet Explorer I guess... your sponsors really should talk to the WM team. ;-)</p>
+</div>
+<p><a id="6797566" href="#6797566">#</a> <strong>Michael S. Kaplan</strong> on 18 Dec 2007 11:02 AM:</p><div style="margin-left: 1em"><p>Consider it a test of modern browsers, at least until I finish up that image code. :-)</p>
+</div>
+<p><a id="6853749" href="#6853749">#</a> <strong>Tanveer Badar</strong> on 24 Dec 2007 10:41 AM:</p><div style="margin-left: 1em"><p>(most of whom will probably call Microsoft support with their questions about this new behavior!)</p>
+<p>Totally hilarious.</p>
+</div>
+<hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2007/12/16 <a href="http://archives.miloush.net/michkap/archive/2007/12/16/6781186.html">Why my IUC31 talks were presented on Vista (even though running on a MacBook Pro)</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2007/12/13/6689013.html" title="If you play with your gadget, there are all kinds of problems you can run into">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2007/12/12/6731510.html" title="ISNUMERIC ISSTUPID (and ISGONNAGETITSASSKICKED if it isn&#39;t careful)">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2007-12">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2007-12-12">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2007/12/12/6742301.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:36 GMT -->
+</html>

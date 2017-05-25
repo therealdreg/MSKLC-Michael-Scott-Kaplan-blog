@@ -1,0 +1,30 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2007/08/04/4218091.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:37 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>The one code page that changed recently</title></head><body>
+<h1>The one code page that changed recently</h1>
+<p><em>by Michael S. Kaplan, published on 2007/08/04 03:01 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2007/08/04/4218091.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P>You may recall when I pointed out that <A class="" href="http://archives.miloush.net/michkap/archive/2005/02/06/368081.html" mce_href="http://archives.miloush.net/michkap/archive/2005/02/06/368081.html"><STRONG>Microsoft does not change code pages [any more]</STRONG></A>.</P>
+<P>This is still an ironclad principle that we follow.</P>
+<P>But there is one exception to that rule, a code page that changed just recently (and which, should the circumstances that led to the change happen again, could even recur....</P>
+<P>That code page? </P>
+<P>UTF-8.</P>
+<P>Changes have happened to this code page from time to time in order to make sure that its conversions are conformant to the Unicode definition, which has undergone subtle changes in relation to invalid sequences (such as unpaired surrogates).</P>
+<P>When those changes happen, it is hard to know what to do with a code page that is defined as following Unicode -- though in the end the decision was made that the promise of that definition would trump the promise to make no changes in the case of UTF-8, since the changes themselves relate to security issues.</P>
+<P>You can consider this the exception that proves the rule! :-)</P>
+<P mce_keep="true">&nbsp;</P>
+<P><FONT color=#ff00ff><EM>This post brought to you by</EM> <FONT size=5>⌢</FONT> <EM>(</EM><A class="" href="http://www.fileformat.info/info/unicode/char/2322" mce_href="http://www.fileformat.info/info/unicode/char/2322"><EM>U+2322</EM></A><EM>, a.k.a. FROWN)</EM></FONT></P>
+<hr/><p><strong>Nick Lamb</strong> on 7 Aug 2007 3:37 PM:</p><div style="margin-left: 1em"><p>Does this mean that Vista, or some forthcoming version of Windows claims to actually have a standards compliant UTF-8 implementation? Does it also mean that someone tested it (you perhaps) ? Through which APIs is this compliant implementation exposed ?</p>
+<p>It certainly would be nice if in a few years people could expect to use Unicode in Windows without tremendous pain and inconvenience.</p></div>
+<p><strong>Michael S. Kaplan</strong> on 7 Aug 2007 4:52 PM:</p><div style="margin-left: 1em"><p>Actually, several versions have been compliant (with the ever changing definition provided by Unicode) including the one in Vista and in .NET with the latest release (either the error out behavior we give via the flag or the U+FFFD substitution we give without are conformant).</p>
+</div>
+<p><strong>Nick Lamb</strong> on 8 Aug 2007 7:57 AM:</p><div style="margin-left: 1em"><p>We know that in the past at least the MultiByteToWideChar family and the Internet Explorer code haven't obeyed the specification. This wasn't because it was &quot;ever changing&quot; but because they either simply weren't tested to see whether they actually did what the standard said or they were tested and no-one cared that they failed.</p>
+<p>Let me be absolutely clear, the UTF-8 specification does not now and never has said &quot;Don't worry about the top bits on trailing bytes, they're optional and it's much faster to ignore them&quot; nor did it say &quot;Arbitrary UTF-16 code units are the same thing as Unicode codepoints, so you can just encode them as UTF-8 with no intermediate steps and it'll be fine&quot;. The only thing that changed was that in 2001 accepting overlong sequences went from being an optional and (to everyone else except Microsoft apparently) obviously insecure practice to being specifically called out as forbidden in the standard.</p>
+<p>So hence I'm interested in whether you actually tested it, and which APIs you believe are fixed. Call it cynicism born of doing QA on real software if you like.</p></div>
+<p><strong>Michael S. Kaplan</strong> on 8 Aug 2007 11:05 AM:</p><div style="margin-left: 1em"><p>Please test with the latest .NET 2.0 and patches or Vista RTM and then get back to me, please.</p>
+<p>I have made a conformance claim, and would suggest it is now on you to either prove me wrong or not, but complaining about what came before in a time when MUCH was in flux and the standard was more relaxed about what was alowed than what was admitted is not really productive....</p>
+<p>If you know what I mean (and even if you don't!). :-)</p>
+</div>
+<hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2007/08/04/4218583.html" title="A re-genitive post">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2007/08/03/4217350.html" title="What is SORT_INVARIANT_MATH for?">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2007-08">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2007-08-04">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2007/08/04/4218091.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:37 GMT -->
+</html>

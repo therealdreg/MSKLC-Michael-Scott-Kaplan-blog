@@ -1,0 +1,27 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2011/08/30/10202389.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>When you want to get horizontal or vertical with some character, don't ask Uniscribe where to go</title></head><body>
+<h1>When you want to get horizontal or vertical with some character, don't ask Uniscribe where to go</h1>
+<p><em>by Michael S. Kaplan, published on 2011/08/30 07:01 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2011/08/30/10202389.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<p>Vinay asked:</p>
+<p style="padding-left: 30px;"><em><span style="font-family: times new roman,times; font-size: medium;">Hi</span></em><br /><em><span style="font-family: times new roman,times; font-size: medium;">There are cases when copying a glyph from charmap into WORD rotates it 90 degree or sometimes 180 degree "in case of Vertical writing".<br /><br />Does this information about rotation come from Uniscribe and if yes,how to get this info??<br /><br />Examples of glyphs which are rotated 180 degree in vertical writing are U+2523,U+2517,etc and most other glyphs are rotated 90 degree(braces,brackets,etc).<br /><br />Please help me how does uniscribe help me to sort out the degree of rotation for a glyph in case of vertical writing.</span></em></p>
+<p>This really isn't a Uniscribe feature at all, Vinay!</p>
+<p>It's a font feature - with the fonts containing the glyphs to use when you are writing in vertical mode.</p>
+<p>When no vertical substitute is specified, the character just gets rotated.</p>
+<p>Now knowing what characters to rotate and what ones not to is something widely understood by font foundries, but there's no Win32 function that has the info (since fonts don't need to call such a function just to do what they already know what to do anyway).</p>
+<p>I suppose it would be potentially be interesting data for Unicode to provide as a property. Though it would perhaps then have to be extended beyond Han and Kana and into other scripts as well.</p>
+<p>No one has yet volunteered to write the&nbsp;Unicode Technical&nbsp;Report for the <strong>UVA</strong> (the Unicode Vidi Algorithm).</p>
+<p>Though <strong>UVA</strong> makes a great backformation of an idea, doesn't it? :-)</p>
+<hr/><p><strong>John Cowan</strong> on 30 Aug 2011 10:51 AM:</p><div style="margin-left: 1em"><p><a rel="nofollow" target="_new" href="http://unicode.org/notes/tn22/RobustVerticalLayout.pdf">unicode.org/.../RobustVerticalLayout.pdf</a> pretty much lays it out for you (ahem). &nbsp;Essentially, you need to know two things about each character: its vertical bidirectional class, which can be T, B, or neutral; and its bi-orientation transformation class, which can be rotate or no-rotate.</p>
+<p>I tried to persuade the UTC to add these as new character properties, but no luck. &nbsp;Fortunately, you can for the most part infer them from the script property, with a few individual exceptions like U+4E00 一, which is rotated even though it&#39;s a CJKV ideograph.</p>
+</div>
+<p><strong>Quppa</strong> on 31 Aug 2011 3:23 AM:</p><div style="margin-left: 1em"><p>Speaking of vertical text layout, will its support in Windows Phone remain limited to Microsoft applications/UI?</p>
+<p><a rel="nofollow" target="_new" href="http://www.istartedsomething.com/20110507/windows-phone-7-mango-east-asian-language-tidbits/">www.istartedsomething.com/.../windows-phone-7-mango-east-asian-language-tidbits</a></p>
+<p>The author mentions that the vertical text layout will be used in hubs/panoramas - apparently to reduce clipping, which makes little sense - in addition to the lock screen, but will probably not be available to third-party applications (I certainly can&#39;t find anything in the latest dev tools). However, does its presence in WP7 indicate that it is implemented somewhere in Silverlight, and might we see it make its way to WPF/Silverlight on the desktop?</p>
+</div>
+<p><strong>Quppa</strong> on 31 Aug 2011 3:25 AM:</p><div style="margin-left: 1em"><p>Another duplicate post... sorry. Either the &#39;Post&#39; button takes two clicks to work, or I end up posting the same thing twice.</p>
+</div>
+<hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2011/08/31/10203390.html" title="And then, the unrelated KB article fixes the problem...">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2011/08/29/10201368.html" title="At this point, it&#39;s a doc bug....">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2011-08">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2011-08-30">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2011/08/30/10202389.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+</html>

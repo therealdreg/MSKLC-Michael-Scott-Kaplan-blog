@@ -1,0 +1,57 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2008/03/19/8323216.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:36 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>The forensic typographers found no link to Lucida Console, and the D.A. had nothing to fallback to</title></head><body>
+<h1>The forensic typographers found no link to Lucida Console, and the D.A. had nothing to fallback to</h1>
+<p><em>by Michael S. Kaplan, published on 2008/03/19 10:01 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2008/03/19/8323216.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P><EM><FONT color=#ff0000 size=1>Please read the </FONT></EM><A class="" href="http://archives.miloush.net/michkap/archive/2008/02/28/7934999.html" mce_href="http://archives.miloush.net/michkap/archive/2008/02/28/7934999.html"><EM><FONT size=1>disclaimer</FONT></EM></A><FONT color=#ff0000><EM><FONT size=1>; content of </FONT></EM><A class="" href="http://blogs.msdn.com/michkap" mce_href="http://blogs.msdn.com/michkap"><EM><FONT size=1>Michael Kaplan's blog</FONT></EM></A><EM><FONT size=1> not approved by Microsoft! </FONT></EM></FONT><EM><FONT color=#ff0000 size=1>In particular, this blog discusses what I think people ought to be doing next in their jobs despite the fact that I&nbsp;have neither&nbsp;authority nor responsibility to make such assessments, across (at least) two&nbsp;teams&nbsp;within Microsoft. Therefore, my opinions should&nbsp;definitely be weighed with that in mind and thus taken with a huge hairy grain of salt -- because even if you agree with me, Microsoft might disagree with both us....</FONT></EM></P>
+<P>So yesterday, when I blogged <A class="" href="http://archives.miloush.net/michkap/archive/2008/03/18/8306597.html" mce_href="http://archives.miloush.net/michkap/archive/2008/03/18/8306597.html"><STRONG>Conventional wisdom is retarded, aka What the @#%&amp;* is _O_U16TEXT?</STRONG></A>, I did a bit of tap dancing around the fact that the Japanese text was showing up as null glyphs (those empty square boxes).</P>
+<P>You know, the notdef glyph I have talked about <A class="" href="http://archives.miloush.net/michkap/archive/2007/06/19/3397122.html" mce_href="http://archives.miloush.net/michkap/archive/2007/06/19/3397122.html"><STRONG>before</STRONG></A>, and then showed in this screenshot:</P>
+<P mce_keep="true"><IMG src="http://trigeminal.fmsinc.com/images/unicodeconsole02.png"></P>
+<P>You might be curious what is going on there?</P>
+<P><EM>If not, you can skip the rest of this post....</EM></P>
+<P>First we'll look at the <STRONG>Font</STRONG> tab of my <STRONG>Visual Studio 2005 Command Prompt</STRONG> shortcut, which probably differs slightly from yours since I always get away from the raster fonts, no doubt an occupational hazard!</P>
+<P><IMG src="http://trigeminal.fmsinc.com/images/unicodeconsole03.png"></P>
+<P>The only choice for TrueType fonts that I have is <STRONG>Lucida Console</STRONG>.</P>
+<P>This is an interesting font with a lot of varied usages -- for example it is one of the main fonts used for [closed] captioning by Media Center and like components (this is hardly secret knowledge even if you aren't a <A class="" href="http://archives.miloush.net/michkap/archive/2007/08/22/4519235.html" mce_href="http://archives.miloush.net/michkap/archive/2007/08/22/4519235.html"><STRONG>forensic typographer</STRONG></A>, since it is easy to see that kind of thing when you are looking for it -- that is why movies like <STRONG>Helvetica</STRONG> are so much fun!</P>
+<P>Of course it is generally regarded as a less than ideal&nbsp;font for captioning, for reasons including:</P>
+<UL>
+<LI>it is essentially monoline;</LI>
+<LI>it is too bold.;</LI>
+<LI>it has a slash zero.</LI>
+<LI>its cap height is too low compared to its x-height;</LI>
+<LI>its acute and circumflex accents poor in some cases (e.g. í vs. î).</LI></UL>
+<P>Now if you think back to June 2005 and my <A class="" href="http://archives.miloush.net/michkap/archive/2005/06/18/430507.html" mce_href="http://archives.miloush.net/michkap/archive/2005/06/18/430507.html"><STRONG>Font substitution and linking #3</STRONG></A> or October 2005 and my <A class="" href="http://archives.miloush.net/michkap/archive/2005/10/01/476022.html" mce_href="http://archives.miloush.net/michkap/archive/2005/10/01/476022.html"><STRONG>Font Linking vs. Font Fallback</STRONG></A>, the number of fonts that are covered by GDI font linking is rather small. It does include <STRONG>Lucida Sans Unicode</STRONG>, but it does not include <STRONG>Lucida Console</STRONG>.</P>
+<P>And because of that, there is no GDI font linking in the console (mitigations like those discussed in <A class="" href="http://archives.miloush.net/michkap/archive/2008/01/17/7141157.html" mce_href="http://archives.miloush.net/michkap/archive/2008/01/17/7141157.html"><STRONG>Expertise isn't always everything (aka When the one who is learning teaches us something important)</STRONG></A>&nbsp;do not apply here since there is no way to get a vertical text font specified in the console anyway).</P>
+<P>Amazingly enough, no one seems eager to add <STRONG>Lucida Console</STRONG> to the GDI font link chain that other fonts like <STRONG>Tahoma</STRONG> and <STRONG>Microsoft Sans Serif</STRONG> and <STRONG>Lucida Sans Unicode</STRONG> are in. And people seem even less eager to add Uniscribe support to the console (which wouldn't help this case just like it didn't help <STRONG>Arial</STRONG> in&nbsp;<A class="" href="http://archives.miloush.net/michkap/archive/2008/01/17/7141157.html" mce_href="http://archives.miloush.net/michkap/archive/2008/01/17/7141157.html"><STRONG>that @ post</STRONG></A>, unless Uniscribe were to take up the CJK question for good in some future version....</P>
+<P mce_keep="true">&nbsp;</P>
+<P mce_keep="true">&nbsp;</P>
+<hr/><p><a id="8326127" href="#8326127">#</a> <strong>Ben Cooke</strong> on 19 Mar 2008 3:21 PM:</p><div style="margin-left: 1em"><p>I may be remembering wrong -- I get a bit confused about the architecture of NT-based Windows -- but doesn't the console live in the kernel and talk directly to the window manager and GDI?</p>
+<p>Can such a component in the kernel use Uniscribe? I would expect not, since IIRC Uniscribe is a userspace DLL implemented in terms of the Win32 API.</p></div>
+<p><a id="8326209" href="#8326209">#</a> <strong>phrosty</strong> on 19 Mar 2008 4:28 PM:</p><div style="margin-left: 1em"><p>on a related note - any clues as to how to make other fonts, like Consolas, appear in that list?</p></div>
+<p><a id="8326236" href="#8326236">#</a> <strong>Michael S. Kaplan</strong> on 19 Mar 2008 4:44 PM:</p><div style="margin-left: 1em"><P>Already asked and answered, <A class="" href="http://archives.miloush.net/michkap/archive/2006/10/19/842895.html"><STRONG>here</STRONG></A>. :-)</P></div>
+<p><a id="8326242" href="#8326242">#</a> <strong>Michael S. Kaplan</strong> on 19 Mar 2008 4:48 PM:</p><div style="margin-left: 1em"><p>Hey Ben,</p>
+<p>The situation is both more and less complicated than that. :-)</p>
+<p>I might get into that in another post, as the various kernel dependencies in the console, user32, and gdi32 are all interesting....</p>
+</div>
+<p><a id="8327211" href="#8327211">#</a> <strong>Centaur</strong> on 20 Mar 2008 6:41 AM:</p><div style="margin-left: 1em"><p>So, in theory, if we added a font that were in the font linking list or extended the font linking list to cover Lucida Console, we would see the kanji in the console, right?</p></div>
+<p><a id="8327246" href="#8327246">#</a> <strong>Michael S. Kaplan</strong> on 20 Mar 2008 7:41 AM:</p><div style="margin-left: 1em"><p>That is the working theory. Anyone want to try to add Courier New to the list to see if the theory is sound? :-)</p>
+</div>
+<p><a id="8337567" href="#8337567">#</a> <strong>Michael Madsen</strong> on 26 Mar 2008 6:34 AM:</p><div style="margin-left: 1em"><p>I know I'm a bit late, but font linking DOES work. I added an entry in HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\FontLink\SystemLink:</p>
+<p>Key=Lucida Console</p>
+<p>Value=MSGOTHIC.TTC,MS Gothic</p>
+<p>And kanji shows up in the console when Lucida Console is selected.</p>
+<p>There are some drawing issues caused by MS Gothic being wider than Lucida Console - it will cut off the string too early when printing the line originally, but get it right the second time it draws that line (that is, when it uses the buffer or otherwise redraws the entire window) as seen here:</p>
+<p><a rel="nofollow" target="_new" href="http://birdiesoft.dk/KanjiConsole.png">http://birdiesoft.dk/KanjiConsole.png</a> (Danish XP Pro SP2)</p>
+<p>MS UI Gothic or MS PGothic might be better - I haven't tested this. I also haven't tested how Vista handles this (that'll have to wait until I get home).</p></div>
+<p><a id="8337663" href="#8337663">#</a> <strong>Michael S. Kaplan</strong> on 26 Mar 2008 8:47 AM:</p><div style="margin-left: 1em"><p>It is never too late for good news! :-)</p>
+</div>
+<p><a id="8338289" href="#8338289">#</a> <strong>Michael Madsen</strong> on 26 Mar 2008 3:09 PM:</p><div style="margin-left: 1em"><p>Now I'm home, so I tested it out on Vista - with even better news!</p>
+<p>All of the MS Gothics (&quot;regular&quot;, PGothic, UI Gothic) share the problem shown in the XP image - so XP users will have to live with the issue shown, unless they have another font (and it is suitable).</p>
+<p>Meiryo, however, will scale the characters so they actually fit inside a single character cell. This means you don't have the issue of having &quot;half&quot; strings because the text uses more space than expected, although it's hardly possible to read at the normal font size:</p>
+<p><a rel="nofollow" target="_new" href="http://birdiesoft.dk/KanjiConsoleVistaMeiryo.png">http://birdiesoft.dk/KanjiConsoleVistaMeiryo.png</a></p>
+<p>This can be remedied by increasing the font size:</p>
+<p><a rel="nofollow" target="_new" href="http://birdiesoft.dk/KanjiConsoleVistaMeiryo_large.png">http://birdiesoft.dk/KanjiConsoleVistaMeiryo_large.png</a></p></div>
+<hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2008/03/20/8326152.html" title="That&#39;s no gap, dear; that&#39;s a huge freaking chasm!">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2008/03/19/8321717.html" title="Before you say &quot;What&#39;s next?&quot; you have to figure out the action items">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2008-03">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2008-03-19">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2008/03/19/8323216.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:36 GMT -->
+</html>

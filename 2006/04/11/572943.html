@@ -1,0 +1,80 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2006/04/11/572943.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:40 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>I daresay it is often <= -1</title></head><body>
+<h1>I daresay it is often <= -1</h1>
+<p><em>by Michael S. Kaplan, published on 2006/04/11 03:06 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2006/04/11/572943.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P><FONT face=Tahoma>A lot of the documentation for functions in the NLS API makes the point that for a length parameter you can either pass the length or you can pass -1 to signal that the string is NULL terminated.</FONT></P>
+<P><FONT face=Tahoma>(I have mentioned this <A href="http://archives.miloush.net/michkap/archive/2005/04/20/410043.html">previously</A>.)</FONT></P>
+<P><FONT face=Tahoma>As it turns out, most of the functions will treat any negative value this way, and it has been that way since the functions were first written (in many/most cases, over a decade ago).</FONT></P>
+<P><FONT face=Tahoma>So,&nbsp;let's look at them one at a time....</FONT></P>
+<UL><FONT face=Tahoma>
+<LI><FONT face=Tahoma>CompareString &lt;= -1</FONT> </LI>
+<LI>CompareStringOrdinal == -1</FONT></LI><FONT face=Tahoma>
+<LI><FONT face=Tahoma>FindNLSString == -1</FONT> </LI>
+<LI>FoldString &lt;= -1</FONT> </LI><FONT face=Tahoma>
+<LI><FONT face=Tahoma>GetStringTypeEx &lt;= -1</FONT> 
+<LI><FONT face=Tahoma>GetStringType[A|W] &lt;= -1</FONT> </LI>
+<LI><FONT face=Tahoma>IsNormalizedString == -1</FONT></LI>
+<LI>LCMapString &lt;= -1</FONT> 
+<LI><FONT face=Tahoma>MultiByteToWideChar &lt;= -1</FONT> </LI><FONT face=Tahoma>
+<LI><FONT face=Tahoma>NormalizeString == -1</FONT> </LI>
+<LI>WideCharToMultiByte &lt;= -1</FONT> </LI></UL>
+<P><FONT face=Tahoma>Believe it or not, some of the comments specifically talk about the parameter being equal to -1 even though the check underneath the comment is for less than or equal to one.</FONT></P>
+<P><FONT face=Tahoma>Of course we can't change the behavior due to the backcompat concerns, though maybe the comments should be updated someday. Though the fact that no one has pointed it out before makes me wonder if anyone ever reads them anyway? :-)</FONT></P>
+<P><FONT face=Tahoma>If you look at the functions, you may even see the pattern -- it is only functions added later that have the "equal to -1" behavior. So that is something, right? We are consistent, in our own way.</FONT></P>
+<P><FONT face=Tahoma>In any case, it is safer to just pass -1 since some functions work that way. And it is an easier rule to remember than a big list of functions....</FONT></P>
+<P><FONT face=Tahoma></FONT>&nbsp;</P>
+<P><FONT face=Tahoma color=#ff1493><EM>This post brought to you by</EM> "-" <EM>(<A href="http://www.fileformat.info/info/unicode/char/002d">U+002d</A>, a.k.a. HYPHEN-MINUS)</EM></FONT></P>
+<hr/><p><a id="573225" href="#573225">#</a> <strong>Phylyp</strong> on 11 Apr 2006 6:13 AM:</p><div style="margin-left: 1em">Warning: some wild ass guesses follow: 
+<br>
+<br>I think the whole &lt;= -1 thing probably came about because someone decided that zero and positive values would be a value, and negative values would be a code/indicator. In the initial implementation, -1 was for a NULL terminated string, and other negatives reserved for future use. 
+<br>
+<br>Ideally, this should be done by separate parameters, one indicating if a string is NULL terminated, another parameter for the length (if not NULL terminated). This approach is verbose, and that is both a good and a bad thing! </div>
+<p><a id="573238" href="#573238">#</a> <strong>Michael S. Kaplan</strong> on 11 Apr 2006 6:47 AM:</p><div style="margin-left: 1em">Hi Phylyp, <BR><BR>But we can't change the behavior once it has been created -- so if that were the case then they should all have been made to check for == -1.... <BR><BR>(for an example of a case where we DID do something like this with the return value, take a look at NormalizeString!) <BR><BR>I won't disagree about the muliple param idea, other than to point out that the most common cited reason for people to wrap our functions is that people find them to be too complicated as they stand!</div>
+<p><a id="573390" href="#573390">#</a> <strong>Maurits [MSFT]</strong> on 11 Apr 2006 11:18 AM:</p><div style="margin-left: 1em">What do the &quot;== -1&quot; functions do if you pass, say, -2?</div>
+<p><a id="573420" href="#573420">#</a> <strong>Michael S. Kaplan</strong> on 11 Apr 2006 11:58 AM:</p><div style="margin-left: 1em">They fail with an ERROR_INVALID_PARAMETER....</div>
+<p><a id="573423" href="#573423">#</a> <strong>Maurits [MSFT]</strong> on 11 Apr 2006 12:02 PM:</p><div style="margin-left: 1em">Ah, good. &nbsp;Kudos for that.
+<br>
+<br>As an aside, it's odd that your comments to this post have an overescaped &amp;lt; in their subject, but ours (mine and Phylyp's) don't... must be due to the &quot;HTML&quot;-ized blog admin tools?</div>
+<p><a id="573428" href="#573428">#</a> <strong>Maurits [MSFT]</strong> on 11 Apr 2006 12:04 PM:</p><div style="margin-left: 1em">&gt; overescaped &amp;lt;
+<br>
+<br>Weird... they seem to wander, and appear only intermittently. &nbsp;Right now I'm looking at a page where only my last comment has an &amp;lt;, and all of the other comments have a normal &lt;</div>
+<p><a id="573574" href="#573574">#</a> <strong>Michael S. Kaplan</strong> on 11 Apr 2006 2:25 PM:</p><div style="margin-left: 1em">Actually, I have been editing them as I see them. :-)</div>
+<p><a id="574900" href="#574900">#</a> <strong>Phylyp</strong> on 12 Apr 2006 9:42 AM:</p><div style="margin-left: 1em">Mike, 
+<br>Yup, I agree that multiple params are only an 'idealistic' solution, practically it's probably better to merge them, especially in scenarios like this, where -ve lengths are meaningless. 
+<br>
+<br>Heh, I used to wonder how people programmed Windows before IntelliSense, IntelliTips and all those keystroke savers in VS 6. 
+<br>
+<br>Also, no, I wasn't suggesting changing the behaviour (UK spelling, ha!) of existing functions. 
+<br>
+<br>I was merely pointing out the fact that one parameter is actually for two purposes: as a flag/indicator, when -ve and as a value when +ve. 
+<br>
+<br>On a related note: I work in data warehousing. We often have a need to store values and/or indicators pertaining to an attribute/entity. In these cases too we often encounter a similar debate about merging values and indicators in the same column. 
+<br>
+<br>Since its a database, and especially since its a data warehouse (where space isn't a constraint), we go for the purist approach, and have a column for the indicator, another for the value. The biggest advantage of the purist approach is that it is quite self-documenting. </div>
+<p><a id="575392" href="#575392">#</a> <strong>Maurits [MSFT]</strong> on 12 Apr 2006 7:58 PM:</p><div style="margin-left: 1em">&gt; one parameter is actually for two purposes: as a flag/indicator, when -ve and as a value when +ve
+<br>
+<br>Pushing the idea of parameter reuse a bit further, LCMapString has a parameter (lpDestStr) that is a pointer to a byte array when LCMAP_SORTKEY is passed, and a pointer to a string when LCMAP_SORTKEY is not passed.
+<br>
+<br>It gets a little weird when LCMAP_SORTKEY | LCMAP_BYTEREV is passed, depending on whether the number of bytes in the sort key is odd or even... see
+<br><a rel="nofollow" target="_new" href="http://msdn.microsoft.com/library/default.asp?url=/library/en-us/intl/nls_5s2v.asp">http://msdn.microsoft.com/library/default.asp?url=/library/en-us/intl/nls_5s2v.asp</a>
+<br>
+<br>But what are the reserved parameters for in LCMapStringEx? &nbsp;Anything you can let us in on?
+<br>
+<br><a rel="nofollow" target="_new" href="http://msdn.microsoft.com/library/default.asp?url=/library/en-us/intl/nls_LCMapStringEx.asp">http://msdn.microsoft.com/library/default.asp?url=/library/en-us/intl/nls_LCMapStringEx.asp</a>
+<br>...
+<br>LPNLSVERSIONINFO lpVersionInformation,
+<br>LPVOID lpReserved,
+<br>LPARAM lParam
+<br>...
+<br>lpVersionInformation
+<br> &nbsp; &nbsp;[in] Reserved, must be NULL.
+<br>lpReserved
+<br> &nbsp; &nbsp;[in] Reserved, must be NULL.
+<br>lParam
+<br> &nbsp; &nbsp;[in] Reserved, must be zero.</div>
+<p><a id="575501" href="#575501">#</a> <strong>Michael S. Kaplan</strong> on 12 Apr 2006 11:47 PM:</p><div style="margin-left: 1em">Think of those extra parameters as leaving room for future expansion. :-)</div>
+<hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2006/04/12/575080.html" title="Getting all you can out of a keyboard layout, Part #9a">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2006/04/11/572838.html" title="Case sensitive Visual Basic!">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2006-04">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2006-04-11">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2006/04/11/572943.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:40 GMT -->
+</html>

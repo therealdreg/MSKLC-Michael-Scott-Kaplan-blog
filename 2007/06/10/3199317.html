@@ -1,0 +1,44 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2007/06/10/3199317.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:38 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Did someone re-calibri-ate a font?</title></head><body>
+<h1>Did someone re-calibri-ate a font?</h1>
+<p><em>by Michael S. Kaplan, published on 2007/06/10 00:29 -07:00, original URI: http://blogs.msdn.com/michkap/archive/2007/06/10/3199317.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostOld -->
+<P>Julia Lerman posted a while back about <A class="" href="http://blog.ziffdavis.com/devlife/archive/2007/01/23/47570.aspx" mce_href="http://blog.ziffdavis.com/devlife/archive/2007/01/23/47570.aspx">How Calibri Font gave&nbsp;her reports a Russian accent</A> and I put it on my list of things to mention.</P>
+<P>And I have been something of a slacker in that I am just getting to it now. Sorry about that, Julia....</P>
+<P><EM>(though maybe I was just&nbsp;so&nbsp;despondant&nbsp;that she was in Redmond and didn't ping me while she was in town!)</EM></P>
+<P>It may or not be fair to assume ClearType is involved. Perhaps it is all of those optional ligatures they added to the ClearType fonts that I mentioned <A class="" href="http://archives.miloush.net/michkap/archive/2006/08/14/698304.html" mce_href="http://archives.miloush.net/michkap/archive/2006/08/14/698304.html"><STRONG>earlier</STRONG></A>, and it is Adobe incorrectly selecting these optional ligatures when only one character is there?</P>
+<P>On the other hand, perhaps the bug is in the font and its tables. </P>
+<P>It does not look like the problem&nbsp;has been&nbsp;investigated yet....</P>
+<P>For now, we'll just assume that Calibri has a Russian accent in some programs and wait to blame someone until the exact cause is understood -- although it gives yet another reason why the experimental addition of the optional ligatures may not have been such a good idea -- if they weren't in the font (like they aren't in Arial) then there would have been no pronlems....</P>
+<P mce_keep="true">&nbsp;</P>
+<P><FONT color=#ff00ff><EM>This post brought to you by</EM> <FONT size=6>i</FONT> <EM>(<A class="" href="http://www.fileformat.info/info/unicode/char/0069" mce_href="http://www.fileformat.info/info/unicode/char/0069">U+0069</A>, a.k.a. LATIN SMALL LETTER I)</EM></FONT></P>
+<hr/><p><a id="3201794" href="#3201794">#</a> <strong>Rosyna</strong> on Sunday, June 10, 2007 5:33 AM:</p><div style="margin-left: 1em"><p>&quot;it is Adobe incorrectly selecting these optional ligatures when only one character is there?&quot;</p>
+<p>Where is Adobe mentioned in her blog post?</p>
+<p>But it sounds like the problem is on the client's end when they view it.</p>
+<p>Actually, it's possible Crystal Report's Export to PDF didn't embed the font at all? If the font wasn't embedded and wasn't available on the client's machine, it could have chosen any random font (as per the client's settings on their computer box). Arial is on most computers, so no font substitution would have been necessary. She explicitly mentions font embedding using Visual Studio and says that works, with also supports the idea font substitution was the issue.</p></div>
+<p><a id="3206956" href="#3206956">#</a> <strong>Michael S. Kaplan</strong> on Sunday, June 10, 2007 11:11 AM:</p><div style="margin-left: 1em"><p>Adobe PDF? :-)</p>
+<p>Or yes, Crystal Decisions may have dropped the ball too. </p>
+<p>The jury is still out, anyone could be guilty.</p>
+<p>But clearly selecting the font leads to the problem and we know the font has the optional ligatures, which makes me doubt the font's selection and use is a specifically involved....</p></div>
+<p><a id="3213083" href="#3213083">#</a> <strong>Mihai</strong> on Sunday, June 10, 2007 4:55 PM:</p><div style="margin-left: 1em"><p>PDF stores glyphs and glyphs coordinates for rendering.</p>
+<p>This is why you can use MS Word and produce Arabic or Hindi PDF files</p>
+<p>and they are ok, even if the Arabic and Hindi support in Acrobat itself is not great (try TouchUp, for instance).</p>
+<p>It is &quot;the thing&quot; that puts the glyphs in the PDF that is doing the mess.</p>
+<p>I don't know how Crystal Report produces the PDF, but it seems there is the problem.</p>
+<p>But this is just &quot;psychic debugging,&quot; one would need to look at the whole thing to tell for sure.</p></div>
+<p><a id="3213228" href="#3213228">#</a> <strong>Michael S. Kaplan</strong> on Sunday, June 10, 2007 5:01 PM:</p><div style="margin-left: 1em"><p>And if the writer were produced by adobe, like that add-in they put into so many versions of Word? :-)</p>
+<p>Just kidding, and in the end I'm still unhappy that all those optional ligatures even exist to expose this other problem, anyway!</p></div>
+<p><a id="3218394" href="#3218394">#</a> <strong>Rosyna</strong> on Sunday, June 10, 2007 10:27 PM:</p><div style="margin-left: 1em"><p>It doesn't sound like the same export to pdf software if it worked in VS 2005 but not Crystal reports. Either that, or the options were vastly different and it's a problem with a specific option (like not checking embed fonts).</p></div>
+<p><a id="3220010" href="#3220010">#</a> <strong>Michael S. Kaplan</strong> on Sunday, June 10, 2007 11:28 PM:</p><div style="margin-left: 1em"><P>Well, that's just it -- clearly the font is being used, whether it is embedded or not. So it can't be something as simple as that. There must be something else going on here....</P></div>
+<p><a id="3231737" href="#3231737">#</a> <strong>Mihai</strong> on Monday, June 11, 2007 12:19 PM:</p><div style="margin-left: 1em"><p>&quot;And if the writer were produced by adobe, like that add-in they put into so many versions of Word? :-)&quot;</p>
+<p>Even then :-)</p>
+<p>Because that writer takes a PostScript file and &quot;distills&quot; it into a PDF. The producer of the PostScript is still responsible. &quot;This is why you can use MS Word and produce Arabic or Hindi PDF files&quot; :-)</p></div>
+<p><a id="3233526" href="#3233526">#</a> <strong>Michael S. Kaplan</strong> on Monday, June 11, 2007 2:23 PM:</p><div style="margin-left: 1em"><p>Well, *something* is finding wrong glyphs here. I'll wait till we know who that is. :-)</p></div>
+<p><a id="3234280" href="#3234280">#</a> <strong>Mihai</strong> on Monday, June 11, 2007 3:46 PM:</p><div style="margin-left: 1em"><p>&quot;Well, *something* is finding wrong glyphs here&quot;</p>
+<p>This is the only sure thing :-)</p>
+<p>All the rest is just &quot;best guess&quot; until someone can take a look &quot;in the belly of the beast&quot;</p></div>
+<p><a id="7325736" href="#7325736">#</a> <strong>Andrea Jones</strong> on Wednesday, January 30, 2008 7:31 AM:</p><div style="margin-left: 1em"><p>I reckon there really is something wrong with the Calibri font. &nbsp;If you set an Excel workbook's default font to Calibri 11 and format a date as mmm-yy and then set the column width to 6 it will not fully display the values for Mar, May, Aug and Nov. &nbsp;This does not seem to happen with other sizes of Calibri (e.g. 10). &nbsp;Unfortunately, MS have made Calibri 11 the default font for Excel 2007 :-( &nbsp;I do hope someone looks into this.</p></div>
+<hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2007/06/10/3212793.html" title="Unicode and ISO -- MFEO">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2007/06/09/3186017.html" title="When do voices vanish? Upon the death of languages....">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2007-06">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2007-06-10">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2007/06/10/3199317.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:38 GMT -->
+</html>

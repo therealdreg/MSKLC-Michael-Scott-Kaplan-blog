@@ -1,0 +1,32 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2006/11/27/1160195.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:39 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Any database developers reading this?</title></head><body>
+<h1>Any database developers reading this?</h1>
+<p><em>by Michael S. Kaplan, published on 2006/11/27 10:56 -05:00, original URI: http://blogs.msdn.com/b/michkap/archive/2006/11/27/1160195.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<FONT face="Segoe UI,Tahoma">
+<P>Attention all database developers out there!</P>
+<P>I have been somewhat dismayed at getting so few comments after I posted <STRONG><A class="" href="http://archives.miloush.net/michkap/archive/2006/10/04/788429.html" mce_href="http://archives.miloush.net/michkap/archive/2006/10/04/788429.html">Wild[card] thing, You make my CHAR sing</A></STRONG>.</P>
+<P>Is this really what people expect out of wildcards? Is there really so little interest in seeing the issue explained and documented? And maybe even future versions of query processors having the syntax expanded to support the notion that the engine underneath it does (in regards to "single characters that are actually single sort elements")?</P>
+<P>It also affects Access (all versions) and Exchange/ESENT, yet it appears not to be documented anywhere....</P>
+<P>Let me know what you think, our phone lines are open. :-)</P>
+<P><FONT color=#ff00ff><EM>This post brought to you by</EM>&nbsp;<FONT size=6>࿄</FONT> <EM>(<A class="" href="http://www.fileformat.info/info/unicode/char/0fc4" mce_href="http://www.fileformat.info/info/unicode/char/0fc4">U+0fc4</A>, a.k.a. TIBETAN SYMBOL DRIL BU)</EM></FONT></P></FONT>
+<hr/><p><strong>Martin Ritchie</strong> on 27 Nov 2006 11:28 AM:</p><div style="margin-left: 1em"><p>I think the reason why so few comments is that we database developers are so used to the lousy string and pattern functions in SQL server. &nbsp;The string functions are terrible (REPLACE, PATINDEX, etc.) and the LIKE operator desperatly needs to be replaced by some sort of Regular Expression tool.</p>
+<p>Your post basically said that SQL Server handles strings poorly. &nbsp;Tell us something we don't know. &nbsp;Microsoft always seems to cut improving the string functions from every new version. &nbsp;To be honest, although I am a big fan of SQL Server, when I use other DBMS like MySQL I am envious of thier string tools.</p></div>
+<p><strong>Simon</strong> on 27 Nov 2006 12:12 PM:</p><div style="margin-left: 1em"><p>I don't know about others but for me the LIKE operator has always been an important one when querying databases for information the user is interested in, therefore I knew the syntax for several servers already.</p>
+<p>It was annoying (* and ? were the obvious choices initially) when I was learning a long time ago, but it was well documented in a variety of places and the similarity to regular expressions meant I can guess it.</p>
+<p>Also, people tend to not comment on good, self explanatory articles (instead preferring to just reference them). &nbsp;They do question articles that have things they don't understand, and they also argue or agree with opinion pieces.</p></div>
+<p><strong>Dean Harding</strong> on 27 Nov 2006 5:32 PM:</p><div style="margin-left: 1em"><p>As I said in the last post, most serious database developers wouldn't be using the LIKE operator like that anyway (if they use it at all). It's quite limiting to begin with (again, since its difficult to use LIKE in an index-friendly way).</p>
+<p>Generally you're better off doing any complicated string-matching in client-side code (or SQLCLR if you really want to in the database). Mostly, you'd just use LIKE as in &quot;WHERE X LIKE 'xyz%'&quot; and that's about the only pattern I'd recommend.</p></div>
+<p><strong>bmm6o</strong> on 27 Nov 2006 6:47 PM:</p><div style="margin-left: 1em"><p>Just chiming in to second what has been said already. &nbsp;Column indexes usually don't help in LIKE queries (i.e. they require a table scan), so there's a good reason to avoid them even when they do work. &nbsp;Other people's experience may be different, but the only wildchar I've ever used in a LIKE query is '%'.</p></div>
+<p><strong>Maurits [MSFT]</strong> on 28 Nov 2006 11:23 AM:</p><div style="margin-left: 1em"><p>A couple of things that bug me...</p>
+<p>LIKE doesn't support including ] in a character class unless you use the strange ESCAPE syntax</p>
+<p>Full-text search doesn't consider &lt; or &gt; to be word-breakers, which makes it hard to keyword-search HTML documents</p>
+<p>I have found myself using LIKE in WHERE clauses of stored procedures:</p>
+<p>WHERE</p>
+<p> &nbsp;'%, ' + @IDS + ', %' LIKE '%, ' + CAST(ID AS VARCHAR(20)) + ', %'</p>
+<p>but only for small tables, and never when performance is important.</p>
+</div>
+<hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2008/10/06 <a href="http://archives.miloush.net/michkap/archive/2008/10/06/8977552.html">UCS-2 to UTF-16, Part 4: Talking about the ask</a></p><p>2007/01/15 <a href="http://archives.miloush.net/michkap/archive/2007/01/15/1469885.html">With SQL Server (and SQL itself) comes the illogic of 'trailing spaces' (and the myth of fixed width)</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2006/11/28/1166834.html" title="When you ask how long it is, keep in mind that some guys may exaggerate their answer">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2006/11/27/1159508.html" title="Judge not one area by performance in another?">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2006-11">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2006-11-27">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2006/11/27/1160195.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:39 GMT -->
+</html>

@@ -1,0 +1,61 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2010/08/01/10044632.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:35 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>It's not a localization bug; it's a core bug in the way they do their globalization and resource loading</title></head><body>
+<h1>It's not a localization bug; it's a core bug in the way they do their globalization and resource loading</h1>
+<p><em>by Michael S. Kaplan, published on 2010/08/01 07:01 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2010/08/01/10044632.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<p>For a long time, I worked on the <strong>NLS Team</strong>.</p>
+<p>MSDN&nbsp;might claim that <strong>NLS</strong> stood for <strong>N</strong>ational <strong>L</strong>anguage <strong>S</strong>upport.</p>
+<p>But given how often people take NLS in the direction I mentioned in <a href="http://archives.miloush.net/michkap/archive/2005/09/10/463397.html" title="You work in NLS? How many languages do you speak?"><strong>You work in NLS? How many languages do you speak?</strong></a>, which inspires me to take Cathy's answer and say it really stands for <strong>N</strong>ot <strong>L</strong>ocalization, <strong>S</strong>tupid. :-)</p>
+<p>Because people assume that I must be in localization if I do international support.</p>
+<p>Now of course it has been many years since I worked on the NLS team, and the NLS team as such is no more. I am&nbsp;on the <strong>World-Readiness Team</strong>.</p>
+<p>Ironically, our reporting structure is such that we report up through the same part of the Windows/Windows Live organization that handles (among other things) <strong>localization</strong>, so although I am still not a localizer I do work on a team that handles things like localizability and in some sense am on the llocalization team, now.</p>
+<p>Kind of a very roundabout application of the "<em>if you can't beat 'em, join 'em!</em>" philosophy, though one has to play fast and loose with the definition of <strong>'em</strong> to make it work, and refer to two different groups of people in the two <strong>'em</strong> instances.</p>
+<p>Now all along, one of the most central issues that comes up when one is looking at bugs is determining where the bug fits in the following categorization:</p>
+<ol>
+<li>Is it a localization bug?</li>
+<li>Is it a localizability bug, which is to say a core bug that blocks proper localization?</li>
+<li>If it is in category #2, can localization work around it, or is it unfixable without the core problem being addressed?</li>
+</ol>
+<p>Now Category #3 only becomes crucial toward the end of a project when it becomes harder to get approval to check in the changes that a bug fix would require if the localizer (who is making changes anyway during the process of <strong>localization</strong>) cannot work around the bug themselves.</p>
+<p>People who do this kind of work all the time get quite good at putting bugs in the correct category.</p>
+<p>Like a bug we were looking at the other day that showed the following screenshot:</p>
+<p><img src="http://trigeminal.fmsinc.com/images/shutdown01.jpg" border="0" /></p>
+<p>Everyone kept trying to assign the bug to the localization team, though it clearly was not their bug since different language/locale settings were being used to load resources and provide format information. This is obviously a core bug with different parts of a dialog using different settings.</p>
+<p>Now the quiz question for all of you:</p>
+<p>Can you determine where each part of the dialog is getting its language/locale information from?</p>
+<p><em>I'll give the answer in a little bit but if you want to make guesses in your head you can see if you were right!</em></p>
+<p>Many possibilities:</p>
+<ol>
+<li>the Default User Locale, returned by functions like <a href="http://msdn.microsoft.com/library/dd318135.aspx">GetUserDefaultLCID</a>;</li>
+<li>the Default System Locale, returned by functions like <a href="http://msdn.microsoft.com/library/dd318121.aspx">GetSystemDefaultLCID</a>;</li>
+<li>the Default User UI Language, returned by functions like <a href="http://msdn.microsoft.com/library/dd318137.aspx">GetUserDefaultUILanguage</a>;</li>
+<li>the Default System UI Language, returned by functions like <a href="http://msdn.microsoft.com/library/dd318123.aspx">GetSystemDefaultUILanguage</a>;</li>
+<li>the Default UI language of the LocalSystem account,&nbsp;a language setting whose usage&nbsp;I discussed in <a href="http://archives.miloush.net/michkap/archive/2006/05/05/590504.html"><strong>this blog</strong></a>;</li>
+<li>the Default User Locale of the LocalSystem account,&nbsp;a&nbsp;locale setting that can be retrieved by the methods used&nbsp;in <a href="http://archives.miloush.net/michkap/archive/2006/05/05/590504.html"><strong>this blog</strong></a>.</li>
+</ol>
+<p>Now if there was no bug, the UI language would always come from&nbsp;#3 and the locale used to grab that date/time string would always come from #1.</p>
+<p>Given that it is a shutdown dialog it could be coming from a service (one of those session 0 services running under the LocalSystem account), which might force&nbsp;code that cannot get #3 and #1 to instead use #5 and #6.</p>
+<p>The settings in this case were:</p>
+<ol>
+<li>Italian</li>
+<li>Spanish</li>
+<li>German</li>
+<li>English</li>
+<li><em>unknown,&nbsp;though it could be&nbsp;the same as #3 given the most common way to set the value</em></li>
+<li><em>unknown,&nbsp;though it could be&nbsp;the same as #1 given the most common way to set the value</em></li>
+</ol>
+<p>And despite the people who were so certain that it was a localization bug, this is clearly a core&nbsp;bug in whoever is putting up that dialog, since that code is clearly using the wrong answers to ask its questions of what languages to use for loading resources and what locale to use for formatting....</p>
+<p>Of course to know what was actually used, at a minimum you would need to know enough of the language and date/time formatting information to know where the dialog is getting the information from.</p>
+<p>Thus it is yet another irony that the person best able to assess where this core bug is getting its info from is a localizer, given how easily they can contact people who speak the various languages. :-)</p>
+<hr/><p><strong>Pavanaja U B</strong> on 1 Aug 2010 9:29 PM:</p><div style="margin-left: 1em"><p>Instead of World-Readiness, why don&#39;t you call it Universe-Readiness? You can add Klingon support to justify the naming. Reecently, there was a report that aliens may be actually trying to contact us using twitter like messages and this must be happening from centuries. If you have Universe-Readyness, we might be able to decipher those messages :)</p></div>
+<p><strong>Michael S. Kaplan</strong> on 1 Aug 2010 10:00 PM:</p><div style="margin-left: 1em"><p>Calling a tail a leg doesn&#39;t make it something you can walk on....which is to say, we&#39;re not equipped for that universe scenario. More likely we&#39;d let Google jump in first and screw it up on someone&#39;s 20% time... :-)</p></div>
+<p><strong>Jody</strong> on 1 Aug 2010 10:42 PM:</p><div style="margin-left: 1em"><p>Now, I really have to ask why, in the &quot;no bug&quot; case does the date come from &quot;Default User Locale&quot; and the body of the dialog come from &quot;Default User UI Language&quot;?</p>
+<p>This drives me completely nuts. I live in Finland, but I am not from here originally, so I want my Windows 7 in English. But in order to get the correct currency, etc I set the Windows locale to Finland. And now all the weekdays and dates come up in Finnish! The only way around it is to set Windows to United States for the locale and manually change all the settings to match the Finnish ones.</p>
+<p>So, why aren&#39;t the date texts dependent on the UI Language? In what situation does it make the any sense to display the dates in a localized language while the rest of the UI is in English?!</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 1 Aug 2010 10:49 PM:</p><div style="margin-left: 1em"><p>Because there are more users who have decided over the years to keep some elements in their preferences consistent, dividing them differently than you want them....it is a lose-lose scenario (not as bad as one of those 51% vs 49% things but similar to it) since not everyone can be made happy, though luckily most people have both settings the same, so they never see a problem.</p>
+</div>
+<hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2010/08/02/10033748.html" title="How to encourage XP to keep QWERTY for the logon screen?">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2010/07/31/10044476.html" title="They&#39;re going the wrong way.">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2010-08">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2010-08-01">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2010/08/01/10044632.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:35 GMT -->
+</html>

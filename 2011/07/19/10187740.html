@@ -1,0 +1,60 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2011/07/19/10187740.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Creating things that aren't real</title></head><body>
+<h1>Creating things that aren't real</h1>
+<p><em>by Michael S. Kaplan, published on 2011/07/19 07:01 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2011/07/19/10187740.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<p>If you work at Microsoft and are a part of the Windows team, you have an interesting ability.</p>
+<p>You can build versions of the product that don't even exist!</p>
+<p>Like remember when the IA64 client was no longer being shipped? Well, you could still build it.</p>
+<p>Hell, even after they stopped building the server you could still build one for a while (it takes time to unravel some of the work there).</p>
+<p>You could build both client and server versions of&nbsp;Server 2003, long before the XP x64 version was ever a thing. And you could even build an x86 version, that would never see the light of day....</p>
+<p>Also, more relevant to my neck of the woods, you can build language versions that don't exist!</p>
+<p>But, to give the example relevant to today's point, you can build a server version localized into Hebrew or Arabic!</p>
+<p>Now in many cases, this doesn't do much -- the resources don't exist, so you can't magically get all the work done to support a language on your own.</p>
+<p>i mean, you can't magically fill in grid entries from <strong><a title="The Locales of Windows 7, divvied up further" href="http://archives.miloush.net/michkap/archive/2011/07/07/10183904.html">The Locales of Windows 7, divvied up further</a></strong>, just because you wanted to.</p>
+<p>But there is one special case that is an exception to this.</p>
+<p>The pseudo mirrored build.</p>
+<p>First described to everyone as a locale in Shawn's <strong><a title="Pseudo Locales in Windows Vista Beta 2" href="http://blogs.msdn.com/b/shawnste/archive/2006/06/27.aspx">Pseudo Locales in Windows Vista Beta 2</a></strong>, it later became a great tool to help find all kinds of different bugs in mirrored builds long before the formal localization process starts.</p>
+<p>Basically, even though we do not ship any mirrored languages as server SKUs, you can create a&nbsp;pseudo-mirrored server!</p>
+<p>Now some server specific components that are never translated into Hebrew or Arabic will still come out English, though many will be "pseudo localized" unless specifically marked to not have that happen.</p>
+<p>This particular build has very little use, mind you.</p>
+<p>Just about every bug you see can't ever happen in a real world scenario.</p>
+<p>So you can put in bugs, sure.</p>
+<p>And if a developer agrees that this is a bug and fixes it, then that's great.</p>
+<p>&nbsp;However, in the (much more likely) case where the developer resolves it as <strong>cannot affect customers</strong>, the truth is that the developer is probably right.</p>
+<p>This ends up happening, perhaps more often than one might expect. It's just that sometimes not building is&nbsp;more of a pain&nbsp;than letting it build. And even if they don't build it in the build labs, you can always build it yourself.</p>
+<p>And as a [largely] untested build</p>
+<p>Anyway, one of the interesting parts about working for Microsoft is that you can create things that don't exist!</p>
+<p>Kind of cool, if you ask me....</p>
+<hr/><p><strong>Joshua</strong> on 19 Jul 2011 2:59 PM:</p><div style="margin-left: 1em"><p>It&#39;s possible to assemble a Windows Server 2002 (winver 5.1) by patching a couple of binaries. It won&#39;t work as a domain controller because those components don&#39;t exist.</p>
+<p>I&#39;ll bet the internal build of the server works just fine.</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 19 Jul 2011 5:02 PM:</p><div style="margin-left: 1em"><p>No need to patch -- if you create a server build in the sasme tree you can even get the same version. It will have some interesting compat issues due to incompatibilities with shipping versions of ESENT and other components. But it is possible....</p>
+</div>
+<p><strong>Mihai</strong> on 19 Jul 2011 7:48 PM:</p><div style="margin-left: 1em"><p>For a while now I have a nagging question: how hard would it be to create a language pack outside Microsoft?</p>
+<p>Not the real linguistic work, just the technical one.</p>
+<p>I should be relatively simple to start from the English binaries and to create some MUI dlls with pseudo-translation or machine translation. But I wonder if I would be able to pack it and have it recognized by Windows.</p>
+<p>What stopped me from trying? The suspicion that there might be some digital signatures involved, and the certainty that it breaks some eula :-) And, of course, the lack of time.</p>
+</div>
+<p><strong>Yuhong Bao</strong> on 19 Jul 2011 9:28 PM:</p><div style="margin-left: 1em"><p>&quot;You could build both client and server versions of Server 2003, long before the XP x64 version was ever a thing.&quot;</p>
+<p>In fact, there was &quot;Windows XP 64-bit Edition Version 2003&quot; for Itanium based on Windows Server 2003. </p>
+</div>
+<p><strong>Yuhong Bao</strong> on 19 Jul 2011 9:34 PM:</p><div style="margin-left: 1em"><p>BTW, on PAE, Geoff Chappell&#39;s article documented how PAE support was completely compiled out of XP SP2 HAL binaries, but if you look at the table included you will see they still did not change the limits for the server editions built into the kernel.</p>
+</div>
+<p><strong>Yuhong Bao</strong> on 19 Jul 2011 9:38 PM:</p><div style="margin-left: 1em"><p>Hah, one of my favorite ideas was a Alpha build of Windows 2000 RTM.</p>
+</div>
+<p><strong>Yuhong Bao</strong> on 19 Jul 2011 10:02 PM:</p><div style="margin-left: 1em"><p>&quot;No need to patch&quot;</p>
+<p>Joshua was talking about doing it externally.</p>
+</div>
+<p><strong>Yuhong Bao</strong> on 19 Dec 2011 1:40 PM:</p><div style="margin-left: 1em"><p>&quot;And you could even build an x86 version, that would never see the light of day....&quot;</p>
+<p>Looks like such a Server 2003 build actually leaked:</p>
+<p><a rel="nofollow" target="_new" href="http://www.youtube.com/watch?v=aeobMSyxEq8&amp;feature=related">www.youtube.com/watch</a></p>
+</div>
+<p><strong>Yuhong Bao</strong> on 19 Dec 2011 1:44 PM:</p><div style="margin-left: 1em"><p>More links:</p>
+<p><a rel="nofollow" target="_new" href="http://www.betaarchive.com/screenshots/index.php?load=Longhorn%203790/">www.betaarchive.com/.../index.php</a></p>
+<p><a rel="nofollow" target="_new" href="http://www.betaarchive.com/wiki/index.php?title=Windows:Vista:3790.1232.winmain.040819-1629">www.betaarchive.com/.../index.php</a></p>
+</div>
+<hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2011/07/20/10188086.html" title="We got the keyboards now! (Windows 7 edition)">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2011/07/18/10187271.html" title="Pedantic nitpickery, turned up to 11">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2011-07">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2011-07-19">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2011/07/19/10187740.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+</html>

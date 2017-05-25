@@ -1,0 +1,25 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2010/10/28/10081912.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>UI languages don't limit cultures</title></head><body>
+<h1>UI languages don't limit cultures</h1>
+<p><em>by Michael S. Kaplan, published on 2010/10/28 07:01 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2010/10/28/10081912.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<p>The question that came up a few weeks ago:</p>
+<p style="padding-left: 30px;"><span style="font-family: times new roman,times;">Is the method CultureInfo.GetCultures() OS dependent, such that an English OS may only load en-US and en-GB but an OS would additional localizations would return more?<br /></span><br /><span style="font-family: courier new,courier;"><strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; public static string GetCurrencySymbol(string ISOCurrency) {<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; if (currencySymbols == null) {<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; currencySymbols = new Hashtable();<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; foreach (CultureInfo ci in CultureInfo.GetCultures(CultureTypes.SpecificCultures)) {<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; RegionInfo ri = new RegionInfo(ci.LCID);<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; if (!currencySymbols.ContainsKey(ri.ISOCurrencySymbol))<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; currencySymbols.Add(ri.ISOCurrencySymbol, ri.CurrencySymbol);<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; return currencySymbols[ISOCurrency].ToString();<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }<br /></strong></span></p>
+<p>Wow.</p>
+<p>I think about that huge list of locales on Windows, and I wonder what people think that list is for if not for stuff like this -- locale data like currency symbols!</p>
+<p>Of course the answer is the UI language of Windows is not something that gates this information in any way....</p>
+<p>Though in truth there is at least one case where this question could be reasonable to ask. </p>
+<p>It isn't correct there either, mind you. But there is a time that things do seem kind of filtered.</p>
+<p>Does anyone know the scenario I am thinking of here? :-)</p>
+<hr/><p><strong>Mihai</strong> on 28 Oct 2010 10:42 AM:</p><div style="margin-left: 1em"><p>Not sure if this is the scenario you are thinking about, but here is one:</p>
+<p>If I have an application localized into languages not available for Windows UI, I might try to use the user locale (used for matting) to make a better guess what the UI of my application should be.</p>
+<p>For instance, if I have a French France and French Canada localized versions and your OS has French UI (the only one available) and French Canada user locale, then I can refine my guess and select fr-CA for my UI.</p>
+<p>At least until Windows gets to expose a list of of UI locales that is independent of what MS localizes ant that I can edit/sort as I want (you know, Mac OS X or browser style :-)</p>
+<p>Other times you might want to filter things? If you are a native non-Unicode application, or if you run on Win 9x (non-Unicode) then you might want to look at the system code page (not the system locale though).</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 28 Oct 2010 5:04 PM:</p><div style="margin-left: 1em"><p>Not bad, though I had something slightly different in mind -- the way the old Win Mobile Platform Builder would let you filter out what locale data made it onto the devicve, so no app could depend on any subset being there....</p>
+</div>
+<hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2010/10/29/10082624.html" title="Sorting my kind of vegetarianism (lacto baconarianism) all out">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2010/10/27/10081365.html" title="Yes, if we do not speak Māori, our treasured language will be lost.">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2010-10">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2010-10-28">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2010/10/28/10081912.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+</html>

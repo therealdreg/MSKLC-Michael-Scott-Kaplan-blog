@@ -1,0 +1,35 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2013/02/12/10392953.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:22 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>ShellExecute/ShellExecuteEx can't be bothered to get all supplementary....</title></head><body>
+<h1>ShellExecute/ShellExecuteEx can't be bothered to get all supplementary....</h1>
+<p><em>by Michael S. Kaplan, published on 2013/02/12 07:01 -05:00, original URI: http://blogs.msdn.com/b/michkap/archive/2013/02/12/10392953.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<p>The other day, colleague David noticed:</p>
+<p style="padding-left: 60px;"><span style="font-family: times new roman,times; font-size: large;">Hi all,</span></p>
+<p style="padding-left: 60px;"><span style="font-family: times new roman,times; font-size: large;">Does anybody know off-hand if launching Explorer programmatically (using either ShellExecute or ShellExecuteEx) should fail to open a directory containing surrogate pairs?</span></p>
+<p style="padding-left: 60px;"><span style="font-family: times new roman,times; font-size: large;">If I first create a directory, say, &ldquo;c:\コンポ𠮷𠮟㐂&ldquo;, and then run&hellip;</span><br /><span style="font-family: times new roman,times; font-size: large;">&nbsp; ShellExecuteW(NULL, L"open", L"explorer", L"c:\\コンポ𠮷𠮟㐂", NULL, SW_SHOWNORMAL);</span></p>
+<p style="padding-left: 60px;"><span style="font-family: times new roman,times; font-size: large;">Then ShellExecute succeeds and Explorer opens, but it just punts and opens My Documents.</span></p>
+<p style="padding-left: 60px;"><span style="font-family: times new roman,times; font-size: large;">If I try the above with any other existing path that does not contain surrogates (like &ldquo;c:\test&rdquo; or even &ldquo;C:\コ㐂&rdquo;) then the Explorer opens in the requested directory.</span></p>
+<p style="padding-left: 60px;"><span style="font-family: times new roman,times; font-size: large;">This occurs on both Win7 and Win8.&nbsp; Is this an expected limitation with surrogate pairs?</span></p>
+<p style="padding-left: 60px;"><span style="font-family: times new roman,times; font-size: large;">Thanks,</span><br /><span style="font-family: times new roman,times; font-size: large;">David</span></p>
+<p>He's right, it doesn't find supplementary paths.</p>
+<p>I doubt it is actually ShellExecuteW, for what it's worth.</p>
+<p>Something to do with the verb syntax, or&nbsp;how NTFS indexes the files, or more likely&nbsp;the way Explorer searches them, maybe?</p>
+<p>Depressing that even in Windows 8 such problems exist.</p>
+<p>A good bug with surrogate pairs and supplementary caracters, in any case!</p>
+<hr/><p><strong>Yuhong Bao</strong> on 12 Feb 2013 1:38 PM:</p><div style="margin-left: 1em"><p>On Unicode in Zip files, there is now this hotfix:</p>
+<p><a rel="nofollow" target="_new" href="http://support.microsoft.com/kb/2704299">support.microsoft.com/.../2704299</a></p>
+</div>
+<p><strong>Doug Ewell</strong> on 12 Feb 2013 2:30 PM:</p><div style="margin-left: 1em"><p>This sort of thing will become more and more annoying, since all those emoji are encoded in the supplementary zone. I&#39;m sure people are already trying to use emoji to create folder names, and no, I&#39;m not being facetious or sarcastic (for once).</p>
+<p>Char in .NET makes it soooo easy to use Unicode transparently, while still getting supplementary characters wrong.</p>
+</div>
+<p><strong>Mike Dimmick</strong> on 13 Feb 2013 5:11 AM:</p><div style="margin-left: 1em"><p>In Windows 7, the Folder class&#39;s &#39;open&#39; command is delegated to an IExecuteCommand implementation, CLSID_ExecuteFolder, which is implemented in %SystemRoot%\system32\explorerframe.dll. The folder name is presumably passed through IExecuteCommand::SetParameters, though DelegateExecute is not well documented.</p>
+<p>So the likelihood is that the parsing of surrogates goes wrong either in CLSID_ExecuteFolder, or in whatever IPC it uses to communicate with the running instance of Explorer. If navigating to the folder in Explorer itself works, I&#39;d suspect the IPC. Unless, of course, ShellExecuteW isn&#39;t detecting that the item *is* a folder.</p>
+</div>
+<p><strong>Mike Dimmick</strong> on 13 Feb 2013 7:59 AM:</p><div style="margin-left: 1em"><p>Actually I&#39;ve just seen Raymond&#39;s blog post for today, which links to two of his old posts:</p>
+<p>DelegateExecute and IExecuteCommand: <a rel="nofollow" target="_new" href="http://blogs.msdn.com/b/oldnewthing/archive/2010/03/12/9977246.aspx">blogs.msdn.com/.../9977246.aspx</a></p>
+<p>Explaining the lpClass member of SHELLEXECUTEINFO: <a rel="nofollow" target="_new" href="http://blogs.msdn.com/b/oldnewthing/archive/2010/07/01/10033224.aspx">blogs.msdn.com/.../10033224.aspx</a></p>
+</div>
+<hr/><p><em>go to <a id="newer" href="../13/10393199.html" title="The time has come to fix a bug that has been in Windows more than twice as long as I have...">newer</a> or <a id="older" href="../11/10392588.html" title="According to Independance Technology and DEKA, it&#39;s my responsibility, but it is *their* fault!">older</a> post, or back to <a href="../../../index-2.html">index</a> or <a href="../../../index-2.html#2013-02">month</a> or <a href="../../../index-2.html#2013-02-12">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2013/02/12/10392953.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:22 GMT -->
+</html>

@@ -1,0 +1,137 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2004/12/06/276124.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:42 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>How to build the 7.1 MFC and the CRT DLLs with MSLU</title></head><body>
+<h1>How to build the 7.1 MFC and the CRT DLLs with MSLU</h1>
+<p><em>by Michael S. Kaplan, published on 2004/12/07 00:10 -05:00, original URI: http://blogs.msdn.com/b/michkap/archive/2004/12/06/276124.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<blockquote>
+<p>The MSDN documentation generally recommends that you use the static versions of libraries like the C Runtime (CRT) or the Microsoft Foundation Classes (MFC). The reason for this is that the DLL versions have not been built for MSLU and thus have no knowledge of the need to use the Microsoft Layer for Unicode for Unicode APIs. However, many complex applications really need to use the DLL versions of these libraries. If you are the developer for one of these applications, you will need to rebuild them so they link with Unicows.lib. The following is a small guide on how to perform this task.</p>
+<p>This document is divided into 3 parts</p>
+<ol>
+<li>How to build the C Runtime Library 7.1 with MSLU 
+</li><li>How to build MFC 7.1 with MSLU 
+</li><li>Switching between non MSLU builds and MSLU builds </li></ol><small>
+<h5>The fine print</h5>
+<p>For more info on rebuilding MFC extension DLLs, see <a href="http://msdn.microsoft.com/library/en-us/vclib/html/_MFCNOTES_TN033.asp">TN033: DLL Version of MFC</a>, specifically the section entitled "Building the MFC DLL" towards the bottom of the article. Our steps here seem a lot nicer. :-)</p>
+<p>All of these steps were used to build DLLs that were subsequently tested on Win98 SE. They are expected to work on all platforms.</p>
+<p>Special thanks are owed to Ted W. for taking the time to do what we all knew was theoretically possible and making it technically possible for everyone. This document is mostly due to his efforts. Thanks, Ted!</p>
+<p><font face=Tahoma color=#ff0000>In all instructions below, the assumption is a default install path and an en-US copy of Windows; if either is not the case, make sure you replace paths such as <strong>C:\Program Files\Microsoft Visual Studio&nbsp;2003</strong>&nbsp;with the appropriate install location.</font></p>
+<p>Also, special thanks to Tim Dowty of <a href="http://www.musicmatch.com/default.htm">Music Match</a> for the great text of step #4 under the MFC build!</p></small>
+<hr />
+
+<p>Before you start:</p>
+<ol>
+<li>Install Visual Studio .NET 2003 including all necessary files. 
+<p>The first thing you need to do is make sure that when you install Visual Studio .NET 2003 that you make sure both the Unicode MFC version and the CRT source code are installed.</p>
+</li><li>Identify the folders and files you will be modifying. 
+<p>If you installed to the default locations, all of the files we need to change are contained in the tree \Program Files\Microsoft Visual Studio .NET 2003\VC7. Find the ATLMFC\SRC folder and the CRT\SRC folder.</p>
+</li><li>Install the Platform SDK and copy the latest unicows.lib file to your VC7\PlatformSDK\LIB folder. Since VC7 comes with a unicows.lib, this step is optional, although it is good to be on the latest unicows.lib from the most recent Platform SDK. </li></ol>
+<hr />
+<a name=CRT>
+<h3>How to build the CRT 7.1 with MSLU</h3>
+<p>The first thing we want to do is make a backup of our VC7\Lib folder. We will be replacing files in it, so if we need to go back (or switch between MSLU and non-MSLU version of the CRT) we can always do that.</p>
+<p>Secondly, let's copy the VC7\CRT\SRC folder to a comfortable place so we can change it and build from it. For example, we'll copy it to the root of C: so we have a folder called C:\SRC, available for quick access from the command line.</p>
+<p>When building the CRT we are actually building two DLLs: MSVCR71.DLL and MSVCP71.DLL. Since we are building both debug and release builds it makes a total of four DLLs we need to build.</p>
+<p>In the SRC folder, there is a provided batch file bldwin9x.bat that will build the all CRT DLLs and an associated makefile.</p>
+<p>Now we will open up the makefile in notepad. At the top of makefile there is a section that controls the naming of the two DLLs to build. For this purpose we will use the name MSLU as a prefix to all of the DLLs instead of the standard name MSVC. So the four names of the DLLs we will create are:</p><pre><strong>MSLUR71.DLL MSLUR71D.DLL MSLUP71.DLL MSLUP71D.DLL </strong></pre>
+<p><b>Warning: Since most people who follow these steps will probably use the exact names given here, please be sure to keep these versions of the DLLs in your own private directory when you use them.</b></p>
+<p>The default names provided in the makefile are _SAMPLE_ and SAMPLE_P. There are associated RC and DEF files for each of these names, so we need to copy them to the new names, i.e. </p><pre><strong>copy _SAMPLE_.RC MSLUR71.RC <br />copy SAMPLE_P.RC MSLUP71.RC <br />copy SAMPLE_P.DEF MSLUP71.DEF <br />copy SAMPLD_P.DEF MSLUP71D.DEF <br />copy Intel\_SAMPLE_.DEF Intel\MSLUR71.DEF <br />copy Intel\_SAMPLD_.DEF Intel\MSLUR71D.DEF </strong></pre>
+<p>Next we need to change the LIBRARY name in each of the above DEF files to match the name of the DEF file. Open up each file in notepad to make the change.</p>
+<p>The provided makefile needs some minor changes to get it to work properly and link with Unicows.lib.</p>
+<ol>
+<li>Change the top block of defines to the following: <pre><strong>RETAIL_DLL_NAME=MSLUR71 <br />RETAIL_LIB_NAME=MSLUR71 <br />RETAIL_DLLCPP_NAME=MSLUP71 <br />RETAIL_LIBCPP_NAME=MSLUP71 <br />DEBUG_DLL_NAME=MSLUR71D <br />DEBUG_LIB_NAME=MSLUR71D <br />DEBUG_DLLCPP_NAME=MSLUP71D <br />DEBUG_LIBCPP_NAME=MSLUP71D </strong></pre>
+</li><li>The VCTOOLS path should be changed to point to the path where you installed Visual Studio .NET 2003, e.g. 
+<p><strong><font face="Courier New">VCTOOLS=C:\Program Files\Microsoft Visual Studio .NET 2003\VC7</font></strong></p>
+</li><li>We want to link to unicows.lib before any other lib files. 
+<p>line 1216, 1268, 1315, 1364 change kernel32.lib to: </p><pre><strong>unicows.lib kernel32.lib advapi32.lib user32.lib gdi32.lib shell32.lib comdlg32.lib version.lib mpr.lib rasapi32.lib winmm.lib winspool.lib vfw32.lib oleacc.lib oledlg.lib </strong></pre>
+</li><li>
+<p>Once we make these changes, we are ready to build the DLLs. It's simple – launch a Visual Studio .NET 2003 command prompt (start menu-programs-Visual Studio .NET 2003 – Visual Studio .NET 2003 tools – Visual Studio command prompt) and then go to the C:\SRC folder and type: </p><pre><strong>set VCTOOLS=C:\Program Files\Microsoft Visual Studio .NET 2003\VC7 <br />BLDWIN9X</strong></pre>
+<p>Once the DLLs finish building they will be in a subfolder called BUILD\INTEL. The Libs, PDBs, and Maps are also in that folder.</p>
+</li><li>Now we've got 4 libs (2 debug, 2 release) we can link to. Let's copy those new libs back to the original names of the libs, e.g. <pre><strong>copy MSLUR71.LIB MSVCRT.LIB <br />copy MSLUR71D.LIB MSVCRTD.LIB <br />copy MSLUP71.LIB MSVCPRT.LIB <br />copy MSLUP71D.LIB MSVCPRTD.LIB </strong></pre>
+<p>The reason we do this is so we can link our existing apps (and build MFC) without having to change the libraries that they link to. The Libs still point to the newly named DLLs, even though they don't share the same names as the new ones anymore. </p>
+</li><li>Now copy the 4 MSVC libs to the VC7\Lib folder (overwriting the existing ones) <br /><br />
+</li><li>Repeat step 4. This step is necessary to rebuild MSLUP71(D).DLL again so it links to our newly created MSVCRT(D).LIB (which points to our new MSLUR71(D).DLL). </li></ol>
+<p>The CRT build is now done.</p>
+<p><font color=#ff0000>Before proceeding any further we need to close the command prompt that we used to build the CRT because it created certain environment variables that will cause compile errors in the next step, building the Unicode version of MFC.</font></p>
+<hr />
+<a name=MFC>
+<h3>Building MFC 7.1 Unicode version with MSLU</h3>
+<p>First we will make a backup of the following folders (and all subfolders of): VC7\ATLMFC\LIB, and VC7\ATLMFC\SRC so we can restore them later if necessary.</p>
+<p>Building the Unicode version of MFC is slightly easier than building the CRT. The Unicode version of MFC is 2 different DLLs (unlike the 5 different DLLs that we had to worry about when building MFC 6.0):</p>
+<ul>
+<li>MFC71U.DLL (Unicode Release) 
+</li><li>MFC71UD.DLL (Unicode Debug) </li></ul>
+<p>There is also a static component to even a DLL build of MFC, named as follows:</p>
+<ul>
+<li>MFCS71U.LIB (Unicode Release – static library – deprecated classes) 
+</li><li>MFCS71UD.LIB (Unicode Debug – static library – deprecated classes) </li></ul>
+<p>To build MFC, there is one master Makefile in the VC7\ATLMFC\SRC folder named:</p>
+<ul>
+<li>ATLMFC.MAK </li></ul>
+<p>And there is one Makefile in the VC7\ATLMFC\SRC\MFC folder named</p>
+<ul>
+<li>MFCDLL.MAK </li></ul>
+<ol>
+<li>First, we will change the MFCDLL.MAK file to link to Unicows.lib. In each file, after the line that states: <pre><strong>link @&lt;&lt;</strong></pre>
+<p>insert the following lines:</p><pre><strong>/nod:kernel32.lib /nod:advapi32.lib /nod:user32.lib /nod:gdi32.lib /nod:shell32.lib /nod:comdlg32.lib /nod:version.lib /nod:mpr.lib /nod:rasapi32.lib /nod:winmm.lib /nod:winspool.lib /nod:vfw32.lib /nod:secur32.lib /nod:oleacc.lib /nod:oledlg.lib /nod:sensapi.lib <br />unicows.lib kernel32.lib advapi32.lib user32.lib gdi32.lib shell32.lib comdlg32.lib version.lib mpr.lib rasapi32.lib winmm.lib winspool.lib vfw32.lib oleacc.lib oledlg.lib </strong></pre>
+<p>They must go in that position, if we don't do this then a library reference will be included causing unicows.lib to be linked after kernel32.lib (which will then cause the unicows.dll load to fail). Other DLLs in the wrong order will simply cause APIs in those specific DLLs to not be called.</p>
+<p>The line number to insert the above two lines after is line 273.</p>
+</li><li>Now, we will decide what to name our new DLL. We do not want to use the standard name(s) for the same reasons we did not use the standard names for the CRT. So we will come up with a simple naming convention: we'll add an "L" to the name. So the new names will be: <br /><br />
+<ul>
+<li>MFC71LU.DLL 
+</li><li>MFC71LUD.DLL </li></ul><br />
+</li><li>Now we're ready to build the versions of MFC: 
+<p>From a Visual Studio .NET 2003 Command Prompt, create a new batch file called buildmfc.bat in the ATLMFC\SRC folder with the following content:</p><pre><strong>nmake -f atlmfc.mak MFC libname=MFC71L</strong></pre>
+<p>This will build all MFC libraries, not just the Unicode DLLs, but it will save us the effort of figuring out how to use the MFCDLL.MAK makefile.</p>
+<p>Run the batch file. If you need to rebuild any time in the future you now have a convenient batch file to do so. The DLL and PDB files will be created in the VC7\ATLMFC\SRC\MFC\INTEL folder. The LIB files will be created in the ATLMFC\LIB\INTEL folder.</p>
+</li><li>
+<p>There is one crucial step missing from the supplied MFC makefiles. If you take a look at line 425 of …vc7\mfc\makefile, you’ll see that one of the options passed to the compiler is /Zc:wchar_t, which causes wchar_t to become an implicit type. This may be what you want, but if the application you’re linking the lib to wasn’t compiled with this same option (and -- therefore -- has wchar_t #defined to unsigned short), you will get unresolved externals when you link. Your program is looking for function signatures with unsigned shorts in them, but the lib only exports wchar_t in the function signatures.</p>
+<p>You could remove the /Zc:wchar_t from the makefile, but this solution isn’t universal; it would still prevent linking with programs compiled with the /Zc:wchar_t switch.</p>
+<p>A better solution is to do what Microsoft did in the original mfc71 libraries: include alias records in the library so that you can link both implicit wchar_t and unsigned short programs. Alias records allow a library to export multiple function signatures that resolve down to the same object code.</p>
+<p>So how do you add alias records to your newly-built MFC libraries?</p>
+<p>For both the debug and release MFC library libraries you need to do the following:</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;a) Extract all of the alias records from the corresponding retail MFC library</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;b) Create a new library comprising only these alias records</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;c) Merge your new Unicows-compliant MFC library with the associated alias-record library</p>
+<p><b>Step A)</b></p>
+<p>This one requires a small detour because lib.exe only allows you to extract one object at a time. We want to automate this step by creating a batch file to do all of the extractions.</p>
+<p>First, get a command prompt and make …\Vc7\atlmfc\lib your current directory. Next, create a list of all of the alias records in both debug and release MFC libs using the following two command lines:</p><pre><strong>lib /LIST mfc71ud.lib &gt; mfc71ud.lib.lst<br />lib /LIST mfc71u.lib &gt; mfc71u.lib.lst</strong></pre>
+<p>You should now have the two .lib.lst files that each contain a list of library objects, one per line.</p>
+<p>Now, we will create a perl script to build a pair of batch files from the .lib.lst files (if you don’t already have perl, it’s freely available from several sources. You can find Perl <a href="http://www.activestate.com/Products/ActivePerl">here</a>).</p>
+<p>Start up a text editor and enter the following text:</p><pre><strong>#!/usr/bin/perl <br /># builds a batch file to extract all alias records <br /># in the input file (input file created with lib.exe /LIST) <br />$targetLib = "mfc71ud.lib"; $outDir = "_aliasRecordsD"; <br />print "md .\\$outDir\n"; <br />while (&lt;&gt;) { <br /># find alias record name if (/_alias[0-9]+\.obj/) { chop; <br />print "LIB /EXTRACT:$_ /OUT:.\\$outDir\\$_ $targetLib\n"; } }</strong></pre>
+<p>Save the text as BuildAliasExtractBatchD.pl.</p>
+<p>Now edit the text so that the $targetLib variable is changed as follows:</p><pre><strong>$targetLib = "mfc71u.lib";</strong></pre>
+<p>also change $outDir as shown:</p><pre><strong>$outDir = “_aliasRecords";</strong></pre>
+<p>Save the edited text as BuildAliasExtractBatch.pl.</p>
+<p>Now run the two perl scripts as follows from the command prompt:</p><pre><strong>perl BuildAliasExtractBatchD.pl mfc71ud.lib.lst &gt; BuildAliasExtractD.bat<br />perl BuildAliasExtractBatch.pl mfc71u.lib.lst &gt; BuildAliasExtract.bat</strong></pre>
+<p>At this point you have two batch files, one of which will extract the alias records from the debug library and one that will extract from the release library.</p>
+<p>To complete step a) all that’s left is to run the batch files. Note that there are about 2000 alias records in each MFC library, and extracting them one by one is a slow process; each library extraction took about 4 hours on a fast PC.</p>
+<p>At the completion of this step, you will have two new directories under …\vc7\atlmfc\lib each of which contains extracted alias records. Each extracted alias record is a file with a name of the form _alias*.obj where * is one to four decimal digits.</p>
+<p><b>Step B)</b></p>
+<p>For Step b), we want to create a new library from the extracted records. Fortunately, this can be done in two simple steps; in contrast to Step a) we can use a response file with lib.exe to simplify our operation.</p>
+<p>First, we create a pair of perl scripts that will build the response files.</p>
+<p>Use your favorite text editor to enter the following text:</p><pre><strong>#!/usr/bin/perl <br /># builds a response file for lib.exe to build a library of <br /># alias records. (input file created with lib.exe /LIST) <br />$outLib = "mfc71udAlias.lib"; <br />$aliasDir = "_aliasRecordsD"; <br />print "/OUT:$outLib"; <br />while (&lt;&gt;) { <br /># find alias record name if (/_alias[0-9]+\.obj/) { chop; <br />print " .\\$aliasDir\\$_"; } } </strong></pre>
+<p>Save the file as CreateAliasLibD.pl.</p>
+<p>Now edit the variable declarations so they read:</p><pre><strong>$outLib = "mfc71uAlias.lib";<br />$aliasDir = "_aliasRecords";</strong></pre>
+<p>and save the file as CreateAliasLib.pl</p>
+<p>Run the perl scripts from the command line. Note that we reuse the .lib.lst files we created in Step A) as input here:</p><pre><strong>perl CreateAliasLibD.pl mfc71ud.lib.lst &gt; mfc71udAlias.rsp<br />perl CreateAliasLib.pl mfc71u.lib.lst &gt; mfc71uAlias.rsp</strong></pre>
+<p>With the response files made, we now use them with lib.exe to create the alias libraries:</p><pre><strong>lib @mfc71udAlias.rsp<br />lib @mfc71uAlias.rsp</strong></pre>
+<p>At the completion of this step you will have two new libraries: mfc71udAlias.lib and mfc71uAlias.lib. They will each contain their respective alias records.</p>
+<p><b>Step C)</b></p>
+<p>In this step, we simply merge our custom-built MFC libraries with the alias libraries we just made. While we’re at it, we’ll also rename the libraries so they’ll replace the original libraries. Note that we get our custom-built libraries directly from their output locations. 
+<p><pre><strong>lib /OUT:mfc71ud.lib .\Intel\MFC71LUD.lib mfc71udAlias.lib<br />lib /OUT:mfc71u.lib .\Intel\MFC71LU.lib mfc71uAlias.lib</strong></pre>
+</p></p></li><li>After the building is done, we need to copy the rest of the created LIBs in the VC7\ATLMFC\LIB\INTEL folder back to their original names in VC7\ATLMFC\LIB (overwriting what's there) so that any of our apps that we link will use the new DLLs. i.e. <pre><strong>copy MFC71LSU.LIB MFCS71U.LIB <br />copy MFC71LSUD.LIB MFCS71UD.LIB </strong></pre>
+<p>The reason we do this is the same as for the CRT: we don't have to worry about changing any linker options in our projects to link to the new version of MFC. We should also copy the PDB files back from the LIB\INTEL folder back to the LIB folder. </p>
+<p>Now we're ready to do a test build of an application. Create a new SDI MFC application using the AppWizard, choose dynamic MFC, create a Unicode Debug and Release build, change the settings to link to unicows.lib, copy the newly created CRT and MFC DLLs to your DEBUG or RELEASE build folder(s) and then run the application. It should all work. </p>
+<p>Use dependency walker to make sure that everything is getting linked properly and the proper DLLs are being loaded (run a profile in dependency walker). No references to the old names of the DLLs for both the CRT or MFC should be there. </p><a name=SWITCH>
+<h3>Switching between non MSLU builds and MSLU builds</h3>
+<p>Because we have done all of the above, any Unicode build on your machine will now link to MSLU. We may not want this necessarily, or we may want to link back to the original CRT and MFC DLLs. This is what we made the backups for. To restore the system, simply restore your VC7\LIB and VC7\ATLMFC\LIB folders. You could even make a simple batch file that copies older or newer versions of the LIBs back to the LIB folders depending on what you want to build.</p></a></li></ol></a></a></blockquote>
+<ol></ol>
+<p></p>
+<hr/><p><a id="333144" href="#333144">#</a> <strong>Uwe Keim</strong> on 27 Dec 2004 10:35 PM:</p><div style="margin-left: 1em">Very interesting read!</div>
+<p><a id="343553" href="#343553">#</a> <strong>Uwe Keim</strong> on 28 Dec 2004 11:50 PM:</p><div style="margin-left: 1em">Another suggestion: Would it be possible (i.e. legally ALLOWED) that someone (maybe I can do it by myself) prebuilds the library and makes it available for others to download as a single package so that one would just set up the correct source-, binary- and library paths?</div>
+<p><a id="343559" href="#343559">#</a> <strong>Michael Kaplan</strong> on 29 Dec 2004 12:09 AM:</p><div style="margin-left: 1em">Well, I am not a lawyer, but as far as I know this is not allowed (I made a similar request once when the issue first came up).<br><br>But I can always ask again -- it would really make sense, and be easier for everyone.</div>
+<p><a id="343621" href="#343621">#</a> <strong>Uwe Keim</strong> on 29 Dec 2004 4:45 AM:</p><div style="margin-left: 1em">Thanks, Michael, this would be great! <br><br>I would volunteer to sacrifice some nights/weekends for doing the builds (at least for MFC 7.1) :-)</div>
+<hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2007/12/24 <a href="http://archives.miloush.net/michkap/archive/2007/12/24/6843913.html">The 9.0 instructions for building MFC and the CRT to use MSLU?</a></p><p>2007/01/11 <a href="http://archives.miloush.net/michkap/archive/2007/01/11/1450206.html">Having problems with MSLU?</a></p><p>2006/04/15 <a href="http://archives.miloush.net/michkap/archive/2006/04/15/577006.html">MFC/CRT build instructions tweaklets</a></p><p>2006/03/26 <a href="http://archives.miloush.net/michkap/archive/2006/03/26/561016.html">Non-default paths and instructions....</a></p><p>2004/12/07 <a href="http://archives.miloush.net/michkap/archive/2004/12/07/277204.html">Rebuilding the CRT and MFC for Unicode on Win9x....</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2004/12/07/277204.html" title="Rebuilding the CRT and MFC for Unicode on Win9x....">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2004/12/06/276123.html" title="How to build the 7.0 MFC and the CRT DLLs with MSLU">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2004-12">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2004-12-06">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2004/12/06/276124.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:42 GMT -->
+</html>

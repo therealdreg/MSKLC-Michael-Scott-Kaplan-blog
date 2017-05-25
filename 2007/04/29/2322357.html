@@ -1,0 +1,18 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2007/04/29/2322357.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:38 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>What type to use for code page values</title></head><body>
+<h1>What type to use for code page values</h1>
+<p><em>by Michael S. Kaplan, published on 2007/04/29 03:21 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2007/04/29/2322357.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P>I was asked via the Contact link:</P>
+<BLOCKQUOTE><FONT face="times new roman,times" size=2>
+<P><EM>Why does CharPrevExA/CharNextExA take a WORD for code page, whereas MultiByteToWideChar takes a UINT? Which type should I use to store code pages?</EM></P></FONT></BLOCKQUOTE>
+<P>It is true that <A class="" href="http://msdn2.microsoft.com/library/ms647470.aspx" mce_href="http://msdn2.microsoft.com/library/ms647470.aspx">CharNextExA</A> and <A class="" href="http://msdn2.microsoft.com/library/ms647472.aspx" mce_href="http://msdn2.microsoft.com/library/ms647472.aspx">CharPrevExA</A> take WORD values for code pages, while <A class="" href="http://msdn2.microsoft.com/library/ms776413.aspx" mce_href="http://msdn2.microsoft.com/library/ms776413.aspx">MultiByteToWideChar</A> and&nbsp;<A class="" href="http://msdn2.microsoft.com/library/ms776420.aspx" mce_href="http://msdn2.microsoft.com/library/ms776420.aspx">WideCharToMultiByte</A> take UINT values.</P>
+<P>But then as I pointed out in <STRONG><A class="" href="http://archives.miloush.net/michkap/archive/2007/04/19/2190207.html" mce_href="http://archives.miloush.net/michkap/archive/2007/04/19/2190207.html">Is CharNextExA broken?</A></STRONG>,&nbsp;those two functions that take WORD values don't handle code pages greater than a WORD even though such code pages exist.</P>
+<P>So the functions named are able to accept all of the code pages values that they can respectively handle.</P>
+<P>To answer the question about what type to use to store code pages,&nbsp;the same rule could be followed -- use the type that is able to handle all of code pages that your code can handle....</P>
+<P mce_keep="true">&nbsp;</P>
+<P><FONT color=#ff00ff><EM>This post bought to you by</EM> ᙔ <EM>(<A class="" href="http://www.fileformat.info/info/unicode/char/1654" mce_href="http://www.fileformat.info/info/unicode/char/1654">U+1654</A>, a.k.a. CANADIAN SYLLABICS CARRIER SHU)</EM></FONT></P>
+<hr/><div style="margin-left: 1em"><em>no comments</em></div><hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2007/04/29/2328012.html" title="_wsetlocale doesn&#39;t support Unicode-only locales">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2007/04/28/2314479.html" title="Testing MSLU">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2007-04">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2007-04-29">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2007/04/29/2322357.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:38 GMT -->
+</html>

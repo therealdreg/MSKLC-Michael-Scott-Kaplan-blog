@@ -1,0 +1,55 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2010/08/30/10055550.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:35 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>A difference that makes no difference shouldn't make a difference, but...</title></head><body>
+<h1>A difference that makes no difference shouldn't make a difference, but...</h1>
+<p><em>by Michael S. Kaplan, published on 2010/08/30 07:01 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2010/08/30/10055550.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<p>It was over five years ago that I pointed out that <a href="http://archives.miloush.net/michkap/archive/2005/06/21/431005.html" title="Number format and currency format are not always the same"><strong>Number format and currency format are not always the same</strong></a>.</p>
+<p>In that blog, I pointed out that one could not necessarily assume that <a href="http://msdn.microsoft.com/library/dd318110">GetNumberFormat</a> and <a href="http://msdn.microsoft.com/library/dd318083.aspx">GetCurrencyFormat</a> will return the same results, because the number format and the currency format were two different things.</p>
+<p>And that is entirely true -- it is why there is both <a href="http://msdn.microsoft.com/library/dd373841.aspx">LOCALE_SDECIMAL</a> and <a href="http://msdn.microsoft.com/library/dd373857.aspx">LOCALE_SMONDECIMALSEP</a>, both&nbsp;<a href="http://msdn.microsoft.com/library/dd373895.aspx">LOCALE_STHOUSAND</a> and <a href="http://msdn.microsoft.com/library/dd373857.aspx">LOCALE_SMONTHOUSANDSEP</a>, both&nbsp;<a href="http://msdn.microsoft.com/library/dd373845.aspx">LOCALE_SGROUPING</a> and <a href="http://msdn.microsoft.com/library/dd373857.aspx">LOCALE_SMONGROUPING</a>.</p>
+<p>But it represents a very idealized view of locale data and what is involved with it.</p>
+<p>Perhaps I was just a wild idealist then and now I know better, but with half a decade to think about it, I've decided to rethink this one a little.</p>
+<p>Because there are really only two times that any of these three pairs of constants will return different data&nbsp;for any locale passed to <a href="http://msdn.microsoft.com/library/dd318101.aspx">GetLocaleInfo</a>:</p>
+<ul>
+<li>When there is a bug in the definitions, and </li>
+<li>When you are looking at the fa-IR locale, aka 0x0429.</li>
+</ul>
+<p>Now the latter case is because it is the one time that <a href="http://msdn.microsoft.com/library/dd373841.aspx">LOCALE_SDECIMAL</a> and <a href="http://msdn.microsoft.com/library/dd373857.aspx">LOCALE_SMONDECIMALSEP</a>&nbsp;are different (it uses <strong>.</strong>&nbsp;aka U+002e aka FULL STOP for the former and <strong>/</strong> aka U+002f aka SOLIDUS for the latter).</p>
+<p>But just about anyone you talk to from Iran, they know with an exchange rate of over 10,000 Rial to the dollar it has been a long time since anyone has ever talked about any fractional Rial value (Dinars or otherwise) except in a metaphorical <span style="font-size: xx-small;"><sup>diddly</sup></span>/<span style="font-size: xx-small;"><sub>squat</sub></span> sense. Of those I asked many were unfamiliar with any expected difference in the decimal separator for the two different cases whatsoever, and those who were familiar with it considered it ridiculous to support for any time in the last century or longer.</p>
+<p>Ironically, I was (many years back)&nbsp;one of the advocates for the Bidi algorithm exception that put U+002f in the "ES" (European Number Separator) category for bidi_class. Largely to preserve this largely theoretical&nbsp;behavior. Though I was just one of the chorus on that one, I did not lead they choir. This change helps fractional Rial currency values in Farsi/Persian, an edge case extraordinaire!</p>
+<p><em>I don't know the exact period in history&nbsp;that fractional Rials became so "theoretical" so I am going to rely on what others have told me for that point.</em></p>
+<p>Either way, six different fields exist in every locale, even though it could have been three all these years.</p>
+<p>You can contrast this with a similar though separate case -- the one&nbsp;of some of the percent locale fields I described in <a href="http://archives.miloush.net/michkap/archive/2005/11/24/495349.html" title="And you can't set all of the properties all of the time..."><strong>And you can't set all of the properties all of the time...</strong></a> -- a case where some properties are separate but the underlying data is not (since none of them were ever different in the locale data).</p>
+<p>We could have just saved ourselves the extra complication and not separate things until the need was proven and the difference actually mattered.</p>
+<p>If the same problem came up in the future, I would not advocate the split (in either the interface or the underlying data) until there was proof that the split would be&nbsp;sensible and expected&nbsp;in actual usage.</p>
+<p>Because <strong>A DIFFERENCE THAT MAKES NO DIFFERENCE SHOULDN'T MAKE A DIFFERENCE</strong>.</p>
+<hr/><p><strong>John Cowan</strong> on 30 Aug 2010 7:51 AM:</p><div style="margin-left: 1em"><p>And a beggar came forward and asked,</p>
+<p>What is Wealth, Master?</p>
+<p>The Master spoke:</p>
+<p>Gold is not Wealth.</p>
+<p>A wealthy man without honor is not a rich man.</p>
+<p>A beggar like yourself can be wealthy compared to a rich man without honor.</p>
+<p>After all, would you consider a man without honor wealthy, even if his Dinar laid end to end would reach from here to the Temple of Toplat?</p>
+<p>No, I wouldn&#39;t, the beggar replied.</p>
+<p>Why is that? the Master asked.</p>
+<p>A Dinar doesn&#39;t go very far these days, Master.</p>
+<p>Besides, the Temple of Toplat is across the street!</p>
+<p>--Kehlog Albran, _The Profit_.</p>
+</div>
+<p><strong>Jan Kučera</strong> on 30 Aug 2010 11:17 AM:</p><div style="margin-left: 1em"><p>Actually, one of the first things I do on a clean installation is setting the number decimal separator to the dot, keeping the money decimal separator to be the comma (Czech locale) - and I&#39;m really thankful for that possibility! Some things do not seem to be needed when you live at the right place...</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 30 Aug 2010 1:04 PM:</p><div style="margin-left: 1em"><p>That&#39;s a little scary....Why?</p>
+</div>
+<p><strong>Alex Cohn</strong> on 5 Sep 2010 9:14 AM:</p><div style="margin-left: 1em"><p>I agree with Jan. </p>
+<p>A Czech-speaking person who lives in US is used to 2,718 for &lt;b&gt;e&lt;/b&gt;, but she will use $200.12 to balance her account.</p>
+<p>And this again brings me to the date formats. One cannot choose the string set for Sun-Mon-Wed, etc. So this dictates the &quot;locale&quot;. All other details - like currency symbol, separators and such - may have to be reconfigured to match the expectations of a hypotetic Russian-speaking Israeli.</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 5 Sep 2010 12:36 PM:</p><div style="margin-left: 1em"><p>One could make a custom locale, and get all of that customized, including day names!</p>
+</div>
+<p><strong>Jan Kučera</strong> on 14 Apr 2011 12:36 AM:</p><div style="margin-left: 1em"><p>One of the reasons is that lots of things break when you keep comma as a decimal separator. Still, some fascinating software, like Office 2010, succesfully ignores the customization on the input side (entering numbers in a font size box on the numeric keypad uses comma even if it the number decimal separator is customized to the dot), just for the pleasure to tell you that the entered number is invalid! Not mentioning numerical data imports to Excel or Quattro or similar, especially with CSV.</p>
+<p>And keeping the accounting format using the comma - well, if the application is aware of the accounting format it is very likely able to respect any of your culture settings. And, you see numbers all the day, coming from all over the world, but prices in a currency - not so much, you are just used for the formatting belonging to that currency.</p>
+<p>So yeah, the main reason is that the life get much more easier. You do not get upset so often, and do not need to make useless complaints to the vendors. I was really hurt when the guy from FedEx told me that I have to enter dots in their software/web because &quot;there are only two bloody countries in the world using comma as a decimal separator and so I have to agree naturally, that it is absolute nonsense to support that&quot;...</p>
+</div>
+<hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2010/08/31/10056140.html" title="And how exactly do you justify those frigging kashidas?">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2010/08/29/10039797.html" title="Seeing a complex problem is not the same thing as seeing a solution">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2010-08">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2010-08-30">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2010/08/30/10055550.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:35 GMT -->
+</html>

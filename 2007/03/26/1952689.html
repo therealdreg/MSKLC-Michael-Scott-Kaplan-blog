@@ -1,0 +1,31 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2007/03/26/1952689.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:38 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Hello, Mr. TrueType Font. Do you support Bengali?</title></head><body>
+<h1>Hello, Mr. TrueType Font. Do you support Bengali?</h1>
+<p><em>by Michael S. Kaplan, published on 2007/03/26 11:01 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2007/03/26/1952689.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P>Torifat asks:</P>
+<BLOCKQUOTE><FONT size=2>
+<P>Hi Michael,<BR><BR>I'm a vb programmer (You can assume me as a neophyte user :)). I want to get the name of those fonts, whose glyphs contain Bengali characters...<BR><BR>I've tried some codes [IMLangFontLink::GetFontCodePages and ...] from your blog but probably I've made some mistake...<BR><BR>Please, Can you assist me something...<BR><BR>[Sorry for my poor English :(]</P></FONT></BLOCKQUOTE>
+<P>For Bengali, <A class="" href="http://msdn.microsoft.com/workshop/misc/mlang/reference/ifaces/imlangfontlink/getfontcodepages.asp" mce_href="http://msdn.microsoft.com/workshop/misc/mlang/reference/ifaces/imlangfontlink/getfontcodepages.asp">IMLangFontLink::GetFontCodePages</A> is not such a great bet, since Bengali is not a part of any code page the method would recognize. A better bet is <A class="" href="http://msdn.microsoft.com/workshop/misc/mlang/reference/ifaces/imlangfontlink2/getfontunicoderanges.asp" mce_href="http://msdn.microsoft.com/workshop/misc/mlang/reference/ifaces/imlangfontlink2/getfontunicoderanges.asp">IMLangFontLink2::GetFontUnicodeRanges</A>.</P>
+<P>But to be honest, and even better bet is the GDI function <A class="" href="http://msdn2.microsoft.com/library/ms533944.aspx" mce_href="http://msdn2.microsoft.com/library/ms533944.aspx">GetFontUnicodeRanges</A>&nbsp;(although the function is not supported until Windows 2000, the truth is that adequate Bengali support is not available in fonts or in Uniscribe until the version that shipped with XP SP2, and the Vista version is a significant update to that).</P>
+<P>There is even as VB sample using the <A class="" href="http://msdn2.microsoft.com/library/ms533944.aspx" mce_href="http://msdn2.microsoft.com/library/ms533944.aspx">GetFontUnicodeRanges</A>&nbsp;function on vbmonster.com <A class="" href="http://www.vbmonster.com/Uwe/Forum.aspx/vb-winapi/4533/How-to-use-GetFontUnicodeRanges-in-VB-or-VBA" mce_href="http://www.vbmonster.com/Uwe/Forum.aspx/vb-winapi/4533/How-to-use-GetFontUnicodeRanges-in-VB-or-VBA">right here</A>, which takes care of the bulk of the hard parts (all that is left is the font enumeration, the selecting a font into an HDC, and then looking through the WCRANGE array for Bengali character support.</P>
+<P>More advance usage would be to look for OpenType support, which when you consider how important it can be for Bengali that has a chance of looking right. You know, like the various OpenType features/layout tables that are needed:</P>
+<P><IMG src="http://trigeminal.fmsinc.com/images/vrinda.png"></P>
+<P>But to be honest, while <A class="" href="http://msdn2.microsoft.com/library/ms534211.aspx" mce_href="http://msdn2.microsoft.com/library/ms534211.aspx">GetFontData</A> is perhaps something that can be tamed without too much difficulty (like I did <A class="" href="http://archives.miloush.net/michkap/archive/2006/02/13/530814.html" mce_href="http://archives.miloush.net/michkap/archive/2006/02/13/530814.html">here</A>), that is far cry from knowing what are the right OpenType tables to look at. You would have to do a whole bunch of digging into the <A class="" href="http://www.microsoft.com/typography/otspec/" mce_href="http://www.microsoft.com/typography/otspec/">OpenType Specification</A>, and the info on the Bengali script <A class="" href="http://www.microsoft.com/typography/otfntdev/bengalot/appen.aspx" mce_href="http://www.microsoft.com/typography/otfntdev/bengalot/appen.aspx">in particular</A>.</P>
+<P>All&nbsp;to learn that the font you are looking for is Vrinda, which <STRONG><A class="" href="http://archives.miloush.net/michkap/archive/2006/04/04/567881.html" mce_href="http://archives.miloush.net/michkap/archive/2006/04/04/567881.html">this post</A></STRONG> would have told you. :-)</P>
+<P mce_keep="true">&nbsp;</P>
+<P><FONT color=#ff00ff><EM>This post brought to you by</EM> <FONT size=5>ত</FONT> <EM>(<A class="" href="http://www.fileformat.info/info/unicode/char/09a4" mce_href="http://www.fileformat.info/info/unicode/char/09a4">U+09a4</A>, a.k.a. BENGALI LETTER TA)</EM></FONT></P>
+<hr/><p><strong>rifat</strong> on 28 Mar 2007 11:49 AM:</p><div style="margin-left: 1em"><p>Dear Michael, Thanks for your valuable reply :D</p>
+</div>
+<p><strong>rifat</strong> on 28 Mar 2007 4:42 PM:</p><div style="margin-left: 1em"><p>Eureka ;), I've done it. Thanks again... But Can you explain me-</p>
+<p>Private Type typWCRANGE</p>
+<p> iLow As Integer</p>
+<p> iGlyphs As Integer</p>
+<p>End Type</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 28 Mar 2007 5:18 PM:</p><div style="margin-left: 1em"><p>Just the VB-ized version of the WCRANGE structure....</p>
+</div>
+<hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2007/03/27/1961293.html" title="Error message of the week, for me">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2007/03/26/1950492.html" title="Flirting with a strange keyboard, will you remember its language in the morning?">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2007-03">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2007-03-26">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2007/03/26/1952689.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:38 GMT -->
+</html>

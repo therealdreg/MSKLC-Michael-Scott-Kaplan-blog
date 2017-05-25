@@ -1,0 +1,41 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2007/03/04/1806607.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:38 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Questions about ESE may not always be EASY for me</title></head><body>
+<h1>Questions about ESE may not always be EASY for me</h1>
+<p><em>by Michael S. Kaplan, published on 2007/03/04 20:46 -05:00, original URI: http://blogs.msdn.com/b/michkap/archive/2007/03/04/1806607.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P>Perhaps I have set myself up for this sort of question, in which case I have only myself to blame. :-)</P>
+<P>But in the early hours Abbott&nbsp; Fleur asked me via the Contact link:</P>
+<BLOCKQUOTE><FONT face="times new roman,times" size=2>
+<P><EM>Using the published api's I can query and list the contents of know tables in an ESE database. I'm sort of flailing trying to get a JET_OBJECTLIST of all the tables (and tableIDs) that exist in an edb.<BR><BR>Could you point me in the proper direction for this?<BR><BR>Thanks<BR><BR>Abbott Fleur</EM></P></FONT></BLOCKQUOTE>
+<P>Now it is true that I did point out in <STRONG><A class="" href="http://archives.miloush.net/michkap/archive/2006/01/08/510673.html" mce_href="http://archives.miloush.net/michkap/archive/2006/01/08/510673.html">Is the Jet no longer invisible?</A></STRONG> that the Extensible Storage Engine and the "Jet Red" engine used by Microsoft Access share a common heritage.</P>
+<P>It is also true that&nbsp;a few years back&nbsp;Beth Scott (then a Jet PM)&nbsp;told me once that for many years there was an effort to keep the two API sets in sync, even though there was no specific plan for one to replace the other.</P>
+<P>And it is also true that I have called the Jet "Red" engine before directly, though not as a career or anything. So I am usually not likely to know the answer to a random question like this one.</P>
+<P>But it is (unfortunately) also true that I am going to dispel most of above this time since I know the answer....</P>
+<P>To get a list of objects, you can call <A class="" href="http://msdn2.microsoft.com/library/ms683519.aspx" mce_href="http://msdn2.microsoft.com/library/ms683519.aspx">JetGetObjectInfo</A> with an InfoLevel of either JET_ObjInfoList or JET_ObjInfoListNoStats. <A class="" href="http://msdn2.microsoft.com/library/ms683519.aspx" mce_href="http://msdn2.microsoft.com/library/ms683519.aspx">JetGetObjectInfo</A> will (as the docs claim):</P>
+<BLOCKQUOTE>
+<P><EM><FONT face="times new roman,times">pvResult is interpreted as a <B>JET_OBJECTINFO</B> structure. Information about all objects is retrieved. A temporary table will be created, and the information that is necessary to traverse the temporary table is described in the <B>JET_OBJECTINFO</B> structure. For more information, see <B>JET_OBJECTINFO</B>. If the caller does not want to know the number of records and pages for the object, consider using JET_ObjInfoListNoStats, which might be faster.</FONT></EM></P></BLOCKQUOTE>
+<P>I am hesitant to provide sample code since I honestly don't think that anything I used nine years ago to call&nbsp;Jet would be guaranteed to work&nbsp;with ESE today.</P>
+<P>But the answer should be enough to get started here (plus realistically set expectations for my ability to answer future questions!). :-)</P>
+<P mce_keep="true">&nbsp;</P>
+<P><FONT color=#ff00ff><EM>This post brought to you by</EM>&nbsp;<FONT size=5>✈</FONT> <EM>(<A class="" href="http://www.fileformat.info/info/unicode/char/2708" mce_href="http://www.fileformat.info/info/unicode/char/2708">U+2708</A>, a.k.a. AIRPLANE, a kind of jet)</EM></FONT></P>
+<hr/><p><strong>Koushal</strong> on 13 Apr 2007 4:47 AM:</p><div style="margin-left: 1em"><P>JetOpenFileInstance gives INVALID HANDLE in the OUT parameter but the return value is JET_errSuccess. Why so?</P>
+<P>Hi Michael,</P>
+<P>pleased to know that there's at least someone who can solve my query regarding the ESE APIs. I am a student and I have a small assignment to be done. My main objective is to read the Exchange Database and transaction log files into memory with the use of the ESE APIs, and then dump the read buffer into an on-disk file. As simple as that. It is just a demonstration of the ESE APIs I'm trying to give to myself so that I can later on develop some backup application, etc.</P>
+<P>I've written some code which does the following:</P>
+<P>1. Call JetCreateInstance<BR>2. Call JetInit<BR>3. Call JetBeginExternalBackupInstance<BR>4. Call JetBeginSession<BR>5. Open a transaction log file (E00.log) using JetOpenFileInstance</P>
+<P>All of these APIs are returning the JET_errSuccess value. But the handle returned by JetOpenFileInstance API as an OUT parameter is invalid. I have first initialized the handle to 0 and even after calling this API, the value of handle remains the same. The API doesnt fail. It returns success return value but the handle to the opened file is invalid. Thus, if I try calling the JetReadFileInstance I get a General Protection Fault.</P>
+<P>This code is written in Visual C++, I'm using Visual Studio .NET 2003 / 2005.</P>
+<P>I'm executing this code on Windows Server 2003 and I have Exchange Server 2003 Enterprise edition installed. </P>
+<P>To get access to the transaction log file, I have stopped the Exchange Information store service from the Control Panel.</P>
+<P>Can you tell me what's going wrong here?</P>
+<P>Is this the right way of accessing the Exchange database or transaction logs using the ESE APIs? </P>
+<P>Will I be able to read e-mails from the exchange database using this approach?</P>
+<P>Waiting for your reply,</P></div>
+<p><strong>Michael S. Kaplan</strong> on 13 Apr 2007 5:24 AM:</p><div style="margin-left: 1em"><p>This falls under the category of thimgs I do not know about -- you probably want to ask over on Brett Shirley's blog, or on the Exchange blog?</p>
+</div>
+<p><strong>Jagathish</strong> on 30 Jul 2010 12:38 AM:</p><div style="margin-left: 1em"><p>I think the documentation is wrong. pvResut should be interpreted as JET_OBJECTLIST instead of JET_OBJECTINFO.</p>
+</div>
+<hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2007/04/13 <a href="http://archives.miloush.net/michkap/archive/2007/04/13/2112495.html">ESE is still not so easy for me!</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2007/03/05/1807683.html" title="You&#39;re not the one out of sequence, and that&#39;s the Word">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2007/03/04/1806219.html" title="String Indexing?">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2007-03">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2007-03-04">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2007/03/04/1806607.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:38 GMT -->
+</html>

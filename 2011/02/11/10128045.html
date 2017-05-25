@@ -1,0 +1,50 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2011/02/11/10128045.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>When good functions [seem to] go bad</title></head><body>
+<h1>When good functions [seem to] go bad</h1>
+<p><em>by Michael S. Kaplan, published on 2011/02/11 07:01 -05:00, original URI: http://blogs.msdn.com/b/michkap/archive/2011/02/11/10128045.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<p>In many cases it isn't the question that is complicated; it is the impact of surrounding features&nbsp;that make the answers so complicated!</p>
+<p>A while back, the question that was asked was:</p>
+<p style="padding-left: 90px;"><span style="font-family: times new roman,times;">Hello, </span></p>
+<p style="padding-left: 90px;"><span style="font-family: times new roman,times;">I&rsquo;m trying to get the file version for mshtml.dll at runtime, when I call GetFileVersionInfo (from shell\osshell\version\filever.cpp) with either the full path (C:\windows\system32\mshtml.dll) or just the binary name, it always gives me: 8.00.7600.16385 (win7_rtm.090713-1255) &ndash; the IE8 RTM version, regardless of which TP (test pass, think of it as a service pack for IE) is on the machine. </span></p>
+<p style="padding-left: 90px;"><span style="font-family: times new roman,times;">According to the filever tool, the version I actually have on my machine is: </span></p>
+<p style="padding-left: 90px;"><span style="font-family: times new roman,times;">&gt;filever /v C:\Windows\System32\mshtml.dll<br />&lt;snip&gt;<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; FileVersion&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 8.00.7600.16625 (win7_gdr.100629-1617)</span></p>
+<p style="padding-left: 90px;"><span style="font-family: times new roman,times;">How can I get GetFileVersionInfo give me this version?</span></p>
+<p style="padding-left: 90px;"><span style="font-family: times new roman,times;">Thanks!</span></p>
+<p>Okay, the way the question was asked was complicated the time, too. :-)</p>
+<p>But at its simplest level the question was just "how do I get the version number?" since the wrong answer was (apparently) being returned.</p>
+<p>Anyone want to take a guess as to what might be going on, what might cause a[n apparent] lie to be told here?</p>
+<p><em><strong>Hint</strong>: Ask yourself why I might care about the answer here as a way to figure out what the answer might be....</em></p>
+<hr/><p><strong>Milan</strong> on 11 Feb 2011 7:15 AM:</p><div style="margin-left: 1em"><p>With hint it&#39;s trivial, there&#39;s .mui file involved.</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 11 Feb 2011 7:25 AM:</p><div style="margin-left: 1em"><p>Go on...</p>
+</div>
+<p><strong>Milan</strong> on 11 Feb 2011 7:50 AM:</p><div style="margin-left: 1em"><p>Acording to documentation (<a rel="nofollow" target="_new" href="http://msdn.microsoft.com/en-us/library/ms647003(v=vs.85).aspx">msdn.microsoft.com/.../ms647003(v=vs.85).aspx</a>):</p>
+<p>&quot;</p>
+<p>File version info has fixed and non-fixed part. The fixed part contains information like version number. The non-fixed part contains things like strings. In the past GetFileVersionInfo was taking </p>
+<p>version information from the binary (exe/dll). Currently, it is querying fixed version from language neutral file (exe/dll) and the non-fixed part from mui file, merges them and returns to the user. If the given binary does not have a mui file then behavior is as in previous version.</p>
+<p>&quot;</p>
+<p>My .mui contains &quot;File Version: 8.00.6001.18702 (longhorn_ie8_rtm(wmbla).090308-0339)&quot; in it&#39;s dynamic part so GetFileVersionInfo returns it.</p>
+<p>I guess filever is not using GetFileVersionInfo but parses resource directly.</p>
+</div>
+<p><strong>Ivan Rouzanov</strong> on 11 Feb 2011 9:53 AM:</p><div style="margin-left: 1em"><p>&quot;In the past GetFileVersionInfo was taking version information from the binary (exe/dll). Currently, it is querying fixed version from language neutral file (exe/dll) and the non-fixed part from mui file, merges them and returns to the user. If the given binary does not have a mui file then behavior is as in previous version.&quot;</p>
+<p><a rel="nofollow" target="_new" href="http://msdn.microsoft.com/en-us/library/ms647003(VS.85).aspx">msdn.microsoft.com/.../ms647003(VS.85).aspx</a></p>
+</div>
+<p><strong>Jeremy Drake</strong> on 11 Feb 2011 10:48 AM:</p><div style="margin-left: 1em"><p>It&#39;s always good when you can tell the user to RTFM:</p>
+<p><a rel="nofollow" target="_new" href="http://msdn.microsoft.com/en-us/library/ms647003(v=VS.85).aspx">msdn.microsoft.com/.../ms647003(v=VS.85).aspx</a></p>
+<p>&quot;&quot;&quot;</p>
+<p>Remarks</p>
+<p>File version info has fixed and non-fixed part. The fixed part contains information like version number. The non-fixed part contains things like strings. In the past GetFileVersionInfo was taking version information from the binary (exe/dll). Currently, it is querying fixed version from language neutral file (exe/dll) and the non-fixed part from mui file, merges them and returns to the user.</p>
+<p>&quot;&quot;&quot;</p>
+<p>I suppose you could format the version number yourself from the fixed part (the binary version number). &nbsp;That&#39;s what I tend to do (though I don&#39;t put anything other than the raw dot-delimited four-part version number in the string version field). &nbsp;Or you could try to convince GetFileVersionInfoEx to give you the lauguage-neutral non-fixed data (though the FM on that function doesn&#39;t tell you what flag to pass for that, I assume it&#39;s 0, none of the above), if you can even use that function since it is only available on Vista+, and most people still have to support at least XP. &nbsp;Or you could use the resource functions directly to look up the RT_VERSION data (FindResourceEx says passing MAKELANGID(LANG_NEUTRAL, SUBLANG_NEUTRAL) gives you the resources for the current thread&#39;s current language, so how would you specify you want the neutral version of the resources?). &nbsp;Or if all that fails, you could always go traipsing around in the PE file format and that way be sure nobody&#39;s pulling any slight-of-hand with which file&#39;s data you get back. &nbsp;In case you can&#39;t tell, I tend to really hate it when the system thinks it&#39;s smarter than me and tells me &quot;You asked for info from *this* file? &nbsp;I&#39;m sure what you really wanted is info from this *OTHER* file, so I&#39;ll just return that instead.&quot; &nbsp;That&#39;s right up there with &quot;You want to know what version of Windows you&#39;re running on? &nbsp;Good luck with that. &nbsp;Here, let me *lie to you* about that so you can try to load the wrong driver and with any luck, that will bluescreen the system and really annoy the user.&quot;</p>
+<p>But let&#39;s go back to the original question for a second. &nbsp;Trying to query the version of a DLL at runtime generally tends to be used for figuring out if it supports a given feature. &nbsp;Better to test for that feature directly, and only if that&#39;s not possible, fall back to comparing the binary version from the &quot;fixed data&quot; that&#39;s not returned from the MUI anyway.</p>
+</div>
+<p><strong>Little Commenter</strong> on 11 Feb 2011 12:51 PM:</p><div style="margin-left: 1em"><p>GetFileVersionInfo is getting info from MUI files (when available) and merges this info with fixed info from language neutral file.</p>
+<p>My proposed answer: Use GetFileVersionInfoEx and pass as first parameter FILE_VER_GET_NEUTRAL. This way you will obtain the resource from the language neutral file, not from the MUI file.</p>
+</div>
+<p><strong>Jeremy Drake</strong> on 11 Feb 2011 3:11 PM:</p><div style="margin-left: 1em"><p>@Little Commenter: the docs for GetFileVersionInfoEx say of FILE_VER_GET_NEUTRAL: &quot;This flag must be combined with FILE_VER_GET_LOCALISED.&quot; &nbsp;The description of what happens in this case seems to match the behavior of GetFileVersionInfo, which is what the original poster had problems with.</p>
+</div>
+<hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2011/02/12/10128490.html" title="What do Frank Burns from M*A*S*H and Windows Server 2008 R2 have in common?">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2011/02/10/10126601.html" title="A design flaw not being fixed is not a bug. And it&#39;s not &quot;By Design&quot;, either.">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2011-02">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2011-02-11">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2011/02/11/10128045.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+</html>

@@ -1,0 +1,23 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2007/04/18/2178209.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:38 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Providing developers a Unicolonic in unmanaged code?</title></head><body>
+<h1>Providing developers a Unicolonic in unmanaged code?</h1>
+<p><em>by Michael S. Kaplan, published on 2007/04/18 13:51 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2007/04/18/2178209.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P>Over in the Suggestion Box, zvi k asks:</P>
+<BLOCKQUOTE>
+<P><FONT face="times new roman,times"><EM>Hello,<BR><BR>&nbsp; I tried to use MultiByteToWideChar() function to&nbsp;&nbsp;convert UTF-16 encoded string and it failed.<BR><BR>&nbsp; Is it designed to get only ANSI / UTF-8 code or it can get UTF-16 format with special parameters?<BR><BR>&nbsp; (I accent &nbsp;- MultiByteToWideChar(), and not&nbsp;WideCharToMultiByte(). The last function can do it. )<BR><BR>Thanks a lot,<BR><BR>&nbsp;Zvi.</EM></FONT></P></BLOCKQUOTE>
+<P mce_keep="true">Now both <A class="" href="http://msdn2.microsoft.com/library/ms776420.aspx" mce_href="http://msdn2.microsoft.com/library/ms776420.aspx">WideCharToMultiByte</A> and <A class="" href="http://msdn2.microsoft.com/library/ms776413.aspx" mce_href="http://msdn2.microsoft.com/library/ms776413.aspx">MultiByteToWideChar</A> accept/emit UTF-16 text on one end (the "WideChar" end!), but neither one of them will accept/emit UTF-16 text on the other. </P>
+<P mce_keep="true">Put simply, there is no code page value you can specify that will allow such a conversion to happen.</P>
+<P mce_keep="true">There are several points to consider though, especially given that in the managed world this kind of operation is in fact supported, in both directions.</P>
+<P mce_keep="true">The first point is that in well-formed UTF-16 text, you are converting text into what it already is -- in other words you are doing nothing. This is the kind of thing a developer can accomplish so much more simply with a cast. </P>
+<P mce_keep="true">And it would be faster, too!</P>
+<P mce_keep="true">The second point is the only real benefit that such a method would give (and does give in .NET): in text that is not well-formed (e.g. unpaired surrogate values), the text will be cleaned up by replacement by the default character, or it will error out if the flag is passed to do so.</P>
+<P mce_keep="true">Somehow the image of "MultiByteToWideChar as <A class="" href="http://en.wikipedia.org/wiki/Colon_Blow#C" mce_href="http://en.wikipedia.org/wiki/Colon_Blow#C">Colon Blow</A>" is one that does not appeal to me that much (and not just because I miss Phil Hartman), so it turns into a very expensive cast operation....</P>
+<P mce_keep="true">But if you really want to do this in unmanaged code, as a workaround you can call <A class="" href="http://msdn2.microsoft.com/library/ms776420.aspx" mce_href="http://msdn2.microsoft.com/library/ms776420.aspx">WideCharToMultiByte</A> and then&nbsp;<A class="" href="http://msdn2.microsoft.com/library/ms776413.aspx" mce_href="http://msdn2.microsoft.com/library/ms776413.aspx">MultiByteToWideChar</A>, pivoting through UTF-8 (code page 65001).</P>
+<P mce_keep="true">This will give you the same effect as this "Unicolonic" approach to text validation....</P>
+<P mce_keep="true">&nbsp;</P>
+<P mce_keep="true"><FONT color=#ff00ff><EM>This post brought to you by</EM> ＝ <EM>(<A class="" href="http://www.fileformat.info/info/unicode/char/ff1d" mce_href="http://www.fileformat.info/info/unicode/char/ff1d">U+ff1d</A>, a.k.a. FULLWIDTH EQUALS SIGN)</EM></FONT></P>
+<hr/><div style="margin-left: 1em"><em>no comments</em></div><hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2007/04/18/2179499.html" title="Will the real orthography please rise? (HINT: they should all stand up)">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2007/04/17/2166496.html" title="The problem with using ordinal (a.k.a. lexicographic, a.k.a. binary) type comparisons?">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2007-04">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2007-04-18">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2007/04/18/2178209.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:38 GMT -->
+</html>

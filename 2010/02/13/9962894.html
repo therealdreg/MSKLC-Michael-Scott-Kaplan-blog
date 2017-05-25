@@ -1,0 +1,93 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2010/02/13/9962894.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:35 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>How Windows 7 broke VB6's RightToLeft property, and how to get it fixed</title></head><body>
+<h1>How Windows 7 broke VB6's RightToLeft property, and how to get it fixed</h1>
+<p><em>by Michael S. Kaplan, published on 2010/02/13 07:01 -05:00, original URI: http://blogs.msdn.com/b/michkap/archive/2010/02/13/9962894.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P>It started many years ago.</P>
+<P>Oh wait, it started even before the date I was thinking of originally.</P>
+<P>This was back at the tail end of the last century.</P>
+<P>I was helping people with some VB add-ins that had to be supported in multiple languages when everyone suddenly realized (after an email I sent out about the subject) that the sample code provided to help with runtime localization was not going to work for Arabic or Hebrew since VB's RightToLeft property couldn't be changed at runtime. It wasn't their fault, really; it was the CreateWindowEx function in the Win32 API that was to blame since you could never change the directionality of a window after it had been created.</P>
+<P>VB's position was that this was by design since the technology they were using didn't support the notion, but I convinced Jim (a VB developer who is no longer at Microsoft) of the speciousness of that argument, since Windows wasn't sticking an easy property out there that anyone could set. So for VB 6.0, Jim made this property settable and did the work behind the scenes to destroy the window and recreate it (at the time a novel concept since suddenly, the handle on the window could change, a rich source of bugs for testers to find!).</P>
+<P>Anyway, fast forward a little bit.</P>
+<P>There were a bunch of people who were being persuaded, convinced, and cajoled to support the new ComAddIn interface that Office 2000 was going to use to let people plug their Visual Basic 6.0 add-ins into the suite by a program manager named Dave who also no longer works for Microsoft.</P>
+<P>I myself (still a mere vendor to Microsoft at the time but who was doing a number of different jobs for various groups) had contracts to help with the integration of four different add-ins, including one that I had written myself and another of which I had mostly written.</P>
+<P>Anyway, it was around the first week in December I think that there was some panic since Dave had promised a localization framework. The panic was Dave's as there was no such framework. How could there by VB add-ins in the Office box if no one was going to be able to translate them into the Office languages.</P>
+<P>He started to write something but it really wasn't very good, plus it was incomplete.</P>
+<P>So with no holiday plans, I just decided to write a framework.</P>
+<P>Dave was overjoyed since it meant he was not going into the midyear with a major initiative flopping, and other devs looked at the framework and saw it would do the job they needed. Everyone was happy.</P>
+<P>Of course, no one wanted to pay me for the three weeks of work.</P>
+<P>Dave was willing but they had no money, the teams that I was working for specifically refused to pay for it since the work I was doing for them was scoped tightly and this work was being promised by a shared team. Other teams felt the same way, plus no one wanted to own testing the framework or supporting it.</P>
+<P>I suppose I could have been a jerk and just sent a <STRONG>cease and desist</STRONG> and made them take the framework out of those products. Someone would have paid me then but I doubt I'd have a whole lot of future work to look forward to for groups at Microsoft.</P>
+<P>I decided to be magnanimous and just grant Microsoft a permanent, non-transferable, non-exclusive license to my "Win32Dialog" class. Perhaps not entirely selfless since it saved at least four of those contracts. :-) Anyway, crisis averted, though even years later I would have someone in legal sending me email asking me about the two files (win32dlg.bas and win32dlg.cls) with the header that said:</P>
+<BLOCKQUOTE>
+<P><STRONG>' This module is a "common software module or tool" owned by<BR>' Trigeminal Software, Inc.</STRONG></P></BLOCKQUOTE>
+<P>and how to get that taken care of. When I explained the situation and told them to take care of it all they had to do was pay me for the three weeks they decided they could live with it.</P>
+<P>I suspect I will never be paid for that work.</P>
+<P>A modified version of the code went into my book (<STRONG>Internationalization with Visual Basic</STRONG>).</P>
+<P>Of course the code included the RightToLeft property and its ability to be set (this was the one piece of the code that would fail in VB 5.0). This was used by several different add-ins and I am told some other projects though I never got a full list.</P>
+<P>Now getting back to that property, the implementation was set up to only work on systems with "Right to Left" support, which sometimes included Windows 2000/XP but not always given the nature of <A href="http://archives.miloush.net/michkap/archive/2005/05/27/422458.html" mce_href="http://archives.miloush.net/michkap/archive/2005/05/27/422458.html"><STRONG>What isn't in the default install for NLS</STRONG></A>. There is a generic dislike within Microsoft of hacks like hard-coding Arabic and Hebrew but there did not seem to be another option. Though luckily, or perhaps unluckily for reasons that will later become clear, some old code supporting WinMe/NT4 using an Arabic/Hebrew specific hack of a special flag to <A href="http://msdn.microsoft.com/library/dd318679.aspx" mce_href="http://msdn.microsoft.com/library/dd318679.aspx">IsValidLocale</A> was found and used instead. </P>
+<P><EM>Somehow using someone else's hack is more palatable than using one's own hack.</EM> :-)</P>
+<P>Now fast forward a few more years, to Windows 7.</P>
+<P>Neither Windows Me nor NT 4.0 are covered by even extended support, and no one knew anything about what the hack was there for or why and everyone hated this kind of thing anyway. So after a small amount (some would say too small but I'm going to be broad-minded here)&nbsp;of due diligence they removed the hack (roughly akin to <STRONG>fixing the glitch</STRONG>!) and Windows 7 shipped that way.</P>
+<P>Fast forward a small amount, and suddenly complaints start rolling in about the broken <STRONG>RightToLeft</STRONG> property on Windows 7. At least four sustained engineering requests for fix to Windows and perhaps some on VB and lots of public outcry including threads like <A href="http://social.technet.microsoft.com/Forums/en-US/w7itproappcompat/thread/2ff7524e-7741-49cb-a7ca-6426b8b58c07" mce_href="http://social.technet.microsoft.com/Forums/en-US/w7itproappcompat/thread/2ff7524e-7741-49cb-a7ca-6426b8b58c07">this one</A>&nbsp;and many others you could probably find if you tried for a few minutes.</P>
+<P>Apparently people noticed that this little old property that was added because I complained enough to Jim one night a decade ago was broken.</P>
+<P>Okay, first things first - the quickest/easiest thing to fix is the documentation problem. Which they did, in <A href="http://msdn.microsoft.com/library/dd318679.aspx" mce_href="http://msdn.microsoft.com/library/dd318679.aspx">IsValidLocale</A>:</P>
+<BLOCKQUOTE>
+<P><STRONG>Note</STRONG>&nbsp;&nbsp;Setting <EM>dwFlags</EM> to 0x39 is a special case that can behave like LCID_INSTALLED for some locales on some versions of Windows. This functionality is deprecated and only provided for compatibility. The flag 0x39 should not be used; use LCID_INSTALLED instead.</P></BLOCKQUOTE>
+<P>Okay I guess that's close enough. :-)</P>
+<P>Of course they also had to add the hack back so that Windows 7 would stop breaking VB6 here. That part was also fairly straightforward since all they had to do was put the code back that had been taken out. :)</P>
+<P><FONT color=#ff0000>The&nbsp;hotfix is officially available</FONT>, but the KB article is perhaps not out yet (it was not when I just looked). <FONT color=#ff0000>You have to contact Microsoft Product Support and ask for the hotfix associated with KB979643 to fix the VB6 RightToLeft property when running on Windows 7 (Microsoft Product Support can look it up on their tools). Make sure you specify the flavor(s) you need&nbsp;(x86, x64, ia64) and they can get you the hotfix. </FONT>It will also be rolled into the next service pack but the hotfix is good for the people broken now (a list that includes at least one police force, one government, one hotel chain, and one publisher!).</P>
+<P><FONT color=#ff0000><STRONG>Update 16 March 2010</STRONG></FONT>: <STRONG><FONT color=#ff0000>You can get the hotfix from the request site, right here:</FONT></STRONG> <A href="http://support.microsoft.com/hotfix/KBHotfix.aspx?kbnum=979643" rel=nofollow target=_new><FONT color=#0000cc>http://support.microsoft.com/hotfix/KBHotfix.aspx?kbnum=979643</FONT></A></P>
+<P>Now I am not going to try to take responsibility here for any of this since my involvement in the break was non-existent (I was no longer on the team) and my involvement in the fix was minimal (I reported one case and pointed out the underlying reason but they figured it out independently). </P>
+<P>I suppose maybe it was because of me that the property was added and because of the person who added the property that the&nbsp;flag&nbsp; was used and because of the nameless MEPD dev that the flag no one knew about even existed.</P>
+<P>There may even be a moral here about not deleting stuff if you don't know why it's there, but like I said there was some due diligence involved and code can get heavy enough from the hacks and workarounds you know about, let alone the ones no one understands.</P>
+<P>The real moral of the story is that the original hack should have been commented better. This mistake was remedied in the re-inserted code:</P><FONT face="Consolas,Lucida Console,Courier New,Courier,Fixed"><B>
+<P>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; //&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Removing this code will break RTL<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; //&nbsp; support for VB6 applications/script, and possibly more.</P></B></FONT>
+<P>And this&nbsp;change (which would have kept the break from happening in the first&nbsp;place) will certainly keep it from being broken again.<BR>&nbsp;</P>
+<hr/><p><strong>Dmitry Ginzburg</strong> on 23 Feb 2010 2:15 AM:</p><div style="margin-left: 1em"><p>Michael, hello.</p>
+<p>First I'd like to thank you for this post, as I have exactly the problem you described in my VB6 application.</p>
+<p>I wonder if you have any suggestions on how to solve another problem - which is also related to multilingual support.</p>
+<p>The problem is best described here:</p>
+<p>&quot;LoadKeyboardLayout is very slow on Windows 7&quot;</p>
+<p><a rel="nofollow" target="_new" href="http://social.msdn.microsoft.com/Forums/en-US/windowscompatibility/thread/fa5589d5-4090-465d-93c4-05ca549d4cb1">http://social.msdn.microsoft.com/Forums/en-US/windowscompatibility/thread/fa5589d5-4090-465d-93c4-05ca549d4cb1</a> </p>
+<p>Although I develop in MS-Access, I believe this is essentially the same problem. The fields in MS-Access have &quot;KeyboardLanguage&quot; property. With this property set, it takes forever just to enter the field.</p></div>
+<p><strong>Michael S. Kaplan</strong> on 23 Feb 2010 9:02 AM:</p><div style="margin-left: 1em"><P>You already have high tier support engineers talking to core folks on the product team in that one, so I think you are already in better hands than mine. :-)</P>
+<P>Though I will say you are changing the keyboard way too quickly and you are doing it with the wrong function -- you should be storing HKL values and using them.</P>
+<P>i can't speak to the MSAccess issue, but I don't think they are using LoadKeyboardLayout, and once again it is doubtful one needs to switch as often as that....</P>
+<P>But this is very offtopic for here, if you want it on the list the Suggestion Box is probably better. :)</P></div>
+<p><strong>M.T.P</strong> on 2 Mar 2010 2:52 AM:</p><div style="margin-left: 1em"><p>what is the result of this topic?</p>
+<p>how we can fix?</p>
+<p>please upload a Project or Setup for fix this problem.</p>
+<p>thx</p></div>
+<p><strong>Michael S. Kaplan</strong> on 2 Mar 2010 2:57 AM:</p><div style="margin-left: 1em"><P>I gave the answer above, in <STRONG><FONT color=#ff0000>red</FONT></STRONG>. You must call Microsoft and ask for the fix in the KB article with the ID I listed.</P>
+<P>Or you can wait for the service pack, whenever that might be.</P>
+<P>No one has the legal right to upload a project or setup file.</P></div>
+<p><strong>Yuhong Bao</strong> on 14 Mar 2010 5:41 PM:</p><div style="margin-left: 1em"><p>It has been a month and the KB article is still not published.</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 14 Mar 2010 5:54 PM:</p><div style="margin-left: 1em"><p>It is internally published and people can request the hotfix from Product Support, which is all the KB article would have done anyway... and many have gotten the fix after following this advice.</p>
+</div>
+<p><strong>Yuhong Bao</strong> on 15 Mar 2010 11:23 PM:</p><div style="margin-left: 1em"><p>Online hotfix request now works though:</p>
+<p><a rel="nofollow" target="_new" href="http://support.microsoft.com/hotfix/KBHotfix.aspx?kbnum=979643">http://support.microsoft.com/hotfix/KBHotfix.aspx?kbnum=979643</a></p>
+</div>
+<p><strong>1120</strong> on 15 Apr 2010 8:15 AM:</p><div style="margin-left: 1em"><p>hi.</p>
+<p>this hotfix not work in win7 64 bit !</p>
+<p>please help us : ((</p></div>
+<p><strong>Michael S. Kaplan</strong> on 15 Apr 2010 8:24 AM:</p><div style="margin-left: 1em"><p>There is an x64 hotfix available, make sure you download the right one and it installs properly. After that if you still have problems (it worked for me) you can go through support (as with all hot fixes)....</p>
+</div>
+<p><strong>inbal</strong> on 4 Aug 2010 8:06 AM:</p><div style="margin-left: 1em"><p>i have never installed hotfix, and i am pretty new in vb6. i am programming on windows xp and install the program that i built on windows 7 and the RTL does not work (it does work on XP, just as described above). should i just run my windows 7 get the hotfix installed and after that all my vb6 application will work? should i do something else? i should install the hotfix on the computer with the windows 7 and not on the computer that i program in, right?</p>
+</div>
+<p><strong>inbal vb6</strong> on 4 Aug 2010 8:12 AM:</p><div style="margin-left: 1em"><p>i have never installed hotfix, and i am pretty new in vb6. i am programming on windows xp and install the program that i built on windows 7 and the RTL does not work (it does work on XP, just as described above). should i just run my windows 7 get the hotfix installed and after that all my vb6 application will work? should i do something else? i should install the hotfix on the computer with the windows 7 and not on the computer that i programming in (the one with XP), right?</p>
+</div>
+<p><strong>Yuhong Bao</strong> on 2 Sep 2010 9:44 PM:</p><div style="margin-left: 1em"><p>Yes, install it on the Win7 target computer.</p>
+</div>
+<p><strong>Yuhong Bao</strong> on 20 Jul 2011 10:29 PM:</p><div style="margin-left: 1em"><p>&quot;some old code supporting WinMe/NT4&quot;</p>
+<p>You mean Win9x?</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 21 Jul 2011 10:45 AM:</p><div style="margin-left: 1em"><p>No, I mean what I wrote -- it supports NT4 as well.</p>
+</div>
+<p><strong>Yuhong Bao</strong> on 31 Jul 2012 7:22 PM:</p><div style="margin-left: 1em"><p>WinMe did not exist back when VB6 was released.</p>
+</div>
+<hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2010/03/10 <a href="http://archives.miloush.net/michkap/archive/2010/03/10/9976075.html">They pushed out of the formatt[ing|er]</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2010/02/14/9963164.html" title="Whither RegionInfo?">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2010/02/13/9962894.html" title="How Windows 7 broke VB6&#39;s RightToLeft property, and how to get it fixed">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2010-02">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2010-02-13">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2010/02/13/9962894.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:35 GMT -->
+</html>

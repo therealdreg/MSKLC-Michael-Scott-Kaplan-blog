@@ -1,0 +1,30 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2005/11/09/490791.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:40 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Getting around the default system locale</title></head><body>
+<h1>Getting around the default system locale</h1>
+<p><em>by Michael S. Kaplan, published on 2005/11/09 08:27 -05:00, original URI: http://blogs.msdn.com/b/michkap/archive/2005/11/09/490791.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P><FONT face=Tahoma>Last month, Duncan asked me:</FONT></P><FONT face=Tahoma><FONT size=2>
+<BLOCKQUOTE dir=ltr style="MARGIN-RIGHT: 0px">
+<P><FONT face="Times New Roman"><EM>Awhile ago, I was running an app that required me to run in Japanese mode, so I've been doing that for quite a while.</EM></FONT></P>
+<P><FONT face="Times New Roman"><EM>In the mean time, I downloaded some videos online that were named in Chinese (in terms of content at least, I have no idea what encoding it uses). So far, everything works fine.</EM></FONT></P>
+<P><FONT face="Times New Roman"><EM>I stopped using the app and decided to switch back to English (I got sick of seeing the YEN sign instead of forward slash anyhow), but now I can't seem to play those files anymore. Windows Media Player seems to be fine, but Real Player would complain that (for example), "_??^2.rpm" cannot be found.</EM></FONT></P>
+<P><FONT face="Times New Roman"><EM>Do you have any idea what's causing this? Does it have to do with the encoding of the filenames?</EM></FONT></P></BLOCKQUOTE></FONT></FONT>
+<P><FONT face=Tahoma>No Duncan, it is not the encoding of the filenames -- the filenames on Windows are in Unicode.</FONT></P><FONT face=Tahoma>
+<P><FONT face=Tahoma>(I have definitely talked about the Yen as file path character in <a href="http://archives.miloush.net/michkap/archive/2005/10/12/479561.html">previously</A>).</FONT></P>
+<P>The problem is that the Real player is not using Unicode API functions to open the files, so when the Unicode name is converted to the default system code page, and if it does not contain the characters then they are converted to the default character (usually a question mark, definitely a question mark in this case).</FONT></P>
+<P><FONT face=Tahoma>So there is no way around this, other than changing the default system locale. Which does force you into that <a href="http://archives.miloush.net/michkap/archive/2005/02/18/376225.html"><STRONG>Ready... Set... Reboot!</STRONG></A> race.</FONT></P>
+<P><FONT face=Tahoma>Well, ok, there is one way, the <A href="http://www.microsoft.com/globaldev/tools/apploc.mspx">AppLocale tool</A>, which will let you change the setting for a single process. Some very excellent app compat work by Geoffrey Guo's team that takes the hack of an MSLU type layer and puts it on its ear by working a shim that does not require a recompile. </FONT></P>
+<P><FONT face=Tahoma><EM>As an aside, I remember meeting with&nbsp;Geoffrey back before AppLocale was written when he was asking about how MSLU did some of its wrappers (since AppLocale would have to have wrappers as well, around some key&nbsp;functions), and I assumed it would go nowhere.&nbsp;Let me tell you that&nbsp;I have never been so happy to be proven wrong, and I will never doubt Geoffrey again!</EM></FONT></P>
+<P><FONT face=Tahoma>Now it is awesome to have a tool to help with the case of applications that are not yet using Unicode.</FONT></P>
+<P><FONT face=Tahoma>But in the long run, the best way to handle the issue is to either:</FONT></P>
+<UL>
+<LI><FONT face=Tahoma>Convince the vendor to move in whole or part to Unicode, or</FONT> 
+<LI><FONT face=Tahoma>Find a vendor who has already been convinced.</FONT></LI></UL>
+<P><FONT face=Tahoma>If not for situations like the one Duncan is in, for the sake of more dire cirumstances such as languages that do not have a default system code page to represent them at all. Let's get these people to move to Unicode!</FONT></P>
+<P><FONT face=Tahoma></FONT>&nbsp;</P>
+<P><FONT face=Tahoma color=#ff1493><EM>This post brought to you by</EM> "<FONT size=6>¦</FONT>" <EM>(<A href="http://www.fileformat.info/info/unicode/char/00A6">U+00a6</A>, a.k.a. BROKEN BAR)</EM></FONT></P>
+<hr/><p><a id="490917" href="#490917">#</a> <strong>Mihai</strong> on 9 Nov 2005 1:27 PM:</p><div style="margin-left: 1em">There are several problems with AppLocale (some of them I would almost call bugs :-)<br></div>
+<hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2007/01/17 <a href="http://archives.miloush.net/michkap/archive/2007/01/17/1481756.html">Ungarbling the comments</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2005/11/09/490792.html" title="Shrinking URLs down">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2005/11/08/490495.html" title="More than you ever wanted to know about CP_SYMBOL">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2005-11">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2005-11-09">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2005/11/09/490791.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:40 GMT -->
+</html>

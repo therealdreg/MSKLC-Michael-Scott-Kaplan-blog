@@ -1,0 +1,73 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2011/04/06/10150467.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>The example was wrong, but the point of the example was spot on!</title></head><body>
+<h1>The example was wrong, but the point of the example was spot on!</h1>
+<p><em>by Michael S. Kaplan, published on 2011/04/06 07:01 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2011/04/06/10150467.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<p>Way back in December of 2005, in my <a href="http://archives.miloush.net/michkap/archive/2005/12/02/498876.html" title="Calendars in other languages"><strong>Calendars in other languages</strong></a> blog, I hinted at what would pretty much have been a terrible behavior in NLS:</p>
+<p style="padding-left: 30px;"><em><span style="font-family: times new roman,times;">Though to be honest, it bothers me more that the Hijri calendar is always in Arabic (even in the Divehi language's locale, where it makes no sense) than the Hebrew calendar is always in Hebrew. Because truthfully in the context of the Hebrew calendar it is in the most sensible language already, and having it in localized or even English form is not quite as important....</span></em></p>
+<p>That's all well and good, mind you.</p>
+<p>But&nbsp;the words here have one big flaw&nbsp;in them: when you use the Hijri calendar with Divehi, here are your month names:&nbsp;</p>
+<table cellpadding="5" cellspacing="5" border="1">
+<tbody>
+<tr>
+<td><span style="font-size: large;">މުޙައްރަމް</span></td>
+</tr>
+<tr>
+<td><span style="font-size: large;">ޞަފަރު</span></td>
+</tr>
+<tr>
+<td><span style="font-size: large;">ރަބީޢުލްއައްވަލް</span></td>
+</tr>
+<tr>
+<td><span style="font-size: large;">ރަބީޢުލްއާޚިރު</span></td>
+</tr>
+<tr>
+<td><span style="font-size: large;">ޖުމާދަލްއޫލާ</span></td>
+</tr>
+<tr>
+<td><span style="font-size: large;">ޖުމާދަލްއާޚިރާ</span></td>
+</tr>
+<tr>
+<td><span style="font-size: large;">ރަޖަބް</span></td>
+</tr>
+<tr>
+<td><span style="font-size: large;">ޝަޢްބާން</span></td>
+</tr>
+<tr>
+<td><span style="font-size: large;">ރަމަޟާން</span></td>
+</tr>
+<tr>
+<td><span style="font-size: large;">ޝައްވާލް</span></td>
+</tr>
+<tr>
+<td><span style="font-size: large;">ޛުލްޤަޢިދާ</span></td>
+</tr>
+<tr>
+<td><span style="font-size: large;">ޛުލްޙިއްޖާ</span></td>
+</tr>
+</tbody>
+</table>
+<p>Um, that ain't Arabic. Looks like Divehi to me!</p>
+<p>So, how did I miss this?</p>
+<p>Well, there is a special hack in place where if you are using CAL_HIJRI and the PRIMARYLANGID of your LCID is LANG_DIVEHI. </p>
+<p><em>The flag that is used internally is even named HACK_VALUE_ICALDIVEHI, so just in case you fear I'm being judgmental in calling it a hack, the authors of it felt the same way! Though I concur with their assessment. :-)</em></p>
+<p>And that hack gives you these month names that are not in Arabic!</p>
+<p>Now&nbsp;the implementation via this hack&nbsp;leads to a few problems:</p>
+<ul>
+<li>There are other locales like ur-PK (Urdu), fa-IR (Persian), tt-RU (Tatar), and ps-AF (Pashto) that can use the Hijri calendar, and all of them must use the Arabic month names;</li>
+<li>If you try to build a custom culture for Divehi that is not a replacement culture, you lose this special feature;</li>
+<li>There are other locales, some covered by Windows and some not, that also use the Hijri calendar -- and none of them can get it, even in a custom locale that adds the Hijri calendar.</li>
+</ul>
+<p>Perhaps&nbsp;all of these other cases have languages where people understand the Arabic language Hijri months, and actually prefer them. Though it seems fairly unlikely....</p>
+<p>The hack itself is pretty unwieldy; to fix it even for the non-custom cases would probably require a more sustainable technique than they are using.</p>
+<p>Solving it for custom locales would require extensions to the entire model that give ways to add the other names -- and such extensions to Windows, .Net, and Locale Builder all seem&nbsp;highly unlikely.</p>
+<p>So if you look at my original quote:</p>
+<p style="padding-left: 30px;"><em><span style="font-family: times new roman,times;">Though to be honest, it bothers me more that the Hijri calendar is always in Arabic (even in the Divehi language's locale, where it makes no sense) than the Hebrew calendar is always in Hebrew. Because truthfully in the context of the Hebrew calendar it is in the most sensible language already, and having it in localized or even English form is not quite as important....</span></em></p>
+<p>I guess you could say while totally inaccurate for Divehi -- the original subject of the quote -- it is eerily and almost prophetically true for every other locale that uses Hijri for a calendar but does not use (or prefer or even know!)&nbsp;Arabic for a language.</p>
+<p>And note I am assuming that&nbsp;all sixteen of the Arabic locales on Windows all support the exact same spelling of the Hijri month names, even though some have slightly different spelling of the Gregorian month names (and other dialectical differences as well). Maybe this is more reasonable to let slide, even if there are in-county differences in Iraq, Egypt, Libya, Algeria, Morocco, Tunisia, Oman, Yemen, Syria, Jordan, Lebanon, Kuwait, U.A.E., Bahrain, or Qatar. Certainly more than the ones I mentioned earlier.</p>
+<p>Somebody should remind me to report this issue (which has been present since Windows 2000!) as a bug at some point to fix the easiest of these issues (though even that involves a bunch of data collection followed by code change to use the new data). </p>
+<p>It seems to get a little worse each version, which does wonders for the statute of limitation on fixing such bugs. And it would be nice to finally do something for the long-standing lack of <a href="http://archives.miloush.net/michkap/archive/2005/12/02/498876.html" title="Calendars in other languages"><strong>Calendars in other languages</strong></a> that is happening to quite a few people (even if not the ones I mentioned as an example in my original bloc so long ago)....</p>
+<hr/><div style="margin-left: 1em"><em>no comments</em></div><hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2012/03/08 <a href="http://archives.miloush.net/michkap/archive/2012/03/08/10278921.html">The evolving Story of Locale Support, part 21: The Windows 8 Hijripalooza extraordinaire!</a></p><p>2011/12/28 <a href="http://archives.miloush.net/michkap/archive/2011/12/28/10251541.html">I won't Dari or double Dari you to knock our Persian calendar support...</a></p><p>2011/09/10 <a href="http://archives.miloush.net/michkap/archive/2011/09/10/10208823.html">It may be one of the reasons there are different Arabic locales</a></p><p>2011/08/01 <a href="http://archives.miloush.net/michkap/archive/2011/08/01/10191481.html">The only way to be impressed by Microsoft is to ignore calendars</a></p><p>2011/05/04 <a href="http://archives.miloush.net/michkap/archive/2011/05/04/10160919.html">Regarding the overthinking and underimplementing of names</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2011/04/07/10150950.html" title="You Go Girl^H^H^HoGlobal! Bring It!">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2011/04/05/10150001.html" title="Men Without Hats? Michael Without Shoes!">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2011-04">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2011-04-06">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2011/04/06/10150467.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+</html>

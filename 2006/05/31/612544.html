@@ -1,0 +1,55 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2006/05/31/612544.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:39 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Keeping out the undesirables?</title></head><body>
+<h1>Keeping out the undesirables?</h1>
+<p><em>by Michael S. Kaplan, published on 2006/05/31 23:45 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2006/05/31/612544.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P><FONT face=Tahoma>The NLS API function <A href="http://msdn.microsoft.com/library/en-us/intl/nls_19ev.asp">IsNLSDefinedString</A> is an exercise in social engineering within software.</FONT></P>
+<P><FONT face=Tahoma>Perhaps I should explain what the hell I am talking about. :-)</FONT></P>
+<P><FONT face=Tahoma>This function takes a string and essentially gives you a judgment about whether this string is one you can pass to the collation functions in the NLS API and expect to have something along the lines of reasonable, supportable results.</FONT></P>
+<P><FONT face=Tahoma>The process is simple. It enumerates every UTF-16 code unit in the string, and uses the following tests to make its decision.</FONT></P>
+<UL>
+<LI><FONT face=Tahoma>Does the&nbsp;code unit&nbsp;have weight?</FONT> 
+<UL>
+<LI><FONT face=Tahoma>If the answer is <STRONG>NO</STRONG>, then&nbsp;find out&nbsp;if a small list of characters that are considered valid despite their weightlessness, like U+00ad (SOFT HYPHEN)?</FONT> 
+<UL>
+<LI><FONT face=Tahoma>If the answer to that question is <STRONG>NO</STRONG>, then return <STRONG><FONT color=#ff0000>FALSE</FONT></STRONG> -- this is an undefined code unit as far as the operating system knows.</FONT> 
+<LI><FONT face=Tahoma>If the answer to that question is <STRONG>YES</STRONG>, then continue the test.</FONT></LI></UL>
+<LI><FONT face=Tahoma>If the answer is YES, then continue the test.</FONT></LI></UL>
+<LI><FONT face=Tahoma>Is the&nbsp;code unit&nbsp;in the PUA (Private Use Area) of Unicode?</FONT> 
+<UL>
+<LI><FONT face=Tahoma>If the answer is <STRONG>YES</STRONG>, then return <STRONG><FONT color=#ff0000>FALSE</FONT></STRONG>.</FONT> 
+<LI><FONT face=Tahoma>If the answer is <STRONG>NO</STRONG>, then continue the test.</FONT></LI></UL>
+<LI><FONT face=Tahoma>Is the code unit a&nbsp;low surrogate?</FONT> 
+<UL>
+<LI><FONT face=Tahoma>If the answer is <STRONG>YES</STRONG>, then return <STRONG><FONT color=#ff0000>FALSE</FONT></STRONG> -- an unpaired surrogate code unit was found.</FONT> 
+<LI><FONT face=Tahoma>If the answer is <STRONG>NO</STRONG>, then continue the test.</FONT></LI></UL>
+<LI><FONT face=Tahoma>If the code unit a high surrogate?</FONT> 
+<UL>
+<LI><FONT face=Tahoma>If the answer is <STRONG>YES</STRONG>, then is the&nbsp;next code point&nbsp;a low surrogate?</FONT> 
+<UL>
+<LI><FONT face=Tahoma>If the answer is <STRONG>YES</STRONG>, then skip one additional code unit and continue the test.</FONT> 
+<LI><FONT face=Tahoma>If the answer is <STRONG>NO</STRONG>, then&nbsp;return <FONT color=#ff0000><STRONG>FALSE</STRONG></FONT>&nbsp;-- an unpaired surrogate code unit was found.</FONT></LI></UL>
+<LI><FONT face=Tahoma>If the answer is <STRONG>NO</STRONG>, then continue the test.</FONT></LI></UL>
+<LI><FONT face=Tahoma>If you made it to this point, then proceed to the next code unit. If you are at the end of the string then return <STRONG><FONT color=#008000>TRUE</FONT></STRONG>.</FONT></LI></UL>
+<P><FONT face=Tahoma>Clearly, this is not a linguistic judgment, since the conditions are easily stated. Every UTF-16 code unit in the string:</FONT></P>
+<OL>
+<LI><FONT face=Tahoma>has weight or is on a small list of valid weightless code units;</FONT> 
+<LI><FONT face=Tahoma>Is not in the PUA;</FONT> 
+<LI><FONT face=Tahoma>Is not an unpaired surrogate.</FONT></LI></OL>
+<P><FONT face=Tahoma>Calling a string that is does not pass this test <STRONG>INVALID</STRONG> has interesting consequences, since it means that <A href="http://msdn.microsoft.com/library/en-us/intl/nls_19ev.asp">IsNLSDefinedString</A>&nbsp;is not just returning whether to expect determinsm in collation function results. If that were the case then only the point #1 would be needed.</FONT></P>
+<P><FONT face=Tahoma>Two questions come up at this point:</FONT></P>
+<P><FONT face=Tahoma><STRONG>Question #1: Why judge the PUA so harshly, if&nbsp;NLS collation functions will return deterministic results?</STRONG></FONT></P>
+<P><FONT face=Tahoma>The issue here is that the private use area has&nbsp;no real context or meaning beyond that created by private agreement. Therefore, there is no way that NLS collation functions can treat such a string as being valid, since its meaning is unknown to the operating system.</FONT></P>
+<P><FONT face=Tahoma>So <A href="http://msdn.microsoft.com/library/en-us/intl/nls_19ev.asp">IsNLSDefinedString</A>&nbsp;makes sure that situations that require an answer to&nbsp;the question of&nbsp;determinism are not given false answers based on strings that do not have a known, valid value.</FONT></P>
+<P><FONT face=Tahoma><STRONG>Question #2: Why judge unpaired surrogate code points to harshly, if NLS collation functions will return deterministic results?</STRONG></FONT></P>
+<P><FONT face=Tahoma>The issue here is that an unpaired surrogate is given the same status in Unicode as an undefined code point, so <A href="http://msdn.microsoft.com/library/en-us/intl/nls_19ev.asp">IsNLSDefinedString</A>&nbsp;returns FALSE here just as it would for any other undefined code point.</FONT></P>
+<P><FONT face=Tahoma>So if you use <A href="http://msdn.microsoft.com/library/en-us/intl/nls_19ev.asp">IsNLSDefinedString</A>, you are being influenced to do certain things with your application to make sure that these "undesirable" code units are not treated as being valid.</FONT></P>
+<P><FONT face=Tahoma>A very geeky form of social engineering, as NLS tries to make the character "neighborhood" a nicer place for the other characters to live!</FONT></P>
+<P><FONT face=Tahoma>Could this be expanded in the future to take care of other sequences such as <A href="http://archives.miloush.net/michkap/archive/2006/03/07/545097.html"><STRONG>too many diacritics</STRONG></A>&nbsp;and other potential undesirables? Well, perhaps -- in a new major version only though, of course -- but the line so far has been drawn to differentiate between what has clear meaning in Unicode vs. what does not; it is unclear whether it makes sense in the long run to extend the coverage to handle implementation-specific limits....</FONT></P>
+<P><FONT face=Tahoma></FONT>&nbsp;</P>
+<P><FONT face=Tahoma color=#ff1493><EM>This post brought to you by <A href="http://www.fileformat.info/info/unicode/char/00ad">U+00ad</A>, a.k.a. SOFT HYPHEN</EM></FONT></P>
+<hr/><p><a id="614361" href="#614361">#</a> <strong>Maurits [MSFT]</strong> on 2 Jun 2006 12:10 PM:</p><div style="margin-left: 1em">If I want to limit my Active Directory to (say) Unicode 3.1, can I pass that in the NLSVERSIONINFO object? &nbsp;Do the NLS version numbers correspond to the Unicode releases?<br><br><a rel="nofollow" target="_new" href="http://msdn.microsoft.com/library/default.asp?url=/library/en-us/intl/nls_Versioning.asp">http://msdn.microsoft.com/library/default.asp?url=/library/en-us/intl/nls_Versioning.asp</a></div>
+<hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2011/08/12 <a href="http://archives.miloush.net/michkap/archive/2011/08/12/10195062.html">There's no "I" in IDN part 8: Punycode don't do the PUA</a></p><p>2011/06/24 <a href="http://archives.miloush.net/michkap/archive/2011/06/24/10178528.html">An irresistible force walks into an immovable object (aka the Thai that binds us)</a></p><p>2007/12/08 <a href="http://archives.miloush.net/michkap/archive/2007/12/08/6708151.html">Social engineering in Windows Explorer....</a></p><p>2006/11/12 <a href="http://archives.miloush.net/michkap/archive/2006/11/12/1064717.html">Maybe it is the name that is 'Undesirable' ?</a></p><p>2006/11/11 <a href="http://archives.miloush.net/michkap/archive/2006/11/11/1061686.html">Keeping out more of the undesirables</a></p><p>2006/10/22 <a href="http://archives.miloush.net/michkap/archive/2006/10/22/854820.html">It is Clear[Type] how the quality is being managed</a></p><p>2006/07/22 <a href="http://archives.miloush.net/michkap/archive/2006/07/22/675085.html">Behind the return of the Unicode IME</a></p><p>2006/07/10 <a href="http://archives.miloush.net/michkap/archive/2006/07/10/661427.html">The PUA isn't complex enough</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2006/06/01/613641.html" title="Presentation forms in Microsoft keyboards?">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2006/05/31/611648.html" title="Beware of the whining!">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2006-05">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2006-05-31">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2006/05/31/612544.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:39 GMT -->
+</html>

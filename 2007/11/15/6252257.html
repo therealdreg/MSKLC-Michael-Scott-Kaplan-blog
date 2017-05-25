@@ -1,0 +1,77 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2007/11/15/6252257.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:37 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Michael's Keyboard Laws for Developers, Part 1</title></head><body>
+<h1>Michael's Keyboard Laws for Developers, Part 1</h1>
+<p><em>by Michael S. Kaplan, published on 2007/11/15 07:46 -08:00, original URI: http://blogs.msdn.com/michkap/archive/2007/11/15/6252257.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostOld -->
+<P><EM>Another exciting series, brought to you by <A class="" href="http://blogs.msdn.com/michkap" mce_href="http://blogs.msdn.com/michkap">SiaO</A>!</EM></P>
+<P>If you are a developer and you deal with the keyboard at all, there really are good rules to live by.</P>
+<P><EM>I am going to call them laws, but as something of a Jeffersonianesque&nbsp;rational anarchist, my feelings on <STRONG>LAW</STRONG> are not as clearcut as yours might be. So feel free to mentally consider them my keyboard <STRONG>guidelines</STRONG> or keyboard <STRONG>best practices</STRONG> if the series title seems a tad too pretentious for your tastes.</EM> :-)</P>
+<P>The first law is simple enough to state but not always obvious to developers, unless they really think about it carefully.</P>
+<BLOCKQUOTE>
+<P><STRONG><FONT size=4>VK_A is not always "A"</FONT></STRONG></P></BLOCKQUOTE>
+<P>Just yesterday two&nbsp;very similar&nbsp;questions came in from two different people that somewhat relate to this very law --&nbsp;this one:</P>
+<BLOCKQUOTE>
+<P><EM><FONT face="times new roman,times">I have a console app that prompts the user for a confirmation when performing certain commands.&nbsp; The prompt is of the form “Are you really sure that you want to do this destructive command? (Y/N)”.&nbsp;&nbsp; The code reads from stdin to get the key pressed by the user.&nbsp; It currently compares the char to ‘Y’ or ‘y’ to indicate confirmation.&nbsp; Since this doesn’t localize I am wondering if there is a better way to solve this issue than putting IDS_CONFIRMED “Y” into the rc file and testing the uppercased key pressed with this string.</FONT></EM></P></BLOCKQUOTE>
+<P>and this other one:</P>
+<BLOCKQUOTE>
+<P><EM><FONT face="times new roman,times">Is there guideline for ‘yes’/’no’ user response for console applications in terms of globalization? In other words, is it ok for console apps to blindly take ‘y’ as ‘Yes’, or console apps should be implemented to take localized ‘y’ such as ‘o’ for fr-fr? I found one of console apps on LHS that takes only ‘y’ as Yes since ‘y’ (or ‘Y’) user response is hardcoded. Any suggestions/guidelines are appreciated.</FONT></EM></P></BLOCKQUOTE>
+<P>Now between both messages, you can see two very similar and interesting trends here:</P>
+<UL>
+<LI>Each of them understands that there is a problem here in the notion of hardcoding a string and they are struggling to decide how to make sure&nbsp;a good localizability plan emerges, and</LI>
+<LI>Neither&nbsp;on them&nbsp;has considered that first law of mine (<STRONG>VK_A is not always "A"</STRONG>), and&nbsp;the relevant&nbsp;logical corollaries (that <STRONG>VK_Y is not always "Y"</STRONG> and <STRONG>VK_N is not always "N"</STRONG>).</LI></UL>
+<P><EM>There is another related law that I will cover tomorrow, by the way!</EM></P>
+<P>To make this a localization problem is to assume that the input language always covers the user interface language.</P>
+<P>Now we'll ignore the Vista/Speech example of this assumption (ref:<A class="" href="http://archives.miloush.net/michkap/archive/2007/09/01/4693025.html" mce_href="http://archives.miloush.net/michkap/archive/2007/09/01/4693025.html"><STRONG>here</STRONG></A> and <A class="" href="http://archives.miloush.net/michkap/archive/2007/09/03/4729217.html" mce_href="http://archives.miloush.net/michkap/archive/2007/09/03/4729217.html"><STRONG>here</STRONG></A>) and instead appeal to logic.</P>
+<P>There are 158 keyboard layout DLLs&nbsp;that ship in&nbsp;Vista (we'll ignore IMEs for now), covering the input of most of the 208 locales.</P>
+<P>Yet there are only 35 full language SKUs and&nbsp;~65 LIPs (Language Interface Packs).</P>
+<P>And not every keyboard has script coverage in a UI language, let alone full language coverage.</P>
+<P>Which means that even if you ignore the ability to switch to some random different keyboard, the fact is that some users will have as single keyboard chosen that no UI language will cover.</P>
+<P>So this problem that both of the questions were asking about CANNOT be a localization or localizability problem, unless we choose to solve the problem poorly, or incompletely.</P>
+<P>Alright, now I have said how NOT to solve the problem, which begs the question of how to contemplate solving it. </P>
+<P>Anyone out there have&nbsp;an idea in mind about how to solve this one? :-)</P>
+<P mce_keep="true">&nbsp;</P>
+<P><FONT color=#ff00ff><EM>This post brought to you by</EM> <FONT size=5>y</FONT> <EM>(<A class="" href="http://www.fileformat.info/info/unicode/char/0079" mce_href="http://www.fileformat.info/info/unicode/char/0079">U+0079</A>, a.k.a. LATIN SMALL LETTER Y)</EM></FONT></P>
+<hr/><p><a id="6269647" href="#6269647">#</a> <strong>Ben Cooke</strong> on Thursday, November 15, 2007 1:25 PM:</p><div style="margin-left: 1em"><p>I'm not sure I'm completely following the chain of thought in this entry. Let's see where I lost it...</p>
+<p> * The people asking the questions want to get a positive or negative response from the user in a console app.</p>
+<p> * They want to localize it so that the responses are made in the UI language.</p>
+<p> * You say that this is a problem because the input language might not match the UI language.</p>
+<p>So what issues result from this? I guess the localized &quot;y&quot; or &quot;n&quot; might result in asking the user to type something that isn't in his keyboard layout, but presumably sticking to latin letters would mean that the necessary characters are available *somewhere*.</p>
+<p>I'm also not really sure how this relates to the virtual keycodes. I'm a little rusty, but I believe they basically relate to the physical key on the keyboard, not to the character generated when pressing that key. In that case, presumably what VK_Y generates doesn't really matter to the app because it's just going to see the bunch of unicode (or &quot;OEM charset&quot;) characters that result. They say &quot;Do you want to continue? (&#230;/&#182;)&quot; (to pick two characters at random) and then I'm left to press whatever key combo produces those characters in my current input locale. (Which is AltGr+A and AltGr+R respectively.)</p>
+<p>The best I can come up with as a possible solution, given my incomplete understanding of what exactly the problem is, is to turn the console app into a GUI app and have the user click on a button marked &quot;Kuk&#233;&quot;! :)</p></div>
+<p><a id="6270845" href="#6270845">#</a> <strong>Michael S. Kaplan</strong> on Thursday, November 15, 2007 2:03 PM:</p><div style="margin-left: 1em"><p>Um, if you tell a customer type &quot;Y&quot;or &quot;N&quot; and the keyboard has no such thing on their keyboard, then there is nothing for them to type.</p>
+<p>Since I can change my keyboard layout, the letter might be unavailable to me.</p>
+<p>So the advice the user is given is to type a letter that they cannot type.</p>
+<p>Some would say this is not as good plan. others, realizing it is Microsoft, would say that this happens all the time so it is not a big deal if the instructions cannot be followed by users.</p></div>
+<p><a id="6270888" href="#6270888">#</a> <strong>Michael S. Kaplan</strong> on Thursday, November 15, 2007 2:05 PM:</p><div style="margin-left: 1em"><P>Further -- the developer always assumes --</P>
+<P>1) Latin is available somewhere, and </P>
+<P>2) The VK_* values have meaning that they can use</P>
+<P>Both points are not true.</P></div>
+<p><a id="6272024" href="#6272024">#</a> <strong>John Cowan</strong> on Thursday, November 15, 2007 2:50 PM:</p><div style="margin-left: 1em"><p>I don't understand this (but I'm far from being a Windows maven). &nbsp;Console applications are written in one or more languages and are operating in that language. &nbsp;This has nothing to do with Windows UI languages particularly: a console app could be written to talk to the user in Ainu, even though there's no Ainu-localized version of Windows. &nbsp;Ainu is normally written in extended katakana, so then it's a matter of making the program accept suitable characters (*not* keystrokes) representing the Ainu words for &quot;yes&quot; and &quot;no&quot;.</p>
+<p>A more serious i18n problem is that lots of languages don't have general purpose &quot;yes&quot; and &quot;no&quot; words: typically, as in the case of Irish, they repeat the verb with or without a negation marker. &nbsp;That means that general-purpose AskYesOrNo routines are bad i18n; the translator needs to be able to specify separate &quot;Yes&quot; and &quot;No&quot; strings for each use in the code, not merely at a single place.</p></div>
+<p><a id="6276412" href="#6276412">#</a> <strong>Maurits</strong> on Thursday, November 15, 2007 5:11 PM:</p><div style="margin-left: 1em"><p>Do any languages' translations of &quot;yes&quot; and &quot;no&quot; start with the same character?</p></div>
+<p><a id="6278133" href="#6278133">#</a> <strong>Tore</strong> on Thursday, November 15, 2007 5:58 PM:</p><div style="margin-left: 1em"><p>Well, some keys are probably constant:</p>
+<p>&quot;Press enter to confirm; any other key to abort.&quot;</p></div>
+<p><a id="6278947" href="#6278947">#</a> <strong>Michael S. Kaplan</strong> on Thursday, November 15, 2007 6:19 PM:</p><div style="margin-left: 1em"><p>Hey John,</p>
+<p>In the world of Windows, the command line utilities often have the same language as Windows -- which would mean that if localized they would tend to follow UI language of Windows....</p>
+<p>But the main point is that treating the prompts as a loc. issue leads to serious issues -- you are in fact indirectly pointing out the road to the solution here. :-)</p></div>
+<p><a id="6280134" href="#6280134">#</a> <strong>C++ guy</strong> on Thursday, November 15, 2007 6:59 PM:</p><div style="margin-left: 1em"><p>Number the options like:</p>
+<p>1. Yes</p>
+<p>2. No</p>
+<p>Numbers are available on every keyboard layout, no?</p></div>
+<p><a id="6283619" href="#6283619">#</a> <strong>Michael S. Kaplan</strong> on Thursday, November 15, 2007 8:58 PM:</p><div style="margin-left: 1em"><p>Hey c++ guy -- yes, that is in fact the solution! :-)</p>
+<p>The only times that Arabic-Indic digits are not available are some cases where nastive digits are, but then the understanding is still there. It is the way around the inherent limitations in the conventional locakizability solutions....</p></div>
+<p><a id="6285530" href="#6285530">#</a> <strong>Cheong</strong> on Thursday, November 15, 2007 10:01 PM:</p><div style="margin-left: 1em"><p>How about the arrows? Are they supposed to change on keyboard layout?</p>
+<p>Perheps &quot;&lt;-&quot; for Yes and &quot;-&gt;&quot; for No, with the &quot;Yes(&lt;-)&quot; button on the left and &quot;No(-&gt;)&quot; button on the right will do?</p></div>
+<p><a id="6293296" href="#6293296">#</a> <strong>Michael S. Kaplan</strong> on Friday, November 16, 2007 3:06 AM:</p><div style="margin-left: 1em"><p>Hi Cheong,</p>
+<p>Arrows are an interesting idea, though there are some times that they are not practical given their meta behavior and status -- people expect the cursor to move and such....</p>
+<p>But in some situations they could also work here. :-)</p></div>
+<p><a id="6297809" href="#6297809">#</a> <strong>Cheong</strong> on Friday, November 16, 2007 5:45 AM:</p><div style="margin-left: 1em"><p>Recently I've read some interesting discussion (in Chinese) on usability. Someone argue that only using the arrows is better, because even those low-grade(in the sense of both &quot;marks&quot; and &quot;education level&quot;) people can handle the game console controllers without problem. So if your action involves non-input related operation and you want to support keyboard-only control, you'd better limit yourself to the choice of arrows plus select/cancel button.</p>
+<p>That leads to this thought. :)</p></div>
+<p><a id="6399427" href="#6399427">#</a> <strong>gjcoram</strong> on Monday, November 19, 2007 7:51 AM:</p><div style="margin-left: 1em"><p>This law (part 1) seems to be focused on console apps; does the same sort of problem arise in keyboard shortcuts? &nbsp;(eg, I've got a menu that says Ctrl-J will do something, and my .rc file has an accelerator defined for VK_J with VIRTKEY, CONTROL, NOINVERT -- though, I just checked and the .rc file has &quot;J&quot; not VK_J).</p>
+<p>And: how does it happen that VK_A is not &quot;A&quot;? &nbsp;Is it in the keyboard itself, or in the keyboard driver? &nbsp;I've got a US keyboard, so suppose I ask for the German layout (where Y and Z are swapped) and press the Y key. &nbsp;Does my app get VK_Y which is really a Z, or does it get VK_Z?</p></div>
+<p><a id="6401726" href="#6401726">#</a> <strong>Michael S. Kaplan</strong> on Monday, November 19, 2007 9:43 AM:</p><div style="margin-left: 1em"><p>Well, you have to keep in mind that there are plenty of other language keyboards where there is no &quot;A&quot; on them -- but there is still a VK_A, though the user probably has no idea that uch a thing is there....</p>
+<p>In the German case, the VK_A moves around....</p></div>
+<hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2012/05/02 <a href="http://archives.miloush.net/michkap/archive/2012/05/02/10299780.html">Who owns keyboard testing?</a></p><p>2012/04/26 <a href="http://archives.miloush.net/michkap/archive/2012/04/26/10297903.html">Michael's Keyboard Laws for Developers, Part 5</a></p><p>2007/11/21 <a href="http://archives.miloush.net/michkap/archive/2007/11/21/6456468.html">Michael's Keyboard Laws for Developers, Part 4</a></p><p>2007/11/20 <a href="http://archives.miloush.net/michkap/archive/2007/11/20/6420601.html">Michael's Keyboard Laws for Developers, Part 3</a></p><p>2007/11/16 <a href="http://archives.miloush.net/michkap/archive/2007/11/16/6298366.html">Michael's Keyboard Laws for Developers, Part 2</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2007/11/15/6264439.html" title="&#39;But there&#39;s no Latins in our Divehi font, Duckman.&#39; &#39;Well, they don&#39;t *speak* Latin in the Maldives, do they?&#39;">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2007/11/14/6212351.html" title="Leaving our mark on the keyboards we create">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2007-11">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2007-11-15">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2007/11/15/6252257.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:37 GMT -->
+</html>

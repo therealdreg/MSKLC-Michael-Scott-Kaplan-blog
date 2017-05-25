@@ -1,0 +1,29 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2007/03/04/1806219.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:38 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>String Indexing?</title></head><body>
+<h1>String Indexing?</h1>
+<p><em>by Michael S. Kaplan, published on 2007/03/04 18:31 -05:00, original URI: http://blogs.msdn.com/b/michkap/archive/2007/03/04/1806219.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P>Sometimes I see a documentation topic that bothers me a little bit.</P>
+<P>And then occasionally I'll see one that bothers me&nbsp;a lot.</P>
+<P>Like that <A href="http://msdn2.microsoft.com/en-us/library/xk2wykcz.aspx"><FONT face=Tahoma>.NET Framework Developer's Guide: Custom Case Mappings and Sorting </FONT></A>topic that I complained about in <A class="" href="http://archives.miloush.net/michkap/archive/2006/05/26/607881.html" mce_href="http://archives.miloush.net/michkap/archive/2006/05/26/607881.html"><STRONG>Custom Case&nbsp;Mappings?</STRONG></A></P>
+<P>(Note that none of that topic seems to have been fixed, though I had suggested the need for such when I posted my critique!)&nbsp;</P>
+<P>Well, I was pointed another&nbsp;topic the other day -- this time it is the <A class="" href="http://msdn2.microsoft.com/en-us/library/7h9tk6x8(VS.80).aspx" mce_href="http://msdn2.microsoft.com/en-us/library/7h9tk6x8(VS.80).aspx">.NET Framework Developer's Guide: String Indexing</A> topic.</P>
+<P>It is in the VS 2005 documentation, yet talks about none of the new Stringinfo methods that I talk about in <STRONG><A class="" href="http://archives.miloush.net/michkap/archive/2005/04/29/413366.html" mce_href="http://archives.miloush.net/michkap/archive/2005/04/29/413366.html">this post</A></STRONG> which were added specifically because there was so much feedback about how the existing methods were confusing.</P>
+<P>Bummer.</P>
+<P>And then there is this bit of text:</P>
+<BLOCKQUOTE>
+<P><FONT face="times new roman,times"><EM>Next, a string containing surrogate pairs is created. In <TT>strSurrogates</TT>, for example, the Unicode code U+DACE represents a high surrogate and the Unicode code U+DEFF represents a low surrogate. Together, these codes represent a surrogate pair and must be parsed as a single text element.</EM></FONT></P></BLOCKQUOTE>
+<P>Now I am all for getting more people to be aware of supplementary characters and the surrogate pairs by which they are encoded in UTF-16. But a quick scan of the ranges shown in&nbsp;<STRONG><A class="" href="http://archives.miloush.net/michkap/archive/2005/09/24/472543.html" mce_href="http://archives.miloush.net/michkap/archive/2005/09/24/472543.html">The Basics of Supplementary</A></STRONG> point out that the high surrogate in question (<A class="" href="http://www.fileformat.info/info/unicode/char/dace" mce_href="http://www.fileformat.info/info/unicode/char/dace">U+dace</A>) is used for the representation of Plane 12 characters.</P>
+<P>And plane 12 is currently reserved, has <A class="" href="http://archives.miloush.net/michkap/archive/2005/01/18/355210.html" mce_href="http://archives.miloush.net/michkap/archive/2005/01/18/355210.html"><STRONG>no weight in sorting</STRONG></A>, and has no proposed, planned, or even&nbsp;provisionally thought to be needed&nbsp;allocation in the <A class="" href="http://www.unicode.org/roadmaps/index.html" mce_href="http://www.unicode.org/roadmaps/index.html">Unicode Roadmap</A>.</P>
+<P>Which on a scale of 1 to lame does not do so well as examples go....</P>
+<P>The end note kind of takes the cake though, for me:</P>
+<BLOCKQUOTE>
+<P><FONT face="times new roman,times"><EM>If you execute this code in a console application, the specified Unicode text elements will not be displayed correctly because the console environment does not support all the Unicode characters.</EM></FONT></P></BLOCKQUOTE>
+<P>Okay, so why did we go through this? </P>
+<P>Summary: why would the sample be built around an Arabic script&nbsp;example which can't ever work in the console and a weightless&nbsp;plane 12 example which can't ever work anywhere, wrapped up in the part of the technology that was deemed so hard to understand that we added a whole new model to how to handle them that is documented in the very <A class="" href="http://msdn2.microsoft.com/en-us/library/system.globalization.stringinfo_members(VS.80).aspx" mce_href="http://msdn2.microsoft.com/en-us/library/system.globalization.stringinfo_members(VS.80).aspx">StringInfo class</A> that the Developer's Guide topic points to?</P>
+<P mce_keep="true">&nbsp;</P>
+<P><FONT color=#ff00ff><EM>This post brought to you by <A class="" href="http://www.fileformat.info/info/unicode/char/dace" mce_href="http://www.fileformat.info/info/unicode/char/dace">U+dace</A>, a HIGH SURROGATE code value used for Plane 12 characters</EM></FONT></P>
+<hr/><div style="margin-left: 1em"><em>no comments</em></div><hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2007/03/04/1806607.html" title="Questions about ESE may not always be EASY for me">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2007/03/04/1802729.html" title="The non-ASCII solution to the .NET Unicode Puzzle">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2007-03">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2007-03-04">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2007/03/04/1806219.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:38 GMT -->
+</html>

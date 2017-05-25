@@ -1,0 +1,29 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2008/12/17/9232191.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:35 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Call Marlett symbolic or the problems might be quite real...</title></head><body>
+<h1>Call Marlett symbolic or the problems might be quite real...</h1>
+<p><em>by Michael S. Kaplan, published on 2008/12/17 18:01 -05:00, original URI: http://blogs.msdn.com/b/michkap/archive/2008/12/17/9232191.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<p>Earlier today, <b>tshirk</b> (probably not his real name?) asked via the Contact link:</p>
+<blockquote>
+<p><i><font face="times new roman,times">Okay, I'm sorry.&nbsp; This is a support question.&nbsp; I suck.<br><br>I'm just asking if you've ever heard of applications that use Marlett (super secret Windows system symbol font) being unable to use it over an RDP connection?<br><br>We've got a bug in a 3rd party component where, when it creates PDFs from HTML forms, it uses the Marlett check to simulate the chekbox on a webpage.&nbsp; Works great, but when run within a remote desktop connection the Marlett font is substituted with Arial, which makes checks look like Bs.<br><br>If you have ever heard of anything like this, or if you are interested enough in this weird situation to look into it, any hints you can give us will be greatly appreciated.<br><br>If not, don't worry about it.&nbsp; I'm pushing to replace all the damn checkboxes on the HTML forms with bitmaps and be done with it....</font></i></p>
+</blockquote>
+<p>Now I know that I tell people not to expect support from me, and they shouldn't.</p>
+<p>But sometimes the question will intrigue me, so I will jump in anyway. </p>
+<p>Besides, there is just something about Marlett (last discussed in <b><a href="http://archives.miloush.net/michkap/archive/2006/01/26/517738.html" mce_href="http://archives.miloush.net/michkap/archive/2006/01/26/517738.html">A bit about Marlett</a></b>). </p>
+<p>My psychic debugging powers leads me in a specific direction here -- this is a bug that I feel pretty comfortable laying at the feet of whoever/whatever component creates the PDFs.</p>
+<p>In fact, this is a bug that was reported during Office 2007 (pre-RTM) in their own "save as PDF" functionality, and fixed prior to RTM.<br></p>
+<p>Does it count as cheating on the "psychic debugging" if you remember running across the bug being reported by someone else, somewhere else? :-)</p>
+<p>The circumstances leading up to the bug are something I talked a bit about in blogs like <b><a href="http://archives.miloush.net/michkap/archive/2007/12/16/6780417.html" mce_href="http://archives.miloush.net/michkap/archive/2007/12/16/6780417.html">How best to keep the font switcheroo from happening?</a></b>, where I emphasize that functions creating fonts are actually <b>requests</b> for fonts based on parameters passed to the functions themselves.</p>
+<p>In this case, if you create a font with the name <b>Marlett</b> (and likely other symbol fonts) but do not specify SYMBOL_CHARSET, there are some code paths, commonly used by PDF renderers if our sample of two is scientific enough, that will end up seeing the font mapper in GDI substitute a different font.</p>
+<p>Of course many tools that create PDFs don't tend to allow one to specify information at this level of detail, but if in this case the component allows one to specify the information then there is a simple workaround....</p>
+<p><br></p>
+<p><font color="#ff00ff"><i>This post brought to you by</i><font size="6"> B 
+</font><i>(<a href="http://www.fileformat.info/info/unicode/char/fe99" class="" mce_href="http://www.fileformat.info/info/unicode/char/fe99">U+0042</a>, aka 
+LATIN CAPITAL LETTER B)</i></font> <br></p>
+<hr/><p><strong>Si</strong> on 20 Dec 2008 10:12 PM:</p><div style="margin-left: 1em"><p>As I recall Webdings mirrors the main Marlett mappings - might work as an alternate. </p></div>
+<p><strong>Michael S. Kaplan</strong> on 21 Dec 2008 12:07 AM:</p><div style="margin-left: 1em"><p>I think using Webdings can lead to the same problem if the font isn't marked with the symbol charset.</p>
+</div>
+<hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2008/12/18/9234330.html" title="Whither ICU.NET? I don&#39;t see it thither...">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2008/12/16/9225748.html" title="Grody to the Max[Date]!">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2008-12">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2008-12-17">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2008/12/17/9232191.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:35 GMT -->
+</html>

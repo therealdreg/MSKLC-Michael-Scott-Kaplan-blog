@@ -1,0 +1,36 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2007/03/30/1995343.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:38 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>When a font looks like crap....</title></head><body>
+<h1>When a font looks like crap....</h1>
+<p><em>by Michael S. Kaplan, published on 2007/03/30 14:50 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2007/03/30/1995343.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P>Ravi asks:</P>
+<BLOCKQUOTE><FONT face="times new roman,times" size=2>
+<P><EM>Hello Michael,<BR><BR>I am a regular reader of your blog and I find it very entertaining and informative.<BR><BR>My problem is this: Gautami font in XP and Vista is absolute crap for reading Telugu documents on the web. You previously had a post comparing Gautami with other Telugu fonts on the web and how crappy it is even to untrained eyes.<BR><BR>I am trying to find a way to set the font preferences in Windows so that Windows would use my font (the free Vemana or Pothana2000 unicode fonts). The only way I could avoid Gautami is by deleting it from the fonts. Is there another way? In Linux you could define a custom fontconfig file to override the settings. Is there a Windows equivalent?<BR><BR>Thanks,<BR><BR>Ravi</EM></P></FONT></BLOCKQUOTE>
+<P><EM>(I'll talk about the issues here&nbsp;related to UI vs. document fonts in another post soon!)</EM></P>
+<P>Unfortunately, there are only two paths one can take here -- either one can use the existing font fallback logic in Uniscribe, Or one can do one's own fallback.</P>
+<P>I talked to some people over here like Nick and Simon, and the only other option (which is not very feasible in the long run) is to replace the font with one that has the exact same name. But doing this leads to all kinds of other problems, as you might be able to imagine (even before you get into the whole unsupported configuration and potential legal issues that could arise here related to licensing and design trademarks.</P>
+<P>Sorry about that. ;-(</P>
+<P>Now for fonts on the web one can change one's font choice for the script in order to see web pages using Telugu with whatever font they choose. This might work around the limitation quite effectively!</P>
+<P mce_keep="true">&nbsp;</P>
+<P><FONT color=#ff00ff><EM>This post brought to you by</EM> ౠ <EM>(<A class="" href="http://www.fileformat.info/info/unicode/char/0c60" mce_href="http://www.fileformat.info/info/unicode/char/0c60">U+0c60</A>, a.k.a. TELUGU LETTER VOCALIC RR)</EM></FONT></P>
+<hr/><p><a id="1995480" href="#1995480">#</a> <strong>Rosyna</strong> on 30 Mar 2007 3:23 PM:</p><div style="margin-left: 1em"><p>&quot;the only other option is to replace the font with one that has the exact same name.&quot;</p>
+<p>Uhm... Which name? File name, one of the 128 entries in the font name table, et cetera?</p>
+<p>This is why Helvetica Neue angers me so much. I have about 50 thousand different fonts that have those two words somewhere in some name in the various tables. And *I'm* supposed to figure out which one some random app developer decided to use in their UI. </p>
+</div>
+<p><a id="1995632" href="#1995632">#</a> <strong>Michael S. Kaplan</strong> on 30 Mar 2007 4:04 PM:</p><div style="margin-left: 1em"><p>Well, in practice the name they register that gets added to the font cache.</p>
+<p>Though since it is a bad idea anyway, the fact that it is hard is just a bonus to keep users safe from the people who might otherwise try to do this. :-)</p>
+</div>
+<p><a id="1996772" href="#1996772">#</a> <strong>Damien Guard</strong> on 30 Mar 2007 8:41 PM:</p><div style="margin-left: 1em"><p>The registry key HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\FontSubstitutes provides some facilities for mapping although again you'd have to remove the original font file.</p>
+<p>Don't really understand how IE is getting to this font so this tip may well be useless.</p>
+<p>[)amien</p>
+</div>
+<p><a id="1996922" href="#1996922">#</a> <strong>Michael S. Kaplan</strong> on 30 Mar 2007 9:23 PM:</p><div style="margin-left: 1em"><P>It gets there through Uniscribe font fallback -- so that registry key is unlikely to help or change the behavior, though....</P></div>
+<p><a id="1997738" href="#1997738">#</a> <strong>Pavanaja U B</strong> on 31 Mar 2007 1:00 AM:</p><div style="margin-left: 1em"><p>Hardcoding of mapping of font names to scripts in Uniscribe is troubling everyone. Why can't you make some sort of customization option for Uniscribe? Better still, make it opensource :)</p>
+<p>-Pavanaja</p></div>
+<p><a id="2001015" href="#2001015">#</a> <strong>Michael S. Kaplan</strong> on 31 Mar 2007 1:34 PM:</p><div style="margin-left: 1em"><P>Pretending for a moment that I have that kind of clout to make such a decision.... :-)</P>
+<P>As someone who has seen that code, debugged it, and even occasionally made checkins to it, I can say that making Uniscribe opensource is not the solution to making it either more usable or more understandable.</P>
+<P>Though I agree that some way to customize the fallback logic would not be such a bad thing. I have lots of thoughts about potential features in that area and have communicated them to people on those teams. A solution here can only help people!</P></div>
+<hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2008/12/03 <a href="http://archives.miloush.net/michkap/archive/2008/12/03/9168086.html">Want to hear about a cool new typographic convention? Khmer, and I'll tell you about it...</a></p><p>2008/05/18 <a href="http://archives.miloush.net/michkap/archive/2008/05/18/8518476.html">The song[ and the answer] remains the same</a></p><p>2008/02/06 <a href="http://archives.miloush.net/michkap/archive/2008/02/06/7490625.html">The utility of a feature like font fallback in Uniscribe can often be somewhat obviated by its design flaw</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2007/03/30/1997518.html" title="Determining if a font is gonna get it done">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2007/03/29/1989831.html" title="Why does it use strings to represent numbers, exactly?">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2007-03">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2007-03-30">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2007/03/30/1995343.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:38 GMT -->
+</html>

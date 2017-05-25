@@ -1,0 +1,32 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2011/06/08/10172411.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Why it may be best to avoid the CRT, in the console at least</title></head><body>
+<h1>Why it may be best to avoid the CRT, in the console at least</h1>
+<p><em>by Michael S. Kaplan, published on 2011/06/08 07:01 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2011/06/08/10172411.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<p>Back at the very end of 2010, over in the Suggestion Box, Jeremy D. asked:</p>
+<p style="padding-left: 120px;"><span style="font-family: times new roman,times; font-size: small;">In a followup to <strong><a href="http://archives.miloush.net/michkap/archive/2010/10/07/10072032.html">Myth busting in the console</a>&nbsp;</strong>talking about _O_U16TEXT for the CRT to output Unicode, why not talk a bit about how the C++ runtime (ie, iostreams) deal with Unicode. &nbsp;For example, in VC2005 with the following test program:</span></p>
+<p style="padding-left: 150px;"><strong><span style="font-family: courier new,courier;">int wmain(int argc, wchar_t** argv) {</span></strong><br /><strong><span style="font-family: courier new,courier;">&nbsp;&nbsp;&nbsp; _setmode(_fileno(stdout), _O_U16TEXT);</span></strong><br /><strong><span style="font-family: courier new,courier;">&nbsp;&nbsp;&nbsp; std::wcout &lt;&lt; L"Testing 123" &lt;&lt; std::endl;</span></strong><br /><strong><span style="font-family: courier new,courier;">&nbsp;&nbsp;&nbsp; return 0;</span></strong><br /><strong><span style="font-family: courier new,courier;">}</span></strong></p>
+<p style="padding-left: 120px;"><span style="font-family: times new roman,times; font-size: small;">All I get output is "T".</span></p>
+<p style="padding-left: 120px;"><span style="font-family: times new roman,times; font-size: small;">After some stepping through the code being called, I can boil it down to the following test case failing:</span></p>
+<p style="padding-left: 150px;"><strong><span style="font-family: courier new,courier;">int wmain(int argc, wchar_t** argv) {</span></strong><br /><strong><span style="font-family: courier new,courier;">&nbsp;&nbsp;&nbsp; _setmode(_fileno(stdout), _O_U16TEXT);</span></strong><br /><strong><span style="font-family: courier new,courier;">&nbsp;&nbsp;&nbsp; assert(fputwc(L'T', stdout) != WEOF);</span></strong><br /><strong><span style="font-family: courier new,courier;">&nbsp;&nbsp;&nbsp; return 0;</span></strong><br /><strong><span style="font-family: courier new,courier;">}</span></strong></p>
+<p style="padding-left: 120px;"><span style="font-family: times new roman,times; font-size: small;">Is it myth #14 that iostream doesn't support Unicode?</span></p>
+<p>And then, a little while later, Jeremy D added:</p>
+<p style="padding-left: 120px;"><span style="font-family: times new roman,times; font-size: small;">...it seems the behavior I was seeing is VC2005-specific. &nbsp;2008 and 2010 are working fine. &nbsp;Ah, bugs...</span></p>
+<p>I suppose I could have just deleted the whole thing since the mystery had been solved.</p>
+<p>But I wanted to underscore a few points:</p>
+<ul>
+<li>The Windows Unicode console functions have been working and stable since at least NT 4.0 (the earliest version I could test in!);</li>
+<li>The Microsoft Visual C Runtime DLL console functions have been broken for most of that time; they started to get fixed in the VS2005 timeframe and have slowly been getting better and better though even the latest versions (VS2010 and Windows 7) are still not totally working right;</li>
+<li>The&nbsp;PowerShell CMD.EXE-hosted console uses Win32 though it has bugs in some versions;</li>
+<li>The graphical PowerShell (aka PowerShell ISE) works really well a lot more often than it doesn't --&nbsp;it is&nbsp;actually better than everything other than the legacy console and its character display support is superior to all other methods;</li>
+<li>Even Visual Studio 2010 still hasn't changed the font in its command line console shortcut to use Consolas:<br /><img src="http://msdnshared.blob.core.windows.net/media/MSDNBlogsFS/prod.evol.blogs.msdn.com/CommunityServer.Blogs.Components.WeblogFiles/00/00/00/33/81/2425.cmd01.jpg" /></li>
+</ul>
+<p>In my opinion, it might be best to do it all with eiher Win32 or the PowerShell ISE. Unless you want to just keep reporting CRT bugs here as you find them.....</p>
+<hr/><p><strong>Joshua</strong> on 13 Jun 2011 9:13 AM:</p><div style="margin-left: 1em"><p>The back-compatibility chain goes back here so far that I&#39;m really not surprised this broke (the old spec was 7bit, everything else on top of it was a set of choices that were not made coherently to begin with).</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 13 Jun 2011 10:09 AM:</p><div style="margin-left: 1em"><p>Technically these Unicode functions have been broken since birth, which might be why they feel okay fixing these problems as they find them. :-)</p>
+</div>
+<hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2011/06/08/10172429.html" title="Wait til you see my Õ (Ō), Latvian edition">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2011/06/07/10171819.html" title="Whither アイヌ・イタㇰ (Ainu)?">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2011-06">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2011-06-08">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2011/06/08/10172411.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+</html>

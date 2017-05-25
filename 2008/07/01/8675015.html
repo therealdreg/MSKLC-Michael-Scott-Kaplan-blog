@@ -1,0 +1,64 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2008/07/01/8675015.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:36 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Oceania is at war with WM_SETTINGCHANGE; Oceania has always been at war with WM_SETTINGCHANGE</title></head><body>
+<h1>Oceania is at war with WM_SETTINGCHANGE; Oceania has always been at war with WM_SETTINGCHANGE</h1>
+<p><em>by Michael S. Kaplan, published on 2008/07/01 03:01 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2008/07/01/8675015.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P>The question that came to a managed code alias was easy enough to see:</P>
+<BLOCKQUOTE>
+<P><FONT face="times new roman,times"><EM>How can I either (1) detect that a system environment variable has changed, or (2) get the current system-wide setting of an environment variable (not necessarily the value of the variable as it was set when my app was launched)?<BR><BR>Windows apps are notified via the WM_WININICHANGE, but I’m looking for a way to do it in a .NET app.</EM></FONT></P></BLOCKQUOTE>
+<P>I'll deal with the second paragraph first -- why is it that everyone wants to do stuff the ".NET way" even hen asking a purely Windows question that even when there is a 100% managed way one has to realize that under the covers there will be numerous native things going on, whether pinvokes or other. Is this a naive code purity thing, a desire to eat the steak without thinking about the cow?</P>
+<P>Okay, we'll move past that. Someone ignored the manged-only piece and suggested they&nbsp;take a look at&nbsp;the <A class="" href="http://msdn.microsoft.com/library/ms725497.aspx" mce_href="http://msdn.microsoft.com/library/ms725497.aspx">WM_SETTINGCHANGE</A> message, but there was a less than positive response to that idea:</P>
+<BLOCKQUOTE>
+<P><FONT face="times new roman,times">Thanks for the response.<BR><BR>I don’t know how the... link will help---when I change an environment variable, the WM_WININICHANGE message is sent to all top-level windows (tested on Vista), and not the WM_SETTINGCHANGE message.<BR><BR>Also, one question I forgot to ask is: if I only can capture some notification that the system environment changed, then that’s not enough; how do I get the contents of the new system environment?</FONT></P></BLOCKQUOTE>
+<P>I laughed when I saw that one, I mean what with the following defined in winuser.h since the late 90's:</P>
+<BLOCKQUOTE>
+<P><FONT face="consolas,lucida console,courier new,courier,fixed"><STRONG>#define WM_WININICHANGE&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 0x001A<BR>#if(WINVER &gt;= 0x0400)<BR>#define WM_SETTINGCHANGE&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; WM_WININICHANGE<BR>#endif /* WINVER &gt;= 0x0400 */</STRONG></FONT></P></BLOCKQUOTE>
+<P>Classic! </P>
+<P>Like that old Bill Tush skit with the teenagers who argue because one loves the words but hates the lyrics, while the other insists that the lyrics are awesome but the words suck.</P>
+<P>Only not contrived!</P>
+<P>In fairness, the <A class="" href="http://msdn.microsoft.com/library/ms725499.aspx" mce_href="http://msdn.microsoft.com/library/ms725499.aspx">WM_WININICHANGE</A> message and the <A class="" href="http://msdn.microsoft.com/library/ms725497.aspx" mce_href="http://msdn.microsoft.com/library/ms725497.aspx">WM_SETTINGCHANGE</A> message don't go out of their way to help here -- they in fact seem designed to do the opposite, really.</P>
+<P>You know, like they put on their Eagles hats and sing "Relax, said the night man, we are programmed to deceive" without realizing they have the words wrong; they don't realize the topics are writing checks that the header files can't cash....</P>
+<P>Whether one looks at the amusing text in the <A class="" href="http://msdn.microsoft.com/library/ms725499.aspx" mce_href="http://msdn.microsoft.com/library/ms725499.aspx">WM_WININICHANGE</A>&nbsp;message:</P>
+<BLOCKQUOTE>
+<P>An application sends the <B>WM_WININICHANGE</B> message to all top-level windows after making a change to the WIN.INI file. The <B>SystemParametersInfo</B> function sends this message after an application uses the function to change a setting in WIN.INI.<BR><BR><B>Note</B>&nbsp;&nbsp;The <B>WM_WININICHANGE</B> message is provided only for compatibility with earlier versions of the system. Applications should use the <B>WM_SETTINGCHANGE</B> message.</P></BLOCKQUOTE>
+<P>With a claim that the wParam is not used and just a small message about the lParam:</P>
+<BLOCKQUOTE>
+<P>A pointer to a string containing the name of the system parameter that was changed. For example, this string can be the name of a registry key or the name of a section in the Win.ini file. This parameter is not particularly useful in determining which system parameter changed. For example, when the string is a registry name, it typically indicates only the leaf node in the registry, not the whole path. In addition, some applications send this message with <I>lParam</I> set to NULL. In general, when you receive this message, you should check and reload any system parameter settings that are used by your application.</P></BLOCKQUOTE>
+<P>All of which is most amusing when you look at the very different text in the <A class="" href="http://msdn.microsoft.com/library/ms725497.aspx" mce_href="http://msdn.microsoft.com/library/ms725497.aspx">WM_SETTINGCHANGE</A>&nbsp;message that gives numerous details about the&nbsp;values of both parameters.</P>
+<P>Though ultimately the funniest part being the requirements for both functions:</P>
+<BLOCKQUOTE>
+<P>
+<TABLE class="" border=1>
+<TBODY>
+<TR>
+<TH class="">Client</TH>
+<TD class="">Requires Windows&nbsp;Vista, Windows&nbsp;XP, or Windows&nbsp;2000 Professional.</TD></TR>
+<TR>
+<TH class="">Server</TH>
+<TD class="">Requires Windows Server&nbsp;2008, Windows Server&nbsp;2003, or Windows&nbsp;2000 Server.</TD></TR></TBODY></TABLE></P></BLOCKQUOTE>
+<P>This is something that makes very little sense given just the header file alone, let alone the pragmatic knowledge between the two topics and the past knowledge of many a Windows developer. :-)</P>
+<P>The language of the documentation, it can be its own dialect of English at times....</P>
+<P mce_keep="true">&nbsp;</P>
+<P><FONT color=#ff00ff><EM>No Unicode character wanted to support this blog except some of the old ones that were removed from Unicode as a part of the 10646 merger</EM></FONT></P>
+<hr/><p><a id="8677060" href="#8677060">#</a> <strong>John Cowan</strong> on 1 Jul 2008 9:49 AM:</p><div style="margin-left: 1em"><p>s/Ocenia/Oceania/</p>
+<p>Are there really any such characters? &nbsp;I know we picked up a bunch from the failed first DIS, but I didn't think we *lost* any.</p></div>
+<p><a id="8677087" href="#8677087">#</a> <strong>Michael S. Kaplan</strong> on 1 Jul 2008 9:56 AM:</p><div style="margin-left: 1em"><P>Well, we got them back later -- like the original Tibetan, described <A class="" href="http://archives.miloush.net/michkap/archive/2007/12/07/6671623.html"><STRONG>here</STRONG></A>....</P></div>
+<p><a id="8677660" href="#8677660">#</a> <strong>andy vt</strong> on 1 Jul 2008 12:15 PM:</p><div style="margin-left: 1em"><p>The &quot;.NET way&quot; means that you write less code, which means you support less code.</p>
+<p>Why go through the effort of rolling your own pinvoke solution when someone did it for you already? &nbsp;</p></div>
+<p><a id="8677742" href="#8677742">#</a> <strong>Skip</strong> on 1 Jul 2008 12:37 PM:</p><div style="margin-left: 1em"><p>Well I can certainly understand not wanting to have to figure out the mechanics of pinvoke if you're someone who was never exposed to the underlying c. &nbsp; Honestly, it's not something I'd want a large chunk of the people I've worked with in .net coding over the last few years doing.</p>
+<p>But in any case, shouldn't you just be able to use System.Windows.Forms.NativeWindow to do this fairly easily?</p></div>
+<p><a id="8677776" href="#8677776">#</a> <strong>Michael S. Kaplan</strong> on 1 Jul 2008 12:46 PM:</p><div style="margin-left: 1em"><p>After meeting and discussing technical issues with people like Anthony and Brian Josh and Kim, I'm happy to use the code they have written -- if it does what I am looking for.</p>
+<p>But since I usually write native code, I am just as happy to provide my own abstractions, sometimes even moreso!</p>
+</div>
+<p><a id="8678578" href="#8678578">#</a> <strong>Karellen</strong> on 1 Jul 2008 4:45 PM:</p><div style="margin-left: 1em"><p>'why is it that everyone wants to do stuff the &quot;.NET way&quot; even hen asking a purely Windows question'</p>
+<p>Uh, maybe it's because it might not be a purely Windows question, because .NET apps are supposed to be portable to other .NET implementations, and because the author might be trying to write an app they can deploy on MS.NET and Mono?</p></div>
+<p><a id="8678612" href="#8678612">#</a> <strong>Ruben</strong> on 1 Jul 2008 4:56 PM:</p><div style="margin-left: 1em"><p>It seems WM_WININICHANGE already triggers System.Win32.SystemEvents.UserPreferenceChanged. So no need to use P/Invoke or NativeWindow. And, much like WM_WININICHANGE, it doesn't tell you much more than Category = General.</p></div>
+<p><a id="8706748" href="#8706748">#</a> <strong>Yuhong Bao</strong> on 8 Jul 2008 2:04 AM:</p><div style="margin-left: 1em"><P>"Though ultimately the funniest part being the requirements for both functions:</P>
+<P>&nbsp; &nbsp;Client Requires Windows Vista, Windows XP, or Windows 2000 Professional.</P>
+<P>&nbsp; &nbsp;Server Requires Windows Server 2008, Windows Server 2003, or Windows 2000 Server.</P>
+<P>This is something that makes very little sense given just the header file alone, let alone the pragmatic knowledge between the two topics and the past knowledge of many a Windows developer. :-)"</P>
+<P>Dig out the Platform SDK for Windows Server 2003 SP1's documentation. Current versions has gotten rid of some of the references to versions of Windows prior to Windows 2000. Talk to the Windows SDK team for more on this.</P></div>
+<hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2008/08/13 <a href="http://archives.miloush.net/michkap/archive/2008/08/13/8856228.html">Migrating docs forward vs. moving 'em forward</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2008/07/02/8679999.html" title="How do I type that, exactly?">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2008/07/01/8674304.html" title="Is that character in the font or isn&#39;t it?">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2008-07">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2008-07-01">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2008/07/01/8675015.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:36 GMT -->
+</html>

@@ -1,0 +1,28 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2011/08/22/10198369.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>I've got your number! Here's how...</title></head><body>
+<h1>I've got your number! Here's how...</h1>
+<p><em>by Michael S. Kaplan, published on 2011/08/22 07:01 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2011/08/22/10198369.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<p>Amul asked me a question via the Contact link:</p>
+<p style="padding-left: 60px;"><em><span style="font-family: times new roman,times;">I am trying to find a solution to get the decimal value to/from Unicode strings.&nbsp; I have been searching high and low and came across your blog post from a few years back.</span></em><br /><em><span style="font-family: times new roman,times;"><a href="http://archives.miloush.net/michkap/archive/2006/10/02/783066.html">http://blogs.msdn.com/michkap/archive/2006/10/02/783066.aspx</a></span></em></p>
+<p style="padding-left: 60px;"><em><span style="font-family: times new roman,times;">My goal is to collate Hindi, Gujarati and Arabic numbers together. (Do warn me if that's a pipe dream :)</span></em></p>
+<p style="padding-left: 60px;"><em><span style="font-family: times new roman,times;">I'm not using Windows, so all I have are the ICU libraries from IBM (and I have no idea what MS uses).&nbsp; I can convert from Unicode characters to decimal numbers but I don't see anything that'll convert back to Unicode characters.</span></em></p>
+<p style="padding-left: 60px;"><em><span style="font-family: times new roman,times;">Would you know how Windows handles this issue?</span></em></p>
+<p style="padding-left: 60px;"><em><span style="font-family: times new roman,times;">thanks,</span></em><br /><em><span style="font-family: times new roman,times;">Amul</span></em></p>
+<p>Well, there is&nbsp;good news and really good news and bad news here.</p>
+<p>First the good news:</p>
+<p>The managed <a href="http://msdn.microsoft.com/en-us/library/system.globalization.charunicodeinfo.aspx">CharUnicodeInfo class</a>&nbsp;has GetDecimalDigitValue, GetDigitValue and GetNumericValue methods that can be used to get the numeric value of any of the numbers.</p>
+<p>The three methods are&nbsp;derived from&nbsp;the <a href="http://www.unicode.org/reports/tr44/#Numeric_Value">Numeric_Value</a>&nbsp;and <a href="http://www.unicode.org/reports/tr44/#Numeric_Type">Numeric_Type</a> properties from the Unicode Character Database....</p>
+<p>You still have to divine your own "interlaced differentiation", of course.</p>
+<p>And the really good news?</p>
+<p>The collation support on Windows already does the work to collate them together!</p>
+<p>Of course if you aren't using Windows, you can't get that stuff. :-(</p>
+<p>Finally the bad news: although I'm sure ICU also wraps this info, I have no idea how. So if you need the answer about ICU then someone else will have to provide it....</p>
+<hr/><p><strong>Tian</strong> on 23 Aug 2011 12:28 AM:</p><div style="margin-left: 1em"><p>Hello,Michael,I am a Chinese and I have one question,can you do me a favor.It is about CEdit::SetCueBanner.You know that I hanve installed the &nbsp;Asian language pack in my WinXP,so the banner does not work at all.My question is:is there any way to use CEdit::SetCueBanner in WinXp with Asian language pack installed?</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 23 Aug 2011 7:17 PM:</p><div style="margin-left: 1em"><p>Not really related, is it? You should perhaps put it in the Suggestion Box, with info on whether it works in later versions....</p>
+</div>
+<hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2011/08/23/10198873.html" title="The secret missing Unicode letters?">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2011/08/19/10197669.html" title="It isn&#39;t like bringing Democracy to Cuba, but still...">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2011-08">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2011-08-22">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2011/08/22/10198369.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+</html>

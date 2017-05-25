@@ -1,0 +1,92 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2008/07/31/8792990.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:36 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Pay no attention to the man behind the curtain, or the language on the file</title></head><body>
+<h1>Pay no attention to the man behind the curtain, or the language on the file</h1>
+<p><em>by Michael S. Kaplan, published on 2008/07/31 03:31 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2008/07/31/8792990.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P>So thinking about&nbsp;the design of MUI, some interesting thoughts came up in a conversation the other day.</P>
+<P>Let's take NOTEPAD.EXE for a second.</P>
+<P>If we move to the WINDOWS directory and hit ALT+ENTER we get it's <STRONG>Properties</STRONG>:</P>
+<P><IMG src="http://trigeminal.fmsinc.com/images/filelang00.png"></P>
+<P>Let's move over to that <STRONG>Details</STRONG> tab:</P>
+<P><IMG src="http://trigeminal.fmsinc.com/images/filelang10.png"></P>
+<P>Hmmm. I thought that we were all language-neutral now. Why is the file' version resource claiming that the file has a language of <STRONG>English (United States)</STRONG>, anyway?</P>
+<P>Let's look over in the language-specific directory and see what the NOTEPAD.EXE.MUI&nbsp;file looks like there:</P>
+<P><IMG src="http://trigeminal.fmsinc.com/images/filelang01.png"></P>
+<P>Wow, no VERSION properties at all!</P>
+<P>Wait, maybe that is an issue with the filetype. Let's copy the file and remove the .MUI extension:</P>
+<P><IMG src="http://trigeminal.fmsinc.com/images/filelang02.png"></P>
+<P>&nbsp;and try again:</P>
+<P><IMG src="http://trigeminal.fmsinc.com/images/filelang03.png"></P>
+<P>Ah, there we go. So it has&nbsp;a VERSION&nbsp;resource and the language is tagged.</P>
+<P>Of course this proves nothing -- the original file makes the same claim, even though all of its resources are gone (as we learned in <A class="" href="http://archives.miloush.net/michkap/archive/2006/10/06/796078.html" mce_href="http://archives.miloush.net/michkap/archive/2006/10/06/796078.html"><STRONG>Random irreverent thoughts about the Ultimate Fallback</STRONG></A>).</P>
+<P>So let's look at some of the other language files, like Arabic:</P>
+<P><IMG src="http://trigeminal.fmsinc.com/images/filelang04.png">&nbsp; <IMG src="http://trigeminal.fmsinc.com/images/filelang05.png"></P>
+<P>or maybe Hebrew:</P>
+<P><IMG src="http://trigeminal.fmsinc.com/images/filelang06.png">&nbsp; <IMG src="http://trigeminal.fmsinc.com/images/filelang07.png"></P>
+<P>And maybe we could mix things up a bit.</P>
+<P>Like looking at the Arabic file under a Hebrew user interface language:</P>
+<P><IMG src="http://trigeminal.fmsinc.com/images/filelang08.png"></P>
+<P>or the Hebrew file under the Arabic user interface language:</P>
+<P><IMG src="http://trigeminal.fmsinc.com/images/filelang09.png"></P>
+<P>Okay, so the language files are being marked.</P>
+<P>The only weird thing left is that the language neutral file, the one that even <A class="" href="http://blogs.technet.com/markrussinovich/" mce_href="http://blogs.technet.com/markrussinovich/">Mark Russinovich</A> discovered the hard way is language neutral (ref: <A class="" href="http://archives.miloush.net/michkap/archive/2006/10/06/796078.html" mce_href="http://archives.miloush.net/michkap/archive/2006/10/06/796078.html"><STRONG>Random irreverent thoughts about the Ultimate Fallback</STRONG></A>), is marked as having a language.</P>
+<P>Well, it turns out that the language splitting functionality in the <A class="" href="http://msdn.microsoft.com/library/aa381055.aspx" mce_href="http://msdn.microsoft.com/library/aa381055.aspx">Resource Compiler</A> (RC.EXE and RCDLL.DLL).</P>
+<P>Now RC.EXE has several flags related to creating .MUI files:</P>
+<DL>
+<DL>
+<DT><FONT face="times new roman,times"><B>/fm</B><I> mresname</I> </FONT>
+<DD>
+<P><FONT face="times new roman,times">RC creates one language-neutral .RES file and one language-dependent (MUI) .RES file using <I>script-file</I>. This option must be used together with the <B>/fo</B><I> resname</I> option. RC names the language-neutral .RES file <I>resname.res</I> and names the language-dependent (MUI) .RES file <I>mresname.res</I>. </FONT></P>
+<DT><FONT face="times new roman,times"><B>/fo</B> <I>resname</I> </FONT>
+<DD>
+<P><FONT face="times new roman,times">RC creates a .RES file named <I>resname</I> using <I>script-file</I>. </FONT></P>
+<P><FONT face="times new roman,times">If the <B>/fm</B><I> mresname</I> option is also set, RC creates one language-neutral .RES file and one language-dependent (MUI) .RES file.</FONT></P></DD>
+<DT><FONT face="times new roman,times"><B>/g1</B> </FONT>
+<DD>
+<P><FONT face="times new roman,times">If /g1, is set, RC generates a MUI file if the only localizable resource being included in the MUI file is a version resource. If /g1 is not set, RC will not generate a MUI file if the only localizable resource being included in the MUI file is a version resource. </FONT></P></DD>
+<DT><FONT face="times new roman,times"><B>/j</B> <I>loctype</I> </FONT>
+<DD>
+<P><FONT face="times new roman,times">Localizable resource types RC places into the language-dependent (MUI) .RES file. If the <B>/q</B> option is also set, this option is ignored, and the information in the RC Configuration file takes precedence.</FONT></P>
+<DT><FONT face="times new roman,times"><B>/k</B> <I>overtype</I> </FONT>
+<DD>
+<P><FONT face="times new roman,times">Overlapping resource types that RC places into both the language-neutral .RES and the language-dependent (MUI).RES files. The resource types that are specified by the <B>/k</B> option must be a subset of those that are specified by the <B>/j</B> option. For example, –J2 –J3 –K3 specifies that RC places resource type 3 in both the language-neutral and language-dependent (MUI) files. If the <B>/q</B> option is also set, this option is ignored, and the information in the RC Configuration file takes precedence.</FONT></P></DD>
+<DT><FONT face="times new roman,times"><B>/q</B><I> Mui.RCConfig</I> </FONT>
+<DD>
+<P><FONT face="times new roman,times">An RC configuration file that follows the RC Configuration File format. The RC Configuration File format enables components to self-describe resource information such as resource versioning, MUI file path, resource types and items. This file specifies which resources go into the language-neutral .RES file and which resources go into the language-dependent (MUI) .RES file. This option, and the information provided in the RC Configuration file, override the command line options <B>/j</B> and <B>/k</B>. </FONT></P></DD></DL></DL>
+<P mce_keep="true">Notice that in none of that talk of splitting resources does it ever make any claims about changing the language of the "neutral" .RES file it creates as part of the splitting.</P>
+<P mce_keep="true">Not that it wouldn't make sense for it to do that (since it took the time&nbsp;cause a de facto&nbsp;change to the language of the resource by removing all of the language-specific information), but that work item would have some interesting consequences, which I can talk about more some other time, perhaps....</P>
+<P mce_keep="true">&nbsp;</P>
+<P><FONT color=#ff0080><EM>This post brought to you by</EM> <FONT face=DokChampa size=6>ຝ</FONT> <EM>and</EM> <FONT face=DokChampa size=6>ພ</FONT> <EM>(<A href="http://www.fileformat.info/info/unicode/char/0e9d/">U+0e9d</A> and <A href="http://www.fileformat.info/info/unicode/char/0e9e">U+0e9e</A>, a.k.a. LAO LETTER FO TAM and LAO LETTER PHO TAM)</EM></FONT></P>
+<hr/><p><strong>GregM</strong> on 31 Jul 2008 9:29 AM:</p><div style="margin-left: 1em"><p>Since every resource has a language associated with it, is it even possible to have a language-neutral version resource. &nbsp;If so, what language would be used for the text fields in that version resource, or would they just not be filled in? &nbsp;In that case, how would you include a copyright notice?</p></div>
+<p><strong>Michael S. Kaplan</strong> on 31 Jul 2008 9:35 AM:</p><div style="margin-left: 1em"><p>If you put in 0 (zero) then you get a language neutral version resource, so that part is easy....</p>
+</div>
+<p><strong>Mihai</strong> on 1 Aug 2008 2:01 PM:</p><div style="margin-left: 1em"><p>It is a bit more interesting than this.</p>
+<p>If you look at Notepad.exe after you change the system UI language, the version info claims to be in that language.</p>
+<p>This means that Explorer uses the old way of accessing resources to get the version info, and the MUI magic is at work.</p>
+<p>I don't say this is bad, it's just a comment.</p>
+<p>As end user I find it normal &nbsp;that notepad.exe is French, since I click on it and starts in French. Only a geek would expect to see neutral.</p></div>
+<p><strong>Michael S. Kaplan</strong> on 1 Aug 2008 2:40 PM:</p><div style="margin-left: 1em"><p>Ah, but is this behavior right either? The system UI language actually has no hold at all on resources for this application. Isn't that slightly more broken, even if the user not expecting language neutral might find it more intuitive? :-)</p>
+</div>
+<p><strong>Mihai</strong> on 1 Aug 2008 5:33 PM:</p><div style="margin-left: 1em"><p>&quot;Ah, but is this behavior right either?&quot;</p>
+<p>More thinking is probably needed :-)</p>
+<p>It feels right for the end user, but technically is (probably) wrong.</p>
+<p>I don't think it is &quot;broken.&quot; Only MS will update Notepad.</p>
+<p>But it gets more interesting if more and more applications move to MUI &quot;Vista style.&quot;</p>
+<p>Now installers should know how to check the version info (imagine an installer refusing to update the language neutral executable because the language does not match, when in reality is fine and the users just switched to French).</p>
+<p>And all other kind of cans of worms :-)</p></div>
+<p><strong>Igor Levicki</strong> on 3 Aug 2008 9:31 PM:</p><div style="margin-left: 1em"><p>If Notepad.exe has MUI resources for all languages including English then English should not be embedded as a fallback. Period.</p></div>
+<p><strong>Michael S. Kaplan</strong> on 3 Aug 2008 10:39 PM:</p><div style="margin-left: 1em"><p>Did you read the original blog? It does not. All resources were removed. I personally don't like this, but it is what it is whether I (and aooarently you) like it or not....</p>
+</div>
+<p><strong>Mihai</strong> on 4 Aug 2008 3:19 PM:</p><div style="margin-left: 1em"><p>&quot;All resources were removed. I personally don't like this&quot;</p>
+<p>I like it.</p>
+<p>It is consistent with the &quot;English is just another language&quot; philosophy.</p>
+<p>And enables some business scenarios that are tricky otherwise</p></div>
+<p><strong>Cody Cutrer</strong> on 20 Nov 2008 3:54 PM:</p><div style="margin-left: 1em"><p>Interestingly, if you copy notepad.exe elsewhere, and rename it (so that Windows can't find the MUI files), and open it in Visual Studio to inspect the actual resources, it *does* have a version resource, in en-US. &nbsp;And the icon and RT_MANIFEST resources are also en-US marked (though they don't actually contain any user-visible en-US content).</p>
+<p>If you open notepad.exe up in Visual Studio in its default location, it will happily show you the &quot;merged&quot; view with the .mui file. &nbsp;Oddly, the RT_MANIFEST resource is no longer visible. &nbsp;Finally, if you're using the es-ES MUI, you *can't* open notepad.exe in the resource editor in Visual Studio... you get a message (from the OS apparently, since it is in Spanish) complaining that it couldn't find the language resource in the image, afterwhich Visual Studio (in english) complains about not being able to enumerate resources in the executable.</p>
+<p>Next question... when using the Resource Compiler with a resource configuration script, the &quot;MUI&quot; resource in the LN file will end up being marked as the language of the .mui file - why is this? &nbsp;It would make more sense to me to have it LANG_INVARIANT, LANG_NEUTRAL, or even en-US. &nbsp;So when the resource loader is looking for the &quot;MUI&quot; resource to find out which resources it should look for in .mui files, does it just choose the first one it can find? &nbsp;What if you put multiple &quot;MUI&quot; resource ID 1's in, but with different language identifiers? &nbsp;Could you theoretically instruct the MUI resource loader to look in the .mui file for a set of resources in one language, but a different set for another language?</p>
+<p>While we're on the topic of the &quot;MUI&quot; resource, why is it required, anyway? &nbsp;Beyond being able to specify an ultimate fallback language (which is why I'm investigating it, because on a pl-PL version of Windows -- which my app isn't localized into -- my MUI-compatible shortcuts are showing up in de-DE instead of en-US because the resource loader is just choosing the first language it can find because en-US is not in the search list at all), and possibly the checksums to ensure you're using a .mui that corresponds to the LN file, what is the purpose? &nbsp;The &quot;this resource is found in the MUI, and this one in the LN&quot; seems pretty pointless to me, besides a very slight optimization to skip searching the .mui's resources if you already know that it will only be in the LN (which very few resources should be). &nbsp;Is there any documentation for this structure? &nbsp;It seems to roughly correspond to FILEMUIINFO, but appears to have a couple more pointers in it that I couldn't find any file that utilized. &nbsp;It also has the flag that says whether the ultimate fallback resources are internal or external (again... who cares? &nbsp;If the ultimate fallback exists externally use that, otherwise search the LN). &nbsp;Also, it seems that one flag marks all Windows components, and is vice versa for everything generated by rc.exe. &nbsp;Maybe MUIRCT generates that flag. &nbsp;I can't find anything on my system that uses Vista MUI that doesn't come with Vista itself.</p>
+<p>Finally, what's the whole point of the Resource Configuration file in helping the resource compiler generate the LN and MUI resource objects? &nbsp;Why not just put things marked as LANG_INVARIANT or LANG_NEUTRAL in the LN .res, and everything else into an appropriate MUI .res based on the language it is tagged with?</p></div>
+<hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2008/08/01/8797292.html" title="My Gut[tman] instinct is...">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2008/07/30/8791285.html" title="On installing and removing fonts, Part 7: What was the question, exactly?">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2008-07">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2008-07-31">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2008/07/31/8792990.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:36 GMT -->
+</html>

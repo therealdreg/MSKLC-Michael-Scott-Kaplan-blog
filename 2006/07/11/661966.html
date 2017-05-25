@@ -1,0 +1,46 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2006/07/11/661966.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:39 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Printing TrueType as graphics</title></head><body>
+<h1>Printing TrueType as graphics</h1>
+<p><em>by Michael S. Kaplan, published on 2006/07/11 03:01 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2006/07/11/661966.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P><FONT face=Tahoma>Francisco Moraes posted in the Suggestion Box: </FONT></P>
+<BLOCKQUOTE dir=ltr style="MARGIN-RIGHT: 0px">
+<P><FONT face=Garamond>This isn't much of a suggestion but more of a question: <BR><BR>I have a program that layouts glyphs from fonts to display on the screen. This all works great until I try to print, because some printers will substitute the font being used and print garbage. Is there a way to avoid the font substitution when using glyphs instead of characters or a better alternative? <BR><BR>Francisco </FONT></P></BLOCKQUOTE>
+<P><FONT face=Tahoma>It is hard to specifically answer the question without knowing what program is being used, but I can talk about the feature, and that may help. :-)</FONT></P>
+<P><FONT face=Tahoma>The option in&nbsp;the user interface goes under different names, but is usually under the Advanced options of the Print dialog and has some name related to TrueType&nbsp;fonts. It is hard to get more specific than that since it is UI that is provided by the printer driver, but here are some examples:</FONT></P>
+<P><IMG src="http://trigeminal.fmsinc.com/images/fontdlg2.jpg"></P>
+<P><IMG src="http://trigeminal.fmsinc.com/images/fontdlg3.jpg"></P>
+<P><IMG src="http://trigeminal.fmsinc.com/images/fontdlg4.jpg"></P>
+<P><FONT face=Tahoma>It is interesting of course that only two options are given in most cases, since the option is based on the <STRONG>dmTTOption member</STRONG> of the <A href="http://msdn.microsoft.com/library/en-us/gdi/prntspol_8nle.asp">DEVMODE data structure</A>. It is documented as follows:</FONT></P>
+<BLOCKQUOTE dir=ltr style="MARGIN-RIGHT: 0px">
+<P><FONT face=Tahoma>Specifies how TrueType fonts should be printed. This member can be one of the following values. 
+<TABLE border=1>
+<TBODY>
+<TR vAlign=top>
+<TH align=left width="32%">Value</TH>
+<TH align=left width="68%">Meaning</TH></TR>
+<TR vAlign=top>
+<TD width="32%">DMTT_BITMAP</TD>
+<TD width="68%">Prints TrueType fonts as graphics. This is the default action for dot-matrix printers.</TD></TR>
+<TR vAlign=top>
+<TD width="32%">DMTT_DOWNLOAD</TD>
+<TD width="68%">Downloads TrueType fonts as soft fonts. This is the default action for Hewlett-Packard printers that use Printer Control Language (PCL).</TD></TR>
+<TR vAlign=top>
+<TD width="32%">DMTT_DOWNLOAD_OUTLINE</TD>
+<TD width="68%"><B>Window 95/98/Me, Windows NT 4.0 and later:</B> Downloads TrueType fonts as outline soft fonts.</TD></TR>
+<TR vAlign=top>
+<TD width="32%">DMTT_SUBDEV</TD>
+<TD width="68%">Substitutes device fonts for TrueType fonts. This is the default action for PostScript printers.</TD></TR></TBODY></TABLE></FONT></P></BLOCKQUOTE>
+<P><FONT face=Tahoma>The thing is that this whole structure in general and this member specifically are trying to cover all of the possible available options in a wide variety of different printers, so for a given printer they will not all be available, usually.</FONT></P>
+<P><FONT face=Tahoma>But that DMTT_BITMAP member is equivalent to the <STRONG>Print TrueType as Graphics</STRONG> option, which keeps those device fonts from being used when the printer thinks it might know better.</FONT></P>
+<P><FONT face=Tahoma>Now in many situations those device fonts are considered to be very important, but in many international and multilingual text scenarios they are not so good -- since they are usually either not available for the font you need or the device font is a subset of the font on the computer. So printing TrueType as graphics is usually the best option....</FONT></P>
+<P><FONT face=Tahoma></FONT>&nbsp;</P>
+<P><FONT face=Tahoma color=#ff1493><EM>This post brought to you by</EM> <STRONG><FONT face="Microsoft Himalaya" size=8>༔</FONT></STRONG> <EM>(<A href="http://www.fileformat.info/info/unicode/char/0f14">U+0f14</A>, a.k.a. TIBETAN MARK GTER&nbsp;TSHEG)</EM></FONT></P>
+<hr/><p><a id="662542" href="#662542">#</a> <strong>Mihai</strong> on 11 Jul 2006 2:10 PM:</p><div style="margin-left: 1em">I would say first option should be &quot;Download as SoftFont&quot;<br>Going with &quot;Send as Bitmap&quot; makes printing slower and also lower quality.<br>When I install a new printer, this is one of the first things I do: set &nbsp;&quot;Download as SoftFont&quot;<br>If there is a font substitution table, I also go there and set all fonts to &quot;Don't Substitute&quot;</div>
+<p><a id="662580" href="#662580">#</a> <strong>Michael S. Kaplan</strong> on 11 Jul 2006 3:11 PM:</p><div style="margin-left: 1em">Well, if the option is available, that is -- often it is not!</div>
+<p><strong>sureshkumar</strong> on 1 Mar 2011 3:55 AM:</p><div style="margin-left: 1em"><p>How to set Download as Softfont for printer</p>
+</div>
+<hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2007/09/24 <a href="http://archives.miloush.net/michkap/archive/2007/09/24/5082103.html">Documented, schmockumented! It's still kind of cool....</a></p><p>2006/07/12 <a href="http://archives.miloush.net/michkap/archive/2006/07/12/662739.html">Device fonts are people too</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2006/07/11/662342.html" title="More on that which breaks Windows Notepad">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2006/07/10/661427.html" title="The PUA isn&#39;t complex enough">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2006-07">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2006-07-11">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2006/07/11/661966.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:39 GMT -->
+</html>

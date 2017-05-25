@@ -1,0 +1,64 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2011/01/13/10115302.153317.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Doing it for appearances, Hong Kong style!</title></head><body>
+<h1>Doing it for appearances, Hong Kong style!</h1>
+<p><em>by Michael S. Kaplan, published on 2011/01/13 07:33 -08:00, original URI: http://blogs.msdn.com/b/michkap/archive/2011/01/13/10115302.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostMail -->
+<p>HKSCS, the Hong Kong Supplemental Character Set, is (if you wade through the extensive amount of text written on it, everywhere) can reasonably be purported as representing many different things:</p>
+ <ul>
+ <li>In some versions, a way to represent everything Hong Kong needs in the Unicode BMP (using the Unicode PUA as needed);</li>
+ <li>A&nbsp;set containing the minimal set of Han needed for users in Hong Kong;</li>
+ <li>A listing of Han that have glyphic differences between the generally preferred forms in Taiwan and Hong Kong.</li>
+ </ul>
+ <p>Now the first two are what is most often discussed, while the third is usually taken for granted and not seen much except in a few obscure typography ora where people work to create such fonts.</p>
+ <p>But I find the whole HKSCS issue to be fascinating, and have even before I talked about the second point in 2005&nbsp;in blogs like&nbsp;<a href="http://archives.miloush.net/michkap/archive/2005/05/10/416129.html" title="More on 'repetoire fences'"><strong>More on 'repetoire fences'</strong></a>&nbsp;and when I talked about the first point in the middle of 2007 when I wrote up my Bradburyian-allusion-titled&nbsp;<a href="http://archives.miloush.net/michkap/archive/2007/05/12/2561904.html"><strong>Kowloon 951</strong></a> and the <a href="http://archives.miloush.net/michkap/archive/2007/09/27/5132462.html" title="Don't look directly at the 951 code page if you can avoid it"><strong>Don't look directly at the 951 code page if you can avoid it</strong></a> follow-up later that same year.</p>
+ <p>Although nascently interested in the third point, I had much more expertise in the first two, and most of the work i had assigned to and the problems people were asking me about kept dragging me in on the first&nbsp;two points.</p>
+ <p>All of this&nbsp;conspired with my lack of typographic expertise to keep me from ever delving into what is really the most interesting point for me, in the long run.</p>
+ <p>And why do I consider it to be thew most interesting?</p>
+ <p>Well, there is a lot behind the four fonts that make up the Hong Kong Supplemental Character Set vs. not support on Windows:</p>
+ <p><img src="http://blogs.msdn.com/cfs-file.ashx/__key/CommunityServer-Blogs-Components-WeblogFiles/00-00-00-33-81/0486.HKSCS01.jpg" /></p>
+ <ul>
+ <li><span style="color: #0000ff;"><strong><span style="color: #0000ff;">MingLiU</span></strong></span></li>
+ <li><strong><span style="color: #ff0000;">MingLiU_HKSCS</span></strong></li>
+ <li><span style="color: #0000ff;"><strong>MingLiU-ExtB</strong></span></li>
+ <li><span style="color: #0000ff;"><strong><span style="color: #ff0000;">MingLiU-ExtB_HKSCS</span></strong></span></li>
+ </ul>
+ <p><em>red is HKSCS, blue is not. Why i chose this will be apparent shortly.</em></p>
+ <p>Why do I find this part to be the most interesting?</p>
+ <p>Well, because although you can explicitly choose the font you want to get particular glyphs, you couldd also specify nothing and let the <strong>default system locale</strong>set to Traditional Chinese (Hong Kong) vs. Traditional Chinese (Taiwan)&nbsp;do the selection for you.</p>
+ <p>In this way, a very easy configuratoion setting could have a huge difference in overall look and feel.</p>
+ <p>Well, wait. Without knowing the degree or amount of difference, that could be overstatement.</p>
+ <p>so in this blog I want to take a look at the difference a little bit....</p>
+ <p>I'll start with the various Microsoft Typography command line tools like BreakTTC.exe (needed to break up the mingliu.ttc file containing so many of these fonts) and FontDiff.exe (needed to look into some of the differences).</p>
+ <p>When you compare the non-HKSCS fonts to the&nbsp;HKSCS ones in FontDiff.exe (click on the images to see them at a larger size):</p>
+ <p><a target="_blank" href="http://blogs.msdn.com/cfs-filesystemfile.ashx/__key/CommunityServer-Blogs-Components-WeblogFiles/00-00-00-33-81/6013.HKSCS02.jpg"><img height="292" width="400" src="http://blogs.msdn.com/cfs-file.ashx/__key/CommunityServer-Blogs-Components-WeblogFiles/00-00-00-33-81/6013.HKSCS02.jpg" /></a>&nbsp; <a target="_blank" href="http://blogs.msdn.com/cfs-filesystemfile.ashx/__key/CommunityServer-Blogs-Components-WeblogFiles/00-00-00-33-81/0844.HKSCS03.jpg"><img height="292" width="401" src="http://blogs.msdn.com/cfs-file.ashx/__key/CommunityServer-Blogs-Components-WeblogFiles/00-00-00-33-81/0844.HKSCS03.jpg" /></a></p>
+ <p>you see 7906 and 1700 listed glyph differences, respectively.</p>
+ <p>Now one of the things that was done here for backwards compatibility with that first issue I mentioned was adding many Han to the PUA in the HKSCS font. You cansee this in FontDiff.exe's results as well if you scroll to the PUA:</p>
+ <p><a target="_blank" href="http://blogs.msdn.com/cfs-filesystemfile.ashx/__key/CommunityServer-Blogs-Components-WeblogFiles/00-00-00-33-81/8664.HKSCS04.jpg"><img height="291" width="401" src="http://blogs.msdn.com/cfs-file.ashx/__key/CommunityServer-Blogs-Components-WeblogFiles/00-00-00-33-81/8664.HKSCS04.jpg" /></a></p>
+ <p>This is the only place in either font that you see a difference of no glyph vs. a glyph, and it knocks that 7906 number down to 3020.</p>
+ <p>Thus the total number of different glyphs is 3020 + 1700 or 4720.</p>
+ <p><em>And of course&nbsp;all of the&nbsp;4886 Han in the PUA portion of the MingLiU_HKSCS font are&nbsp;in their proper code point position in MingLiU-ExtB_HKSCS, and some percentage of those Han may also be different from their&nbsp;MingLiU-ExtB brethren, but unless someone made a mistake in the one of the fonts those differences should be captured in the MingLiU-ExtB vs. MingLiU-ExtB_HKSCS comparison. The FontDiff.exe tool is not useful for making those comparisons but I am sure the MST folks have other tools to verify that sort of thing!</em></p>
+ <p>Okay, now let's take a quick gander at one of these differences. Looking at this one (double-click to see it bigger):</p>
+ <p><a target="_blank" href="http://blogs.msdn.com/cfs-filesystemfile.ashx/__key/CommunityServer-Blogs-Components-WeblogFiles/00-00-00-33-81/7024.HKSCS05.jpg"><img height="259" width="400" src="http://blogs.msdn.com/cfs-file.ashx/__key/CommunityServer-Blogs-Components-WeblogFiles/00-00-00-33-81/7024.HKSCS05.jpg" /></a></p>
+ <p>U+9f96 will work for us. My first thought was the <strong>glyf</strong> table, but that didn't work:</p>
+ <p><img src="http://blogs.msdn.com/cfs-file.ashx/__key/CommunityServer-Blogs-Components-WeblogFiles/00-00-00-33-81/0207.HKSCS08.jpg" /></p>
+ <p>because the tool is considering them to be equal even when they look kind of different. so let's try something else with U+9f96.</p>
+ <p>Let's do the comparison by looking at glyphid 28478 in one font versus glyphid 34003 in the other, directly:</p>
+ <p><img height="571" width="736" src="http://blogs.msdn.com/cfs-file.ashx/__key/CommunityServer-Blogs-Components-WeblogFiles/00-00-00-33-81/8547.HKSCS06.jpg" /></p>
+ <p>You can also see the difference visually without that middle comparison frame in Word:</p>
+ <p><img height="589" width="515" src="http://blogs.msdn.com/cfs-file.ashx/__key/CommunityServer-Blogs-Components-WeblogFiles/00-00-00-33-81/6318.HKSCS07.jpg" /></p>
+ <p>Now I have been told by some people I know both on the "typography" side and the "living in Hong Kong working with the HKSCS standard fonts" side that of the 4720 Han, some differences are more marked than this example here and some are less. But in the long run they do give a different experience for a user in Hong Kong.</p>
+ <p>Of course in Windows for a long time there were bugs that happened insetting the default system locale to Hong Kong instead of Taiwan, and either for that reason (or for other reasons less the fault of Microsoft!), users may prefer the Taiwan style glyphs for these Han. And they can use the same original workaround to get this --- a Taiwan Default System Locale! </p>
+ <p>Or they can explicitly choose the font, of course!</p>
+ <p>You can dig more info differences here yourself using these same tools I was using, if you are interested....</p>
+ <p>There is one last issue, one that is not solved the same way, at all.</p>
+ <p>I describe in <a href="http://archives.miloush.net/michkap/archive/2010/07/12/10032066.html" title="Making a font fetish a bit more mainstream"><strong>Making a font fetish a bit more mainstream</strong></a>how we'd really like people to be much more on Microsoft JhengHei to get the best experience with the latest OpenType fonts.</p>
+ <p>Now FontDiff.exe can't do much here, it is a TrueType tool created before OpenType even existed.</p>
+ <p>Now if you look at U+9f96 in Microsoft JhengHei on a system with either a US default system locale or a Hong Kong one makes no difference:</p>
+ <p><img height="589" width="814" src="http://blogs.msdn.com/cfs-file.ashx/__key/CommunityServer-Blogs-Components-WeblogFiles/00-00-00-33-81/8176.HKSCS09.jpg" /></p>
+ <p>So, it appears that efforts aimed at <a href="http://archives.miloush.net/michkap/archive/2010/07/12/10032066.html" title="Making a font fetish a bit more mainstream"><strong>Making a font fetish a bit more mainstream</strong></a>&nbsp;may cause the Hong Kong experience to be less than optimal....</p>
+ <p><em>It is possible that Microsoft JhengHei solves this issue using a more OpenType-like solution, but that kind of support&nbsp;is something&nbsp;that Notepad/Wordpad/Word/Windows UI don't know about and definitely can lead to a less than optimal experience for people who want the HKSCS-preferred glyphs. </em></p>
+ <p>I really do hope I am wrong about this last bit and that perhaps other more conventional Han work correctly here. But I'll need a scosh of typography expertise to say for sure....</p>
+<hr/><div style="margin-left: 1em"><em>comments not archived</em></div><hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2012/05/07 <a href="http://archives.miloush.net/michkap/archive/2012/05/07/10301695.html">Why one may not be able to find a zh-TW MUI language pack, and why that's okay...</a></p><p>2011/04/20 <a href="http://archives.miloush.net/michkap/archive/2011/04/20/10156217.html">What's best for Hong Kong, anyway?</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2011/01/13/10115302.html" title="Doing it for appearances, Hong Kong style!">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2011/01/12/10114507.html" title="Adding a whole new DISMension to an old issue">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2011-01">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2011-01-13">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2011/01/13/10115302.153317.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+</html>

@@ -1,0 +1,109 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2008/08/25/8893033.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:36 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>The Bidi Algorithm's own SEP Field</title></head><body>
+<h1>The Bidi Algorithm's own SEP Field</h1>
+<p><em>by Michael S. Kaplan, published on 2008/08/25 10:01 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2008/08/25/8893033.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<p>&nbsp;</p><p>There are many nice things that I can (and sometimes do) say about Unicode Standard Annex #9 (<a href="http://www.unicode.org/reports/tr9/" mce_href="http://www.unicode.org/reports/tr9/">Unicode Bidirectional Algorithm</a>), which I will call for the rest of this blog the UBA in order to avoid the repetitive and tiresome nature of "<a href="http://www.unicode.org/reports/tr9/" mce_href="http://www.unicode.org/reports/tr9/">Unicode Bidirectional Algorithm</a>". I know thast it is not a pronoun, but saying all those nouns over and over again really does wear you down so whatever shortcut works. :-)</p>
+<p>Anyway, what was I talking about?</p>
+<p>Oh yeah, about how there are so many nice things that I can (and sometimes do) say about UBA.<br></p>
+<p>This blog is not about any of them.</p>
+<p>Instead, this blog is going to focus on two particular limitations that in my opinion make the UBA less useful in software.</p>
+<p>I am thinking mainly about Windows, but after listening to people who work on the Mac and in Linux I think this is really a platform agnostic set of issues.</p><p>Now I know some people think the issues are with input, but really they aren't. I mean I mentioned in blogs like <b><a href="http://archives.miloush.net/michkap/archive/2006/02/20/535260.html" mce_href="http://archives.miloush.net/michkap/archive/2006/02/20/535260.html">Mirroring and Keyboards are complicated</a></b> but that isn't what makes this really hard for application developers, most of the time. And it isn't why applications have bad or inconsistent behavior, by and large.</p><p>In fact, it is not the input itself that is to blame but the rendering -- so cursor movement and all that are interesting but most of it is okay often enough that people would probably not notice problems if other things weren't going on.</p><p>Plus, those other items are kind of subject to some variability based on platform and expectations, so while recommendations are nice these are not the blocking issues.<br></p><p>I am therefore going to be looking elsewhere. <br></p>
+<p>The two issues I am focusing on here are:</p>
+<ul>
+<li>The influence of and lack of guidance about "higher level protocols", and</li>
+<li>The inability to handle multilingual text by default</li>
+</ul>
+Now these items are ones I started really jumping into with other blogs like <a href="http://archives.miloush.net/michkap/archive/2007/01/06/1421178.html" class="" mce_href="http://archives.miloush.net/michkap/archive/2007/01/06/1421178.html"><b>Mixing 
+it up with bidirectional text</b></a>&nbsp;and <a href="http://archives.miloush.net/michkap/archive/2008/04/07/8364480.html" class="" mce_href="http://archives.miloush.net/michkap/archive/2008/04/07/8364480.html"><b>The 
+Bug(s) Spotted, aka Design flaws are worse than bugs</b></a> and <b><a href="http://archives.miloush.net/michkap/archive/2008/04/18/8405696.html" mce_href="http://archives.miloush.net/michkap/archive/2008/04/18/8405696.html">The mythical nature of bidirectional support, and where the wheels come off the wagon</a></b>.<p>The simple problem is best stated as:</p><blockquote><p><font size="4"><b>The Unicode Bidirectional Algorithm cannot handle text from both left-to-right and right-to-left languages together in the same line of text.</b></font></p></blockquote><p>That is it, right there.<br></p><p>Sure the <a href="http://www.unicode.org/reports/tr9/" mce_href="http://www.unicode.org/reports/tr9/">UBA</a> has all of that hand-wavey text about "higher level protocols" but all theyr eally did was create their own SEP field.</p><p>You know what an SEP is, right?</p><p>It's a Douglas Adam thing, so I'll let him explain it: <br></p><blockquote><p><i>An SEP is something we can't see, or don't see, or our brain doesn't let us see, because we think that it's somebody else's problem.... The brain just edits it out, it's like a blind spot. If you look at it directly you won't see it unless you know precisely what it is. Your only hope is to catch it by surprise out of the corner of your eye.</i></p></blockquote><p>This basically also explains why Unicode hasn't dealt with the issue, since they rely "...on people's natural predisposition not to see anything they don't want to, weren't expecting, or can't explain..." and talk about higher level protocols as a way of saying that someone else has to deal with it.</p><p>But I can look at things like this:</p><p><img src="http://trigeminal.fmsinc.com/images/english_MUI.png" width="571" height="1028"></p><p>and this:</p><p><img src="http://trigeminal.fmsinc.com/images/mui_hebrew.png"></p><p>and I know that there are quite a few inadequate somebody elses out there.</p><p>Even my Mac runs into those same problems. Even when the text is plain:</p><p><img src="http://trigeminal.fmsinc.com/images/TextEditBidi.png" alt="http://www.trigeminal.com/images/TextEditBidi.png"> <br></p><p>The section in the UBA about <a href="http://www.unicode.org/reports/tr9/#Higher-Level_Protocols" mce_href="http://www.unicode.org/reports/tr9/#Higher-Level_Protocols">Higher Level Protocols</a> show how much clients are left on their own to figure stuff out: </p><blockquote><blockquote><blockquote><h3 class="section"><font face="times new roman,times">4.3 <a title="Higher-Level_Protocols" class="" name="Higher-Level_Protocols"></a>Higher-Level Protocols</font></h3>
+  <p><font face="times new roman,times">The following clauses are the only permissible ways for systems to apply higher-level protocols 
+  to the ordering of bidirectional text. Some of the clauses apply to <i>segments</i> of structured 
+  text. This refers to the situation where text is interpreted as being structured, whether with 
+  explicit markup such as XML or HTML, or internally structured such as in a word processor or 
+  spreadsheet. In such a case, a segment is span of text that is distinguished in some way by the 
+  structure.&nbsp; </font></p>
+  <table class="noborder" border="0" cellpadding="4" cellspacing="0">
+    <tbody><tr>
+      <td class="noborder" valign="top">
+      <p class="noborder"><font face="times new roman,times"><i><a title="HL1" class="" name="HL1"></a>HL1.</i></font></p></td>
+      <td class="noborder" valign="top">
+      <p><font face="times new roman,times"><i>Override P3, and set the paragraph embedding level explicitly.</i></font></p>
+      <ul><li><font face="times new roman,times">
+        A higher-level protocol may set the paragraph level explicitly and 
+        ignore P3. This can be done on the basis of the context, such as on a table cell, paragraph, 
+        document, or system level.</font></li></ul>
+      </td>
+    </tr>
+    <tr>
+      <td class="noborder" valign="top"><font face="times new roman,times"><i><a title="HL2" class="" name="HL2"></a>HL2.</i></font></td>
+      <td class="noborder" valign="top"><font face="times new roman,times"><i>Override W2, and set EN or AN explicitly.</i></font>
+      <ul><li><font face="times new roman,times">A higher-level process may reset characters of type EN to AN, or vice versa, and ignore 
+        W2. For example, style sheet or markup information can be used within a span of text to 
+        override the setting of EN text to be always be AN, or vice versa.</font></li></ul>
+      </td>
+    </tr>
+    <tr>
+      <td class="noborder" valign="top"><font face="times new roman,times"><i><a title="HL3" class="" name="HL3"></a>HL3.</i></font></td>
+      <td class="noborder" valign="top"><font face="times new roman,times"><i>Emulate directional overrides or embedding codes.</i></font>
+      <ul><li><font face="times new roman,times">A higher-level protocol can impose a directional override or embedding on a segment of 
+        structured text. The behavior must always be defined by reference to what would happen if 
+        the equivalent explicit codes as defined in the algorithm were inserted into the text. For 
+        example, a style sheet or markup can set the embedding level on a span of text.</font></li></ul>
+      </td>
+    </tr>
+    <tr>
+      <td class="noborder" valign="top"><font face="times new roman,times"><i><a title="HL4" class="" name="HL4"></a>HL4.</i></font></td>
+      <td class="noborder" valign="top"><font face="times new roman,times"><i>Apply the Bidirectional Algorithm to segments</i>.</font><ul><li><font face="times new roman,times">The Bidirectional Algorithm can be applied independently to one or more segments of structured 
+        text. For example, when displaying a document consisting of textual data and visible markup 
+        in an editor, a higher-level process can handle syntactic elements in the markup separately 
+        from the textual data.</font></li></ul>
+      </td>
+    </tr>
+    <tr>
+      <td class="noborder" valign="top"><font face="times new roman,times"><i><a title="HL5" class="" name="HL5"></a>HL5.</i></font></td>
+      <td class="noborder" valign="top"><font face="times new roman,times"><i>Provide artificial context.</i></font>
+      <ul><li><font face="times new roman,times">Text can be processed by the Bidirectional Algorithm as if it were preceded by a character of a 
+        given type and/or followed by a character of a given type. This allows a piece of text that 
+        is extracted from a longer sequence of text to behave as it did in the larger context.</font></li></ul>
+      </td>
+    </tr>
+    <tr>
+      <td class="noborder" valign="top"><font face="times new roman,times"><i><a title="HL6" class="" name="HL6"></a>HL6.</i></font></td>
+      <td class="noborder" valign="top"><font face="times new roman,times"><i>Additional mirroring</i>.</font><ul><li><font face="times new roman,times">Characters with a resolved directionality of R that do not
+ have the Bidi_Mirrored property can also be depicted by 
+		a mirrored glyph in specialized contexts. Such contexts include, but are 
+		not limited to, historic scripts and associated punctuation, private-use 
+		characters, and characters in mathematical expressions. (See <span class="section">Section </span><span class="secno">6,</span><i> <a href="http://www.unicode.org/reports/tr9/#Mirroring">Mirroring</a></i>.)</font></li></ul>
+      </td>
+    </tr>
+  </tbody></table>
+  <p><font face="times new roman,times">Clauses HL1 and HL3 are not logically necessary; they are covered by applications of clauses HL4 
+  and HL5. However, they are included for clarity because they are more common operations.</font></p>
+  <p><font face="times new roman,times">As an example of the application of HL4, suppose an XML document contains the following 
+  fragment. (Note: This is a simplified example for illustration: element names, attribute names, 
+  and attribute values could all be involved.)</font></p>
+  <blockquote>
+	<p><font face="times new roman,times"><code style="font-size: 86%;">ARABICenglishARABIC&lt;e1 type='ab'&gt;ARABICenglish&lt;e2 type='cd'&gt;english</code></font></p>
+	</blockquote>
+  <p><font face="times new roman,times">This can be analyzed as being five different segments:</font></p>
+  <ol type="a"><li><font face="times new roman,times"><code style="font-size: 86%;">ARABICenglishARABIC</code></font></li><li><font face="times new roman,times"><code style="font-size: 86%;">&lt;e1 type='ab'&gt;</code></font></li><li><font face="times new roman,times"><code style="font-size: 86%;">ARABICenglish</code></font></li><li><font face="times new roman,times"><code style="font-size: 86%;">&lt;e2 type='cd'&gt;</code></font></li><li><font face="times new roman,times"><code style="font-size: 86%;">english</code></font></li></ol>
+  <p><font face="times new roman,times">To make the XML file readable as source text, the display in an editor 
+	could order these elements all in a uniform direction (for example, all left-to-right) and apply the 
+	Bidirectional Algorithm to each 
+  field separately. It could also choose to order the element names, attribute names, and attribute 
+  values uniformly in the same direction (for example, all left-to-right). For final display, the markup 
+  could be ignored, allowing all of the text (segments a, c, and e) to be reordered together.</font></p>
+  <p><font face="times new roman,times">When text using a higher-level protocol is to be converted to Unicode plain text, for 
+  consistent appearance formatting codes should be inserted to ensure that the order matches that of 
+  the higher-level protocol.</font></p></blockquote></blockquote></blockquote><p>This information is so helpful that implementers can't even have their text look wrong in a consistent way -- every implementation has their own mistakes.</p><p>Even in plain text, when the whole higher level protocol is arguable.<br></p><p>And yes you can solve all such cases with RLM and LRM and RLE and LRE and PDF, sure. But with no standard on how to apply these in plain text, or how to make the standard itself pass my own "smart as an 8-year old" test (something those eight-year olds can do in cases like the above and in harder cases like in <b><a href="http://archives.miloush.net/michkap/archive/2008/04/18/8405696.html" mce_href="http://archives.miloush.net/michkap/archive/2008/04/18/8405696.html">The mythical nature of bidirectional support, and where the wheels come off the wagon</a></b>).</p><p>Certainly some cases are exceptional, but the default case is mixed language text is broken now.</p><p>More importantly, the "islands of text of one language in a sea of another language" is also broken. For no good reason, really. <br></p><p>Perhaps the organization that Microsoft and all of these other big
+companies pay ten times the price of an Optimus keyboard a year to needs to start doing a bit of higher
+level work here, rather than passing the buck to random protocols.<br></p>
+<p>Because it is clearly our problem (and everyone else's)....</p>
+<p>Which makes it theirs! :-)<br></p>
+<p><br></p><p><font color="#ff00ff"><i>This blog&nbsp;brought to you by&nbsp;</i></font><font color="#ff00ff"><i><a href="http://www.fileformat.info/info/unicode/char/200e" class="" mce_href="http://www.fileformat.info/info/unicode/char/200e">U+200e</a></i></font><font color="#ff00ff"><i>&nbsp;and </i></font><font color="#ff00ff"><i><a href="http://www.fileformat.info/info/unicode/char/200f" class="" mce_href="http://www.fileformat.info/info/unicode/char/200f">U+200f</a></i></font><font color="#ff00ff"><i> (aka&nbsp;LEFT-TO-RIGHT MARK and RIGHT-TO-LEFT MARK)</i></font> <br></p>
+<hr/><p><a id="8903129" href="#8903129">#</a> <strong>anon</strong> on 28 Aug 2008 6:02 AM:</p><div style="margin-left: 1em"><p>Do you think this problem is solvable? &nbsp;Can the UBA do much better without knowing the meaning of the text it's laying out?</p></div>
+<hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2010/07/23 <a href="http://archives.miloush.net/michkap/archive/2010/07/23/10041679.html">It used to be Windows doing it right, and Office following. But now...</a></p><p>2009/06/29 <a href="http://archives.miloush.net/michkap/archive/2009/06/29/9800913.html">UCS-2 to UTF-16, Part 11: Turning it up to Eleven!</a></p><p>2008/09/15 <a href="http://archives.miloush.net/michkap/archive/2008/09/15/8951496.html">Hi, I'm a PC. And I have a MAC. Wait, isn't that backwards? No worries, we're talking Bidi here!</a></p><p>2008/09/01 <a href="http://archives.miloush.net/michkap/archive/2008/09/01/8917599.html">Bidi, in your face[book]</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2008/08/25/8893208.html" title="In the name of God, St Michael, and St. George, I dub thee the SUBOptimus keyboard">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2008/08/22/8887005.html" title="What good is irony if it can&#39;t provide symmetry?">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2008-08">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2008-08-25">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2008/08/25/8893033.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:36 GMT -->
+</html>

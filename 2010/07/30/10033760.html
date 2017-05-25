@@ -1,0 +1,53 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2010/07/30/10033760.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:35 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Unicode without UNICODE/_UNICODE?</title></head><body>
+<h1>Unicode without UNICODE/_UNICODE?</h1>
+<p><em>by Michael S. Kaplan, published on 2010/07/30 07:01 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2010/07/30/10033760.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<p>A familiar question I got the other day:</p>
+<p style="padding-left: 30px;"><span style="font-family: times new roman,times;">We are considering porting a Win32 application to use Unicode for internal string handling and are trying to decide which encoding to use. We would like to use UTF-8 and wondered whether there is any way to tell the application to use this encoding without having to compile using the _UNICODE compiler switch. What we'd really like is to be able to call an equivalent to the SetConsoleCP function for a full blown Win32 application as opposed to just a console application. We have tried to achieve this by changing the locale setting but see no way to set code page 65001 using the SetThreadLocale API function. Is there any way to do this without compiling with the _UNICODE compiler switch?</span></p>
+<p style="padding-left: 30px;"><span style="font-family: times new roman,times;">Thanks in advance for you help.</span></p>
+<p>I think I've been asked this one before!</p>
+<p>The reason Andreas was unable to find a way to do this is that there is no way to do this.</p>
+<p>You cannot have a CP_ACP that is 65001 (UTF-8). Period.</p>
+<p>Having that would make migration to Unicode "easier", for developer "customers".</p>
+<p>But the cost to Microsoft would be scrubbing literally thousands (and when I say thousands I mean the high thousands!) of functions to make sure they behave okay with UTF-8 (a significant percentage of them will not, in fact).</p>
+<p>&nbsp;There would likely be little other time to do feature work in the next release of Windows beyond this one huge feature that most users&nbsp;would neither understand nor care about. That would be a hard sell to management, believe me!</p>
+<p>Now this is not to say it hasn't been prototyped to see what works, etc. Because it has (at least twice, over the years)....</p>
+<hr/><p><strong>Pascal Craponne</strong> on 30 Jul 2010 7:26 AM:</p><div style="margin-left: 1em"><p>I had the same problem, a few years ago.</p>
+<p>We finally decided to write a wrapper for the console, in order to convert internal unicode strings to something that could be displayed in the console.</p>
+<p>This worked fine, but of course, not all characters could be displayed. Anyway, since the console was not our main output device, it was fairly enough for us, even if not all characters could be displayed.</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 30 Jul 2010 8:06 AM:</p><div style="margin-left: 1em"><p>Note that if you run the same app with some of the modifications I posted, many more characters can be displayed.</p>
+<p>And if you run it in Powershell ISE, then you can see pretty much all of the characters!</p>
+</div>
+<p><strong>John Cowan</strong> on 30 Jul 2010 8:23 AM:</p><div style="margin-left: 1em"><p>Yet CP_ACP can be set to mixed 8/16 code pages, correct? &nbsp;It&#39;s strange that UTF-8 would break in ways that SJIS (say) would not. &nbsp;Not that I doubt you, it&#39;s just peculiar.</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 30 Jul 2010 8:40 AM:</p><div style="margin-left: 1em"><p>UTF-8&#39;s principal source of breakage as an ACP is in all the code that assumes a maximum of two bytes per character. As an OEMCP the bugs are more subtle but are still present in a few cases....</p>
+</div>
+<p><strong>Yuhong Bao</strong> on 31 Jul 2010 12:58 PM:</p><div style="margin-left: 1em"><p>Well, you know that it is standard for Unix nowadays, do you? Which is why it is unfortunate that the CRT do not support UTF-8.</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 31 Jul 2010 2:12 PM:</p><div style="margin-left: 1em"><p>I know it&#39;s the standard for UNIX. As is writing all their shell scripts in Notepad. :-)</p>
+</div>
+<p><strong>Yuhong Bao</strong> on 31 Jul 2010 3:36 PM:</p><div style="margin-left: 1em"><p>Yep, I remember that UTF-8 BOM fiasco, a curse of the Microsoft bureaucracy. What do you think of that issue?</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 31 Jul 2010 3:44 PM:</p><div style="margin-left: 1em"><p>I&#39;ve already written about it. UNIX shell scripts authors are a bunch of whiners who shouldn&#39;t use programs from &nbsp;companies they claim to hate so much!</p>
+</div>
+<p><strong>Yuhong Bao</strong> on 31 Jul 2010 3:48 PM:</p><div style="margin-left: 1em"><p>Yes, but I am talking about the UTF-8 BOM fiasco in general, not just shell scripts. </p>
+</div>
+<p><strong>Yuhong Bao</strong> on 31 Jul 2010 3:55 PM:</p><div style="margin-left: 1em"><p>And when I mention &quot;a curse of the Microsoft bureaucracy&quot;, I am particularly thinking of your patch which added not only UTF-8 without BOM support but also OEM code page support handy for editing Windows batch files.</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 31 Jul 2010 3:56 PM:</p><div style="margin-left: 1em"><p>I don&#39;t see it as a fiasco. The scenario is valid and Microsoft makes use of the scenario. End of story....</p>
+</div>
+<p><strong>Yuhong Bao</strong> on 31 Jul 2010 4:07 PM:</p><div style="margin-left: 1em"><p>BTW, even better would be to provide a text box in the Open/Save dialogs where the user can type in a codepage number, which of course would require an UI change.</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 31 Jul 2010 4:25 PM:</p><div style="margin-left: 1em"><p>Better for who? Unicode is the future, code pages are the past -- guess which one is the priority in top level Windows UI? :-)</p>
+</div>
+<p><strong>Dan Bishop</strong> on 31 Jul 2010 5:11 PM:</p><div style="margin-left: 1em"><p>Where is all this code that assumes a maximum of two bytes per character? &nbsp;Seems to me that a more common false assumption would be ONE byte per character. &nbsp;Or assuming that you can use a byte-oriented Find function for strings, which breaks for the Asian code pages but NOT for UTF-8.</p>
+<p>I&#39;m working on some cross-platform libraries (using UTF-8 strings) and it&#39;s VERY frustrating that I can&#39;t even call fopen on Windows because the character encoding is wrong.</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 31 Jul 2010 5:34 PM:</p><div style="margin-left: 1em"><p>The &quot;ANSI&quot; code path. Since no Windows &quot;ANSI&quot; code page is ever more than two bytes per &quot;character&quot;, the assumption is valid for all intended cases. Of course this design limits options for making use of some code pages or UTF-8 as an ACP, it is as true design limitation, which was the point of this blog -- that there is no option to magically support a UTF-8 ACP.</p>
+</div>
+<hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2010/07/31/10044476.html" title="They&#39;re going the wrong way.">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2010/07/29/10043668.html" title="4 out the door, in both 32 &amp; 64 (aka What Irish, Malay, Maltese &amp; Bengali have in common)">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2010-07">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2010-07-30">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2010/07/30/10033760.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:35 GMT -->
+</html>

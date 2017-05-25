@@ -1,0 +1,28 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2012/05/31/10312206.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:33 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Are you an unmarked literal or a placeholder? (man or mouse?)</title></head><body>
+<h1>Are you an unmarked literal or a placeholder? (man or mouse?)</h1>
+<p><em>by Michael S. Kaplan, published on 2012/05/31 07:01 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2012/05/31/10312206.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<p>The question brings out one of the less intuitive behaviors of .NET Globalization:</p>
+<p style="padding-left: 60px;"><span style="font-family: times new roman,times; font-size: medium;">Guys, I know I have already bugged you about this, but this thing keeps puzzling me.</span></p>
+<p style="padding-left: 60px;"><span style="font-family: times new roman,times; font-size: medium;">The most harmless .NET code on Earth</span></p>
+<p style="padding-left: 60px;"><span style="font-family: times new roman,times; font-size: medium;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Console.WriteLine(DateTime.Now.ToString("H:mm:ss", new CultureInfo("pa-Arab-PK")));</span><br /><span style="font-family: times new roman,times; font-size: medium;">prints</span><br /><span style="font-family: times new roman,times; font-size: medium;">21.28.15</span></p>
+<p style="padding-left: 60px;"><span style="font-family: times new roman,times; font-size: medium;">The pattern "H:mm:ss" was obtained from the list of all long time 24-hour patterns that .NET returns and used unmodified, as an opaque string. The MSDN library says .NET takes .TimeSeparator from .ShortTimePattern; so it is a dot and all colons in the long time pattern get resolved to dots.</span></p>
+<p style="padding-left: 60px;"><span style="font-family: times new roman,times; font-size: medium;">It feels like a bug. Apparently .NET cannot properly handle NLS data with different time separators within the same locale. The question is: is it a good idea to introduce such data that .NET cannot handle, even if we are told it is what Punjabi people really want?</span></p>
+<p>Yes,&nbsp;and the <a href="http://msdn.microsoft.com/library/system.globalization.datetimeformatinfo.timeseparator.aspx">DateTimeFormatInfo.TimeSeparator Property</a> docs do say this.</p>
+<p>But they say more than that. They point out, at length:</p>
+<p style="padding-left: 60px;"><span style="color: #3366ff;"><strong>Remarks</strong></span></p>
+<p style="padding-left: 90px;"><span style="color: #3366ff;">If the custom pattern includes the format pattern ":", DateTime.ToString displays the value of TimeSeparator in place of the ":" in the format pattern.</span></p>
+<p style="padding-left: 90px;"><span style="color: #3366ff;">The time separator is derived from the ShortTimePattern property. Your applications are recommended to set the short or long time patterns to the exact values of interest, instead of attempting to have the time separator replaced. For example, to obtain the pattern h-mm-ss, the application should set "h-mm-ss" specifically. This also permits the setting of patterns such as "h'h 'mm'm 'ss's'" (3h 36m 12s) that don't contain a traditional separator between all parts of the format.</span></p>
+<p>Perhaps this very&nbsp;issue -- the way that (for example) calling <a href="http://msdn.microsoft.com/library/dah0ktz1">DateTimeFormatInfo.GetAllDateTimePatterns Method (Char)</a> with the "T" (Long time pattern) can lead to unexpected results that seem to not go along harmoniously with an established separatof, given the fact that there is no way for .NET or Windows or anyone to discern the true intent of the COLON and such: whether it is intended to be a literal that is inserted as is, or a placeholder for the <a href="http://msdn.microsoft.com/library/system.globalization.datetimeformatinfo.timeseparator.aspx">TimeSeparator</a>.</p>
+<p>One theoretical "fix" to make sure the intent is never unclear would be to remove the whole notion of de facto (i.e. unmarked) literals and always require everything that is not an insert to be a literal.</p>
+<p>Though the cost (virtually every format string being more complicated, and less intuitive) is pretty high -- perhaps unexpectedly high.</p>
+<p>It's probably easier to just confuse a few people, rather than to confuse&nbsp;many of them!</p>
+<hr/><p><strong>Joshua</strong> on 31 May 2012 9:31 AM:</p><div style="margin-left: 1em"><p>Ewwww. Just for that, I&#39;m leaning to using HL7&#39;s time format internally.</p>
+<p>You know the format: yyyy[MM[dd[HH[mm[ss[.f[f[f[f]]]]]]]]][±ZZzz].</p>
+<p>It has the nice advantage of recording its precision in the time format.</p>
+</div>
+<hr/><p><em>go to <a id="newer" href="../../06/01/10313124.html" title="Have you started looking at the Windows 8 Release Preview yet?">newer</a> or <a id="older" href="../30/10311665.html" title="The date we&#39;ll add the INDIAN RUPEE SIGN to the &#39;United States - International&#39; keyboard layout">older</a> post, or back to <a href="../../../index-2.html">index</a> or <a href="../../../index-2.html#2012-05">month</a> or <a href="../../../index-2.html#2012-05-31">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2012/05/31/10312206.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:33 GMT -->
+</html>

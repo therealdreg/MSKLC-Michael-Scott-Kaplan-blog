@@ -1,0 +1,31 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2007/08/08/4291958.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:37 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>The user locale of the system account is not the system locale</title></head><body>
+<h1>The user locale of the system account is not the system locale</h1>
+<p><em>by Michael S. Kaplan, published on 2007/08/08 07:12 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2007/08/08/4291958.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P>One can&nbsp;get into trouble when one mixes metaphors....</P>
+<P>Take for example the&nbsp;<A class="" href="http://msdn2.microsoft.com/library/ms776315.aspx" mce_href="http://msdn2.microsoft.com/library/ms776315.aspx">GetSystemDefaultLCID</A> function from the Win32 API, which as the documentation claims will "Returns the locale identifier for the system default locale." We know that this is the language for non-Unicode programs, which is not entirely relevant here so we'll ignore that for a moment.</P>
+<P>Then take the <A class="" href="http://msdn2.microsoft.com/library/ms776244.aspx" mce_href="http://msdn2.microsoft.com/library/ms776244.aspx">GetUserDefaultLCID</A>&nbsp;function, also from the Win32 API. It is documented that it "Returns the locale identifier for the user default locale." This will be done for the current user, or sometimes an impersonated user if that user's profile is available (for more on that issues see my old post <STRONG><A class="" href="http://archives.miloush.net/michkap/archive/2005/03/19/398994.html" mce_href="http://archives.miloush.net/michkap/archive/2005/03/19/398994.html">Impersonation and NLS</A></STRONG>).</P>
+<P>Okay, now what happens if you are running code in a service that is running under the "LocalSystem" account, also known as SYSTEM.</P>
+<P>The current user is the system, so shouldn't that mean that <A class="" href="http://msdn2.microsoft.com/library/ms776315.aspx" mce_href="http://msdn2.microsoft.com/library/ms776315.aspx">GetSystemDefaultLCID</A> and <A class="" href="http://msdn2.microsoft.com/library/ms776244.aspx" mce_href="http://msdn2.microsoft.com/library/ms776244.aspx">GetUserDefaultLCID</A>&nbsp;should return the same thing?</P>
+<P>Well, it turns out they don't. Because the user locale of the system account is not the system locale, at all. They are entirely separate and unrelated....</P>
+<P mce_keep="true">&nbsp;</P>
+<P><FONT color=#ff00ff><EM>This post brought to you by</EM> <FONT size=5>δ</FONT> <EM>(<A class="" href="http://www.fileformat.info/info/unicode/char/06cc/i" mce_href="http://www.fileformat.info/info/unicode/char/06cc/i">U+03b4</A>, a.k.a. GREEK SMALL LETTER DELTA)</EM></FONT></P>
+<hr/><p><a id="4294508" href="#4294508">#</a> <strong>Mike Dimmick</strong> on 8 Aug 2007 11:59 AM:</p><div style="margin-left: 1em"><p>It's the locale of the default user profile, isn't it? As I recall, the only way to change that in the UI (in XP and 2003) is to click the checkbox under 'Default user account settings' on the Advanced tab of Regional and Language Options.</p>
+<p>My recollection is that it's not possible to edit this setting through the regular UI in Windows 2000 (might be possible in TweakUI!)</p>
+</div>
+<p><a id="4295289" href="#4295289">#</a> <strong>Michael S. Kaplan</strong> on 8 Aug 2007 12:52 PM:</p><div style="margin-left: 1em"><p>Indeed, it is -- no direct way to change though I think you could use the unattend support running under the system account in Win2000....</p>
+</div>
+<p><strong>neeraj</strong> on 15 Jun 2010 7:27 AM:</p><div style="margin-left: 1em"><p>how do we set the system accounts locale then?</p></div>
+<p><strong>Michael S. Kaplan</strong> on 15 Jun 2010 7:31 AM:</p><div style="margin-left: 1em"><p>See the earlier comments about this, which explain how to do this on &gt;= Windows XP.</p>
+</div>
+<p><strong>ciscogambo</strong> on 13 Jul 2010 1:19 PM:</p><div style="margin-left: 1em"><p>Changing the locale of the system account...</p>
+<p>On Windows Server 2003 there is a checkbox &quot;Apply all settings to the current user account and to the default user profile&quot; found on Regional and Language Options - Advanced tab.</p>
+<p>On Windows Server 2008 there is a button &quot;Change system locale&quot; on the Regional and Language Options - Administrative tab.</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 13 Jul 2010 2:57 PM:</p><div style="margin-left: 1em"><p>Actually, in Server 2008 and Server 2008 R2, it is the &quot;Copy Settings&quot; button that does the same thing. NOT the other button you mention...</p>
+</div>
+<hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2008/08/05 <a href="http://archives.miloush.net/michkap/archive/2008/08/05/8833203.html">On describing poorly (and on not listening)</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2007/08/09/4317492.html" title="The phantom kern get smashed, but he may invade someone else&#39;s space if he does">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2007/08/07/4280884.html" title="The SIAO submarine running silent, and a scheduled live appearance">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2007-08">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2007-08-08">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2007/08/08/4291958.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:37 GMT -->
+</html>

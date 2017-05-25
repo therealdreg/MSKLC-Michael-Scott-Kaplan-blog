@@ -1,0 +1,67 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2008/01/28/7287476.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:36 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Behold the Table Driven Text Service, Part 5 (All about the language, baby!)</title></head><body>
+<h1>Behold the Table Driven Text Service, Part 5 (All about the language, baby!)</h1>
+<p><em>by Michael S. Kaplan, published on 2008/01/28 09:31 -05:00, original URI: http://blogs.msdn.com/b/michkap/archive/2008/01/28/7287476.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P>Prior posts in the series:</P>
+<UL>
+<LI><A class="" href="http://archives.miloush.net/michkap/archive/2008/01/21/7178421.html" mce_href="http://archives.miloush.net/michkap/archive/2008/01/21/7178421.html"><STRONG>0 (You have to start somewhere)</STRONG></A> 
+<LI><A class="" href="http://archives.miloush.net/michkap/archive/2008/01/22/7179223.html" mce_href="http://archives.miloush.net/michkap/archive/2008/01/22/7179223.html"><STRONG>1 (Starting with a dictionary simple in every way)</STRONG></A> 
+<LI><A class="" href="http://archives.miloush.net/michkap/archive/2008/01/23/7179692.html" mce_href="http://archives.miloush.net/michkap/archive/2008/01/23/7179692.html"><STRONG>2 (Three ways to convert!)</STRONG></A> 
+<LI><A class="" href="http://archives.miloush.net/michkap/archive/2008/01/24/7180212.html" mce_href="http://archives.miloush.net/michkap/archive/2008/01/24/7180212.html"><STRONG>3 (Where do keystrokes come in?)</STRONG></A></LI>
+<LI><A class="" href="http://archives.miloush.net/michkap/archive/2008/01/25/7227422.html" mce_href="http://archives.miloush.net/michkap/archive/2008/01/25/7227422.html"><STRONG>4 (Specifying when to modify, if not how)</STRONG></A></LI></UL>
+<P>Last time I promised</P>
+<BLOCKQUOTE>
+<P><EM><FONT face="times new roman,times">Next up, I'll cover some of the other settings in the [Configuration] section, or I might cover the language settings. Whichever one I don't do next will be done the time after....</FONT></EM></P></BLOCKQUOTE>
+<P>But who are we kidding here? Language settings are always gonna come first for me; we all know that, right?</P>
+<P>Not that I like being so boring and predictable, mind you. I'll explain how I have been working on that another day.... :-)</P>
+<P>Anyway, the language settings.</P>
+<P>We start in the</P>
+<BLOCKQUOTE>
+<P><STRONG>[System]</STRONG></P></BLOCKQUOTE>
+<P>section of the file, (by convention) right at the top of the file, and (again, by convention) the first line in the section will be</P>
+<BLOCKQUOTE>
+<P><STRONG>LangId = <EM>x</EM></STRONG></P></BLOCKQUOTE>
+<P>where <STRONG><EM>x</EM></STRONG> represents one of five different possible values. These possible values are:</P>
+<P>1) One of the many <STRONG>LANG_*</STRONG> constants defined in winnt.h from the time that Vista shipped, like <STRONG>LANG_MACEDONIAN</STRONG> or <STRONG>LANG_BENGALI</STRONG> or <STRONG>LANG_TAMIL</STRONG> or whatever, e.g.</P>
+<BLOCKQUOTE>
+<P><STRONG>LangId = LANG_BENGALI</STRONG></P></BLOCKQUOTE>
+<P>and yes those spaces are okay there. Let's do me a favor and not get me started on the spaces there....</P>
+<P>This seems pretty straightforward, right?</P>
+<P>I know the list is the Vista RTM one as at the time after I had just gotten that Amharic IME in (as previously mentioned in <A class="" href="http://archives.miloush.net/michkap/archive/2006/08/02/686384.html" mce_href="http://archives.miloush.net/michkap/archive/2006/08/02/686384.html"><STRONG>Hang on just a [Hansel]Minute!</STRONG></A> and <A class="" href="http://archives.miloush.net/michkap/archive/2007/10/22/5590751.html" mce_href="http://archives.miloush.net/michkap/archive/2007/10/22/5590751.html"><STRONG>We weren't Vista heroes, but I think we were kinda heroic</STRONG></A>), I looked to make sure that LANG_AMHARIC was there, and it wasn't. And most of the new Vista locales weren't either, so I added them. :-)</P>
+<P>Then I worked with colleague <A class="" href="http://imdb.com/name/nm1508995/" mce_href="http://imdb.com/name/nm1508995/">Jennifer Shepherd</A> to get an icon in for the Amharic input method....</P>
+<P>The <STRONG>LANG_*</STRONG> constant works by calling <A class="" href="http://msdn2.microsoft.com/library/ms776270.aspx" mce_href="http://msdn2.microsoft.com/library/ms776270.aspx">GetLocaleInfo</A> with that value, which means it will expand to <STRONG>LANG_*, SUBLANG_DEFAULT</STRONG> as GetLocaleInfo is wont to do. It will be called with the LOCALE_SABBREVLANGNAME lcype&nbsp;which will be&nbsp;used as described in <A class="" href="http://archives.miloush.net/michkap/archive/2006/09/27/773341.html" mce_href="http://archives.miloush.net/michkap/archive/2006/09/27/773341.html"><STRONG>LOCALE_SABBREVLANGNAME is more than just an ISO-639 code</STRONG></A>&nbsp;and <A class="" href="http://archives.miloush.net/michkap/archive/2005/02/17/375235.html" mce_href="http://archives.miloush.net/michkap/archive/2005/02/17/375235.html"><STRONG>LOCALE_SABBREVLANGNAME is so not an ISO-639 code</STRONG></A>.</P>
+<P>2) One of the many <STRONG>LANG_*</STRONG> constants defined in winnt.h from the time that Vista shipped, like <STRONG>LANG_MACEDONIAN</STRONG> or <STRONG>LANG_BENGALI</STRONG> or <STRONG>LANG_TAMIL</STRONG> or whatever, followed by a comm a and a space, followed by one of the many <STRONG>SUBLANG_*</STRONG> constants defined in winnt.h from the time Vista shipped, like <STRONG>SUBLANG_DEFAULT</STRONG> or <STRONG>SUBLANG_BENGALI_INDIA</STRONG> or whatever, e,g,</P>
+<BLOCKQUOTE>
+<P><STRONG>LangId = LANG_BENGALI, SUBLANG_BENGALI_INDIA</STRONG></P></BLOCKQUOTE>
+<P>Again working the same way via that <A class="" href="http://msdn2.microsoft.com/library/ms776270.aspx" mce_href="http://msdn2.microsoft.com/library/ms776270.aspx">GetLocaleInfo</A>&nbsp;call, via a MAKELANGID macro to turn the two values into a number and the function will be called with the LOCALE_SABBREVLANGNAME lcype&nbsp;which will be&nbsp;used as described in <A class="" href="http://archives.miloush.net/michkap/archive/2006/09/27/773341.html" mce_href="http://archives.miloush.net/michkap/archive/2006/09/27/773341.html"><STRONG>LOCALE_SABBREVLANGNAME is more than just an ISO-639 code</STRONG></A>&nbsp;and <A class="" href="http://archives.miloush.net/michkap/archive/2005/02/17/375235.html" mce_href="http://archives.miloush.net/michkap/archive/2005/02/17/375235.html"><STRONG>LOCALE_SABBREVLANGNAME is so not an ISO-639 code</STRONG></A>.</P>
+<P>3) A numeric value of any valid PRIMARYLANGID or LANGID, e.g.</P>
+<BLOCKQUOTE>
+<P><STRONG>LangId = 0x0409</STRONG></P></BLOCKQUOTE>
+<P>which will see <A class="" href="http://msdn2.microsoft.com/library/ms776270.aspx" mce_href="http://msdn2.microsoft.com/library/ms776270.aspx">GetLocaleInfo</A>&nbsp;be called with the LOCALE_SABBREVLANGNAME lcype&nbsp;which will be&nbsp;used as described in <A class="" href="http://archives.miloush.net/michkap/archive/2006/09/27/773341.html" mce_href="http://archives.miloush.net/michkap/archive/2006/09/27/773341.html"><STRONG>LOCALE_SABBREVLANGNAME is more than just an ISO-639 code</STRONG></A>&nbsp;and <A class="" href="http://archives.miloush.net/michkap/archive/2005/02/17/375235.html" mce_href="http://archives.miloush.net/michkap/archive/2005/02/17/375235.html"><STRONG>LOCALE_SABBREVLANGNAME is so not an ISO-639 code</STRONG></A>.</P>
+<P>4) #2 with a&nbsp;LANG_*&nbsp;constant&nbsp;for the PRIMARYLANGID and 0xFFFF for the SUBLANGID, e.g.</P>
+<BLOCKQUOTE>
+<P><STRONG>LangId = LANG_BENGALI, 0xFFFF</STRONG></P></BLOCKQUOTE>
+<P>This odd 0xFFFF value is something that TextTableService.dll thinks of as the neutral setting, and it will then add the input method as n option to all of the SUBLANGID values under that PRIMARYLANGID&nbsp;-- thus under <STRONG>Bengali (India)</STRONG> and <STRONG>Bengali (Bangladesh)</STRONG> in the above example.</P>
+<P>5) #3 with the 0xFFFF value (or #2 with 0xFFFF for both PRIMARYLANGID and SUBLANGID values, e.g. either of the following:</P>
+<BLOCKQUOTE>
+<P><STRONG>LangId = 0xFFFF<BR><BR>LangId = 0xFFFF, 0xFFFF</STRONG></P></BLOCKQUOTE>
+<P>Either of these values will cause the input method to be included as an option under all languages.</P>
+<P>Anyhow....</P>
+<P>At this point you may be wondering one or both of the two things I was wondering about:</P>
+<UL>
+<LI>What about locale names instead of LCIDs, since that would just be a call to <A class="" href="http://msdn2.microsoft.com/library/ms776365.aspx" mce_href="http://msdn2.microsoft.com/library/ms776365.aspx">GetLocaleInfoEx</A> with everything else the same?</LI>
+<LI>What about custom language names, whether via something akin to the hack I described in <A class="" href="http://archives.miloush.net/michkap/archive/2007/08/25/4564548.html" mce_href="http://archives.miloush.net/michkap/archive/2007/08/25/4564548.html"><STRONG>MSKLC keyboard layout names in your own language</STRONG></A> or via an installed&nbsp;custom locale and a <A class="" href="http://msdn2.microsoft.com/library/ms776365.aspx" mce_href="http://msdn2.microsoft.com/library/ms776365.aspx">GetLocaleInfoEx</A>&nbsp;call?</LI></UL>
+<P>The answer to both questions will likely not be the one you are looking for (they were not the ones I wanted to hear!).</P>
+<P><STRONG>Not supported</STRONG>.</P>
+<P>But just to round out the <STRONG>[System]</STRONG> section information, here are some more entries (these ones pulled from the Yi IME -- you would fill in your own info):</P>
+<BLOCKQUOTE>
+<P>GuidProfile={&lt;fill in your own unique curly-brace delimited GUID value, please!}<BR>Description="Yi Input Method"<BR>Display Description="@%programFiles%\Windows NT\TableTextService\TableTextService.dll,-16"</P></BLOCKQUOTE>
+<P>Note the MUI-friendly string -- you can fill in your own DLL name and string index, obviously....</P>
+<P>I'll cover the rest of the settings like icon info in an upcoming post.</P>
+<P mce_keep="true">&nbsp;</P>
+<P><FONT color=#ff00ff><EM>This post brought to you by</EM><FONT size=5> ⑤ </FONT></FONT><EM><FONT color=#ff00ff>(</FONT><A class="" href="http://www.fileformat.info/info/unicode/char/2464" mce_href="http://www.fileformat.info/info/unicode/char/2464">U+2464</A><FONT color=#ff00ff>, aka CIRCLED DIGIT FIVE)</FONT></EM></P>
+<hr/><div style="margin-left: 1em"><em>no comments</em></div><hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2008/10/21 <a href="http://archives.miloush.net/michkap/archive/2008/10/21/9009276.html">Behond the Table Driven Text Service, Part 14 (Don't expect too much from numbers)</a></p><p>2008/07/25 <a href="http://archives.miloush.net/michkap/archive/2008/07/25/8771255.html">Behold the Table Driven Text Service, Part 13 (Sinhalification proclamation!)</a></p><p>2008/06/30 <a href="http://archives.miloush.net/michkap/archive/2008/06/30/8669123.html">Behold the Table Driven Text Service, Part 12 (The knights who say நீ, redux, #2)</a></p><p>2008/06/21 <a href="http://archives.miloush.net/michkap/archive/2008/06/21/8632391.html">Back to Sri Lanka (conceptually)</a></p><p>2008/02/25 <a href="http://archives.miloush.net/michkap/archive/2008/02/25/7884260.html">Behold the Table Driven Text Service, Part 11 (The knights who say நீ, redux, #1)</a></p><p>2008/02/15 <a href="http://archives.miloush.net/michkap/archive/2008/02/15/7713553.html">Behold the Table Driven Text Service, Part 10 ("Even Jove nods," Atlas shrugged, "so we'll convert their old files, now.")</a></p><p>2008/02/12 <a href="http://archives.miloush.net/michkap/archive/2008/02/12/7632387.html">Behold the Table Driven Text Service, Part 9 (Will you be content if I tell you how some content can be defined?)</a></p><p>2008/02/11 <a href="http://archives.miloush.net/michkap/archive/2008/02/11/7588649.html">Behold the Table Driven Text Service, Part 8 (Configuration 'junk in the trunk', part 2)</a></p><p>2008/01/30 <a href="http://archives.miloush.net/michkap/archive/2008/01/30/7321697.html">Behold the Table Driven Text Service, Part 7 (Configuration 'junk in the trunk', part 1)</a></p><p>2008/01/29 <a href="http://archives.miloush.net/michkap/archive/2008/01/29/7297793.html">Behold the Table Driven Text Service, Part 6 (it is sufficient to be iconic, aka DaYi, DaYi Aynu!)</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2008/01/29/7297793.html" title="Behold the Table Driven Text Service, Part 6 (it is sufficient to be iconic, aka DaYi, DaYi Aynu!)">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2008/01/28/7265016.html" title="What does the [cracked] SiaO crystal ball say about language support in XP SP3?">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2008-01">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2008-01-28">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2008/01/28/7287476.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:36 GMT -->
+</html>

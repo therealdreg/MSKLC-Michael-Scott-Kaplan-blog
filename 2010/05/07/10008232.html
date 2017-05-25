@@ -1,0 +1,174 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2010/05/07/10008232.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:35 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Cunningly conquering communicated console caveats. Comprende, mon Capitán?</title></head><body>
+<h1>Cunningly conquering communicated console caveats. Comprende, mon Capitán?</h1>
+<p><em>by Michael S. Kaplan, published on 2010/05/07 07:01 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2010/05/07/10008232.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P><EM><FONT color=#ff0000>If you are someone who is generally annoyed by my blather then you may skip to the code, otherwise I find it all interesting so I don't mind if you do, as well.....</FONT></EM></P>
+<P>Ok, so I wrote the&nbsp;blog&nbsp;<A href="http://archives.miloush.net/michkap/archive/2010/02/15/9963784.html" mce_href="http://archives.miloush.net/michkap/archive/2010/02/15/9963784.html"><STRONG>The real problem(s) with all of these console "fallback" discussions</STRONG></A> to point how backasswards most of the console code out there really is in relation to available Unicode support.</P>
+<P>And I wrote the blog <A href="http://archives.miloush.net/michkap/archive/2008/03/18/8306597.html" mce_href="http://archives.miloush.net/michkap/archive/2008/03/18/8306597.html"><STRONG>Conventional wisdom is retarded, aka What the @#%&amp;* is _O_U16TEXT?</STRONG></A> to point out how Unicode support was in there, even though no one thought it was.</P>
+<P>Then last month I wrote the blog <A href="http://archives.miloush.net/michkap/archive/2010/04/07/9989346.html" mce_href="http://archives.miloush.net/michkap/archive/2010/04/07/9989346.html"><STRONG>Anyone who says the console can't do Unicode isn't as smart as they think they are</STRONG></A> where I pointed out that this stuff can work even in places like .Net where people assume it won't.</P>
+<P>Now between these three blogs, I am telling <STRONG>a lot</STRONG> of people they are wrong. Including three prior versions of me, each of whom did not know the knowledge in some or all of these blogs.</P>
+<P>Now let's pretend that I hadn't written any of these for a moment.</P>
+<P>In fact, let's pretend I hadn't even <EM>read</EM> any of them.</P>
+<P>And that I had never heard of <STRONG>Michael S. Kaplan</STRONG> or <STRONG>Sorting it all Out</STRONG> at all.</P>
+<P>Just for a moment.</P>
+<P>Now further, pretend that I am just as ornery and non-authoritarian as I actually am usually.</P>
+<P>My response to these three blogs would be <STRONG>who the hell is Michael Kaplan?!?</STRONG></P>
+<P>I would look especially at that last blog and point out the flaws in the arguments made here, i.e.</P>
+<P><STRONG>There are so many caveats listed there that they could fill a whole 'nuther blog!</STRONG></P>
+<P>and</P>
+<P><STRONG>Sometimes you will still get question marks, other times you will get square boxes, and only occasionally will you get full support of text. </STRONG></P>
+<P>and</P>
+<P><STRONG>There is not a lot to help you detect which is which!</STRONG></P>
+<P>Those three points alone are all I would need to write all of this off as interesting but not useful for my console applications.</P>
+<P>I would demand those blanks be filled in, that the job get finished, or this <STRONG>Michael&nbsp;Kaplan</STRONG> fellow&nbsp;should just quit talking so much. Or writing so much. Or whatever so much.</P>
+<P><STRONG>Today</STRONG>, I am going to try to satisfy that fictional version of me, with a bit of code:</P>
+<BLOCKQUOTE><PRE class=code><SPAN style="COLOR: blue">using </SPAN>System;
+<SPAN style="COLOR: blue">using </SPAN>System.Text;
+<SPAN style="COLOR: blue">using </SPAN>System.Runtime.InteropServices;
+
+<SPAN style="COLOR: blue">public class </SPAN><SPAN style="COLOR: #2b91af">Test </SPAN>{
+    <SPAN style="COLOR: blue">public static void </SPAN>Main() {
+        <SPAN style="COLOR: blue">if</SPAN>(IsConsoleRedirected()) {
+            <SPAN style="COLOR: #2b91af">Console</SPAN>.WriteLine(<SPAN style="COLOR: #a31515">"You are running in a redirected console.\r\nWrite Unicode via WriteFile and be happy!"</SPAN>);
+        } <SPAN style="COLOR: blue">else </SPAN>{
+            <SPAN style="COLOR: blue">if</SPAN>(IsPowerShellIse()) {
+                <SPAN style="COLOR: #2b91af">Console</SPAN>.WriteLine(<SPAN style="COLOR: #a31515">"You are running in Powershell ISE and can support complex scripts."</SPAN>);
+            } <SPAN style="COLOR: blue">else </SPAN>{
+                <SPAN style="COLOR: blue">if</SPAN>(IsConsoleFontTrueType()) {
+                    <SPAN style="COLOR: #2b91af">Console</SPAN>.WriteLine(<SPAN style="COLOR: #a31515">"No PowerShell ISE, but a TrueType font is selected;\r\nyou can at least display some Unicode in CMD."</SPAN>);
+                } <SPAN style="COLOR: blue">else </SPAN>{
+                    <SPAN style="COLOR: #2b91af">Console</SPAN>.WriteLine(<SPAN style="COLOR: #a31515">"No PowerShell ISE, no TrueType font; you are limited to one code page."</SPAN>);
+                }
+            }
+        }
+    }
+
+    <SPAN style="COLOR: blue">internal static bool </SPAN>IsConsoleFontTrueType() {
+        <SPAN style="COLOR: #2b91af">IntPtr </SPAN>stdout = GetStdHandle(STD_OUTPUT_HANDLE);
+        CONSOLE_FONT_INFO_EX cfie = <SPAN style="COLOR: blue">new </SPAN>CONSOLE_FONT_INFO_EX();
+        cfie.cbSize = (<SPAN style="COLOR: blue">uint</SPAN>)<SPAN style="COLOR: #2b91af">Marshal</SPAN>.SizeOf(cfie);
+        <SPAN style="COLOR: blue">if</SPAN>(GetCurrentConsoleFontEx(stdout, <SPAN style="COLOR: blue">false</SPAN>, <SPAN style="COLOR: blue">ref </SPAN>cfie)) {
+            <SPAN style="COLOR: blue">return</SPAN>((cfie.FontFamily &amp; TMPF_TRUETYPE) == TMPF_TRUETYPE);
+        }
+        <SPAN style="COLOR: blue">return false</SPAN>;
+    }
+
+    <SPAN style="COLOR: blue">internal static bool </SPAN>IsPowerShellIse() {
+        <SPAN style="COLOR: blue">uint</SPAN>[] rgpl = <SPAN style="COLOR: blue">new uint</SPAN>[1];
+        <SPAN style="COLOR: blue">uint </SPAN>siz = GetConsoleProcessList(rgpl, 1);
+        <SPAN style="COLOR: blue">if</SPAN>(siz &gt; 0) {
+            rgpl = <SPAN style="COLOR: blue">new uint</SPAN>[siz];
+            siz = GetConsoleProcessList(rgpl, (<SPAN style="COLOR: blue">uint</SPAN>)rgpl.Length);
+            <SPAN style="COLOR: blue">for</SPAN>(<SPAN style="COLOR: blue">int </SPAN>pid=0; pid &lt; siz; pid++) {
+                <SPAN style="COLOR: #2b91af">StringBuilder </SPAN>sb = <SPAN style="COLOR: blue">new </SPAN><SPAN style="COLOR: #2b91af">StringBuilder</SPAN>(260);
+                <SPAN style="COLOR: blue">uint </SPAN>dwSize = (<SPAN style="COLOR: blue">uint</SPAN>)sb.Capacity;
+                <SPAN style="COLOR: #2b91af">IntPtr </SPAN>process = OpenProcess(PROCESS_QUERY_LIMITED_INFORMATION, <SPAN style="COLOR: blue">false</SPAN>, (<SPAN style="COLOR: blue">int</SPAN>)rgpl[(<SPAN style="COLOR: blue">int</SPAN>)pid]); 
+                QueryFullProcessImageName(process, 0, sb, <SPAN style="COLOR: blue">ref </SPAN>dwSize);<BR>                <SPAN style="COLOR: green">// Name of EXE is PowerShell_ISE.exe</SPAN>
+                <SPAN style="COLOR: blue">if</SPAN>(sb.ToString(0, (<SPAN style="COLOR: blue">int</SPAN>)dwSize).IndexOf(<SPAN style="COLOR: #a31515">"_ise"</SPAN>) != -1) {
+                    <SPAN style="COLOR: blue">return</SPAN>(<SPAN style="COLOR: blue">true</SPAN>);
+                }
+            }
+        }
+        <SPAN style="COLOR: blue">return</SPAN>(<SPAN style="COLOR: blue">false</SPAN>);
+    }
+
+    <SPAN style="COLOR: blue">public static bool </SPAN>IsConsoleRedirected() {
+        <SPAN style="COLOR: #2b91af">IntPtr </SPAN>stdout = GetStdHandle(STD_OUTPUT_HANDLE);
+        <SPAN style="COLOR: blue">if</SPAN>(stdout != INVALID_HANDLE_VALUE) {
+            <SPAN style="COLOR: blue">uint </SPAN>filetype = GetFileType(stdout);
+            <SPAN style="COLOR: blue">if</SPAN>(! ((filetype == FILE_TYPE_UNKNOWN) &amp;&amp; (<SPAN style="COLOR: #2b91af">Marshal</SPAN>.GetLastWin32Error() != ERROR_SUCCESS))) {
+                <SPAN style="COLOR: blue">uint </SPAN>mode;
+                filetype &amp;= ~(FILE_TYPE_REMOTE);
+                <SPAN style="COLOR: blue">if </SPAN>(filetype == FILE_TYPE_CHAR) {
+                    <SPAN style="COLOR: blue">bool </SPAN>retval = GetConsoleMode(stdout, <SPAN style="COLOR: blue">out </SPAN>mode);
+                    <SPAN style="COLOR: blue">if </SPAN>((retval == <SPAN style="COLOR: blue">false</SPAN>) &amp;&amp; (<SPAN style="COLOR: #2b91af">Marshal</SPAN>.GetLastWin32Error() == ERROR_INVALID_HANDLE)) {
+                        <SPAN style="COLOR: blue">return true</SPAN>;
+                    } <SPAN style="COLOR: blue">else </SPAN>{
+                        <SPAN style="COLOR: blue">return false</SPAN>;
+                    }
+                } <SPAN style="COLOR: blue">else </SPAN>{
+                    <SPAN style="COLOR: blue">return true</SPAN>;
+                }
+            }
+        }
+        <SPAN style="COLOR: green">// TODO: Not even a stdout so this is not even a console?
+        </SPAN><SPAN style="COLOR: blue">return false</SPAN>;
+    }
+
+    [<SPAN style="COLOR: #2b91af">DllImport</SPAN>(<SPAN style="COLOR: #a31515">"kernel32.dll"</SPAN>, ExactSpelling=<SPAN style="COLOR: blue">true</SPAN>, EntryPoint=<SPAN style="COLOR: #a31515">"QueryFullProcessImageNameW"</SPAN>, CharSet = <SPAN style="COLOR: #2b91af">CharSet</SPAN>.Unicode)]
+    <SPAN style="COLOR: blue">internal static extern bool </SPAN>QueryFullProcessImageName(<SPAN style="COLOR: #2b91af">IntPtr </SPAN>hProcess, <SPAN style="COLOR: blue">uint </SPAN>dwFlags, <SPAN style="COLOR: #2b91af">StringBuilder </SPAN>lpExeName, <SPAN style="COLOR: blue">ref uint </SPAN>lpdwSize);
+
+    [<SPAN style="COLOR: #2b91af">DllImport</SPAN>(<SPAN style="COLOR: #a31515">"kernel32.dll"</SPAN>, ExactSpelling=<SPAN style="COLOR: blue">true</SPAN>)]
+    <SPAN style="COLOR: blue">internal static extern </SPAN><SPAN style="COLOR: #2b91af">IntPtr </SPAN>OpenProcess(<SPAN style="COLOR: blue">uint </SPAN>dwDesiredAccess, <SPAN style="COLOR: blue">bool </SPAN>bInheritHandle, <SPAN style="COLOR: blue">int </SPAN>dwProcessId);
+
+    [<SPAN style="COLOR: #2b91af">DllImport</SPAN>(<SPAN style="COLOR: #a31515">"kernel32.dll"</SPAN>, ExactSpelling=<SPAN style="COLOR: blue">true</SPAN>, SetLastError=<SPAN style="COLOR: blue">true</SPAN>)]
+    <SPAN style="COLOR: blue">internal static extern bool </SPAN>GetConsoleMode(<SPAN style="COLOR: #2b91af">IntPtr </SPAN>hConsoleHandle, <SPAN style="COLOR: blue">out uint </SPAN>lpMode);
+
+    [<SPAN style="COLOR: #2b91af">DllImport</SPAN>(<SPAN style="COLOR: #a31515">"kernel32.dll"</SPAN>, ExactSpelling=<SPAN style="COLOR: blue">true</SPAN>)]
+    <SPAN style="COLOR: blue">internal static extern bool </SPAN>GetCurrentConsoleFontEx(<SPAN style="COLOR: #2b91af">IntPtr </SPAN>hConsoleOutput, <SPAN style="COLOR: blue">bool </SPAN>bMaximumWindow, <SPAN style="COLOR: blue">ref </SPAN>CONSOLE_FONT_INFO_EX lpConsoleCurrentFontEx);
+
+    [<SPAN style="COLOR: #2b91af">DllImport</SPAN>(<SPAN style="COLOR: #a31515">"Kernel32.DLL"</SPAN>, ExactSpelling=<SPAN style="COLOR: blue">true</SPAN>, SetLastError=<SPAN style="COLOR: blue">true</SPAN>)]
+    <SPAN style="COLOR: blue">internal static extern uint </SPAN>GetFileType(<SPAN style="COLOR: #2b91af">IntPtr </SPAN>hFile);
+
+    [<SPAN style="COLOR: #2b91af">DllImport</SPAN>(<SPAN style="COLOR: #a31515">"Kernel32.DLL"</SPAN>, ExactSpelling=<SPAN style="COLOR: blue">true</SPAN>)]
+    <SPAN style="COLOR: blue">internal static extern </SPAN><SPAN style="COLOR: #2b91af">IntPtr </SPAN>GetStdHandle(<SPAN style="COLOR: blue">int </SPAN>nStdHandle);
+
+    [<SPAN style="COLOR: #2b91af">DllImport</SPAN>(<SPAN style="COLOR: #a31515">"kernel32.dll"</SPAN>, SetLastError = <SPAN style="COLOR: blue">true</SPAN>)]
+    <SPAN style="COLOR: blue">static extern uint </SPAN>GetConsoleProcessList(<SPAN style="COLOR: blue">uint</SPAN>[] ProcessList, <SPAN style="COLOR: blue">uint </SPAN>ProcessCount);
+
+    [<SPAN style="COLOR: #2b91af">StructLayout</SPAN>(<SPAN style="COLOR: #2b91af">LayoutKind</SPAN>.Sequential, CharSet = <SPAN style="COLOR: #2b91af">CharSet</SPAN>.Unicode)]
+    <SPAN style="COLOR: blue">internal struct </SPAN><SPAN style="COLOR: #2b91af">CONSOLE_FONT_INFO_EX </SPAN>{
+        <SPAN style="COLOR: blue">internal uint </SPAN>cbSize;
+        <SPAN style="COLOR: blue">internal uint </SPAN>nFont;
+        <SPAN style="COLOR: blue">internal ushort </SPAN>dwFontSizeX;
+        <SPAN style="COLOR: blue">internal ushort </SPAN>dwFontSizeY;
+        <SPAN style="COLOR: blue">internal int </SPAN>FontFamily;
+        <SPAN style="COLOR: blue">internal int </SPAN>FontWeight;
+        [<SPAN style="COLOR: #2b91af">MarshalAs</SPAN>(<SPAN style="COLOR: #2b91af">UnmanagedType</SPAN>.ByValTStr, SizeConst = LF_FACESIZE)]
+        <SPAN style="COLOR: blue">internal string </SPAN>FaceName;
+    }
+
+    <SPAN style="COLOR: blue">internal const uint </SPAN>PROCESS_QUERY_LIMITED_INFORMATION = 0x1000;
+    <SPAN style="COLOR: blue">internal const int </SPAN>TMPF_TRUETYPE = 0x4;
+    <SPAN style="COLOR: blue">internal const int </SPAN>LF_FACESIZE = 32;
+    <SPAN style="COLOR: blue">internal const int </SPAN>STD_OUTPUT_HANDLE = -11; <SPAN style="COLOR: green">// Handle to the standard output device.
+    </SPAN><SPAN style="COLOR: blue">internal const int </SPAN>ERROR_INVALID_HANDLE = 6;
+    <SPAN style="COLOR: blue">internal const int </SPAN>ERROR_SUCCESS = 0;
+    <SPAN style="COLOR: blue">internal const uint </SPAN>FILE_TYPE_UNKNOWN = 0x0000;
+    <SPAN style="COLOR: blue">internal const uint </SPAN>FILE_TYPE_DISK = 0x0001;
+    <SPAN style="COLOR: blue">internal const uint </SPAN>FILE_TYPE_CHAR = 0x0002;
+    <SPAN style="COLOR: blue">internal const uint </SPAN>FILE_TYPE_PIPE = 0x0003;
+    <SPAN style="COLOR: blue">internal const uint </SPAN>FILE_TYPE_REMOTE = 0x8000;
+    <SPAN style="COLOR: blue">internal static </SPAN><SPAN style="COLOR: #2b91af">IntPtr </SPAN>INVALID_HANDLE_VALUE = <SPAN style="COLOR: blue">new </SPAN><SPAN style="COLOR: #2b91af">IntPtr</SPAN>(-1);
+}</PRE><A href="http://11011.net/software/vspaste"></A></BLOCKQUOTE>
+<P>First, note that as with the previous blog I am writing Win32 code in C#, to not only let any C/C++ Win32 developer know what to do, but to allow managed developers to be able to support it right away with no delay.</P>
+<P>Now there are three important routines here:</P>
+<P><STRONG>IsConsoleRedirected()</STRONG> returns <STRONG>true</STRONG> when your console has been redirected to a file, which means that you can just write everything out as Unicode and call it good.</P>
+<P>And when that function returns <STRONG>false</STRONG>, you can move on to the next function.</P>
+<P>Because that next function, <STRONG>IsPowerShellIse()</STRONG>, returns <STRONG>true</STRONG> if you are running in PowerShell ISE, a.k.a. The Graphical PowerShell. If you are, then you have full support for Unicode and complex scripts, and anything your application can produce or try to take in. You do not have to be writing in PowerShell ISE to get that support; a Unicode console application can do all the work here, taking advantage of running in this cool modern host, where IMEs and other input methods work irregardless of systm locale and so on.</P>
+<P>And when <EM>that</EM> function returns <STRONG>false</STRONG>, you can move on to the last function.</P>
+<P>Because that last function, <STRONG>IsConsoleFontTrueType()</STRONG>, returns <STRONG>true</STRONG>, it means that you are in CMD.EXE but with a TrueType font set. And that means you can&nbsp;display&nbsp;any character the font supports and that the square box that is displayed for the rest of the characters can be copied and pasted somewhere.</P>
+<P>And if all three functions return <STRONG>false</STRONG> and you are truly limited to code pages, then you can do what you would have done if none of this support existed.</P>
+<P>With all of this support, you can write some kickass and cool console applications that will in every case do the best that the platform can offer the user of the application. Every time....</P>
+<P>Now there are other fancy things you (or I!) might want to do like try to change some of those answers, but for now we're going to pretend you are trying to live within the environment you are given. Perhaps some other time all of you non-<STRONG>J. Alfred Prufrock</STRONG> types like myself who would dare to disturb the universe can exercise that bit of psyche and try to change some of the answers that can be changed....</P>
+<P>:-)</P>
+<hr/><p><strong>Random832</strong> on 11 May 2010 7:36 AM:</p><div style="margin-left: 1em"><p>Is this right? IsConsoleRedirected()...</p>
+<p> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;if (filetype == FILE_TYPE_CHAR) {</p>
+<p> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;bool retval = GetConsoleMode(stdout, out mode);</p>
+<p> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;if ((retval == false) &amp;&amp; (Marshal.GetLastWin32Error() == ERROR_INVALID_HANDLE)) {</p>
+<p> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;return false;</p>
+<p> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;} else {</p>
+<p> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;return true;</p>
+<p> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;}</p>
+<p> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;} else {</p>
+<p> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;return false;</p>
+<p> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;}</p></div>
+<p><strong>Michael S. Kaplan</strong> on 11 May 2010 11:03 PM:</p><div style="margin-left: 1em"><p>Is what right?</p></div>
+<p><strong>Random832</strong> on 12 May 2010 8:13 AM:</p><div style="margin-left: 1em"><p>That code. It (well, translated back to C) seems to give the opposite results to what it should, and it doesn't make logical sense - wouldn't an invalid handle error from a console-only function mean it _is_ redirected?</p>
+<p>Also - what about pipes - not so much in terms of how to detect whether you're in a pipe [that's obvious enough once you have the filetype], but rather how do they fit into the whole unicode thing?</p></div>
+<p><strong>Michael S. Kaplan</strong> on 12 May 2010 8:44 AM:</p><div style="margin-left: 1em"><P>Ok, I take that back, the logic was reversed. Fixed now....</P></div>
+<hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2011/09/22 <a href="http://archives.miloush.net/michkap/archive/2011/09/22/10215125.html">Consoling oneself with TrueType</a></p><p>2011/07/13 <a href="http://archives.miloush.net/michkap/archive/2011/07/13/10185915.html">It's ultimately your call, but your PowerShell cmdlets really don't need to SUCK this much</a></p><p>2010/10/07 <a href="http://archives.miloush.net/michkap/archive/2010/10/07/10072032.html">Myth busting in the console</a></p><p>2010/09/23 <a href="http://archives.miloush.net/michkap/archive/2010/09/23/10066660.html">A confluence of circumstances leaves a stone unturned...</a></p><p>2010/06/27 <a href="http://archives.miloush.net/michkap/archive/2010/06/27/10028282.html">Bugs hidden in plain sight, and commented that way too ANSWERS</a></p><p>2010/06/18 <a href="http://archives.miloush.net/michkap/archive/2010/06/18/10024976.html">Bugs hidden in plain sight, and commented that way too</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2010/05/08/10002804.html" title="That GetThreadLocale bug, again (aka Delphi has more users than I originally thought)">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2010/05/06/10006797.html" title="Dude! Not so Lao&#39;d!">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2010-05">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2010-05-07">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2010/05/07/10008232.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:35 GMT -->
+</html>

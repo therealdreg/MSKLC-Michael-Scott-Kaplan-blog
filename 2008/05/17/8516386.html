@@ -1,0 +1,72 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2008/05/17/8516386.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:36 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Do your utmost to be conventional (and then pimp, q.d. or p.r.n.)</title></head><body>
+<h1>Do your utmost to be conventional (and then pimp, q.d. or p.r.n.)</h1>
+<p><em>by Michael S. Kaplan, published on 2008/05/17 03:01 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2008/05/17/8516386.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P>The message I got the other day via the Contact link was very well-timed:</P>
+<BLOCKQUOTE>
+<P><EM><FONT face="times new roman,times">Hello Michael,<BR><BR>I don't remember where was it, that I read you were the author of the Microsoft Keyboard Layout creator, but well... here I am, emailing you because I found a very nasty aspect of layouts created with the tool.<BR><BR>The issue is, layouts created with it, do not map Ctrl+&lt;key&gt; to the correct value, say I create a Dvorak variation, and use it... Ctrl+T should open a tab when using Internet Explorer, but it doesn't, since it windows thinks Ctrl+K is being typed in (since T in Dvorak is located where K is in QWERTY).<BR><BR>I was wondering if there was a way to solve this in a reasonably elegant way, or if you could point me out to a tool with such capabilities, or the source for compiling my own driver/layout.<BR><BR>I wait for your reply and thank you for your attention,<BR><BR>--<BR>Jamiel</FONT></EM></P></BLOCKQUOTE>
+<P><FONT size=1>Another keyboard post -- Goldie'll probably never see it, even if I say stuff about her later in the post?</FONT></P>
+<P>Hopefully the text of the Contact page was something Jamiel read since although I am giving the note my attention, I'm not directly responding to it except via this blog you are reading now. :-)</P>
+<P>I'll tell a story to provide some context.</P>
+<P>The very first build of MSKLC I let them try out was missing the most commonly used feature -- loading an existing layout and modifying it. As I mentioned way back in January 2005 in&nbsp;<A class="" href="http://archives.miloush.net/michkap/archive/2005/01/03/345719.html" mce_href="http://archives.miloush.net/michkap/archive/2005/01/03/345719.html"><STRONG>Accessibility, Internationalization, and Keyboards (#3: MSKLC's UI)</STRONG></A>, while&nbsp;talking about the backasswards development process of the tool in general and this feature in particular:</P>
+<BLOCKQUOTE>
+<P><FONT face="times new roman,times">Although it is last on the list here, it is probably the most commonly used feature, and it highlighted the pattern of those weekly meetings. I would show the current state of the UI, Simon or Cathy would bring up a feature they felt was crucial, I would push back and explain why it was not feasible, they would grudgingly accept this, but the issues they brought up would keep bothering me until I thought of a way to make it feasible. Then I would show it to them the next week. I am pretty sure that was how the meeting became known as D&amp;P in the first place....</FONT></P></BLOCKQUOTE>
+<P>This particular feature is one I pushed bask on, hard. Because even before I knew how much work it would truly be, I knew it would be a lot of work. It just didn't seem to be worthwhile.</P>
+<P>But then, over the weekend (the D&amp;P was on Friday), I tried to build&nbsp;a keyboard.</P>
+<P>I felt a bit like Stan and Kyle in that South Park episode (A Very Crappy Christmas) where they were creating a cartoon using the same techniques that Matt and Trey originally used for the shorts before the show. You know, excited when the first key was done, and then as each successive keystroke was assigned and I realized what a huge horking pain in the ass creating a keyboard from scratch could really be, I just got more and more annoyed.</P>
+<P>By the eighth key, I was ready to rethink the whole idea of no "load an existing layout" functionality....</P>
+<P mce_keep="true">By the eleventh, I stopped creating the keyboard and started prototyping this new feature.</P>
+<P mce_keep="true">So now, thinking about Jamiel's message, I realized the process he had to be using to build the Dvorak keyboard. He was changing the assignment of very single key and every shift state!</P>
+<P mce_keep="true">Yikes.</P>
+<P mce_keep="true">There was no way that this was fun. :-(</P>
+<P mce_keep="true">Let's take a step back here to solve this problem, though. I mean, after all, there is a Dvorak keyboard in Windows we can look at.</P>
+<P mce_keep="true">First we have the plain old <STRONG>US</STRONG> keyboard layout:</P>
+<P mce_keep="true"><IMG height=525 src="http://trigeminal.fmsinc.com/images/dvorak01.png" width=1027></P>
+<P mce_keep="true">and then we have the <STRONG>United States - Dvorak</STRONG> keyboard layout:</P>
+<P mce_keep="true"><IMG src="http://trigeminal.fmsinc.com/images/dvorak02.png"></P>
+<P mce_keep="true">The hint about the difference between Jamiel's layout and the one above is in the ToolTips, but to be more explicit let's right-click, we are talking:</P>
+<P mce_keep="true"><IMG src="http://trigeminal.fmsinc.com/images/dvorak03.png"></P>
+<P mce_keep="true">versus:</P>
+<P mce_keep="true"><IMG src="http://trigeminal.fmsinc.com/images/dvorak04.png"></P>
+<P mce_keep="true">or to be more explicit and launch that dialog, we re looking at:</P>
+<P mce_keep="true"><IMG src="http://trigeminal.fmsinc.com/images/dvorak05.png"></P>
+<P mce_keep="true">versus</P>
+<P mce_keep="true"><IMG src="http://trigeminal.fmsinc.com/images/dvorak06.png"></P>
+<P mce_keep="true">In fact, the only way to see what ties these two different assignments to that one key is to check the Advanced View and look at:</P>
+<P mce_keep="true"><IMG src="http://trigeminal.fmsinc.com/images/dvorak07.png"></P>
+<P mce_keep="true">versus</P>
+<P mce_keep="true"><IMG src="http://trigeminal.fmsinc.com/images/dvorak08.png"></P>
+<P mce_keep="true">and note that they share a common scan code of <STRONG>25</STRONG>.</P>
+<P mce_keep="true">Let's look at the two .KLC files, say sampling the key in question and a few on each side, for <STRONG>US</STRONG>:</P>
+<BLOCKQUOTE>
+<P mce_keep="true"><FONT face="courier new,courier"><STRONG>23&nbsp; &nbsp;H&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 1&nbsp; &nbsp;h&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;H&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;-1 &nbsp;&nbsp; // LATIN SMALL LETTER H, LATIN CAPITAL LETTER H, &lt;none&gt;<BR>24&nbsp; &nbsp;J&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 1&nbsp; &nbsp;j&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;J&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;-1&nbsp; &nbsp; // LATIN SMALL LETTER J, LATIN CAPITAL LETTER J, &lt;none&gt;<BR></STRONG><STRONG><FONT color=#ff0000>25&nbsp; &nbsp;K&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 1&nbsp; &nbsp;k&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; K&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;-1&nbsp;&nbsp; &nbsp;// LATIN SMALL LETTER K, LATIN CAPITAL LETTER K, &lt;none&gt;<BR></FONT>26&nbsp; &nbsp;L&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 1&nbsp; &nbsp;l&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; L&nbsp; &nbsp;&nbsp;&nbsp; -1&nbsp; &nbsp;&nbsp;// LATIN SMALL LETTER L, LATIN CAPITAL LETTER L, &lt;none&gt;<BR>27&nbsp; &nbsp;OEM_1&nbsp;&nbsp;0&nbsp; &nbsp;003b&nbsp;&nbsp; 003a&nbsp;&nbsp; -1 &nbsp; &nbsp;// SEMICOLON, COLON, &lt;none&gt;</STRONG></FONT></P></BLOCKQUOTE>
+<P mce_keep="true">versus <STRONG>United States - Dvorak</STRONG>:</P>
+<BLOCKQUOTE>
+<P mce_keep="true"><FONT face="courier new,courier"><STRONG>23&nbsp; &nbsp;D&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;1&nbsp; &nbsp;d&nbsp;&nbsp; &nbsp; &nbsp;D&nbsp;&nbsp; &nbsp; &nbsp;-1&nbsp; &nbsp;&nbsp;// LATIN SMALL LETTER D, LATIN CAPITAL LETTER D, &lt;none&gt;<BR>24&nbsp; &nbsp;H&nbsp; &nbsp;&nbsp;&nbsp; 1&nbsp; &nbsp;h&nbsp; &nbsp;&nbsp;&nbsp; H&nbsp; &nbsp;&nbsp;&nbsp; -1&nbsp; &nbsp;&nbsp;// LATIN SMALL LETTER H, LATIN CAPITAL LETTER H, &lt;none&gt;<BR><FONT color=#ff0000>25&nbsp; &nbsp;T&nbsp; &nbsp;&nbsp;&nbsp; 1&nbsp; &nbsp;t&nbsp;&nbsp; &nbsp; &nbsp;T&nbsp;&nbsp; &nbsp; &nbsp;-1&nbsp;&nbsp;&nbsp; // LATIN SMALL LETTER T, LATIN CAPITAL LETTER T, &lt;none&gt;<BR></FONT>26&nbsp; &nbsp;N&nbsp;&nbsp;&nbsp; &nbsp; 1&nbsp;&nbsp; n&nbsp; &nbsp;&nbsp;&nbsp; N&nbsp;&nbsp; &nbsp; &nbsp;-1&nbsp; &nbsp;&nbsp;// LATIN SMALL LETTER N, LATIN CAPITAL LETTER N, &lt;none&gt;<BR>27&nbsp; &nbsp;S&nbsp; &nbsp; &nbsp;&nbsp;1&nbsp;&nbsp; s&nbsp;&nbsp; &nbsp; &nbsp;S&nbsp; &nbsp;&nbsp;&nbsp; -1&nbsp; &nbsp;&nbsp;// LATIN SMALL LETTER S, LATIN CAPITAL LETTER S, &lt;none&gt;</STRONG></FONT></P></BLOCKQUOTE>
+<P mce_keep="true">Now obviously there are at least two different lessons one can learn here....</P>
+<P mce_keep="true">One could have the lesson of loading existing layouts when you can in order to make keyboard development easier. :-)</P>
+<P mce_keep="true">Or one can take an existing .KLC file and modify the hell out of it to make keyboard layout with. The format is not publicly documented, but most of it is pretty self-explanatory: it is how we used to build all keyboard layouts before there was a tool. And you can even have this handy scan code map to help:</P>
+<P mce_keep="true"><IMG src="http://trigeminal.fmsinc.com/images/Dvorak09.png"></P>
+<P mce_keep="true">To be honest I wish I had this back in the early days, myself.... :-)</P>
+<P mce_keep="true">Now the best answer is probably between these two extremes -- load an existing layout, and then modify the .KLC file to pimp as necessary!</P>
+<P mce_keep="true"><FONT color=#ff00ff><EM>This blog brought to you by</EM><FONT size=7> ⎇ </FONT><EM>(<A class="" href="http://www.fileformat.info/info/unicode/char/2387" mce_href="http://www.fileformat.info/info/unicode/char/2387">U+2387</A>, aka ALTERNATIVE KEY SYMBOL)</EM></FONT></P>
+<hr/><p><a id="8519313" href="#8519313">#</a> <strong>Mihai</strong> on 19 May 2008 1:23 PM:</p><div style="margin-left: 1em"><p>Interesting article. But I think it does nothing to explain the problem :-)</p>
+<p>Most likely the IE accelerator table (like many others) use the VK codes. Which don't change, no matter how much one plays with MSKLC.</p></div>
+<p><a id="8519351" href="#8519351">#</a> <strong>Michael S. Kaplan</strong> on 19 May 2008 1:43 PM:</p><div style="margin-left: 1em"><p>Actually, you are mistaken -- the tricks in this article DO change the VK codes; that is the whole point of why what Jamiel was doing was not working! :-)</p>
+</div>
+<p><strong>BalintN</strong> on 7 Jan 2009 6:28 PM:</p><div style="margin-left: 1em"><p>Hi, I might be dumb, but I have a similar / same problem, and I don't understand the answer:</p>
+<p>Say, I want to program CTRL-Z on CTRL + Z (on the key that is Z in the US layout).</p>
+<p>How can I do that?</p></div>
+<p><strong>Michael S. Kaplan</strong> on 7 Jan 2009 9:32 PM:</p><div style="margin-left: 1em"><p>The CTRL shift state allows you to assign letters -- so you can put them on that Z. Load the keyboard you like and then modify the one you loaded to create your new one....</p></div>
+<p><strong>BalintN</strong> on 8 Jan 2009 5:47 AM:</p><div style="margin-left: 1em"><p>Hi Michael,</p>
+<p>I did just that, but it does not work the way I'd expect.</p>
+<p>I have a Hungarian / Hungarian keyboard layout - I imported that. It contains the ZY letters flipped (like the German keyboard), it is QWERTZ. If I count lines from the top, Z is on line 2, and Y is on line 4.</p>
+<p>I'd like to move Z to line 4, and Y to line 2 (in the English-like QWERTY order).</p>
+<p>I did that, but CTRL-Z remains in line 2.</p>
+<p>So I checked the Ctrl shift-state, and placed ZY in their QWERTY places - but CTRL-Z (undo) behaviour remains in line 2.</p>
+<p>What am I missing?</p></div>
+<hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2010/07/07 <a href="http://archives.miloush.net/michkap/archive/2010/07/07/10032340.html">[Pretty much] All the things you can't do with SGCAPS, and why</a></p><p>2008/11/04 <a href="http://archives.miloush.net/michkap/archive/2008/11/04/9037027.html">Strange control over CTRL and control characters</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2008/05/17/8517829.html" title="The undocumented limits are the ones that can trip you">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2008/05/16/8511203.html" title="My Spidey senses blame the rogue text editor">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2008-05">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2008-05-17">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2008/05/17/8516386.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:36 GMT -->
+</html>

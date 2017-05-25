@@ -1,0 +1,36 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2006/03/09/546882.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:40 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Don't forget to test the demos</title></head><body>
+<h1>Don't forget to test the demos</h1>
+<p><em>by Michael S. Kaplan, published on 2006/03/09 03:01 -05:00, original URI: http://blogs.msdn.com/b/michkap/archive/2006/03/09/546882.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P><FONT face=Tahoma>I embarrassed myself a little bit at one of my presentations, yesterday.</FONT></P>
+<P><FONT face=Tahoma>I was doing my <STRONG><A HREF="http://archives.miloush.net/michkap/archive/2005/11/21/495389.html">Tales of Incorrect String Comparisons</A></STRONG> talk, and I did the following:</FONT></P>
+<OL>
+<LI><FONT face=Tahoma>On a machine with Windows Server 2003 and an early 2005 CTP build of SQL&nbsp;</FONT><FONT face=Tahoma>Server 2005 that supports Windows authentication</FONT><FONT face=Tahoma>, create two user accounts on the local machine, named '<STRONG>AdminЀ</STRONG>' and '<STRONG>AdminЀЀЀЀ</STRONG>'.</FONT></LI>
+<LI><FONT face=Tahoma>Open up SQL Server Management Studio, pick any database and run the following two queries:<BR><BR></FONT><FONT face="Courier New"><STRONG>&nbsp;create user "</STRONG><FONT face=Tahoma>MICHKAP3\AdminЀ</FONT><STRONG>"</STRONG><BR><STRONG>&nbsp;create user "</STRONG><FONT face=Tahoma>MICHKAP3\AdminЀЀЀЀ</FONT><STRONG>"</STRONG></FONT></LI></OL>
+<P><FONT face=Tahoma>As I am sure you can guess, that character at the end is one of those that have <A HREF="http://archives.miloush.net/michkap/archive/2005/01/18/355210.html">no weight</A>....</FONT></P>
+<P><FONT face=Tahoma>The result for that second query:</FONT></P>
+<BLOCKQUOTE dir=ltr style="MARGIN-RIGHT: 0px">
+<P><FONT face=Tahoma color=#ff0000>Msg 15023, Level 16, State 1, Line 1<BR>User, group, or role 'MICHKAP3\AdminЀ' already exists in the current database.</FONT></P></BLOCKQUOTE>
+<P><FONT face=Tahoma>Basically, SQL Server is validating the entry using its own collation rules -- whether it is doing some sort of optimization here to avoid the performance hit of a call to do the Windows authentication, or whether it is simply storing the entries in a uniquely indexed column that does not allow its own collation rules to be broken, it is clearly not allowing two different valid Windows accounts to be used here.</FONT></P>
+<P><FONT face=Tahoma><EM>(this was a problem I had reported early last year, along with another few bugs that were fixed, and I was told this one had been fixed)</EM></FONT></P>
+<P><FONT face=Tahoma>Anyway, I then did the same steps on a different setup with a released version of SQL Server 2005 that I had spent half the night installing onto another VPC machine.</FONT></P>
+<P><FONT face=Tahoma>I mentioned as this VPC machine was loading that I had just installed it last night and had not even tested it out....</FONT></P>
+<P><FONT face=Tahoma>(note to self -- even if&nbsp;I am tired and even if&nbsp;<A href="http://www.microsoft.com/billgates/speeches/04-19spcomdex.asp">I&nbsp;am not doing a billg demo</A>,&nbsp;I should still check the demo,&nbsp;especially if I am sure that I know what will happen)</FONT></P>
+<P><FONT face=Tahoma>The result?</FONT></P><FONT face=Tahoma>
+<BLOCKQUOTE dir=ltr style="MARGIN-RIGHT: 0px">
+<P><FONT face=Tahoma color=#ff0000>Msg 15023, Level 16, State 1, Line 1<BR>User, group, or role 'MICHKAP7\AdminЀ' already exists in the current database.</FONT></P></BLOCKQUOTE></FONT>
+<P><FONT face=Tahoma>I was shocked.</FONT></P>
+<P><FONT face=Tahoma>I thought I covered okay by acting dramatic about the situation as if this was what I expected, but the folks who knew me (and at least one of the ones who didn't) noticed I was not expecting that result.</FONT></P>
+<P><FONT face=Tahoma>Damn.</FONT></P>
+<P><FONT face=Tahoma>Ah well, at least it was a good example of some type of comparison operation that was not being performed correctly.</FONT></P>
+<P><FONT face=Tahoma><EM>(And it was not really as bad as the one with Chris and the USB scanner, or even the other one with Tod and the Access 95 demo, a story for another day!)</EM></FONT></P>
+<P><FONT face=Tahoma>I think the other examples, of problems&nbsp;that had been fixed were for the most part technically cooler, though I suspect that the one they will remember was the SQL Server one.... :-)</FONT></P>
+<P><FONT face=Tahoma></FONT>&nbsp;</P>
+<P><FONT face=Tahoma color=#ff1493><EM>This post brought to you by</EM> "Ѐ" <EM>(<A href="http://www.fileformat.info/info/unicode/char/0400">U+0400</A>, a.k.a. CYRILLIC CAPITAL LETTER IE WITH GRAVE)</EM></FONT></P>
+<hr/><p><a id="548633" href="#548633">#</a> <strong>Maurits [MSFT]</strong> on 10 Mar 2006 11:32 AM:</p><div style="margin-left: 1em">Sounds like whoever filed that bug report didn't test to see if it was fixed...</div>
+<p><a id="548643" href="#548643">#</a> <strong>Michael S. Kaplan</strong> on 10 Mar 2006 11:42 AM:</p><div style="margin-left: 1em">Well, hard to say (I am not sure who filed the report). Since the other three issues I brought up were all addressed, any of a number of reasons may exist for this one not being addressed (e.g. no one wanted to take the perf hit, or it may have been deemed to be too destabilizing to change, etc.).<br><br>Unless you meant me -- in which case I'd point out that I am not the one who filed the bug report. :-)</div>
+<hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2007/09/05 <a href="http://archives.miloush.net/michkap/archive/2007/09/05/4756822.html">Head checks containing either comparison or case validation BITE</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2006/03/09/546910.html" title="Blogging doesn&#39;t pay... enough">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2006/03/08/546809.html" title="You can often do better than [GDI] font linking">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2006-03">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2006-03-09">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2006/03/09/546882.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:40 GMT -->
+</html>

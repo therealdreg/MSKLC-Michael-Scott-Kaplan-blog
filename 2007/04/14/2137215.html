@@ -1,0 +1,65 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2007/04/14/2137215.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:38 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Rhymes with Amharic #4 (a.k.a. we're all [sub]set so turning out the lights and going to [em]bed!)</title></head><body>
+<h1>Rhymes with Amharic #4 (a.k.a. we're all [sub]set so turning out the lights and going to [em]bed!)</h1>
+<p><em>by Michael S. Kaplan, published on 2007/04/14 21:01 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2007/04/14/2137215.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<p>(see also parts <a href="http://archives.miloush.net/michkap/archive/2007/04/14/2128198.html"><strong>1</strong></a>, <strong><a href="http://archives.miloush.net/michkap/archive/2007/04/14/2133650.html">2</a></strong>,&nbsp;and <a href="http://archives.miloush.net/michkap/archive/2007/04/14/2134278.html"><strong>3</strong></a>)&nbsp;</p>
+<p>OK, we are getting close to the end of this little mini-series....</p>
+<p>First there was a <a href="http://archives.miloush.net/michkap/archive/2007/04/14/2128198.html#2134749"><strong>comment</strong></a> from <a href="http://blogs.msdn.com/utility/Redirect.aspx?U=http%3a%2f%2forcmid.com%2fblog%2f">Dennis E. Hamilton</a> asking about the DPI in the screen shots of that first post:</p>
+<blockquote>
+<p><span style="font-family: times new roman,times;"><em>I notice two things here. &nbsp;First, the impact of Cleartype is amazing. &nbsp;Secondly, the Vista rendering seems fuzzy somehow and not as crisp as the XP SP2 Cleartype. &nbsp;I realize the sizes are different, with different assumed resolutions, but the subjective experience at scale is important. &nbsp;(I think I see this on my Vista-equipped Tablet PC too, so I really wonder ... )<br /><br />If you use the same DPI, how well does Vista match the XP Cleartype case?</em></span></p>
+</blockquote>
+<p>I decided to engage in a bit of experimental DPI viewing. I used the funniest string from <a href="http://archives.miloush.net/michkap/archive/2005/02/01/364376.html"><strong>Why that is positively Ethiopic!</strong></a> (፳፩፼፳፰፻፷፯፼፶፫፻፱) and took screen shots at 96, 120, 134, and 144 DPI (note that I did not change the sample application; I just pasted the string into the TextBox controls):</p>
+<p><img src="http://msdnshared.blob.core.windows.net/media/MSDNBlogsFS/prod.evol.blogs.msdn.com/CommunityServer.Blogs.Components.WeblogFiles/00/00/00/33/81/4212.embed04.png" alt="" /></p>
+<p><img src="http://msdnshared.blob.core.windows.net/media/MSDNBlogsFS/prod.evol.blogs.msdn.com/CommunityServer.Blogs.Components.WeblogFiles/00/00/00/33/81/2061.embed05.png" alt="" /></p>
+<p><img src="http://msdnshared.blob.core.windows.net/media/MSDNBlogsFS/prod.evol.blogs.msdn.com/CommunityServer.Blogs.Components.WeblogFiles/00/00/00/33/81/1832.embed06.png" alt="" /></p>
+<p><img src="http://msdnshared.blob.core.windows.net/media/MSDNBlogsFS/prod.evol.blogs.msdn.com/CommunityServer.Blogs.Components.WeblogFiles/00/00/00/33/81/0257.embed07.png" alt="" /></p>
+<p>I'll let you decide on your own about the quality (the code was unchanged so it was trying to use a 32pt size for the font in all four cases).... :-)</p>
+<p>Now the additional issues to keep in mind here for font embedding....</p>
+<p>First we'll take a look at Nyala's OpenType support from 10,000 feet:</p>
+<p><img src="http://msdnshared.blob.core.windows.net/media/MSDNBlogsFS/prod.evol.blogs.msdn.com/CommunityServer.Blogs.Components.WeblogFiles/00/00/00/33/81/7571.embed08.png" alt="" /></p>
+<p>Notice that it does have some&nbsp;OpenType tables that provide support for Ethiopic, though&nbsp;the main reason to consider Ethiopic to be a complex script is for that undocumented sixth reason to be considered s complex script that I described in <a href="http://archives.miloush.net/michkap/archive/2005/10/18/481654.html"><strong>Font Linking vs. Font Fallback, #2</strong></a>.</p>
+<p>The technology provides the selected [subset of the] font and allows you to embed it in your application if the font's licensing restrictions allow it. But it does not give you updates to shaping engines and it does not give you pieces of the font that are excluded by subsetting decisions you might make. In the end, this means that any time the language you are trying to display is a complex script, the proper display might be limited by what the machine itself can support (for an example of this imagine some of the complex scripts added in Vista like Khmer or Sinhalese or Tibetan and try to imagine displaying them in Windows 2000!).</p>
+<p>XP SP2 will actually do very well here, much better than one might expect at first. But it turns out that the update to the Uniscribe shaping engines provided by the update I first described in <a href="http://archives.miloush.net/michkap/archive/2005/01/26/360685.html"><strong><span style="font-family: Tahoma;">Lions and tigers and <span style="text-decoration: line-through;"><span style="color: #808080;">bears</span></span>ELKs, Oh my!</span></strong></a>&nbsp;included some of the (not completely finished but certainly in progress) updates that eventually made their way into Vista. So you may find you have better luck in XP SP2 then in most other downlevel platforms. But n matter what you will always have the constraint of the platform's support to contend with.</p>
+<p>This also applies to keyboards (you'll have to provide them via <a href="http://go.microsoft.com/fwlink/?LinkId=82315&amp;clcid=0x409">MSKLC</a> or whatever), locale support (custom cultures, anyone?), or collation (currently no solution for this one, sorry -- so beware <a href="http://archives.miloush.net/michkap/archive/2005/01/18/355210.html"><strong>this</strong></a> problem!).</p>
+<p>You will probably always want to be using .NET Framework &gt;= 2.0 so that you can use Uniscribe and not be limited to what GDI+ supports.</p>
+<p>And then when you are done, be sure to call <a href="http://msdn2.microsoft.com/en-us/library/ms536746.aspx">TTDeleteEmbeddedFont</a> as the sample does in its FormClosing event. And in your real world samples you probably should embed the font in your application's resources and then just use a MemoryStream rather than a FileStream&nbsp;to read it (though even is you treat it as a file like the sample does, there is not&nbsp;really anything&nbsp;else that you can do with the file anyway....</p>
+<p>As a final note, let me once again remind people to follow the licensing restrictions of the font you want to use. Your font foundry will thank you for attention to your attention to this particular detail!</p>
+<p>&nbsp;</p>
+<p><span style="color: #ff00ff;"><em>This post brought to you by</em> ጵ <em>(<a href="http://www.fileformat.info/info/unicode/char/1335">U+1335</a>, a.k.a. ETHIOPIC SYLLABLE PHE)</em></span></p>
+<hr/><p><a id="2140609" href="#2140609">#</a> <strong>Cory Nelson</strong> on 15 Apr 2007 1:32 AM:</p><div style="margin-left: 1em"><p>Did you intend for the Vista DPI scaling to happen? &nbsp;It looks like those are all being rendered at 96dpi and scaled up as a bitmap.</p>
+<p>You need to call SetProcessDPIAware() before you create any windows to make the app truely use high DPI.</p></div>
+<p><a id="2140808" href="#2140808">#</a> <strong>Michael S. Kaplan</strong> on 15 Apr 2007 1:48 AM:</p><div style="margin-left: 1em"><p>In this case, you have the source. So you know that I did not go to any special effort here along those lines, right?</p>
+</div>
+<p><a id="2148377" href="#2148377">#</a> <strong>Dean Harding</strong> on 15 Apr 2007 8:45 PM:</p><div style="margin-left: 1em"><p>&gt; I did not go to any special effort here along those lines, right?</p>
+<p>That's why it looks so bad, then. For some reason, Windows assumes that applications, by default, are not able scale properly in high DPI modes and so it does bitmap scaling -- unless you specify in your manifest (or by calling SetProcessDPIAware()) that you scale properly. Even worse, WinForms (and MFC and pretty much every other GUI framework) usually scales perfectly well.</p>
+<p>As a quick test, you can right-click on the .exe and in the Properties dialog, check the &quot;disable scaling for high DPI&quot; (or whatever it is called) and try making the screenshots again -- it'll look MUCH, MUCH better.</p>
+<p>In my opinion, it should have been the other way around: by default, do NOT do bitmap scaling, but include it as an option. Oh well...</p>
+</div>
+<p><a id="2148622" href="#2148622">#</a> <strong>Michael S. Kaplan</strong> on 15 Apr 2007 9:22 PM:</p><div style="margin-left: 1em"><P>Okay, this is new info for me. :-)</P>
+<P>I put up some screenshots at multiple resolutions with that checkbox toggled, you can try them and tell me if you think they look better than the ones in that first post....</P>
+<UL>
+<LI><A href="http://www.i18nwithvb.com/images/embed04new.png" target=_new rel=nofollow>96 DPI</A></LI>
+<LI><A href="http://www.i18nwithvb.com/images/embed05new.png" target=_new rel=nofollow>120 DPI</A></LI>
+<LI><A href="http://www.i18nwithvb.com/images/embed06new.png" target=_new rel=nofollow>134 DPI</A></LI>
+<LI><A href="http://www.i18nwithvb.com/images/embed07new.png" target=_new rel=nofollow>144 DPI</A></LI></UL></div>
+<p><a id="2149393" href="#2149393">#</a> <strong>Dean Harding</strong> on 15 Apr 2007 10:54 PM:</p><div style="margin-left: 1em"><p>Yeah, those ones look much better :-)</p>
+<p>You can tell if you zoom in on the images. The old ones have two (or more) columns of blue/red pixels, while the news ones only have 1 column (which is what it is supposed to look like).</p>
+<p>You can force it to work permanently with that call to SetProcessDPIAware() or using a manifest (though I've never been able to find the documented method for using a manifest in WinForms...)</p>
+</div>
+<p><a id="2150058" href="#2150058">#</a> <strong>Michael S. Kaplan</strong> on 16 Apr 2007 12:31 AM:</p><div style="margin-left: 1em"><p>It is weird though.</p>
+<p>Why does the &quot;Custom DPI setting&quot; dialog have a &quot;Use Windows XP style DPI scaling&quot; (which I did not set) if it is going to do the old style DPI scaling anyway?</p>
+</div>
+<p><a id="2150220" href="#2150220">#</a> <strong>Dean Harding</strong> on 16 Apr 2007 12:55 AM:</p><div style="margin-left: 1em"><p>The &quot;old-style&quot; scaling is what you see in the &quot;new&quot; screenshots. The &quot;new-style&quot; scaling is bitmap scaling when you don't have a manifest/call SetProcessDPIAware.</p>
+<p>So if you have &quot;use Windows XP-style DPI scaling&quot; OFF then you get the ugly scaling. If you have &quot;use Windows XP-style DPI scaling&quot; ON you get the good scaling. Yes, that means Windows XP had better defaults than Vista (that's my opinion, at least).</p>
+<p>It's all a bit confusing. Basically, the bitmap scaling was added in Vista, and is the default (except for a few well-known apps like Office, and ones that have the manifest setting). Bitmap scaling also looks MUCH WORSE than any other kind of scaling...</p>
+</div>
+<p><strong>Alex</strong> on 20 Mar 2013 11:47 PM:</p><div style="margin-left: 1em"><p>Michael, have You archive with this project? Put it to sendspace.com please! Hosting is dead now..</p>
+<p>Thank You!</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 21 Mar 2013 12:34 AM:</p><div style="margin-left: 1em"><p>Sorry about that! Fixing now...</p>
+</div>
+<hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2013/10/23 <a href="http://archives.miloush.net/michkap/archive/2013/10/23/10459401.html">I finally got to meet ali eteraz in person...</a></p><p>2007/12/12 <a href="http://archives.miloush.net/michkap/archive/2007/12/12/6742301.html">SiaO as The Red Carpet (aka Characters just want to be seen)</a></p><p>2007/04/15 <a href="http://archives.miloush.net/michkap/archive/2007/04/15/2145619.html">Rhymes with Amharic #5 (a.k.a. [Sub]setting up this code where it can do the most good?)</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2007/04/15/2145619.html" title="Rhymes with Amharic #5 (a.k.a. [Sub]setting up this code where it can do the most good?)">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2007/04/14/2134278.html" title="Rhymes with Amharic #3 (a.k.a. Read and write a language w/o even getting out of my [em]bed? Kewl!)">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2007-04">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2007-04-14">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2007/04/14/2137215.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:38 GMT -->
+</html>

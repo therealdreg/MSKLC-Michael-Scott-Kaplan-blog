@@ -1,0 +1,215 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2012/04/30/10298801.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:33 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>The [underdocumented] world of the Korean keyboard layout</title></head><body>
+<h1>The [underdocumented] world of the Korean keyboard layout</h1>
+<p><em>by Michael S. Kaplan, published on 2012/04/30 07:01 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2012/04/30/10298801.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<p>The Korean keyboard layout has several diferent flavors, all of which get molded into the one big "kbdkor.dll" file that contains four different regular keyboard DLLs.</p>
+<p>You might be curious what those four Korean layouts are:</p>
+<ul>
+<li>kbd101a (Type A)</li>
+<li>kbd101b (Type B)</li>
+<li>kbd101c (Type C)</li>
+<li>kbd103</li>
+</ul>
+<p><em>Note that none of these four are documented keybord subtypes for <a href="http://msdn.microsoft.com/library/windows/desktop/ms724336.aspx">GetKeyboardType</a>. And note that 106 isn't on the list (the Korean 106 is exacyly captured by the Korean 103).</em></p>
+<p>There is a reason for all of that....</p>
+<p>Because unlike the Japanese "kbdjpn.dll" keyboard, it is not so much hardware incompatibility that drives the differences, it is how the 101 keyboards handle the two missing keys (when they are missing).</p>
+<p>The four different layouts (this is information from the actual source; it seems to be docmented nowhere!):</p>
+<p>kbd101a:</p>
+<ul>
+<li><span style="font-family: courier new,courier;">Hanguel Toggle: <strong>Right Alt</strong> </span></li>
+<li><span style="font-family: courier new,courier;">Junja Toggle&nbsp; : <strong>Left Alt + '='</strong> </span></li>
+<li><span style="font-family: courier new,courier;">Hanja Toggle&nbsp; : <strong>Right Ctrl</strong></span></li>
+</ul>
+<p>kbd101b:</p>
+<ul>
+<li><span style="font-family: courier new,courier;">Hanguel Toggle: <strong>Right Ctrl</strong></span></li>
+<li><span style="font-family: courier new,courier;">Junja Toggle &nbsp;: <strong>Left Alt + '='</strong></span></li>
+<li><span style="font-family: courier new,courier;">Hanja Toggle&nbsp; : <strong>Right Alt</strong></span></li>
+</ul>
+<p>kbd101c:</p>
+<ul>
+<li><span style="font-family: courier new,courier;">Hanguel Toggle: <strong>Shift + ' '</strong></span></li>
+<li><span style="font-family: courier new,courier;">Junja Toggle &nbsp;: <strong>Left Alt + '='</strong></span></li>
+<li><span style="font-family: courier new,courier;">Hanja Toggle&nbsp; : <strong>Control + ' '</strong></span></li>
+</ul>
+<p>kbd103:</p>
+<ul>
+<li><span style="font-family: courier new,courier;">Hanguel Toggle</span><strong><span style="font-family: courier new,courier;">: Hanguel key</span></strong></li>
+<li><span style="font-family: courier new,courier;">Junja Toggle</span><strong><span style="font-family: courier new,courier;"> &nbsp;: Left Alt + '='</span></strong></li>
+<li><span style="font-family: courier new,courier;">Hanja Toggle</span><strong><span style="font-family: courier new,courier;">&nbsp; :&nbsp;Hanja key</span></strong>&nbsp;</li>
+</ul>
+<p>Now of course there isn't much documentation on these differences.</p>
+<p>Though how to detect them can be found, in the Microsoft Knowledge Base (<a href="http://support.microsoft.com/kb/927824">927824: Windows may not use the correct keyboard layout when you connect a USB keyboard to the computer</a>), which has the following info listed:</p>
+<h3>English and Korean keyboard registry entries</h3>
+<h4>English US 101/102-key keyboard</h4>
+<p>The following table illustrates the</p>
+<div class="reg_path">HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\i8042prt\Parameters</div>
+<p>registry entries for an English US 101/102 key USB keyboard.</p>
+<div class="kb_nowrapper">
+<table class="table" border="1" cellspacing="1">
+<tbody>
+<tr><th>Value name</th><th>Value type</th><th>Value data</th></tr>
+<tr>
+<td>LayerDriver JPN</td>
+<td>REG_SZ</td>
+<td>kbd101.dll</td>
+</tr>
+<tr>
+<td>OverrideKeyboardIdentifier</td>
+<td>REG_SZ</td>
+<td>PCAT_101KEY</td>
+</tr>
+<tr>
+<td>OverrideKeyboardSubtype</td>
+<td>DWORD</td>
+<td>0</td>
+</tr>
+<tr>
+<td>OverrideKeyboardType</td>
+<td>DWORD</td>
+<td>7</td>
+</tr>
+</tbody>
+</table>
+</div>
+<h4>Korean 101-key Type 1 USB keyboard</h4>
+<p>The following table illustrates the</p>
+<div class="reg_path">HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\i8042prt\Parameters</div>
+<p>registry entries for a Korean 101-key Type 1 USB keyboard.</p>
+<div class="kb_nowrapper">
+<table class="table" border="1" cellspacing="1">
+<tbody>
+<tr><th>Value name</th><th>Value type</th><th>Value data</th></tr>
+<tr>
+<td>LayerDriver KOR</td>
+<td>REG_SZ</td>
+<td>kbd101a.dll</td>
+</tr>
+<tr>
+<td>OverrideKeyboardIdentifier</td>
+<td>REG_SZ</td>
+<td>PCAT_101AKEY</td>
+</tr>
+<tr>
+<td>OverrideKeyboardSubtype</td>
+<td>DWORD</td>
+<td>3</td>
+</tr>
+<tr>
+<td>OverrideKeyboardType</td>
+<td>DWORD</td>
+<td>8</td>
+</tr>
+</tbody>
+</table>
+</div>
+<h4>Korean 101-key Type 2 USB keyboard</h4>
+<p>The following table illustrates the</p>
+<div class="reg_path">HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\i8042prt\Parameters</div>
+<p>registry entries for a Korean 101-key Type 2 USB keyboard.</p>
+<div class="kb_nowrapper">
+<table class="table" border="1" cellspacing="1">
+<tbody>
+<tr><th>Value name</th><th>Value type</th><th>Value data</th></tr>
+<tr>
+<td>LayerDriver KOR</td>
+<td>REG_SZ</td>
+<td>kbd101b.dll</td>
+</tr>
+<tr>
+<td>OverrideKeyboardIdentifier</td>
+<td>REG_SZ</td>
+<td>PCAT_101BKEY</td>
+</tr>
+<tr>
+<td>OverrideKeyboardSubtype</td>
+<td>DWORD</td>
+<td>4</td>
+</tr>
+<tr>
+<td>OverrideKeyboardType</td>
+<td>DWORD</td>
+<td>8</td>
+</tr>
+</tbody>
+</table>
+</div>
+<h4>Korean 101-key Type 3 USB keyboard</h4>
+<p>The following table illustrates the</p>
+<div class="reg_path">HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\i8042prt\Parameters</div>
+<p>registry entries for a Korean 101-key Type 3 USB keyboard.</p>
+<div class="kb_nowrapper">
+<div class="kb_nowrapper">Collapse this tableExpand this table</div>
+<div class="kb_nowrapper"></div>
+<table class="table" border="1" cellspacing="1">
+<tbody>
+<tr><th>Value name</th><th>Value type</th><th>Value data</th></tr>
+<tr>
+<td>LayerDriver KOR</td>
+<td>REG_SZ</td>
+<td>kbd101c.dll</td>
+</tr>
+<tr>
+<td>OverrideKeyboardIdentifier</td>
+<td>REG_SZ</td>
+<td>PCAT_101CKEY</td>
+</tr>
+<tr>
+<td>OverrideKeyboardSubtype</td>
+<td>DWORD</td>
+<td>5</td>
+</tr>
+<tr>
+<td>OverrideKeyboardType</td>
+<td>DWORD</td>
+<td>8</td>
+</tr>
+</tbody>
+</table>
+</div>
+<h4>Korean 103/106-key USB keyboard</h4>
+<p>The following table illustrates the</p>
+<div class="reg_path">HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\i8042prt\Parameters</div>
+<p>registry entries for a Korean 103/106-key USB keyboard.</p>
+<div class="kb_nowrapper">
+<table class="table" border="1" cellspacing="1">
+<tbody>
+<tr><th>Value name</th><th>Value type</th><th>Value data</th></tr>
+<tr>
+<td>LayerDriver KOR</td>
+<td>REG_SZ</td>
+<td>kbd103.dll</td>
+</tr>
+<tr>
+<td>OverrideKeyboardIdentifier</td>
+<td>REG_SZ</td>
+<td>PCAT_103KEY</td>
+</tr>
+<tr>
+<td>OverrideKeyboardSubtype</td>
+<td>DWORD</td>
+<td>6</td>
+</tr>
+<tr>
+<td>OverrideKeyboardType</td>
+<td>DWORD</td>
+<td>8</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>&nbsp;Now one very reasonable question one may expect to have here is perfectly obvious.</p>
+<p><strong><span style="font-size: xx-large;">WHY?</span></strong></p>
+<p>As in....</p>
+<p><strong><span style="font-size: xx-large;">Why go through all of these tortuous levels of complication at all?</span></strong></p>
+<p>I have no idea, though I suspect it is compatibility with various other layouts, and giving OEMs a way to support it.</p>
+<p>But in&nbsp;any case, Korean keyboard problems are much easier to grok than the Japanese ones. And at least now much of this info is documented somewhere!</p>
+<hr/><p><strong>John Cowan</strong> on 30 Apr 2012 9:10 AM:</p><div style="margin-left: 1em"><p>Is it really misspelled &quot;Hanguel&quot; in the source?</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 30 May 2012 12:28 PM:</p><div style="margin-left: 1em"><p>Yes it is, in fact... :-)</p>
+</div>
+<hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2012/07/09 <a href="../../07/09/10327871.html">The [even more underdocumented] world of the Japanese keyboard layout</a></p></div><p><em>go to <a id="newer" href="../../05/01/10299370.html" title="Albuquerque is not so accessible to the likes of me....">newer</a> or <a id="older" href="../28/10298622.html" title="If one had to choose which group at Microsoft should spontaneously combust...">older</a> post, or back to <a href="../../../index-2.html">index</a> or <a href="../../../index-2.html#2012-04">month</a> or <a href="../../../index-2.html#2012-04-30">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2012/04/30/10298801.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:33 GMT -->
+</html>

@@ -1,0 +1,117 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2010/06/05/10019465.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:35 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Not all developers speak English. Dammit.</title></head><body>
+<h1>Not all developers speak English. Dammit.</h1>
+<p><em>by Michael S. Kaplan, published on 2010/06/05 07:01 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2010/06/05/10019465.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<p>There are times I look at Microsoft's approach to the world and am really impressed by the scale and scope and planning.</p>
+<p>At those times I am humbled and pleased and proud, to be a part of that. To know that there are not many other places in the world where one could be a part of that.</p>
+<p>And then there are other times that I am annoyed by some of the things that are stated and triaged and decided.</p>
+<p>At those times I am humbled and embarrassed&nbsp;and ashamed, to be a part of that. To know that it is truly a challenge to be as decisively wrong about an issue.</p>
+<p><em>Somehow I end up feeling humble either way - those who know me will verify that this is not a usual state for me!</em></p>
+<p>Let me guive you an example.</p>
+<p>Like the other day.</p>
+<p>Well, it started back in October, 2008, with a bug report a colleage pointed me toward:</p>
+<blockquote>
+<p><span style="font-family: times new roman,times;">After installing a German SQLServer 2008, I can change Visual Studio 2008's display language between English and German via Tools-&gt;Options-&gt;Environment-&gt;International Settings.</span></p>
+<p><span style="font-family: times new roman,times;">If I choose German and compile my solution, I get the following error<br />"Invalid Resx file. Der angeforderte Wert Ctrl konnte nicht gefunden werden. Zeile ..." ( which is in english<br />"Invalid Resx file. Requested value 'Ctrl' was not found. Line...").<br />The source of error is the following part in resx-file:<br />...<br />&lt;data name="mnuFileNew.ShortcutKeys" type="System.Windows.Forms.Keys, System.Windows.Forms"&gt;<br />&nbsp;&nbsp;&nbsp; &lt;value&gt;Ctrl+N&lt;/value&gt;<br />&lt;/data&gt;<br />...<br />If I change &lt;value&gt;Ctrl+N&lt;/value&gt; into &lt;value&gt;Strg+N&lt;/value&gt;, it works with IDE in German language. But if I choose English language again, I get the same error reverted, that means an error<br />"Invalid Resx file. Requested value 'Strg' was not found. Line..."<br />on that line. </span></p>
+</blockquote>
+<p>The notion that the language of the IDE has influence on the ability to compile is just wrong.</p>
+<p>If it were only so simple to have everyone realize that.</p>
+<p>Now at first no one inside Microsoft could reproduce the problem. They asked for more information after several days.</p>
+<p>The next day, they got it -- an easy repro of the problem in the form of a simple project, and for good measure a screenshot of the error obtained thereby.</p>
+<p>After a quick "escalating now" message, nothing until March of 2009.</p>
+<p>At that point,&nbsp;someone else chimed in, someone external who could also repro the problem:</p>
+<blockquote>
+<p><span style="font-family: times new roman,times;"><em>Hello</em></span></p>
+<p><span style="font-family: times new roman,times;"><em>I have the same Problem. I have installed Visual Studio on 2 Computers from the English Setup. On one Computer i have additional a English Language Pack on in. So i switched the Language to German. <br />When i open the Projekt from the English Language Computer on the German Computer. I have this problem too.</em></span></p>
+<p><span style="font-family: times new roman,times;"><em>In German it is "Strg+B" in English "Ctrl+B"</em></span></p>
+<p><span style="font-family: times new roman,times;"><em>On both Computers are Windows XP SP2 German languge.</em></span></p>
+<p><span style="font-family: times new roman,times;"><em>I hope for a Bug Fix ;)<br />Thank you </em></span></p>
+</blockquote>
+<p>Okay, so clearly the repro is now available and folks had it for some time.</p>
+<p>Then, a few days later, the verdict:</p>
+<blockquote>
+<p><span style="font-family: times new roman,times;">Thanks for your feedback on the .NET Framework!</span></p>
+<p><span style="font-family: times new roman,times;">Customer feedback is a critical part of a successful, impactful product release. Unfortunately another part is the reality of schedules and the need to get the bits into production. We have evaluated the issue that you reported and it does not meet the criteria to be addressed in this release. This evaluation is carefully done and considers many aspects including fix cost, breaking changes, globalization, performance, etc.</span></p>
+<p><span style="font-family: times new roman,times;">Many customers have found it useful to discuss issues like this in the forums (</span><a href="http://forums.microsoft.com/msdn/default.aspx?siteid=1"><span style="font-family: times new roman,times;">http://forums.microsoft.com/msdn/default.aspx?siteid=1</span></a><span style="font-family: times new roman,times;">) where Microsoft and other members of the community can suggest workarounds.</span></p>
+<p><span style="font-family: times new roman,times;">Before we even begin work on the next release of the NET Framework release where we can make changes like this one we will devote time to addressing the top issues/suggestion (in terms of number of votes, lack of workarounds, etc). So please do continue to vote for this item if it is causing issues.</span></p>
+<p><span style="font-family: times new roman,times;">Please keep the feedbacks coming.</span></p>
+<p><span style="font-family: times new roman,times;">Thanks,<br />UIFx Team </span></p>
+</blockquote>
+<p>Disappointing.</p>
+<p>Now sometimes this does happen. Thinking about the nature of the problem, there is clearly a design flaw here where&nbsp;identifying names in source files are being localized. It is easy to imagine the fix could be expensive and/or risky.</p>
+<p>So okay, people should vote on this, let the people who own this design flaw know that this is really ugly.</p>
+<p>Not to say there was no disappoint. The response, just two days later:</p>
+<blockquote>
+<p><em><span style="font-family: times new roman,times;">I'm very disappointed that this heavy bug has been set to "fixed" and will not be solved! That means, you cannot work in an international team where some people work with english and some people work with german VS Version because the code is not compatible.</span></em></p>
+</blockquote>
+<p>That's about how I'd feel.</p>
+<p>Perhaps my language would be a little stronger. :-)</p>
+<p>Then, just a week later, the response from Microsoft:</p>
+<blockquote>
+<p><span style="font-family: times new roman,times;">We understand your pains. There is a relative simple workaround - ask your german colleagues to switch to English. Would you agree that this doesn't cause too many efforts, right? After all, they should be capable of coding in English.</span></p>
+<p><span style="font-family: times new roman,times;">This issue is annoying but it doesn't seem blocking you from doing what you state to do.</span></p>
+<p><span style="font-family: times new roman,times;">Thanks!<br />UIFx Team </span></p>
+</blockquote>
+<p><big>
+<p><strong>Oh. My. God.</strong></p>
+<p><strong>No they didn't.</strong></p>
+</big></p>
+<p>I would swear right now, even though I have been doing that much less often by explicit choice.&nbsp;But there is a filter on the new blogging platform that blocks me from doing so (though it did seem to let the title through, at least).</p>
+<p>I swore in a much more vigorous way when I read the report, I can promise you that. My colleague in the office next to me, she&nbsp;might be used to that occasional outburst&nbsp;by this point.</p>
+<p>But seriously?</p>
+<p>This is coming from a company&nbsp;whose personnel have&nbsp;development staff who span languages and scripts,&nbsp;who span countries and continents, and who by rights really ought to know better.</p>
+<p>Now I know that we are not completely enlightened here; for example,&nbsp;I mean I cannot do a complete build of Windows that compiles all source if my system locale is set to something like Japanese, due to some errant characters in a few random source files that hit <a href="http://archives.miloush.net/michkap/archive/2005/01/05/347394.html"><strong>the C4819 issue</strong></a>. This could be fixed at any time and until then is truly a little painful for developers in the company who are elsewhere. </p>
+<p>But what happens internally is not the same as what we design for customers.</p>
+<p>And the Windows thing could be fixed at any time (any time I have been in such a source file changing something else, I have removed the errant bytes as part of my checkin - and I am not the only one). It is just a bug (random bytes in a source file were clearly not intentional).</p>
+<p>But designing something with an "easy workaround" of switching to English, when we ought to know that not all of our customers know English?</p>
+<p>Thus here I am.</p>
+<p>Bemused. </p>
+<p>Not <strong>a</strong>mused, but <strong>be</strong>mused.</p>
+<p>Humbled.</p>
+<p>Embarrassed.</p>
+<p>Ashamed.</p>
+<p>You can read the whole report on this bug,&nbsp;in <a href="https://connect.microsoft.com/VisualStudio/feedback/details/361798/switching-visual-studio-2008-ide-language-from-english-to-german-produces-compiler-errors-on-resx-file">Switching Visual Studio 2008 IDE Language from English to German produces compiler-errors on Resx-file</a>. Feel free to weigh in and vote or whatever if you have appropriate reason to do so.</p>
+<p>An apology would make sense. We (Microsoft)&nbsp;may not be better than this; clearly we (Microsoft)&nbsp;aren't, sometimes.</p>
+<p>But we (Microsoft)&nbsp;can be. And we (Microsoft)&nbsp;have been.</p>
+<p>I'm sorry that we (Microsoft)&nbsp;weren't this time....</p>
+<hr/><p><strong>John Cowan</strong> on 5 Jun 2010 12:12 PM:</p><div style="margin-left: 1em"><p>Whoever wrote that should be taken in back of the barn and shot. &nbsp;No, shaken hard. &nbsp;No, actually, shaken had and *then* taken in back of the barn.</p>
+<p>Outrageous.</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 5 Jun 2010 12:14 PM:</p><div style="margin-left: 1em"><p>Well, my reaction was not quite so violent. But clearly I am not pleased about it....</p>
+</div>
+<p><strong>fowl</strong> on 5 Jun 2010 8:18 PM:</p><div style="margin-left: 1em"><p>&quot;Would you agree that this doesn&#39;t cause too many efforts, right? &quot;</p>
+<p>^^ Is that even English?</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 6 Jun 2010 12:19 AM:</p><div style="margin-left: 1em"><p>They *are* Englsh words. Though they are using a sentence structure with which I am unfamiliar. This often suggests someone for whom English is not a native language, which would be quite delightfully ironic, right? :-)</p>
+</div>
+<p><strong>Kemp</strong> on 6 Jun 2010 4:36 AM:</p><div style="margin-left: 1em"><p>This is the sort of seemingly uncaring attitude that contributes to giving MS a bad name, though I can see how someone who has never travelled outside of the US and never worked on an international team might not realise what they&#39;re saying. On the other hand, I really don&#39;t think it falls to you to apologise on behalf of MS. I don&#39;t think you could find a single person who reads your blog who would think you would be happy with this situation.</p>
+<p>It&#39;s very easy to under-localise things, I guess this is a case of things being over-localised. What would the ideal fix (from your point of view) be? Make it always be a particular identifier (Ctrl presumably to break the least existing code)? Make the compiler pick up both Ctrl and Strg (and a thousand others) as valid regardless of language setting? Have Ctrl always being valid, along with an identifier specified by their language setting? I can see how each of these would cause problems, either in implementation or usage.</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 6 Jun 2010 9:20 AM:</p><div style="margin-left: 1em"><p>How to fix? Well, in my opinion the easiest fix is also the most compatible one (even if not the ideal &quot;always works&quot; answer): make sure the last &quot;save&quot; language is stored, and then use it to load the keywords. The only case that would be broken is the one whetre you save and then uninstall the language pack used, but that doesn&#39;t seem very mainstream in terms of scenario. </p>
+<p>So in the cross-lang development scenario, it would occasionally require you to install a language pack, but you would never be required to switch to it, and the error message/kb article could explain this....</p>
+</div>
+<p><strong>Michiel</strong> on 7 Jun 2010 12:59 AM:</p><div style="margin-left: 1em"><p>I&#39;m more surprised that Microsoft even released such a localized product. I&#39;m talking from experience when I say that all _good_ developers understand English. This is no coincidence: to be a good developer, you have to keep up with innovation. That means reading, in English. Any developer who only understands German (or French, or Spanish) will be behind the times.</p>
+</div>
+<p><strong>Alasdair King</strong> on 7 Jun 2010 2:42 AM:</p><div style="margin-left: 1em"><p>&quot;This often suggests someone for whom English is not a native language, which would be quite delightfully ironic, right? :-)&quot;</p>
+<p>It also suggests why they&#39;d feel comfortable making that suggestion: they&#39;ve had to move to English for development themselves, so why shouldn&#39;t you?</p>
+</div>
+<p><strong>wva</strong> on 15 Jun 2010 5:12 PM:</p><div style="margin-left: 1em"><p>Re that C4819 issue, the instructions that you or compiler support folks have given me were not too enlightening:) Both have told me to use BOM in UTF-8 source files and ignored my argument that it would fail on any compiler and any platform different from Windows with Visual/C++. </p>
+<p>So, I told Japanese folks in our company to switch to English Windows, since Microsoft does not plan to fix that compiler bug, and I did not feel ashamed, humbled, bemused or embarrased while doing it:)</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 15 Jun 2010 5:37 PM:</p><div style="margin-left: 1em"><p>Any C or C++ developer worth their salt can add a BOM as a preprocessing step for the build; anyone doing cross-platform work who feels such an effort is beyond their skill level? Hmmmm....</p>
+</div>
+<p><strong>wva</strong> on 15 Jun 2010 6:43 PM:</p><div style="margin-left: 1em"><p>Oh please.. Why should I hack the build system to compensate for C++ compiler bug, that neither affects me nor it affects company compile servers. It just affect some poor people elsewhere who prefer to work on localized Windows. I can keep telling those people to expect surprises on localized Windows versions, one of which is known to be refusing valid C++ source code, if it contains non-ASCII UTF8. I also tell people that I reported compiler bug, and my part is done here, fixing the bug remains compiler vendor&#39;s responsibility.</p>
+</div>
+<p><strong>wva</strong> on 15 Jun 2010 6:44 PM:</p><div style="margin-left: 1em"><p>Oh please.. Why should I hack the build system to compensate for C++ compiler bug, that neither affects me nor it affects company compile servers. It just affect some poor people elsewhere who prefer to work on localized Windows. I can keep telling those people to expect surprises on localized Windows versions, one of which is known to be refusing valid C++ source code, if it contains non-ASCII UTF8. I also tell people that I reported compiler bug, and my part is done here, fixing the bug remains compiler vendor&#39;s responsibility.</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 15 Jun 2010 8:03 PM:</p><div style="margin-left: 1em"><p>If something is designed a particular way, and it works that way, then it is by design. It is only a bug in expectations on the part of someone who expected behavior to change....</p>
+<p>The compiler issue affecting the Windows build is a bug in a few source files, which is by no means the same as the bug being discussed here. The only reason it is not fixed us that they consider it out of scope for the project.</p>
+</div>
+<p><strong>Sup</strong> on 16 Jun 2010 7:05 AM:</p><div style="margin-left: 1em"><p>Makes Sense. </p>
+<p>German is for faggots.</p>
+</div>
+<hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2010/06/06/10020514.html" title="I may have game, though I&#39;m really not playing much anymore....">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2010/06/04/10018681.html" title="Vietnam or Viet Nam or Việt Nam or ???">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2010-06">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2010-06-05">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2010/06/05/10019465.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:35 GMT -->
+</html>

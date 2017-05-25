@@ -1,0 +1,48 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2005/12/29/508045.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:40 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>What's a secondary distinction?</title></head><body>
+<h1>What's a secondary distinction?</h1>
+<p><em>by Michael S. Kaplan, published on 2005/12/29 15:16 -05:00, original URI: http://blogs.msdn.com/b/michkap/archive/2005/12/29/508045.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P><FONT face=Tahoma>It was over a year ago that I talked about how <STRONG><a href="http://archives.miloush.net/michkap/archive/2004/11/30/272207.html">They ask me "why is my Korean text in random order?"</A></STRONG></FONT></P>
+<P><FONT face=Tahoma>It is a pretty important concept in collation to have items collate with muliple levels. What is interesting to about this concept is how it is so hard to describe to people yet how easily and intuitively those same people will recognize the results.</FONT></P>
+<P><FONT face=Tahoma>The differences are often very subtle rather than the more obvious case of Swedish (which I talked about&nbsp;<a href="http://archives.miloush.net/michkap/archive/2004/12/08/278170.html">here</A>). Whether you to meet a letter like <STRONG>ā</STRONG> (U+0101, LATIN SMALL LETTER A WITH MACRON) as a LATIN SMALL LETTER A with a diacritic on top of it or as an entirely separate letter right after <STRONG>a</STRONG> is a different you will only notice if you are sorting several words whose differences include the two letters. Easy to see in a dictionary or a (potentially contrived) word list, to be sure, but not quite as obvious in everyday situations, even when the letters are commonly used.</FONT></P>
+<P><FONT face=Tahoma>To give an example, it is simply easier to see the difference between</FONT></P>
+<UL>
+<LI><FONT face=Verdana size=4>a </FONT>
+<LI><FONT face=Verdana size=4>ā </FONT>
+<LI><FONT face=Verdana size=4>ābols </FONT>
+<LI><FONT face=Verdana size=4>ala </FONT>
+<LI><FONT face=Verdana size=4>auns </FONT>
+<LI><FONT face=Verdana size=4>āzis </FONT>
+<LI><FONT face=Verdana size=4>b</FONT></LI></UL>
+<P><FONT face=Tahoma>and</FONT></P><FONT face=Tahoma>
+<UL>
+<LI><FONT face=Verdana size=4>a </FONT>
+<LI><FONT face=Verdana size=4>ala </FONT>
+<LI><FONT face=Verdana size=4>auns </FONT>
+<LI><FONT face=Verdana size=4>ā </FONT>
+<LI><FONT face=Verdana size=4>ābols </FONT>
+<LI><FONT face=Verdana size=4>āzis </FONT>
+<LI><FONT face=Verdana size=4>b</FONT></LI></UL>
+<P>but a simple listing of letters like</P>
+<UL>
+<LI><FONT face=Verdana size=4>a </FONT>
+<LI><FONT face=Verdana size=4>ā </FONT>
+<LI><FONT face=Verdana size=4>b </FONT>
+<LI><FONT face=Verdana size=4>c</FONT></LI></UL>
+<P><FONT face=Verdana size=4></FONT></P>
+<P><FONT face=Tahoma>would look identical in the two cases. We you are not dealing with large lists&nbsp;such as&nbsp;dictionaries, you may not notice the difference.</FONT></P>
+<P><FONT face=Tahoma>Now there is one case where you often would have a large list on a computer, and that is an address book. However, even if you are looking at the list, in most cases you are typing the name which will shorten the list. In common usage, you may never notice that the computer is not meeting up to your expectations.</FONT></P>
+<P><FONT face=Tahoma>The end result (in cases where the computer does not match the user expectations) is usually either not noticing a subconscious sense that the computer has it wrong without an explicit understanding of what might be incorrect. If the differences end up being significant enough, they may eventually try to figure out what's wrong.&nbsp;But in most cases&nbsp;they&nbsp;will just&nbsp;report the bug rather than trying to dig into it. Because no matter how intuitive user expectations are, they're not very easily explained.</FONT></P>
+<P><FONT face=Tahoma>In collation terms, the difference between those first two lists that I gave above is whether U+0101 has a primary distinction from the letter <STRONG>a</STRONG> or a secondary one. But if somebody is giving you a list that makes up the ALPHABET for a language that type of distinction is usually absent. So if somebody tells you that their alphabet is:</FONT></P>
+<BLOCKQUOTE dir=ltr style="MARGIN-RIGHT: 0px">
+<P><FONT face=Verdana size=4>aāàáâãäåbcdeēèéêëfghiīìíîïjklmnoōòóôõöpqrstuūùúûüvwxyýÿz</FONT></P></BLOCKQUOTE>
+<P><FONT face=Tahoma>then you would not have enough information to decide how the letters should sort. Because no real information is being given about the primary and secondary distinctions. </FONT><FONT face=Tahoma>In many languages that have letters with diacritics, you can't assume that they are all even handled the same way!</FONT></P>
+<P><FONT face=Tahoma>In collation, this does become crucial in situations like the one I pointed out in <a href="http://archives.miloush.net/michkap/archive/2005/02/05/367666.html"><STRONG>You can't ignore diacritics when a language does not give them diacritic weight</STRONG></A>&nbsp;because of a difference between the users and the computer's expectations, usually because the language settings are incorrect on the computer....</FONT></P>
+<P><FONT face=Tahoma>Perhaps the best reason to make sure that your default user locale is set properly? :-)</FONT></P>
+<P><FONT face=Tahoma></FONT>&nbsp;</P>
+<P><FONT face=Tahoma color=#ff1493><EM>This post brought to you by</EM> "<FONT size=6>ā</FONT>" <EM>(U+0101, a.k.a. LATIN SMALL LETTER A WITH MACRON)</EM></FONT></P></FONT>
+<hr/><div style="margin-left: 1em"><em>no comments</em></div><hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2010/07/13 <a href="http://archives.miloush.net/michkap/archive/2010/07/13/10037608.html">I swear the Latvian bug is fixed; it was fixed 4.5 years ago!</a></p><p>2006/11/01 <a href="http://archives.miloush.net/michkap/archive/2006/11/01/916477.html">If you add enough characters to a sort, intuitive distinction can suffer</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2005/12/29/508124.html" title="Best practices for keyboards #0: MSKLC warnings in 1.0/1.1">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2005/12/28/507759.html" title="Getting rid of your extra yen">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2005-12">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2005-12-29">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2005/12/29/508045.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:40 GMT -->
+</html>

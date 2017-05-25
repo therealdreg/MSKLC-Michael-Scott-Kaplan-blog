@@ -1,0 +1,89 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2004/12/31/344739.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:42 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>French collation: When diacritical becomes diabolical</title></head><body>
+<h1>French collation: When diacritical becomes diabolical</h1>
+<p><em>by Michael S. Kaplan, published on 2004/12/31 02:08 -05:00, original URI: http://blogs.msdn.com/b/michkap/archive/2004/12/31/344739.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P>A few months ago, I was talking with a customer who simply could not understand the sorting results she was seeing (in this case in a table in&nbsp;MS Word 2003). She distilled it down to a small repro; basically she took a small list of words:</P>
+<TABLE cellSpacing=1 cellPadding=0>
+
+<TR>
+<TD><B><I><FONT size=2>
+<P>word</B></I></FONT></P></TD>
+<TD><B><I><FONT size=2>
+<P>meaning</B></I></FONT></P></TD></TR>
+<TR>
+<TD>
+<P>cote</P></TD>
+<TD>
+<P><FONT size=2>dimension</FONT></P></TD></TR>
+<TR>
+<TD>
+<P>côte</P></TD>
+<TD><FONT size=2>
+<P>coast</P></FONT></TD></TR>
+<TR>
+<TD>
+<P>coté</P></TD>
+<TD><FONT size=2>
+<P><FONT size=2>with dimensions</FONT></FONT></P></TD></TR>
+<TR>
+<TD>
+<P>côté</P></TD>
+<TD>
+<P><FONT size=2>side</FONT></P></TD></TR></TABLE>
+<P>(at this point I knew both the language and what was causing her to have problems, and you may know too!)</P>
+<P>What she noticed was that if she marked the left column as being French text (she tried several French choices, including France and Canada), the order was like this:</P>
+<TABLE cellSpacing=1 cellPadding=0>
+
+<TR>
+<TD><FONT size=4>
+<P>cote</FONT></P></TD></TR>
+<TR>
+<TD><FONT size=4>
+<P>côte</FONT></P></TD></TR>
+<TR>
+<TD><FONT size=4>
+<P>coté</FONT></P></TD></TR>
+<TR>
+<TD><FONT size=4>
+<P>côté</FONT></P></TD></TR></TABLE>
+<P>while if column was marked as being English then the results looked like this:</P>
+<TABLE cellSpacing=1 cellPadding=0>
+
+<TR>
+<TD><FONT size=4>
+<P>cote</FONT></P></TD></TR>
+<TR>
+<TD><FONT size=4>
+<P>coté</FONT></P></TD></TR>
+<TR>
+<TD><FONT size=4>
+<P>côte</FONT></P></TD></TR>
+<TR>
+<TD><FONT size=4>
+<P>côté</FONT></P></TD></TR></TABLE>
+<P>She could not understand any sorting rules that would explain the way that the words were sorting in the "French" table.</P>
+<P>So I talked with her about <A href="http://www.academie-francaise.fr/"><U><FONT color=#0000ff>Académie française</U></FONT></A> and how they have a specific preference related to the way letters with diacritics are to be sorted (I also mentioned incidentally that I thought they had abolished the use of the circumflex in the early 1990's in many words but honestly I did not know if it applied to these two words that use the SMALL O WITH CIRCUMFLEX!).</P>
+<P>The specific rule I was talking about here is that diacritics are evaluated from right to left rather than from left to right. Thus <FONT size=4>côte</FONT> comes <I>before</I> <FONT size=4>coté</FONT>, rather than after it as it does in languages like English that evaluate them from left to right. Because the word <FONT size=4>côte</FONT> has no ACUTE on the "e" at the end of the word while <FONT size=4>coté </FONT>does. In English and most other languages, the evaluation starts on the left and therefore the CIRCUMFLEX or lack thereof on the "o" is the controlling factor in ordering.</P>
+<P>You can see it described in the French sort order exanple in <A href="http://www.microsoft.com/globaldev/dis_v1/disv1.asp?DID=dis33d&amp;File=S24C4.asp"><U><FONT color=#0000ff>Appendix D</U></FONT></A> of the first edition of <A href="http://www.microsoft.com/globaldev/dis_v1/disv1.asp"><U><FONT color=#0000ff>Developing International Software for Windows 95 and Windows NT</U></FONT></A>.</P>
+<P>This particular rule is interesting in that in all of the native French speakers with whom I have spoken, I never found anyone who&nbsp;could explain the rule to me. In their defense they were pretty much all aware that there were special rules used in dictionaries, but if you think about it there would seldom be a time that one could not find the word one wanted in a dictionary that used this rule. After living with the language for a lifetime, I am sure things like this are simply understood subconsciously when they occur. This phenomenon is common in almost all languages and they pretty much all have rules that native speakers understand even if the speakers cannot articulate the rules.</P>
+<P>Another interesting factoid about language that can be seen here has to do with the fact that this use of "reverse diacritics" is seen in every French locale supported by Windows. It is fascinating to see the influence that the "mother country" of a language can sometimes have on changes that are made to other places where it is spoken.</P>
+<P>When changes are made, whether by longtime organizations such as the Académie or by direct legislation, other countries will in many cases tend to pick up those changes. To me, the reasons behind such language reforms spreading this way are fascinating to contemplate. It is certainly not any kind of sovereignty or true languge "ownership" issue (and in future posts I may discuss specific cases in other languages where changes were at times intentionally <I>not</I> picked up!). </P>
+<P>But I am at times amazed at the way that people will appear to see language as transcending the petty things. Its the kind of behavior that makes me interested in linguistic issues. :-)</P>
+<P>&nbsp;</P><I><FONT color=#800080>
+<P>This post brought to you by</I> "Ô" <I>and</I> "É"<I> (U+00d4, a.k.a. LATIN CAPITAL LETTER O WITH CIRCUMFLEX, and U+00c9, a.k.a. LATIN CAPITAL LETTER E WITH ACUTE)</I></FONT></P>
+<hr/><p><a id="344747" href="#344747">#</a> <strong>S&#233;bastien Nussbaumer</strong> on 31 Dec 2004 1:00 AM:</p><div style="margin-left: 1em">Welcome to France :)<br>I didn't even know such order rules existed in my language ! BTW, the meanings of words 2 and 3 have been mixed up :<br> - &quot;c&#244;te&quot; means &quot;coast&quot;<br> - &quot;cot&#233;&quot; means &quot;with dimensions&quot; (in fact, it's used to tell that an object has had its dimensions set precisely. It's mainly used in industrial drawing when you design some piece, of an engine for example. The object is &quot;cot&#233;&quot; from the moment the designers has decided which are its dimensions)</div>
+<p><a id="344758" href="#344758">#</a> <strong>Serge Wautier</strong> on 31 Dec 2004 1:41 AM:</p><div style="margin-left: 1em">Michael,<br><br>Interesting. I'm a french speaker but I didn't know that rule ! Neither did I know about abolishment of the ^ ...<br><br>My feeling is that in this case (the 4 words you mention), sorting the french way seems phonetically better than the default sort: &#244; is phonetically much closer to o than &#233; is to e. How this explanation would lead to the 'reverse diacritics' is beyond me though.<br><br>PS: Small translation bug :<br>cot&#233; = with dimensions<br>c&#244;te = coast<br></div>
+<p><a id="344764" href="#344764">#</a> <strong>David Brabant</strong> on 31 Dec 2004 2:39 AM:</p><div style="margin-left: 1em">Hi Michael, <br><br>Just a minor correction: the translations you provide for the French words are wrong. See here:<br><a target="_new" href="http://www.french-linguistics.co.uk/cgi-bin/frdict.pl?login=&amp;password=&amp;entry=cote">http://www.french-linguistics.co.uk/cgi-bin/frdict.pl?login=&amp;password=&amp;entry=cote</a><br>About sorting in French, I can talk about my own experience and what we (in my company) usually do for our own software: we just ignore accents. For most applications (beside dictionaries maybe), that's perfectly OK :-)<br></div>
+<p><a id="344808" href="#344808">#</a> <strong>Michael Kaplan</strong> on 31 Dec 2004 7:55 AM:</p><div style="margin-left: 1em">Thanks for helping with the translation bug -- I looked bsck at her mail and see it was completely my fault. :-) <br><br>I have found multiple mentions sbout the spelling reform, including <a target="_new" href="http://www.tiscali.co.uk/reference/encyclopaedia/hutchinson/m0005887.html">http://www.tiscali.co.uk/reference/encyclopaedia/hutchinson/m0005887.html</a> ....</div>
+<p><a id="344949" href="#344949">#</a> <strong>George</strong> on 31 Dec 2004 1:04 PM:</p><div style="margin-left: 1em">I don't think this diabolical, though. It is very weird, especially when people who speak French have never heard of the rule.</div>
+<p><strong>Michael S. Kaplan</strong> on 14 Feb 2008 10:35 AM:</p><div style="margin-left: 1em"></div>
+<p><strong>Mod Mekkawi</strong> on 4 Jul 2008 8:45 AM:</p><div style="margin-left: 1em"><p># &nbsp;re: French collation: When diacritical becomes diabolical</p>
+<p>Thanks so much for this information, all new to me, including the elimination of the accent circumflex. </p>
+<p>I agree w/ David said above, except for dictionaries and the most demanding academic needs, I would ignore accents when sorting words with diacritics.</p>
+<p>BTW, anyone knows a way to sort in alpha order an html list where the lines are hyperlinked? -- Mod Mekkawi, Howard U, Washington, DC</p></div>
+<p><strong>Tom</strong> on 3 Sep 2011 6:00 AM:</p><div style="margin-left: 1em"><p>Yes, these changes are awful for linguists and translators, we really have to battle to keep updated... www.alafrench.com for French translation services by the way.</p></div>
+<hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2006/11/17 <a href="http://archives.miloush.net/michkap/archive/2006/11/17/1097532.html">Korean + French == ????</a></p><p>2005/08/10 <a href="http://archives.miloush.net/michkap/archive/2005/08/10/449909.html">Double compressions -- Hungarian goulash?</a></p><p>2005/07/20 <a href="http://archives.miloush.net/michkap/archive/2005/07/20/440842.html">More on sort elements</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2004/12/31/344888.html" title="Unlike LCMapString, the sort keys for English characters precede the sort keys for Korean">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2004/12/30/344714.html" title="Accessible crap advertising">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2004-12">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2004-12-31">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2004/12/31/344739.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:42 GMT -->
+</html>

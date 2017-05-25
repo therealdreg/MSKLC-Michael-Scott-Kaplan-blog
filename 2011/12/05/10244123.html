@@ -1,0 +1,27 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2011/12/05/10244123.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Not so KS, if you know what I mean....</title></head><body>
+<h1>Not so KS, if you know what I mean....</h1>
+<p><em>by Michael S. Kaplan, published on 2011/12/05 07:01 -05:00, original URI: http://blogs.msdn.com/b/michkap/archive/2011/12/05/10244123.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<p>A few months ago, Ken Lunde of Adobe noted some mapping differences between several different vendors and the Korean KS X 1001 standard:</p>
+<p style="padding-left: 30px;"><strong><span style="font-family: courier new,courier;">The small table below shows the fourteen KS X 1001 code points that map differently,</span></strong><br /><strong><span style="font-family: courier new,courier;">depending on the platform:</span></strong></p>
+<p style="padding-left: 30px;"><strong><span style="font-family: courier new,courier;">&nbsp; KS X 1001 (GR)&nbsp; Unicode (W = Windows; M = Macintosh; A = Adobe)</span></strong><br /><strong><span style="font-family: courier new,courier;">&nbsp; 01-09 (0xA1A9)&nbsp; U+00AD (W) U+2013 (M/A) *</span></strong><br /><strong><span style="font-family: courier new,courier;">&nbsp; 01-10 (0xA1AA)&nbsp; U+2014 (M/A) U+2015 (W) *</span></strong><br /><strong><span style="font-family: courier new,courier;">&nbsp; 01-11 (0xA1AB)&nbsp; U+2016 (M/A) U+2225 (W) *</span></strong><br /><strong><span style="font-family: courier new,courier;">&nbsp; 01-13 (0xA1AD)&nbsp; U+223C (W) U+301C (M) U+FF5E (A) *</span></strong><br /><strong><span style="font-family: courier new,courier;">&nbsp; 01-43 (0xA1CB)&nbsp; U+00A2 (M) U+FFE0 (W/A) *</span></strong><br /><strong><span style="font-family: courier new,courier;">&nbsp; 01-44 (0xA1CC)&nbsp; U+00A3 (M) U+FFE1 (W/A) *</span></strong><br /><strong><span style="font-family: courier new,courier;">&nbsp; 01-45 (0xA1CD)&nbsp; U+00A5 (M) U+FFE5 (W/A) *</span></strong><br /><strong><span style="font-family: courier new,courier;">&nbsp; 01-76 (0xA1EC)&nbsp; U+00AB (A) U+226A (W/M)</span></strong><br /><strong><span style="font-family: courier new,courier;">&nbsp; 01-77 (0xA1ED)&nbsp; U+00BB (A) U+226B (W/M)</span></strong><br /><strong><span style="font-family: courier new,courier;">&nbsp; 01-94 (0xA1FE)&nbsp; U+00AC (M) U+FFE2 (W/A) *</span></strong><br /><strong><span style="font-family: courier new,courier;">&nbsp; 02-06 (0xA2A6)&nbsp; U+02DC (M/A) U+FF5E (W) *</span></strong><br /><strong><span style="font-family: courier new,courier;">&nbsp; 02-16 (0xA2B0)&nbsp; U+02D0 (W/M) U+2236 (A)</span></strong><br /><strong><span style="font-family: courier new,courier;">&nbsp; 02-33 (0xA2C1)&nbsp; U+2299 (W) U+25C9 (M/A) *</span></strong><br /><strong><span style="font-family: courier new,courier;">&nbsp; 03-94 (0xA3FE)&nbsp; U+203E (M) U+FFE3 (W/A) *</span></strong></p>
+<p>As it turns out,&nbsp;the plan for the government is to do an official mapping between Unicode and their standard.</p>
+<p>This would of course lead to small problems of these different vendors due to the aforementioned small differences....</p>
+<p>The question I was asked was whether or not we would be updating <a href="http://msdn.microsoft.com/en-us/goglobal/cc305154">Windows code page 949</a>&nbsp;after the standard was updated.</p>
+<p>Ah.</p>
+<p>The short answer?</p>
+<p style="padding-left: 30px;"><strong>No.</strong><strong></strong></p>
+<p>The slightly longer answer?</p>
+<p style="padding-left: 30px;"><span style="font-size: large;"><strong>Hell no! What, are you kidding me?</strong></span></p>
+<p>Our own stability requirements keep us from changing our code pages.</p>
+<p>And people who have to move between platforms should generally convert to Unicode using each platform's individual notion of how to map to and from Unicode.</p>
+<p>Then you can use Unicode as the invariant info that can be moved to different platforms....</p>
+<hr/><p><strong>Brian Tkatch</strong> on 5 Dec 2011 8:22 AM:</p><div style="margin-left: 1em"><p>Before i realized &quot;invarint&quot; was a typo, i thought it was a data type. :)</p>
+</div>
+<p><strong>Ken Lunde</strong> on 9 Dec 2011 5:47 AM:</p><div style="margin-left: 1em"><p>I thought that the platform-specific differences were somewhat nasty for Japanese, specifically referring to the Unicode mappings of some symbols in JIS X 0208, but I discovered that it is nastier for Korean.</p>
+</div>
+<hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2011/12/06/10244626.html" title="CompareString != CompareStringOrdinal. Even if we want it to be.">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2011/12/01/10243326.html" title="No one ever doubts me when I tell them SharePoint ate my spec!">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2011-12">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2011-12-05">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2011/12/05/10244123.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+</html>

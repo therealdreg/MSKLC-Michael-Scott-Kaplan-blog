@@ -1,0 +1,32 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2012/07/12/10328248.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:48 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Deciding how things that we used to suck at should work</title></head><body>
+<h1>Deciding how things that we used to suck at should work</h1>
+<p><em>by Michael S. Kaplan, published on 2012/07/10 07:01 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2012/07/10/10328248.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<p><span style="color: #ff0000;"><em>Grammatically inappropriate blog title's awkwardness is [decidedly] intentional, though this sentence's, sadly, is not!</em></span></p>
+<p>There are some features of NLS that never worked terribly well.</p>
+<p>For example, the way currency is so tightly coupled to locale, in&nbsp; model that encourages typical usage to be based on <strong>LOCALE_USER_DEFAULT</strong>, or <strong>System.Globalization.CultureInfo.CurrentCulture</strong>.</p>
+<p>Which is not to say that is necessarily always a bad thing, but let me show you an example of where things stutter and fail.</p>
+<p>Try to put some money values in an Excel spreadsheet.</p>
+<p>Then change your default user locale.</p>
+<p>It will change the money unit -- so dollars may become francs or yen or whatever.</p>
+<p>Oops!</p>
+<p>Clearly the need to separate the notion of the money type from the formatting is not intuitively present for commonly used applications to take advantage of!</p>
+<p>So for Windows 8, there is Windows Runtime support for the <a title="CurrencyFormatter class" href="http://msdn.microsoft.com/library/windows/apps/xaml/windows.globalization.numberformatting.currencyformatter.aspx">CurrencyFormatter class</a>, which does not automatically tie these two concepts (the region where money is being spent&nbsp;and the language-esque preferences used to format the money values) quite as tightly!</p>
+<p>This is a Very Good Thing, believe me.</p>
+<p>But not everyone is quite on board yet. Like when someone just asked some people:</p>
+<p style="padding-left: 90px;"><span style="font-family: times new roman,times; font-size: medium;">I have a question regarding the CurrencyFormatter behavior with non-matching language and region.<br /></span><br /><span style="font-family: times new roman,times; font-size: medium;">We have price values with currency ISO symbols, and we need to format the price as required by the regions (due to laws, etc.).<br /></span><br /><span style="font-family: times new roman,times; font-size: medium;">Can you please confirm if the actual formatting from the CurrencyFormatter for the following scenarios are correct?<br /></span><br /><span style="font-family: times new roman,times; font-size: medium;">Thank you.</span></p>
+<p style="padding-left: 90px;"><span style="font-family: times new roman,times; font-size: medium;">Scenarios:</span><br /><span style="font-family: times new roman,times; font-size: medium;">Input:</span><br /><span style="font-family: times new roman,times; font-size: medium;">&bull;&nbsp;Currency: USD</span><br /><span style="font-family: times new roman,times; font-size: medium;">&bull;&nbsp;Region: US</span><br /><span style="font-family: times new roman,times; font-size: medium;">&bull;&nbsp;Language: de-DE</span><br /><span style="font-family: times new roman,times; font-size: medium;">Expected formatting: $12.34 (standard USD format)</span><br /><span style="font-family: times new roman,times; font-size: medium;">Actual formatting: 12.34 $</span></p>
+<p style="padding-left: 90px;"><br /><span style="font-family: times new roman,times; font-size: medium;">Input:</span><br /><span style="font-family: times new roman,times; font-size: medium;">&bull;&nbsp;Currency: EURO</span><br /><span style="font-family: times new roman,times; font-size: medium;">&bull;&nbsp;Region: DE</span><br /><span style="font-family: times new roman,times; font-size: medium;">&bull;&nbsp;Language: en-US</span><br /><span style="font-family: times new roman,times; font-size: medium;">Expected formatting: 12.34 &euro; (standard EURO format)</span><br /><span style="font-family: times new roman,times; font-size: medium;">Actual formatting: &euro;12.34</span></p>
+<p>Now I'm obviously not working on that class, but I have a hard time accepting the <strong>Expected formatting</strong> info to actually <em>be</em> expected.</p>
+<p>That would be behavior worthy of Excel, frankly....</p>
+<p>And we've waited a long time to get a more intuitive an understandable behavior in place here.</p>
+<p>Let's try and enjoy it!</p>
+<hr/><p><strong>Ice-Wolf</strong> on 12 Jul 2012 1:44 PM:</p><div style="margin-left: 1em"><p>I would never expect the Euro sign to come after the amount in English. &nbsp; €12.34 is definitely the expected format.</p>
+<p>just like in a German context &nbsp; I would say the expected should be &nbsp; &nbsp;&quot;12,34 $&quot; (rather than the actual typed above &quot;12.34 $&quot;</p>
+<p>I&#39;d say having it formatted as &quot;Der Preis: $12.34&quot; &nbsp;would give more of a start... 1,234 dollars? (with the . and the $ in the wrong spot...)</p>
+</div>
+<hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2012/07/13 <a href="http://archives.miloush.net/michkap/archive/2012/07/13/10329490.html">There are 3 kinds of people....</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2012/07/11/10327775.html" title="The evolving Story of Locale Support, part 25: Something old, something new, something repurposed, and something...">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2012/07/09/10327871.html" title="The [even more underdocumented] world of the Japanese keyboard layout">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2012-07">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2012-07-10">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2012/07/12/10328248.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:48 GMT -->
+</html>

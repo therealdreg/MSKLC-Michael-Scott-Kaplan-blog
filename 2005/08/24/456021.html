@@ -1,0 +1,27 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2005/08/24/456021.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:41 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>The loader without the loaded</title></head><body>
+<h1>The loader without the loaded</h1>
+<p><em>by Michael S. Kaplan, published on 2005/08/24 23:08 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2005/08/24/456021.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P><FONT face=Tahoma>I have mentioned in the past about customers who did not need the <A href="http://www.microsoft.com/globaldev/handson/dev/mslu_announce.mspx">Microsoft Layer for Unicode on Win9x Systems</A>&nbsp;itself. They had their own layer, perhaps built based on the <A href="http://www.microsoft.com/msj/1198/multilang/multilang.aspx">article</A> written by F. Avery Bishop, David C. Brown, and David M. Meltzer.</FONT></P>
+<P><FONT face=Tahoma>But they did like the loader in unicows.lib, and wanted to hook up their layer to this loader.</FONT></P>
+<P><FONT face=Tahoma>So how hard is it to have the loader without having the loaded?</FONT></P>
+<P><FONT face=Tahoma>It is actually quite easy!</FONT></P>
+<P><FONT face=Tahoma>Basically, you need to have include unicows.lib in your project just as the Platform SDK describes and add a file in your project that has a custom loader function -- something that will return an HMODULE such as that returned by LoadLibrary. What this needs to look like is on the Platform SDK, <A href="http://msdn.microsoft.com/library/en-us/mslu/winprog/compiling_your_application_with_the_microsoft_layer_for_unicode.asp">here</A>. The code looks like this:</FONT></P>
+<BLOCKQUOTE dir=ltr style="MARGIN-RIGHT: 0px">
+<P><FONT face="Courier New"><STRONG>#ifdef __cplusplus<BR>extern "C" {<BR>#endif<BR>extern FARPROC _PfnLoadUnicows = (FARPROC) &amp;LoadUnicowsProc;<BR>#ifdef __cplusplus<BR>}<BR>#endif</STRONG></FONT></P></BLOCKQUOTE>
+<P><FONT face=Tahoma>Of course you need to define your own LoadUnicowsProc procedure. :-)</FONT></P>
+<P><FONT face=Tahoma>Now what you do next depends. You have two choices:</FONT></P>
+<P><FONT face=Tahoma>A) If you have a library that has all of the functions you call in it and their names are identical, then once you have a LoadUnicowsProc() defined that returns its HMODULE, you are done! The MSLU loader does all of the work for you and loads the functions. You're done!</FONT></P>
+<P><FONT face=Tahoma>B) If your library's function names are different or there are other reasons you want to handle having the pointers to functions yourself, you can actually add the following to that source file you added (<A href="http://msdn.microsoft.com/library/en-us/mslu/winprog/overriding_an_api_in_the_microsoft_layer_for_unicode.asp">as is described here</A>) for each function:</FONT></P>
+<BLOCKQUOTE dir=ltr style="MARGIN-RIGHT: 0px">
+<P><FONT face="Courier New"><STRONG>#ifdef __cplusplus<BR>extern "C" {<BR>#endif<BR>extern FARPROC Unicows_&lt;function name one&gt; = (FARPROC) &lt;function you want MSLU to call&gt;<BR>extern FARPROC Unicows_&lt;function name two&gt; = (FARPROC) &lt;function you want MSLU to call&gt;<BR></STRONG></FONT><FONT face="Courier New"><STRONG>...<BR>extern FARPROC Unicows_&lt;function name <EM>n</EM>&gt; = (FARPROC) &lt;function you want&nbsp;MSLU to call&gt;<BR>#ifdef __cplusplus<BR>}<BR>#endif</STRONG></FONT></P></BLOCKQUOTE>
+<P><FONT face=Tahoma>And then you are done with this method. The loader will never use that HMODULE you&nbsp;returned from LoadUnicowsProc(), so you can pass any non-NULL value (I would recommend calling a guaranteed invalid value like (HMODULE)0x00000001 or something).</FONT></P>
+<P><FONT face=Tahoma>Now as long as you cover all of the functions your application is calling (via either method), then you get the advantage of the platform-based switching that the MSLU Loader provides, without any worries related to your functions being called on non-Win9x platforms.</FONT></P>
+<P><FONT face=Tahoma>Now not everyone needs such a method, but if it would be handy for you then it is available. :-)</FONT></P>
+<P><FONT face=Tahoma></FONT>&nbsp;</P>
+<P><FONT face=Tahoma color=#ff0000><EM>This post brought to you by</EM> "٭" <EM>(<A href="http://www.fileformat.info/info/unicode/char/066d/index.htm">U+066d</A>, a.k.a. ARABIC FIVE POINTED STAR)</EM></FONT></P>
+<hr/><div style="margin-left: 1em"><em>no comments</em></div><hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2005/08/25/456237.html" title="My kingdom for some Unicode controls">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2005/08/24/455962.html" title="It didn&#39;t make my brown eyes blue">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2005-08">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2005-08-24">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2005/08/24/456021.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:41 GMT -->
+</html>

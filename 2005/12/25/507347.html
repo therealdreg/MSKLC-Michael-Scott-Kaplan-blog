@@ -1,0 +1,48 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2005/12/25/507347.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:40 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Locale dependencies in the managed debuuger?</title></head><body>
+<h1>Locale dependencies in the managed debuuger?</h1>
+<p><em>by Michael S. Kaplan, published on 2005/12/25 20:01 -05:00, original URI: http://blogs.msdn.com/b/michkap/archive/2005/12/25/507347.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P><FONT face=Tahoma>Ian Thomas asked in the Suggestion Box:</FONT></P>
+<BLOCKQUOTE dir=ltr style="MARGIN-RIGHT: 0px">
+<P><EM><FONT size=2>The person who found the problem, and probably one or more who verified it, have probably taken this to the Visual Studio teams (even though it's 2003 - I understand that SPs will be issued from time to time). It's a little obscure, but the thread on the Australia .NET discussion list can be checked to get detail - eg, Piers Williams on 7Dec2005, thread "Visual Studio .NET" </FONT></EM><A href="http://www.stillhq.com/aus-dotnet/archives2/msg13489.html" target=_new rel=nofollow><EM><FONT size=2>http://www.stillhq.com/aus-dotnet/archives2/msg13489.html</FONT></EM></A><EM><FONT size=2> </FONT></EM></P>
+<P><EM><FONT size=2>Here's the problem (found by "SG"): </FONT></EM></P>
+<BLOCKQUOTE dir=ltr style="MARGIN-RIGHT: 0px">
+<P><EM><FONT size=2>"The problem is that Visual Studio seems to ignore any localization settings that are present in the machine configuration, Web.config file and aspx page directives when it comes to dates (and possibly other things I don't know about). This is evident in the Watch and Autos windows, and when you hover your mouse over a DateTime variable in break mode." </FONT></EM></P></BLOCKQUOTE>
+<P><EM><FONT size=2>The problem (as explained in the thread, URL given above) is that "it's not consistent across languages :-/ </FONT></EM></P>
+<P><EM><FONT size=2>As far as I can tell C# gets it right, whilst VB displays the non-localised date in the watch window. As expected both get it right in the immediate window. I had to look several times at this before I believed it (you'd assume that the visualisers in the debugger would be language-neutral, surely), and this doesn't appear to back up what you're saying because you're using C#." (quoting Piers Williams). </FONT></EM></P>
+<P><EM><FONT size=2>NOW .. <BR>for the blog topic: </FONT></EM></P>
+<P><EM><FONT size=2>"TDD (Test Driven Development) and Internationalization" </FONT></EM></P>
+<P><EM><FONT size=2>WHY? </FONT></EM></P>
+<P><EM><FONT size=2>Many developers (including many in the various Microsoft teams, whose blogs I seem to encounter frequently) are pushing the TDD barrow, from those in the Patterns &amp; Practices arena through to those who are trying to get us to develop secure code. I find that it's a difficult practice / skill to perform - but I'm an average coder, not a Microsoftie. </FONT></EM></P>
+<P><EM><FONT size=2>How difficult is it to add another strand to the testing, that includes internationalization? I don't know. But I'd think that getting the dates right for a range of cultures (like us Aussies and Poms) would not be too hard. </FONT></EM></P>
+<P><EM><FONT size=2>I realise that the bug described is quite r, and very obscure. </FONT></EM></P></BLOCKQUOTE>
+<P><FONT face=Tahoma>It is true that TDD is something that many people are talking about these days.</FONT></P>
+<P><FONT face=Tahoma>I'll talk about that first, then about the&nbsp;problem&nbsp;Ian mentioned (the one he is calling an obscure bug).</FONT></P>
+<P><FONT face=Tahoma>I remember a long time ago, when I was doing work for the development team for Microsoft Access, that not everyone who was on the development team was running the product regularly.</FONT></P>
+<P><FONT face=Tahoma>Now this was not true of everybody (it was certainly not true of the developers who came up 'through the ranks' from tester to wizard developer to core developer!). But there were&nbsp;actually a few devs on the team who were somewhat proud of the fact that they were able to do so much work on the product without reaslly doing work in it.</FONT></P>
+<P><FONT face=Tahoma>When I think of the principal benefit of Test Driven Development, it is indeed (in my mind at least) driven by a pride in nearly the opposite philosophy -- in making working in the product and verifying its functionality as a core part of the development process.</FONT></P>
+<P><FONT face=Tahoma>However, for TDD to work, there has to be a really good understanding of the issues that one is trying to test. And here is where the problems can start....</FONT></P>
+<P><FONT face=Tahoma>It is perhaps easy to imagine that anyone who is writing the code for a feature has&nbsp;a good understanding of the feature and how to use it.</FONT></P>
+<P><FONT face=Tahoma><EM>There are nuances, such as in the MS Access case -- where one may not be as knowledgable in the scripting language VBA so one may not be as effective in testing some aspects of the functionality one is authoring.</EM></FONT></P>
+<P><FONT face=Tahoma>It is also&nbsp;perhaps easy to imagine that inside of Microsoft, where security training is such an important basic requirement and where threat models that help people really evaluate potential risks of features, people could integrate knowledge of potential security threats into a TDD plan.</FONT></P>
+<P><FONT face=Tahoma>However, as I pointed out in <STRONG><a href="http://archives.miloush.net/michkap/archive/2005/01/04/346116.html">Why international test is an art (and why there are few fine artists)</A></STRONG>,&nbsp;the talent involved in being able to really look at any feature and see the dimensions that internationalization can add to it is one that not even all testers have, let alone all developers. So I am not sure how effective developers would be at being able to add such testing to a core part of a TDD regimen.</FONT></P>
+<P><FONT face=Tahoma>With that said, there are specific elements that probably could be added, as Ian suggests. If one is dealing with internationalizable aspects of a feature such as date formatting, one could imagine adding that aspect to the testing,and to the test driven development.</FONT></P>
+<P><FONT face=Tahoma>With that said, the particular bug Ian mentions (the non application-locale-dependent way in which the debugger for VB.Net handles formatting date and number variables) is an interesting one.</FONT></P>
+<P><FONT face=Tahoma>The honest truth is that if it were up to me, it would be a configurable setting.</FONT></P>
+<P><FONT face=Tahoma>I may want the dates and such to be formatted in the way they would be in the actaul application, or I may want them in my own preferred formats.</FONT></P>
+<P><FONT face=Tahoma>In my ideal debugger, I would have a configurable and easily changeable choice for this, just like I do for whether integrers should be in decimal or hexidecimal.</FONT></P>
+<P><FONT face=Tahoma>So I guess from my point of view, both experiences as reportef may be somewhat broken. :-)</FONT></P>
+<P><FONT face=Tahoma>Of course we do not know from the report what the user locale settings are on the machine, and all we know for sure about the dates in VB.NET is that they are using the same pound-delimited format that has been used in VBA/VBScript/COM forever to be the invariant format used for dates and such in code. So the exact behavior here has still not really been described. So this is not really a bug report so much as an incomplete attempt to describe a problem that may be a bug....</FONT></P>
+<P><FONT face=Tahoma>In any case, I do not think that my ideal feature as I state above would work completely, or that I would even want it to&nbsp;-- after all, I would not expect (for example) the SortedList class to follow my preferences and ignore the underlying order that the object itself is using. So it may be a slippery slope to decide which features follow the fictional 'developer's preference' and which ones follow the application settings.</FONT></P>
+<P><FONT face=Tahoma>However,&nbsp;what I would like to see here is less of a burden:</FONT></P>
+<UL>
+<LI><FONT face=Tahoma>a bit more consistency when possible/feasible between programming languages, and</FONT></LI>
+<LI><FONT face=Tahoma>a bit more documentation on how things are expected to work in these situations in any case.</FONT></LI></UL>
+<P><FONT face=Tahoma>I think that would lead to a better experience, in any case. :-)</FONT></P>
+<P><FONT face=Tahoma></FONT>&nbsp;</P>
+<P><FONT face=Tahoma color=#ff1493><EM>This post brought to you by</EM> "<FONT size=6>ミ</FONT>" <EM>(<A href="http://www.fileformat.info/info/unicode/char/30df">U+30df</A>, KATAKANA LETTER MI)</EM></FONT></P>
+<hr/><div style="margin-left: 1em"><em>no comments</em></div><hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2005/12/26/507402.html" title="COleDateTime&#39;s ParseDateTime and locales....">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2005/12/24/507177.html" title="Fictional could make things less functional">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2005-12">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2005-12-25">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2005/12/25/507347.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:40 GMT -->
+</html>

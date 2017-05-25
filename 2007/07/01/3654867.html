@@ -1,0 +1,29 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2007/07/01/3654867.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:38 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Is Simple MAPI simply Unicode?</title></head><body>
+<h1>Is Simple MAPI simply Unicode?</h1>
+<p><em>by Michael S. Kaplan, published on 2007/07/01 23:14 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2007/07/01/3654867.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P>It is funny. If you look at the documentation for the functions supported by <A class="" href="http://msdn2.microsoft.com/library/ms529621.aspx" mce_href="http://msdn2.microsoft.com/library/ms529621.aspx">Simple MAPI</A>,&nbsp;they all look something like <A class="" href="http://msdn2.microsoft.com/library/ms530633.aspx" mce_href="http://msdn2.microsoft.com/library/ms530633.aspx">this one</A>:</P>
+<BLOCKQUOTE><FONT face="Consolas,Lucida Console,Courier New,Courier"><B>
+<P>ULONG FAR PASCAL MAPIAddress( <BR>&nbsp; LHANDLE lhSession,<BR>&nbsp; ULONG ulUIParam,<BR>&nbsp; LPTSTR lpszCaption,<BR>&nbsp; ULONG nEditFields,<BR>&nbsp; LPTSTR lpszLabels,<BR>&nbsp; ULONG nRecips,<BR>&nbsp; lpMapiRecipDesc lpRecips,<BR>&nbsp; FLAGS flFlags,<BR>&nbsp; ULONG ulReserved,<BR>&nbsp; LPULONG lpnNewRecips,<BR>&nbsp; lpMapiRecipDesc FAR * lppNewRecips<BR>&nbsp; )</P></B></FONT></BLOCKQUOTE>
+<P mce_keep="true">The docs, with their <STRONG><FONT color=#ff0000>LPTSTR</FONT></STRONG> parameters, almost seem like they would support Unicode.</P>
+<P mce_keep="true">However, looks (and docs) can be deceiving.</P>
+<P mce_keep="true">Looking at mapi.h, the definition is actually:</P>
+<BLOCKQUOTE><FONT face="Consolas,Lucida Console,Courier New,Courier"><B>
+<P mce_keep="true">typedef ULONG (FAR PASCAL MAPIADDRESS)(<BR>&nbsp;&nbsp;&nbsp; LHANDLE lhSession,<BR>&nbsp;&nbsp;&nbsp;&nbsp;ULONG_PTR ulUIParam,<BR>&nbsp;&nbsp;&nbsp;&nbsp;__in LPSTR lpszCaption,<BR>&nbsp;&nbsp;&nbsp;&nbsp;ULONG nEditFields,<BR>&nbsp;&nbsp;&nbsp; __in LPSTR lpszLabels,<BR>&nbsp;&nbsp;&nbsp; ULONG nRecips,<BR>&nbsp;&nbsp;&nbsp; lpMapiRecipDesc lpRecips,<BR>&nbsp;&nbsp;&nbsp; FLAGS flFlags,<BR>&nbsp;&nbsp;&nbsp; ULONG ulReserved,<BR>&nbsp;&nbsp;&nbsp; LPULONG lpnNewRecips,<BR>&nbsp;&nbsp;&nbsp; lpMapiRecipDesc FAR *lppNewRecips<BR>);<BR>typedef MAPIADDRESS FAR *LPMAPIADDRESS;<BR>MAPIADDRESS MAPIAddress;</P></B></FONT></BLOCKQUOTE>
+<P mce_keep="true">There is no MapiAddressA and MapiAddressW, and if you compile with UNICODE/_UNICODE and were trying to use these functions with Univode strings, then you will create a bunch of compile errors. :-(</P>
+<P mce_keep="true">The Simple MAPI that is out there does not support Unicode. </P>
+<P mce_keep="true">Which is kind of a shame since there are a whole lot of languages that you cannot use wuthout it, these days....</P>
+<P mce_keep="true">Though I suppose we should be happy, at least no one tried to claim that it is supported by MSLU like <A class="" href="http://archives.miloush.net/michkap/archive/2006/05/19/601823.html" mce_href="http://archives.miloush.net/michkap/archive/2006/05/19/601823.html">last time</A>! :-)</P>
+<P mce_keep="true">&nbsp;</P>
+<P mce_keep="true"><FONT color=#ff00ff><EM>This post brought to you by</EM> Ḃ <EM>(<A class="" href="http://www.fileformat.info/info/unicode/char/1e02" mce_href="http://www.fileformat.info/info/unicode/char/1e02">U+1e02</A>, a.k.a. LATIN CAPITAL LETTER B WITH DOT ABOVE)</EM></FONT></P>
+<hr/><p><a id="3655091" href="#3655091">#</a> <strong>Dean Harding</strong> on 1 Jul 2007 11:34 PM:</p><div style="margin-left: 1em"><p>Even the full-blown COM API for MAPI says this (taken from <a rel="nofollow" target="_new" href="http://msdn2.microsoft.com/en-us/library/ms528625.aspx">http://msdn2.microsoft.com/en-us/library/ms528625.aspx</a>):</p>
+<p>&quot;[...] supports Unicode character strings [...] for Windows NT platforms only. The Unicode strings are converted to the multibyte character string (MBCS) format before they are displayed in the common dialog box.&quot;</p>
+<p>That documentation is rather confusing (*which* MBCS format? The current codepage?) but it seems to imply that the underlying datastructures are ANSI and the COM API simply converts all Unicode strings to the current ANSI codepage before doing the actual work...</p>
+</div>
+<p><a id="3655157" href="#3655157">#</a> <strong>Michael S. Kaplan</strong> on 1 Jul 2007 11:42 PM:</p><div style="margin-left: 1em"><p>I would tend to blame the actual interface developers for these sorts of things, for poorly describing them to the doc writers....</p>
+</div>
+<hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2007/07/02/3660189.html" title="Not so Lao[d], at least not until Vista">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2007/06/30/3637646.html" title="Sometimes if the two wrongs are consistent, they may make a right!">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2007-07">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2007-07-01">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2007/07/01/3654867.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:38 GMT -->
+</html>

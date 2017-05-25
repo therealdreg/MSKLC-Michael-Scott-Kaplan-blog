@@ -1,0 +1,36 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2008/10/15/9000666.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:35 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>What is the freaking point of LOCALE_USE_CP_ACP?</title></head><body>
+<h1>What is the freaking point of LOCALE_USE_CP_ACP?</h1>
+<p><em>by Michael S. Kaplan, published on 2008/10/15 11:16 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2008/10/15/9000666.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P>The question I got the other day was a "slightly less suitable for families" version of this blog's title.</P>
+<P>It came out of <B><A href="http://archives.miloush.net/michkap/archive/2008/09/24/8963238.html" mce_href="http://archives.miloush.net/michkap/archive/2008/09/24/8963238.html">It used to be right, dammit!</A></B>, and reader Jon was kind of confused as to why this flag and so many other *_USE_CP_ACP flags are used in the various NLS API functions that also take a locale.</P>
+<P>I may have unintentionally encouraged the "off" language by my own blog's use of the word <B>dammit</B> so I'm not speaking ill of the word used; I'm just trying to show a little control. :-)</P>
+<P>Now the reason for having LOCALE_USE_CP_ACP and related flags is simple enough.</P>
+<P>You see, if you call the ANSI versions of functions like <A href="http://msdn.microsoft.com/library/ms776293.aspx" mce_href="http://msdn.microsoft.com/library/ms776293.aspx">GetDateFormat</A> (i.e. your call resolves one way or another to GetDateFormatA) then by default the code page that will be used to convert from the Unicode data in Windows is the default system code page (ACP) of the locale you pass in.</P>
+<P>This functionality is the hallmark of the <B>double secret ANSI</B> applications I first mentioned in <B><A href="http://archives.miloush.net/michkap/archive/2007/03/08/1838231.html" mce_href="http://archives.miloush.net/michkap/archive/2007/03/08/1838231.html">Double Secret ANSI, part 1 (Somewhere between ANSI and Unicode)</A></B>.</P>
+<P>This is a great feature -- when combined with support within GDI and the USER subsystem it allows non-Unicode applications even on Win9x to support characters off the default system code page.</P>
+<P>However, most non-Unicode applications don't bother with such things, and stay firmly within the CP_ACP of the machine they are running on.</P>
+<P>For them, the use of <B>double secret ANSI</B>-type features are not only unhelpful, but they are also kind of dangerous since the data is treated as already being converted from Unicode, even though it was converted incorrectly from the application's point of view.</P>
+<P>In such cases, it is usually safer to get back a question mark ten to get back the wrong character -- which is what you would other wise get for any non-ASCII ( &gt; 127) piece of the ANSI string.</P>
+<P>And that is where LOCALE_USE_CP_ACP comes in. It gives you that question mark in such cases!</P>
+<P>Of course since most applications are not <B>double secret ANSI</B> applications, the fact that the default is basically to support the <B>double secret ANSI</B> stuff while not supporting it requires an opt-in flag does seem like a strange choice, but keep in mind that keyboards don't really even give you the choice in the first place, and the flag itself was added later as a way to help mitigate a reported bug -- it is too late to change a default behavior when you've already shipped it for several versions....</P>
+<P>When the issue was mitigated, it was a simple bug fix for the NLS subset of the Win32 API, not for all of Windows. <BR></P>
+<P>Thus LOCALE_USE_CP_ACP and its related cousins are always there and available, even though other parts of the <B>double secret ANSI</B> world don't have such a mechanism available....</P>
+<P>One could perhaps argue that if such a mechanism existed that bugs like that mentioned in <B><A href="http://archives.miloush.net/michkap/archive/2007/03/20/1917161.html" mce_href="http://archives.miloush.net/michkap/archive/2007/03/20/1917161.html">Double Secret ANSI, part 2 (the brokenest one yet, sorry 'bout that!)</A></B> would be just as debilitating, though perhaps not as confusing!</P>
+<P mce_keep="true">&nbsp;</P>
+<P><FONT color=#ff00ff><I>This blog brought to you by</I><FONT size=6> ? </FONT><I>(<A href="http://www.fileformat.info/info/unicode/char/003f" mce_href="http://www.fileformat.info/info/unicode/char/003f">U+003f</A>, aka QUESTION MARK)</I></FONT> <BR></P>
+<hr/><p><strong>Yuhong Bao</strong> on 18 Nov 2010 10:11 AM:</p><div style="margin-left: 1em"><p>For example, people call these functions using VB(A) Declare statements, which always use the default system ANSI codepage for the conversions from/to Unicode. If they forgot to pass LOCALE_USE_CP_ACP to it, in the case the default system ANSI codepage do not match the one used in the locale, the conversion done by VB(A) will result in garbled characters. Another alternative is to use a Byte array, and then use StrConv with vbUnicode and pass in the LCID to convert to Unicode using correct codepage.</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 18 Nov 2010 1:06 PM:</p><div style="margin-left: 1em"><p>Better still -- StrPtr and byVal Long parameters....</p>
+</div>
+<p><strong>Yuhong Bao</strong> on 18 Nov 2010 2:54 PM:</p><div style="margin-left: 1em"><p>Not available on Win9x, but yes I&#39;d try that first.</p>
+</div>
+<p><strong>Yuhong Bao</strong> on 18 Nov 2010 2:56 PM:</p><div style="margin-left: 1em"><p>Note BTW that the same thing applies to .NET developers calling this using P/Invoke and Charset.Ansi or Auto.</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 18 Nov 2010 4:44 PM:</p><div style="margin-left: 1em"><p>I don&#39;t respect those people though. :-)</p>
+</div>
+<hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2008/10/16/9001396.html" title="Shine a Little [Silver]Light">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2008/10/15/9000371.html" title="UCS-2 to UTF-16, Part 5: What&#39;s on the Next Level?">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2008-10">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2008-10-15">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2008/10/15/9000666.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:35 GMT -->
+</html>

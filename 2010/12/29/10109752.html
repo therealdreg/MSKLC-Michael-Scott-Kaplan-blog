@@ -1,0 +1,40 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2010/12/29/10109752.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>People just want what they want, whether they have permission or not</title></head><body>
+<h1>People just want what they want, whether they have permission or not</h1>
+<p><em>by Michael S. Kaplan, published on 2010/12/29 07:01 -05:00, original URI: http://blogs.msdn.com/b/michkap/archive/2010/12/29/10109752.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<p>The question that came onto the distribution list was:</p>
+<p style="padding-left: 30px;"><span style="font-family: times new roman,times;"><em>I have a customer who has removed administrative rights for the users in his domain and since then those users are not able to see the administrative tab in the Regional and Language Options on their respective workstations. The workstations are running XP SP2. <br /><br />I searched on this and found that this is something by default and hard coded in the OS and thus difficult to work around. Can somebody confirm this please?<br /><br />Thanks for your help.</em></span></p>
+<p>Of course what these non-administrative users wanted to do in the Advanced tab of Regional and Language Options in XP is less clear:<br /><br /><img src="http://www.i18nwithvb.com/images/RLO_Tab3.jpg" /></p>
+<p>Every single item there requires administrative permissions to do, since they all involve addng/deleting files in the SYSTEM32 directory and/or changing registry information under HKEY_LOCAL_MACHINE.</p>
+<p>it was in fact <a href="http://blogs.msdn.com/b/oldnewthing">Raymond</a> who set the record straight on that internal alias about whether or not one could find formal documentation on whether one coukld work around this issue; summary version: one can't.</p>
+<p>Maybe they just wanted an easy way to view what the default system locale was, or which code pages have been installed.</p>
+<p>Now there are nuances here -- the generic check for administrative rights would not handle special cases where registry permissions were modified in unusual ways to try to make all of the operations on this tab work (and we don't really document what that method is, or even what changes get made, in any real way).</p>
+<p>But of course given the fact that the issue is addressed for everything Vista and later makes the idea of modifying XP to support something that changes no real functionality would be pretty unlikely. </p>
+<p>If one wanted to query information writing a simple application that does that bit is a lot more likely, and easy to do.</p>
+<p>But there is no way to win here, completely, since:</p>
+<ul>
+<li>if you hide something they complain it's not there; </li>
+<li>if you have it there but disable it, they complain they can't change it;</li>
+<li>if you enable it and let them know via an error message that they cannot make the change in question, they ask how to work around it (and complain that the change was allowed in UI if it wasn't going to work).</li>
+</ul>
+<p>Summary: people just want what they want, whether they have permission or not.....</p>
+<hr/><p><strong>Cheong</strong> on 29 Dec 2010 5:43 PM:</p><div style="margin-left: 1em"><p>I think most probably they want to change the locale for all users in order to change the default input locale in logon screen.</p>
+<p>Sure they can change the input locale with key combinations, but I&#39;ve heard people want to have &quot;Num Lock&quot; defaulted to &quot;on&quot; so that they can type password in keypad directly too... :P</p>
+<p>That said, is it possible to make language bar floating in the logon screen (I think this is the reason why they make the language button available in Vista/7)? It isn&#39;t intuitive for users with less computer knowledge to figure out how to change the input locale in logon screen.</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 29 Dec 2010 6:50 PM:</p><div style="margin-left: 1em"><p>But a DCR for an OS almost out of extended support? At this point, the fix is the upgrade (if that&#39;s the scenario, even)....</p>
+</div>
+<p><strong>Alex Cohn</strong> on 29 Dec 2010 9:36 PM:</p><div style="margin-left: 1em"><p>why can&#39;t a user choose their non- unicode code page?</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 29 Dec 2010 10:01 PM:</p><div style="margin-left: 1em"><p>Because it is a system wide setting that affects every interactive and non-interactive session on the machine, and changing requires changes to be written to HKEY_LOCAL_MACHINE, as well as a reboot.</p>
+</div>
+<p><strong>Yuhong Bao</strong> on 30 Dec 2010 1:57 AM:</p><div style="margin-left: 1em"><p>&quot;But a DCR for an OS almost out of extended support? &quot;</p>
+<p>Well, extended support for XP ends April 2014.</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 30 Dec 2010 7:53 AM:</p><div style="margin-left: 1em"><p>Features are not supposed to be added in the long tail of service packs.</p>
+</div>
+<hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2010/12/30/10110184.html" title="Short-sighted text processing #3: The Protcols of the EDIT for i18n">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2010/12/28/10108950.html" title="On disliking Emoji, disrespecting code pages, and not looking past dogma">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2010-12">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2010-12-29">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2010/12/29/10109752.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+</html>

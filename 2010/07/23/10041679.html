@@ -1,0 +1,47 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2010/07/23/10041679.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:35 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>It used to be Windows doing it right, and Office following. But now...</title></head><body>
+<h1>It used to be Windows doing it right, and Office following. But now...</h1>
+<p><em>by Michael S. Kaplan, published on 2010/07/23 07:01 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2010/07/23/10041679.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<p>I think I may be getting old.</p>
+<p>More and more, I find myself responding to various engineering situations at Microsoft where I am saying (or at least thinking) <strong>"When I was doing that work..."</strong>, if you know what I mean.</p>
+<p>Like for example, there was a time when Cathy and I were on the NLS team and we were both heavily involved in Unicode.</p>
+<p>Windows pretty much set the trends, did the work that other parts of Microsoft would then pick up.</p>
+<p>Now over the last several years, some of which were happening while I was still on that team and some of which happened later, I have been blogging about the terrible job that both Microsoft&nbsp;and Unicode have been doing on core aspects of real world use of the <a href="http://www.unicode.org/reports/tr9/">Unicode Bidirectional Algorithm</a>. Like all of these and more:</p>
+<ul>
+<li><a href="http://archives.miloush.net/michkap/archive/2007/01/06/1421178.html" title="Mixing it up with bidirectional text"><strong>Mixing it up with bidirectional text</strong></a></li>
+<li><a href="http://archives.miloush.net/michkap/archive/2008/04/07/8364480.html" title="Fight the Future? (#8 of ??), aka The Bug(s) Spotted, aka Design flaws are worse than bugs"><strong>Fight the Future? (#8 of ??), aka The Bug(s) Spotted, aka Design flaws are worse than bugs</strong></a></li>
+<li><strong><a href="http://archives.miloush.net/michkap/archive/2008/04/18/8405696.html">The mythical nature of bidirectional support, and where the wheels come off the wagon</a></strong></li>
+<li><a href="http://archives.miloush.net/michkap/archive/2008/08/25/8893033.html" title="The Bidi Algorithm's own SEP Field"><strong>The Bidi Algorithm's own SEP Field</strong></a></li>
+</ul>
+<p>As I said previously, the simple problem is best stated as:</p>
+<blockquote>
+<p><span style="font-size: medium;"><b>The Unicode Bidirectional Algorithm cannot handle text from both left-to-right and right-to-left languages together in the same line of text.</b></span></p>
+</blockquote>
+<p>That is it, right there.</p>
+<p>And since in the real world this scenario and its underlying problem (all of the neutral character type punctuation charactersare so often there), this is not a theoretical problem; it is a real one.</p>
+<p>Now Unicode's Bidi Algoritm&nbsp;kind of wasn't very good in this scenario.</p>
+<p>And Windows was equally not good, though with the excuse that they were conformant to the UBA.</p>
+<p>Which we knew kind of sucked here.</p>
+<p>And of course Office, which uses the Uniscribe component from Windows, would (as an application suite downlevel of Windows), sucked a bit too -- but was conformant to the UBA and doing the work to support what Windows did (or didn't).</p>
+<p>Folks in Windows were comfortable with this, knowing that when Office did their own thing that had incomplete stories like the one in <a href="http://archives.miloush.net/michkap/archive/2008/01/09/7012965.html" title="Oh (Saka to me, Saka to me, Saka to me, Saka to me) Whoa Babe (Just a little bit) A little respect (just a little bit)"><strong>Oh (Saka to me, Saka to me, Saka to me, Saka to me) Whoa Babe (Just a little bit) A little respect (just a little bit)</strong></a>.</p>
+<p>Then, for Office 2007, one could say that they looked at that Bidi situation and decided enough was enough.</p>
+<p>Even if Windows was okay with the idea of sucking with a good excuse (Unicode conformance), they decided to say <strong>screw that</strong>....</p>
+<p>Murray Sargent described some of what they did in blogs like&nbsp;<a href="http://blogs.msdn.com/b/murrays/archive/2010/04/07/tailoring-the-unicode-bidi-algorithm.aspx"><strong>Tailoring the Unicode Bidi Algorithm</strong></a> and&nbsp;<a href="http://blogs.msdn.com/b/murrays/archive/2010/05/07/bidi-paragraph-with-parenthesized-text.aspx"><strong>Bidi Paragraph with Parenthesized Text</strong></a>. Basically they tackled this huge scenario in a way that neither Windows nor Unicode were doing so well in.</p>
+<p>And people have been noticing the difference, e.g. blogs like <a href="http://archives.miloush.net/michkap/archive/2010/07/19/10031197.html" title="It's a bug, it's always been a bug. In either direction...."><strong>It's a bug, it's always been a bug. In either direction....</strong></a>and how Office and many of its applications and components now do it correctly, while most of Windows and&nbsp;.Net&nbsp;do not.</p>
+<p>This all shipped in both Office 2007 and Office 2010. And was in beta before Vista shipped.</p>
+<p>And at the most recent Unicode Technical Committee meeting, Murray Sargent brought up the problem with Unicode and suggested that they make a change to describe this exact option to better support real world usages of bidirectional text.</p>
+<p>They were very interested, and are looking forward to the fully written up proposal at the next UTC meeting.</p>
+<p>Soon enough, Microsoft Office and RichEdit and Unicode will be working correctly in this scenario.</p>
+<p>And Uniscribe, GDI+, WPF, DWrite, Silverlight, and everyone else won't.</p>
+<p><em>In fact, all of the above is true right now, except for Unicode.</em></p>
+<p>The excuse of these components is that they had to stay conformant to the UBA.</p>
+<p>I wonder what their response will be when Unicode is updated too?</p>
+<p><strong>I remember back when</strong> Windows was pretty much the one doing the right thing in such circumstances. </p>
+<p>Now (less than a half a decade later)?</p>
+<hr/><p><strong>carlos</strong> on 23 Jul 2010 7:58 AM:</p><div style="margin-left: 1em"><p>In your bulleted list of four links near the start of the post, the first and third links point to the post editor rather than the posts.</p>
+<p><strong>Whoops! Fixed now.... </strong></p></div>
+<hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2010/08/08 <a href="http://archives.miloush.net/michkap/archive/2010/08/08/10047395.html">Download languages for Windows</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2010/07/24/10041833.html" title="My 2 out of 119 (11 + 108) trips around the Chilkur Balaji Temple&#39;s inner shrine">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2010/07/22/10033828.html" title="When I say Graphics.MeasureString can hang with you, I mean it in a bad way!">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2010-07">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2010-07-23">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2010/07/23/10041679.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:35 GMT -->
+</html>

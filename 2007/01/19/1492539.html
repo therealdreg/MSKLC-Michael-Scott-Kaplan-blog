@@ -1,0 +1,37 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2007/01/19/1492539.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:38 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>For HKSCS, Vista ≫ 2004, and 2004 ≫ 2001</title></head><body>
+<h1>For HKSCS, Vista ≫ 2004, and 2004 ≫ 2001</h1>
+<p><em>by Michael S. Kaplan, published on 2007/01/19 06:01 -05:00, original URI: http://blogs.msdn.com/b/michkap/archive/2007/01/19/1492539.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P>Back in May of 2005 when I posted <A class="" href="http://archives.miloush.net/michkap/archive/2005/05/10/416129.html" mce_href="http://archives.miloush.net/michkap/archive/2005/05/10/416129.html"><STRONG>More on 'repertoire fences'</STRONG></A>, I tried to describe how code pages were becoming less important for their own sake but more important to help define what was considered important in different parts of the world.</P>
+<P>I was reminded of this the other day when someone was asking about trying to use characters from the 2001 version of the Hong Kong Supplemental Character Set from a VB6 application, and they were finding some characters were not being displayed properly.</P>
+<P>The package they were referring to was up at <A class="" href="http://www.microsoft.com/hk/hkscs/" mce_href="http://www.microsoft.com/hk/hkscs/">this site</A>, which to be honest I don't care for too much since</P>
+<OL>
+<LI>the package is for a six year old version of the standard;</LI>
+<LI>although it is an official Microsoft site it links to an IP address site with a ZIP file for its package;</LI>
+<LI>the version of HKSCS from back then was heavily invested in the Private Use Area of Unicode, and everyone knows <STRONG><A class="" href="http://archives.miloush.net/michkap/archive/2005/09/26/473738.html" mce_href="http://archives.miloush.net/michkap/archive/2005/09/26/473738.html">how much I hate that</A></STRONG>.</LI></OL>
+<P>Luckily, there is a version of the package that addresses all of these points first released in October of 2005, which is described at <A class="" href="http://www.microsoft.com/globaldev/outreach/dnloads/MSCCCR_HKSCS_2004.mspx" mce_href="http://www.microsoft.com/globaldev/outreach/dnloads/MSCCCR_HKSCS_2004.mspx">Microsoft Character Code Conversion Routines for HKSCS-2004</A> and has a link to the download center and everything. Much cooler, I think.</P>
+<P>Now note that this is not going to magically make the VB6 case work since without a lot of special help, VB6 is not going to support Unicode, and there is a nice big chunk of HKSCS that is outside of code page 950; some of it is even outside of the BMP in Unicode. These things <STRONG>can</STRONG> work in VB6 (I even wrote a book to help that work) but it isn't easy to do, the book is out of print, and it is simply better to upgrade and get these things working by default.</P>
+<P>But HKSCS as a standard does help define the preferred characters for fonts in the area, and the package does include a font.</P>
+<P>There are other issues that make the newer package work better than the older one, like the fact that you need to have a Taiwan system locale rather than a Hong Kong one to avoid random things not working. In every way the updated package is an improved experience.</P>
+<P>Though to be honest the work that was done in Vista can blow both of them away given how much better the font support&nbsp;was able to&nbsp;be integrated, something that is much easier to do when you are not trying to provide a patch after the fact....</P>
+<P><EM>(There are some interesting linguistic issues wrapped up in this as well that I will cover in anther post soon!)</EM></P>
+<P mce_keep="true">&nbsp;</P>
+<P><FONT color=#ff00ff><EM>This post brought to you by</EM>&nbsp;<FONT size=6>≫</FONT> <EM>(<A class="" href="http://www.fileformat.info/info/unicode/char/226b" mce_href="http://www.fileformat.info/info/unicode/char/226b">U+226b</A>, a.k.a. MUCH GREATER-THAN)</EM></FONT></P>
+<hr/><p><a id="1494837" href="#1494837">#</a> <strong>Maurits [MSFT]</strong> on 19 Jan 2007 4:57 PM:</p><div style="margin-left: 1em"><p>Cool, a &quot;much greater than&quot; code point... I thought that was U+00BB when I first saw it.</p>
+</div>
+<p><a id="1495537" href="#1495537">#</a> <strong>Justin Burtch</strong> on 19 Jan 2007 8:09 PM:</p><div style="margin-left: 1em"><p>Outlook 2007 doesn't like U+226b completely. Looks good in the mail folder view, looks good in the body of the email, doesn't look good in the email subject of the email view. I didn't know where to give the product team this feedback.</p></div>
+<p><a id="1495623" href="#1495623">#</a> <strong>Michael S. Kaplan</strong> on 19 Jan 2007 8:41 PM:</p><div style="margin-left: 1em"><p>Hi Justin! </p>
+<p>Unicode PST/store? Or the older format? what form dpes the not looking good take?</p>
+</div>
+<p><a id="1495779" href="#1495779">#</a> <strong>Justin Burtch</strong> on 19 Jan 2007 9:23 PM:</p><div style="margin-left: 1em"><p>I believe I created it as a Unicode pst file (did not specify Outlook 97-2003 pst). The character in the subject is a box with a question mark in it. I will send you a screen shot for more info.</p></div>
+<p><strong>Yuhong Bao</strong> on 15 Oct 2010 10:31 PM:</p><div style="margin-left: 1em"><p>Why wasn&#39;t ANSI support for HKSCS incorporated into the later HKSCS support packages and in Vista? I am not saying using cp951 that uses Unicode PUA as-is, but modifying it to map to the characters later officially defined in Unicode and using that.</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 17 Oct 2010 8:20 AM:</p><div style="margin-left: 1em"><p>Because we aren&#39;t doing any more ACPs.</p>
+</div>
+<p><strong>Yuhong Bao</strong> on 17 Oct 2010 2:24 PM:</p><div style="margin-left: 1em"><p>And I just read the official code points for these characters that used to map to Unicode PUA are beyond the BMP, like Shift_JIS-2004.</p>
+</div>
+<hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2007/09/27 <a href="http://archives.miloush.net/michkap/archive/2007/09/27/5132462.html">Don't look directly at the 951 code page if you can avoid it</a></p><p>2007/06/03 <a href="http://archives.miloush.net/michkap/archive/2007/06/03/3069028.html">The trouble with HKSCS, for me</a></p><p>2007/02/24 <a href="http://archives.miloush.net/michkap/archive/2007/02/24/1751301.html">Using a character proposal for a 'repertoire fence' extension</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2007/01/22/1505420.html" title="Getting all of the localized names of a font[.NET]">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2007/01/19/1491959.html" title="What do keyboards and socks NOT have in common?">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2007-01">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2007-01-19">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2007/01/19/1492539.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:38 GMT -->
+</html>

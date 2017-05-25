@@ -1,0 +1,49 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2010/12/22/10107967.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>I agree with you 100%. But we're both wrong (according to the spec)</title></head><body>
+<h1>I agree with you 100%. But we're both wrong (according to the spec)</h1>
+<p><em>by Michael S. Kaplan, published on 2010/12/22 07:01 -05:00, original URI: http://blogs.msdn.com/b/michkap/archive/2010/12/22/10107967.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<p>It was last week, in response to <a href="http://archives.miloush.net/michkap/archive/2010/12/16/10105779.html" title="You can't ignore crap and hope it won't cause problems..."><strong>You can't ignore crap and hope it won't cause problems...</strong></a> that Cheong commented:</p>
+<p style="padding-left: 30px;"><span style="font-family: times new roman,times;"><em>Yet in the question, we'd expect tar.IndexOf(r) returns -1 because content of r does not exist in tar. I can imagine having it return 0 will case some infinate loop problem in certain data stream processing functions if they're lazy enough to use string manipulation functions to process data.</em></span></p>
+<p>This ends up being an interesting design decision!</p>
+<p>I'll explain how things ended up where they did.</p>
+<p>First comes the easy question: <strong>What do you return for "meow".IndexOf("") exactly?</strong></p>
+<p>The explicit decision that was made was that every string both implicitly starts and ends with the empty string.</p>
+<p>Thus returning 0 here "makes sense" by that design.</p>
+<p><em>Ignore the "".IndexOf("") inconsistency here, of course!</em></p>
+<p>
+<p>I believe Java does the same thing, though it has been a while since I have done much with Java. Perhaps someone else can confirm.</p>
+<p>Now I think the design is kind of stupid, for what it is worth. For the same reason Cheong was thinking -- the possibility of infinite loops.</p>
+</p>
+<p>In fact,&nbsp;the very first version of FindNLSString that I checked in had behavior I believed to be more intuitive, but it was actually my manager at the time who came to me shortly thereafter who mentioned I was not being consistent with .Net. And since that was the whole reason FinsNLSString was being added, this was a blocking issue.</p>
+<p>Now while grumbling and doing the research to get the behavior consistent (I was doing both at the same time since consistency with what I thought of as incorrect design is a worse sin than being half right), I found several inconsistencies in .Net as well. That manager found these inconsistencies very frustrating (though in truth he isn't the one who caused the problem; the parts he wrote were consistent), and he jumped in to fix the managed code to be consistent while I fixed the [new] native code to have the same behavior that he was busy making sure would be consistent.</p>
+<p>Anyway, where was I?</p>
+<p>Oh yeah, with <strong>"hiss".IndexOf("") returning 0</strong>.</p>
+<p>Now when you have strings with no weight, they compare as linguistically equal to the empty string.</p>
+<p>Thus <strong>"\uFFFD".Compare("") is expected to return 0</strong>.</p>
+<p>Now there are some standards bodies in parts of the world I am not going to name at this moment that would take statements like:</p>
+<p>&nbsp;&nbsp;&nbsp; <strong>"hiss".IndexOf("") == 0<br />&nbsp;&nbsp;&nbsp; "\uFFFD".Compare("") == 0</strong></p>
+<p>and then make the claim that</p>
+<p>&nbsp;&nbsp;&nbsp; <strong>"\uFFFD".IndexOf("") != 0</strong></p>
+<p>but for the sake of a fragile attempt at consistency, this route was not taken -- and thus the zero length string is indeed assumed to adorn the front of that string.</p>
+<p>Native code and managed code still look at things that way, and huge chunks of the checkin suite verify this behavior is not broken by well-meaning developers who might try and "fix bugs" without realizing that they aren't considered bugs....</p>
+<p>So, to summarize the point to Cheong, <strong>I agree with you 100%. But we're both wrong according to the spec.</strong></p>
+<p>Perhaps the spec was wrong, but I'm pretty sure taking that route with my changes would have created an uncomfortable working environment for me back then. and I doubt&nbsp;I would have won the argument in the long run anyway.... :-)</p>
+<hr/><p><strong>McDowell</strong> on 23 Dec 2010 3:52 AM:</p><div style="margin-left: 1em"><p>RE: Java</p>
+<p>&quot;foo&quot;.indexOf(&quot;&quot;) == 0<br />&quot;&quot;.indexOf(&quot;&quot;) == 0<br />&quot;\uFFFD&quot;.indexOf(&quot;a&quot;) == -1<br />&quot;\uFFFD&quot;.compareTo(&quot;&quot;) &gt; 0</p></div>
+<p><strong>Michael S. Kaplan</strong> on 23 Dec 2010 4:32 AM:</p><div style="margin-left: 1em"><p>Oh yes, now I remember -- the StartsWith/EndsWith behavior in Java do this implicit &quot;there&#39;s an empty string there&quot; but IndexOf does not; in .Net, StartsWith/EndsWith actually *use* IndexOf/LastIndexOf to get their results, so the choice was either have them be inconsistent like Java (where a string can start with something that returns no index) or have them both work the same way and just have this problem of returning an index that isn&#39;t valid.</p>
+<p>I don&#39;t agree with the choice that .Net&#39;s design made here, but it is now consistent (as I suggest in this blog), at least. I personally find both designs to be weird, and by removing that arbitrary &quot;there is an invisible empty string in front of every string&quot; thing, all of these methods could have been made entirely consistent with each other and with common sense.</p>
+<p>So really both Java and .Net stink here, though for slightly different reasons. :-)</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 23 Dec 2010 4:34 AM:</p><div style="margin-left: 1em"><p>Also, Java does not give U+fffd zero weight in collation, so you have to do the last two tests with some other character that Java treats like nothing is there....</p>
+</div>
+<p><strong>Cheong</strong> on 27 Dec 2010 6:10 PM:</p><div style="margin-left: 1em"><p>I don&#39;t know, perheps it does make sense have different comparing rule that treat these zero weight characters as they have weight if the whole string contains *only* zero weight characters. I think this should match the logic most of us is expecting.</p>
+<p>When you compare something with two bowl of water, you can possibly ignore the case if I&#39;m adding a drop of water to one side. But if all you have to comapre is that drop of water, you&#39;re not expected to ignore it.</p>
+<p>So in my opinion, it&#39;s the spec that have to fix if this would introduce inconsistancy.</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 27 Dec 2010 11:41 PM:</p><div style="margin-left: 1em"><p>You have to remember that in the database situation, you are not comparing strings, you are building sort keys -- so you have to provide a weight that will always be there....</p>
+</div>
+<hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2010/12/23/10108492.html" title="PC LOAD LETTER? What the f**k does that mean [in Chinese]?">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2010/12/21/10107496.html" title="What the hell does &quot;...you can fry a Finn in butter, and he&#39;s still a Finn&quot; mean, anyway?!?">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2010-12">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2010-12-22">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2010/12/22/10107967.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+</html>

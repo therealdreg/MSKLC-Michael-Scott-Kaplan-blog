@@ -1,0 +1,77 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2010/04/01/9988607.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:35 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Is the text in XKCD broken?</title></head><body>
+<h1>Is the text in XKCD broken?</h1>
+<p><em>by Michael S. Kaplan, published on 2010/04/01 07:01 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2010/04/01/9988607.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P>The other day my friend Samantha (of "sam I am" fame, for regular readers, my part time music groupie friend) pointed me at an XKCD column.</P>
+<P>She thought it might be right up my alley as it looked like it had one of those "cobe page" (that isn't a typo, she called it COBE page) problems.</P>
+<P>It was this comic:</P>
+<P><A href="http://xkcd.com/712/"><IMG style="WIDTH: 740px; HEIGHT: 309px" title="Using a ring to bind someone you covet into your dark and twisted world? Wow, just got the subtext there. Also, the apparently eager BeyoncÃ© would've made one badass NazgÈ—l." border=0 alt="Using a ring to bind someone you covet into your dark and twisted world? Wow, just got the subtext there. Also, the apparently eager BeyoncÃ© would've made one badass NazgÈ—l." src="http://imgs.xkcd.com/comics/single_ladies.png" width=740 height=309 mce_src="http://imgs.xkcd.com/comics/single_ladies.png"></A></P>
+<P>Hover over it to see the problem, in the tooltip, it should look something like this:</P>
+<P><IMG style="WIDTH: 787px; HEIGHT: 539px" border=0 src="http://trigeminal.fmsinc.com/images/xkcd01.jpg" width=787 height=539 mce_src="http://trigeminal.fmsinc.com/images/xkcd01.jpg"></P>
+<P>Or maybe I could just show it right here:</P>
+<BLOCKQUOTE>
+<P><FONT color=#006600>Using a ring to bind someone you covet into your dark and twisted world? Wow, just got the subtext there. Also, the apparently eager BeyoncÃ© would've made one badass NazgÈ—l.</FONT></P></BLOCKQUOTE>
+<P>Bummer.</P>
+<P>Let's look at the source of the page:</P>
+<P><IMG style="WIDTH: 622px; HEIGHT: 472px" border=0 src="http://trigeminal.fmsinc.com/images/xkcd02.jpg" width=622 height=472 mce_src="http://trigeminal.fmsinc.com/images/xkcd02.jpg"></P>
+<P>Aha, my regular readers might know what's going on here....</P>
+<P mce_keep="true">It may remind people of blogs like <A href="http://archives.miloush.net/michkap/archive/2006/05/27/608351.html" mce_href="http://archives.miloush.net/michkap/archive/2006/05/27/608351.html"><STRONG>Consistent garbage text can be incorrect encoding identification (or detection)</STRONG></A> and <A href="http://archives.miloush.net/michkap/archive/2006/12/23/1354366.html" mce_href="http://archives.miloush.net/michkap/archive/2006/12/23/1354366.html"><STRONG>Do not adjust your browser, a.k.a. sometimes two wrongs DO make a right, a.k.a. dumb quotes</STRONG></A>, and one of these is pretrty much what is going on here, as a matter of a fact.</P>
+<P mce_keep="true">I mean, the coDe page for that page is indeed marked UTF-8:</P>
+<P mce_keep="true"><IMG style="WIDTH: 622px; HEIGHT: 472px" border=0 src="http://trigeminal.fmsinc.com/images/xkcd03.jpg" width=622 height=472 mce_src="http://trigeminal.fmsinc.com/images/xkcd03.jpg"></P>
+<P mce_keep="true">Yet if you are using Internet Explorer (I was using 8.0, so was&nbsp;Sam) the browser looked to both of us as if not&nbsp;seeing it&nbsp;that way:</P>
+<P mce_keep="true"><IMG style="WIDTH: 880px; HEIGHT: 806px" border=0 src="http://trigeminal.fmsinc.com/images/xkcd04.jpg" width=880 height=806 mce_src="http://trigeminal.fmsinc.com/images/xkcd04.jpg"></P>
+<P mce_keep="true">On the other hand, there is Firefox.</P>
+<P mce_keep="true">My FireFix seems to do it right:</P>
+<P mce_keep="true"><IMG style="WIDTH: 1063px; HEIGHT: 610px" border=0 src="http://trigeminal.fmsinc.com/images/xkcd05.jpg" width=1063 height=610 mce_src="http://trigeminal.fmsinc.com/images/xkcd05.jpg"></P>
+<P mce_keep="true">If you want to see&nbsp;the text&nbsp;right and you do not have FireFox and you don't want to right-click and change the encoding in IE, you can:</P>
+<OL>
+<LI>
+<DIV mce_keep="true">Open Notepad on a machine with a cp1252 system default codepage;</DIV></LI>
+<LI>
+<DIV mce_keep="true">Paste the text in green above into Notepad;</DIV></LI>
+<LI>
+<DIV mce_keep="true">Save the file;</DIV></LI>
+<LI>
+<DIV mce_keep="true">Close the file;</DIV></LI>
+<LI>
+<DIV mce_keep="true">Open the file.</DIV></LI></OL>
+<P mce_keep="true">The text will suddenly look right as these two sequences are proof enough for Notepad to know this is UTF-8, not cp1252:</P>
+<BLOCKQUOTE>
+<P mce_keep="true"><FONT color=#cc0000>Using a ring to bind someone you covet into your dark and twisted world? </FONT><FONT color=#cc0000>Wow, just got the subtext there. Also, the apparently eager Beyoncé would've made one badass Nazgȗl.</FONT></P></BLOCKQUOTE>
+<P mce_keep="true">Wow! That is like <A href="http://archives.miloush.net/michkap/archive/2006/06/14/631016.html" mce_href="http://archives.miloush.net/michkap/archive/2006/06/14/631016.html"><STRONG>Behind 'How to break Windows Notepad'</STRONG></A>, but in reverse!</P>
+<P mce_keep="true">Just like Sauron would have&nbsp;wanted it. :-)</P>
+<hr/><p><strong>Mihai</strong> on 1 Apr 2010 12:08 PM:</p><div style="margin-left: 1em"><P>True, there is a (useless) encoding="utf-8" for the xml (useless because the default encoding for xml is utf-8).</P>
+<P>But apparently the browsers (or at least IE) ignores the xml "envelope" and just deals with the html part. And there is nothing to indicate that is utf-8.</P>
+<P>The HTTP response header says just</P>
+<P>&nbsp; Content-Type text/html</P>
+<P>instead of</P>
+<P>&nbsp; Content-Type text/html; charset=UTF-8</P>
+<P>And the html file does not have a Content-Type meta in in the head section.</P>
+<P>(&lt;meta http-equiv="Content-Type" content="text/html; charset=utf-8" /&gt;)</P>
+<P>So in the end I would not blame IE (too much :-)</P></div>
+<p><strong>Michael S. Kaplan</strong> on 1 Apr 2010 12:22 PM:</p><div style="margin-left: 1em"><p>Sam's comment to me was that she doesn't right click. :-)</p>
+</div>
+<p><strong>Skip</strong> on 1 Apr 2010 1:54 PM:</p><div style="margin-left: 1em"><p>Interesting thing about this one - I read xkcd in google reader, inside of IE (I think IE8 on Win7 when this comic came out). &nbsp; And as far as I know, the popup text was correct there, so I never saw this. &nbsp;I guess google reader does this correctly.</p></div>
+<p><strong>Michael S. Kaplan</strong> on 1 Apr 2010 3:05 PM:</p><div style="margin-left: 1em"><P>Well, as Mihai's words point out, "correct" is relative; I think HTML has a different default than XML such that technically IE might be more conformant by asuming no enceddng equals ISO 8859-1. Though of course more conformant to correctness also has its benefits as well. :-)</P></div>
+<p><strong>Yuhong Bao</strong> on 1 Apr 2010 6:53 PM:</p><div style="margin-left: 1em"><p>BTW, the &lt;?xml version=1.0&gt; forces quirks mode in IE</p></div>
+<p><strong>Dave Bacher</strong> on 2 Apr 2010 12:42 PM:</p><div style="margin-left: 1em"><P>It's messed up in Chrome and Opera.</P>
+<P>It is an error for the xml-declaration and http-equiv meta tag not to match the HTTP content-encoding header, regardless of what the HTML, XML and XHTML standards say about the matter. &nbsp;It is an error, it can crash intermediate systems, and if an intermediate system (forward/reverse proxy, etc.) is in play, it can conceptually crash or cause unexpected results in the browser itself.</P>
+<P>For example, a certain blue company that is rather big has a reverse proxy product that runs regular expressions against text types, and rewrites URLs. &nbsp;To keep it fast, they use one code path regardless of the type of text, and they assume that the HTTP content encoding is accurate.</P>
+<P>So if that says shift-jis, and you're sending UTF-8, it's going to try to apply the UTF-8 decoder to your shift-jis text. &nbsp;I don't suspect that is going to work very well.</P>
+<P>When they encode text, they encode it using the same content-encoding you specified. &nbsp;So if the content-encoding in the HTTP transaction was UTF8, but you're actually giving it UTF16 XML, you get (dependent on byte order) either the first less than, or nothing at all, being processed and passed along to the user.</P>
+<P>The specs do technically allow you to specify the encoding via the XML declaration or the meta tag, which works fine for files on-disk or being transported as SMTP attachments (although content-encoding should match there as well). &nbsp;Most file systems don't have a useful standardized way of communicating the information.</P>
+<P>The reason they don't catch this, at a spec level, is because it works for the most common case. &nbsp;The most common case is that the web server is serving US ASCII/ISO Latin as the content encoding (because that's usually the default), and since TCP is 8bit clean, and that is a single byte character set, it works OK.</P>
+<P>However, the reality is, the intermediate systems involved in an HTTP transaction rely on the HTTP header being set correctly, and so you really do need for it to be correct.</P></div>
+<p><strong>Headache</strong> on 4 Apr 2010 1:10 PM:</p><div style="margin-left: 1em"><p>When I look at the hostname I am quite amused that this page isn't shown &quot;correctly&quot; in neither IE nor firefox. <a rel="nofollow" target="_new" href="http://rfc-ignorant.org/letter-dsn-fr-FR.php">http://rfc-ignorant.org/letter-dsn-fr-FR.php</a></p></div>
+<p><strong>Mike Dimmick</strong> on 6 Apr 2010 10:52 AM:</p><div style="margin-left: 1em"><p>IE doesn't do XHTML in any released version. It's planned for IE 9.</p>
+<p>Use of the &lt;?xml XML declaration causes IE 8 and earlier to miss the following DOCTYPE declaration and drop into Quirks mode. XKCD also has a processing instruction that IE doesn't understand before the DOCTYPE. Fundamentally it's an HTML, not XHTML, browser.</p>
+<p>XKCD is relying entirely on this XML declaration - it specifies Content-Type text/html with no Charset (and this will cause some conforming browsers to drop into HTML, rather than XHTML, mode, and still ignore the XML declaration).</p>
+<p>@Headache: the reason is that the server specifies utf-8. The actual HTTP header overrules any META tag in the document. The META HTTP-EQUIV feature was intended to instruct the server what HTTP headers it should output, but that feature does not work on any server that I'm aware of.</p>
+<p>In addition that page has an HTML comment, apparently from the version control system, which precedes the DOCTYPE declaration and causes IE to drop into Quirks mode.</p>
+<p>Mike: I know you don't manage the blog software, but you might like to make the people who do aware that the CAPTCHA image doesn't work a large proportion of the time. /blogs/JpegImage.aspx just redirects to the the aspxerrorpage.htm page - presumably dynamic error handling. You have to refresh a lot and be lucky if you want to leave a comment.</p>
+</div>
+<hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2010/04/02/9987938.html" title="We&#39;re off script now, brothers and sisters....Let me here you say YEH!">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2010/03/31/9986458.html" title="OS level support for non-Gregorian calendars?">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2010-04">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2010-04-01">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2010/04/01/9988607.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:35 GMT -->
+</html>

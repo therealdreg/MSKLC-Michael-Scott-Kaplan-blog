@@ -1,0 +1,96 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2005/09/23/472656.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:41 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Stick a fork in GetCharacterPlacement</title></head><body>
+<h1>Stick a fork in GetCharacterPlacement</h1>
+<p><em>by Michael S. Kaplan, published on 2005/09/23 03:01 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2005/09/23/472656.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P><FONT face=Tahoma>Joseph asked in the newsgroups the other day:</FONT></P>
+<BLOCKQUOTE dir=ltr style="MARGIN-RIGHT: 0px">
+<P><FONT size=2>I have a problem rendering some Unicode characters.&nbsp; I have a particular instance although it is representative of a more general problem.</FONT></P>
+<P><FONT size=2>I have a sequence of five Unicode characters.&nbsp; They are 0A38 0A36 0A47 0A30 0A47, where the 0A47 characters are the problem.&nbsp; These are GURMUKHI VOWEL SIGN EE, a nominally zero-width diacritical mark.</FONT></P>
+<P><FONT size=2>My problem is that I have to render one "character" at a time.&nbsp; In this case, a "character" is the pair 0A36+0A47 or 0A30+0A47.&nbsp; My problem is to figure out how to render such sequences as single glyphs.&nbsp; </FONT></P>
+<P><FONT size=2>I find a lot of the Uniscribe documentation fairly incomprehensible.&nbsp; I tried to use GetCharacterPlacement to get the offsets, figuring that if I saw two offsets the same I'd have the pair to render.&nbsp; However, when presented with this string, and flags of 0, I get a return value of 0; the GCP_RESULTS values are all left unset, yet when I call GetLastError, I get a return value of 0 (S_OK). </FONT></P>
+<P><FONT size=2>What I'm looking for is a way to partition the sequence of characters into a sequence of glyphs that I can render.&nbsp; What I should be able to obtain here is the three substrings</FONT></P>
+<P><FONT size=2>0A38&nbsp; 0A36+0A47&nbsp; 0A30+0A47</FONT></P>
+<P><FONT size=2>which I can then render using TextOut (I'm using Arial Unicode MS as my font, in a Unicode application)</FONT></P>
+<P><FONT size=2>thanks<BR>joe</FONT></P></BLOCKQUOTE>
+<P><FONT face=Tahoma>The awful story is pretty clearly (some would say baldly) laid out in the <A href="http://msdn.microsoft.com/library/en-us/gdi/fontext_4l84.asp">GetCharacterPlacement</A> documentation in the Platform SDK, the text I marked in <FONT color=#ff1493>pink</FONT>:</FONT></P>
+<BLOCKQUOTE dir=ltr style="MARGIN-RIGHT: 0px">
+<P><FONT size=2><EM>The GetCharacterPlacement function retrieves information about a character string, such as character widths, caret positioning, ordering within the string, and glyph rendering. The type of information returned depends on the dwFlags parameter and is based on the currently selected font in the specified display context. The function copies the information to the specified <A href="http://msdn.microsoft.com/library/en-us/gdi/fontext_3l6a.asp">GCP_RESULTS</A> structure or to one or more arrays specified by the structure.</EM></FONT></P>
+<P><FONT size=2><EM><FONT color=#ff1493>Although this function was once adequate for working with character strings, a need to work with an increasing number of languages and scripts has rendered it obsolete. It has been superseded by the functionality of the Uniscribe module. For more information, see </FONT><FONT color=#ff1493><A href="http://msdn.microsoft.com/library/en-us/intl/uniscrib_35k5.asp">Uniscribe</A></FONT>.</EM></FONT></P></BLOCKQUOTE>
+<P><FONT face=Tahoma>The simple truth is that you can stick a fork in <A href="http://msdn.microsoft.com/library/en-us/gdi/fontext_4l84.asp">GetCharacterPlacement</A>; it's done.</FONT></P>
+<P><FONT face=Tahoma>So, the string in question is U+0a38 U+0a36 U+0a47 U+0a30 U+0a47, which is to say:</FONT></P>
+<BLOCKQUOTE dir=ltr style="MARGIN-RIGHT: 0px">
+<P><FONT face=Tahoma size=2>GURMUKHI LETTER SA; GURMUKHI LETTER SHA; GURMUKHI VOWEL SIGN EE; GURMUKHI LETTER RA; GURMUKHI VOWEL SIGN EE</FONT></P></BLOCKQUOTE>
+<P><FONT face=Tahoma>It would look something like this when it is all put together (assuming you are on a machine with rendering support): <FONT size=5>ਸਸ਼ੇਰੇ</FONT>.&nbsp;</FONT></P>
+<P><FONT face=Tahoma>But the big question here is WHY only one&nbsp;"character" can be rendered at a time, when the point of complex script rendering is to not think that way but instead to do runs of text? It is all well and good to want to render it in chunks like</FONT></P>
+<P><FONT face=Tahoma size=5>ਸ&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ਸ਼ੇ&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ਰੇ</FONT></P>
+<P><FONT face=Tahoma>but it is not entirely clear how that would satisfy the needs of the script. Why not just work with the full run? If you are using TextOutW or ExtTextOutW, it will forward the call to Uniscribe to make sure all the shaping happens for you....</FONT></P>
+<P><FONT face=Tahoma>As it turns out, Joe did have a specific reason for the request:</FONT></P>
+<BLOCKQUOTE dir=ltr style="MARGIN-RIGHT: 0px">
+<P>The problem is that the text layout requires special rendering.&nbsp; I can't change the requirement because it relates to how the layout is being done.&nbsp; My problem is that somehow I have to make fonts like this work within that constraint. Since the layout is also dynamic based on a maximum width of the widest character, I need to first compute the maximum width required, the render the characters to fit in the area. The height of the font is based on the number of character cells I need to fit into the space.&nbsp; So the initial thought of using DrawText won't work either.&nbsp; TextOut will render the text correctly if all the text were being displayed in a single line, but it is not; it actually must be rendered vertically, e.g.,</P>
+<BLOCKQUOTE dir=ltr style="MARGIN-RIGHT: 0px">
+<P>ABC</P></BLOCKQUOTE>
+<P>would render as</P>
+<BLOCKQUOTE dir=ltr style="MARGIN-RIGHT: 0px">
+<P>A<BR>B<BR>C</P></BLOCKQUOTE>
+<P>but I have to deal with rendering</P>
+<BLOCKQUOTE dir=ltr style="MARGIN-RIGHT: 0px">
+<P>Win</P></BLOCKQUOTE>
+<P>as</P>
+<BLOCKQUOTE dir=ltr style="MARGIN-RIGHT: 0px">
+<P>W<BR>i<BR>n</P></BLOCKQUOTE>
+<P>with the characters centered in the bounding box determined by the widest character.</P>
+<P>I realize that the requirement is the problem, but I can't really change the requirement, and it was written with English in mind.&nbsp; Then there was a decision to localize, and I've been running "torture tests" trying to get worst-case scenarios.&nbsp; This was one of the first I fell over, and it represents a problem that will apply to many languages and many character sequences.</P></BLOCKQUOTE>
+<P><FONT face=Tahoma>I would consider this a case of good internationalization at a superficial technical level and poor internationalization at a user level.</FONT></P>
+<P><FONT face=Tahoma>Why do I say that? Well, Joe is taking a UI paradigm and trying to apply it to every language, whether it makes sense or not. Andd there are a myriad of languages where this will make no sense, or destroy meaning due to breaking expected shaping behavior, or truly annoy users. Which is really not a good way to go, at all.</FONT></P>
+<P><FONT face=Tahoma>You could also think of it as the software coding equivalent of the difference between translation and localization -- one is an attempt to just transfer from a source to some targets, one is an attempt to truly understand the differences between languages and cultures and work with that knowledge to provide compelling features.</FONT></P>
+<P><FONT face=Tahoma>With that said,&nbsp;if you truly want to know where those boundaries are, then you can look into some specific Uniscribe functionality to query for the info, namely the <A href="http://msdn.microsoft.com/library/en-us/intl/uniscrib_1dm3.asp">ScriptBreak</A>&nbsp;function, which will return the breaks in the string (ScriptBreak requires you to call <A href="http://msdn.microsoft.com/library/en-us/intl/uniscrib_8hut.asp">ScriptItemize</A> first to retrieve a set of&nbsp;<A href="http://msdn.microsoft.com/library/en-us/intl/uniscrib_8hgy.asp">SCRIPT_ANALYSIS</A> structs, one for each chunk of text. And then ScriptBreak will return an array of <A href="http://msdn.microsoft.com/library/en-us/intl/uniscrib_1gtu.asp">SCRIPT_LOGATTR</A> structs that will return information about each code point:</FONT></P>
+<BLOCKQUOTE dir=ltr style="MARGIN-RIGHT: 0px">
+<P><FONT face="Courier New"><STRONG>typedef struct tag_SCRIPT_LOGATTR { <BR>&nbsp; BYTE fSoftBreak :1; <BR>&nbsp; BYTE fWhiteSpace :1; <BR>&nbsp; BYTE fCharStop :1; <BR>&nbsp; BYTE fWordStop :1; <BR>&nbsp; BYTE fInvalid :1; <BR>&nbsp; BYTE fReserved :3; <BR>} SCRIPT_LOGATTR;</STRONG></FONT></P></BLOCKQUOTE>
+<P><FONT face=Tahoma>So Joe, if you need a small sample written up, let me know -- but this one is pretty easy to just do (unlike some Uniscribe requirements out there!)....</FONT></P>
+<P><FONT face=Tahoma></FONT>&nbsp;</P>
+<P><FONT face=Tahoma><FONT color=#ff1493><EM>This post brought to you by</EM> "<FONT face=Raavi size=6>ੇ</FONT>" <EM>(<A href="http://www.fileformat.info/info/unicode/char/0a47/index.htm">U+0a47</A>, GURMUKHI VOWEL SIGN EE)</EM></FONT></FONT></P>
+<hr/><p><a id="473199" href="#473199">#</a> <strong>Gabe</strong> on 23 Sep 2005 3:26 AM:</p><div style="margin-left: 1em">I must say that writing English vertically has the same problem of breaking expected shaping behavior and truly annoying users. Are there any scripts besides CJK ones that don't have a problem when written vertically?</div>
+<p><a id="473209" href="#473209">#</a> <strong>Michael S. Kaplan</strong> on 23 Sep 2005 4:32 AM:</p><div style="margin-left: 1em">Hi Gabe -- there are a few that expect some form of vertical writing to be possible, like Mongolian and CJK. But as you mention, for most languages it is at least an annoyance....</div>
+<p><a id="473262" href="#473262">#</a> <strong>Nicholas Allen</strong> on 23 Sep 2005 9:30 AM:</p><div style="margin-left: 1em">Even CJK text won't quite work if you try to do it manually like this.  There are different forms and positions between some horizontal and vertical writing.</div>
+<p><a id="473263" href="#473263">#</a> <strong>Michael S. Kaplan</strong> on 23 Sep 2005 9:31 AM:</p><div style="margin-left: 1em">Absolutely, Nicholas -- and the answer is Uniscribe! :-)</div>
+<p><a id="473427" href="#473427">#</a> <strong>David</strong> on 23 Sep 2005 5:51 PM:</p><div style="margin-left: 1em">Sometimes when Uniscribe is incomprehensible, I've found it useful to examine other approaches.  Such as IBM's &quot;International Component for Unicode&quot; library (ICU).  It's nicely implemented in both C and Java, and since it's open source, you can figure out exactly what it's doing!<br><br>See: <a rel="nofollow" target="_new" href="http://www-306.ibm.com/software/globalization/icu/index.jsp">http://www-306.ibm.com/software/globalization/icu/index.jsp</a></div>
+<p><a id="473450" href="#473450">#</a> <strong>Michael S. Kaplan</strong> on 23 Sep 2005 7:51 PM:</p><div style="margin-left: 1em">David -- ICU does not have full support for rendering as many scripts.... and this really is a rendering issue.</div>
+<p><strong>Pierre</strong> on 13 Nov 2011 7:55 AM:</p><div style="margin-left: 1em"><p>For some applications, TextOutW or ExtTextOutW are too simplistic. In my app I have to display the letters along a curved arc. Each letter requires creating an individual font with a different lfEscapement and lfOrientation. It would be nice to display the letters correctly.</p>
+<p>Uniscribe only works on Vista and WIndows 7. A lot of my customers are still using XP.</p></div>
+<p><strong>Michael S. Kaplan</strong> on 13 Nov 2011 8:12 AM:</p><div style="margin-left: 1em"><p>Um, Uniscribe was added in Windows 2000 (and updated in XP and XP SP2). It requires complex script support to be installed until Vista, but that is a far cry from unavailable!</p>
+</div>
+<p><strong>Pierre</strong> on 13 Nov 2011 9:28 AM:</p><div style="margin-left: 1em"><p>The documentation for some functions (ex: ScriptGetFontFeatureTags, ScriptGetFontAlternateGlyphs, ScriptGetFontLanguageTags) says it requires &quot;Minimum supported client: Windows Vista&quot;.</p>
+<p>See:</p>
+<p><a rel="nofollow" target="_new" href="http://msdn.microsoft.com/en-us/library/windows/desktop/dd368547(v=VS.85).aspx">msdn.microsoft.com/.../dd368547%28v=VS.85%29.aspx</a></p>
+<p>Also, Visual Studio 2010 documentation.</p>
+</div>
+<p><strong>Pierre</strong> on 13 Nov 2011 10:15 AM:</p><div style="margin-left: 1em"><p>I&#39;m trying to do something rather basic, and would prefer to use GetCharacterPlacement rather than wade into Uniscribe.</p>
+<p>The problem I&#39;m having is that for simple English script, the characters returned in lpGlyphs[] bear no resemblance to the original input. I must be doing something wrong.</p>
+<p>Here is my code:</p>
+<p>	GCP_RESULTSW gcp_results;</p>
+<p>	wchar_t ww[] = L&quot;Gnarfle&quot;;</p>
+<p>	int len = wcslen(ww);</p>
+<p>	memset(&amp;gcp_results, NUL, sizeof(gcp_results));</p>
+<p>	gcp_results.lStructSize = sizeof(gcp_results);</p>
+<p>	gcp_results.lpOrder = (UINT *)calloc(len, sizeof(UINT));	// order after reordering</p>
+<p>	memset(gcp_results.lpOrder, NUL, len * sizeof(UINT));</p>
+<p>	gcp_results.lpGlyphs = (WCHAR *)calloc(len, sizeof(WCHAR));</p>
+<p>	memset(gcp_results.lpGlyphs, NUL, len * sizeof(WCHAR));</p>
+<p>	gcp_results.nGlyphs = len;</p>
+<p>	gcp_results.lpGlyphs[0] = 0;	// normal ligation</p>
+<p>	GetCharacterPlacementW(hdc, ww, len, 0, &amp;gcp_results, </p>
+<p>		GCP_GLYPHSHAPE| GCP_REORDER | GCP_LIGATE);</p>
+<p>Results after calling GetCharacterPlacementW:</p>
+<p>ww: [0]=0047/G [1]=006E/n [2]=0061/a [3]=0072/r [4]=0066/f [5]=006C/l [6]=0065/e </p>
+<p>gcp_results.lpOrder &nbsp;[0]=0 [1]=1 [2]=2 [3]=3 [4]=4 [5]=5 [6]=6 </p>
+<p>gcp_results.lpGlyphs &nbsp;[0]=002A/* [1]=0051/Q [2]=0044/D [3]=0055/U [4]=0049/I [5]=004F/O [6]=0048/H </p>
+<p>What is in &#39;lpGlyphs&#39;??</p>
+<p>I did a test with Arabic, and lpGlyphs returns with non-Arabic characters. Why doesn&#39;t this work?</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 13 Nov 2011 10:47 AM:</p><div style="margin-left: 1em"><p>Okay, the docs are talking about some of the new functions they added -- not all functions. And none of those new functions are GetCharacterPlacement replacement functions.</p>
+<p>GetCharacterPlacement is not being updated. If you want to do more than it does and you want to support XP, than moving to Uniscribe is your only option.</p></div>
+<hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2008/10/15 <a href="http://archives.miloush.net/michkap/archive/2008/10/15/9000371.html">UCS-2 to UTF-16, Part 5: What's on the Next Level?</a></p><p>2007/03/27 <a href="http://archives.miloush.net/michkap/archive/2007/03/27/1963148.html">GPOS w/o GSUB in a TTF on XP SP2 can be FUBAR</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2005/09/23/473486.html" title="The Microsoft Company Meeting">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2005/09/22/473049.html" title="No charset meta tag?">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2005-09">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2005-09-23">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2005/09/23/472656.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:41 GMT -->
+</html>

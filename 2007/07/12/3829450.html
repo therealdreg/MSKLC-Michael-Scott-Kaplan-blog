@@ -1,0 +1,32 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2007/07/12/3829450.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:38 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Wait til you see my 'O'[EMCP based technology]</title></head><body>
+<h1>Wait til you see my 'O'[EMCP based technology]</h1>
+<p><em>by Michael S. Kaplan, published on 2007/07/12 07:48 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2007/07/12/3829450.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P><EM><FONT face=Tahoma>(no, this post is not about a rap or hip hop song, or its lyrics, though I admit the title may have been inspired by one, just like <A class="" href="http://archives.miloush.net/michkap/archive/2006/03/14/551112.html" mce_href="http://archives.miloush.net/michkap/archive/2006/03/14/551112.html">last time</A>)</FONT></EM></P>
+<P>Looking at <A class="" href="http://blogs.msdn.com/larryosterman" mce_href="http://blogs.msdn.com/larryosterman">Larry Osterman</A>'s post yesterday entitled <A class="" href="http://blogs.msdn.com/larryosterman/archive/2007/07/11/how-do-i-compare-two-different-netbios-names.aspx" mce_href="http://blogs.msdn.com/larryosterman/archive/2007/07/11/how-do-i-compare-two-different-netbios-names.aspx">How do I compare two different NetBIOS names?</A>....</P>
+<P><EM>(A nice brief history of a feature with piss-poor international support that even to this day resists all efforts to improve, by the way!)</EM></P>
+<P>The actual question that prompted the "simplified" question that Larry covered was interesting on its own and I wanted to talk about it a bit.</P>
+<P>There was a need to compare two computer names, but one of them was UTF-16 and the other (like all NetBIOS names) is in CP_OEMCP. And the question was how to do the comparison....</P>
+<P>Obviously there are two possible ways:</P>
+<OL>
+<LI>Convert the UTF-16 name to CP_OEMCP and compare them;</LI>
+<LI>Convert the CP_OEMCP name to UTF-16 and compare them.</LI></OL>
+<P>In both comparisons, one is wanting to use&nbsp;that whole "uppercase+binary" kind of ignore case comparison that we all know and love.</P>
+<P>Given the complications in doing the case insensitive binary comparison in an arbitrary code page, it is much better to go with choice #2 (where there is just the one case table to deal with and there is a handy <A class="" href="http://msdn2.microsoft.com/library/ms776340.aspx" mce_href="http://msdn2.microsoft.com/library/ms776340.aspx">CompareStringOrdinal</A> function to do the actual comparison with).</P>
+<P>In this particular case they were in a position to instead&nbsp;consider calling <A class="" href="http://msdn2.microsoft.com/library/ms803007.aspx" mce_href="http://msdn2.microsoft.com/library/ms803007.aspx">RtlEqualUnicodeString</A> directly rather than <A class="" href="http://msdn2.microsoft.com/library/ms776340.aspx" mce_href="http://msdn2.microsoft.com/library/ms776340.aspx">CompareStringOrdinal</A>&nbsp;or even <A class="" href="http://msdn2.microsoft.com/library/ms804321.aspx" mce_href="http://msdn2.microsoft.com/library/ms804321.aspx">RtlCompareUnicodeString</A>, which has the bonus of being even faster (though it would be hard to call it enough times to notice the difference making&nbsp;the performance issue&nbsp;most likely theoretical, the function has the benefit of doing exactly what they are looking for (this is the whole issue I talk about in <STRONG><A class="" href="http://archives.miloush.net/michkap/archive/2006/02/09/528297.html" mce_href="http://archives.miloush.net/michkap/archive/2006/02/09/528297.html">Is RtlCompareUnicodeString used correctly?</A></STRONG>, where the answer is that by and large, it isn't!).</P>
+<P>Of course&nbsp;fixing the NetBIOS/computer name story to do better than an OEMCP world would be even better, but that seems a lot less likely. :-(</P>
+<P mce_keep="true">&nbsp;</P>
+<P><FONT color=#ff00ff><EM>This post brought to you by</EM> <FONT size=5>ỗ</FONT> <EM>(<A class="" href="http://www.fileformat.info/info/unicode/char/1ed7" mce_href="http://www.fileformat.info/info/unicode/char/1ed7">U+1ed7</A>, a.k.a. LATIN SMALL LETTER O WITH CIRCUMFLEX AND TILDE)</EM></FONT></P>
+<hr/><p><a id="3831135" href="#3831135">#</a> <strong>Robert MacLean</strong> on 12 Jul 2007 8:44 AM:</p><div style="margin-left: 1em"><p>What about converting both the UTF-16 and CP_OEMCP to Unicode and then comparing two Unicode values?</p></div>
+<p><a id="3831951" href="#3831951">#</a> <strong>Michael S. Kaplan</strong> on 12 Jul 2007 9:41 AM:</p><div style="margin-left: 1em"><p>UTF-16 *is* Unicode, for these purposes. :-)</p>
+</div>
+<p><strong>Yuhong Bao</strong> on 4 Dec 2010 4:50 PM:</p><div style="margin-left: 1em"><p>&quot;(A nice brief history of a feature with piss-poor international support that even to this day resists all efforts to improve, by the way!)&quot;</p>
+<p>To be honest, DNS names are no better either. Why do you think Punycode/IDN was created?</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 4 Dec 2010 7:02 PM:</p><div style="margin-left: 1em"><p>With the DNS interfaces in Windows, there was hope for the future; NetBIOS never had a chance....</p>
+</div>
+<hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2011/06/08 <a href="http://archives.miloush.net/michkap/archive/2011/06/08/10172429.html">Wait til you see my Õ (Ō), Latvian edition</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2007/07/13/3837355.html" title="What the hell is up with Timor-Leste? [Microsoft edition]">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2007/07/12/3824741.html" title="Why can&#39;t everyone just speak German?">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2007-07">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2007-07-12">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2007/07/12/3829450.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:38 GMT -->
+</html>

@@ -1,0 +1,58 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2010/10/04/10070978.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Figuring out the applicability of the term "breaking change"</title></head><body>
+<h1>Figuring out the applicability of the term "breaking change"</h1>
+<p><em>by Michael S. Kaplan, published on 2010/10/04 07:01 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2010/10/04/10070978.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<p>Whether one agrees with the <a href="http://en.wiktionary.org/wiki/breaking_change">Wiktionary definition</a> or not, if you work in software you know what a breaking change is.</p>
+<p>Let's look at that definition for a second:</p>
+<p style="PADDING-LEFT: 30px; FONT-FAMILY: "><span style="font-family: times new roman,times;"><strong>breaking change</strong> (plural breaking changes)</span></p>
+<p style="PADDING-LEFT: 30px; FONT-FAMILY: "><span style="font-family: times new roman,times;">1.(computing) A change in one part of a software system that causes other parts to fail; occurs most often in shared libraries of code used by multiple applications <br />"Not possible to fix old entries without a breaking change, so remap old to new in import lib."</span></p>
+<p>We have had the locale data in Windows for over 15 years now, and every version several things happen:</p>
+<ul>
+<li>Some new locales are added;</li>
+<li>Some bugs in the old locales that people reported get fixed;</li>
+<li>Some changes in the data that old locales depended on happened, which inspired changes in the locales.</li>
+</ul>
+<p>Literally every version this happens.</p>
+<p>Occasionally other stuff has happened too. But these three things represent&nbsp;a cluster of things that has <strong>always happened</strong>.</p>
+<p>Now the interesting philosophical question pops up here, one that I am kind of curious about:</p>
+<p><strong><span style="font-size: large;">Is each individual change within the second two bullet points above a separate breaking change?</span></strong></p>
+<p>Perhaps the above is an outrageous instance of reductio ad absurdum, though. </p>
+<p>I mean, perhaps some changes would not really be reasonably considered to be breaking changes, and some would.</p>
+<p>Other changes are there because people saw the unchanged behavior itself as a bug. And dependence on incorrect behavior is always treated as a second class citizen compared to not having such dependencies.</p>
+<p>Is there a reasonable <span style="color: #888888;"><span style="text-decoration: line-through;">man</span></span>person standard that could be applied here, in order to determine which types of changes could be reported as breaking?</p>
+<p>And, if that is the case, should such reports be given for each change? </p>
+<p>Or should there be a list of all the qualifying changes at designated intervals, such as ship dates, or at beta dates?</p>
+<p>On the other hand, maybe this is the wrong way to think about the problem, since we actually have an over 15 year history of not treating anything at all as a breaking change, even when the change was in fact later determined to break something.</p>
+<p>And I will not lie, that has happened.</p>
+<p>There are times in society where the first action a new team takes is to repudiate and assume fault in everything the old team did, but this hardly seems like the most prudent course here. So maybe the old team's approach (to focus on the message that <strong>anything in the data can change between versions, so if something of theirs broke then it was caused by their broken assumptions</strong>) is the correct way to look at things, rather than focusing on each individual change.</p>
+<p>Yet this can also be cast as a form of laziness by someone who disagrees with the idea. They&nbsp;could look at it as someone being afraid to take on a complicated problem.</p>
+<p>This point, and how to resolve it, is not a trivial one. </p>
+<p>While it is not the most important issue I am dealing with at the moment, it is in the top five. </p>
+<p>And it <strong>is</strong> the most important issue about which I am really able to talk about at the moment.</p>
+<p>I am interested in people's thoughts here.</p>
+<p><strong><span style="font-size: medium;">How does the notion of breaking changes fit the model of per version locale changes?</span></strong></p>
+<hr/><p><strong>It was just ten years ago today ...</strong> on 4 Oct 2010 1:31 PM:</p><div style="margin-left: 1em"><p>(well, not *today*, actually, but sometime in 2000)</p>
+<p>... that I learned that when communicating between independently developed pieces of software, there is *no such thing* as a non-breaking change. &nbsp;Every change, however silly, breaks someone. &nbsp;How do I know? &nbsp;I&#39;ll tell ya:</p>
+<p>At that time $EMPLOYER was distributing certain files to customers in plain text or in simple HTML, their choice. &nbsp;Each paragraph of the plain text was a single physical line beginning with five spaces so that it would show up indented in plain-text editors. &nbsp;In the HTML version, each such line was wrapped in a p element exactly as-is, including the five spaces.</p>
+<p>So I decided to modify the HTML version to drop the five spaces, since they didn&#39;t have any effect on HTML renderers anyway. &nbsp;But no. &nbsp;It turns out that some customers were preprocessing the HTML we sent them by removing the fourth through eighth character of each paragraph line without looking at them. &nbsp;So now they were dropping the first five letters of the content instead of a space.</p>
+<p>Backed that change out in a hurry.</p>
+<p>Moral: Unless you have an agreement in advance about what can be changed, *nothing* can be changed. &nbsp;Ever.</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 4 Oct 2010 10:04 PM:</p><div style="margin-left: 1em"><p>Since the locale data does (and has, and must!) change with new versions, the only question is about whether to report any or all of it as breaking (and if so to who and how often)....</p>
+</div>
+<p><strong>Mihai</strong> on 5 Oct 2010 9:42 AM:</p><div style="margin-left: 1em"><p>Kind of agree than any change is going to be a breaking change for someone.</p>
+<p>But I would split those affected in two: those who are hit because they did not use the recommended ways to deal with locale data, and those who did the right thing, but had not enough functionality.</p>
+<p>To be more clear: if I store locale sensitive data in a file (or use them for communication), and if the locale changing breaks my loading routines, that&#39;s my fault. I should store them in a locale-independent way.</p>
+<p>But if I parse user input and I was forced to write a parser, it gets a bit trickier. Because Windows does not give me any parsers. So some changes will break my code, but there was nothing I could have done.</p>
+<p>So, kind of the rule of thumb: it is a breaking change if you did everything following the best recommended practices, but still get affected.</p>
+<p>Well, how is that?</p>
+</div>
+<p><strong>Aaron</strong> on 5 Oct 2010 10:43 AM:</p><div style="margin-left: 1em"><p>I agree with Mihai, except that I would also call out breaking changes if they will break a statistically significant number of &#39;important&#39; third-party applications, even if they aren&#39;t doing things &#39;The Right Way&#39;.</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 5 Oct 2010 12:02 PM:</p><div style="margin-left: 1em"><p>On the end of the telescope that we sit when doing the update, potential impact here is not always known, of course...</p>
+</div>
+<hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2010/10/15 <a href="http://archives.miloush.net/michkap/archive/2010/10/15/10076268.html">"Breaking changes" are mostly about potential, not realization</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2010/10/05/10071540.html" title="English becomes Europe&#39;s second language. Or maybe not so much...">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2010/10/03/10070787.html" title="It&#39;s always back to ISO-8601 for some reason">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2010-10">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2010-10-04">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2010/10/04/10070978.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+</html>

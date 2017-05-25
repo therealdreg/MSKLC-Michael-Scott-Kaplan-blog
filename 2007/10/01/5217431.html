@@ -1,0 +1,36 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2007/10/01/5217431.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:37 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>You'll flip if you see the early right-to-left builds of products (aka Don't flip if you have to flip or not flip)</title></head><body>
+<h1>You'll flip if you see the early right-to-left builds of products (aka Don't flip if you have to flip or not flip)</h1>
+<p><em>by Michael S. Kaplan, published on 2007/10/01 03:16 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2007/10/01/5217431.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P>Regular reader Serge Wautier asked over in the microsoft.public.win32.programmer.international newsgroup:</P>
+<BLOCKQUOTE>
+<P><EM><FONT face="times new roman,times">By default, progress bar fill from left to right in LTR locales and right-to-left in RTL locales.<BR><BR>When I added support for RTL languages to appTranslator, I decided that it was not a good idea and I added code to defeat this behaviour in dialogs that contain progress bars:<BR><BR>Rather than simply addin WS_EX_LAYOUTRTL to the dialog layout, I also added WS_EX_NOINHERITLAYOUT and I added WS_EX_LAYOUTRTL to all controls but progress bars.<BR><BR>For reasons beyond my understanding, I never ever considered that a progress bar filling from right to left was the desired behaviour!<BR><BR>Time flew. I am now investigating a related problem and I realize I was most likely stupid and I should fix this stupid design decision. Before I do it, I'd like to make sure I was dumb hence my question to you RTL knowledgeable people out there:<BR><BR>What should be the filling direction of a progress bar in RTL locales: RTL or LTR?<BR><BR>Sorry for the apparently stupid question but I'm confused ;-)</FONT></EM></P></BLOCKQUOTE>
+<P>(In this case, they should in fact be mirrored, for what it is worth....)</P>
+<P>But this is not a stupid question, really. Well,&nbsp;at least if it is I wish people would be willing to risk acting stupid a bit more often, since I have seen my share of improperly mirrored dialogs and applications in my time.</P>
+<P>In fact there were some pre-release versions of Vista that were incorrectly mirroring the datetime dialog and the clock gadget -- and believe me you&nbsp;will never&nbsp;feel as&nbsp;not-stupid about mirroring as when you saw a copy of Vista doing this:</P>
+<P><IMG src="http://trigeminal.fmsinc.com/images/mirrored1.png"></P>
+<P>or this:</P>
+<P><IMG src="http://trigeminal.fmsinc.com/images/mirrored2.png"></P>
+<P>Thankfully these bugs were fixed&nbsp;prior to ship. :-)&nbsp;</P>
+<P>The fact is that for each user interface component (be it a progress bar, clock, calendar, dialog, menu, or whatever) there is an expected behavior. And the initial builds of RTL user interface languages are almost guaranteed to have mistakes in them with things that&nbsp;are either not flipped when they should be or over-actively flipped like in these examples.</P>
+<P>There is no one rule to follow, though the best bet when dealing with localized user interfaces is that rather than trying to solve the problems completely in code in some automated way, you make sure that the setting is exposed to localizers in some way, since they are the people who are being paid to bring their expertise to the situation and decide what to flip and what not to flip....</P>
+<P>Then the second rule is to have people who know what the conventions are reviewing the user interface, so they can tell you when things are right and when they are wrong. Then if you know who did (or did not do) the flipping you'll know if it is your bug, a localization bug, or both.</P>
+<P>And the third rule -- don't flip if you have to flip or not flip. If you know what I mean. :-)</P>
+<P mce_keep="true">&nbsp;</P>
+<P><FONT color=#ff00ff><EM>This post brought to you by</EM> <FONT size=5>☏</FONT> <EM>(<A class="" href="http://www.fileformat.info/info/unicode/char/260f" mce_href="http://www.fileformat.info/info/unicode/char/260f">U+260f</A>, a.k.a. WHITE TELEPHONE)</EM></FONT></P>
+<hr/><p><a id="5222203" href="#5222203">#</a> <strong>John Cowan</strong> on 1 Oct 2007 8:40 AM:</p><div style="margin-left: 1em"><p>I find the flipped map rather charming, actually.</p>
+<p>In an office not too far from mine there is a physical analog clock with normal works (it spins clockwise and all that) but with randomly assorted numbers. &nbsp;I try to avoid looking at it....</p></div>
+<p><a id="5231999" href="#5231999">#</a> <strong>Maurits [MSFT]</strong> on 1 Oct 2007 8:23 PM:</p><div style="margin-left: 1em"><p>The flipped map reminds me of the &quot;Hollow Earth&quot; theory -- see Jules Verne's &quot;A Journey to the Center of the Earth&quot;</p>
+</div>
+<p><a id="5238991" href="#5238991">#</a> <strong>Arun Philip</strong> on 2 Oct 2007 2:49 AM:</p><div style="margin-left: 1em"><p>@Maurits, </p>
+<p>So, Axel and the professor ought to use the flipped map for their timezones, when looking up at their sky? :) </p>
+<p>Although, they'd call our continents their constellations :)) </p>
+<p>PS: Thanks for taking me back 10 years to school, when that was one of our texts. </p>
+</div>
+<p><a id="5239028" href="#5239028">#</a> <strong>Michael S. Kaplan</strong> on 2 Oct 2007 2:54 AM:</p><div style="margin-left: 1em"><p>Wow, and thanks for taking me back to when &quot;taking me back to school&quot; was just ten years ago! I had a birthday recently and that kind of memory is nice to have....</p>
+</div>
+<hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2007/10/01/5218976.html" title="What&#39;s wrong with what FxCop does for globalization, Part 1">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2007/10/01/5216797.html" title="Tell them to GO FISH?, aka Carpe Carp [Sarcalogos] (Seize the [Christian] Fish), aka Unicode List (where characters discuss character encoding)">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2007-10">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2007-10-01">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2007/10/01/5217431.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:37 GMT -->
+</html>

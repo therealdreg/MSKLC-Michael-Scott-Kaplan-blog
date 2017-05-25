@@ -1,0 +1,109 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2004/12/08/278170.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:42 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Where is the locale? "Its Invariant." In <i>where</i>?</title></head><body>
+<h1>Where is the locale? "Its Invariant." In <i>where</i>?</h1>
+<p><em>by Michael S. Kaplan, published on 2004/12/08 02:39 -05:00, original URI: http://blogs.msdn.com/b/michkap/archive/2004/12/08/278170.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P>Old joke, updated for Windows XP:</P>
+<P>Q -- Where is the locale? <BR>A -- Its invariant. <BR>Q -- Where is variant? <BR>A -- Its ten miles south of communicado, and five miles east of Cognito.</P>
+<P>The invariant locale is pretty weird. Lets take a look at its interesting chracteristics. </P>
+<UL>
+<LI>It has no actual language. 
+<LI>It has no region. 
+<LI>It has&nbsp;no country. 
+<LI>It does not show up in enumerations a-la-EnumSystemLocale. 
+<LI>Its data was chosen to dissuade people from trying to use it as a locale. And that is putting it charitably. 
+<LI>Its not used in Office, SQL Server, or any of the other products that list locales for customers.</LI></UL>
+<P>So why is it there?</P>
+<P>Well, it all comes back to collation. Like everything else that is worthwhile in life. :-)</P>
+<P>In collation for Windows, there is a default table that gives the ordering of every&nbsp;code point in Unicode. As I noted in in my article about how <a href="http://archives.miloush.net/michkap/archive/2004/11/28/271121.html">Microsoft does not use the UCA</A>, the default table has been around for a long time, adding code points from version to version as more languages&nbsp;have become supported by Windows. And the thing about the default table is that it supports every language that can co-exist without conflicts -- like English and Greek and Arabic and&nbsp;German (not a complete list!). It is not that they have the same sort -- they don't. It is that they do not have anything in their sorts that conflict with the others on the list (because they either do not share characters at all or they do not sort any of the characters that are shared differently). They all have the non-conflicting rules for the following characters:</P>
+<P>
+<TABLE class=MsoTableGrid cellSpacing=0 cellPadding=0>
+
+<TR>
+<TD>
+<P class=MsoNormal align=center><FONT face="Times New Roman"><STRONG><FONT size=4>A<o:p></o:p></FONT></STRONG></FONT></P></TD></TR>
+<TR>
+<TD>
+<P class=MsoNormal align=center><FONT face="Times New Roman"><STRONG><FONT size=4>a<o:p></o:p></FONT></STRONG></FONT></P></TD></TR>
+<TR>
+<TD>
+<P class=MsoNormal align=center><SPAN><STRONG><FONT size=4>Å<o:p></o:p></FONT></STRONG></SPAN></P></TD></TR>
+<TR>
+<TD>
+<P class=MsoNormal align=center><SPAN><STRONG><FONT size=4>o<o:p></o:p></FONT></STRONG></SPAN></P></TD></TR>
+<TR>
+<TD>
+<P class=MsoNormal align=center><SPAN><STRONG><FONT size=4>Ö<o:p></o:p></FONT></STRONG></SPAN></P></TD></TR>
+<TR>
+<TD>
+<P class=MsoNormal align=center><SPAN><STRONG><FONT size=4>Z<o:p></o:p></FONT></STRONG></SPAN></P></TD></TR>
+<TR>
+<TD>
+<P class=MsoNormal align=center><SPAN><STRONG><FONT size=4>α<o:p></o:p></FONT></STRONG></SPAN></P></TD></TR>
+<TR>
+<TD>
+<P class=MsoNormal align=center><SPAN><STRONG><FONT size=4>β<o:p></o:p></FONT></STRONG></SPAN></P></TD></TR>
+<TR>
+<TD>
+<P class=MsoNormal align=center><SPAN><STRONG><FONT size=4>γ<o:p></o:p></FONT></STRONG></SPAN></P></TD></TR>
+<TR>
+<TD>
+<P class=MsoNormal align=center><STRONG><FONT size=4><SPAN>ب</SPAN><SPAN><o:p></o:p></SPAN></FONT></STRONG></P></TD></TR>
+<TR>
+<TD>
+<P class=MsoNormal align=center><STRONG><FONT size=4><SPAN>ح</SPAN><SPAN><o:p></o:p></SPAN></FONT></STRONG></P></TD></TR>
+<TR>
+<TD>
+<P class=MsoNormal align=center><SPAN><STRONG><FONT size=4>د</FONT></STRONG></SPAN><SPAN><o:p></o:p></SPAN></P></TD></TR></TABLE></P>
+<P>Now you can contrast the way that Swedish would look at the same characters (differences are marked in <FONT color=#ff0000><STRONG>red</STRONG></FONT>):</P>
+<P>
+<TABLE class=MsoTableGrid cellSpacing=0 cellPadding=0>
+
+<TR>
+<TD>
+<P class=MsoNormal align=center><SPAN><FONT face="Times New Roman"><STRONG><FONT size=4>A<o:p></o:p></FONT></STRONG></FONT></SPAN></P></TD></TR>
+<TR>
+<TD>
+<P class=MsoNormal align=center><SPAN><FONT face="Times New Roman"><STRONG><FONT size=4>a<o:p></o:p></FONT></STRONG></FONT></SPAN></P></TD></TR>
+<TR>
+<TD>
+<P class=MsoNormal align=center><SPAN><STRONG><FONT size=4>o<o:p></o:p></FONT></STRONG></SPAN></P></TD></TR>
+<TR>
+<TD>
+<P class=MsoNormal align=center><SPAN><STRONG><FONT size=4>Z<o:p></o:p></FONT></STRONG></SPAN></P></TD></TR>
+<TR>
+<TD>
+<P class=MsoNormal align=center><SPAN><STRONG><FONT color=#ff0000><FONT size=4>Å<o:p></o:p></FONT></FONT></STRONG></SPAN></P></TD></TR>
+<TR>
+<TD>
+<P class=MsoNormal align=center><SPAN><STRONG><FONT color=#ff0000><FONT size=4>Ö<o:p></o:p></FONT></FONT></STRONG></SPAN></P></TD></TR>
+<TR>
+<TD>
+<P class=MsoNormal align=center><SPAN><STRONG><FONT size=4>α<o:p></o:p></FONT></STRONG></SPAN></P></TD></TR>
+<TR>
+<TD>
+<P class=MsoNormal align=center><SPAN><STRONG><FONT size=4>β<o:p></o:p></FONT></STRONG></SPAN></P></TD></TR>
+<TR>
+<TD>
+<P class=MsoNormal align=center><SPAN><STRONG><FONT size=4>γ<o:p></o:p></FONT></STRONG></SPAN></P></TD></TR>
+<TR>
+<TD>
+<P class=MsoNormal align=center><STRONG><FONT size=4><SPAN>ب</SPAN><SPAN><o:p></o:p></SPAN></FONT></STRONG></P></TD></TR>
+<TR>
+<TD>
+<P class=MsoNormal align=center><STRONG><FONT size=4><SPAN>ح</SPAN><SPAN><o:p></o:p></SPAN></FONT></STRONG></P></TD></TR>
+<TR>
+<TD>
+<P class=MsoNormal align=center><SPAN><STRONG><FONT size=4>د</FONT></STRONG></SPAN><SPAN><o:p></o:p></SPAN></P></TD></TR></TABLE></P>
+<P>So obviously, Swedish cannot be handled in the default table due to the fact that in Swedish "Å" and "<FONT face=Tahoma>Ö" are both considered to be separate letters that sort after "Z", rather than being treated as an "A" and an "O" with accessories (diacritics), like they are in English or like something that sorts after but near to "A" and "O" like in German. So it is not handled by the default table, like those other languages are.</FONT></P>
+<P><FONT size=2><EM>(For fuller and cooler examples of this sort of thing, see </EM></FONT><A href="http://www.microsoft.com/globaldev/dis_v1/disv1.asp?DID=dis33d&amp;File=S24BF.asp"><FONT size=2><EM>Appendix D</EM></FONT></A><FONT size=2><EM> from the first edition of <U>Developing International Software for Windows 95 and Windows NT</U>. Though not attributed, Cathy Wissink did those tables and it was how I got to be "impressed in advanced" about her work at Microsoft. Even though I had no idea who she was, and would not find out for another half decade.)</EM></FONT></P>
+<P><FONT face=Tahoma>Now often people would get into trouble trying to LOCALE_USER_DEFAULT or LOCALE_SYSTEM_DEFAULT for sorts that were not supposed to change. Either of those, however, would change any time a setting was changed by the user. And that would cause bugs in people's code. On the NLS team, we&nbsp;would recommend that people use <A title=MAKELCID href="http://msdn.microsoft.com/library/en-us/intl/nls_7qck.asp" target=_blank>MAKELCID</A>(MAKELANGID(LANG_ENGLISH, SUBLANG_ENGLISH_US)), not because we were trying to be provinical (after all, German or Arabic or Russian or Greek or many other languages would have been fine), but to force an unchanging result on sorts that were not supposed to change on the whim of the user's settings.</FONT></P>
+<P><FONT face=Tahoma>Of course, people would often look at using 0x0409 (also known as US English) as Microsoft just being a provincial US corporation. So rather than fight that perception, since the only real goal anyway was to "use the default table" for sorting, a new locale was added. One that would not change, would not vary. It would be.... INVARIANT. And thus, LOCALE_INVARIANT was born in Windows XP, the 136th locale added to Windows.</FONT></P>
+<P><FONT face=Tahoma>Not really such a bad thing to do, since thats all that the folks on the NLS team were trying to do anyway, right?</FONT></P>
+<P><FONT face=Tahoma>The same thing exists in the .NET Framework, with its static member <A title=CultureInfo href="http://msdn.microsoft.com/library/en-us/cpref/html/frlrfsystemglobalizationcultureinfoclasstopic.asp" target=_blank>CultureInfo</A>.InvariantCulture. It is just as weird for everything in its locale fields for dates and numbers and such. But it has consistent results for sorting that use the default table.</P></FONT>
+<hr/><p><a id="348053" href="#348053">#</a> <strong>Adrian Burton</strong> on 6 Jan 2005 4:24 PM:</p><div style="margin-left: 1em">What locale should one nominate when making a keyboard layout (in <a title="MSKLC" href="http://www.microsoft.com/globaldev/tools/msklc.mspx" target="_blank">MSKLC</a>) that contains elements from the Combining Diacritical Marks block?<br><br>Error message reads:<br><br>-----quote----<br>WARNING: The character ̣ (U+0323) exists in the entry for VK_OEM_PERIOD, ShiftState 'Ctrl' of the layout table and is not in the default system code page (1252) of the English (United States) language you specified. This may cause compatibility problems in non-Unicode applications.<br>--------end-------------<br><br>Is this a use for the Invariant Language?</div>
+<p><a id="348156" href="#348156">#</a> <strong>Michael Kaplan</strong> on 6 Jan 2005 7:19 PM:</p><div style="margin-left: 1em">Heh heh heh.... no, it isn't. But thats pretty funny, in any case! :-)</div>
+<hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2010/03/04 <a href="http://archives.miloush.net/michkap/archive/2010/03/04/9971425.html">Having neither army nor navy, Invariant is apparently just a dialect</a></p><p>2007/05/12 <a href="http://archives.miloush.net/michkap/archive/2007/05/12/2562871.html">The exception that proves the rule that was the exception that proves another rule (aka On the variability of the Invariant)</a></p><p>2006/01/24 <a href="http://archives.miloush.net/michkap/archive/2006/01/24/516661.html">Invariant is a really good choice (any time there is no better choice)</a></p><p>2005/12/29 <a href="http://archives.miloush.net/michkap/archive/2005/12/29/508045.html">What's a secondary distinction?</a></p><p>2005/11/30 <a href="http://archives.miloush.net/michkap/archive/2005/11/30/498183.html">Expectations around collation</a></p><p>2005/10/15 <a href="http://archives.miloush.net/michkap/archive/2005/10/15/481314.html">If you are using INVARIANT then you are probably MISusing it, #1</a></p><p>2005/09/12 <a href="http://archives.miloush.net/michkap/archive/2005/09/12/463483.html">How does Microsoft assign new collation weights?</a></p><p>2005/04/13 <a href="http://archives.miloush.net/michkap/archive/2005/04/13/407823.html">Invariant and Ordinal Redux</a></p><p>2005/04/03 <a href="http://archives.miloush.net/michkap/archive/2005/04/03/405071.html">TechEd Bloggers does not work for this site?</a></p><p>2004/12/29 <a href="http://archives.miloush.net/michkap/archive/2004/12/29/344136.html">Comparison confusion: INVARIANT vs. ORDINAL</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2004/12/09/279020.html" title="What the heck is an LCID?">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2004/12/07/277204.html" title="Rebuilding the CRT and MFC for Unicode on Win9x....">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2004-12">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2004-12-08">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2004/12/08/278170.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:42 GMT -->
+</html>

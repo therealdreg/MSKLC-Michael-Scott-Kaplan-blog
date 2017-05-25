@@ -1,0 +1,86 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2008/04/07/8364480.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:36 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Fight the Future? (#8 of ??), aka The Bug(s) Spotted, aka Design flaws are worse than bugs</title></head><body>
+<h1>Fight the Future? (#8 of ??), aka The Bug(s) Spotted, aka Design flaws are worse than bugs</h1>
+<p><em>by Michael S. Kaplan, published on 2008/04/07 10:01 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2008/04/07/8364480.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<p><em><span style="color: #ff0000; font-size: xx-small;">Content of </span></em><a href="http://blogs.msdn.com/michkap"><em><span style="font-size: xx-small;">Michael Kaplan's personal blog</span></em></a><span style="color: #ff0000; font-size: xx-small;"><em> not approved by Microsoft (see </em></span><a href="http://archives.miloush.net/michkap/archive/2008/02/28/7934999.html"><em><span style="font-size: xx-small;">disclaimer</span></em></a><span style="color: #ff0000; font-size: xx-small;"><em>)!<br /></em></span><em><span style="color: #ff0000; font-size: xx-small;">Regular readers should keep in mind that all I said in <a href="http://archives.miloush.net/michkap/archive/2008/03/30/8340299.html"><strong>The End?</strong></a> still applies; the allusion to the X-Files continues for people who understand such references....</span></em></p>
+<p>It seems like it was just days ago when I blogged <a href="http://archives.miloush.net/michkap/archive/2008/04/04/8355738.html"><strong>Fight the Future? (#2 of ??), aka Spot the Bug(s)!</strong></a>, which provided the following code and asked (dared?) people to find the problem(s) therein:</p>
+<blockquote>
+<p><span style="font-family: consolas,lucida console,courier new,courier;"><strong>if( _plv-&gt;_ci.dwExStyle &amp; WS_EX_RTLREADING)<br />{<br />&nbsp;&nbsp;&nbsp; if (item.pszText)<br />&nbsp;&nbsp;&nbsp; {<br /><span style="color: #009933;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; //<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // temp hack for the find.files to see if LtoR/RtoL mixing<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // works. if ok, we'll take this out and make that lv ownerdraw<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; //<br /></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; if ((item.pszText[0] != '\xfd') &amp;&amp; (item.pszText[lstrlen(item.pszText)-1] != '\xfd'))<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; textflags |= SHDT_RTLREADING;<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }<br />&nbsp;&nbsp;&nbsp; }<br />}</strong></span></p>
+</blockquote>
+<p>Now many people pointed out that this code can't handle when the text in item.pszText is a zero-length string (leading to at best&nbsp;a not-so-nice one charcter buffer underrun), and several also went further in guessing that <strong>item</strong> was meant to be an <a href="http://msdn2.microsoft.com/library/bb774760.aspx">LVITEM Structure</a> in a list-view control. One person even pointed put what <a href="http://blogs.msdn.com/benkaras/">Ben</a> referred to as the principal error being targetted when he asked the question initially:</p>
+<blockquote>
+<p><span style="font-family: times new roman,times;"><strong>Short answer:</strong><br />The comparison is always false because WCHAR is zero-extended but '\xfd' is sign-extended.<br /><br /><strong>Long answer:</strong><br />Among the solvers, there was confusion about which half of the comparison was signed.&nbsp; In our project, WCHAR is unsigned, and char is signed.&nbsp; So '\xfd' is sign extended and pszText[0] will not be, so they always compare as unequal.<br /><br />This is most evident from the assembly code.&nbsp; Did you know one dev even closed this bug since they couldn't believe the compiler would do such a thing?</span><br /><br /><span style="font-family: consolas,lucida console,courier new,courier;"><strong>75ae1e1f 0fb708&nbsp;&nbsp;&nbsp;movzx&nbsp;&nbsp; ecx,word ptr [eax]&nbsp;&nbsp;&nbsp;<span style="color: #00cc00;">// zero extend a WORD (pszText[0])</span><br />75ae1e22 83f9fd&nbsp;&nbsp;&nbsp;cmp&nbsp;&nbsp;&nbsp;&nbsp; ecx,0FFFFFFFDh&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color: #00cc00;">// compare to a DWORD literal</span></strong></span></p>
+</blockquote>
+<p>One person noted that there should be a compiler flag to keep this sign mismatch issue from happening. He is right, it is /J, described in the topic&nbsp;<a href="http://msdn2.microsoft.com/library/0d294k5z.aspx">/J (Default char Type is unsigned)</a>.</p>
+<p>But although this bug does&nbsp;keep the code from ever working, it still is just a bug -- and a quick fix once it is identified.</p>
+<p>And then several people noted the more serious issue -- the fact that the code is using a non-Unicode chracter ('\xfd') in the comparison against&nbsp;Unicode characters in the item.pszText -- in an attempt to look for <a href="http://www.fileformat.info/info/unicode/char/200e">U+200e</a>, the LEFT-TO-RIGHT MARK (which is only '\xfd' in Windows code pages 1255 and 1256, and not in Unicode ever).</p>
+<p>Now we get to where the wheels fall off the wagon a bit. :-)</p>
+<p>There was a bit of suggestion with this&nbsp;described&nbsp;problem what the actual fix would be, and the "internal" answer for all of this was pretty direct:</p>
+<blockquote>
+<p><span style="font-family: times new roman,times;">The deeper bug requires some context.&nbsp; One person was kind enough to provide some detailed history:</span></p>
+<blockquote>
+<p><span style="font-family: times new roman,times;">"It's worse than you think.<br /><br />The code was originally written for the Mideast version of Windows 95. That version of Windows uses ANSI not Unicode, and the code pages are 1255 (Hebrew) and 1256 (Arabic). In both of those code pages, character 0xFD is Unicode character U+200E (LEFT-TO-RIGHT MARK). The code was protected under #ifdef WINDOWS_ME so it would be active only on Arabic and Hebrew systems.<br /><br />This code was ported to Unicode without paying attention to the code page assumption hiding behind the #ifdef. Lucky for us, the code was ported incorrectly and the test never succeeds.&nbsp; A naive "fix" would corrupt Czech strings: The comparison would think that character U+00FD (LATIN SMALL Y WITH ACUTE) is the LTR marker and any string that begins and ends with that character gets treated as Arabic/Hebrew text.<br /><br />The correct fix is to delete the test entirely. We are all-Unicode now. We don't need an old hack for Hebrew/Arabic Windows 95."</span></p>
+</blockquote>
+</blockquote>
+<p>But in some ways I find this answer a little bit wrong and also&nbsp;way less than complete, to be honest.</p>
+<p>The hint for my issue here can be found if you look at the comment:</p>
+<p><strong><span style="font-family: Consolas; color: #009933;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; //<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // temp hack for the find.files to see if LtoR/RtoL mixing<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // works. if ok, we'll take this out and make that lv ownerdraw<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; //</span></strong></p>
+<p>What kind of <strong>temp hack</strong> designed to test a specific feature lives on long enough to make it to a Unicode conversion, intact?</p>
+<p>Now the problem with LtoR/RtoL mixing does not go away when you convert to Unicode -- it just gets harder. And the initial hack was indeed a hack because it was never really such a great solution being given.</p>
+<p>You can see&nbsp;the underlying real problem&nbsp;in action with the user interface language list -- shown here in Vista on that machine with all of the home-built locales, with an English UI language:</p>
+<p><img height="1028" width="571" src="http://trigeminal.fmsinc.com/images/english_MUI.png" /></p>
+<p>though not in the smaller "official" list with an English user interface language since there are no RTL languages with parentheses listed:</p>
+<p><img src="http://trigeminal.fmsinc.com/images/mui_english.png" /></p>
+<p>though the bug comes backi to haunt us with a right-to-left user interface language with many examples:</p>
+<p><img src="http://trigeminal.fmsinc.com/images/mui_hebrew.png" /></p>
+<p>Now this is yet another case of the problem I talked about in <a href="http://archives.miloush.net/michkap/archive/2007/01/06/1421178.html"><strong>Mixing it up with bidirectional text</strong></a>, where any time you "islands of text" within other text that:</p>
+<ol>
+<li>
+<div>does not have the same directionality as the overall user interface, and</div>
+</li>
+<li>
+<div>either the first character or the last one has&nbsp;a neutral Bidi class</div>
+</li>
+</ol>
+<p>then one needs to put in a non-neutral character such as <a href="http://www.fileformat.info/info/unicode/char/200e">U+200e</a>&nbsp;(LEFT-TO-RIGHT MARK) or <a href="http://www.fileformat.info/info/unicode/char/200f">U+200f</a>&nbsp;(RIGHT-TO-LEFT MARK) -- depending on the desired directionslity of the island.</p>
+<p>The "old" temp hack fix -- presumably only running on Hebrew or Arabic Win9x -- was </p>
+<ul>
+<li>
+<div>a bit incomplete&nbsp;(since it never added characters even if it needed to)&nbsp;and </div>
+</li>
+<li>
+<div>a bit heavy handed (since many strings would need the flag set, basically any with strong LTR characters at the beginning or the end) and </div>
+</li>
+<li>
+<div>a bit short-sighted (since it oly looked at the problem or LTR text in an RTL world, not the converse scenario).</div>
+</li>
+</ul>
+<p>So the person who suggested the code could just be removed was right -- if you are willing to live with strings that have serious potential to look wrong in any of those directiolaity-spanning scenarios.</p>
+<p>What should be there? Well, an algorithm that:</p>
+<ol>
+<li>
+<div>Looked at the directionality of the first and last characters/pieces in the string, and</div>
+</li>
+<li>
+<div>Looked at the directionality of either the surrounding text or the user interface (whichever was appropriate), and</div>
+</li>
+<li>
+<div>Whenever a difference between&nbsp;either/both sides of&nbsp;#1 and what was found in #2 was seen, added the appropriate RLM or LRM marker to cause the text to look right. kind of like I suggested in <a href="http://archives.miloush.net/michkap/archive/2007/01/06/1421178.html"><strong>Mixing it up with bidirectional text</strong></a>.</div>
+</li>
+</ol>
+<p>Now there are two ways this bug can manifest -- if the character in question is neutral and mirrored, it can show up on the wrong side of the string, reversed. And if it is just neutral but is not mirrored, then it will look right but still be on the wrong side of the string. </p>
+<p>Both problems are fixed by the above description of the algorithm (the code for which is left as an exercise for the reader).</p>
+<p>In fairness to that initial code, it was a <strong>temp hack</strong> presumably to test whether using strong LTR characters would help with directionality of listview items on RTL platforms, but obviously if the code is never removed and then the actual issue is never fixed then there is clearly a bug here -- a bug caused by the lower quality bar implicit in a <strong>temp hack</strong> which, by never being revisited, proved the underlying problem in ever lowering one's quality bars in code one checks in.</p>
+<p>Which in my mind is the most serious bug here -- the conceptual design flaw caused by never finishing the work to solve a genuine issue.</p>
+<p>It would be great if this code were written up in a function, which could then be used in all of the places in the UI where such strings can or do show up, from Listviews to Listboxes and beyond....</p>
+<p>&nbsp;</p>
+<p><span style="color: #ff00ff;"><em>This blog brought to you by</em><span style="font-size: large;">&nbsp;&rlm;)&rlm; </span><em>(<a href="http://www.fileformat.info/info/unicode/char/0029">U+0029</a>, aka RIGHT PARENTHESIS, <span style="font-size: xx-small;">mirrored of course due to a surrounding U+200f entourage...</span>)</em></span></p>
+<hr/><p><a id="8402943" href="#8402943">#</a> <strong>John Cowan</strong> on 17 Apr 2008 9:43 AM:</p><div style="margin-left: 1em"><p>It should, of course, have been &quot;This blog brought to you by ( (U+0029, aka RIGHT PARENTHESIS)&quot;.</p></div>
+<p><a id="8402957" href="#8402957">#</a> <strong>Michael S. Kaplan</strong> on 17 Apr 2008 9:47 AM:</p><div style="margin-left: 1em"><p>Tempting,but I'd hate to freak people out quite that much.</p>
+<p>On second thought.... :-)</p>
+</div>
+<hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2010/07/23 <a href="http://archives.miloush.net/michkap/archive/2010/07/23/10041679.html">It used to be Windows doing it right, and Office following. But now...</a></p><p>2010/06/18 <a href="http://archives.miloush.net/michkap/archive/2010/06/18/10024976.html">Bugs hidden in plain sight, and commented that way too</a></p><p>2008/08/25 <a href="http://archives.miloush.net/michkap/archive/2008/08/25/8893033.html">The Bidi Algorithm's own SEP Field</a></p><p>2008/04/19 <a href="http://archives.miloush.net/michkap/archive/2008/04/19/8409778.html">Even if the text is right underneath, it may look wrong close up....</a></p><p>2008/04/18 <a href="http://archives.miloush.net/michkap/archive/2008/04/18/8405696.html">The mythical nature of bidirectional support, and where the wheels come off the wagon</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2008/04/08/8367471.html" title="Fight the Future? (#10 of ??), aka Looks like I wasn&#39;t mistaken">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2008/04/07/8364480.html" title="Fight the Future? (#8 of ??), aka The Bug(s) Spotted, aka Design flaws are worse than bugs">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2008-04">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2008-04-07">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2008/04/07/8364480.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:36 GMT -->
+</html>

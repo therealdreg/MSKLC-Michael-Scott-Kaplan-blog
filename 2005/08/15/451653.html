@@ -1,0 +1,62 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2005/08/15/451653.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:41 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>MSLU and the Windows Common Controls</title></head><body>
+<h1>MSLU and the Windows Common Controls</h1>
+<p><em>by Michael S. Kaplan, published on 2005/08/15 03:01 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2005/08/15/451653.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P><FONT face=Tahoma>Recently in the microsoft.public.platformsdk.mslayerforunicode, someone with the handle Alpha Siera posted the following:</FONT></P>
+<BLOCKQUOTE dir=ltr style="MARGIN-RIGHT: 0px">
+<P><FONT size=2><EM>Hi, </EM></FONT></P>
+<P><FONT size=2><EM>I have converted one application to use MSLayer for unicode for Win 9x. The application is staticaly linked with unicows.lib (Visual Studio 6.0). </EM></FONT></P>
+<P><FONT size=2><EM>**What I am doing ?</EM></FONT></P>
+<P><FONT size=2><EM>The application uses CTreeCtrl and I have derived one of my class from CTreeCtrl. Plus I am capturing message like TVN_ITEMEXPANDING and TVN_SELCHANGED in my derived class.</EM></FONT></P>
+<P><FONT size=2><EM>**My Problem </EM></FONT></P>
+<P><FONT size=2><EM>When the application was not using MS Layer for unicode derived class (derived from CTreeCtrl) was able to receive notifications messages. Wherease when the application is linked to use unicows.lib it does not receive any notification messages on 9x.</EM></FONT></P>
+<P><FONT size=2><EM>**What I have tried ? </EM></FONT></P>
+<P><FONT size=2><EM>If I remove unicows.lib from linking the application works fine and properly receives notification messages on Windows 9x but when unicows.lib is included it stops receiving any messages.</EM></FONT></P>
+<P><FONT size=2><EM>Please advice where i am wrong .. or any work around for the problem.</EM></FONT></P>
+<P><FONT size=2><EM>Regards</EM></FONT></P>
+<P><FONT size=2><EM>Alpha</EM></FONT></P></BLOCKQUOTE>
+<P><FONT face=Tahoma>The issue here is one that is discussed in the article Cathy and I wrote about&nbsp;the layer&nbsp;(<A href="http://msdn.microsoft.com/msdnmag/issues/01/10/MSLU/"><STRONG>MSLU: Develop Unicode Applications for Windows 9x Platforms with the Microsoft Layer for Unicode</STRONG></A>), in the section entitled <EM>What MSLU does and does not address</EM>:</FONT></P>
+<BLOCKQUOTE dir=ltr style="MARGIN-RIGHT: 0px">
+<P><FONT face=Tahoma><FONT face="Times New Roman" size=2><IMG height=4 alt="" src="http://msdn.microsoft.com/msdnmag/images/dingbats/indent.gif" width=10>MSLU was designed to be a translation layer for Windows NT-based Unicode APIs on Windows 9<I>x</I>. The layer, however, is not a complete rewrite of Windows 9<I>x</I>, nor is it some type of Windows NT emulator for the Windows 9<I>x</I> platform. It does not provide support for Unicode-only scripts like Devanagari or Georgian, or for any of the new supplementary characters that have been added to Unicode (specifically UTF-16) as surrogate pairs. It also cannot provide extended international support beyond the platform that it runs on, since it is relying on the operating system for any particular international functionality that developers may want to provide. For example, MSLU does not provide updated versions of the cp_*nls files that contain support for code pages, nor does it add support on Windows 95 for GetLocalInfo LCTypes for which the operating system has no specific information.<BR><IMG height=4 alt="" src="http://msdn.microsoft.com/msdnmag/images/dingbats/indent.gif" width=10>Instead, developers should consider MSLU as one part of a whole package of international or Unicode-focused components provided by Microsoft. These components include RichEdit, which provides rich text support and can also be used for more comprehensive support with plain text. Windows common controls provide a standard way to implement many commonly used interface components. Uniscribe allows the support and rendering of complex scripts (writing systems that need additional processing prior to display, such as Arabic, Devanagari, and Thai). GDI+ extends Uniscribe to provide easier developer integration and more consistent rendering for mixed scripts. MLang provides many features such as character encoding, string conversion, and font linking support, and the Text Services Framework (TSF) provides a common framework for text input and natural language technologies.<BR><IMG height=4 alt="" src="http://msdn.microsoft.com/msdnmag/images/dingbats/indent.gif" width=10>Since all of these components have a Unicode solution, MSLU does not attempt to provide overlapping functionality. With the use of these other components, you can go a step beyond MSLU's support for Unicode and handle multilingual input, processing, and rendering, so that applications can go beyond the codepage-based support provided by Windows 9<I>x</I>.<BR><IMG height=4 alt="" src="http://msdn.microsoft.com/msdnmag/images/dingbats/indent.gif" width=10>For more information on these other technologies, what versions to use, and how to implement and deploy them, go to the </FONT><A href="http://msdn.microsoft.com/"><FONT face="Times New Roman" size=2>MSDN® Online</FONT></A><FONT size=2><FONT face="Times New Roman"> homepage.</FONT></FONT></FONT></P></BLOCKQUOTE>
+<P><FONT face=Tahoma size=2>The topic being sort of referred to is in the Platform SDK and is entitled <A href="http://msdn.microsoft.com/library/en-us/mslu/winprog/other_existing_unicode_support.asp">Other Existing Unicode Support</A>, and it contains the following section:</FONT></P><FONT face=Tahoma>
+<BLOCKQUOTE dir=ltr style="MARGIN-RIGHT: 0px">
+<H4>Existing Unicode-enabling Technologies</H4>
+<P>
+<P>The Microsoft Layer for Unicode does not duplicate the following Unicode-enabling technologies.</P>
+<P>
+<TABLE border=1>
+<TBODY>
+<TR>
+<TH><FONT size=2>Technology</FONT></TH>
+<TH><FONT size=2>Description</FONT></TH></TR>
+<TR>
+<TD><FONT size=2>Common Controls (commctrl32)</FONT></TD>
+<TD><FONT size=2>Supports Unicode through </FONT><A href="http://msdn.microsoft.com/library/en-us/shellcc/platform/commctls/common/messages/ccm_getunicodeformat.asp"><FONT size=2>CCM_GETUNICODEFORMAT</FONT></A><FONT size=2>, </FONT><A href="http://msdn.microsoft.com/library/en-us/shellcc/platform/commctls/common/messages/ccm_setunicodeformat.asp"><FONT size=2>CCM_SETUNICODEFORMAT</FONT></A><FONT size=2>, and </FONT><A href="http://msdn.microsoft.com/library/en-us/shellcc/platform/commctls/common/messages/wm_notifyformat.asp"><B><FONT size=2>WM_NOTIFYFORMAT</FONT></B></A><FONT size=2> and controls such as TreeView and ListView. </FONT>
+<P><FONT size=2>On Windows Me/98/95, you must use comctl32.dll of version 5.80 or later. This ships with Microsoft Internet Explorer 5.0.</FONT></P></TD></TR>
+<TR>
+<TD><A href="http://msdn.microsoft.com/library/en-us/intl/ime_5tiq.asp"><FONT size=2>Input Method Editor</FONT></A><FONT size=2> (IME)</FONT></TD>
+<TD><FONT size=2>Allows users to enter complex characters and symbols, such as Japanese Kanji, by using a standard keyboard. </FONT>
+<P><FONT size=2>Windows Me/98 supports the Unicode version of these functions except for </FONT><A href="http://msdn.microsoft.com/library/en-us/intl/ime_2ffp.asp"><B><FONT size=2>ImmIsUIMessage</FONT></B></A><FONT size=2>.</FONT></P>
+<P><FONT size=2>On Windows 95, these functions are stubbed, thus you can statically link to the Unicode versions.</FONT></P></TD></TR>
+<TR>
+<TD><A href="http://msdn.microsoft.com/workshop/misc/mlang/reference/objects/CMultiLanguage.asp"><FONT size=2>MLang</FONT></A><FONT size=2>, the MultiLanguage Object&nbsp;&nbsp;&nbsp; &nbsp; </FONT></TD>
+<TD><FONT size=2>Provides services for applications on international issues, including conversion between code pages, font linking, code page "guessing", line breaking, and more. </FONT></TD></TR>
+<TR>
+<TD><A href="http://msdn.microsoft.com/library/en-us/shellcc/platform/commctls/richedit/richeditcontrols.asp"><FONT size=2>Rich Edit</FONT></A><FONT size=2> 2.0 and later</FONT></TD>
+<TD><FONT size=2>Provides a programming interface for formatting text. Rich Edit 2.0 supports Unicode, and Rich Edit 3.0 has expanded support for complex scripts, partly due to Uniscribe.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;</FONT></TD></TR>
+<TR>
+<TD><A href="http://msdn.microsoft.com/library/en-us/intl/uniscrib_35k5.asp"><FONT size=2>Uniscribe</FONT></A></TD>
+<TD><FONT size=2>Supports the processing of complex scripts, that is, those scripts that need special processing to properly render them. It includes a subset of the features found in GDI+.</FONT></TD></TR></TBODY></TABLE></FONT><FONT face=Tahoma></FONT></P></BLOCKQUOTE>
+<P><FONT face=Tahoma>Now luckily one of our two internationalization MVPs (Ted, in this case) responded right away:</FONT></P>
+<BLOCKQUOTE dir=ltr style="MARGIN-RIGHT: 0px">
+<P><EM><FONT size=2>In your class that uses the CTreeCtrl (e.g. your CDialog) handle OnNotifyFormat (WM_NOTIFYFORMAT message) and return NFR_UNICODE.&nbsp; Also, send&nbsp;a message CCM_SETUNICODEFORMAT with TRUE to the tree control.</FONT></EM></P></BLOCKQUOTE>
+<P><FONT face=Tahoma>And then Alpha responded that this did the trick, and also wondered why Microsoft did not document this issue, though I think the rest of the post kind of belies the premise of <EM>that</EM> question! :-)</FONT></P>
+<P><FONT face=Tahoma>Now I think MSLU was a cool project to work on, and it enables some incredible scenarios. But when you compare it to the items in the above table that actually <STRONG>do</STRONG> support Unicode versus just wrapping the non-Unicode functions and converting prn, it really does tend to pail a bit....</FONT></P>
+<P><FONT face=Tahoma>Hmmm.... I just noticed what seems to me like a doc bug, maybe&nbsp;-- since GDI+ is basically frozen from a language list standpoint, Uniscribe can truly be considered a superset of GDI+, not a subset (unless you think of international support as a subset of the other things GDI+ does like image-handling methods)....</FONT></P>
+<P><FONT face=Tahoma></FONT>&nbsp;</P>
+<P><FONT face=Tahoma color=#ff0000><EM>This post brought to you by</EM> "<FONT size=5>ޜ</FONT>" <EM>(<A href="http://www.fileformat.info/info/unicode/char/079c/index.htm">U+079c</A>, a.k.a. THAANA LETTER ZAA)</EM></FONT></P>
+<hr/><div style="margin-left: 1em"><em>no comments</em></div><hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2005/08/16/452036.html" title="It may make my brown eyes blue">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2005/08/14/451626.html" title="Changing the code page of a text file">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2005-08">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2005-08-15">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2005/08/15/451653.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:41 GMT -->
+</html>

@@ -1,0 +1,41 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2006/10/27/878277.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:39 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>When collations collide?</title></head><body>
+<h1>When collations collide?</h1>
+<p><em>by Michael S. Kaplan, published on 2006/10/27 03:03 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2006/10/27/878277.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<FONT face=Tahoma size=3>
+<P>Praveen asks in one of the SQL Server aliases in Microsoft a question about an issue that us not very well understood: </P>
+<BLOCKQUOTE><FONT face="Times New Roman,Times" size=2>
+<P>Hi<BR><BR>Let me know if this is not a appropriate question for this DL.<BR><BR>My Sql Server (2005) has case sensitivity turned on. I create a database with case sensitive option turned off (SQL_Latin1_General_CP1_CI_AI), create a table and create a stored procedure. The creation of stored procedure gives me a error indicating that case sensitivity does not work for the datatype in variables. Is this true? Is there some other option I can specify during the create database statement so that this will work too?<BR><BR>Thanks<BR>Praveen</P>
+<BLOCKQUOTE>
+<P><FONT face="Consolas,Courier New,Lucida Console,Courier"><B>CREATE DATABASE&nbsp; Test1 COLLATE SQL_Latin1_General_CP1_CI_AI<BR>go<BR>use Test1<BR>go<BR>CREATE TABLE table1(&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Column1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; nvarchar(64) NOT NULL&nbsp; )<BR>Go<BR><BR>create proc proc1<BR>&nbsp;&nbsp;&nbsp; @Column1 nvarchar(64)<BR>as <BR>begin<BR>&nbsp;&nbsp;&nbsp; if exists (select * from table1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; where<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; @column1 = Column1)<BR>&nbsp;&nbsp;&nbsp; begin<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; return -1<BR>&nbsp;&nbsp;&nbsp; end<BR>&nbsp;&nbsp;&nbsp; return 0<BR>end</B></FONT></P></BLOCKQUOTE>
+<P>Error message during the sproc creation:</P>
+<BLOCKQUOTE>
+<P><FONT face="Consolas,Courier New,Lucida Console,Courier"><B><FONT color=#ff0000>sp_helpdb Test1Msg 137, Level 15, State 2, Procedure proc1, Line 8<BR>Must declare the scalar variable "@column1".</FONT></B></FONT></P></BLOCKQUOTE></FONT></BLOCKQUOTE>
+<P mce_keep="true">Bart was very quick to point out where the issue is documented:</P>
+<BLOCKQUOTE>
+<P mce_keep="true">See the “Identifier Collation” topic in BOL:</P>
+<BLOCKQUOTE>
+<P><FONT face="times new roman,times" size=2>The collation of an identifier depends on the level at which it is defined. Identifiers of instance-level objects, such as logins and database names, are assigned the default collation of the instance. Identifiers of objects within a database, such as tables, views, and column names, are assigned the default collation of the database. Variables, GOTO labels, temporary stored procedures, and temporary tables can be created when the connection context is associated with one database and then referenced when the context has been switched to another database. Therefore, the identifiers for variables, GOTO labels, and temporary tables are in the default collation of the instance.</FONT></P></BLOCKQUOTE></BLOCKQUOTE>
+<BLOCKQUOTE></BLOCKQUOTE>
+<P mce_keep="true">The topic that Bart refers to is <A class="" href="http://msdn2.microsoft.com/en-us/library/ms188686.aspx" mce_href="http://msdn2.microsoft.com/en-us/library/ms188686.aspx">right here</A> and has links to several related topics about collation at various levels. None of them really talk about the additional issues related to security, given the 2-3 different possible login logics for comparing user names (server collation, local machine using the NT object namespace, or domain login usually but not always using Active Directory). </P>
+<P mce_keep="true">But I thought Praveen's question might get the ball rolling here, with what may be one of the easier scenarios to understand after it is explained. Future topics may delve more into the ones that actually are just as hard to fathom after you understand them as they are before. :-)</P>
+<P mce_keep="true">&nbsp;</P>
+<P mce_keep="true"><FONT color=#ff00ff><EM>This post brought to you by</EM> <STRONG><FONT size=6>ก</FONT></STRONG> <EM>(<A class="" href="http://www.fileformat.info/info/unicode/char/0e01" mce_href="http://www.fileformat.info/info/unicode/char/0e01">U+0e01</A>, a.k.a. THAI CHARACTER KO KAI)</EM></FONT></P></FONT>
+<hr/><p><a id="878354" href="#878354">#</a> <strong>Dean Harding</strong> on 27 Oct 2006 3:47 AM:</p><div style="margin-left: 1em"><p>Yeah, this is a real problem when you're developing an application that can be installed on somebody else's instance of SQL Server.</p>
+<p>You basically HAVE to develop it on a case-sensitive instance locally, otherwise one of your users invariably has a case-sensitive instance installed and your app breaks. They get upset if you tell them to install it on a new instance that is not case-sensitive :)</p>
+</div>
+<p><a id="880353" href="#880353">#</a> <strong>John Ingres</strong> on 27 Oct 2006 9:55 AM:</p><div style="margin-left: 1em"><p>We've been looking at the implications of moving our database from</p>
+<p>SQL_Latin1_General_CP1_xxxx</p>
+<p>to </p>
+<p>Latin1_General_xxx</p>
+<p>since it is the recommended pratice to use Windows collations instead of the legacy SQL collation but this is a large change affecting more than 30 applications and over a hundred production systems and I have been investigating differences between those two collations and information is extremely scarce. Is there a source of information with detailed information? Of course, we will test exhaustively but subtle differences in sort order for example are not always easily apparent.</p>
+<p>thanks</p>
+<p>John</p></div>
+<p><a id="884220" href="#884220">#</a> <strong>Michael S. Kaplan</strong> on 27 Oct 2006 5:08 PM:</p><div style="margin-left: 1em"><p>Hi John and Dean,</p>
+<p>Both of you touch on issues that deserve their very own posts. Sty tuned this weekend and I will see what I can do....</p>
+</div>
+<hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2006/10/30 <a href="http://archives.miloush.net/michkap/archive/2006/10/30/897681.html">If you are more sensitive, you'll pick up on more problems</a></p><p>2006/10/29 <a href="http://archives.miloush.net/michkap/archive/2006/10/29/897317.html">SQL Server: compatibility collations vs. Window collations</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2006/10/27/884071.html" title="for(int iMoonTrip = 0; iMoonTrip == 0; iMoonTrip++)">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2006/10/26/878226.html" title="Suggest a Topic!">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2006-10">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2006-10-27">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2006/10/27/878277.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:39 GMT -->
+</html>

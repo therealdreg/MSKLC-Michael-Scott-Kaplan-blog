@@ -1,0 +1,49 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2010/05/25/10014052.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:35 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Can you Vai for attention and get in a Tif[inagh] with [Marie] Osman[ya]? N'ko way!</title></head><body>
+<h1>Can you Vai for attention and get in a Tif[inagh] with [Marie] Osman[ya]? N'ko way!</h1>
+<p><em>by Michael S. Kaplan, published on 2010/05/25 07:01 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2010/05/25/10014052.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<p><em><span style="color: #ff0000;">I may have blown the stack on ridiculous puns with this blog. If your stack was blown then please accept my apologies (and be happy there were no other scripts in the font to continue the punning!).</span></em></p>
+<p>So the other day, friend and colleague across the vast divide that is Unicode Charles Riley contacted me over IM (I must admit Facebook has been a boon for some communications, the key is to be in front of the machine with the right tab showng in the browser and knowing who to answer when their window pops up!).</p>
+<p>Anyhow, Charles pointed out a smll oops in Word, and in particular in its famous <strong>Insert Symbol... </strong>dialog.</p>
+<p>It is something he found in looking at the dialog with his interest in African languages....</p>
+<p>In particularly the <a href="http://www.microsoft.com/typography/fonts/family.aspx?FID=371">Ebrima font</a> in Windows 7, and the support of <a href="http://www.unicode.org/charts/PDF/U07C0.pdf">N'ko</a> (U+07c0 - U+07ff):</p>
+<p>&nbsp;</p>
+<p>and&nbsp;<a href="http://www.unicode.org/charts/PDF/UA500.pdf">Vai</a> (U+a500 - U+a63f):</p>
+<p><img src="http://trigeminal.fmsinc.com/images/African02.jpg" border="0" style="max-width: 550px;" /></p>
+<p>Note that <a href="http://www.unicode.org/charts/PDF/U2D30.pdf">Tifinagh</a> (U+2d30 - U+2d7f) works:</p>
+<p><img src="http://trigeminal.fmsinc.com/images/African03.jpg" border="0" style="max-width: 550px;" /></p>
+<p>and <a href="http://www.unicode.org/charts/PDF/U10480.pdf">Osmanya</a> (U+10480 - U+104af) kind of works:</p>
+<p><img src="http://trigeminal.fmsinc.com/images/African04.jpg" border="0" style="max-width: 550px;" /></p>
+<p>The font works just fine in all cases, though.</p>
+<p>It looks like a simple set of range errors in the code supporting the dialog. Presumably this would be easy to fix, though I couldn't say for sure without looking at the code....</p>
+<p>Though unfortunately this bug (which Charles found in Office 2007) also occurs in the recently released Office 2010, as well.</p>
+<p><em>The above screenshots were all from Office 2007 but I verified the same bug is in thew new version as well.</em></p>
+<p>Now Windows and its Character Map are running a slightly different record, with <a href="http://www.unicode.org/charts/PDF/U07C0.pdf">N'ko</a> (U+07c0 - U+07ff) and <a href="http://www.unicode.org/charts/PDF/U2D30.pdf">Tifinagh</a> (U+2d30 - U+2d7f) working:</p>
+<p><img src="http://trigeminal.fmsinc.com/images/African05.jpg" border="0" style="max-width: 550px;" />&nbsp;<img src="http://trigeminal.fmsinc.com/images/African07.jpg" border="0" style="max-width: 550px;" /></p>
+<p>while <a href="http://www.unicode.org/charts/PDF/UA500.pdf">Vai</a> (U+a500 - U+a63f) does not:</p>
+<p><img src="http://trigeminal.fmsinc.com/images/African06.jpg" border="0" style="max-width: 550px;" /></p>
+<p>And of course <a href="http://www.unicode.org/charts/PDF/U10480.pdf">Osmanya</a> (U+10480 - U+104af) won't work since Character Map can't handle supplementary characters, as I mentioned in <a href="http://archives.miloush.net/michkap/archive/2008/02/27/7897776.html"><strong>I thought that font had a lot of supplementary characters? (aka The highest number of tangents I could fit into a single blog)</strong></a>.</p>
+<p>That blog, incidentally, explains how no one knows how to update the names on the ranges in Character Map, which suggests that either they figured it out and didn't remember to add Vai, or that the support for N'ko and Tifinagh has been in Character Map since XP even though the fonts haven't been there.</p>
+<p>I must admit I am&nbsp;not too&nbsp;curious to know which, since the fact that Tiffinagh was added in Unicode 4.1, N'Ko was added in Unicode 5.0, and&nbsp;Vai was added in Unicode 5.1 suggest either psychic abilities or the incomplete update hypothesis. :-)</p>
+<p>One of the last things Charles asked me was what I thought the odds for a service pack fix were (for either bug or both).</p>
+<p>The fixes for either one before the next major version seem unlikely since the functionality was in no way impacted for either -- just the cool feature of seeing the name in the user interface....</p>
+<hr/><p><strong>Random832</strong> on 26 May 2010 4:48 AM:</p><div style="margin-left: 1em"><p>Even in windows 7 there&#39;s no N&#39;ko or Tifinagh subrange. Your screenshot doesn&#39;t show there being one - it shows character names, which come from getuname.dll [semi relevant blog link: <a rel="nofollow" target="_new" href="http://archives.miloush.net/michkap/archive/2006/01/12/511920.html">blogs.msdn.com/.../511920.aspx</a> ]</p>
+<p>As for the ranges themselves... I did this before, but the trail ran cold at the string ids; I never thought to open up charmap.exe in a resource editor, and it was an old blog anyway so I never posted the comment at the time:</p>
+<p>16-byte header: &#39;UCEX&#39; magic, DWORD offset of name, WORD codepage*, WORD count of ranges, two WORDs unknown purpose.</p>
+<p>*it&#39;s 1200 in subrange.uce, 932 in ShiftJis.uce, 936 in gb2312, etc, but the character data is always in unicode.</p>
+<p>16-byte item per range: DWORD offset of name, DWORD offset of start of character data, DWORD count of characters, DWORD always zero.</p>
+<p>Character data itself - couldn&#39;t be simpler: a newline character U+000A signifies the &quot;line breaks&quot; you see. Each range&#39;s character data begins immediately after the previous one.</p>
+<p>Names - there&#39;s a list at the end of the file of strings of the form &quot;010100&quot; &quot;010101&quot; &quot;010102&quot; etc. They appear to be string IDs into the string table of charmap.exe[.mui]. If a string not made of digits appears in the file, it looks like it&#39;ll use that as the name [but it won&#39;t be localizable, obviously]</p>
+<p>All that&#39;s left are those last two words in the header:</p>
+<p>ShiftJis.uce: 0,1; SubRange.uce: 0,1; bopomofo.uce: 4,11; gb2312.uce: 3,9; ideograf.uce: 12,21; kanji_1.uce: 5,10; kanji_2.uce: 0,1; korean.uce: 2,7. Surely someone with access to the charmap source code could figure out what they&#39;re for [and whether or not that all-zero dword in the range structure is used for anything], and a tool could be written to build uce files from scratch.</p>
+<p>Now, this is assuming that the tool they&#39;re built with has in fact been lost - if it&#39;s just that it exists but no-one who cares knows what it is - well, that&#39;s a different problem, one not as easily solved by an outsider.</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 26 May 2010 6:25 AM:</p><div style="margin-left: 1em"><p>Indeed, you are right. I got caught up in showing up Office, perhaps (which I still technicaly did, a liitle bit? :-) Good times!).</p>
+<p>The tool was in fact lost (but the source for CharMap is not). Maybe someone should take a look some day!</p></div>
+<p><strong>Charles</strong> on 27 May 2010 9:02 AM:</p><div style="margin-left: 1em"><p>Here&#39;s hoping that tool shows up again, or that it can be rebuilt. &nbsp;Then with any luck, your products will finally be fully Vai-able. &nbsp;:)</p>
+</div>
+<hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2010/05/26/10013980.html" title="The SOP for STX vs. SOH vs. SOT: excitabat enim fluctus in simpulo!">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2010/05/24/a10013991.html" title="&quot;Donesian&quot;…just east of &quot;Variant&quot; and just north of &quot;Cognito&quot;, right?">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2010-05">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2010-05-25">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2010/05/25/10014052.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:35 GMT -->
+</html>

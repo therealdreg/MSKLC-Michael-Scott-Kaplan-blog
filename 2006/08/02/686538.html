@@ -1,0 +1,334 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2006/08/02/686538.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:39 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Insertion of an adendum to the intro to font embedding</title></head><body>
+<h1>Insertion of an adendum to the intro to font embedding</h1>
+<p><em>by Michael S. Kaplan, published on 2006/08/02 11:31 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2006/08/02/686538.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<FONT face=Tahoma>
+<P>I was talking about <STRONG><A href="http://archives.miloush.net/michkap/archive/2006/05/13/596774.html">Font embedding</A></STRONG> -- the intro a little while back. And several people have taken me up on my offer for the header file. So I thought an update on the situation might be in order....</P>
+<P>As I pointed out in a comment <A href="http://archives.miloush.net/michkap/archive/2006/05/13/596774.html#685267">here</A> just yesterday: </P>
+<BLOCKQUOTE dir=ltr style="MARGIN-RIGHT: 0px">
+<P><FONT face="Times New Roman" size=2>The header file and also the .LIB file are actually both available in </FONT><A href="http://windowssdk.msdn.microsoft.com/en-us/library/ms717328.aspx"><STRONG><FONT size=2>the Windows SDK</FONT></STRONG></A><FONT size=2>, at this point.</FONT></P></BLOCKQUOTE>
+<P>Now this is actually two header files (t2embapi.h and fontsub.h) and two .LIB files (t2embapi.lib and fontsub.lib). The first of each is involved in the creation of the embedded font files, and the second of each is involved in the usage of that data; both pieces are obviously important....</P>
+<P>Now while the set of error constants for the first set related to embedding&nbsp;(<A href="http://windowssdk.msdn.microsoft.com/en-us/library/ms536724.aspx">described here</A>) is available in the Windows SDK, the set of error constants for the second set related to packaging (<A href="http://windowssdk.msdn.microsoft.com/en-us/library/ms536727.aspx">described here</A>) is not.</P>
+<P>Now this issue will be addressed in the SDK in the future, but for now I'll give the constant values here, because the header file they are in at the moment is really not meant for publishing so they'll have to do a little moving stuff around to get it into a header like fontsub.h eventually....</P>
+<P>Note that most of these errors are more of an indication of an error in the process of embedding/packaging tht an error that something could be done with -- so don't feel like you have to turn them into your own header file right away -- just use them as information for now, and they will be defined soon enough. :-)</P>
+<BLOCKQUOTE dir=ltr style="MARGIN-RIGHT: 0px">
+<P>
+<TABLE border=1>
+<TBODY>
+<TR>
+<TD><STRONG>Return value</STRONG></TD>
+<TD><STRONG>Value</STRONG></TD>
+<TD><STRONG>Description</STRONG></TD></TR>
+<TR>
+<TD>NO_ERROR</TD>
+<TD>0</TD>
+<TD>No error.</TD></TR>
+<TR>
+<TD>ERR_FORMAT</TD>
+<TD>1006</TD>
+<TD>Input data format error.</TD></TR>
+<TR>
+<TD>ERR_GENERIC</TD>
+<TD>1000</TD>
+<TD>&nbsp;</TD></TR>
+<TR>
+<TD>ERR_MEM</TD>
+<TD>1005</TD>
+<TD>Error allocating memory.</TD></TR>
+<TR>
+<TD>ERR_NO_GLYPHS</TD>
+<TD>1009</TD>
+<TD>&nbsp;</TD></TR>
+<TR>
+<TD>ERR_INVALID_BASE</TD>
+<TD>1085</TD>
+<TD>&nbsp;</TD></TR>
+<TR>
+<TD>ERR_INVALID_CMAP</TD>
+<TD>1030</TD>
+<TD>&nbsp;</TD></TR>
+<TR>
+<TD>ERR_INVALID_DELTA_FORMAT</TD>
+<TD>1013</TD>
+<TD>Trying to subset a format 1 or 2 font.</TD></TR>
+<TR>
+<TD>ERR_INVALID_EBLC</TD>
+<TD>1086</TD>
+<TD>&nbsp;</TD></TR>
+<TR>
+<TD>ERR_INVALID_GLYF</TD>
+<TD>1061</TD>
+<TD>&nbsp;</TD></TR>
+<TR>
+<TD>ERR_INVALID_GDEF</TD>
+<TD>1083</TD>
+<TD>&nbsp;</TD></TR>
+<TR>
+<TD>ERR_INVALID_GPOS</TD>
+<TD>1082</TD>
+<TD>&nbsp;</TD></TR>
+<TR>
+<TD>ERR_INVALID_GSUB</TD>
+<TD>1081</TD>
+<TD>&nbsp;</TD></TR>
+<TR>
+<TD>ERR_INVALID_HDMX</TD>
+<TD>1089</TD>
+<TD>&nbsp;</TD></TR>
+<TR>
+<TD>ERR_INVALID_HEAD</TD>
+<TD>1062</TD>
+<TD>&nbsp;</TD></TR>
+<TR>
+<TD>ERR_INVALID_HHEA</TD>
+<TD>1063</TD>
+<TD>&nbsp;</TD></TR>
+<TR>
+<TD>ERR_INVALID_HHEA_OR_VHEA</TD>
+<TD>1072</TD>
+<TD>&nbsp;</TD></TR>
+<TR>
+<TD>ERR_INVALID_HMTX</TD>
+<TD>1064</TD>
+<TD>&nbsp;</TD></TR>
+<TR>
+<TD>ERR_INVALID_HMTX_OR_VMTX</TD>
+<TD>1073</TD>
+<TD>&nbsp;</TD></TR>
+<TR>
+<TD>ERR_INVALID_JSTF</TD>
+<TD>1084</TD>
+<TD>&nbsp;</TD></TR>
+<TR>
+<TD>ERR_INVALID_LTSH</TD>
+<TD>1087</TD>
+<TD>&nbsp;</TD></TR>
+<TR>
+<TD>ERR_INVALID_TTO</TD>
+<TD>1080</TD>
+<TD>&nbsp;</TD></TR>
+<TR>
+<TD>ERR_INVALID_VDMX</TD>
+<TD>1088</TD>
+<TD>&nbsp;</TD></TR>
+<TR>
+<TD>ERR_INVALID_LOCA</TD>
+<TD>1065</TD>
+<TD>&nbsp;</TD></TR>
+<TR>
+<TD>ERR_INVALID_MAXP</TD>
+<TD>1066</TD>
+<TD>&nbsp;</TD></TR>
+<TR>
+<TD>ERR_INVALID_MERGE_CHECKSUMS</TD>
+<TD>1011</TD>
+<TD>Trying to merge two fonts from different mother font.</TD></TR>
+<TR>
+<TD>ERR_INVALID_MERGE_FORMATS</TD>
+<TD>1010</TD>
+<TD>Trying to merge fonts with the wrong dttf formats.</TD></TR>
+<TR>
+<TD>ERR_INVALID_MERGE_NUMGLYPHS</TD>
+<TD>1012</TD>
+<TD>Trying to merge 2 fonts from different mother font.</TD></TR>
+<TR>
+<TD>ERR_INVALID_NAME</TD>
+<TD>1067</TD>
+<TD>&nbsp;</TD></TR>
+<TR>
+<TD>ERR_INVALID_POST</TD>
+<TD>1068</TD>
+<TD>&nbsp;</TD></TR>
+<TR>
+<TD>ERR_INVALID_OS2</TD>
+<TD>1069</TD>
+<TD>&nbsp;</TD></TR>
+<TR>
+<TD>ERR_INVALID_VHEA</TD>
+<TD>1070</TD>
+<TD>&nbsp;</TD></TR>
+<TR>
+<TD>ERR_INVALID_VMTX</TD>
+<TD>1071</TD>
+<TD>&nbsp;</TD></TR>
+<TR>
+<TD>ERR_INVALID_TTC_INDEX</TD>
+<TD>1015</TD>
+<TD>&nbsp;</TD></TR>
+<TR>
+<TD>ERR_MEM</TD>
+<TD>1005</TD>
+<TD>Error allocating memory.</TD></TR>
+<TR>
+<TD>ERR_MISSING_CMAP</TD>
+<TD>1030</TD>
+<TD>&nbsp;</TD></TR>
+<TR>
+<TD>ERR_MISSING_EBDT</TD>
+<TD>1044</TD>
+<TD>&nbsp;</TD></TR>
+<TR>
+<TD>ERR_MISSING_GLYF</TD>
+<TD>1031</TD>
+<TD>&nbsp;</TD></TR>
+<TR>
+<TD>ERR_MISSING_HEAD</TD>
+<TD>1032</TD>
+<TD>&nbsp;</TD></TR>
+<TR>
+<TD>ERR_MISSING_HHEA</TD>
+<TD>1033</TD>
+<TD>&nbsp;</TD></TR>
+<TR>
+<TD>ERR_MISSING_HMTX</TD>
+<TD>1034</TD>
+<TD>&nbsp;</TD></TR>
+<TR>
+<TD>ERR_MISSING_LOCA</TD>
+<TD>1035</TD>
+<TD>&nbsp;</TD></TR>
+<TR>
+<TD>ERR_MISSING_MAXP</TD>
+<TD>1036</TD>
+<TD>&nbsp;</TD></TR>
+<TR>
+<TD>ERR_MISSING_NAME</TD>
+<TD>1037</TD>
+<TD>&nbsp;</TD></TR>
+<TR>
+<TD>ERR_MISSING_POST</TD>
+<TD>1038</TD>
+<TD>&nbsp;</TD></TR>
+<TR>
+<TD>ERR_MISSING_OS2</TD>
+<TD>1039</TD>
+<TD>&nbsp;</TD></TR>
+<TR>
+<TD>ERR_MISSING_VHEA</TD>
+<TD>1040</TD>
+<TD>&nbsp;</TD></TR>
+<TR>
+<TD>ERR_MISSING_VMTX</TD>
+<TD>1041</TD>
+<TD>&nbsp;</TD></TR>
+<TR>
+<TD>ERR_MISSING_HHEA_OR_VHEA</TD>
+<TD>1042</TD>
+<TD>&nbsp;</TD></TR>
+<TR>
+<TD>ERR_MISSING_HMTX_OR_VMTX</TD>
+<TD>1043</TD>
+<TD>&nbsp;</TD></TR>
+<TR>
+<TD>ERR_NOT_TTC</TD>
+<TD>1014</TD>
+<TD>&nbsp;</TD></TR>
+<TR>
+<TD>ERR_PARAMETER0</TD>
+<TD>1100</TD>
+<TD>Calling function argument 0 is invalid.</TD></TR>
+<TR>
+<TD>ERR_PARAMETER1</TD>
+<TD>1101</TD>
+<TD>Calling function argument 1 is invalid.</TD></TR>
+<TR>
+<TD>ERR_PARAMETER2</TD>
+<TD>1102</TD>
+<TD>Calling function argument 2 is invalid.</TD></TR>
+<TR>
+<TD>ERR_PARAMETER3</TD>
+<TD>1103</TD>
+<TD>Calling function argument 3 is invalid.</TD></TR>
+<TR>
+<TD>ERR_PARAMETER4</TD>
+<TD>1104</TD>
+<TD>Calling function argument 4 is invalid.</TD></TR>
+<TR>
+<TD>ERR_PARAMETER5</TD>
+<TD>1105</TD>
+<TD>Calling function argument 5 is invalid.</TD></TR>
+<TR>
+<TD>ERR_PARAMETER6</TD>
+<TD>1106</TD>
+<TD>Calling function argument 6 is invalid.</TD></TR>
+<TR>
+<TD>ERR_PARAMETER7</TD>
+<TD>1107</TD>
+<TD>Calling function argument 7 is invalid.</TD></TR>
+<TR>
+<TD>ERR_PARAMETER8</TD>
+<TD>1108</TD>
+<TD>Calling function argument 8 is invalid.</TD></TR>
+<TR>
+<TD>ERR_PARAMETER9</TD>
+<TD>1109</TD>
+<TD>Calling function argument 9 is invalid.</TD></TR>
+<TR>
+<TD>ERR_PARAMETER10</TD>
+<TD>1110</TD>
+<TD>Calling function argument 10 is invalid.</TD></TR>
+<TR>
+<TD>ERR_PARAMETER11</TD>
+<TD>1111</TD>
+<TD>Calling function argument 11 is invalid.</TD></TR>
+<TR>
+<TD>ERR_PARAMETER12</TD>
+<TD>1112</TD>
+<TD>Calling function argument 12 is invalid.</TD></TR>
+<TR>
+<TD>ERR_PARAMETER13</TD>
+<TD>1113</TD>
+<TD>Calling function argument 13 is invalid.</TD></TR>
+<TR>
+<TD>ERR_PARAMETER14</TD>
+<TD>1114</TD>
+<TD>Calling function argument 14 is invalid.</TD></TR>
+<TR>
+<TD>ERR_PARAMETER15</TD>
+<TD>1115</TD>
+<TD>Calling function argument 15 is invalid.</TD></TR>
+<TR>
+<TD>ERR_PARAMETER16</TD>
+<TD>1116</TD>
+<TD>Calling function argument 16 is invalid.</TD></TR>
+<TR>
+<TD>ERR_READCONTROL</TD>
+<TD>1003</TD>
+<TD>Read control structure does not match data.</TD></TR>
+<TR>
+<TD>ERR_READOUTOFBOUNDS</TD>
+<TD>1001</TD>
+<TD>Trying to read from memory not allowed - data error?</TD></TR>
+<TR>
+<TD>ERR_VERSION</TD>
+<TD>1008</TD>
+<TD>Major dttf.version of the input data is greater than the version this program can read.</TD></TR>
+<TR>
+<TD>ERR_WOULD_GROW</TD>
+<TD>1007</TD>
+<TD>Action would cause data to grow. use original data.</TD></TR>
+<TR>
+<TD>ERR_WRITECONTROL</TD>
+<TD>1004</TD>
+<TD>Write control structure does not match data.</TD></TR>
+<TR>
+<TD>ERR_WRITEOUTOFBOUNDS</TD>
+<TD>1002</TD>
+<TD>Trying to write to memory not allowed - data error?</TD></TR></TBODY></TABLE></P></BLOCKQUOTE>
+<P>So, enjoy the little addendum to the intro. :-)</P>
+<P>&nbsp;</P>
+<P><FONT color=#ff1493><EM>This post brought to you by</EM> <FONT size=6>ਅ</FONT> <EM>(<A href="http://www.fileformat.info/info/unicode/char/0a05">U+0a05</A>, a.k.a. GURMUKHI LETTER A)</EM></FONT></P></FONT>
+<hr/><p><strong>J. Shin</strong> on 15 Dec 2008 9:19 PM:</p><div style="margin-left: 1em"><p>In what version of PSDK is t2embapi.h included? I downloaded what I believed to be the latest PSDK from the page you pointed to ( <a rel="nofollow" target="_new" href="http://windowssdk.msdn.microsoft.com/en-us/library/ms717328.aspx">http://windowssdk.msdn.microsoft.com/en-us/library/ms717328.aspx</a> ), but it still does not have t2embapi.h</p>
+<p>It's installed, by default, in C:\Program Files\Microsoft SDKs\Windows\v6.0. &nbsp;And Include folder has fontsub.h but NOT t2embapi.h </p>
+<p>According to 'Add or Remove programs', it's 6000.0.0. </p>
+<p>I also tried what's available at the following page:</p>
+<p><a rel="nofollow" target="_new" href="http://www.microsoft.com/downloads/details.aspx?FamilyID=4377f86d-c913-4b5c-b87e-ef72e5b4e065&amp;displaylang=en">http://www.microsoft.com/downloads/details.aspx?FamilyID=4377f86d-c913-4b5c-b87e-ef72e5b4e065&amp;displaylang=en</a></p>
+<p>It's 6000.16384.10, but neither does it have t2embapi.h/t2embed.lib</p>
+<p>I can use t2embapi.h you posted elsewhere, but I still need the LIB file. Should/Could I make it following the instruction at </p>
+<p><a rel="nofollow" target="_new" href="http://support.microsoft.com/kb/131313">http://support.microsoft.com/kb/131313</a> ?</p>
+<p>It'd be really nice if you could point me where to download PSDK with those two files. &nbsp;Thank you !</p></div>
+<hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2006/08/03/687388.html" title="MSLU: some back-story, some back-formations (and no backwash)">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2006/08/02/686384.html" title="Hang on just a [Hansel]Minute!">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2006-08">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2006-08-02">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2006/08/02/686538.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:39 GMT -->
+</html>

@@ -1,0 +1,432 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2011/12/21/10249983.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>The evolving Story of Locale Support, part 13: Divvying up locales, yet again!</title></head><body>
+<h1>The evolving Story of Locale Support, part 13: Divvying up locales, yet again!</h1>
+<p><em>by Michael S. Kaplan, published on 2011/12/21 07:01 -05:00, original URI: http://blogs.msdn.com/b/michkap/archive/2011/12/21/10249983.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<p>Previous blogs from this series:</p>
+<ul>
+<li><strong><a title="part 12: Logic dictates that we keep a sense of proportion about the RATIO" href="http://archives.miloush.net/michkap/archive/2011/12/09/10246051.html">part 12: Logic dictates that we keep a sense of proportion about the RATIO</a></strong></li>
+<li><strong><a title="part 11: What language is that keyboard for?" href="http://archives.miloush.net/michkap/archive/2011/11/23/10240896.html">part 11: What language is that keyboard for?</a></strong></li>
+<li><strong><a title="part 10: Perhaps it is best to think of it as unintelligent design?" href="http://archives.miloush.net/michkap/archive/2011/11/22/10239572.html">part 10: Perhaps it is best to think of it as unintelligent design?</a></strong></li>
+<li><strong><a title="part 9: Nastaleeq vs. Nastaliq? Either way, Windows 8 has got it!" href="http://archives.miloush.net/michkap/archive/2011/11/16/10237715.html">part 9: Nastaleeq vs. Nastaliq? Either way, Windows 8 has got it!</a></strong></li>
+<li><strong><a title="part 8: [Finally] taking care of some [more] languages in Pakistan" href="http://archives.miloush.net/michkap/archive/2011/11/15/10237317.html">part 8: [Finally] taking care of some [more] languages in Pakistan</a></strong></li>
+<li><strong><a title="part 7: That would be a " href="http://archives.miloush.net/michkap/archive/2011/11/11/10236194.html" for="" a="" call="" and="" raise="" hawaiian="">part 7: That would be a "call and a raise" for Hawaiian</a></strong></li>
+<li><strong><a title="part 6 (Behind the Cherokee Phonetic layout in Windows 8)" href="http://archives.miloush.net/michkap/archive/2011/11/09/10235391.html">part 6 (Behind the Cherokee Phonetic layout in Windows 8)</a></strong></li>
+<li><strong><a title="part 5 part 5 (...until the decision was made to not refuse to add it)" href="http://archives.miloush.net/michkap/archive/2011/11/08/10234995.html">part 5 (...until the decision was made to not refuse to add it)</a></strong></li>
+<li><strong><a title="part 4 (working beyond one's bugs, and the case for an MSKLC update)" href="http://archives.miloush.net/michkap/archive/2011/11/04/10233999.html">part 4 (working beyond one's bugs, and the case for an MSKLC update)</a></strong></li>
+<li><strong><a title="part 3 (working beyond one's bugs, the setup)" href="http://archives.miloush.net/michkap/archive/2011/11/03/10233591.html">part 3 (working beyond one's bugs, the setup)</a> </strong></li>
+<li><strong><a title="part 2 (raising the roof on keyboards)" href="http://archives.miloush.net/michkap/archive/2011/11/02/10232468.html">part 2 (raising the roof on keyboards)</a></strong></li>
+<li><strong><a title="part 1 (Some people don't want to double-d's)" href="http://archives.miloush.net/michkap/archive/2011/11/01/10232070.html">part 1 (Some people don't want to double-d's)</a></strong></li>
+<li><strong><a title="part 0 (The introduction)" href="http://archives.miloush.net/michkap/archive/2011/10/31/10231661.html">part 0 (The introduction)</a></strong></li>
+</ul>
+<p>Now in the past, I've written <strong><a title="The Locales of Windows 7, all divvied up" href="http://archives.miloush.net/michkap/archive/2011/05/24/10167604.html">The Locales of Windows 7, all divvied up</a></strong>, which included:</p>
+<ul>
+<li>Table 1: the locales representing languages into which Windows 7 localizes</li>
+<li>Table 2: the locales representing languages for which Windows creates Language Interface Packs, aka LIPs</li>
+<li>Table 3: locales whose identifiers are not directly associated with any localizations of Windows, even if a related identifier might make for one representing a suitable localization</li>
+</ul>
+<p>I've also written the sequel, <strong><a title="The Locales of Windows 7, divvied up further" href="http://archives.miloush.net/michkap/archive/2011/07/07/10183904.html">The Locales of Windows 7, divvied up further</a></strong>, which included the slihttky more niche:</p>
+<ul>
+<li>Table 4: the locales into which Windows Server 2008 R2 is localized</li>
+<li>Table 5: the locales into which PowerShell is localized, by Microsoft</li>
+<li>Table 6: the locales into which Visual Studio is localized, by Microsoft</li>
+</ul>
+<p>And&nbsp;in <strong><a title="The evolving Story of Locale Support, part 5 (...until the decision was made to not refuse to add it)" href="http://archives.miloush.net/michkap/archive/2011/11/08/10234995.html">The evolving Story of Locale Support, part 5 (...until the decision was made to not refuse to add it)</a></strong>, which listed&nbsp;a bunch of locales added to Windows 8 that at some point might make nice entries to an updated version of <strong>Table 3</strong>.</p>
+<p>I didn't comment about how many of them&nbsp;might be added to a nice updated version of <strong>Table 2</strong>, because that list is still confidential info. Though if history is a guide then some of the new languqages and some of te exiting ones might fit there.</p>
+<p>Also,&nbsp;in <strong><a title="The evolving Story of Locale Support, part 2 (raising the roof on keyboards)" href="http://archives.miloush.net/michkap/archive/2011/11/02/10232468.html">The evolving Story of Locale Support, part 2 (raising the roof on keyboards)</a></strong>, I Listed a bunch of new keyboards added to Windows 8, some of which have no LCIDs, as I pointed out in that very blog (I described some of&nbsp;my implementation concerns on this matter in <strong><a title="The evolving Story of Locale Support, part 11: What language is that keyboard for?" href="http://archives.miloush.net/michkap/archive/2011/11/23/10240896.html">The evolving Story of Locale Support, part 11: What language is that keyboard for?</a></strong>).</p>
+<p>But there is yet another list -- a missing list.</p>
+<p>You see, <strong>Table 3</strong> should have, rather than being called</p>
+<p style="padding-left: 30px;">Table 3: locales whose identifiers are not directly associated with any localizations of Windows, even if a related identifier might make for one representing a suitable localization</p>
+<p>should have instead been more accurately called</p>
+<p style="padding-left: 30px;">Table 3: locales <strong>supported by Windows 7</strong> whose identifiers are not directly associated with any localizations of Windows, even if a related identifier might make for one representing a suitable localization</p>
+<p>Because just yesterday the question was asked:</p>
+<p style="padding-left: 30px;"><span style="font-family: times new roman,times; font-size: medium;"><em><span face="Calibri" size="3">I am wondering if en-HK is a supported culture in Windows 7? </span><a href="http://msdn.microsoft.com/en-us/goglobal/bb964664"><span style="color: #0000ff;" face="Calibri" size="3" color="#0000ff">From this document</span></a><span size="3"><span face="Calibri">, it says it&rsquo;s supported in Windows XP &amp; <br />Server 2003, but yet I get a CultureNotFoundException trying to instantiate the culture with &ldquo;en-HK&rdquo; or it&rsquo;s LCID 15369.</span></span></em></span></p>
+<p style="padding-left: 30px;"><span style="font-family: times new roman,times; font-size: medium;"><em><span size="3"><span face="Calibri">Any suggestions? If not, please forward to a more appropriate alias, thanks.</span></span></em></span></p>
+<p>One of the people&nbsp;(Alexander)&nbsp;got that mail forwarded it to me, and he (Alexander) is on the small list of people I have Outlook set to let the mail get to me even though I'm on vacation (as I mentioned in <strong><a title="I plan to go somewhere that starts with a &quot;T&quot;." href="http://archives.miloush.net/michkap/archive/2011/12/07/10244934.html">I plan to go somewhere that starts with a "T"</a></strong>).</p>
+<p>And it is an interesting question, so I thought I'd take it up now!</p>
+<p>The problems with that <a href="http://msdn.microsoft.com/en-us/goglobal/bb964664">Locale IDs Assigned by Microsoft</a>&nbsp;web page are numerous, and I'll get into that some other day.</p>
+<p>But for now I'll give a first crack at yet another table:</p>
+<p><strong>Table 7: Locales whose LCD values are reserved but which are not really supported in Windows 8 or earlier</strong></p>
+<table border="1" cellspacing="1" cellpadding="1">
+<tbody>
+<tr>
+<td>
+<p>Language Name</p>
+</td>
+<td>
+<p>Reserved LCID</p>
+</td>
+</tr>
+<tr>
+<td>
+<p>Burmese</p>
+</td>
+<td>
+<p>0455</p>
+</td>
+</tr>
+<tr>
+<td>
+<p>Edo</p>
+</td>
+<td>
+<p>0466</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><span style="color: #ff0000;"><strong>English - Hong Kong SAR</strong></span></p>
+</td>
+<td>
+<p><span style="color: #ff0000;"><strong>3c09</strong></span></p>
+</td>
+</tr>
+<tr>
+<td>
+<p>English - Malaysia</p>
+</td>
+<td>
+<p>4409</p>
+</td>
+</tr>
+<tr>
+<td>
+<p>English - Singapore</p>
+</td>
+<td>
+<p>4809</p>
+</td>
+</tr>
+<tr>
+<td>
+<p>French - Cameroon</p>
+</td>
+<td>
+<p>2c0c</p>
+</td>
+</tr>
+<tr>
+<td>
+<p>French - Democratic Rep. of Congo</p>
+</td>
+<td>
+<p>240c</p>
+</td>
+</tr>
+<tr>
+<td>
+<p>French - Cote d'Ivoire</p>
+</td>
+<td>
+<p>300c</p>
+</td>
+</tr>
+<tr>
+<td>
+<p>French - Haiti</p>
+</td>
+<td>
+<p>3c0c</p>
+</td>
+</tr>
+<tr>
+<td>
+<p>French - Mali</p>
+</td>
+<td>
+<p>340c</p>
+</td>
+</tr>
+<tr>
+<td>
+<p>French - Morocco</p>
+</td>
+<td>
+<p>380c</p>
+</td>
+</tr>
+<tr>
+<td>
+<p>French - North Africa</p>
+</td>
+<td>
+<p>e40c</p>
+</td>
+</tr>
+<tr>
+<td>
+<p>French - Reunion</p>
+</td>
+<td>
+<p>200c</p>
+</td>
+</tr>
+<tr>
+<td>
+<p>French - Senegal</p>
+</td>
+<td>
+<p>280c</p>
+</td>
+</tr>
+<tr>
+<td>
+<p>French - West Indies</p>
+</td>
+<td>
+<p>1c0c</p>
+</td>
+</tr>
+<tr>
+<td>
+<p>Fulfulde - Nigeria</p>
+</td>
+<td>
+<p>0467</p>
+</td>
+</tr>
+<tr>
+<td>
+<p>Guarani - Paraguay</p>
+</td>
+<td>
+<p>0474</p>
+</td>
+</tr>
+<tr>
+<td>
+<p>Ibibio - Nigeria</p>
+</td>
+<td>
+<p>0469</p>
+</td>
+</tr>
+<tr>
+<td>
+<p>Kanuri - Nigeria</p>
+</td>
+<td>
+<p>0471</p>
+</td>
+</tr>
+<tr>
+<td>
+<p>Kashmiri</p>
+</td>
+<td>
+<p>0860</p>
+</td>
+</tr>
+<tr>
+<td>
+<p>Kashmiri (Arabic)</p>
+</td>
+<td>
+<p>0460</p>
+</td>
+</tr>
+<tr>
+<td>
+<p>Latin</p>
+</td>
+<td>
+<p>0476</p>
+</td>
+</tr>
+<tr>
+<td>
+<p>Manipuri</p>
+</td>
+<td>
+<p>0458</p>
+</td>
+</tr>
+<tr>
+<td>
+<p>Nepali - India</p>
+</td>
+<td>
+<p>0861</p>
+</td>
+</tr>
+<tr>
+<td>
+<p>Oromo</p>
+</td>
+<td>
+<p>0472</p>
+</td>
+</tr>
+<tr>
+<td>
+<p>Papiamentu</p>
+</td>
+<td>
+<p>0479</p>
+</td>
+</tr>
+<tr>
+<td>
+<p>Rhaeto-Romanic</p>
+</td>
+<td>
+<p>0417</p>
+</td>
+</tr>
+<tr>
+<td>
+<p>Romanian - Moldava</p>
+</td>
+<td>
+<p>0818</p>
+</td>
+</tr>
+<tr>
+<td>
+<p>Russian - Moldava</p>
+</td>
+<td>
+<p>0819</p>
+</td>
+</tr>
+<tr>
+<td>
+<p>Sepedi</p>
+</td>
+<td>
+<p>046c</p>
+</td>
+</tr>
+<tr>
+<td>
+<p>Sindhi - India</p>
+</td>
+<td>
+<p>0459</p>
+</td>
+</tr>
+<tr>
+<td>
+<p>Sindhi - Pakistan</p>
+</td>
+<td>
+<p>0859</p>
+</td>
+</tr>
+<tr>
+<td>
+<p>Sinhalese - Sri Lanka</p>
+</td>
+<td>
+<p>045b</p>
+</td>
+</tr>
+<tr>
+<td>
+<p>Slovak</p>
+</td>
+<td>
+<p>041b</p>
+</td>
+</tr>
+<tr>
+<td>
+<p>Slovenian</p>
+</td>
+<td>
+<p>0424</p>
+</td>
+</tr>
+<tr>
+<td>
+<p>Somali</p>
+</td>
+<td>
+<p>0477</p>
+</td>
+</tr>
+<tr>
+<td>
+<p>Sutu</p>
+</td>
+<td>
+<p>0430</p>
+</td>
+</tr>
+<tr>
+<td>
+<p>Tamazight (Arabic)</p>
+</td>
+<td>
+<p>045f</p>
+</td>
+</tr>
+<tr>
+<td>
+<p>Tibetan - Bhutan</p>
+</td>
+<td>
+<p>0851</p>
+</td>
+</tr>
+<tr>
+<td>
+<p>Tsonga</p>
+</td>
+<td>
+<p>0431</p>
+</td>
+</tr>
+<tr>
+<td>
+<p>Urdu - India</p>
+</td>
+<td>
+<p>0820</p>
+</td>
+</tr>
+<tr>
+<td>
+<p>Venda</p>
+</td>
+<td>
+<p>0433</p>
+</td>
+</tr>
+<tr>
+<td>
+<p>Yiddish</p>
+</td>
+<td>
+<p>043d</p>
+</td>
+</tr>
+<tr>
+<td>
+<p>HID (Human Interface Device)</p>
+</td>
+<td>
+<p>04ff</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p>&nbsp;Note that <strong>en-HK</strong> is one of the many locales on this list.</p>
+<p>Some also recognize Urdu - India,which I discussed in <strong><a title="Where's the other Urdu?" href="http://archives.miloush.net/michkap/archive/2010/07/18/10039492.html">Where's the other Urdu?</a></strong>, a blog where I also talked about the <a href="http://msdn.microsoft.com/en-us/goglobal/bb964664">Locale IDs Assigned by Microsoft</a>&nbsp;page and some of its problems.</p>
+<p>I'd love to comment about some of the reasons why a locale would end up here on this page, reserved, but in many cases the reasons would be mere suppositions on my part.</p>
+<p>I mean I know about my fruitless campaign for an Urdu - India that was champoioned by and ulimately tied to a Microsoft VP who left under unhappy at the lack of direction of many efforts he championed in the unused potential of Microsoft India&nbsp;-- technologies that ultimately were marginalized and now have no owners (an issue I also was unable to influence in the endd since no one had the resources to take&nbsp;the work&nbsp;on). But that's heroic tale of throwing an elbow that didn't connect, a little too much inside baseball, and something that ultimatelty blew my stack on sports metaphors that only some o my readers will get.</p>
+<p>Alternately,&nbsp;I know&nbsp;about&nbsp;the campaign of harassment by a professor that led to the <strong>Yiddish locale</strong> being added to this list,&nbsp;and I could revel my readers with tales like that. But although it came to me from a reputable source, it is still hearsay -- and I'd like to keep blogs admissible. :-)</p>
+<p>Kind of hints at future <strong>Table 8</strong>: Locale lists that are broken in one or more ways. :-)</p>
+<p>But for now, that <strong>Table 7</strong> list should do. And I got a question of a customer (albeit an internal customer) answered, which id good since i still do serve at the pleasure of the customer....</p>
+<hr/><p><strong>Timwi</strong> on 21 Dec 2011 2:14 PM:</p><div style="margin-left: 1em"><p>“Moldava”? What the heck is Moldava? :) The country is called Moldova...</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 21 Dec 2011 4:30 PM:</p><div style="margin-left: 1em"><p>See <strong><a href="http://msdn.microsoft.com/en-us/goglobal/bb964664">that link</a></strong> that I accused of being broken in many senses -- it is their spelling....</p></div>
+<p><strong>cheong00</strong> on 21 Dec 2011 5:50 PM:</p><div style="margin-left: 1em"><p>IMO, it seems the only difference between zh-HK and en-HK would be DateTime format difference (I currently cannot think of the others. Even in zh-HK, people has been set the currency format to HK$#,##0.00 ). Is there a point for implementing a seperate English based locale for Hong Kong?</p>
+<p>There may be, just weak. So I guess this is why it haven&#39;t been implemented as of Windows 8.</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 21 Dec 2011 6:25 PM:</p><div style="margin-left: 1em"><p>I suspect the lack of a proven need for the locale is the main reason it was not added, actually.</p>
+</div>
+<hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2012/10/26 <a href="http://archives.miloush.net/michkap/archive/2012/10/26/10362603.html">The evolving Story of Locale Support, part 28: We finally fixed that 'Install New Languages' thing!</a></p><p>2012/10/02 <a href="http://archives.miloush.net/michkap/archive/2012/10/02/10354988.html">The evolving Story of Locale Support, part 27: No, the T and the H aren't silent...</a></p><p>2012/08/21 <a href="http://archives.miloush.net/michkap/archive/2012/08/21/10341855.html">The Locales of Windows 8, not yet divvied up...</a></p><p>2012/08/20 <a href="http://archives.miloush.net/michkap/archive/2012/08/20/10341516.html">The evolving Story of Locale Support, part 26: Hey Windows 8, there's someone on the phone for you.</a></p><p>2012/07/11 <a href="http://archives.miloush.net/michkap/archive/2012/07/11/10327775.html">The evolving Story of Locale Support, part 25: Something old, something new, something repurposed, and something...</a></p><p>2012/06/07 <a href="http://archives.miloush.net/michkap/archive/2012/06/07/10316511.html">The evolving Story of Locale Support, part 24: I Adar you! Hell, I Double Adar you! (Windows 8 ed.)</a></p><p>2012/06/05 <a href="http://archives.miloush.net/michkap/archive/2012/06/05/10315033.html">The evolving Story of Locale Support, part 23: Tamazight? Outta sight!</a></p><p>2012/04/12 <a href="http://archives.miloush.net/michkap/archive/2012/04/12/10292952.html">The evolving Story of Locale Support, part 22: Digit Substitution 2.0</a></p><p>2012/03/08 <a href="http://archives.miloush.net/michkap/archive/2012/03/08/10278921.html">The evolving Story of Locale Support, part 21: The Windows 8 Hijripalooza extraordinaire!</a></p><p>2012/03/02 <a href="http://archives.miloush.net/michkap/archive/2012/03/02/10276258.html">The evolving Story of Locale Support, part 20: Yes, it's Bangla. Not Bengali!</a></p><p>2012/02/21 <a href="http://archives.miloush.net/michkap/archive/2012/02/21/10270502.html">The evolving Story of Locale Support, part 19: In honor of International Mother Language Day...</a></p><p>2012/02/15 <a href="http://archives.miloush.net/michkap/archive/2012/02/15/10268235.html">The evolving Story of Locale Support, part 18: Two scripts that share ten digits can be trouble</a></p><p>2012/02/02 <a href="http://archives.miloush.net/michkap/archive/2012/02/02/10263136.html">The evolving Story of Locale Support, part 17: Today I feel like translating you more than before</a></p><p>2012/01/24 <a href="http://archives.miloush.net/michkap/archive/2012/01/24/10259941.html">The evolving Story of Locale Support, part 16: We can't scale to a Xishuangbanna Dai locale, but…</a></p><p>2012/01/17 <a href="http://archives.miloush.net/michkap/archive/2012/01/17/10256884.html">The evolving Story of Locale Support, part 15: Fixing our listings up in Windows 8!</a></p><p>2011/12/22 <a href="http://archives.miloush.net/michkap/archive/2011/12/22/10250349.html">The evolving Story of Locale Support, part 14: Tifinagh, Tamazight, and Berber? Oh my!</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2011/12/22/10250349.html" title="The evolving Story of Locale Support, part 14: Tifinagh, Tamazight, and Berber? Oh my!">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2011/12/20/10249596.html" title="On limitations your design that you may have failed to take into account">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2011-12">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2011-12-21">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2011/12/21/10249983.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+</html>

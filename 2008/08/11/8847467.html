@@ -1,0 +1,82 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2008/08/11/8847467.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:36 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>The fault is ~60% functionality, ~40% documentation</title></head><body>
+<h1>The fault is ~60% functionality, ~40% documentation</h1>
+<p><em>by Michael S. Kaplan, published on 2008/08/11 03:01 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2008/08/11/8847467.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<p>The question in the email was:</p>
+
+<blockquote>
+<p><font face="times new roman,times">Hi,<br><br>I am trying to debug an issue... and was wondering if you could explain or elaborate on the behavior I am seeing from<br><br>&nbsp;&nbsp;&nbsp; GetLcidFromRfc1766() with the string “ja-JP” <br><br>it is returning S_false, indicating that only the primary langauge tag was matched.&nbsp; The lcid that is returned is 1041. However,&nbsp; According to the windows language code identifier reference this lcid corresponds to ja-jp which has both a primary and a subtag.&nbsp; Is it just a coincidence that the correct lcid is being returned?&nbsp; <br></font></p>
+</blockquote>
+
+<p>Ah, where to begin? :-)</p>
+
+<p>I suppose we can start with <a href="http://msdn.microsoft.com/library/aa740994.aspx" mce_href="http://msdn.microsoft.com/library/aa740994.aspx">GetLcidFromRfc1766</a> and its unusual return value semantic: </p>
+
+<blockquote>
+<blockquote>
+<p><i>Returns one of the following values.</i></p>
+
+<table border="1"><tbody>
+<tr>
+<td>S_OK</td>
+
+<td>Success. </td>
+</tr>
+
+<tr>
+<td>S_FALSE</td>
+
+<td>The returned LCID matches only the primary language of the RFC1766-conforming name. </td>
+</tr>
+
+<tr>
+<td>E_FAIL</td>
+
+<td>The method cannot get the information from the database or the system. </td>
+</tr>
+
+<tr>
+<td>E_INVALIDARG</td>
+
+<td>One or more of the arguments are invalid. </td>
+</tr>
+</tbody></table>
+</blockquote>
+</blockquote>
+
+<p>I think I have made my feelings about "creative" uses of return values clear in blogs like <b><a href="http://archives.miloush.net/michkap/archive/2004/12/19/325199.html" mce_href="http://archives.miloush.net/michkap/archive/2004/12/19/325199.html">API Consistency and Developer Comfort</a></b> and <b><a href="http://archives.miloush.net/michkap/archive/2006/04/24/581700.html" mce_href="http://archives.miloush.net/michkap/archive/2006/04/24/581700.html">When the documentation is confusing, it is often because the functionality is, too</a></b> (especially the latter one which talks about the creative return value semantic of <a href="http://msdn.microsoft.com/library/ms776395.aspx" mce_href="http://msdn.microsoft.com/library/ms776395.aspx">NormalizeString</a>).</p>
+
+<p>Now of course in addition to overloading an HRESULT such that both S_OK and S_FALSE are both meaningful, we have an additional problem, this one in the documentation.</p>
+
+<p>After all, doesn't the text about "<i>only the primary language of the RFC1766-conforming name</i>" kind of imply it is talking about <a href="http://msdn.microsoft.com/library/ms776329.aspx" mce_href="http://msdn.microsoft.com/library/ms776329.aspx">PRIMARYLANGID</a> stuff?</p>
+
+<p>This is what the person asking the original question was kind of thinking it meant. He was thinking that the S_FALSE implied a return of something like 0x11 (LANG_JAPANESE) when one passes "ja".</p>
+
+<p><span style="font-style: italic;">Which is why ja-jp getting S_FALSE does seem a little off!</span> <br></p>
+
+<p>Now this is an entirely reasonable assumption one could make given the normal and reasonable expectation of consistent terminology in documentation.<br></p>
+
+<p>However, that is not what it means here.</p>
+
+<p>If you saw <b><a href="http://archives.miloush.net/michkap/archive/2005/05/17/418372.html" mce_href="http://archives.miloush.net/michkap/archive/2005/05/17/418372.html">The weird, weird world of the SUBLANGID</a></b> from way back when, you'll have the hint -- the documentation is thinking of a LANGID/LCID value constructable with SUBLANG_DEFAULT as being the "primary" language tag.</p>
+
+<p>Though if you read <b><a href="http://archives.miloush.net/michkap/archive/2005/05/17/418372.html" mce_href="http://archives.miloush.net/michkap/archive/2005/05/17/418372.html">The weird, weird world of the SUBLANGID</a></b>you'll see whay that is a bad idea. I mean, given the lengths the definitions try to go to make the claim that when there are multiple SUBLANGID values defined for a given PRIMARYLANGID that the first one is arbitrary and is no more privileged than later ones. You know, that Microsoft is making no claim of</p>
+
+<p>MAKELANGID(LANG_PORTUGUESE, SUBLANG_PORTUGUESE_BRAZILIAN)</p>
+
+<p>being more special or more important than</p>
+
+<p>MAKELANGID(LANG_PORTUGUESE, SUBLANG_PORTUGUESE)</p>
+
+<p>just because it is the first one.</p>
+
+<p>Though if you think about it, as bad a the documentation is here, they are just documenting the [flawed] functionality.</p>
+
+<p>So it is still mostly not the fault of the documentation. :-)</p>
+
+<p><font color="#ff00ff"><i>This blog brought to you by</i><font size="6"> ၌ </font><i>(<a href="http://www.fileformat.info  /info/unicode/char/104c" mce_href="http://www.fileformat.info  /info/unicode/char/104c">U+104c</a>, aka MYANMAR SYMBOL LOCATIVE)</i></font><br></p>
+<hr/><div style="margin-left: 1em"><em>no comments</em></div><hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2008/08/12/8849596.html" title="Unbloggableable: an inconceivableable term that makes me a little uncomfortableable">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2008/08/08/8842654.html" title="What&#39;s in a name?">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2008-08">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2008-08-11">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2008/08/11/8847467.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:36 GMT -->
+</html>

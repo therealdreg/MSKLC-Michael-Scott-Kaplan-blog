@@ -1,0 +1,60 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2010/04/28/10002896.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:35 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>"Does my buttload look too big for that stream?" (from the Tales of the "That's what she said!" files)</title></head><body>
+<h1>"Does my buttload look too big for that stream?" (from the Tales of the "That's what she said!" files)</h1>
+<p><em>by Michael S. Kaplan, published on 2010/04/28 07:01 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2010/04/28/10002896.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P>The whole thing really takes me back.</P>
+<P>It takes me back over four years to one of my favorite blogs (<A href="http://archives.miloush.net/michkap/archive/2006/02/17/533929.html" mce_href="http://archives.miloush.net/michkap/archive/2006/02/17/533929.html"><STRONG>What do you get when you combine a base character with a buttload of diacritics?</STRONG></A>).</P>
+<P>It was just a few months back in <A href="http://blogs.msdn.com/shawnste/archive/2010/01/25/most-combining-characters-in-a-unicode-glyph-character-whatever.aspx" mce_href="http://blogs.msdn.com/shawnste/archive/2010/01/25/most-combining-characters-in-a-unicode-glyph-character-whatever.aspx">Most combining characters in a Unicode glyph/character/whatever</A> that <A href="http://blogs.msdn.com/shawnste/" mce_href="http://blogs.msdn.com/shawnste/">Shawn</A> was talking about a kind of related issue:</P>
+<BLOCKQUOTE>
+<P><EM><FONT face="times new roman,times">Recently on the Unicode list someone asked basically what the biggest number of combining characters could happen in a sequence.&nbsp; It's as many as someone wants to use, though the normalization UTS15 adds a limit, and the font rendering problem gets weird.</FONT></EM></P></BLOCKQUOTE>
+<P>I had soime people ask me about that blog, I guess you could say it waas those people who took me back, specifically. :-)</P>
+<P>Now the font rendering issue Shawn mentioned is something I already talked about, and that "buttload" blog even showed how fonts exist that can kinda handle even extreme cases, such as the aforementioned "buttload" scenario -- even as others cannot.</P>
+<P>Now there is no UTS (Unicode Technical Standard) 15; Shawn was actually referring to UAX (Unicode Standard Annex) 15 (<A href="http://www.unicode.org/reports/tr15" mce_href="http://www.unicode.org/reports/tr15">Unicode Normalization Forms</A>), specifically section 21 (<A href="http://www.unicode.org/reports/tr15/#Stream_Safe_Text_Format" mce_href="http://www.unicode.org/reports/tr15/#Stream_Safe_Text_Format">Stream-Safe Text Format</A>), whifch states:</P>
+<BLOCKQUOTE>
+<P><FONT face="times new roman,times">There are certain protocols that would benefit from using normalization, but that have implementation constraints. For example, a protocol may require buffered serialization, in which only a portion of a string may be available at a given time. Consider the extreme case of a string containing a&nbsp; digit 2 followed by 10,000 umlauts followed by one dot-below, then a digit 3. As part of normalization, the&nbsp; dot-below at the end must be reordered to immediately after the&nbsp; digit 2, which means that 10,003 characters need to be considered before the result can be output.</FONT></P>
+<P><FONT face="times new roman,times">Such extremely long sequences of combining marks are not illegal, even though for all practical purposes they are not meaningful. However, the possibility of encountering such sequences forces a conformant, serializing implementation to provide large buffer capacity or to provide a special exception mechanism just for such degenerate cases. The Stream-Safe Text Format specification addresses this situation.</FONT></P>
+<P><FONT face="times new roman,times">D7. Stream-Safe Text Format: A Unicode string is said to be in Stream-Safe Text Format if it would not contain any sequences of non-starters longer than 30 characters in length when normalized to NFKD.</FONT></P>
+<P><FONT face="times new roman,times">&nbsp;&nbsp;&nbsp; * Such a string can be normalized in buffered serialization with a buffer size of 32 characters, which would require no more than 128 bytes in any Unicode Encoding Form.<BR>&nbsp;&nbsp;&nbsp; * Incorrect buffer handling can introduce subtle errors in the results. Any buffered implementation should be carefully checked against the normalization test data.<BR>&nbsp;&nbsp;&nbsp; * The value of 30 is chosen to be significantly beyond what is required for any linguistic or technical usage. While it would have been feasible to chose a smaller number, this value provides a very wide margin, yet is well within the buffer size limits of practical implementations.<BR>&nbsp;&nbsp;&nbsp; * NFKD was chosen for the definition because it produces the potentially longest sequences of non-starters from the same text.</FONT></P></BLOCKQUOTE>
+<P>Okay, so for this <STRONG>one&nbsp;scenario</STRONG> (when the stream-safe text format is needed), the unbounded case is limited to 30 of those combining characters.</P>
+<P>The word "buttload" in my original blog was meant to imply a very large number without giving specific bounds though some bounds are obviously implied.</P>
+<P>Just the other day Gweneth was in a meeting I was in and she was amused by my use of the "indefinite adjective" use of <STRONG>buttload </STRONG>in such cases.</P>
+<P>This 30 character limit is obviously shorter than the example I used in <A href="http://archives.miloush.net/michkap/archive/2006/02/17/533929.html" mce_href="http://archives.miloush.net/michkap/archive/2006/02/17/533929.html"><STRONG>What do you get when you combine a base character with a buttload of diacritics?</STRONG></A>, which would mean that "my" buttload is not stream-safe; it is simply too big for <EM>that</EM> stream. :-)</P>
+<P>I will try not to take it too personally.</P>
+<P>My butt reportedly doesn't look too big in my pants, so I think I'm okay with this one blog anomaly, that does not cross over into my social life.</P>
+<P>Shawn also mentioned the "user character" that was represented by the largest well-known&nbsp;grapheme cluster in Unicode, which is:</P>
+<BLOCKQUOTE>
+<P>U+0f67 U+0f90 U+0fb5 U+0fa8 U+0fb3 U+0fba U+0fbc U+0fbb U+0f82</P></BLOCKQUOTE>
+<P>also known as:</P>
+<BLOCKQUOTE>
+<P>TIBETAN LETTER HA +<BR>TIBETAN SUBJOINED LETTER KA +<BR>TIBETAN SUBJOINED LETTER SSA +<BR>TIBETAN SUBJOINED LETTER MA +<BR>TIBETAN SUBJOINED LETTER LA +<BR>TIBETAN SUBJOINED LETTER FIXED-FORM WA +<BR>TIBETAN SUBJOINED LETTER FIXED-FORM RA +<BR>TIBETAN SUBJOINED LETTER FIXED-FORM YA +&nbsp;<BR>TIBETAN SIGN NYI ZLA NAA DA</P></BLOCKQUOTE>
+<P>also known as:</P>
+<BLOCKQUOTE>
+<P>HAKṢHMALAWARAYAṀ</P></BLOCKQUOTE>
+<P>also known as:</P>
+<BLOCKQUOTE>
+<P>ཧྐྵྨླྺྼྻྂ</P></BLOCKQUOTE>
+<P>which is kind of a useless ink smudge for me, perhaps you can see it better.</P>
+<P>Maybe we can turn up the font size a scosh:</P>
+<BLOCKQUOTE>
+<P><FONT size=7>ཧྐྵྨླྺྼྻྂ</FONT></P></BLOCKQUOTE>
+<P mce_keep="true">&nbsp;</P>
+<P mce_keep="true">&nbsp;</P>
+<P mce_keep="true">&nbsp;</P>
+<P mce_keep="true">Better? Looks great here!</P>
+<P>It really is a beautiful script. And that bit of text is certified stream safe!</P>
+<P>Now the interesting bit about this one (you'll only see if you have a font like Microsoft Himalaya) can be noted if you put it alongside some text:</P>
+<P mce_keep="true">&nbsp;</P>
+<BLOCKQUOTE>
+<P><FONT size=7>ABCDEཧྐྵྨླྺྼྻྂedcbaཧྐྵྨླྺྼྻྂabcdeཧྐྵྨླྺྼྻྂEDCBA</FONT></P></BLOCKQUOTE>
+<P mce_keep="true">&nbsp;</P>
+<P mce_keep="true">&nbsp;</P>
+<P>(<EM>Look </EM><A href="http://www.trigeminal.com/images/thatword.jpg" target=_blank mce_href="http://www.trigeminal.com/images/thatword.jpg"><EM>here</EM></A><EM> if you can't see it in your browser but want some idea of what the hell I'm talking about!</EM>)</P>
+<P>Clearly many of these subjoined beasties are underneath the main bit of the stack, well below the baseline&nbsp;-- enough that this particular well-known grapheme cluster isn't even using the space that a full&nbsp;uppercase letter could use.</P>
+<P>It seems to me like there&nbsp;oughtta be&nbsp;things that could be done to make Tibetan more usable on Windows, but the full scope of what would be required momentarily escapes me. It would probably take an effort akin to the one I described in <A href="http://archives.miloush.net/michkap/archive/2008/12/03/9168086.html" mce_href="http://archives.miloush.net/michkap/archive/2008/12/03/9168086.html"><STRONG>Want to hear about a cool new typographic convention? Khmer, and I'll tell you about it...</STRONG></A> for Khmer, which would really require forces outside of us to see the work done. Forces inside Tibet, for instance....</P>
+<P>Note that the current implementation of collation in Windows does not allow a compression (i.e. a UCA contraction) of more than&nbsp;eight UTF-16 code units, which means that the collation of the HAKṢHMALAWARAYAṀ is probably not going to be exactly&nbsp;right.</P>
+<P>So that one character's butt is a bit large for the jeans one might try to fit it in, on Windows!</P>
+<hr/><div style="margin-left: 1em"><em>no comments</em></div><hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2010/04/29/10003565.html" title="New for Windows 7: The PROCESS to keep MUI from being THREADbare....">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2010/04/27/10002948.html" title="Were it not for Emoji, this blog would look very different (and would have been unnecessary)">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2010-04">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2010-04-28">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2010/04/28/10002896.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:35 GMT -->
+</html>

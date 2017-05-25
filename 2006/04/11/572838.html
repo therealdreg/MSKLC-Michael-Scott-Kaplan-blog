@@ -1,0 +1,40 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2006/04/11/572838.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:40 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Case sensitive Visual Basic!</title></head><body>
+<h1>Case sensitive Visual Basic!</h1>
+<p><em>by Michael S. Kaplan, published on 2006/04/11 03:11 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2006/04/11/572838.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P><FONT face=Tahoma>Ok, we start with the following code -- just paste it into Notepad, and save in UTF-8 or Unicode encoding with a nice generic name like Module1.vb:</FONT></P>
+<BLOCKQUOTE dir=ltr style="MARGIN-RIGHT: 0px">
+<BLOCKQUOTE dir=ltr style="MARGIN-RIGHT: 0px">
+<P><FONT face="Courier New">Module Module1</FONT></P>
+<P><FONT face="Courier New">&nbsp;&nbsp;&nbsp; Sub Main()<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Call Pröcedure1()<BR>&nbsp;&nbsp;&nbsp; End Sub</FONT></P>
+<P><FONT face="Courier New">&nbsp;&nbsp;&nbsp; Sub Pröcedure1()<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Console.WriteLine("Schrödinger's cat is not dead.")<BR>&nbsp;&nbsp;&nbsp; End Sub</FONT></P>
+<P><FONT face="Courier New">&nbsp;&nbsp;&nbsp; Sub PRÖCEDURE1()<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Console.WriteLine("Schrödinger's cat is dead.")<BR>&nbsp;&nbsp;&nbsp; End Sub</FONT></P>
+<P><FONT face="Courier New">End Module</FONT></P>
+<P><FONT face="Courier New"></FONT>&nbsp;</P></BLOCKQUOTE></BLOCKQUOTE>
+<P><FONT face=Tahoma>Compile it in with VBC (1.0, 1.1, or 2.0):</FONT></P>
+<BLOCKQUOTE dir=ltr style="MARGIN-RIGHT: 0px">
+<P><FONT face="Courier New" size=2><STRONG>C:\TMP\Sample\CaseSensitiveVB&gt;vbc Module1.vb</STRONG></FONT></P></BLOCKQUOTE>
+<P><FONT face=Tahoma>Then run the code:</FONT></P>
+<BLOCKQUOTE dir=ltr style="MARGIN-RIGHT: 0px">
+<P><FONT face="Courier New"><STRONG>C:\TMP\Sample\CaseSensitiveVB&gt;Module1.exe<BR>Schrödinger's cat is dead.</STRONG></FONT></P></BLOCKQUOTE>
+<P><FONT face=Tahoma>The appearance here is that VB is not only allowing function names that vary in no way other than case to co-exist, but also that will appear to be calling the wrong function sometimes!</FONT></P><FONT face=Tahoma><FONT face=Tahoma>
+<P><FONT face=Tahoma>Hmmm.... how did that happen?</FONT></P>
+<P>I am sure regular readers will know what I did here; it's a bit like that <A HREF="http://archives.miloush.net/michkap/archive/2005/02/07/368570.html"><STRONG>Normalization as obfuscation in C#</STRONG></A> post, but with the case variation thrown in.</P>
+<UL>
+<LI>String #1 uses <A href="http://www.fileformat.info/info/unicode/char/00f6">U+00f6</A>, a.k.a. LATIN SMALL LETTER O WITH DIAERESIS</LI>
+<LI>String #2 uses <A href="http://www.fileformat.info/info/unicode/char/006f">U+006f</A> <A href="http://www.fileformat.info/info/unicode/char/0308">U+0308</A>, a.k.a. LATIN SMALL LETTER O and&nbsp;COMBINING DIAERESIS</LI>
+<LI>String #3 uses <A href="http://www.fileformat.info/info/unicode/char/00d6">U+00d6</A>, a.k.a. LATIN CAPITAL LETTER O WITH DIAERESIS</FONT></LI></UL></FONT>
+<P><FONT face=Tahoma>So now VB gets to not only be weirdly obfuscated, it also has lost its case insensitivity!</FONT></P>
+<P><FONT face=Tahoma>Doesn't this seem worthy of a fix? Even if it requires a different compiler setting for backcompat with the people crazy enough to code this way, for the sanity of those who didn't want case sensitive VB it seems like a good idea....</FONT></P>
+<P><FONT face=Tahoma><EM>(I realize I have thrown down the gauntlet to the VB team to try to get this issue fixed now!)</EM></FONT></P>
+<P><FONT face=Tahoma>:-)</FONT></P>
+<P><FONT face=Tahoma></FONT>&nbsp;</P>
+<P><FONT face=Tahoma color=#ff1493><EM>This post brought to you by</EM> "Ö" <EM>(<A href="http://www.fileformat.info/info/unicode/char/00d6">U+00d6</A>, a.k.a. LATIN CAPITAL LETTER O WITH DIAERESIS)<BR><FONT size=1>(A character that is proud to not be part of the dyslexic heritage that will confuse people between <A href="http://www.fileformat.info/info/unicode/char/00f6">U+00f6</A> and <A href="http://www.fileformat.info/info/unicode/char/006f">U+006f</A>!)</FONT></EM></FONT></P>
+<P><FONT face=Tahoma></FONT>&nbsp;</P>
+<hr/><p><strong>SE</strong> on 26 Aug 2012 2:22 PM:</p><div style="margin-left: 1em"><p>hehe</p>
+</div>
+<hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2006/04/11/572943.html" title="I daresay it is often &lt;= -1">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2006/04/11/572613.html" title="Not a complete waste of space">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2006-04">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2006-04-11">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2006/04/11/572838.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:40 GMT -->
+</html>

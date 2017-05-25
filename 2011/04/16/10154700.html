@@ -1,0 +1,90 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2011/04/16/10154700.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Chain Chain Chain, Chain of Dead Keys</title></head><body>
+<h1>Chain Chain Chain, Chain of Dead Keys</h1>
+<p><em>by Michael S. Kaplan, published on 2011/04/16 07:01 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2011/04/16/10154700.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<p>Over in the Suggestion Box, Van Anderson asked:</p>
+<p style="padding-left: 60px;"><span style="font-size: medium;">I've always wanted to know how to chain dead keys. Since you can't do it in MSKLC, this seems like something that should be out there for the public at large. <br /><br />Is it as simple as altering the KLC file by adding an '@' after a composite in a dead key list, then giving it its own dead key list? Do you have to do a command line compile with special flags? <br /><br />Basically, I'm looking for documentation on how to go about doing it for myself, seeing as you were unceremoniously taken off of MSKLC development before you could do everything you wanted.</span></p>
+<p>Now I have&nbsp;mentioned chained dead keys many times in the past:</p>
+<ol>
+<li>17 December 2004 <a href="http://archives.miloush.net/michkap/archive/2004/12/17/323257.html" title="Dead keys are not intuitive"><strong>Dead keys are not intuitive</strong></a></li>
+<li>11 November 2005 <a href="http://archives.miloush.net/michkap/archive/2005/11/11/491349.html" title="What to do with the Vietnamese keyboard on Windows?"><strong>What to do with the Vietnamese keyboard on Windows?</strong></a></li>
+<li>15 November 2005 <a href="http://archives.miloush.net/michkap/archive/2005/11/15/492200.html" title="It is not easy to chain dead keys on Windows"><strong>It is not easy to chain dead keys on Windows</strong></a></li>
+<li>22 April 2006 <a href="http://archives.miloush.net/michkap/archive/2006/04/22/581107.html" title="Getting all you can out of a keyboard layout, Part #10a"><strong>Getting all you can out of a keyboard layout, Part #10a</strong></a></li>
+<li>10 September 2006 <a href="http://archives.miloush.net/michkap/archive/2006/09/10/748775.html" title="Sometimes you *want* to interfere with the keyboard's state buffer"><strong>Sometimes you *want* to interfere with the keyboard's state buffer</strong></a></li>
+<li>31 January 2007 <a href="http://archives.miloush.net/michkap/archive/2007/01/31/1564299.html" title="A year later, and the Vietnamese keyboard isn't any better"><strong>A year later, and the Vietnamese keyboard isn't any better</strong></a></li>
+<li>05 March 2007 <a href="http://archives.miloush.net/michkap/archive/2007/03/05/1810677.html" title="It's not just returning 1; it's returning -1"><strong>It's not just returning 1; it's returning -1</strong></a></li>
+<li>04 May 2007 <a href="http://archives.miloush.net/michkap/archive/2007/05/04/2407782.html" title="The limitations of keyboard layouts (again)"><strong>The limitations of keyboard layouts (again)</strong></a></li>
+<li>18 May 2007 <a href="http://archives.miloush.net/michkap/archive/2007/05/18/2710448.html" title="Not spacing out on spacing forms of characters"><strong>Not spacing out on spacing forms of characters</strong></a></li>
+<li>28 September 2010 <a href="http://archives.miloush.net/michkap/archive/2010/09/28/10068553.html" title="Like one of those standards that can't/won't be fully implemented"><strong>Like one of those standards that can't/won't be fully implemented</strong></a></li>
+</ol>
+<p>But&nbsp;I have never truly described how it is done, though I have left broad hints about it -- hints that Van picked up on and clearly was hoping I would perhaps "finish the job". He even supplied some potential motive&nbsp;for me to do so, the reference to how the MSKLC project was transitioned and buried....</p>
+<p>Well, I don't require that additional motivation. :-)</p>
+<p>But I figure it might be nice to finally put it all out there and explain how it it is done. </p>
+<p>And so, without further adieu, I will explain how to chain dead keys on Windows.</p>
+<p>First the gratuitous videos for the <strong>Chain of Fools</strong> song:</p>
+<p><iframe width="480" frameborder="0" src="http://www.youtube.com/embed/Tvzw1Cy27lE?rel=0" height="390" title="YouTube video player"></iframe>&nbsp;&nbsp;&nbsp;&nbsp; <iframe width="480" frameborder="0" src="http://www.youtube.com/embed/8Lx52sBLtKI?rel=0" height="390" title="YouTube video player"></iframe></p>
+<p>Okay, with that crucial bit out of the way, I'll continue. :-)</p>
+<p>&nbsp;Now first I'll review some of the consequences of what I am about to tell you:</p>
+<ul>
+<li>The changes that this blog will talk about making to a .KLC file will make a file that cannot be opened ever again within MSKLC;</li>
+<li>After you build the keyboard, if you load it in MSKLC the pieces of the layout it does not understand will be silently stripped out;</li>
+<li>The code within KBDUTOOL.EXE that supports chained dead keys was written over 10 years ago for the KBDTOOL.EXE used by Windows itself, and although the code was never tested (beyond possibly by ad hoc efforts never recorded) of the original developer, it still works despite the fact the two tools have been changed many times and ported to x86, x64, IA64, MIPS, PPC, and Alpha -- living proof that the <a href="http://archives.miloush.net/michkap/archive/2005/11/12/491519.html" title="Software Tester's Axioms"><strong>Software Tester's Axioms</strong></a>&nbsp;I-III have exceptions!</li>
+<li>I don't ever expect the changes I suggest here to break, but without some kind of testing in place I do wonder if the axioms will catch up at some point. I hope a tester reads this and adds the test case (if you are such a tester send me email and I'll help!),</li>
+</ul>
+<p>&nbsp;Okay, the simple steps, now:</p>
+<p><strong>Step 1:</strong> Create a simple keyboard like below in MSKLC:</p>
+<p><img src="http://blogs.msdn.com/cfs-file.ashx/__key/CommunityServer-Blogs-Components-WeblogFiles/00-00-00-33-81/2402.layout05.jpg" /></p>
+<p>Be sure to put both the upper case and lower case letters on those two keys with letters on them. and do the key that is a dead key just as given above.</p>
+<p><strong>Step 2:</strong> Build the keyboard from <strong>Project | <span style="text-decoration: underline;">B</span>uild DLL and Setup Package</strong>.</p>
+<p><strong>Step 3:</strong> Save out the .KLC file and open it up. If you look at the file, the LAYOUT and DEAD KEY sections&nbsp;should look as follows:</p>
+<p style="padding-left: 30px;"><span style="font-family: consolas,lucida console,courier new,courier;"><strong>LAYOUT&nbsp;&nbsp;;an extra '@' at the end is a dead key<br /><br />//SC&nbsp;VK_&nbsp;&nbsp;Cap&nbsp;&nbsp; 0&nbsp;&nbsp;&nbsp;&nbsp; 1&nbsp;&nbsp;&nbsp; 2<br />//--&nbsp;----&nbsp;&nbsp;----&nbsp;---- &nbsp;----&nbsp;----<br /><br />16&nbsp;U&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 1&nbsp;&nbsp;&nbsp; u&nbsp;&nbsp;&nbsp;&nbsp; U&nbsp;&nbsp;&nbsp; -1&nbsp;&nbsp; // LATIN SMALL LETTER U, LATIN CAPITAL LETTER U, &lt;none&gt;<br />18&nbsp;O&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1&nbsp;&nbsp;&nbsp; o&nbsp;&nbsp;&nbsp;&nbsp; O&nbsp;&nbsp;&nbsp;&nbsp;-1 &nbsp;&nbsp;// LATIN SMALL LETTER O, LATIN CAPITAL LETTER O, &lt;none&gt;<br />28&nbsp;OEM_7&nbsp;&nbsp; 0&nbsp;&nbsp;&nbsp; 00b4@&nbsp;-1&nbsp;&nbsp;&nbsp;-1&nbsp; &nbsp;// ACUTE ACCENT, &lt;none&gt;, &lt;none&gt;<br />39&nbsp;SPACE&nbsp;&nbsp; 0&nbsp;&nbsp;&nbsp; 0020&nbsp; 0020&nbsp;-1&nbsp;&nbsp; // SPACE, SPACE, &lt;none&gt;<br />53&nbsp;DECIMAL&nbsp;0&nbsp;&nbsp;&nbsp; 002e&nbsp; 002e&nbsp;-1&nbsp;&nbsp; // FULL STOP, FULL STOP, <br /><br />DEADKEY&nbsp;00b4<br /><br />00b4&nbsp;02ba&nbsp;// &acute; -&gt; ʺ<br />0020&nbsp;00b4&nbsp;//&nbsp;&nbsp; -&gt; &acute;</strong></span></p>
+<p>&nbsp;As the file&nbsp;says, the @ on the end of 00b4 indicates it is a dead key -- and thus the later dead key table for 00b4 that is being pointed to.</p>
+<p>Replace&nbsp;the DEADKEY table there with the following:</p>
+<p style="padding-left: 30px;"><span style="font-family: consolas,lucida console,courier new,courier;"><strong>DEADKEY 00b4&nbsp; ; combinations with Acute<br />00b4&nbsp;&nbsp;&nbsp; 02ba@ ; Acute + Acute -&gt; Double Acute (Modifier Letter Double Prime)<br />0020&nbsp;&nbsp;&nbsp; 00b4&nbsp; ; Acute + Space -&gt; Acute<br /><br />DEADKEY 02ba&nbsp; ; combinations with Double Acute (Modifier Letter Double Prime)<br />o&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 0151&nbsp; ; Double Acute + o -&gt; Small Letter o With Double Acute<br />O&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 0150&nbsp; ; Double Acute + O -&gt; Capital Letter O With Double Acute<br />u&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 0171&nbsp; ; Double Acute + u -&gt; Small Letter u With Double Acute<br />U&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 0170&nbsp; ; Double Acute + U -&gt; Capital Letter U With Double Acute<br />0020&nbsp;&nbsp;&nbsp; 2033&nbsp; ; Double Acute + space -&gt; Double Prime</strong></span></p>
+<p>&nbsp;Save the file.</p>
+<p><strong>Step 4:</strong> Build the four DLL files, replacing the files already built.</p>
+<p>To do this on my 64-bit machine, I&nbsp;ran the following command line manually from the directory that contained the modified .KLC file and then hand-copied each DLL after it was built to the relevant directory of the setup built in <strong>Step 2</strong>: (you should substitute the correct path to MSKLC for your install):</p>
+<p style="padding-left: 30px;"><span style="font-family: consolas,lucida console,courier new,courier;"><strong>C:\Users\michkap\Desktop&gt;"\Program Files (x86)\Microsoft Keyboard Layout Creator&nbsp;1.4\bin\i386\kbdutool.exe" -u -v -w <span style="color: #ff0000;">-x</span> layout05.klc<br /><br />C:\Users\michkap\Desktop&gt;"\Program Files (x86)\Microsoft Keyboard Layout Creator&nbsp;1.4\bin\i386\kbdutool.exe" -u -v -w <span style="color: #ff0000;">-m</span> layout05.klc<br /><br />C:\Users\michkap\Desktop&gt;"\Program Files (x86)\Microsoft Keyboard Layout Creator&nbsp;1.4\bin\i386\kbdutool.exe" -u -v -w <span style="color: #ff0000;">-i</span> layout05.klc<br /><br />C:\Users\michkap\Desktop&gt;"\Program Files (x86)\Microsoft Keyboard Layout Creator&nbsp;1.4\bin\i386\kbdutool.exe" -u -v -w <span style="color: #ff0000;">-o</span> layout05.klc</strong></span></p>
+<p>&nbsp;Of course if you are automating things you can do the copy after each step. </p>
+<p>Just remember that the file can't be opened in MSKLC any more!</p>
+<p><strong>Step 5:</strong> Install the setup package on a machine. </p>
+<p>You will now be able to type </p>
+<p style="padding-left: 30px;"><span style="font-size: x-large;">&acute;&acute;u&acute;&acute;U&acute;&acute;o&acute;&acute;O</span></p>
+<p>&nbsp;to get </p>
+<p style="padding-left: 30px;"><span style="font-size: x-large;">űŰőŐ</span></p>
+<p>&nbsp;and if you ever type anything other than u, o, U, or O for that third character, you will see the &Prime; (U+2033, aka DOUBLE PRIME) put in for those two acutes.</p>
+<p>One last note, you should probably add&nbsp;names for all the dead keys too, they are in a table near the end of the .KLC file:</p>
+<p style="padding-left: 30px;"><strong><span style="font-family: consolas,lucida console,courier new,courier;">KEYNAME_DEAD<br /><br />00b4&nbsp;"ACUTE ACCENT"</span></strong></p>
+<p>You should add one line for each dead key, even including the ones that can never be produced (since they are still returned by WM_DEADCHAR type messages). Things will still work if you don't do this, but it is a bad practice. For the sake of completeness, I would highly recommend this last step.</p>
+<p>Now, there are some interesting things to note here, as you plan out how you might choose characters to use in your own chained dead key containing keyboard:</p>
+<ul>
+<li>The U+02ba character in this case is never going to appear when you type, because every end point of the various keys replaces it with something else;</li>
+<li>Every sequence of chained dead keys must end up pointing to a single UTF-16 code point; no sequence can be created;</li>
+<li>you have to uniquely assign those "midpoint" characters like U+02ba so that each sequence can be uniquely resolved;</li>
+<li>The very end of each of those special dead key tables should contain a character that won't be <strong>too</strong> confusing to users, just in case they type a sequence not in your list.</li>
+</ul>
+<p>And there you have it: how to chain dead keys in Windows. Hope that helps you out Van.&nbsp;And everyone else! :-)</p>
+<hr/><p><strong>Van</strong> on 16 Apr 2011 5:45 PM:</p><div style="margin-left: 1em"><p>Thanks for the tutorial here, Michael. Believe it or not, I will actually use this information. Now I just have to remember how to program batch files...; better find my DOS 5.0 manual - hurrah for dosshell!</p>
+<p>That&#39;s one down to creating a comprehensive multi-script keyboard. Now if we can just get rid of the stupid WCHAR restriction. I really want access to the SMP by deadkey or SGCaps. If it makes you feel any better, I fully expected you to answer this pretty soon, but knew I couldn&#39;t go wrong appealing to your vanity over losing control of MSKLC - and it worked!</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 16 Apr 2011 7:14 PM:</p><div style="margin-left: 1em"><p>The project stuff wasn&#39;t really a driver, I found the politics that led to everything getting re-prioritized more annoying than anything else. :-)</p>
+<p>This was on my list to cover at some point, and your question popped up at just the right time....</p>
+<p>I wouldn&#39;t hold your breath on the WCHAR limitation getting lifted, though; the code in question is frozen solid, unchanging.</p>
+<p>Of course I believe you&#39;re using it; so am I!</p>
+</div>
+<p><strong>Doug Ewell</strong> on 18 Apr 2011 3:00 PM:</p><div style="margin-left: 1em"><p>I&#39;ll have to try this.</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 18 Apr 2011 5:23 PM:</p><div style="margin-left: 1em"><p>Hey Doug, I kind of thought you might be interested. There are a few others I am hoping to hear from who I expect might be interested too. :-)</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 18 Apr 2011 5:28 PM:</p><div style="margin-left: 1em"><p>I expect I may hear from a Marc and a John (or two!) and an Andrew (or two!), as well. :-)</p>
+</div>
+<p><strong>Ralph Hancock</strong> on 1 Sep 2012 3:32 PM:</p><div style="margin-left: 1em"><p>Coming rather late to this discussion, but someone may still be reading it.</p>
+<p>I wrote a long list of chained deadkeys for classical Greek, where some letters have three different marks on them. When I tried to compile it with kbdutool it stuck at the first line that referred to a second-stage deadkey, and complained that the reference was &#39;ill-formed&#39;. There seemed no way around this problem.</p>
+<p>So I searched for a commercial program that would handle chained deadkeys, and found one called KbdEdit, inexpensive at about $20. It imports .klc files, and it imported the file I had written without fuss, and made a fully working keyboard.</p>
+<p>So there was nothing wrong with the file I had written. But it looks as if the curse you predicted has struck kbdutool. I was using version 1.4.6002, dated 26 January 2007, in 64-bit Windows 7.</p>
+</div>
+<hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2015/07/03 <a href="http://archives.miloush.net/michkap/archive/2015/07/03/8770668856267196631.html">If we won't update MSKLC, at least we could put up a keyboard for them to install....</a></p><p>2011/11/09 <a href="http://archives.miloush.net/michkap/archive/2011/11/09/10235391.html">The evolving Story of Locale Support, part 6: Behind the Cherokee Phonetic layout in Windows 8</a></p><p>2011/05/23 <a href="http://archives.miloush.net/michkap/archive/2011/05/23/10167319.html">Philosophical about enablement, the impossible, and the infeasible</a></p><p>2011/04/28 <a href="http://archives.miloush.net/michkap/archive/2011/04/28/10159111.html">The Sally Kimball Addition To The Dead Keys Conundrum: An Encyclopedia Brown Mystery</a></p><p>2011/04/23 <a href="http://archives.miloush.net/michkap/archive/2011/04/23/10157359.html">Solution: The Dead Keys Conundrum: An Encyclopedia Brown Mystery</a></p><p>2011/04/22 <a href="http://archives.miloush.net/michkap/archive/2011/04/22/10157095.html">The Dead Keys Conundrum: An Encyclopedia Brown Mystery</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2011/04/18/10155176.html" title="We are missing the Naira, not the Narnia, though technically we are missing the Narnia too">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2011/04/15/10154335.html" title="The internationalization of spam">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2011-04">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2011-04-16">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2011/04/16/10154700.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+</html>

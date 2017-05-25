@@ -1,0 +1,36 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2007/12/06/6661053.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:37 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>In SQL Server, A-Z, A-z, a-Z, and a-z may not mean the same thing!</title></head><body>
+<h1>In SQL Server, A-Z, A-z, a-Z, and a-z may not mean the same thing!</h1>
+<p><em>by Michael S. Kaplan, published on 2007/12/06 10:16 -05:00, original URI: http://blogs.msdn.com/b/michkap/archive/2007/12/06/6661053.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P>Yesterday, I was blathering about how <A class="" href="http://archives.miloush.net/michkap/archive/2007/12/05/6660685.html" mce_href="http://archives.miloush.net/michkap/archive/2007/12/05/6660685.html"><STRONG>In SQL Server, the distance between A and Z is wider than you might think</STRONG></A>.</P>
+<P>So now let's add case sensitivity to the mix, which is&nbsp;a great way to find problems, as I pointed out in <A class="" href="http://archives.miloush.net/michkap/archive/2006/10/30/897681.html" mce_href="http://archives.miloush.net/michkap/archive/2006/10/30/897681.html"><STRONG>If you are more sensitive, you'll pick up on more problems</STRONG></A> and <A class="" href="http://archives.miloush.net/michkap/archive/2005/05/11/416293.html" mce_href="http://archives.miloush.net/michkap/archive/2005/05/11/416293.html"><STRONG>Case/kana/accent/width sensitive SQL Server, for testing</STRONG></A>.</P>
+<P>In particular, it will help find the problems I am about to talk about. :-)</P>
+<P>Now, we already know that you should avoid</P>
+<BLOCKQUOTE>
+<P><STRONG><FONT face="Courier New">LIKE '[ABCDEFGHIJKLMNOPQRSTUVWXYZ]'</FONT></STRONG></P></BLOCKQUOTE>
+<P>like it is poison.</P>
+<P>But let's say, on a case sensitive server, what do you think might be the difference between all of the following expressions?</P>
+<BLOCKQUOTE>
+<P><STRONG><FONT face="Courier New">LIKE '[A-Z]'<BR><BR>LIKE '[a-z]'<BR><BR>LIKE '[A-z]'<BR><BR>LIKE '[a-Z]'</FONT></STRONG></P></BLOCKQUOTE>
+<P>Now wait before you answer.</P>
+<P>First you might want to read <A class="" href="http://archives.miloush.net/michkap/archive/2005/11/13/492179.html" mce_href="http://archives.miloush.net/michkap/archive/2005/11/13/492179.html"><STRONG>Which comes first, 'a' or 'A' ?</STRONG></A> and <A class="" href="http://archives.miloush.net/michkap/archive/2005/11/26/495072.html" mce_href="http://archives.miloush.net/michkap/archive/2005/11/26/495072.html"><STRONG>Technically it *is* a hungarian sort</STRONG></A>.</P>
+<P>So, how confident are you feeling now about ranges?</P>
+<P>And now would you create an expression that would not break when the collation underneath it changed? :-)</P>
+<P>Damn. You know, this series was certainly heading toward the areas where good expressions were hard to find and/or unfindable, but I really was not trying to get close so fast. And we still have some distance to go!</P>
+<P mce_keep="true">&nbsp;</P>
+<P><FONT color=#ff00ff><EM>This post brought to you by</EM><FONT size=5> Z </FONT></FONT><EM><FONT color=#ff00ff>(</FONT><A class="" href="http://www.fileformat.info/info/unicode/char/005a" mce_href="http://www.fileformat.info/info/unicode/char/005a">U+005a</A><FONT color=#ff00ff>, LATIN CAPITAL LETTER Z, <FONT size=1>who sued since he&nbsp;feels like he did not get his money's worth out of yesterday's post so as part of the out-of-court settlement gets to sponsor today's post free!</FONT>)</FONT></EM></P>
+<hr/><p><a id="6682874" href="#6682874">#</a> <strong>Aaron</strong> on 6 Dec 2007 1:12 PM:</p><div style="margin-left: 1em"><p>This is why you should never use '[A-Za-z]', but rather '\w'. &nbsp;Of course, i'm not familiar enough with SQL regular expressions, perhaps it's missing '\w' also known as 'match word character'.</p>
+<p>#aaron</p></div>
+<p><a id="6683397" href="#6683397">#</a> <strong>Michael S. Kaplan</strong> on 6 Dec 2007 2:00 PM:</p><div style="margin-left: 1em"><P>Exactly, Aaron -- though I am trying to go through the proofs on why this is the case very methodically, as each individual objection has people fight to figure out a new expression to use....</P></div>
+<p><a id="6685246" href="#6685246">#</a> <strong>Dean Harding</strong> on 6 Dec 2007 4:57 PM:</p><div style="margin-left: 1em"><p>The &quot;LIKE&quot; operator has very simple syntax. Basically it supports &quot;%&quot; for &quot;0 or more characters&quot;, &quot;_&quot; for exactly one character, and [] and [^] for in-range, not-in-range respectively.</p>
+<p>To be honest, the number of possible uses for the LIKE operator is relatively small, and I tend to avoid it.</p>
+</div>
+<p><a id="6685274" href="#6685274">#</a> <strong>Michael S. Kaplan</strong> on 6 Dec 2007 5:00 PM:</p><div style="margin-left: 1em"><p>Deceptively simple, perhaps? :-)</p>
+</div>
+<p><strong>k</strong> on 25 Sep 2011 3:59 AM:</p><div style="margin-left: 1em"><p>k</p>
+</div>
+<hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2008/07/25 <a href="http://archives.miloush.net/michkap/archive/2008/07/25/8771119.html">Let's save some time and call them all IRregular expression engines</a></p><p>2007/12/11 <a href="http://archives.miloush.net/michkap/archive/2007/12/11/6730684.html">In SQL Server, there is the rest of Unicode (aka the SiaO Incompleteness Theorem)</a></p><p>2007/12/10 <a href="http://archives.miloush.net/michkap/archive/2007/12/10/6719043.html">In SQL Server, different collations implies different ranges (aka Not every table has its THORN)</a></p><p>2007/12/09 <a href="http://archives.miloush.net/michkap/archive/2007/12/09/6673424.html">In SQL Server, the alphabet does not end at Z!</a></p><p>2007/12/08 <a href="http://archives.miloush.net/michkap/archive/2007/12/08/6669846.html">In SQL Server, your ranges also need to ACCENT-uate the positives!</a></p><p>2007/12/07 <a href="http://archives.miloush.net/michkap/archive/2007/12/07/6669587.html">In SQL Server, the wrong range can make you seem insensitive to one's width! (aka Do my V's look fat?)</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2007/12/06/6675217.html" title="The subliminal message: &#39;My search is more testosterone-laced than yours!&#39;">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2007/12/05/6674157.html" title="A Strange and Sublime HASANT">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2007-12">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2007-12-06">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2007/12/06/6661053.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:37 GMT -->
+</html>

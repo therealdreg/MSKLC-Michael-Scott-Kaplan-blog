@@ -1,0 +1,106 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2013/04/01/10406100.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:20 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>If it isn't English, the WP8 Messaging App can get the numbers all wrong</title></head><body>
+<h1>If it isn't English, the WP8 Messaging App can get the numbers all wrong</h1>
+<p><em>by Michael S. Kaplan, published on 2013/04/01 07:01 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2013/04/01/10406100.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<p>When you use SMS/Text capabilities, you have 160 bytes per text.</p>
+<p>This makes English the smallest language, and every other language a little bit bigger.</p>
+<p>And it makes some a lotta bit bigger.</p>
+<p>If you are using supplementary characters, you'll be a lotta bit biggest!</p>
+<p>Thank goodness I have unlimited texting!</p>
+<p>I decided to play around with this on my Nokia Lumia 920 running Windows Phone 8.</p>
+<p>For this exercise, I spammed my good friend Lauren Witt with a few texts.</p>
+<p><img src="http://msdnshared.blob.core.windows.net/media/MSDNBlogsFS/prod.evol.blogs.msdn.com/CommunityServer.Blogs.Components.WeblogFiles/00/00/00/33/81/6607.wp_5F00_ss_5F00_20130328_5F00_0001.png" alt="" width="422" height="703" /></p>
+<p>Text #1 was 160 ASCII digits.</p>
+<p>You know,</p>
+<p style="padding-left: 30px;"><span style="font-family: 'Calibri','sans-serif'; font-size: 11pt; mso-fareast-font-family: 'Times New Roman'; mso-bidi-font-family: 'Times New Roman'; mso-ansi-language: EN-US; mso-fareast-language: EN-US; mso-bidi-language: AR-SA;">0123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789</span></p>
+<p><span style="font-family: 'Calibri','sans-serif'; font-size: 11pt; mso-fareast-font-family: 'Times New Roman'; mso-bidi-font-family: 'Times New Roman'; mso-ansi-language: EN-US; mso-fareast-language: EN-US; mso-bidi-language: AR-SA;">In UTF-8, this is 160 bytes.</span></p>
+<p><span style="font-family: 'Calibri','sans-serif'; font-size: 11pt; mso-fareast-font-family: 'Times New Roman'; mso-bidi-font-family: 'Times New Roman'; mso-ansi-language: EN-US; mso-fareast-language: EN-US; mso-bidi-language: AR-SA;"><img src="http://msdnshared.blob.core.windows.net/media/MSDNBlogsFS/prod.evol.blogs.msdn.com/CommunityServer.Blogs.Components.WeblogFiles/00/00/00/33/81/6644.wp_5F00_ss_5F00_20130328_5F00_0002.png" alt="" width="422" height="703" /></span></p>
+<p><span style="font-family: 'Calibri','sans-serif'; font-size: 11pt; mso-fareast-font-family: 'Times New Roman'; mso-bidi-font-family: 'Times New Roman'; mso-ansi-language: EN-US; mso-fareast-language: EN-US; mso-bidi-language: AR-SA;">Text #2 was 30 emoticons.</span></p>
+<p><span style="font-family: 'Calibri','sans-serif'; font-size: 11pt; mso-fareast-font-family: 'Times New Roman'; mso-bidi-font-family: 'Times New Roman'; mso-ansi-language: EN-US; mso-fareast-language: EN-US; mso-bidi-language: AR-SA;">You know,</span></p>
+<p style="padding-left: 30px;"><span style="font-family: 'Calibri','sans-serif'; font-size: 11pt; mso-fareast-font-family: 'Times New Roman'; mso-bidi-font-family: 'Times New Roman'; mso-ansi-language: EN-US; mso-fareast-language: EN-US; mso-bidi-language: AR-SA;"><span style="font-family: 'Calibri','sans-serif'; font-size: 11pt; mso-fareast-font-family: 'Times New Roman'; mso-bidi-font-family: Calibri; mso-ansi-language: EN-US; mso-fareast-language: EN-US; mso-bidi-language: AR-SA;">😃😃😃😃😃😞😞😞😞😞😃😃😃😃😃😞😞😞😞😞😃😃😃😃😃😞😞😞😞😞</span></span></p>
+<p><span style="font-family: 'Calibri','sans-serif'; font-size: 11pt; mso-fareast-font-family: 'Times New Roman'; mso-bidi-font-family: 'Times New Roman'; mso-ansi-language: EN-US; mso-fareast-language: EN-US; mso-bidi-language: AR-SA;"><span style="font-family: 'Calibri','sans-serif'; font-size: 11pt; mso-fareast-font-family: 'Times New Roman'; mso-bidi-font-family: Calibri; mso-ansi-language: EN-US; mso-fareast-language: EN-US; mso-bidi-language: AR-SA;">A stream of five U+</span></span>1F603 characters followed by five U+1F61E characters, over and over.</p>
+<p>In UTF-8, (30 * 4) or 120 bytes.</p>
+<p>Notice how it had me at 60/70 characters there for my 120 bytes.</p>
+<p>The actual UTF-8 (care of Mark Davis's <a href="../../../../../../macchiato.com/unicode/convert.html">site</a>), is:</p>
+<p style="padding-left: 30px;">F0 9F 98 83 F0 9F 98 83 F0 9F 98 83 F0 9F 98 83 F0 9F 98 83 F0 9F 98 9E F0 9F 98 9E F0 9F 98 9E F0 9F 98 9E F0 9F 98 9E F0 9F 98 83 F0 9F 98 83 F0 9F 98 83 F0 9F 98 83 F0 9F 98 83 F0 9F 98 9E F0 9F 98 9E F0 9F 98 9E F0 9F 98 9E F0 9F 98 9E F0 9F 98 83 F0 9F 98 83 F0 9F 98 83 F0 9F 98 83 F0 9F 98 83 F0 9F 98 9E F0 9F 98 9E F0 9F 98 9E F0 9F 98 9E F0 9F 98 9E</p>
+<p><em>But that's kinda besides the point.</em></p>
+<p>Basically four bytes per character, which is how well-formed UTF-8 supplementary characters behave.</p>
+<p><img src="http://msdnshared.blob.core.windows.net/media/MSDNBlogsFS/prod.evol.blogs.msdn.com/CommunityServer.Blogs.Components.WeblogFiles/00/00/00/33/81/6237.wp_5F00_ss_5F00_20130328_5F00_0003.png" alt="" width="422" height="703" /></p>
+<p>Then, my final spam.</p>
+<p>Six&nbsp;ASCII digits followed by five emoticons.</p>
+<p>So that is (6 + (5 * 4)) * 4 or 104 bytes.</p>
+<p>You know,</p>
+<p style="padding-left: 30px;">012345😃😞😃😞😃012345😃😞😃😞😃012345😃😞😃😞😃012345😃😞😃😞😃</p>
+<p>Notice how it had me at 64/70 characters.</p>
+<p>The UTF-8 was:</p>
+<p style="padding-left: 30px;">30 31 32 33 34 35 F0 9F 98 83 F0 9F 98 9E F0 9F 98 83 F0 9F 98 9E F0 9F 98 83 30 31 32 33 34 35 F0 9F 98 83 F0 9F 98 9E F0 9F 98 83 F0 9F 98 9E F0 9F 98 83 30 31 32 33 34 35 F0 9F 98 83 F0 9F 98 9E F0 9F 98 83 F0 9F 98 9E F0 9F 98 83 30 31 32 33 34 35 F0 9F 98 83 F0 9F 98 9E F0 9F 98 83 F0 9F 98 9E F0 9F 98 83</p>
+<p>which is obviously a little bit smaller.</p>
+<p>But it still gave me weird limitation estimates, this time 64 characters out of 70.</p>
+<p>So. Smaller, but bigger?</p>
+<p>I think their logic is a little off here.</p>
+<p>One last text.</p>
+<p>150 ASCII digits, a space, and two emoticons.</p>
+<p>You know,&nbsp;</p>
+<p style="padding-left: 30px;">012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789 😃😞</p>
+<p>Now, like every other time, this text should fit under the 160 byte limit. The UTF-8 is 150 + 1 + (2 * 4) or 159 bytes, 1 byte short of the limit.</p>
+<p>Let's see what the phone says:</p>
+<p>&nbsp;</p>
+<p><img src="http://msdnshared.blob.core.windows.net/media/MSDNBlogsFS/prod.evol.blogs.msdn.com/CommunityServer.Blogs.Components.WeblogFiles/00/00/00/33/81/0020.wp_5F00_ss_5F00_20130328_5F00_0004.png" alt="" width="422" height="703" /></p>
+<p>Um, 155/201, taking three messages?</p>
+<p>What the hell?</p>
+<p>Someone has an algorithm&nbsp;bug to fix in the WP8 Messaging app, I think...</p>
+<p>In the end, that last text was just <strong>one</strong> text, containing 159 bytes.</p>
+<p>Yet the miscalculation was used and according to Lauren, the phone <strong>sent out three texts!</strong></p>
+<p><em>For the record, I'd be more forgiving if they were only off estimating when it was over the limit. There is no excuse to erroneously claim I'm over the limit when I'm not, a</em><em>nd definitely no excuse to spam the error out into the world outside!</em></p>
+<p>Note that similar repros can be constructed for actual&nbsp;languages using 2 bytes, 3 bytes, and/or 4 bytes for UTF-8 - all of them put the WP8 messaging app in "4 byte mode".</p>
+<p>Not really an April Fools Day joke, though basic errors in arithmetic read that way to me!</p>
+<p>(I originally found the problem in actual texts, not looking for bugs -- so be warned <strong>Ken</strong> if they try to <strong>Won't Fix</strong> the bug I'll have many real world examples for the reactivate!)</p>
+<p>Either way, I'm glad I have unlimited texting -- if not, I would submit the bill to the Windows Phone team. :-)</p>
+<p>And isn't it cool to see the font support? Segoe UI Symbol, I presume. Keyboard support for Emoji is also sublime....</p>
+<p>Still loving my WP8 running Nokia Lumia 920.</p>
+<p>If they gave me access to newer builds, I could selfhost/dogfood. WP would get the bug reports pre-ship, and&nbsp;NDAs would limit blogs about bugs - everybody would win!&nbsp;;-)</p>
+<p>In any case, I have new respect for the language based pain some languages have based on their arbitrary place in Unicode, something I've both spoken and written about before....</p>
+<p>&nbsp;</p>
+<p><span style="color: #ff0000;"><em><strong>Special thanks to Lauren for putting up with my </strong><strong>6 spam texts and still being willing to go to the symphony with me this last weekend. Like all my friends, she puts up with a lot! :-)</strong></em></span></p>
+<hr/><p><strong>Daniel</strong> on 1 Apr 2013 8:34 AM:</p><div style="margin-left: 1em"><p>Your problem is assuming SMS has anything to do with UTF-8. It does not.</p>
+<p>Read this and weep:</p>
+<p><a rel="nofollow" target="_new" href="http://en.wikipedia.org/wiki/GSM_03.38">en.wikipedia.org/.../GSM_03.38</a></p>
+</div>
+<p><strong>John Cowan</strong> on 1 Apr 2013 9:27 AM:</p><div style="margin-left: 1em"><p>By what I understand, an SMS message is 140 bytes. &nbsp;If all the characters are in the GSM 03.38 character set (ASCII plus various things replacing the control characters), then you get 160 7-bit characters packed into those bytes. &nbsp;Otherwise you get 70 UTF-16 characters. &nbsp;There is no variable-length encoding such as UTF-8 involved.</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 1 Apr 2013 10:12 AM:</p><div style="margin-left: 1em"><p>This makes me very sad.</p>
+<p>But that last text should still be *2*, not 3 texts!</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 1 Apr 2013 10:41 AM:</p><div style="margin-left: 1em"><p>Of course, I&#39;m still a little fuzzy here. Wouldn&#39;t UCS-2 mean *two* bytes per character, not FOUR?</p>
+</div>
+<p><strong>Daniel</strong> on 1 Apr 2013 11:50 AM:</p><div style="margin-left: 1em"><p>The last one works like this:</p>
+<p>- your message contained those emoticons, so it switches the whole thing to the UCS-2/UTF-16 mode</p>
+<p>- thus the 150 numbers plus one space thus takes 302 bytes</p>
+<p>- the emoticons are in the SMP, so they take 4 bytes each, 8 bytes in total</p>
+<p>So you need 310 bytes for the message.</p>
+<p>A single SMS has space for 140 bytes, so you need multiples. When you start needing multiples, then some bytes are wasted to mark the sequences, so now you only got 134 bytes per message.</p>
+<p>134 + 134 + 42 = 310</p>
+<p>Thus you need three messages and you have 134-42 = 92 bytes left before needing another one.</p>
+<p>Your phone is an optimist, as is pretty much any other phone, and assumes you are going to be writing BMP characters rather than some more SMP emoji. The 155/201 counter it displays is exactly that, 201-155 = 46. Times two for any BMP character, 92.</p>
+<p>First example: fits into the 7-bit SMS character set and you only needed one message, so you could fit 160 characters into the 140 bytes</p>
+<p>Second example: emojis switch to UTF-16 mode, 30 of them takes 4 bytes each, 140 - 120 = you got 20 bytes left and still only using one message, so the readout says you could type 10 more BMP characters (60/70).</p>
+<p>All three works as expected.</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 1 Apr 2013 6:07 PM:</p><div style="margin-left: 1em"><p>When it decides to split them, it should re-assess the size of them post-split. Not doing that is a bug, IMHO.</p>
+</div>
+<p><strong>Kalle Olavi Niemitalo</strong> on 1 Apr 2013 9:44 PM:</p><div style="margin-left: 1em"><p>Do you mean the phone should split your last text into two messages: 7-bit for the first 151 characters and UTF-16 for the two emoticons? &nbsp;This is not recommended by ETSI TS 123 040 V11.4.0 (2013-01) section 9.2.3.24.1 (Concatenated Short Messages): &quot;The TP elements in the SMS-SUBMIT PDU, apart from TP-MR, TP-SRR, TP-UDL and TP-UD, should remain unchanged for each SM which forms part of a concatenated SM, otherwise this may lead to irrational behaviour.&quot; &nbsp;The character-set bits are in the TP-Data-Coding-Scheme field, which is not listed here.</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 2 Apr 2013 7:36 AM:</p><div style="margin-left: 1em"><p>Terrible recommendation, by people who clearly either weren&#39;t sending other language text or weren&#39;t being charged per text message...</p>
+</div>
+<p><strong>Doug Ewell</strong> on 2 Apr 2013 8:23 AM:</p><div style="margin-left: 1em"><p>Back in 1995, before most folks outside the industry had heard of SMS, Tim Garton from Motorola asked for a way to encode Unicode such that the best-case scenario would be 7 bits per character:</p>
+<p><a rel="nofollow" target="_new" href="../../../../../../www.unicode.org/mail-arch/unicode-ml/Archives-Old/UML001/0240.html">www.unicode.org/.../0240.html</a></p>
+<p>The response was to try RCSU, which is 8 bits in the best case, but still better than the adopted approach, which treats Unicode as an emergency exit. Naturally, SCSU is better still, but we&#39;re not supposed to say that.</p>
+</div>
+<p><strong>Doug Ewell</strong> on 9 Apr 2013 9:24 AM:</p><div style="margin-left: 1em"><p>&gt; In any case, I have new respect for the language based pain some languages have based on their arbitrary place in Unicode, something I&#39;ve both spoken and written about before....</p>
+<p>You don&#39;t really want me to write my long-postponed response to &quot;It is easy (and obnoxious)...&quot;, do you?</p>
+</div>
+<hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2013/09/10 <a href="../../09/10/10447092.html">Is there anyone from Facebook reading this Blog?</a></p></div><p><em>go to <a id="newer" href="../02/10406831.html" title="All abbreviated days of week are created equal. But some are less equal than others!">newer</a> or <a id="older" href="../../03/29/10406219.html" title="Instead of ₺₺₺₺₺₺, we see ??????">older</a> post, or back to <a href="../../../index-2.html">index</a> or <a href="../../../index-2.html#2013-04">month</a> or <a href="../../../index-2.html#2013-04-01">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2013/04/01/10406100.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:21 GMT -->
+</html>

@@ -1,0 +1,42 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2006/05/29/609737.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:39 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>When ALT+X seems to be failing...</title></head><body>
+<h1>When ALT+X seems to be failing...</h1>
+<p><em>by Michael S. Kaplan, published on 2006/05/29 03:01 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2006/05/29/609737.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P><FONT face=Tahoma>I have mentioned the ALT+X mechanism for entering Unicode code points in passing previously, e.g. in posts such as <A href="http://archives.miloush.net/michkap/archive/2005/05/18/419117.html">Typing in random Unicode code points</A>.</FONT></P>
+<P><FONT face=Tahoma>Michael O'Henly asked via the Contacting Me... link: </FONT></P>
+<BLOCKQUOTE dir=ltr style="MARGIN-RIGHT: 0px">
+<P><FONT face="Times New Roman" size=2>Hi Michael... </FONT></P>
+<P><FONT face="Times New Roman" size=2>I'm starting to learn Mandarin and want to be able to take notes using pinyin romanization in Word. Basically, I want to be able to easily create the following characters in a Word document.</FONT></P>
+<BLOCKQUOTE dir=ltr style="MARGIN-RIGHT: 0px">
+<P><FONT face=Tahoma size=2><STRONG>ā á ǎ à ō ó ǒ ò ē é ě è ī í ǐ ì ū ú ǔ ù ǖ ǘ ǚ ǜ ü Ā Á Ǎ À Ō Ó Ǒ Ò Ē É Ě È</STRONG></FONT></P></BLOCKQUOTE>
+<P><FONT face="Times New Roman" size=2>I think what I'm going to describe is a Word (2003 and 2007) bug, but I'd appreciate your opinion.</FONT></P>
+<OL>
+<LI><FONT face="Times New Roman" size=2>In a new document and using a unicode font, enter 01CE followed by Alt-X. You get "ǎ".</FONT> 
+<LI><FONT face="Times New Roman" size=2>Enter 01DA followed by Alt-X, then 01CE followed by Alt-X. You get "ǚǎ". So far so good.</FONT> 
+<LI><FONT face="Times New Roman" size=2>Enter "asdf" followed by 01CE followed by Alt-X. You get "asdf01CE". The substitution of the unicode character doesn't happen.</FONT></LI></OL>
+<P><FONT face="Times New Roman" size=2>This behaviour _doesn't_ occur in WordPad -- only in Word.</FONT></P>
+<P><FONT face="Times New Roman" size=2>Any thoughts about why this is happening and/or how I can get around it?<BR>Thank you.</FONT></P></BLOCKQUOTE>
+<P><FONT face=Tahoma>It is funny, I was over in building 36 a few weeks ago, while some of the folks from Office were giving a presentation to some customers about some of the international features in the next version of Office.</FONT></P>
+<P><FONT face=Tahoma>Chris Pratley was there, and although I probably hadn't seen him for a while, he&nbsp;actually helped me out recently when he pointed out a feature I did not know about in Office ( &gt;= 2002) that is behind the very behavior that Michael hit....</FONT></P>
+<P><FONT face=Tahoma>Believe it or not, it is by design!</FONT></P>
+<P><FONT face=Tahoma>The &lt;ALT&gt;+X behavior in Word that toggles between Unicode code points and characters only supported UTF-16 code units when it was first introduced, but starting with Office 2002 it will accept code points across the entire Unicode code space!</FONT></P>
+<P><FONT face=Tahoma>In this particular case, because what was typed was <FONT face="Courier New"><STRONG>asdf01ce</STRONG></FONT>, where the last four characters could all be potential hexidecimal numbers (and where you had not selected the four specific characters you wanted to be converted), Word could not really figure out what you wanted -- and thus did nothing.</FONT></P>
+<P><FONT face=Tahoma>As a workaround, if you select the last four characters of <STRONG><FONT face="Courier New">asdf<FONT style="BACKGROUND-COLOR: #ffffff" color=#000000><U>01ce</U></FONT></FONT></STRONG>&nbsp;there that represent the code point you want to convert and then hit &lt;ALT&gt;+X, then you will end up with the <FONT face="Segoe UI,Tahoma"><STRONG>asdfǎ</STRONG></FONT> that you were looking for.</FONT></P>
+<P><FONT face=Tahoma>The reason this does not happen in Wordpad is due in part to the fact that </FONT><FONT face=Tahoma>the version of Wordpad that ships with some versions of Windows<SUP><FONT size=1>1</FONT></SUP> still only has support for UTF-16 -- so you cannot repro the "problem" there, and in part because </FONT><FONT face=Tahoma>the "feature" of guessing what you want to convert without the selection does not seem to work exactly the same way.</FONT></P>
+<P><FONT face=Tahoma>But if you select the code unit or code point, it will always convert for you!</FONT></P>
+<P><FONT face=Tahoma></FONT>&nbsp;</P>
+<P><FONT face=Tahoma size=1><EM>1 - How far behind the Windows version of RichEdit is from the one in Office is a constant pain point that Office PARTNER SDE Murray Sargent and I have commiserated about in the past!</EM></FONT></P>
+<P><FONT face=Tahoma></FONT>&nbsp;</P>
+<P><FONT face=Tahoma color=#ff1493><EM>This post brought to you by</EM> <STRONG><FONT size=6>ǎ</FONT></STRONG> <EM>(<A href="http://www.fileformat.info/info/unicode/char/01ce">U+01ce</A>, a.k.a. LATIN SMALL LETTER A WITH CARON)</EM></FONT></P>
+<hr/><p><a id="610371" href="#610371">#</a> <strong>Tom Gewecke</strong> on 29 May 2006 9:04 PM:</p><div style="margin-left: 1em">UTF-16 does support the entire Unicode code &nbsp;space, so I assume you &nbsp;actually mean that originally only the BMP/Plane 0 range of characters could be accessed with this system.</div>
+<p><a id="610396" href="#610396">#</a> <strong>Michael S. Kaplan</strong> on 29 May 2006 10:10 PM:</p><div style="margin-left: 1em">Actually, I meant it a bit more literally -- it supports UTF-16 only -- thus you convert to and from surrogate code units. :-)</div>
+<p><a id="8525692" href="#8525692">#</a> <strong>Darrell</strong> on 20 May 2008 9:12 PM:</p><div style="margin-left: 1em"><p>I dont know what Alt+z or alt +x means. How do I apply it to a picture. Will it let me open a picture up and tell me numbers of some sort?? Like gps cords if they were hidden inside the pictures image?</p></div>
+<p><a id="8526273" href="#8526273">#</a> <strong>Michael S. Kaplan</strong> on 20 May 2008 11:42 PM:</p><div style="margin-left: 1em"><p>No, I am saying if you type the four numbers in Word, highlight them, and hit ALT+X it will convert to a character.</p>
+</div>
+<p><strong>Frank DePuy</strong> on 2 Mar 2011 6:17 AM:</p><div style="margin-left: 1em"><p>I am just starting to use alt-x and found this interesting. I have a separate question. I am trying to use alt-x with unicodes in Access 2003. In particular 2104 for centerline, 2334 for counterbore, and 21a7 for depth. All three return a unknown symbol. Can you point me in the right direction. My e-mail is fdepuy@qualityswitch.com. Thank you.</p>
+</div>
+<hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2006/05/29/610351.html" title="I U+2665 The Slowskys">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2006/05/28/609369.html" title="Mirror, mirror... before whom I fuss, does mirroring work well in GDI+?">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2006-05">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2006-05-29">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2006/05/29/609737.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:39 GMT -->
+</html>

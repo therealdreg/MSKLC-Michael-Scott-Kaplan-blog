@@ -1,0 +1,380 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2005/10/07/478235.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:41 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>How to build the 8.0 MFC and CRT DLLs with MSLU</title></head><body>
+<h1>How to build the 8.0 MFC and CRT DLLs with MSLU</h1>
+<p><em>by Michael S. Kaplan, published on 2005/10/07 07:57 -07:00, original URI: http://blogs.msdn.com/michkap/pages/478235.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostOld -->
+<H2><FONT color=#ff0000><EM>Updated for RTM of Visual Studio 2005</EM></FONT></H2>
+<H2><FONT color=#9933cc><EM>Updated for SP1 of Visual Studio 2005</EM></FONT></H2>
+<H2>How to build the 8.0 MFC and the CRT DLLs with MSLU</H2>
+<BLOCKQUOTE>
+<P>The MSDN documentation generally recommends that you use the static versions of libraries like the C Runtime (CRT) or the Microsoft Foundation Classes (MFC). The reason for this is that the DLL versions have not been built for MSLU and thus have no knowledge of the need to use the Microsoft Layer for Unicode for Unicode APIs. However, many complex applications really need to use the DLL versions of these libraries. If you are the developer for one of these applications, you will need to rebuild them so they link with Unicows.lib. The following is a small guide on how to perform this task.</P>
+
+<P>This document is divided into 3 parts</P>
+
+<OL>
+<LI>How to build the C Runtime Library 8.0 with MSLU 
+<LI>How to build MFC 8.0 with MSLU 
+<LI>Switching between non MSLU builds and MSLU builds </LI>
+</OL>
+<SMALL>
+<H5>The fine print</H5>
+<P>For more info on rebuilding MFC extension DLLs, see <A href="http://msdn.microsoft.com/library/en-us/vclib/html/_MFCNOTES_TN033.asp" mce_href="http://msdn.microsoft.com/library/en-us/vclib/html/_MFCNOTES_TN033.asp">TN033: DLL Version of MFC</A>, specifically the section entitled "Building the MFC DLL" towards the bottom of the article. Our steps here seem a lot nicer. :-)</P>
+
+<P>All of these steps were used to build DLLs that were subsequently tested on Win98 SE. They are expected to work on all platforms.</P>
+
+<P>Special thanks are owed to Ted W. for taking the time to do what we all knew was theoretically possible and making it technically possible for everyone. This document is mostly due to his efforts. Thanks, Ted!</P>
+
+<P><FONT color=#ff0000>In all instructions below, the assumption is a default install path and an en-US copy of Windows; if either is not the case, make sure you replace paths such as <STRONG>C:\Program Files\Microsoft Visual Studio 8</STRONG>&nbsp;with the appropriate install location.</P>
+
+<P>Also, special thanks to Tim Dowty of <A href="http://www.musicmatch.com/default.htm" mce_href="http://www.musicmatch.com/default.htm">Music Match</A> for the great text of step #4 under the MFC build!</P>
+</FONT></SMALL>
+<HR>
+
+<P>Before you start:</P>
+
+<OL>
+<LI>Install Visual Studio 2005 including all necessary files. 
+<P>The first thing you need to do is make sure that when you install Visual Studio 2005 that you make sure both the Unicode MFC version and the CRT source code are installed.&nbsp;&nbsp; This is now done by default so unless you made changes, you should have both.&nbsp; </P>
+
+<LI>Identify the folders and files you will be modifying. 
+<P>If you installed to the default locations, all of the files we need to change are contained in the tree \Program Files\Microsoft Visual Studio 8\VC. Find the ATLMFC\SRC folder and the CRT\SRC folder.</P>
+
+<LI>Install the Platform SDK and copy the latest unicows.lib file to your VC\PlatformSDK\LIB folder. Since VC8 comes with a unicows.lib, this step is optional, although it is good to be on the latest unicows.lib from the most recent Platform SDK. </LI>
+</OL>
+
+<HR>
+<A name=CRT>
+<H3>How to build the CRT 8.0 with MSLU</H3>
+<P>The first thing we want to do is make a backup of our VC\Lib folder. We will be replacing files in it, so if we need to go back (or switch between MSLU and non-MSLU version of the CRT) we can always do that.</P>
+
+<P>Secondly, let's copy the VC\CRT\SRC folder to a comfortable place so we can change it and build from it. For example, we'll copy it to the root of C: so we have a folder called C:\SRC, available for quick access from the command line.</P>
+<FONT color=#9933cc>
+<DIV><STRONG>Special note for Visual Studio 2005 Service Pack 1 users:</STRONG></DIV>
+<BLOCKQUOTE>
+<DIV><STRONG>The Visual Studio 2005 Service Pack 1 C Runtime Library source code shipped with some minor problems that prevent it from being built successfully.&nbsp;&nbsp; If you've installed Service Pack 1, please follow these steps before proceeding with the rest of the CRT rebuild instructions.<BR>&nbsp;<BR>1) In the SRC folder, two files need minor changes.&nbsp; Open up the following two files in notepad and make these changes:&nbsp;</STRONG></DIV>
+<BLOCKQUOTE>
+<DIV><STRONG>a) in the MAKEFILE<BR>&nbsp;<BR>&nbsp;&nbsp;&nbsp; On lines 302, 303, 304, 307, 308 and 309, remove the -wx option <BR>&nbsp;<BR>b) In the MAKEFILE.SUB<BR>&nbsp;<BR>&nbsp;&nbsp;&nbsp; On line 103 remove the -wx option </STRONG></DIV></BLOCKQUOTE>
+<STRONG>
+<DIV>2) A file named unhandld.obj was inadvertently left out of the CRT source distribution.&nbsp; To recover this file, we will extract it from the eh.lib library&nbsp;</DIV>
+<BLOCKQUOTE>
+<DIV>From a Visual Studio 2005 Command Prompt, do the following:</DIV></BLOCKQUOTE>
+
+<BLOCKQUOTE>
+<BLOCKQUOTE>
+<DIV>C:<BR>CD \SRC<BR>for %i in (dll mt xdll xmt) do pushd intel\%i_lib &amp;&amp; lib /extract:..\build\intel\%i_obj\unhandld.obj eh.lib &amp;&amp; popd</DIV></BLOCKQUOTE>
+</BLOCKQUOTE>
+</STRONG></BLOCKQUOTE>
+</FONT>
+<P>When building the CRT we are actually building three release DLLs: MSVCR80.DLL, MSVCP80.DLL MSVCM80.DLL. Since we are building both debug and release builds it makes a total of six DLLs we need to build (the corresponding debug versions are&nbsp;MSVCR80D.DLL MSVCP80D.DLL MSVCM80D.DLL</P>
+
+<P>In the SRC folder, there is a provided batch file <B>bldnt.cmd</B> that will build the all CRT DLLs and an associated <B>makefile</B>.</P>
+
+<P>Now we will open up the makefile in notepad. At the top of makefile there is a section that controls the naming of the DLLs to build. For this purpose we will use the name MSLU as a prefix to all of the DLLs instead of the standard name MSVC. So the six names of the DLLs we will create are:</P>
+<PRE><STRONG>MSLUR80.DLL MSLUR80D.DLL MSLUP80.DLL MSLUP80D.DLL MSLUM80.DLL MSLUM80D.DLL</STRONG></PRE>
+<P><B>Warning: Since most people who follow these steps will probably use the exact names given here, please be sure to keep these versions of the DLLs in your own private directory when you use them.</B></P>
+
+<P>For the MSLUM80.DLL and MSLUM80D.DLL (new DLLs used for managed .NET programming) we actually have two different pairs of libraries, one pair for compiling using the command line compiler option<B> /clr</B>, and one for <B>/clr:pure</B>.&nbsp;&nbsp;&nbsp; There are also two extra pairs of libraries used for partial trust programming.&nbsp; The names of all the libraries for this purpose are:</A></P>
+<A name=CRT>
+<PRE><STRONG>MSVCMRT.LIB MSVCMRTD.LIB MSVCURT.LIB MSVCURTD.LIB PTRUSTM.LIB PTRUSTMD.LIB PTRUSTU.LIB PTRUSTUD.LIB</STRONG></PRE>
+<P><BR>The default names provided in the makefile are _SAMPLE_, SAMPLE_P, SAMPLE_M, and SAMPLE_U. Each of these have both debug and release versions.&nbsp; There are associated RC and DEF files for each of these names (however, SAMPLE_U does not have an associated RC)&nbsp; We need to copy them to the new names we have chosen, i.e.</P>
+<PRE><STRONG>copy _SAMPLE_.RC MSLUR80.RC
+copy SAMPLE_P.RC MSLUP80.RC
+copy SAMPLE_M.RC MSLUM80.RC
+copy SAMPLE_P.DEF MSLUP80.DEF
+copy SAMPLD_P.DEF MSLUP80D.DEF
+copy SAMPLE_M.DEF MSLUM80.DEF
+copy SAMPLD_M.DEF MSLUM80D.DEF
+copy SAMPLE_U.DEF MSLUU80.DEF
+copy SAMPLD_U.DEF MSLUU80D.DEF
+copy Intel\_SAMPLE_.DEF Intel\MSLUR80.DEF
+copy Intel\_SAMPLD_.DEF Intel\MSLUR80D.DEF 
+</STRONG></PRE>
+<P>Next we need to change the LIBRARY name inside each of the above 8 DEF files to match the name of the DEF file (an exception to this is MSLUU80.DEF and MSLUU80.DEF - please use LIBRARY name MSLUM80 and MSLUM80D respectively) Open up each file in notepad to make the change.</P>
+
+<P>The provided makefile needs some minor changes to get it to work properly and link with Unicows.lib.</P>
+
+<OL>
+<LI>Change the top block of defines to the following: 
+<PRE><STRONG>RETAIL_DLL_NAME=MSLUR80
+RETAIL_LIB_NAME=MSLUR80
+RETAIL_DLLCPP_NAME=MSLUP80
+RETAIL_LIBCPP_NAME=MSLUP80
+RETAIL_DLLMIXED_NAME=MSLUM80
+RETAIL_LIBMIXED_NAME=MSLUM80
+RETAIL_LIBPURE_NAME=MSLUU80
+RETAIL_PT_LIBMIXED_NAME=MSLUPTM
+RETAIL_PT_LIBPURE_NAME=MSLUPTU
+DEBUG_DLL_NAME=MSLUR80D
+DEBUG_LIB_NAME=MSLUR80D
+DEBUG_DLLCPP_NAME=MSLUP80D
+DEBUG_LIBCPP_NAME=MSLUP80D
+DEBUG_DLLMIXED_NAME=MSLUM80D
+DEBUG_LIBMIXED_NAME=MSLUM80D
+DEBUG_LIBPURE_NAME=MSLUU80D
+DEBUG_PT_LIBMIXED_NAME=MSLUPTMD
+DEBUG_PT_LIBPURE_NAME=MSLUPTUD
+RC_NAME=MSLUR80
+RCCPP_NAME=MSLUP80
+RCMIXED_NAME=MSLUM80</STRONG></PRE>
+<LI>The VCTOOLS path should be changed to point to the path where you installed Visual Studio 2005, e.g. 
+<P><STRONG>VCTOOLS=C:\Program Files\Microsoft Visual Studio 8\VC</STRONG></P>
+
+<LI>We want to link to unicows.lib before any other lib files. 
+<P>On lines 1779, 1841, 1905, 1940, 2037, 2105, 2139, 2230 change kernel32.lib to:</P>
+<PRE><STRONG>unicows.lib kernel32.lib</STRONG></PRE>
+<LI>
+<P>Once we make these changes, we are ready to build the DLLs. It's simple - launch a Visual Studio 2005 command prompt (start menu-programs-Microsoft Visual Studio 2005 - Visual Studio tools - Visual Studio 2005 command prompt) and then go to the C:\SRC folder and type:</P>
+<PRE><STRONG>set VCTOOLS=C:\Program Files\Microsoft Visual Studio 8\VC 
+BLDNT</STRONG></PRE>
+<P>Once the DLLs finish building they will be in a subfolder called BUILD\INTEL. The Libs, PDBs, and Maps are also in that folder.</P>
+
+<LI>Now we've got 12 libs (6 debug, 6 release) we can link to. Let's copy those new libs back to the original names of the libs, e.g. 
+<PRE><STRONG>copy MSLUPTM.LIB PTRUSTM.LIB
+copy MSLUPTMD.LIB PTRUSTMD.LIB
+copy MSLUPTU.LIB PTRUSTU.LIB
+copy MSLUPTUD.LIB PTRUSTUD.LIB
+copy MSLUR80.LIB MSVCRT.LIB
+copy MSLUR80D.LIB MSVCRTD.LIB
+copy MSLUP80.LIB MSVCPRT.LIB
+copy MSLUP80D.LIB MSVCPRTD.LIB 
+copy MSLUM80.LIB MSVCMRT.LIB
+copy MSLUM80D.LIB MSVCMRTD.LIB
+copy MSLUU80.LIB MSVCURT.LIB
+copy MSLUU80D.LIB MSVCURTD.LIB</STRONG></PRE>
+<P>The reason we do this is so we can link our existing apps (and build MFC) without having to change the libraries that they link to. The Libs still point to the newly named DLLs, even though they don't share the same names as the new ones anymore.</P>
+
+<LI>Now copy the 12 MSVC libs to the VC\Lib folder (overwriting the existing ones)<BR><BR>
+<LI>Repeat steps 4 through 6. This step is necessary to rebuild MSLUP80(D).DLL and static libraries again so they link to our newly created MSVCRT(D).LIB (which points to our new MSLUR80(D).DLL). </LI>
+</OL>
+
+<P>The CRT build is now done.</P>
+
+<P><FONT color=#ff0000>Before proceeding any further we need to close the command prompt that we used to build the CRT because it created certain environment variables that will cause compile errors in the next step, building the Unicode version of MFC.</FONT></P>
+
+<HR>
+</A><A name=MFC>
+<H3>Building MFC 8.0 Unicode version with MSLU</H3>
+<P>First we will make a backup of the following folders (and all subfolders of): VC\ATLMFC\LIB, and VC so we can restore them later if necessary.</P>
+
+<P>The Unicode version of MFC is 4 different DLLs:</P>
+
+<UL>
+<LI>MFC80U.DLL (Unicode Release) 
+<LI>MFC80UD.DLL (Unicode Debug) 
+<LI>MFCM80U.DLL (Mixed mode/Managed Unicode Release) 
+<LI>MFCM80UD.DLL (Mixed mode/Managed Unicode Debug) </LI>
+</UL>
+
+<P>There is also a static component to even a DLL build of MFC, named as follows:</P>
+
+<UL>
+<LI>MFCS80U.LIB (Unicode Release – static library – deprecated classes) 
+<LI>MFCS80UD.LIB (Unicode Debug – static library – deprecated classes) </LI>
+</UL>
+
+<P>To build MFC, there is one master Makefile in the VC\ATLMFC folder named:</P>
+
+<UL>
+<LI>ATLMFC.MAK </LI>
+</UL>
+
+<P>There is one Makefile in the VC\ATLMFC\SRC\MFC folder named</P>
+
+<UL>
+<LI>MFCDLL.MAK </LI>
+</UL>
+</A>
+<P>Finally, there is one Makefile in the VC\ATLMFC\SRC\MFCM folder named</P>
+
+<UL><A name=MFC>
+<LI>MFCMDLL.MAK </A></LI>
+</UL>
+
+<P mce_keep="true">&nbsp;</P>
+<A name=MFC>
+<OL>
+<LI>First, we will change the MFCDLL.MAK and MFCMDLL.MAK files to link to Unicows.lib. In both files, after the lines that state: 
+<PRE><STRONG>link @&lt;&lt;</STRONG></PRE>
+<P>insert the following line:</SPAN></P>
+<PRE><STRONG>/nod:kernel32.lib /nod:advapi32.lib /nod:user32.lib /nod:gdi32.lib /nod:shell32.lib /nod:comdlg32.lib /nod:version.lib /nod:mpr.lib /nod:rasapi32.lib /nod:winmm.lib /nod:winspool.lib /nod:vfw32.lib /nod:secur32.lib /nod:oleacc.lib /nod:oledlg.lib /nod:sensapi.lib 
+</STRONG></PRE></A>
+<P>Also, on line 180 of MFCDLL.MAK, change the line:<BR><BR><B><FONT size=2>LIBS=$(CRTDLL) kernel32.lib gdi32.lib msimg32.lib user32.lib uuid.lib daouuid.lib htmlhelp.lib shlwapi.lib $(PROFLIB)</FONT></B><BR><BR>to <BR><BR><B><FONT size=2>LIBS=$(CRTDLL) unicows.lib kernel32.lib gdi32.lib msimg32.lib user32.lib uuid.lib daouuid.lib htmlhelp.lib shlwapi.lib $(PROFLIB)</FONT></B><BR><BR><BR>And finally, on line 215 in MFCMDLL.MAK <BR><BR>change<BR><BR><B><FONT size=2>LIBS=$(CRTDLL) $(CRTMDLL) mscoree.lib kernel32.lib gdi32.lib msimg32.lib user32.lib \</FONT></B><BR><BR>to <BR><BR><B><FONT size=2>LIBS=$(CRTDLL) $(CRTMDLL) mscoree.lib unicows.lib kernel32.lib gdi32.lib msimg32.lib user32.lib \</FONT></B></P>
+
+<P><A name=MFC>All changes must go in the position stated. If we don't do this then a library reference will be included causing unicows.lib to be linked after kernel32.lib (which will then cause the unicows.dll load to fail). Other DLLs in the wrong order will simply cause APIs in those specific DLLs to not be called.</A></P>
+
+<P mce_keep="true">&nbsp;</P>
+<A name=MFC>
+<LI>Now, we will decide what to name our new DLL. We do not want to use the standard name(s) for the same reasons we did not use the standard names for the CRT. So we will come up with a simple naming convention: we'll add an "L" to the name. So the new names will be: <BR><BR>
+<UL>
+<LI>MFC80LU.DLL 
+<LI>MFC80LUD.DLL 
+<LI>MFCM80LU.DLL 
+<LI>MFCM80LUD.DLL </LI>
+</UL>
+<BR>
+<LI>In the MFCM\Intel folder, modify the mfcm80u.def and mfcm80ud.def files to change the LIBRARY line to match the name you gave your DLLs in step 2<BR>&nbsp; 
+<LI>Three subparts to this part: 
+<OL>
+<LI>In the file:<BR>\Program Files\Microsoft Visual Studio 8\VC\atlmfc\src\mfcm\wfrmcmd.cpp<BR>comment out the following line:<BR><BR><B><FONT size=2>#error Following information required to build private version</FONT></B><BR><BR>and change the line:<BR>[assembly: AssemblyTitle("")];<BR>to<BR>[assembly: AssemblyTitle("mfcm80L")];<BR><BR>
+<LI>And in the file:<BR>\Program Files\Microsoft Visual Studio 8\VC\atlmfc\src\mfcm\interfaces\AssemblyInfo.cpp<BR>comment out the following line<BR><BR><B><FONT size=2>#error Following information required to build private version</FONT></B><BR><BR>and change the line:<BR>[assembly: AssemblyTitle("")];<BR>to<BR>[assembly: AssemblyTitle("mfcm80Lifaces")];<BR><BR>
+<LI>MFC 8.0 has a new wrapper class named CCommDlgWrapper that is responsible for dealing with isolation aware APIs.&nbsp;&nbsp; Unfortunately it&nbsp;uses GetProcAddress for every function in comdlg32.dll and&nbsp;ends up bypassing&nbsp;the&nbsp;versions in unicows.dll.<BR><BR>
+<DIV>To fix this problem, in the file</DIV>
+<DIV>\Program Files\Microsoft Visual Studio 8\VC\atlmfc\include\afxcomctl32.h </DIV>
+<DIV>change the line:<BR><BR>
+<DIV>&nbsp;&nbsp;<FONT color=#0000ff>&nbsp; : CDllIsolationWrapperBase(_T("comdlg32.dll"))</DIV>
+<DIV>&nbsp;</DIV></font>
+<DIV>to:</DIV>
+<DIV>&nbsp;</DIV>
+<DIV><FONT color=#0000ff>&nbsp;&nbsp;&nbsp; : CDllIsolationWrapperBase(<BR>#ifdef _UNICODE<BR>&nbsp;&nbsp;&nbsp; (GetVersion() &amp; 0x80000000) ? _T("unicows.dll") : <BR>#endif<BR>&nbsp;&nbsp;&nbsp; _T("comdlg32.dll"))<BR>&nbsp;</DIV></DIV></FONT></LI>
+</OL>
+
+<LI>Now we're ready to build the versions of MFC: 
+<P>From a Visual Studio 2005 Command Prompt, create a new batch file called buildmfc.bat in the ATLMFC\SRC folder with the following content:</P>
+<PRE><STRONG>nmake -f atlmfc.mak MFC libname=MFC80L</STRONG></PRE>
+<P>This will build all MFC libraries, not just the Unicode DLLs, but it will save us the effort of figuring out how to use the other makefiles.</P>
+
+<P>Run the batch file. If you need to rebuild any time in the future you now have a convenient batch file to do so. The DLL and PDB files will be created in the VC\ATLMFC\SRC\MFC(M)\INTEL folder. The LIB files will be created in the ATLMFC\LIB\INTEL folder.</P>
+
+<LI>
+<P>There is one crucial step missing from the supplied MFC makefiles. If you take a look inside&nbsp; …VC\mfc\makefile, you’ll see that one of the options passed to the compiler is /Zc:wchar_t, which causes wchar_t to become an implicit type. This may be what you want, but if the application you’re linking the lib to wasn’t compiled with this same option (and -- therefore -- has wchar_t #defined to unsigned short), you will get unresolved externals when you link. Your program is looking for function signatures with unsigned shorts in them, but the lib only exports wchar_t in the function signatures.</P>
+
+<P>You could remove the /Zc:wchar_t from the makefile, but this solution isn’t universal; it would still prevent linking with programs compiled with the /Zc:wchar_t switch.</P>
+
+<P>A better solution is to do what Microsoft did in the original mfc80 libraries: include alias records in the library so that you can link both implicit wchar_t and unsigned short programs. Alias records allow a library to export multiple function signatures that resolve down to the same object code.</P>
+
+<P>So how do you add alias records to your newly-built MFC libraries?</P>
+
+<P>For both the debug and release MFC library libraries you need to do the following:</P>
+
+<P>&nbsp;&nbsp;&nbsp;&nbsp;a) Extract all of the alias records from the corresponding retail MFC library</P>
+
+<P>&nbsp;&nbsp;&nbsp;&nbsp;b) Create a new library comprising only these alias records</P>
+
+<P>&nbsp;&nbsp;&nbsp;&nbsp;c) Merge your new Unicows-compliant MFC library with the associated alias-record library</P>
+
+<P><B>Step A)</B></P>
+
+<P>This one requires a small detour because lib.exe only allows you to extract one object at a time. We want to automate this step by creating a batch file to do all of the extractions.</P>
+
+<P>First, get a command prompt and make …\VC\atlmfc\lib your current directory. Next, create a list of all of the alias records in both debug and release MFC libs using the following two command lines:</P>
+<PRE><STRONG>lib /LIST mfc80ud.lib &gt; mfc80ud.lib.lst
+lib /LIST mfc80u.lib &gt; mfc80u.lib.lst
+lib /LIST mfcm80ud.lib &gt; mfcm80ud.lib.lst
+lib /LIST mfcm80u.lib &gt; mfcm80u.lib.lst
+</STRONG></PRE>
+<P>You should now have the 4 .lib.lst files that each contain a list of library objects, one per line.</P>
+
+<P>Now, we will create a perl script to build 2 pair of batch files from the .lib.lst files (if you don’t already have perl, it’s freely available from several sources. You can find Perl </A><A href="http://www.activestate.com/Products/ActivePerl" mce_href="http://www.activestate.com/Products/ActivePerl">here</A>).</P>
+
+<P>Start up a text editor and enter the following text:</P>
+<PRE><STRONG>#!/usr/bin/perl 
+# builds a batch file to extract all alias records 
+# in the input file (input file created with lib.exe /LIST) 
+$targetLib = "mfc80ud.lib"; $outDir = "_aliasRecordsD"; 
+print "md .\\$outDir\n"; 
+while (&lt;&gt;) { 
+# find alias record name
+if (/_alias[0-9]+\.obj/) { chop; 
+print "LIB /EXTRACT:$_ /OUT:.\\$outDir\\$_ $targetLib\n"; } }</STRONG></PRE>
+<P>Save the text as BuildAliasExtractBatchD.pl.</P>
+
+<P>Now edit the text so that the $targetLib variable is changed as follows:</P>
+<PRE><STRONG>$targetLib = "mfc80u.lib";</STRONG></PRE>
+<P>also change $outDir as shown:</P>
+<PRE><STRONG>$outDir = “_aliasRecords";</STRONG></PRE>
+<P>Save the edited text as BuildAliasExtractBatch.pl.</P>
+
+<P>Repeat the above for both MFCM libraries, i.e. </P>
+
+<P><B><FONT size=2>targetLib = "mfcm80ud.lib";</FONT></B></P>
+
+<P>also change $outDir as shown:<BR><BR><B><FONT size=2>$outDir = “_aliasRecordsMD";</FONT></B></P>
+
+<P>Save the edited text as BuildAliasExtractBatchMD.pl.<BR><BR><B><FONT size=2>targetLib = "mfcm80u.lib";</FONT></B></P>
+
+<P>also change $outDir as shown:<BR><BR><B><FONT size=2>$outDir = “_aliasRecordsM";</FONT></B></P>
+
+<P>Save the edited text as BuildAliasExtractBatchM.pl.</P>
+
+<P>Now run the 4 perl scripts as follows from the command prompt:</P>
+<PRE><STRONG>perl BuildAliasExtractBatchD.pl mfc80ud.lib.lst &gt; BuildAliasExtractD.bat
+perl BuildAliasExtractBatch.pl mfc80u.lib.lst &gt; BuildAliasExtract.bat
+perl BuildAliasExtractBatchMD.pl mfcm80ud.lib.lst &gt; BuildAliasExtractMD.bat
+perl BuildAliasExtractBatchM.pl mfcm80u.lib.lst &gt; BuildAliasExtractM.bat</STRONG></PRE>
+<P>At this point you have four batch files, two of which will extract the alias records from the debug library and two that will extract from the release library.</P>
+
+<P>To complete step a) all that’s left is to run the batch files. Note that there are about 2000 alias records in each MFC library, and extracting them one by one is a slow process; each library extraction took about 4 hours on a fast PC.&nbsp; The MFCM libraries only have a few alias records so those library extractions will go quickly.</P>
+
+<P>At the completion of this step, you will have four new directories under …\VC\atlmfc\lib each of which contains extracted alias records. Each extracted alias record is a file with a name of the form _alias*.obj where * is one to four decimal digits.</P>
+
+<P><B>Step B)</B></P>
+
+<P>For Step b), we want to create a new library from the extracted records. Fortunately, this can be done in two simple steps; in contrast to Step a) we can use a response file with lib.exe to simplify our operation.</P>
+
+<P>First, we create a pair of perl scripts that will build the response files.</P>
+
+<P>Use your favorite text editor to enter the following text:</P>
+<PRE><STRONG>#!/usr/bin/perl 
+# builds a response file for lib.exe to build a library of 
+# alias records. (input file created with lib.exe /LIST) 
+$outLib = "mfc80udAlias.lib"; 
+$aliasDir = "_aliasRecordsD"; 
+print "/OUT:$outLib"; 
+while (&lt;&gt;) { 
+# find alias record name 
+if (/_alias[0-9]+\.obj/) { chop; 
+print " .\\$aliasDir\\$_"; } } </STRONG></PRE>
+<P>Save the file as CreateAliasLibD.pl.</P>
+
+<P>Now edit the variable declarations so they read:</P>
+<PRE><STRONG>$outLib = "mfc80uAlias.lib";
+$aliasDir = "_aliasRecords";</STRONG></PRE>
+<P>and save the file as CreateAliasLib.pl</P>
+
+<P>Repeat the above&nbsp;for the MFCM libraires, i.e.</P>
+
+<P><B><FONT size=2>$outLib = "mfcm80uAlias.lib";<BR>$aliasDir = "_aliasRecordsM";</FONT></B></P>
+
+<P>and save the file as CreateAliasLibM.pl<BR><BR>and again<BR><BR><B><FONT size=2>$outLib = "mfcm80udAlias.lib";<BR>$aliasDir = "_aliasRecordsMD";</FONT></B></P>
+
+<P>and save the file as CreateAliasLibMD.pl</P>
+
+<P>Run the perl scripts from the command line. Note that we reuse the .lib.lst files we created in Step A) as input here:</P>
+<PRE><STRONG>perl CreateAliasLibD.pl mfc80ud.lib.lst &gt; mfc80udAlias.rsp
+perl CreateAliasLib.pl mfc80u.lib.lst &gt; mfc80uAlias.rsp
+perl CreateAliasLibMD.pl mfcm80ud.lib.lst &gt; mfcm80udAlias.rsp
+perl CreateAliasLibM.pl mfcm80u.lib.lst &gt; mfcm80uAlias.rsp</STRONG></PRE>
+<P>With the response files made, we now use them with lib.exe to create the alias libraries:</P>
+<PRE><STRONG>lib @mfc80udAlias.rsp
+lib @mfc80uAlias.rsp
+lib @mfcm80udAlias.rsp
+lib @mfcm80uAlias.rsp</STRONG></PRE>
+<P>At the completion of this step you will have 4 new libraries: mfc80udAlias.lib, mfc80uAlias.lib, mfcm80udAlias.lib, and mfcm80uAlias.lib. They will each contain their respective alias records. We'll copy these 4 libraries to the VC\ATLMFC\LIB folder. </P>
+
+<P><B>Step C)</B></P>
+
+<P>In this step, we simply merge our custom-built MFC libraries with the alias libraries we just made. While we’re at it, we’ll also rename the libraries so they’ll replace the original libraries. Note that we get our custom-built libraries directly from their output locations. In VC\ATLMFC\LIB: 
+<PRE><STRONG>lib /OUT:mfc80ud.lib .\Intel\MFC80LUD.lib mfc80udAlias.lib
+lib /OUT:mfc80u.lib .\Intel\MFC80LU.lib mfc80uAlias.lib
+lib /OUT:mfcm80ud.lib .\Intel\MFCM80LUD.lib mfcm80udAlias.lib
+lib /OUT:mfcm80u.lib .\Intel\MFCM80LU.lib mfcm80uAlias.lib</STRONG></PRE>
+<LI>After the building is done, we need to copy the rest of the created LIBs in the VC\ATLMFC\LIB\INTEL folder back to their original names in VC\ATLMFC\LIB (overwriting what's there) so that any of our apps that we link will use the new DLLs. i.e. 
+<PRE><STRONG>copy .\Intel\MFC80LSU.LIB MFCS80U.LIB
+copy .\Intel\MFC80LSUD.LIB MFCS80UD.LIB</STRONG></PRE>
+<P>The reason we do this is the same as for the CRT: we don't have to worry about changing any linker options in our projects to link to the new version of MFC. We should also copy the PDB files back from the LIB\INTEL folder back to the LIB folder. </P>
+
+<P>Now, Repeat steps 5, 6(c), and 7 above so any MFC DLLs that need to be linked to each other will pick up the new LIB references. </P>
+
+<P>Now we're ready to do a test build of an application. Create a new SDI MFC application using the AppWizard, choose dynamic MFC, create a Unicode Debug and Release build, change the settings to link to unicows.lib, copy the newly created CRT and MFC DLLs to your DEBUG or RELEASE build folder(s) and then run the application. It should all work.&nbsp; Special note: to run the application on Windows XP and higher, you may have to remove the generated manifest file from your app because it refers to the standard built-in CRT and MFC libraries in the WinSxS folder instead of your rebuilt ones.&nbsp; In these instructions, I have not addressed how to install your own custom built DLLs into the WinSxS folder.&nbsp; </P>
+
+<P>Use dependency walker to make sure that everything is getting linked properly and the proper DLLs are being loaded (run a profile in dependency walker). No references to the old names of the DLLs for both the CRT or MFC should be there.&nbsp;&nbsp; However, you may still see a dependency on MSVCRT.DLL.&nbsp;&nbsp; Unlike previous versions of the CRT, the 8.0 version of the CRT has a hard dependency on MSVCRT.DLL.&nbsp;&nbsp; Notice that there is one dependency to the function "getdrives" in MSVCRT.DLL.&nbsp;&nbsp; The reason for the hard dependency is to allow future operating system versions of MSVCRT.DLL to share some "critical state information" with MSVCR80(D).DLL.&nbsp;&nbsp; So do not be alarmed if you still see this dependency after rebuilding the CRT.&nbsp; </P>
+
+<H3>Switching between non MSLU builds and MSLU builds</H3>
+<P>Because we have done all of the above, any Unicode build on your machine will now link to MSLU. We may not want this necessarily, or we may want to link back to the original CRT and MFC DLLs. This is what we made the backups for. To restore the system, simply restore your VC\LIB and VC\ATLMFC\LIB folders. You could even make a simple batch file that copies older or newer versions of the LIBs back to the LIB folders depending on what you want to build. As we made changes to the makefiles and MFC source code, you may want to restore that as well.</P>
+</LI>
+</OL>
+</BLOCKQUOTE>
+<hr/><div style="margin-left: 1em"><em>no comments</em></div><hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2007/12/24 <a href="http://archives.miloush.net/michkap/archive/2007/12/24/6843913.html">The 9.0 instructions for building MFC and the CRT to use MSLU?</a></p><p>2006/04/15 <a href="http://archives.miloush.net/michkap/archive/2006/04/15/577006.html">MFC/CRT build instructions tweaklets</a></p><p>2006/03/26 <a href="http://archives.miloush.net/michkap/archive/2006/03/26/561016.html">Non-default paths and instructions....</a></p><p>2005/11/01 <a href="http://archives.miloush.net/michkap/archive/2005/11/01/487550.html">The 8.0 instructions for rebuilding MFC and the CRT Redux</a></p><p>2005/10/07 <a href="http://archives.miloush.net/michkap/archive/2005/10/07/478239.html">The 8.0 instructions for rebuilding MFC and the CRT</a></p><p>2004/12/07 <a href="http://archives.miloush.net/michkap/archive/2004/12/07/277204.html">Rebuilding the CRT and MFC for Unicode on Win9x....</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2005/10/07/478239.html" title="The 8.0 instructions for rebuilding MFC and the CRT">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2005/10/07/478127.html" title="It does not always pay to be compatible">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2005-10">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2005-10-07">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2005/10/07/478235.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:41 GMT -->
+</html>

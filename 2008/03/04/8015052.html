@@ -1,0 +1,66 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2008/03/04/8015052.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:36 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Consistency in the Windows Shell is not overrated; it's just underobserved!</title></head><body>
+<h1>Consistency in the Windows Shell is not overrated; it's just underobserved!</h1>
+<p><em>by Michael S. Kaplan, published on 2008/03/04 10:16 -05:00, original URI: http://blogs.msdn.com/b/michkap/archive/2008/03/04/8015052.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P><FONT color=#ff0000 size=1><EM>Please read the </EM></FONT><A class="" href="http://archives.miloush.net/michkap/archive/2008/02/28/7934999.html" mce_href="http://archives.miloush.net/michkap/archive/2008/02/28/7934999.html"><EM><FONT size=1>disclaimer</FONT></EM></A><EM><FONT color=#ff0000 size=1>; content not approved by Microsoft!</FONT></EM></P>
+<P>You may have been around in January 2005, when I first answered the question <A class="" href="http://archives.miloush.net/michkap/archive/2005/01/05/346933.html" mce_href="http://archives.miloush.net/michkap/archive/2005/01/05/346933.html"><STRONG>What is up with number sorting?</STRONG></A>.</P>
+<P>On the other hand, perhaps you were around in April 2005, when I said&nbsp;a bit more on the subject in <A class="" href="http://archives.miloush.net/michkap/archive/2005/04/01/404830.html" mce_href="http://archives.miloush.net/michkap/archive/2005/04/01/404830.html"><STRONG>What is up with number sorting, redux</STRONG></A>.</P>
+<P>Perhaps you missed both and your first introduction to the subject was in October 2006, when I talked about the <A class="" href="http://archives.miloush.net/michkap/archive/2006/10/01/778990.html" mce_href="http://archives.miloush.net/michkap/archive/2006/10/01/778990.html"><STRONG>Logical StrCmpLogicalW changes in Vista</STRONG></A>.</P>
+<P>All of them center on the <A class="" href="http://msdn2.microsoft.com/library/bb759947.aspx" mce_href="http://msdn2.microsoft.com/library/bb759947.aspx">StrCmpLogicalW function</A>, created by the <A class="" href="http://shellrevealed.com/" mce_href="http://shellrevealed.com/">Shell</A> folks to help with a more intuitive sorting behavior for normal humans (which excludes geeks, who are not normal).</P>
+<P><EM>Of course I do not refer to the initial implementation with its not so great bug long since fixed everywhere, though technically that was due to the not very intuitive nature of&nbsp;integer overflow&nbsp;bugs to people who had never seen them before! The fixed version of the code is much smarter than both the original and the upstarts in this area I mentioned recently in <A class="" href="http://archives.miloush.net/michkap/archive/2007/12/22/6834163.html" mce_href="http://archives.miloush.net/michkap/archive/2007/12/22/6834163.html"><STRONG>Incomplete Scenarios: They don't know everything that's up with number sorting</STRONG></A>!</EM></P>
+<P>To know if you are normal, look at the following:</P>
+<P><IMG src="http://trigeminal.fmsinc.com/images/order00.png"></P>
+<P>If you think the order looks correct, then you are not a normal human -- because all normal humans know that</P>
+<BLOCKQUOTE>
+<P>6 &lt; 55 &lt; 444 &lt; 3333 &lt; 22222 &lt; 111111</P></BLOCKQUOTE>
+<P>Anyway, Vista is tailor made for normal humans! See?</P>
+<P><IMG src="http://trigeminal.fmsinc.com/images/order01.png"></P>
+<P>Look at that! It knows which numbers are bigger!</P>
+<P>Or wait, maybe not -- look at what we see in the address bar:</P>
+<P><IMG src="http://trigeminal.fmsinc.com/images/order03.png"></P>
+<P>Crap.</P>
+<P>I guess some parts of the&nbsp;OS user interface&nbsp;aren't calling <A class="" href="http://msdn2.microsoft.com/library/bb759947.aspx" mce_href="http://msdn2.microsoft.com/library/bb759947.aspx">StrCmpLogicalW</A>. :-(</P>
+<P>Ah, but there is hope here!</P>
+<P>Check out the breadcrumb bar:</P>
+<P><IMG src="http://trigeminal.fmsinc.com/images/order02.png"></P>
+<P>Yea! Some parts of the&nbsp;OS user interface&nbsp;are calling <A class="" href="http://msdn2.microsoft.com/library/bb759947.aspx" mce_href="http://msdn2.microsoft.com/library/bb759947.aspx">StrCmpLogicalW</A>&nbsp;after all!</P>
+<P>That's a relief, let me tell you.</P>
+<P>Oh wait, I may have spoken too soon. When it's files the OpenFile dialog has trouble too:</P>
+<P><IMG src="http://trigeminal.fmsinc.com/images/order04.png"></P>
+<P>Crap again.</P>
+<P>Oh well, there is always next version, right? :-)</P>
+<P>There are almost certainly other cases of this problem, with parts of the&nbsp;OS that don't call <A class="" href="http://msdn2.microsoft.com/library/bb759947.aspx" mce_href="http://msdn2.microsoft.com/library/bb759947.aspx">StrCmpLogicalW</A>, even in Vista. </P>
+<P>Can you find examples of your own of this problem, in Vista?</P>
+<P>I'll talk about other inconsistencies another day....</P>
+<P mce_keep="true">&nbsp;</P>
+<P><FONT color=#ff00ff><EM>This blog brought to you by</EM><FONT size=5> ໂ </FONT><EM>(<A class="" href="http://www.fileformat.info/info/unicode/char/0ec2" mce_href="http://www.fileformat.info/info/unicode/char/0ec2">U+0ec2</A>, aka LAO VOWEL SIGN O)</EM></FONT></P>
+<hr/><p><a id="8031349" href="#8031349">#</a> <strong>Mihai</strong> on 4 Mar 2008 1:05 PM:</p><div style="margin-left: 1em"><p>My guess: the two bad places are probably using the standard history feature of the standard combo-box. That is the one that should be fixed.</p>
+<p>I can understand the difficulties a developer has to solve to reconcile the differences between breadcrumb bar and address bar.</p>
+<p>The address bar is &quot;the real thing&quot; and is less aware of fancy stuff.</p>
+<p>Kind of the same problem with &quot;fake translations&quot; done with SHSetLocalizedName (try navigating &quot;My Music&quot; or &quot;My Documents&quot; with MUI).</p></div>
+<p><a id="8031515" href="#8031515">#</a> <strong>John Cowan</strong> on 4 Mar 2008 1:10 PM:</p><div style="margin-left: 1em"><p>It's not so much whether StrCmpLogicalWhatever is called, it's the fact that it obviously can't cope with the presence of more than one numeric part in the strings you hand it. &nbsp;So while 6 sorts before 16, making foo\6 sort before foo\16 requires more sophistication -- and to get the order of 6\6, 6\16, 16\6, and 16\16 right involves working even harder. &nbsp;And so on.</p></div>
+<p><a id="8031685" href="#8031685">#</a> <strong>Ben Cooke</strong> on 4 Mar 2008 1:18 PM:</p><div style="margin-left: 1em"><p>How does it handle mixtures of digits and letters, though? (I ask only because I don't have a Vista box here to test with.) I'm thinking of lists like &quot;Version 3.0 (draft)&quot;, &quot;Version 11 (released)&quot;, &quot;Version 87.2 2006-04-28&quot;.</p>
+<p>The autocomplete thing has several other interesting issues other than that ordering problem you've seen. The one that bites me most often is that in a common file dialog box with a filename extension filter set, the autocomplete list will show all files ignoring the filter. This can be especially irritating when combined with a long filename that doesn't fit in the box so you can't actually tell the difference between various versions of the same file with different extensions.</p>
+<p>I think the geeky sorting is the least of the autocomplete widget's problems! :)</p></div>
+<p><a id="8031794" href="#8031794">#</a> <strong>Michael S. Kaplan</strong> on 4 Mar 2008 1:26 PM:</p><div style="margin-left: 1em"><p>Hi John,</p>
+<p>It actually does handle thiose cases quite well, believe it or not -- when it is called. :-)</p>
+</div>
+<p><a id="8031828" href="#8031828">#</a> <strong>Michael S. Kaplan</strong> on 4 Mar 2008 1:28 PM:</p><div style="margin-left: 1em"><p>Good point, Ben -- I was just focusing on the one inconsistency but there are other problems in some of the pieces here....</p>
+</div>
+<p><a id="8037038" href="#8037038">#</a> <strong>Dean Harding</strong> on 4 Mar 2008 5:27 PM:</p><div style="margin-left: 1em"><p>It also doesn't sort &quot;normally&quot; when displaying files in a menu (for example, the &quot;Send To&quot; menu, the quicklaunch menu, etc). See:</p>
+<p><a rel="nofollow" target="_new" href="http://codeka.com/blogs/media/unintuitive-sort-1.png">http://codeka.com/blogs/media/unintuitive-sort-1.png</a></p>
+<p>and</p>
+<p><a rel="nofollow" target="_new" href="http://codeka.com/blogs/media/unintuitive-sort-2.png">http://codeka.com/blogs/media/unintuitive-sort-2.png</a></p></div>
+<p><a id="8105813" href="#8105813">#</a> <strong>Maurits [MSFT]</strong> on 7 Mar 2008 3:35 PM:</p><div style="margin-left: 1em"><p>Question... of the places that /do/ call StrCmpLogicalW, how many honor the &quot;no, really, I'm a geek&quot; policy?</p>
+<p>(HKCU|HKLM)\Software\Microsoft\Windows\CurrentVersion\Policies\Explorer\NoStrCmpLogical</p></div>
+<p><a id="8106199" href="#8106199">#</a> <strong>Michael S. Kaplan</strong> on 7 Mar 2008 4:13 PM:</p><div style="margin-left: 1em"><p>I would guess all of them? I think the functionality is built into the function, right?</p>
+<p>It would be easy enough to check....</p>
+</div>
+<p><a id="8107501" href="#8107501">#</a> <strong>Michael S. Kaplan</strong> on 7 Mar 2008 6:28 PM:</p><div style="margin-left: 1em"><P>Nope, looks like it does not. Though it does pick up the Vista "dot" behavior improvement based on that other polcy!</P></div>
+<p><strong>trodas</strong> on 29 Sep 2009 5:22 PM:</p><div style="margin-left: 1em"><p>And is there a way to change the sorting behaviour? I mean... not waiting for new version of Windows, but fixing it &quot;in the place&quot;, modificating the way the sorting works, perhaps?</p>
+<p>Anyone? :)</p></div>
+<hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2008/06/10 <a href="http://archives.miloush.net/michkap/archive/2008/06/10/8588265.html">When Unicode's "PDF" character isn't supported, you really *can* say that the app's Bidi support doesn't POP!</a></p><p>2008/03/13 <a href="http://archives.miloush.net/michkap/archive/2008/03/13/8174202.html">More than one kind of "alphabetical" order</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2008/03/04/8017002.html" title="The story on Language Packs and Windows Vista SP1">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2008/03/03/7988789.html" title="ঘেমন কর্ম তেমন ফল, aka Learn Bengali in a month (or not)">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2008-03">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2008-03-04">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2008/03/04/8015052.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:36 GMT -->
+</html>

@@ -1,0 +1,42 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2010/09/30/10069631.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Office skipped version "13" (makes you wonder what they will do in 2013!)</title></head><body>
+<h1>Office skipped version "13" (makes you wonder what they will do in 2013!)</h1>
+<p><em>by Michael S. Kaplan, published on 2010/09/30 07:01 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2010/09/30/10069631.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<p>For a long time, I have been talking about how much LCIDs suck.</p>
+<p>Blogs like <a href="http://archives.miloush.net/michkap/archive/2007/07/23/4021529.html" title="Your LCID sucks"><strong>Your LCID sucks</strong></a> and <a href="http://archives.miloush.net/michkap/archive/2007/08/20/4472890.html" title="It is true that your LCID sucks, but your LANGID sucks more"><strong>It is true that your LCID sucks, but your LANGID sucks more</strong></a>, in particular, try to make the point.</p>
+<p>The underlying practical issues that are often referenced, such as in blogs like <a href="http://archives.miloush.net/michkap/archive/2005/03/02/383458.html" title="Why do LCIDs skip around so much?"><strong>Why do LCIDs skip around so much?</strong></a> and <a href="http://archives.miloush.net/michkap/archive/2006/08/16/702877.html" title="Walking off the end of the eighth bit"><strong>Walking off the end of the eighth bit</strong></a>.</p>
+<p>And all of that is true.</p>
+<p>But I think Jon Stewart's <strong>Rally To Restore Sanity</strong> has had a little bit of impact on me.</p>
+<p>Alythough it is a really good idea to stop depending on LCID and LANGID numbers, the truth is that some people and more importantly some tools still do depend on them.</p>
+<p>They will never be as completely flexible and as able to conform to standards and as extensible as using <strong>locale names</strong>, but for the languages that Microsoft itself has to support, the tendency to keep allocating LCID values is one that cannot simply stop. Because there are quite simply too internal tools and processes that break if they do not have these numbers to work with.</p>
+<p>When I point out problems&nbsp;like <a href="http://archives.miloush.net/michkap/archive/2006/08/16/702877.html" title="Walking off the end of the eighth bit"><strong>Walking off the end of the eighth bit</strong></a>, I am falling in to the trap of those who would support the literal rhetoric of Stephen Colbert's <strong>March To Keep Fear Alive</strong>.</p>
+<p>I am fear-mongering, making you afraid of what might break based on the code people might have created years ago that would break once Microsoft ran out of <strong>8-bit LCID values</strong>.</p>
+<p>Which kind of ignores the fact that the most worrying of them, conceptually -- 0x0501 -- has already been allocated, for pseudo,&nbsp;and thus no actual locale will be mistaken for Arabic.</p>
+<p>And which also ignores the fact that if there are other, similar&nbsp;"dangerous" LCIDs then they can simply be skipped, just like Office skipped the number <strong>thirteen</strong> in their version releases (makes you wonder what they and other Microsoft products plan to do in 2013, doesn't it?).</p>
+<p>And which also ignores the fact that while the LCID model cannot scale to either every language in the Ethnologue nor any arbitrary custom locale that it can certainly scale to the (comparatively modest)&nbsp;number of locales and user interface languages that Microsoft has to support in its products.</p>
+<p>Just remember to keep the following in mind:</p>
+<ul>
+<li>Every new&nbsp;locale that gets an LCID will have a name, too;</li>
+<li>The name is probably the only thing you can use to work on other platforms that you may need to communicate with;</li>
+<li>In the long run it is where you really ought to be going.</li>
+</ul>
+<p>and I will stop trying to use scare tactics to convince people. </p>
+<p>We need to restore sanity, not keep fear alive....</p>
+<hr/><p><strong>anon</strong> on 30 Sep 2010 8:48 AM:</p><div style="margin-left: 1em"><p>What the heck? Dubious value indeed.</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 30 Sep 2010 9:47 AM:</p><div style="margin-left: 1em"><p>Hmmm.... more specific, please?</p>
+</div>
+<p><strong>Pavanaja U B</strong> on 30 Sep 2010 9:37 PM:</p><div style="margin-left: 1em"><p>Just like the light bulb joke on Microsoft, MSFT will declare 2013 as 2014 and continue :)</p>
+</div>
+<p><strong>Random832</strong> on 2 Oct 2010 6:18 PM:</p><div style="margin-left: 1em"><p>I imagine that in 2013 they will do the same thing they did in 1996, 1999, 2001, 2004, 2005, 2006, and 2009.</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 2 Oct 2010 6:30 PM:</p><div style="margin-left: 1em"><p>Since the decisions and marketing strategies and conversations were really not the same for any of those, I think that counts as a genuine non-answer. :-)</p></div>
+<p><strong>Random832</strong> on 4 Oct 2010 6:44 AM:</p><div style="margin-left: 1em"><p>My point being that there simply does not happen to be any version of Office or Windows named for any of those years. Since the products don&#39;t have an annual release cycle like cars, there isn&#39;t any reason to think that there would even ordinarily be one called &quot;Office 2013&quot;.</p>
+</div>
+<p><strong>MS</strong> on 4 Oct 2010 6:50 PM:</p><div style="margin-left: 1em"><p>13 is bad luck. &nbsp;Of course, this meant that my code&#39;s assumption that 2010 would have internal version number of 2007 (12) + 1 meant my office addin&#39;s version detection routine would fail. &nbsp;Oops, always should double check that sort of thing.</p>
+</div>
+<hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2010/10/01/10070128.html" title="Kurdish with an Arabic Accent?">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2010/09/29/10069077.html" title="Dotting the t&#39;s and crossing the i&#39;s is more work than that, PDF edition">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2010-09">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2010-09-30">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2010/09/30/10069631.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+</html>

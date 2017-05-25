@@ -1,0 +1,24 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2006/03/10/548670.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:40 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Setting the location in unattend?</title></head><body>
+<h1>Setting the location in unattend?</h1>
+<p><em>by Michael S. Kaplan, published on 2006/03/10 13:01 -05:00, original URI: http://blogs.msdn.com/b/michkap/archive/2006/03/10/548670.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P><FONT face=Tahoma>Alistair&nbsp;asked me via email:</FONT></P>
+<BLOCKQUOTE dir=ltr style="MARGIN-RIGHT: 0px">
+<P><FONT face="Times New Roman" size=2>V.quick question (I am contacting you as I can see you are an expert in this area from your excellent blog entries ;-)</FONT></P>
+<P><FONT face="Times New Roman" size=2>Do you happen to know how I can automate changing the location listed in the "Location" field in the "Regional and Language Options" control panel (first tab and the bottom)</FONT></P>
+<P><FONT face="Times New Roman" size=2>I need to change this for imaged installs and / or post install.</FONT></P>
+<P><FONT face="Times New Roman" size=2>I can use sysprep.inf [RegionalSettings] and / or rundll32 (rundll32.exe shell32,Control_RunDLL intl.cpl,,/f:"&lt;file.inf&gt;").<BR>This changes most of the stuff I need to change fine.</FONT></P>
+<P><FONT face="Times New Roman" size=2>However "Location" listed in this dialog does not seem to change irrespective of what I enter.</FONT></P>
+<P><FONT face="Times New Roman" size=2>Do you happen to know what sysprep.inf entry maps to this dialog. Also if it's possible to modify this by using rundll32 ?</FONT></P></BLOCKQUOTE>
+<P><FONT face=Tahoma>Well, there is of&nbsp;course a function call that can do it -- <A href="http://msdn.microsoft.com/library/en-us/intl/nls_6m5g.asp">SetUserGeoID</A>. I know this does kind of violate the bit of social engineering we have in place to try to keep developers from calling functions to change user settings, but we inherited this function. :-)</FONT></P>
+<P><FONT face=Tahoma>But, as Alistair indicated, <A href="http://support.microsoft.com/default.aspx?scid=kb;en-us;289125">that KB article</A> does not detail a way to change the location setting from sysprep.inf or the later run with intl.cpl directly (both of them go through the same engine).</FONT></P>
+<P><FONT face=Tahoma>As far as I have been able to gather, this setting is not available in the setup/pre-setup case -- perhaps we are lucky that <A href="http://archives.miloush.net/michkap/archive/2005/02/04/366922.html">no one seems to be using the GEO stuff</A>?</FONT></P>
+<P><FONT face=Tahoma>(I am admittedly hoping that someone from the team will correct me if I am mistaken, though my hopes are not high at this point)</FONT></P>
+<P><FONT face=Tahoma>Note that in Vista we do support this particular </FONT><FONT face=Tahoma>setting, along with some other stuff (I'll be posting soon on the new features and syntax)....</FONT></P>
+<P><FONT face=Tahoma></FONT>&nbsp;</P>
+<P><FONT face=Tahoma color=#ff1493><EM>This post brought to you by</EM> "" <EM>(<A href="http://www.fileformat.info/info/unicode/char/0053">U+0053</A>, a.k.a. LATIN CAPITAL LETTER S)</EM></FONT></P>
+<hr/><div style="margin-left: 1em"><em>no comments</em></div><hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2006/05/30 <a href="http://archives.miloush.net/michkap/archive/2006/05/30/610505.html">Unattend for Regional and Language Options in Vista</a></p><p>2006/05/20 <a href="http://archives.miloush.net/michkap/archive/2006/05/20/602745.html">How to REALLY handle the unattended version of Regional and Language Options</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2006/03/11/549624.html" title="If you don&#39;t commit, you may not get what you want">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2006/03/09/546910.html" title="Blogging doesn&#39;t pay... enough">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2006-03">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2006-03-10">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2006/03/10/548670.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:40 GMT -->
+</html>

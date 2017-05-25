@@ -1,0 +1,63 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2011/10/25/10229790.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>There's no "I" in IDN, part 11: There's no place like ::1, not even 127.0.0.1!</title></head><body>
+<h1>There's no "I" in IDN, part 11: There's no place like ::1, not even 127.0.0.1!</h1>
+<p><em>by Michael S. Kaplan, published on 2011/10/25 07:01 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2011/10/25/10229790.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<p>Previous parts in this series:</p>
+<ul>
+<li><strong><a title="There's no &quot;I&quot; in IDN, part 1: If you're not Unicode, you're just wrong!" href="http://archives.miloush.net/michkap/archive/2011/02/14/10128621.html"><span style="color: #006bad;" color="#006bad">part 1: If you're not Unicode, you're just wrong!</span></a></strong></li>
+<li><strong><a title="There's no &quot;I&quot; in IDN, part 2: Try not to use the wrong functions!" href="http://archives.miloush.net/michkap/archive/2011/04/02/10149149.html"><span style="color: #006bad;" color="#006bad">part 2: Try not to use the wrong functions!</span></a></strong></li>
+<li><strong><a title="There's no &quot;I&quot; in IDN, part 3: There's no &quot;I&quot; in DIY, either!" href="http://archives.miloush.net/michkap/archive/2011/05/25/10168228.html"><span style="color: #006bad;" color="#006bad">part 3: There's no "I" in DIY, either!</span></a></strong></li>
+<li><strong><a title="There's no &quot;I&quot; in IDN, part 4: the 'path' to Hell is paved with IDN bugs" href="http://archives.miloush.net/michkap/archive/2011/06/17/10173790.html"><span style="color: #006bad;" color="#006bad">part 4: the 'path' to Hell is paved with IDN bugs</span></a></strong></li>
+<li><strong><a title="There's no &quot;I&quot; in IDN, part 5: Stephen Colbert's job is not in any jeopardy" href="http://archives.miloush.net/michkap/archive/2011/06/29/10181212.html"><span style="color: #006bad;" color="#006bad">part 5: Stephen Colbert's job is not in any jeopardy</span></a></strong></li>
+<li><strong><a title="There's no &quot;I&quot; in IDN, part 6: It isn't like there's an &quot;I&quot; in EAI, either!" href="http://archives.miloush.net/michkap/archive/2011/07/14/10186414.html"><span style="color: #006bad;" color="#006bad">part 6: It isn't like there's an "I" in EAI, either!</span></a></strong></li>
+<li><strong><a title="There's no &quot;I&quot; in IDN, part 7: IDN comes to AdWords" href="http://archives.miloush.net/michkap/archive/2011/07/28/10190701.html"><span style="color: #006bad;" color="#006bad">part 7: IDN comes to AdWords</span></a>&nbsp;</strong></li>
+<li><strong><a title="There's no &quot;I&quot; in IDN, part 8: Punycode don't do the PUA" href="http://archives.miloush.net/michkap/archive/2011/08/12/10195062.html"><span style="color: #006bad;" color="#006bad">part 8: Punycode don't do the PUA</span></a></strong></li>
+<li><strong><a title="part 9: Who needs IDN support? How much? When? (Part 2)" href="http://archives.miloush.net/michkap/archive/2011/09/16/10212216.html"><span style="color: #006bad;" color="#006bad">part 9: Who needs IDN support? How much? When? (Part 1)</span></a></strong></li>
+<li><strong><a title="part 10: Who needs IDN support? How much? When? (Part 2)" href="http://archives.miloush.net/michkap/archive/2011/09/21/10214081.html">part 10: Who needs IDN support? How much? When? (Part 2)</a></strong></li>
+</ul>
+<p>&nbsp;I have a T-shirt with the caption:</p>
+<p>There's no place like 127.0.0.1</p>
+<p><a href="http://www.thinkgeek.com/images/action/large/2106c60.jpg"><img style="max-width: 550px;" border="0" alt="" src="http://www.thinkgeek.com/images/action/large/2106c60.jpg" /></a></p>
+<p></p>
+<p>which is kind of fun, and a nice way to help distinguish geeks in some situations.</p>
+<p>It makes the topic today even more topical, which I guess just makes it a better topic?</p>
+<p>The limitations I mentioned in Part 10 above related to the way the hope of&nbsp;Unicode support in DNS is dashed by the requirements that NetBIOS, and more to the point the way the DNS and NetBIOS names are kept in sync by a convention that many people depend on.</p>
+<p>That limitation is a pretty bitter one, since the whole point of IDN is really to allow names that support a significant chunk of Unicode, yet the "default" name for just about everything you might do with&nbsp;a machine is largely kept in the world of code pages.</p>
+<p>That's ugly.</p>
+<p>Moving forward, it is easy to assume that backcompat requirements will keep the situation from ever changing.</p>
+<p>Thankfully that assumption ignores the one way we can make sure we can get out from under Microsoft's implementation of NetBIOS's ugly limitations.</p>
+<p><strong><span style="font-size: xx-large;">IPv6</span></strong></p>
+<p>(gratuitous embedding of&nbsp;the song performed by the secret-wg in the closing plenary of the RIPE 55 conference follows)</p>
+<p><iframe height="315" src="http://www.youtube.com/embed/_y36fG2Oba0" frameborder="0" width="420" allowfullscreen=""></iframe></p>
+<p>&nbsp;There is one very cool thing about IPv6.</p>
+<p>Well actually, there are&nbsp;a buttload of cool things about IPv6, but most of those things aren't relevant to this Blog and only one&nbsp;is relevant to this blog.</p>
+<p>It is the fact that the standard defines no direct relationship to NBT, aka NetBIOS over TCP/IP, aka NetBIOS.</p>
+<p>So, in a pure IPv6 world, unless Microsoft specifically adds such a relationship, and thereby snatches defeat from the jaws of victory, an IPv6 only world is a DNS only world.</p>
+<p>And thus an IPv6 only machine does not need to run NetBIOS -- or at least not connect the two together.</p>
+<p>And the machine name no longer has to be dependent on the default system locale, or more specifically the CP_OEMCP.</p>
+<p>Now there's "<strong>many a slip twixt a cup and a lip</strong>", as they say.</p>
+<p>But one of the new&nbsp;commitments I will now have as a part of my larger IDN responsibilities is to make sure no one adds back that dependency....</p>
+<hr/><p><strong>Raymond</strong> on 25 Oct 2011 7:22 AM:</p><div style="margin-left: 1em"><p>Who are you kidding? You know that eventually, some corporation is going to say &quot;We require NetBIOS support in IPv6, and we demand that you implement it.&quot;</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 25 Oct 2011 7:29 AM:</p><div style="margin-left: 1em"><p>What can I say? I have high hopes that they&#39;ll take tha route AD has for compat mode vs. not....</p>
+</div>
+<p><strong>cheong00</strong> on 25 Oct 2011 7:42 AM:</p><div style="margin-left: 1em"><p>Awesome song.</p>
+<p>Bonue point for &quot;(those silent will be shot)&quot; remark at the third chrous.</p>
+<p>ROFL!!!</p>
+</div>
+<p><strong>cheong00</strong> on 25 Oct 2011 7:48 AM:</p><div style="margin-left: 1em"><p>Actually I&#39;d also think that there will be request for punycode support on NetBIOS. Afterall that is the standard our government is pushing in DNS resolution in Chinese region to solve the CHT/CHS domain name problem.</p>
+<p>It&#39;s only logical to have servers match their names with the name be seen on the internet. :P</p>
+</div>
+<p><strong>John Cowan</strong> on 25 Oct 2011 8:17 AM:</p><div style="margin-left: 1em"><p>&quot;Gratuitous&quot;? &nbsp;Hardly. &nbsp;One of the best things you&#39;ve ever linked to, I&#39;d say.</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 25 Oct 2011 10:31 AM:</p><div style="margin-left: 1em"><p>Gratuitous because it was orthogonal to the central point of the blog itself, not because it wasn&#39;t cool!</p>
+</div>
+<p><strong>Stuart</strong> on 25 Oct 2011 11:34 AM:</p><div style="margin-left: 1em"><p>::1 and 127.0.0.1 are distinguishable in other ways too... we&#39;re using IIS6 for SMTP (because our system administrator hasn&#39;t figured out how to do the equivalent in IIS7 or what the supported replacement is yet) and when you tell it to enable routing it only accepts an IPv4 address. If you are trying to use &quot;localhost&quot; as your SMTP server, you can get in trouble when Windows Update decides to make localhost resolve to ::1 instead of 127.0.0.1...</p></div>
+<p><strong>cheong00</strong> on 25 Oct 2011 6:30 PM:</p><div style="margin-left: 1em"><p>@Stuart: I think I&#39;ve seen standalone SMTP server in Windows Component selection menu (the same place where you add the telnet client back). It&#39;s required to install that component before Exchange Server installation can continue.</p>
+<p>You may want to ask your system admin to check again.</p>
+</div>
+<hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2013/10/17 <a href="http://archives.miloush.net/michkap/archive/2013/10/17/10453790.html">There's no "I" in IDN, part 19: There's no "I" in IPv6, either!</a></p><p>2013/10/08 <a href="http://archives.miloush.net/michkap/archive/2013/10/08/10454553.html">There's no "I" in IDN, part 18: There isn't even an "I" in John C. Klensin's name!</a></p><p>2013/09/13 <a href="http://archives.miloush.net/michkap/archive/2013/09/13/10448110.html">There's no "I" in IDN, part 17: EAI made it to China, and everybody knows it!</a></p><p>2013/04/19 <a href="http://archives.miloush.net/michkap/archive/2013/04/19/10412471.html">There's no "I" in IDN, part 16: It's a good thing they decided to call it EAI!</a></p><p>2012/10/12 <a href="http://archives.miloush.net/michkap/archive/2012/10/12/10359120.html">There's no "I" in IDN, part 15: Still no 'I' in EAI.... but we could use an US sometime soon!</a></p><p>2012/08/08 <a href="http://archives.miloush.net/michkap/archive/2012/08/08/10337799.html">There's no "I" in IDN, part 14: It turns out there's no "I" in IE, either</a></p><p>2012/05/18 <a href="http://archives.miloush.net/michkap/archive/2012/05/18/10305223.html">There's no "I" in IDN, part 13: Desktop and Managed and Metro; oh my!</a></p><p>2012/02/27 <a href="http://archives.miloush.net/michkap/archive/2012/02/27/10273315.html">There's no "I" in IDN, part 12: Emoji + IDN == U+1F4A9 (PILE OF POO)</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2011/10/26/10230215.html" title="Improving genitive. Or not.... (part 2): Explaining the point of Part 1">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2011/10/24/10229176.html" title="That&#39;s how I knew that you don&#39;t know me. And you&#39;re still creepy....">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2011-10">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2011-10-25">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2011/10/25/10229790.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+</html>

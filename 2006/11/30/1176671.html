@@ -1,0 +1,54 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2006/11/30/1176671.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:39 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Subsets of subsets of subsets of subsets of subsets</title></head><body>
+<h1>Subsets of subsets of subsets of subsets of subsets</h1>
+<p><em>by Michael S. Kaplan, published on 2006/11/30 03:26 -05:00, original URI: http://blogs.msdn.com/b/michkap/archive/2006/11/30/1176671.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<FONT face="Segoe UI,Tahoma">
+<P>The big master list of locales that Microsoft has assigned LCID values for is quite large and even includes ones like Yiddish (0x043d) that are unlikely to be added to the Windows locale list any times soon.</P>
+<P>There is a subset of that big list, the official list of locales in Windows. I was going to post it till I saw that Kieran <A href="http://blogs.msdn.com/kierans/archive/2006/09/27/774637.aspx">actually did already</A>. 
+<P>There is another not entirely matching subset of locales that are supported by Office for language support and document text tagging. Many locales in fact made it into the big list based on requests from Office.</P>
+<P>Now there is a smaller subset of locales that Office supports proofing tools for. This to me is the coolest list since it is the one list with the power to help shape language in positive directions when things like standardized spellings are hard to come by.</P>
+<P>There is another subset representing the locales supported by the .NET Framework (it is only smaller now since locales were not really added to it to make it up to the Vista list, but <A class="" href="http://msdn2.microsoft.com/en-us/library/system.globalization.cultureinfo.aspx">here</A> is the list that it natively supports without Windows only locales).</P>
+<P>There is that weird subset/superset of locales supported by SQL Server for their collation support (subset because they folded many of them together and also because they&nbsp;did not update for Vista or even Server 2003, superset because they added a few collations to try to bring some up to the Server 2003 level), and&nbsp;then there is the subset supported by SQL Server's independent locale list.</P>
+<P>Which brings me to Aldo Donetti's mail that he sent to me yesterday:</P>
+<BLOCKQUOTE><FONT face="Times New Roman,Times"><I>
+<P>In SQL 2005 if you get the Collations and their LCIDs and group the latter, you’ll see there are approximately 46 LCIDs. </P>
+<P>Now there’s a feature called Full Text index which also has some language support – but only for 16 LCIDs (+ a Neutral one)</P>
+<P>So if anyone were to programmatically try to set the LCID on the Full Text index based on the DB/Table/Column collation, there’s a good 75% chance it will fail.</P>
+<P>The list of languages supported for the Full text index is this:</P>
+<UL>
+<LI>Traditional Chinese</LI>
+<LI>German</LI>
+<LI>English</LI>
+<LI>French</LI>
+<LI>Italian</LI>
+<LI>Japanese</LI>
+<LI>Korean</LI>
+<LI>Dutch</LI>
+<LI>Swedish</LI>
+<LI>Thai</LI>
+<LI>Simplified Chinese</LI>
+<LI>British English</LI>
+<LI>Chinese (Hong Kong SAR, PRC)</LI>
+<LI>Spanish</LI>
+<LI>Chinese (Singapore)</LI>
+<LI>Chinese (Macau SAR)</LI>
+<LI>+ the “Neutral” one</LI></UL>
+<P>So maybe chances to fail are less than 75% given some of the most used languages are in there, but Hindi is missing and so is Hebrew, Arabic, Cyrillic, Turkish and a bunch of others (30 overall)</P>
+<P>Not sure how many people in the SQL division knew about this, but I (and a bunch of people in DevDiv, including our VP) know about it now. :-(&nbsp;</P></I></FONT></BLOCKQUOTE>
+<P>Notice how they were even upset that (for example) both Swedish and Finnish weren't even on their list of SQL Server collations but were unhappy about the lack overlap between collation support and full text support? :-)</P>
+<P>So the actual "missing" list is even bigger if you come at it from the .NET Framework point of view, especially in 2.0 and later where the .NET Framework picks up all that is in Windows even if they don't support it natively.</P>
+<P>The languages for which Index Server/SQL Server Full Text Search have word breakers and stemmers is yet another subset, a theoretically open&nbsp;subset (since anyone can write one and the SDK tells people how) but in practice a mostly closed subset given how difficult it is to write a word breaker/stemmer,</P>
+<P>I guess it is easy to look at this mess and wonder how interoperability work on these products at all, isn't it? :-)</P>
+<P>Though the changes to bring&nbsp;Windows and the .NET Framework into sync with Vista and .NET 2.0 are a good first step. The next steps would be to try to bring Office and SQL Server into the fold if we can.</P>
+<P>If we are lucky, the only ones that will always remain semi-open subsets are proofing tools and full text search indexes, since they are the two that are not just adding a compatibility layer but require unique and difficult work. :-)</P>
+<P>I think the fact that there is apparently a VP who has been made aware of all this might help us though (and big cross-division effort needs a champion!), so maybe I need to follow up with Aldo on this!</P>
+<P mce_keep="true">&nbsp;</P>
+<P><FONT color=#ff00ff><EM>This post brought to you by</EM>&nbsp;<FONT size=4>ऩ</FONT> <EM>(<A class="" href="http://www.fileformat.info/info/unicode/char/0929" mce_href="http://www.fileformat.info/info/unicode/char/0929">U+0929</A>, a.k.a. DEVANAGARI LETTER NNNA)</EM></FONT></P></FONT>
+<hr/><p><a id="1177427" href="#1177427">#</a> <strong>Bertilo Wennergren</strong> on 30 Nov 2006 5:55 AM:</p><div style="margin-left: 1em"><p>So when are you going to add an Esperanto locale? There are actually quite a few people using Esperanto in their computers. Probably many more than for some of the languages that are already in that list (Sorbian, Tamazight, Sami, Romansh, Occitan, Mapudungun, Sanskrit...). What those Esperanto people mostly need is actually a keyboard layout. Wouldn't be so hard, now, would it?</p>
+<p>Most of the big Linux distros have Esperanto locales and keyboard layouts nowadays. Don't know about the Macs.</p>
+<p>I promise we won't sue you (like the Mapudungun people did...).</p></div>
+<hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2008/06/30 <a href="http://archives.miloush.net/michkap/archive/2008/06/30/6633571.html">Thirdly, aka Forty two, aka Understanding the answer can require a properly defined question</a></p><p>2007/10/22 <a href="http://archives.miloush.net/michkap/archive/2007/10/22/5590751.html">We weren't Vista heroes, but I think we were kinda heroic</a></p><p>2007/03/13 <a href="http://archives.miloush.net/michkap/archive/2007/03/13/1850613.html">Track change (a.k.a. A new job that has a few things in common with the old one)</a></p><p>2006/12/12 <a href="http://archives.miloush.net/michkap/archive/2006/12/12/1266500.html">Open it all up, get out of the way, and then what happens?</a></p><p>2006/11/30 <a href="http://archives.miloush.net/michkap/archive/2006/11/30/1177646.html">So when is Esperanto coming?</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2006/11/30/1177646.html" title="So when is Esperanto coming?">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2006/11/29/1170815.html" title="Where&#39;d *that* language come from?">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2006-11">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2006-11-30">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2006/11/30/1176671.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:39 GMT -->
+</html>

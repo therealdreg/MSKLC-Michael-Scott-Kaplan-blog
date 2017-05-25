@@ -1,0 +1,43 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2007/09/06/4778963.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:37 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Hot or not? Well, I say 'Not', at least from an international text perspective!</title></head><body>
+<h1>Hot or not? Well, I say 'Not', at least from an international text perspective!</h1>
+<p><em>by Michael S. Kaplan, published on 2007/09/06 03:01 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2007/09/06/4778963.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P>Somebody told me tonight at dinner that that I have a huge fan base. </P>
+<P>Funny, I didn't even know I had any huge fans. Well, if you are one of them then welcome. :-)</P>
+<P>Anyway, I got home and someone who is a regular reader of this blog from Turkey told me via the contact link that they think the famous <A class="" href="http://en.wikipedia.org/wiki/Hot_or_Not" mce_href="http://en.wikipedia.org/wiki/Hot_or_Not">Hot or Not</A> web site did not handle international text all that well. She figured I should check it out.</P>
+<P>Sparing no expense (well, the site is free, technically), I headed out to investigate the mastter.</P>
+<P>The job was admittedly made easier since I actually have an account on the site. </P>
+<P><IMG src="http://trigeminal.fmsinc.com/images/hotornot0.png"></P>
+<P>It was originally put up by someone else as a joke (no one has yet fessed up to it but I have my suspicions). I was eventually able to get ownership of "my" page,&nbsp;but even after I got ownership I left it up, mainly out of curiosity as to how I would rate with that picture that people around here seem to hate so much....</P>
+<P><EM>(For those who are curious, it rates a 6.9 after 92 votes, which according to them means I am hotter than 66% of the men on the site. Though I think this says more about the others than about me!))</EM></P>
+<P>Anyway, after arranging a "match" with the&nbsp;reader who reported the problem, I sent her a message with a bunch of dotted uppercase I's and dotless lower case ones. Basically with the following text:</P>
+<BLOCKQUOTE>
+<BLOCKQUOTE>
+<P mce_keep="true"><FONT face="times new roman,times">I think you may be right -- it looks like this site can't handle the undotted lowercase 'i' very well, can it? That would make Turkish support a problem!<BR><BR>Quick test of some dotted uppercase and dotless lowercase I's to see if they work:<BR><BR>İıİıİıİıİıİıİıİıİıİıİıİıİıİıİıİıİıİıİıİı </FONT></P></BLOCKQUOTE></BLOCKQUOTE>
+<P>and then&nbsp;I sent it. She looked at it and told me it was corrupt.</P>
+<P>When I looked at the message in the archive, I found that she was right! It looked like this:</P>
+<P><IMG src="http://trigeminal.fmsinc.com/images/hotornot1.png"></P>
+<P>but it is easy to diagnose a problem that simply shows corrupt text (rather than notdef glyphs or question marks); it is an encoding problem.</P>
+<P>when I right-clicked on the page and looked at the source, lo and behold the page was marked as being cp1252:</P>
+<BLOCKQUOTE>
+<P>&nbsp; &lt;meta http-equiv="Content-Language" content="en-us"&gt;<BR>&nbsp; &lt;meta http-equiv="Content-Type" content="text/html; charset=windows-1252"&gt;</P></BLOCKQUOTE>
+<P>If I right click and change the encoding to UTF-8 and then everything looks right again:</P>
+<P><IMG src="http://trigeminal.fmsinc.com/images/hotornot2.png"></P>
+<P>Clearly they could do a lot better if they did not mark their pages as cp1252, or if nothing else converted the text to NCRs so they could work independently of the setting.</P>
+<P>Given that they have counted over 12 billion votes from around the world, maybe they can work to better support other languages?</P>
+<P>Until then, I have to say the answer to the <STRONG>Hot or Not?</STRONG> question when asked about the site is <STRONG>NOT</STRONG>, according to SiaO, until they can better handle other encodings....</P>
+<P>I am not putting a link to the profile over there as this post is not intended to increase the hit count or the vote (or to decrease it either!). Since the picture has kind of reached a steady state in voters it is probably almost time to take it down anyway.</P>
+<P>Just think of this as an example of the tremendous lengths that the investigatory branch of SiaO will go to in order to identify internationalization issues! :-)</P>
+<P mce_keep="true">&nbsp;</P>
+<P><FONT color=#ff00ff><EM>This post brought to you by</EM> <FONT size=6>ꉹ∨¬</FONT> <EM>(<A class="" href="http://www.fileformat.info/info/unicode/char/a279" mce_href="http://www.fileformat.info/info/unicode/char/a279">U+a279</A> <A class="" href="http://www.fileformat.info/info/unicode/char/2228" mce_href="http://www.fileformat.info/info/unicode/char/2228">U+2228</A> <A class="" href="http://www.fileformat.info/info/unicode/char/00ac" mce_href="http://www.fileformat.info/info/unicode/char/00ac">U+00ac</A>, a.k.a. YI SYLLABLE HOT, LOGICAL OR, NOT SIGN)</EM></FONT></P>
+<hr/><p><a id="4800293" href="#4800293">#</a> <strong>Pavanaja U B</strong> on 7 Sep 2007 12:10 AM:</p><div style="margin-left: 1em"><p>Yes. You have a huge fan base. And I am one of them. I am your fan due to these facts -</p>
+<p>1. You are quite knowledgeable in i18n. </p>
+<p>2. You disseminate that knowledge. If you were to be eligible for MVP award, definitely you could have been given one. I guess you were a MVP once upon a time.</p>
+<p>3. You are not like other MS employees who are known for &quot;beating around the bush&quot;. Majority fo them don't admit the bugs in MS products, they don't answer the queries with a straight forward answer (digitally - &quot;YES&quot; or &quot;NO&quot;)</p>
+<p>Regards,</p>
+<p>Pavanaja</p></div>
+<hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2007/09/07/4326344.html" title="worn me down">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2007/09/05/4780807.html" title="The Sorting It All Out on LiveJournal is not associated with this blog">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2007-09">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2007-09-06">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2007/09/06/4778963.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:37 GMT -->
+</html>

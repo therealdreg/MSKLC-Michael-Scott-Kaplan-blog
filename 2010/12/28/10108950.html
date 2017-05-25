@@ -1,0 +1,60 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2010/12/28/10108950.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>On disliking Emoji, disrespecting code pages, and not looking past dogma</title></head><body>
+<h1>On disliking Emoji, disrespecting code pages, and not looking past dogma</h1>
+<p><em>by Michael S. Kaplan, published on 2010/12/28 07:01 -05:00, original URI: http://blogs.msdn.com/b/michkap/archive/2010/12/28/10108950.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<p>It will come as no surprise to people who know my "World Readiness" persona that I am not so fond of the Emoji (like those added to Unicode 6.0).</p>
+<p>For those who read this blog, it has come up before <a target="_blank" href="http://www.bing.com/search?q=site%3Ablogs.msdn.com%2Fb%2Fmichkap%2F+emoji&amp;form=QBLH&amp;qs=n&amp;sk=&amp;sc=8-36"><strong>in the past</strong></a> here.</p>
+<p>I don't like them, because they feel to me like such a betrayal of some of the core principles that I used to espouse.</p>
+<p>And I still believe that.</p>
+<p>But I like enough of what Unicode does that I can see past that.</p>
+<p>I mean, here at Microsoft, for every Kin there's a Windows Phone 7, for every Vista there's a Windows 7, for every Bob there's also a Kinect, and so on. Overall I like the stuff&nbsp;that comes out of Microsoft, even though the working for them part feels more ordinary these days.</p>
+<p>And I still believe that (both of those thats).</p>
+<p>Now I think about the time I was on the NLS team (back when they were actually still called the NLS team) where everyone pushed so hard to get people off of legacy code pages and into using Unicode.</p>
+<p>And everyone has been quite consistently on message for that.</p>
+<p>I still believe that message is a correct one, and I believe there is no place for new code pages for languages.</p>
+<p>But when I think of the Emoji, when I know that some people will probably want to use and support them (like the phone and instant messaging and email and so on), and when I think of files like Unicode's <a target="_blank" href="http://www.unicode.org/Public/UNIDATA/EmojiSources.txt">EmojiSources.txt</a> from the Unicode Character Database, I wonder if maybe my belief system, and the belief system of all of those who have been espousing the above, might be missing out on something obvious.</p>
+<p>From that file's header:</p>
+<p style="padding-left: 60px;"><span style="font-family: consolas,lucida console,courier new,courier,fixed;"><strong># EmojiSources-6.0.0.txt<br /># Date: 2010-04-24, 00:00:00 GMT [MS]<br />#<br /># Unicode Character Database<br /># Copyright (c) 1991-2010 Unicode, Inc.<br /># For terms of use, see http://www.unicode.org/terms_of_use.html<br /># For documentation, see http://www.unicode.org/reports/tr44/<br />#<br /># This file provides mappings between Unicode code points and sequences on one hand<br /># and Shift-JIS codes for cell phone carrier symbols on the other hand.<br /># Each mapping is symmetric ("round trip"), for equivalent Unicode and carrier<br /># symbols or sequences. This file does not include best-fit ("fallback")<br /># mappings to similar but not equivalent symbols in either mapping direction.<br />#<br /># Note: It is possible that future versions of this file will include<br /># additional data columns providing mappings for additional vendors.<br />#<br /># Format: Semicolon-delimited file with a fixed number of fields.<br /># The number of fields may increase in the future.<br />#<br /># Fields:<br /># 0: Unicode code point or sequence<br /># 1: DoCoMo Shift-JIS code<br /># 2: KDDI Shift-JIS code<br /># 3: SoftBank Shift-JIS code<br />#<br /># Each field 1..3 contains a code if and only if the vendor character set<br /># has a symbol which is equivalent to the Unicode character or sequence.</strong></span></p>
+<p>If the Japanese telcos or those products I mentioned or whoever needs to map from their various proprietary mappings to and from Unicode, then that is essentially what code pages are all about.</p>
+<p>Perhaps being dogmatically against code page support&nbsp;is really not such a good idea.</p>
+<p>Perhaps the focus should have been on language support (which really requires Unicode) and that Microsoft has to support things like GB 18030 anyway, and not been so against the concept of code pages for mappings that can still make sense.</p>
+<p>Like the vendor mappings between Emoji and Unicode, whatever they may&nbsp;be.</p>
+<p>I mean, every time one of my friends with an iPhone (and there are a lot of them) sends a tweet via Twitter and there smiley face emoticons are private use area characters, I know that Microsoft is not alone -- Apple is making the exact same stupid mistake that Microsoft is, albeit in a different way.</p>
+<p>In my opinion, there should be symbol mappings added to a brand new code page (or if necessary multiple code pages) to support this key scenario.</p>
+<p>Claiming that Emoji are crucial (which many people do claim) and not providing the proper mappings between them and the random crap that people are using throughout the world because of a frenzied dogmatic belief that code pages are evil and so no new code pages should be supported is a really bad product decision coming out of a really bad belief system.</p>
+<p>With that said, I have minimal say in what these product groups do. Many of them read here and listen to what I say, shortly before they ignore it and do what they had already decided what to do.</p>
+<p><em>In that way I am like a not-as-well-paid version of Ray Ozzie, whose thoughts on issues such as privacy and career stage profiles and the Cloud are brilliant and deserve better than to be&nbsp;discounted by the huge percentage of MS discounting them....</em></p>
+<p>So I would be truly surprised to see things supported this way when the time comes to do the work to support Emoji. No one wants to admit they took a belief too far, since that would mean implicitly admitting one was wrong about something (and who wants to do that when the next review is in their minds?). </p>
+<p>I'm no better, mind you; I doubt I'd be writing this particular blog if I was still on the NLS team.</p>
+<p>Perhaps it is time to move on to&nbsp;a good idea, instead. That would be much better than forcing everyone to roll their own.....</p>
+<hr/><p><strong>John Cowan</strong> on 28 Dec 2010 1:55 PM:</p><div style="margin-left: 1em"><p>Unified ideographs are actually defined the same way as emoji: with reference to the union of particular existing de facto or de jure standards, aka character sets. &nbsp;The answer to &quot;What is U+4E00?&quot; is &quot;It is GB 5027, JIS 1676, KSC 7673, ...&quot;</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 28 Dec 2010 5:20 PM:</p><div style="margin-left: 1em"><p>Indeed. And we actually have those mappings for one and not the other, &nbsp;for the reasons given....</p>
+</div>
+<p><strong>Random832</strong> on 28 Dec 2010 5:55 PM:</p><div style="margin-left: 1em"><p>I think of them as ideographs in a very early stage of evolution. No, I&#39;m serious... Some characters that we would never think of as being &quot;not text&quot; are still pictures, more or less, of what they mean. I&#39;m reminded of a recent blog post by Raymond Chen that mentioned in passing that 車 is basically a top view of a car. From a certain point of view, you can still see the ox head in the latin capital letter A. And in 123 the graphical relationship to tally marks can still almost be seen - it&#39;s more clear in ١٢٣, even more in 一二三.</p>
+<p>In a way, emoji - and the &#39;emoticons&#39; haphazardly built up out of normal text elements that came before them - are a natural consequence of the typewriter. Before, even in written communication, tone could be conveyed by the little details of handwriting. &quot;Plain&quot; text wasn&#39;t so plain, and good luck encoding _that_ in Unicode. Now all that&#39;s left to us is the choice between Times Roman and Comic Sans. In many places even that is gone.</p>
+</div>
+<p><strong>Miguel Sousa</strong> on 29 Dec 2010 12:51 AM:</p><div style="margin-left: 1em"><p>And every time someone sends me a smiley face using Outlook what I get is a uppercase J... <a rel="nofollow" target="_new" href="http://archives.miloush.net/michkap/archive/2010/07/08/10033725.html">blogs.msdn.com/.../10033725.aspx</a></p>
+</div>
+<p><strong>Mihai</strong> on 29 Dec 2010 3:19 PM:</p><div style="margin-left: 1em"><p>My understanding is that the various Japanese phones are using the JIS equivalent of PUA. </p>
+<p>So before adding new code pages we should take a look at the stuff coming out of the Japanese handsets.</p>
+<p>Is the text even tagged somehow? Is there a way to know if the text comes from a SoftBank or DoCoMo phone?</p>
+<p>If not, then adding code pages is pretty much pointless, because there is no way to know the &quot;JIS flavor&quot;.</p>
+<p>My feeling about Emoji is similar yours (don&#39;t like the idea).</p>
+<p>They might be useful, but in reality the Japanese vendors don&#39;t care about them.</p>
+<p>No, strike that: they don&#39;t want them. Because (I think) they don&#39;t want interoperability</p>
+<p>(if they wanted that, they would have tried to achieve it in the &quot;JIS PUA&quot; first)</p>
+<p>But as it is, they can encourage social networks to stay in the same vendor (&quot;see, if your friend is not with us, you can&#39;t use Emoji&quot;)</p>
+<p>And having more (and cooler) Emoji is a selling point, so adding more (incompatible) symbols is an almost sure thing.</p>
+<p>So adding stuff to Unicode, or trying to add &quot;standard&quot; code pages is just trying to play catch up with and industry that does not want interoperability or standards.</p>
+</div>
+<p><strong>jmdesp</strong> on 29 Dec 2010 4:27 PM:</p><div style="margin-left: 1em"><p>This in some ways is really worrisome. Additional code pages would only partially solve the problem, since I can imagine each of those extensions will regularly be tagged as simply SJIS, and not Docomo-SJIS, KDDI-SJIS or SoftBank-SJIS.</p>
+</div>
+<p><strong>Yuhong Bao</strong> on 30 Dec 2010 2:00 AM:</p><div style="margin-left: 1em"><p>&quot;This in some ways is really worrisome. Additional code pages would only partially solve the problem, since I can imagine each of those extensions will regularly be tagged as simply SJIS, and not Docomo-SJIS, KDDI-SJIS or SoftBank-SJIS.&quot;</p>
+<p>Yep, it is already a problem, as Shift_JIS-2004 and codepage 932 both uses the same user-defined character range.</p>
+</div>
+<hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2010/12/29/10109752.html" title="People just want what they want, whether they have permission or not">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2010/12/27/10109107.html" title="You have to deal with Hebrew periods where they come up">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2010-12">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2010-12-28">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2010/12/28/10108950.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+</html>

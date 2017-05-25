@@ -1,0 +1,54 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2010/07/09/10033379.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:35 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>The script can make the language more complicated [to use]</title></head><body>
+<h1>The script can make the language more complicated [to use]</h1>
+<p><em>by Michael S. Kaplan, published on 2010/07/09 07:01 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2010/07/09/10033379.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<p>So now I'm going to talk about something kind of new. </p>
+<p>I've kind of mentioned it before but really just in passing </p>
+<p>Basically I'm going to just talk a little bit about some Indic conjuncts that exist for languages like Hindi and Bengali.</p>
+<p>Now I&rsquo;ve talked about the Bengali NNA before.</p>
+<p>Basically in Unicode it&rsquo;s NA + VIRAMA + NA == NNA, or </p>
+<p><span style="font-size: x-large;">ন + ্ + ন == ন্ন</span></p>
+<p>Now you can kind of see a little of the doubled NA in the conjunct itself, though its mostly all well and good that cursor movement will not put you in the middle of this conjunct.</p>
+<p>They are doing that work with Uniscribe, which I believe sets the rules based on the information in the font and its own knowledge about the script in the shaping engine.</p>
+<p>Thankfully intelligent keyboards know that I can just type NNA and get that conjunct as an option rather than requiring me to add a virama (or should I say HASANT?) myself.</p>
+<p>It certainly makes typing more natural!</p>
+<p>There is a lingering size issue I'll talk about another day....</p>
+<p>Now Hindi is another language that has a lot of conjuncts in it, like:</p>
+<p><span style="font-size: x-large;">DDA: द + ् + द == द्द </span></p>
+<p>(which should obviously not be confused with DEVANAGRAI LETTER DDA (U+0921, <span style="font-size: large;">ड</span>).</p>
+<p><span style="font-size: x-large;">JNYA: ज + ् + ञ == ज्ञ</span></p>
+<p><span style="font-size: x-large;">SHRA: श + ् + र == श्र</span></p>
+<p><span style="font-size: x-large;">KSSA: क + ् + ष == क्ष</span></p>
+<p>Okay, you get the point. I can&rsquo;t do them all, there are thousands in the Mangal font. And when I say thousands I mean on the high thousands side. If I had the unlocked font in front of me I'd give you an exact count.</p>
+<p>So you perhaps can see what I was getting at here &ndash; how in many cases the conjunct may have a lot less to do with visual similarities with the original letters that it is made up of.</p>
+<p><em>I never thought about it, but to be able to read in Hindi you need to know lots of these conjuncts &ndash; that is like having to learn all the Kanji for Japanese!</em></p>
+<p>Now this makes languages like Hindi very complicated (and Sanskrit even more complicated), indeed! Not because they are complicated languages (after all Hindi and Urdu are roughly the same language, as I pointed out in <a href="http://archives.miloush.net/michkap/archive/2010/06/30/10032695.html"><strong>Giving the people Urdu, we are!</strong></a>). But Urdu, unlike Hindi, doesn&rsquo;t have so many alternate forms of letters that happened to be alongside each other.</p>
+<p>And Unicode, by requiring viramas and control characters, adds some extra complexity on their own (since implementers took way to long to hide the details from regular users).</p>
+<p>But it makes me wonder....</p>
+<p>Could one have a simplified version of Hindi that just stuck to the letters and had no conjuncts? </p>
+<p>Would it make sense and be readable? </p>
+<p>Would it look childish?</p>
+<p>Would everyone hate it?</p>
+<p>Of course it wouldn't really help much -- this is the "full consonant, explicit virama, full consonant" case I discussed in <a href="http://archives.miloush.net/michkap/archive/2007/12/16/6781186.html" title="Why my IUC31 talks were presented on Vista (even though running on a MacBook Pro)"><strong>Why my IUC31 talks were presented on Vista (even though running on a MacBook Pro)</strong></a>, which will require more control characters to be added to get the right result (thus making it more complicated to do this "simpler" form.</p>
+<p>No one ever did describe the reasoning one would use to choose which form one wanted, though for the record I'll note that none of the intelligent input methods for Indic seem to allow it....</p>
+<p>Maybe it woulf be easier to just use Urdu instead. ;-)</p>
+<hr/><p><strong>John Cowan</strong> on 9 Jul 2010 9:38 AM:</p><div style="margin-left: 1em"><p>I&#39;m looking at this posting in Firefox 3.6.6 and Internet Explorer 7.0.5730.13, both in Windows XP SP3. &nbsp;Alas, the IE version is badly garbled. &nbsp;The Bengali characters are all outlined white boxes, and the Devanagari shows up with the == displaced just to the right of the + signs, with the virama-plus-dotted-circle glyph *between* the two equals signs. &nbsp;Very grody.</p>
+<p>On Firefox, which uses its own cross-platform rendering engine, the Bengali is in a slightly different font, and there&#39;s no ligature, but at least the NA-with-virama NA glyphs appear correctly, not as boxes. &nbsp;The Devanagari is perfect.</p>
+<p>When I get home I&#39;ll look at it in Firefox and Chrome on Ubuntu. &nbsp;So far it&#39;s Windows +1, Internet Exploder -1.</p>
+</div>
+<p><strong>Paul D. Hunt</strong> on 9 Jul 2010 1:30 PM:</p><div style="margin-left: 1em"><p>Michael,</p>
+<p>Of course it is possible to reform the Devanagari script to make it so that no conjuncts are required, but I would argue that this would much impede the reader. Think of conjuncts as ligatures: In quality typography, you will often find ﬁ standing in the place of f and i. It is possible to render Hindi or any of the languages that uses Devanagari script with half (or halant) forms of the consonants, and in fact the Mangal font does this quite a bit of the time (perhaps a vast majority of the time). In fact, the last time I checked there were not thousands of of conjuncts. In the version of the font that came with my Win XP laptop (version 1.20) there are 675 characters in total of which perhaps ~80% are conjunct characters. However, in my opinion, many of the characters in Mangal are superfluous and will in all likelyhood never be accessed. But I digress. If you can get your hands on a copy of Bapurao S. Naik&#39;s &#39;Typography of Devanagari&#39;, I would recommend reading the portions on script reform ideas that were proposed and implemented in an attempt to make Devanagari typesetting possible during the hot metal typesetting era. Also, I would discount your comparison of learning conjuncts for Indian scripts to learning Han ideographs, as the formation of the Indian conjuncts occurs in highly predictable ways once one knows the rules of formation. Just as you perceive Urdu to be a simpler system (I am assuming because you are familiar with it), my perception is that the Brahmi-based scripts are a simpler system - because I am familiar with it. Spend a week learning how conjuncts are constructed and you&#39;ll have a much easier time reading it.</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 9 Jul 2010 4:36 PM:</p><div style="margin-left: 1em"><p>John, I though Google employees weren&#39;t supposed to be running Windows in their offices anymore? :-)</p>
+<p>Maybe that was the problem -- everyone there was using platforms that were nine years old. I assume your Ubuntu is a more recent build....</p>
+<p>But seriously, the Bengali situation in XP post SP2 was okay but before they had to make massive changes (some from Unicode changes, some from feedback), so I won&#39;t be too surprised if things didn&#39;t look *too* good there compared to now. Things look very nice on Windows 7/IE8, fwiw.</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 9 Jul 2010 5:51 PM:</p><div style="margin-left: 1em"><p>Paul, I agree -- but the full form <strong>does</strong> exist, so the question of when the user <strong>would</strong> expect it remains an interesting one, right?</p></div>
+<p><strong>Pavanaja U B</strong> on 9 Jul 2010 9:37 PM:</p><div style="margin-left: 1em"><p>&lt;Now this makes languages like Hindi very complicated (and Sanskrit even more complicated)&gt;</p>
+<p>Actually, it is not the language, but the script which looks complicated. The idea of just keeping the basic characters with &quot;halant&quot; at the end for conjuncts is not very new. This was tried almost a century ago in Kannada when the letterpress printing was just in nascent stages. Very famous Kannada writer B M Shreekantayya tried it in Kannada. But people did not accept it. Kannada is more complex compared to Devanagari script because of vattus. Malayalam newspapers imposed the simplified Malayalam almost 4 decades ago on to the people and got success.</p>
+</div>
+<hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2010/07/26 <a href="http://archives.miloush.net/michkap/archive/2010/07/26/10036264.html">You can violate the rules of decorum, just not the law of gravity</a></p><p>2010/07/21 <a href="http://archives.miloush.net/michkap/archive/2010/07/21/10036699.html">It is easy (and obnoxious) to claim "size doesn't matter" if one has the size everyone wants</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2010/07/10/10036652.html" title="On properly discerning my intent. Or at least letting me correct your ill conceived notions thereof.">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2010/07/08/10033725.html" title="Maybe they had a really great experience on J-Date, or really liked Jay Leno">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2010-07">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2010-07-09">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2010/07/09/10033379.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:35 GMT -->
+</html>

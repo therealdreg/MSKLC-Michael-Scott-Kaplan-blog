@@ -1,0 +1,41 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2010/12/16/10105779.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>You can't ignore crap and hope it won't cause problems...</title></head><body>
+<h1>You can't ignore crap and hope it won't cause problems...</h1>
+<p><em>by Michael S. Kaplan, published on 2010/12/16 07:01 -05:00, original URI: http://blogs.msdn.com/b/michkap/archive/2010/12/16/10105779.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<p>So the question that came up the other day:</p>
+<p style="PADDING-LEFT: 90px; FONT-FAMILY: "><span style="font-family: times new roman,times;">Hi. I met a unexpected problem when using string.IndexOf. The following code demonstrates the problem:</span></p>
+<p style="PADDING-LEFT: 90px; FONT-FAMILY: "><span style="font-family: times new roman,times;">string r = "\ufffd\ufffd\ufffd\ufffd";<br />string tar = "a";<br />Console.WriteLine(tar.IndexOf(r));<br />Can you guess the output? The output is 0, which is very weird for me. Can someone explain why? Because this has broken my program, which assume if a.IndexOf(b)&gt;= 0 Then a.Length &gt;= b.Length.</span></p>
+<p>Now the behavior here is by design.</p>
+<p>And the reasons for this are covered in my <a href="http://archives.miloush.net/michkap/archive/2008/04/09/8367652.html" title="Microsoft is giving this character nada weight but lotsa importance"><strong>Microsoft is giving this character nada weight but lotsa importance</strong></a> blog.</p>
+<p>Okay, so U+fffd (aka REPLACEMENT CHARACTER) is now the central way that Microsoft deals with text that is illegal/invalid by Unicode rules, whether due unexpected or unintended corruption of results.</p>
+<p>Fine, I can live with that -- conformance is a good thing.</p>
+<p>I would prefer to have a way to opt out of the behavior if I am trying to investigate the nature of an intentional attack on security, but I can live with requiring to stay outside of the encoding system provided by the globalization team.</p>
+<p><span style="font-size: xx-large;">BUT....</span></p>
+<p>And this is a huge BUT, in my opinion!</p>
+<p>If you look at what Unicode does here in its <a href="http://www.unicode.org/reports/tr10/">UTS 10: Unicode Collation Algorithm</a>, in its <a href="http://www.unicode.org/Public/UCA/6.0.0/allkeys.txt">allkeys.txt</a>::</p>
+<p style="PADDING-LEFT: 30px; FONT-FAMILY: "><span style="font-family: courier new,courier;"><strong>0000&nbsp; ; [.0000.0000.0000.0000] # [0000] NULL (in 6429)<br />0001&nbsp; ; [.0000.0000.0000.0000] # [0001] START OF HEADING (in 6429)<br />0002&nbsp; ; [.0000.0000.0000.0000] # [0002] START OF TEXT (in 6429)<br />...<br />FFFC&nbsp; ; [*1490.0020.0002.FFFC] # OBJECT REPLACEMENT CHARACTER<br />FFFD&nbsp; ; [*1491.0020.0002.FFFD] # REPLACEMENT CHARACTER</strong></span></p>
+<p>&nbsp;gives the two related characters some weight, while Microsoft's collation data does not.</p>
+<p>Now it is not fair to say that on this basis Microsoft isn't conformant, since <a href="http://archives.miloush.net/michkap/archive/2004/11/28/271121.html" title="Microsoft does not use the Unicode Collation Algorithm"><strong>Microsoft does not use the Unicode Collation Algorithm</strong></a>.</p>
+<p>However, it is clear that Microsoft is, while perhaps conformant, accomplishing the goal of making the conformance meaningless for developers.</p>
+<p>Because when you get right down to it, if I am comparing</p>
+<p><strong><span style="font-size: medium;">LIZ</span></strong></p>
+<p>and</p>
+<p><span style="font-size: medium;"><span style="color: #c0c0c0;">&lt;uninterpretable crap&gt;</span><strong>LIZ</strong><span style="font-size: medium;"><span style="color: #c0c0c0;">&lt;uninterpretable crap&gt;</span></span></span></p>
+<p>and</p>
+<p><span style="font-size: medium;"><strong>L</strong><span style="font-size: medium;"><span style="color: #c0c0c0;">&lt;uninterpretable crap&gt;</span></span><strong>I</strong><span style="font-size: medium;"><span style="color: #c0c0c0;">&lt;uninterpretable crap&gt;</span></span><strong>Z</strong></span></p>
+<p>then it is <strong>incorrect</strong> to consider them to be identical.</p>
+<p>They are not.</p>
+<p>Remember that the official change in Unicode was to get away from the tendency of implementations to drop the invalid characters entirely -- due to security concerns.</p>
+<p>But if I say "LA LA LA LA I am not listening to you" to ignore crap when it happens, then I am subverting the whole process of inserting this particular bit of crap to be conformant in the first place.</p>
+<p>in my opinion, Microsoft's implementation over the last few years is <strong>not </strong>conformant to the Unicode Standard.</p>
+<p>Microsoft can't ignore crap and hope it will go away....</p>
+<hr/><p><strong>Cheong</strong> on 16 Dec 2010 9:31 PM:</p><div style="margin-left: 1em"><p>Yet in the question, we&#39;d expect tar.IndexOf(r) returns -1 because content of r does not exist in tar. I can imagine having it return 0 will case some infinate loop problem in certain data stream processing functions if they&#39;re lazy enough to use string manipulation functions to process data.</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 16 Dec 2010 10:25 PM:</p><div style="margin-left: 1em"><p>That weirdness is due to a different issue that I will be covering another day. :-/</p>
+<p>Though it too would not be an issue if my advice were taken here and U+fffd was given weight....</p>
+</div>
+<hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2010/12/22 <a href="http://archives.miloush.net/michkap/archive/2010/12/22/10107967.html">I agree with you 100%. But we're both wrong (according to the spec)</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2010/12/17/10106288.html" title="Dude, you forgot to fflush! (aka toilet humor is undignified, as are flush puns)">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2010/12/15/10105168.html" title="I think MaxLength needs protection to assure safer text">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2010-12">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2010-12-16">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2010/12/16/10105779.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+</html>

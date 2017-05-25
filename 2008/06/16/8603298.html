@@ -1,0 +1,69 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2008/06/16/8603298.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:36 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Sometimes, GDI respects users (even if no one else does!)</title></head><body>
+<h1>Sometimes, GDI respects users (even if no one else does!)</h1>
+<p><em>by Michael S. Kaplan, published on 2008/06/16 10:01 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2008/06/16/8603298.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P>Regular readers know how I am always encouraging, cajoling, and sometimes even threatening developers to respect the user's locale&nbsp;settings choices.</P>
+<P>Not everyone is of a mind to do this, however....</P>
+<P>Like just the other day when someone was sending me mail about a problem they were having:</P>
+<BLOCKQUOTE>
+<P><FONT face="times new roman,times">We found that the GDI uses&nbsp;the user&nbsp;locale regardless of&nbsp; the current thread locale for&nbsp;rendering. <FONT color=#cc0000>Data gets formatted using Current thread locale</FONT> but at last moment the digit replacement happen using the user locale. Is there a strong reason behind this inconsistent behavior or is this a bug in GDI.</FONT></P></BLOCKQUOTE>
+<P>Of course formatting behavior, via functions like </P>
+<UL>
+<LI>
+<DIV mce_keep="true">GetCurrencyFormat</DIV></LI>
+<LI>
+<DIV mce_keep="true">GetCurrencyFormatEx</DIV></LI>
+<LI>
+<DIV mce_keep="true">GetDurationFormat</DIV></LI>
+<LI>
+<DIV mce_keep="true">GetDurationFormatEx</DIV></LI>
+<LI>
+<DIV mce_keep="true">GetNumberFormat</DIV></LI>
+<LI>
+<DIV mce_keep="true">GetNumberFormatEx</DIV></LI>
+<LI>
+<DIV mce_keep="true">GetTimeFormat</DIV></LI>
+<LI>
+<DIV mce_keep="true">GetTimeFormatEx</DIV></LI></UL>
+<P mce_keep="true">is based on the locale you give it, and there is no constant that tells these <A class="" href="http://msdn.microsoft.com/library/ms776318.aspx" mce_href="http://msdn.microsoft.com/library/ms776318.aspx">NLS API functions</A> to "use the thread locale" (though there are ones that will look up the user locale for the caller if requested. :-)</P>
+<P mce_keep="true">So that text in red above is not really accurate, unless there is some rogue library or program clling <A class="" href="http://msdn.microsoft.com/library/ms776331.aspx" mce_href="http://msdn.microsoft.com/library/ms776331.aspx">GetThreadLocale</A> and pasing the results to one of the non-Ex functions in the list above....</P>
+<P mce_keep="true">Becsause the truth is that GDI doesn't give a crap about formatting or really anything related to locales, with one signle exception:</P>
+<BLOCKQUOTE>
+<P mce_keep="true"><FONT size=5>Digit Substitution</FONT></P></BLOCKQUOTE>
+<P mce_keep="true">Any time you go to render text it will grab those digit substitution settings in the user locale (including the user override information) and use the info to decide how to display numbers.</P>
+<P mce_keep="true">And since there is no way to override those settings at the level where GDI uses them like there is (kind of) for Uniscribe (ref: <A class="" href="http://archives.miloush.net/michkap/archive/2006/02/22/536877.html" mce_href="http://archives.miloush.net/michkap/archive/2006/02/22/536877.html"><STRONG>And the digits just keep on coming</STRONG></A>).</P>
+<P mce_keep="true">Well, there is one way....</P>
+<P mce_keep="true">If you are doing your GDI rendering vie <A class="" href="http://msdn.microsoft.com/library/ms533949.aspx" mce_href="http://msdn.microsoft.com/library/ms533949.aspx">ExtTextOutW</A>, then there are two flags that have been around since Windows 95:</P>
+<P mce_keep="true">
+<TABLE class="" border=1>
+<TBODY>
+<TR vAlign=top>
+<TD class="" width="30%">ETO_NUMERICSLATIN</TD>
+<TD class="" width="70%"><B>Windows 95 and Windows NT 4.0 and later: </B>To display numbers, use European digits.</TD></TR>
+<TR vAlign=top>
+<TD class="" width="30%">ETO_NUMERICSLOCAL</TD>
+<TD class="" width="70%"><B>Windows 95 and Windows NT 4.0 and later: </B>To display numbers, use digits appropriate to the locale.</TD></TR></TBODY></TABLE></P>
+<P mce_keep="true">Basically these are the (very differently named!) equivalents of <A class="" href="http://msdn.microsoft.com/library/ms776270.aspx" mce_href="http://msdn.microsoft.com/library/ms776270.aspx">GetLocaleInfo</A>'s LOCALE_IDIGITSUBSTITUTION settings:</P>
+<P mce_keep="true">
+<TABLE class="" border=1>
+<TBODY>
+<TR vAlign=top>
+<TD class="" width="12%">1</TD>
+<TD class="" width="88%" colSpan=3>No substitution is used. This gives full Unicode compatibility.</TD></TR>
+<TR vAlign=top>
+<TD class="" width="12%">2</TD>
+<TD class="" width="88%" colSpan=3>Native digit substitution. National shapes are displayed according to LOCALE_SNATIVEDIGITS.</TD></TR></TBODY></TABLE></P>
+<P mce_keep="true">So you can override the assumption of the GDI code that the user locale preferences are to be respected if yo uwant to, by calling low level functions and pasing one of those two ETO_* flags.</P>
+<P mce_keep="true">But there is no way to make it easier than that, sorry. And not because the OS respects me and my advice,&nbsp; but because sometimes the only way the user will get any respect is if we force developers to give it to them.... :-)</P>
+<P mce_keep="true">This behavior is completely <STRONG>by design</STRONG>.</P>
+<P mce_keep="true">&nbsp;</P>
+<P mce_keep="true"><FONT color=#ff00ff><EM>This blog brought to you by</EM><FONT size=5> R </FONT><EM>(<A class="" href="http://www.fileformat.info/info/unicode/char/0052" mce_href="http://www.fileformat.info/info/unicode/char/0052">U+0052</A>, aka LATIN CAPITAL LETTER R)</EM></FONT></P>
+<hr/><p><a id="8605943" href="#8605943">#</a> <strong>Mike Dimmick</strong> on 16 Jun 2008 12:26 PM:</p><div style="margin-left: 1em"><p>I have to be honest, I find that behaviour a little surprising. I expect GDI to output whatever glyphs map to the codepoints I provided, not map them a further time. But what's done is done, and changing this no doubt would break at least some applications.</p>
+<p>I assume that ETO_NUMERICSLATIN doesn't modify the local digits, where they have been used?</p></div>
+<p><a id="8606054" href="#8606054">#</a> <strong>Michael S. Kaplan</strong> on 16 Jun 2008 1:00 PM:</p><div style="margin-left: 1em"><p>Correct -- these flags only modify U+0030 -- U+0039, as needed....</p>
+</div>
+<hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2010/11/12 <a href="http://archives.miloush.net/michkap/archive/2010/11/12/10088056.html">Suddenly, in a bit more time than a blink of an eye, "standards support" becomes "less i18n support"</a></p><p>2008/10/02 <a href="http://archives.miloush.net/michkap/archive/2008/10/02/8971896.html">When swimming in a sea of CONTEXT, applications can drown (and there is no lifeguard)</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2008/06/16/8603560.html" title="I Didn&#39;t Start Something">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2008/06/15/8601634.html" title="Me and Facebook (and I)">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2008-06">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2008-06-16">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2008/06/16/8603298.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:36 GMT -->
+</html>

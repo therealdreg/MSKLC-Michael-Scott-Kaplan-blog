@@ -1,0 +1,30 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2006/01/29/518934.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:40 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>It can't be all about the money</title></head><body>
+<h1>It can't be all about the money</h1>
+<p><em>by Michael S. Kaplan, published on 2006/01/29 17:01 -05:00, original URI: http://blogs.msdn.com/b/michkap/archive/2006/01/29/518934.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<p><font face=Tahoma>Someone with the handle of *g* asked in the Suggestion Box:</font></p>
+<blockquote dir=ltr style="MARGIN-RIGHT: 0px">
+<p><font face="Times New Roman" size=2><em>Hi Michael, </em></font></p>
+<p><font face="Times New Roman" size=2><em>I love your blog and read it regularily, even though my primary work interests are in device automation: simply because yours is one of the most interesting blogs to be had ;) </em></font></p>
+<p><font face="Times New Roman" size=2><em>I am working with devices that store money, and send information on amounts with currency information in isocode. Some tasks here are: </em></font></p>
+<ol type=a>
+<li><font face="Times New Roman" size=2><em>given an isocode, display an amount e.g. "deposit 123,45 €". </em></font>
+</li><li><font face="Times New Roman" size=2><em>given an isocode, display a note value: note that commonly (where common is less-than-well-defined as in: western europe and north america), for note values there is no fraction. You don't have a $1,00 bill, you have a $1 bill. </em></font></li></ol>
+<p><font face="Times New Roman" size=2><em>Now, there is always GetCurrencyFormat(). However, I have some problems with it: </em></font></p>
+<ul>
+<li><font face="Times New Roman" size=2><em>it assumes that I know the lcid; however, the devices I'm working with only send me the isocode an assume (incorrectly, I admit) that e.g. all EUR formatting is the same across all countries </em></font>
+</li><li><font face="Times New Roman" size=2><em>there is no sufficient discrimination between countries; e.g. if I have CAD and USD, both will show as $. </em></font>
+</li><li><font face="Times New Roman" size=2><em>for situation (b) above I can only do custom formatting with a CURRENCYFMT structure; plus I need additional "language knowledge" on how bill values are presented to the user. </em></font></li></ul>
+<p><font face="Times New Roman" size=2><em>Your thoughts? </em></font></p></blockquote>
+<p><font face=Tahoma>I hope my answer does not cause *g* to find my blog less interesting!</font></p>
+<p><font face=Tahoma>There really is not a mechanism to support what is being asked for here -- because an ISO currency code without the context of a locale does not give enough information to do the formatting (and there is no automatable rule about the common name for curreny notes in any country, though there are patterns there is no way to definitively know what to call the currency short of the actual localization process. This is the problem in the request of the first bullet point -- the formats in different locales <strong>is</strong> often different, so we can't ever assume that it is not.</font></p>
+<p><font face=Tahoma>The second bullet point is not really a problem if you do know the locale, unless you are trying to equate the currencies of two different locales based on the currency symbol -- which is again a bug in what the software is assuming (a bug which should be fixed right away before it costs people a lot of money!).</font></p>
+<p><font face=Tahoma>When you get down to it, the third bullet point really is talking about a localization issue -- an interesting one, to be sure, but one that is way beyond what the NLS API is designed to handle.</font></p>
+<p><font face=Tahoma>For better or worse, the context of a locale is indeed at the core of NLS support on Microsoft products, and without that context there is no real hope of giving the right results. This particular dependency can lead to other problems which I will talk about soon. :-)</font></p>
+<p><font face=Tahoma></font>&nbsp;</p>
+<p><font face=Tahoma color=#ff1493><em>This post brought to you by</em> "<font face="Mongolian Baiti" size=6>ᢨ</font>" <em>(<a href="http://www.fileformat.info/info/unicode/char/18a8">U+18a8</a>, a.k.a. MONGOLIAN LETTER MANCHU ALI GALI BHA)</em></font></p>
+<hr/><div style="margin-left: 1em"><em>no comments</em></div><hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2006/01/30/519230.html" title="Are multilingual sorts integrated?">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2006/01/29/518777.html" title="Handling multilingual data in SQL Server">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2006-01">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2006-01-29">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2006/01/29/518934.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:40 GMT -->
+</html>

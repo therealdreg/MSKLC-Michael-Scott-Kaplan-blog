@@ -1,0 +1,221 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2008/12/16/9223301.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:35 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>UCS-2 to UTF-16, Part 9: The torrents of breaking CharNext/CharPrev</title></head><body>
+<h1>UCS-2 to UTF-16, Part 9: The torrents of breaking CharNext/CharPrev</h1>
+<p><em>by Michael S. Kaplan, published on 2008/12/16 00:01 -08:00, original URI: http://blogs.msdn.com/michkap/archive/2008/12/16/9223301.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostOld -->
+<p>Previous blogs in this series of blogs on this Blog:</p>
+
+<ul>
+<li><b><a href="http://archives.miloush.net/michkap/archive/2008/08/30/8907667.html" mce_href="http://archives.miloush.net/michkap/archive/2008/08/30/8907667.html">Part 0: 
+The intro, sans content</a></b> 
+</li>
+<li><b><a href="http://archives.miloush.net/michkap/archive/2008/09/08/8931641.html" mce_href="http://archives.miloush.net/michkap/archive/2008/09/08/8931641.html">Part 1: 
+Getting the obvious out of the way</a></b> 
+</li>
+<li><b><a href="http://archives.miloush.net/michkap/archive/2008/09/15/8952073.html" mce_href="http://archives.miloush.net/michkap/archive/2008/09/15/8952073.html">Part 2: 
+A&amp;P of a 'linguistic character'</a></b> 
+</li>
+<li><b><a href="http://archives.miloush.net/michkap/archive/2008/09/18/8956650.html" mce_href="http://archives.miloush.net/michkap/archive/2008/09/18/8956650.html">Part 3: 
+It starts with cursor movement (where MS simultaneously gets better and 
+worse)</a></b> 
+</li>
+<li><b><a href="http://archives.miloush.net/michkap/archive/2008/10/06/8977552.html" mce_href="http://archives.miloush.net/michkap/archive/2008/10/06/8977552.html">Part 4: 
+Talking about the ask&nbsp;</a></b> 
+</li>
+<li><b><a href="http://archives.miloush.net/michkap/archive/2008/10/15/9000371.html" mce_href="http://archives.miloush.net/michkap/archive/2008/10/15/9000371.html">Part 5: 
+What's on the Next Level?</a></b> 
+</li>
+<li><b><a href="http://archives.miloush.net/michkap/archive/2008/11/24/9134826.html" mce_href="http://archives.miloush.net/michkap/archive/2008/11/24/9134826.html">Part 6: 
+An exercise left for whoever needs some exercise</a></b> 
+</li>
+<li><b><a href="http://archives.miloush.net/michkap/archive/2008/12/04/9173687.html" mce_href="http://archives.miloush.net/michkap/archive/2008/12/04/9173687.html">Part 7: 
+If it makes the SQL Server columns too small then it made the Oracle columns 
+either too smallER or too smallEST</a></b></li>
+<li><b><a href="http://archives.miloush.net/michkap/archive/2008/12/09/9187379.html" mce_href="http://archives.miloush.net/michkap/archive/2008/12/09/9187379.html">Part 8: It's the end of the string as we know it (and I feel ellipses) </a></b><b><br></b></li>
+</ul>
+
+<p>It was way back in January of 2005 where I first mentioned how <b><a href="http://archives.miloush.net/michkap/archive/2005/01/14/352802.html" mce_href="http://archives.miloush.net/michkap/archive/2005/01/14/352802.html">CharNext(ch) != ch+1, a lot of the time</a></b>, which explained about how just incrementing a character pointer was not all that the <a href="http://msdn.microsoft.com/library/ms647469.aspx" mce_href="http://msdn.microsoft.com/library/ms647469.aspx">CharNext</a> function did.</p>
+
+<p>Then James pointed out in a comment (<a href="http://archives.miloush.net/michkap/archive/2005/01/14/352802.html#363364" mce_href="http://archives.miloush.net/michkap/archive/2005/01/14/352802.html#363364">here</a>) that, as it turns out, on Windows XP and Server 2003, that kind of was all that <a href="http://msdn.microsoft.com/library/ms647469.aspx" mce_href="http://msdn.microsoft.com/library/ms647469.aspx">CharNext</a> was doing.</p>
+
+<p>Remember how I talked about the way that even though NLS did not own some of 
+these USER functions, that we pretty much "owned" them since we control their 
+behavior, in <b><a href="http://archives.miloush.net/michkap/archive/2005/06/22/431394.html" class="" mce_href="http://archives.miloush.net/michkap/archive/2005/06/22/431394.html">this 
+post</a></b>?</p>
+
+<p>Well, this is one of those functions.</p>
+
+<p>Details on the breakage cause were described soon thereafter in <b><a href="http://archives.miloush.net/michkap/archive/2005/01/30/363420.html" mce_href="http://archives.miloush.net/michkap/archive/2005/01/30/363420.html">We broke CharNext/CharPrev (or, bugs found through blogging?)</a></b>.</p>
+
+<p>So the decision was made to fix the bug (restoring the old
+functionality from NT &lt;= Windows 2000, and at the same time to look
+at the other common complaint related to surrogate pairs.</p>
+
+<p>Vista, therefore, supports the old functionality and took steps to add the new functionality (not splitting surrogate pairs).</p>
+
+<p>There was a problem, though.</p>
+
+<p>The code in there swapped the check for high and low surrogates such
+that it was always skipping the high surrogate and always returning the
+low surrogate -- which is exactly the opposite of the behavior you want.</p>
+
+<p>Now no one found the bug because as it turns out the tested case
+(and admittedly the most common scenario for the function?), which is "a more
+linguistically appropriate lstrlenW based on <b>user character</b> principles" will still work here, even though a single call will return the wrong result when faced with a high surrogate.<br></p>
+
+<p>Here is where it gets more complicated.</p>
+
+<p>What happens in the next version, and/or possibly in the next service pack of Vista/Server 2008? </p><p>There are many choices:</p>
+1) Do we give up on the supplementary character detection given the
+mistake and just bring it back to the &lt;= Windows 2000 level behavior
+that properly handles combining characters?
+<p>2) Do we fix the bug with supplementary characters so that both they and the combining characters case will both work? <br></p>
+
+<p>3) Do we give up on both and go back to the XP level behavior, which
+even though it was a regression from prior versions does represent a
+very popular platform?</p>
+
+<p>4) Do we give up on trying to do anything here and just leave it
+broken as it is now, and perhaps in some unknown future version (it is
+a bit late in the cycle to start designing all new features) look into
+all new solutions to the problem(s) once they are identified?</p>
+
+<p>Now the order of these four choices, due to the way the code is
+written and under the principle of minimal change, is technically in
+order from most difficult to least difficult. Though really the amount
+of difficulty involved here is not that much even as you move across
+all four options, so that does not really provide very much insight
+into a triage process.</p>
+
+<p>In terms of platform popularity, I don't think there are many people
+outside of fans of the Windows "Mohave" commercials who would claim
+that XP isn't the most popular platform -- which does suggest that #3
+is worth considering, at least.</p>
+
+<p>My personal preference would be #2 since it is "the right thing to
+do" though when you have behavior that has been changing every few
+versions it might perhaps better to take some time to think about the
+backward compatibility issues before concluding that "the right thing
+to do" and "the best thing to do" are necessarily the same.</p>
+
+<p>The fact that so few people noticed the bug suggests that either </p>
+
+<ul>
+<li>no one is paying attention to/relying on the results, or</li>
+<li>the function is being used for a "linguistic character" version of lstrlenW.</li>
+</ul>
+
+<p>And obviously in both of those cases #2 would not represent a breaking change.</p>
+
+<p>But let's assume that a certain number of developers have noticed
+the odd behavior and chosen to work around it in their own code. Plenty
+of people do that, and many of them are either too cynical to report
+the bug or don't know of a good way to make the report. Or they just don't like Microsoft -- it happens.<br></p>
+
+<p>The ones who just decide the function is unreliable and write their
+own can be removed from our consideration here, since even though they
+may be right, they will not be broken if the behavior changes. So we'll
+leave them aside for a moment. <br></p>
+
+<p>If we don't want to break the people who found the bug and worked
+around it, we'd have to assume that they were essentially detecting the
+case where <a href="http://msdn.microsoft.com/library/ms647469.aspx" mce_href="http://msdn.microsoft.com/library/ms647469.aspx">CharNext</a> or <a href="http://msdn.microsoft.com/library/ms647471.aspx" mce_href="http://msdn.microsoft.com/library/ms647471.aspx">CharPrev</a> incorrectly return a high surrogate value (whether using the <a href="http://msdn.microsoft.com/library/ms776380.aspx" mce_href="http://msdn.microsoft.com/library/ms776380.aspx">IS_HIGH_SURROGATE macro</a> or simple range checking or whatever), and then doing an additional increment/decrement in those cases.</p>
+
+<p>Perhaps they feel that their code was a really good idea since it
+will even "fix" prior versions like NT 4.0 or Windows 2000 or XP and
+thus they feel they are "future-proof" since no right-thinking
+developer would break against every version (note that none of the
+above solutions do that!).<br></p>
+
+<p>Now if history is to be a guide, people might not do the full job
+here -- they might not be detecting the errant cases like unpaired
+surrogates or multiple high surrogates, so it might just be blind one
+WCHAR increment/decrement.</p>
+
+<p>And some might go even farther and validate that a valid surrogate
+pair exists, which is not something Windows necessarily does but isn't
+unreasonable here.<br></p>
+
+<p>But note that even in all of the above potential circumstances, the full fix described above in <b>#2</b> is still entirely safe since the function would never return a character that was a high surrogate.</p>
+
+<p>On balance, my gut feeling that #2 would be the best thing to do (in
+the next version of Windows and possibly even in future Vista/Server
+2008 service packs) mainly on the basis that it is the right thing to
+do also does appear to be the best solution for technical reasons as
+well.</p>
+<p>I mean, as UTF-16 detection mechanisms go, the best that can be said about <a href="http://msdn.microsoft.com/library/ms647469.aspx" mce_href="http://msdn.microsoft.com/library/ms647469.aspx">CharNext</a> and <a href="http://msdn.microsoft.com/library/ms647471.aspx" mce_href="http://msdn.microsoft.com/library/ms647471.aspx">CharPrev</a> is that they [sometimes, in some versions] work. Which is not saying much, but is saying <span style="font-style: italic;">something</span>, at least. It is better at least in the abstract to improve with each version, in my opinion.... <br>
+</p>
+
+<p>Though perhaps others would analyze the situation and circumstances and come to a different conclusion.</p>
+
+<p>What would you do?</p>
+<p>&nbsp;</p>
+
+<p><font color="#ff0000"><font size="4"><i>This post brought to you by<font size="7"> </font></i><font size="7">å</font></font><i><font size="4"><font size="7"> </font>(</font><a href="http://www.fileformat.info/info/unicode/char/00e5/index.htm"><font size="4">U+00e5</font></a><font size="4">, a.k.a. LATIN SMALL LETTER A WITH RING 
+ABOVE)</font><br><font size="1">A character that is downright snooty about the 
+fact that it has none of the problems mentioned in this article.<br>Despite the 
+fact that a circle almost bigger than its body&nbsp;is super-glued to its head, 
+something that would make me feel at least a little 
+self-conscious.</font></i></font> </p>
+<hr/><p><a id="9226781" href="#9226781">#</a> <strong>Mihai</strong> on Tuesday, December 16, 2008 12:24 PM:</p><div style="margin-left: 1em"><p>On my side, I have my own.</p>
+<p>The problem is, I cannot advice people anything.</p>
+<p>I used to say: use CharNext, it's safe. But not anymore :-(</p>
+<p>Thing is, I would rather go with 4.</p>
+<p>A function that changed behavior 3 times in 3 successive versions of Windows is so unreliable that is not trustworthy anymore.</p>
+<p>How can I advise someone to use this? What is the story? &quot;It will be wrong in XP, Vista, and Server 2003, but will work in Vista SPx and Win 7?&quot;</p>
+<p>Should one detect the Win version and use the stock API or their own, depending on the result? Then why not use always their own? At least is guaranteed to work the same on all platforms, so if you test on one you know it works on all.</p></div>
+<p><a id="9229248" href="#9229248">#</a> <strong>Michael S. Kaplan</strong> on Tuesday, December 16, 2008 7:00 PM:</p><div style="margin-left: 1em"><p>There is the argument for at least making it not broken before one drops it. :-)</p></div>
+<p><a id="9236607" href="#9236607">#</a> <strong>Mihai</strong> on Thursday, December 18, 2008 12:50 PM:</p><div style="margin-left: 1em"><p>In general it is easier to say &quot;don't use this, never ever&quot; instead of &quot;it is safe to use on xyz, but not on abc&quot;</p>
+<p>People don't write code for xyz, they want their applications to run on multiple systems, as long as they are popular.</p>
+<p>One of the things preventing (in my opinion) the faster adoption of new APIs is the lack of back-ports libraries.</p>
+<p>Examples:</p>
+<p> - Unicode: MSLU was too late</p>
+<p> - MUI: the backport is not 100% compatible with the new API (folder naming convention is not portable)</p>
+<p> - string locale id: there is no backport, just a mapping API between string and numeric locale identifiers</p>
+<p>So I would say the best solution I can see is:</p>
+<p> - Advise against CharNext/CharPrev</p>
+<p> - Add a new API that is native in Win X (whatever version that is) and available as a back-ported library for everything between XP and Win X</p>
+<p>I know that backporting is not in general a good idea (otherwise why would people migrate to the latest and greatest).</p>
+<p>But for some core, infrastructure stuff, that people are really encouraged to use, is better to backport. It will make adoption faster.</p></div>
+<p><a id="9237178" href="#9237178">#</a> <strong>Michael S. Kaplan</strong> on Thursday, December 18, 2008 2:51 PM:</p><div style="margin-left: 1em"><p>Let's keep the backport issue separate for a moment -- I happen to agree with you there, but there are at time powerful forces arrayed against it (I doubt, for example, that another XP SP is planned?).</p>
+<p>And let's keep the new version, new feature issue separate too. That is also something I agree with, but again if not backported far down enough, it won't help much for years anyway.</p>
+<p>But the real question is whether to leave the two functions that are literally broken in a specific way, knowing people will keep using them and never fixing them where they are broken, before they cause real problems (which in theory they can now)...</p>
+<p>I'm not convinced what the best overall strategy would be (though I am fairly close to where you are in that last comment!), but the bug is not strategy, its tactics. from a tactics point of view fixing things on a less popular OS before a potentially more popular OS inherits the bug does have specific visceral appeal to me.</p></div>
+<p><a id="9238034" href="#9238034">#</a> <strong>Mihai</strong> on Thursday, December 18, 2008 4:44 PM:</p><div style="margin-left: 1em"><p>Bit I talk as a potential beneficiary of this: this is broken for about 10 years. It is dead and buried. I don't use it, I recommend against it.</p>
+<p>Something new backported as a library (not SP!) and deprecating the old API feels like the most useful thing.</p>
+<p>I just don't see much benefit in fixing something that did not work for close to 10 years now. Stuff is broke, but fixing it might break existing software that was tested and works with the broken stuff.</p>
+<p>I don't know what the standard MS approach is on this kind of stuff.</p>
+<p>But I am trying to think a bit like Raymond :-)</p></div>
+<p><a id="9238149" href="#9238149">#</a> <strong>Michael S. Kaplan</strong> on Thursday, December 18, 2008 5:02 PM:</p><div style="margin-left: 1em"><p>Let's take as an example NLSDL (download <a href="http://www.microsoft.com/downloads/details.aspx?FamilyID=eb72cda0-834e-4c35-9419-ff14bc349c9d&amp;DisplayLang=en">here</a>) -- only good for XPSP2 and higher, Server 2003 SP1 and higher. How far downlevel would this (technically non-NLS) set of functions have to go? There are complicated issues there, and no solution is likely until at least Win8, by which time it might be very hard to be allowed to support even XP, let alone 2000....</p>
+<p>And in the meantime the two functions that exist stay wrong, for the next generation of developers. :-(</p></div>
+<p><a id="9239516" href="#9239516">#</a> <strong>Mihai</strong> on Thursday, December 18, 2008 8:43 PM:</p><div style="margin-left: 1em"><p>I would look at the statistics: what is out there, installed.</p>
+<p>Correlated with the official support period.</p>
+<p>Gut feeling: XP SP2 might be enough (it also depends when the thing gets released).</p>
+<p>The next generation of developers should not use it.</p>
+<p>Is deprecated, mark it as such.</p>
+<p>How is one supposed to write code that works on </p>
+<p>Win 8, Win 7, Vista, and (maybe XP)?</p>
+<p>1. New API + static library. The static lib is the backport doing the right thing on old win, and calls the native stuff on Win 8</p>
+<p>2. Old API and force all users to install the latest SP (with the risk of breaking old applications that don't use the library)</p>
+<p>3. Old API + backport lib? Is the lib supposed to "override" the system API? This one seems the most "unclean" version.</p>
+<p>I kind of favor 1. But I think someone like Raymond Chen can offer better advice than me, really...</p>
+<p>Right now my advice for devs is: write your own stuff and make sure to use it everywhere. This would allow fixing stuff in one single place when something gets fixed in Win.</p></div>
+<p><a id="9255111" href="#9255111">#</a> <strong>Yuhong Bao</strong> on Sunday, December 28, 2008 4:31 PM:</p><div style="margin-left: 1em"><p>&quot;In terms of platform popularity, I don't think there are many people outside of fans of the Windows &quot;Mohave&quot; commercials who would claim that XP isn't the most popular platform -- which does suggest that #3 is worth considering, at least.&quot;</p>
+<p>Reminds me of this comment:</p>
+<p><a rel="nofollow" target="_new" href="http://archives.miloush.net/michkap/archive/2008/11/11/9059132.html#9088973">http://blogs.msdn.com/michkap/archive/2008/11/11/9059132.aspx#9088973</a></p></div>
+<p><a id="9270552" href="#9270552">#</a> <strong>Mike</strong> on Saturday, January 03, 2009 2:55 PM:</p><div style="margin-left: 1em"><p>my vote (same as Mihai):</p>
+<p>- new static lib like NLSDL </p>
+<p>- don't touch the current APIs - keep as-is in Win7 and Win8</p>
+<p>- appcompat db for xp behavior</p></div>
+<p><a id="9857676" href="#9857676">#</a> <strong>James</strong> on Wednesday, August 05, 2009 12:07 AM:</p><div style="margin-left: 1em"><p>I'm new to this surrogate pair thing, so bear with me. ;)</p>
+<p>I'm confused by these two seemingly contradictory statements:</p>
+<p>"The code in there swapped the check for high and low surrogates such that it was always skipping the high surrogate and always returning the low surrogate -- which is exactly the opposite of the behavior you want."</p>
+<p>"If we don't want to break the people who found the bug and worked around it, we'd have to assume that they were essentially detecting the case where CharNext or CharPrev incorrectly return a high surrogate value"</p>
+<p>The first statement says that it's incorrect for CharNext/CharPrev to return the low surrogate value; the second says that it's incorrect to return the high surrogate value! &nbsp;Which is it? (Or am I misunderstanding all of this?)</p>
+<p>The first statemenet makes more sense to me since my gut tells me that CharNext/CharPrev ideally would return the leading code unit of a surrogate pair, and I'm assuming that the leading code unit is the "high" one.</p></div>
+<p><a id="9858116" href="#9858116">#</a> <strong>Michael S. Kaplan</strong> on Wednesday, August 05, 2009 11:16 AM:</p><div style="margin-left: 1em"><p>Hi James,</p>
+<p>It is incorrect to return the low surrogate. What I was trying to convey (perhaps unclearly) was the notion that people who assumed we were going to stay wrong &nbsp;by detecting we were returning the wrong character would advance an extra WCHAR to try to make up for the bug....</p></div>
+<hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2010/06/26 <a href="http://archives.miloush.net/michkap/archive/2010/06/26/10028278.html">BUG SPOTTING answers</a></p><p>2010/05/31 <a href="http://archives.miloush.net/michkap/archive/2010/05/31/10017323.html">BUG SPOTTING: Identify 1) what the code does, and 2) what they wanted it to do</a></p><p>2009/06/29 <a href="http://archives.miloush.net/michkap/archive/2009/06/29/9800913.html">UCS-2 to UTF-16, Part 11: Turning it up to Eleven!</a></p><p>2009/06/10 <a href="http://archives.miloush.net/michkap/archive/2009/06/10/9723321.html">UCS-2 to UTF-16, Part 10: Variation[ Selector] on a theme...</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2008/12/16/9225748.html" title="Grody to the Max[Date]!">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2008/12/15/9215772.html" title="Frost&#39;s The Form Not Taken">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2008-12">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2008-12-16">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2008/12/16/9223301.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:35 GMT -->
+</html>

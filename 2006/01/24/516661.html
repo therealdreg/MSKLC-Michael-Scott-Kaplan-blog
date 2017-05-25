@@ -1,0 +1,32 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2006/01/24/516661.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:40 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Invariant is a really good choice (any time there is no better choice)</title></head><body>
+<h1>Invariant is a really good choice (any time there is no better choice)</h1>
+<p><em>by Michael S. Kaplan, published on 2006/01/24 06:01 -05:00, original URI: http://blogs.msdn.com/b/michkap/archive/2006/01/24/516661.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P><FONT face=Tahoma>The&nbsp;title quote was said by the most famous person to ever write a post for this blog. :-)</FONT></P>
+<P><FONT face=Tahoma>It came up earlier today when someone was asking about InvariantCulture (names changes to protect the guilty):</FONT></P>
+<BLOCKQUOTE dir=ltr style="MARGIN-RIGHT: 0px">
+<BLOCKQUOTE dir=ltr style="MARGIN-RIGHT: 0px">
+<P><EM><FONT size=2>I found a good summary on string comparisons and InvariantCulture at: </FONT></EM><A href="http://team/sites/NETSecurity/Shared Documents/String Issues/New Recommendations for Using Strings in .NET 2.0.mht"><EM><FONT size=2>http://team/sites/NETSecurity/Shared%20Documents/String%20Issues/New%20Recommendations%20for%20Using%20Strings%20in%20.NET%202.0.mht</FONT></EM></A><EM><FONT size=2>.</FONT></EM></P>
+<P><EM><FONT size=2>What about culture agnostic data handling?&nbsp; The&nbsp;__________ team is using en-US for serialization instead of InvariantCulture based on current limitations of the latter.&nbsp; Is there a document that lists the current limitations and/or a comparison of InvariantCulture with en-US?</FONT></EM></P>
+<P><EM><FONT size=2>Is the current guidance to abandon InvariantCulture (with the exeption of the cases listed in the above document) and use en-US for all internal AND culture agnostic data handling?</FONT></EM></P></BLOCKQUOTE></BLOCKQUOTE>
+<P><FONT face=Tahoma>When you think about the reasons the Invariant locale exists (cf: <STRONG><a href="http://archives.miloush.net/michkap/archive/2004/12/08/278170.html">Where is the locale? It's Invariant. In <EM>where</EM>?</A></STRONG>), this is a somewher ironic turn of events, isn't it?</FONT></P>
+<P><FONT face=Tahoma>I mean, think about how the problem was in the perception of recommending that people use 0x0409/en-US when they wanted something arbitrary, and the solution was to provide something arbitrary. A way to not be quite so provincial.</FONT></P>
+<P><FONT face=Tahoma>But then when it comes down to the time to make the decision, it is the very arbitrary nature of the data that works against Invariant, so people&nbsp;go right back to 0x0409/en-US for their locale/culture needs. All on the basis that&nbsp;a document suggests that people&nbsp;should stay away from Invariant when they&nbsp;ought to&nbsp;be using Ordinal or OrdinalIgnoreCase for comparisons.</FONT></P>
+<P><FONT face=Tahoma>In actuality, 0x0409/en-US is a terrible choice here -- because if the preferences of people in this country change and a new preferences emerges, the data will be changed. In other words, the en-US CultureInfo follows <EM>the cultural preferences of those English speaking people in the United States of America</EM>. Which are completely subject to change.</FONT></P>
+<P><FONT face=Tahoma>Not a great base for arbitrary or for culture-agnostic operations, by any means!</FONT></P>
+<P><FONT face=Tahoma>Let's go back to that quote for a minute:</FONT></P>
+<P><FONT face=Tahoma><STRONG>Invariant is a really good choice any time there is no better choice.</STRONG></FONT></P>
+<P><FONT face=Tahoma>Easy rule, just keep in mind:</FONT></P>
+<UL>
+<LI><FONT face=Tahoma>if you need to compare symbolic identifiers or other non-linguistic data, Ordinal or OrdinalIgnoreCase is better.</FONT> 
+<LI><FONT face=Tahoma>if you need to handle data according to any particular culture, <EM>use that culture!</EM></FONT> 
+<LI><FONT face=Tahoma>otherwise, Invariant is the best and indeed only way to go if you want to avoid any potential problems.</FONT></LI></UL>
+<P><FONT face=Tahoma>It is pretty easy to decide what bucket your code falls into if you know what the code does....</FONT></P>
+<P><FONT face=Tahoma>But don't rely on en-US -- here in the USA, we elect B-movie actors for president and action movie stars for governor. Would you really want to rely on this country for its cultural preferences? I know I wouldn't! :-)</FONT></P>
+<P><FONT face=Tahoma></FONT>&nbsp;</P>
+<P><FONT face=Tahoma color=#ff1493><EM>This post brought to you by</EM> "<FONT size=6><STRONG>Ｉ</STRONG></FONT>" <EM>(U+ff29, a.k.a. FULLWIDTH LATIN CAPITAL LETTER I)</EM></FONT></P>
+<hr/><div style="margin-left: 1em"><em>no comments</em></div><hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2006/05/24 <a href="http://archives.miloush.net/michkap/archive/2006/05/24/605599.html">Invariant vs. Ordinal, the third</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2006/01/24/516670.html" title="Novantrone doesn&#39;t work for everyone">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2006/01/23/515987.html" title="It is not just the good SQL queries that have trouble, sometimes">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2006-01">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2006-01-24">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2006/01/24/516661.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:40 GMT -->
+</html>

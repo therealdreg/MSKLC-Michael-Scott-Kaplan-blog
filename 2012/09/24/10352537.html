@@ -1,0 +1,33 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2012/09/24/10352537.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:26 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>NOTE TO SELF: Not every team in Microsoft does things the same way...</title></head><body>
+<h1>NOTE TO SELF: Not every team in Microsoft does things the same way...</h1>
+<p><em>by Michael S. Kaplan, published on 2012/09/24 07:01 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2012/09/24/10352537.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<p>So as Windows 8 was being developed, we had a&nbsp;huge review done of locale data.</p>
+<p>Quite a few bugs were fixed during that process.</p>
+<p>And we learned some very interesting issues, as well!</p>
+<p>Like if you look back at a blog I wrote back in 2005 (<strong><a title="Number format and currency format are not always the same" href="../../../2005/06/21/431005.html">Number format and currency format are not always the same</a></strong>), I didn't give the actual example I had in mind -- the fact that we have separate <a href="http://msdn.microsoft.com/library/windows/desktop/dd373841">LOCALE_SDECIMAL</a> and <a href="http://msdn.microsoft.com/library/windows/desktop/dd373857">LOCALE_SMONDECIMALSEP</a> settings -- because that example wasn't in my mind a very good one.</p>
+<p>Because we had data that said the decimal separator for Farsi (Persian) was U+002e (aka FULL STOP), while the currency decimal separator&nbsp;for Farsi (Persian) was U+002f (aka SOLIDUS). But since it had been over a century that the <a href="http://en.wikipedia.org/wiki/Iranian_rial">IRANIAN RIAL</a> had ever needed to be divided into fractional values (often&nbsp;known as <a href="http://en.wikipedia.org/wiki/Dinar">DINAR</a>s).</p>
+<p>They didn't even make the coins any more, so it seemed like a stretch to speak about such a theoretical issue.</p>
+<p><em>Geeks such as myself are often proud of our arcane knowledge, but often try to avoid calling attention to it when it makes us seem silly!</em></p>
+<p>This didn't stop us from voting in favor of changes suggested by Asmus Freytag to the Unicode Bidi Algorithm (<a href="http://www.unicode.org/reports/tr9/">UAX #9</a>) to make it more "Microsoft-like) back in early 90s, by changing the Bidi class of U+200f (aka SOLIDUS) to make sure numbers on&nbsp; either side if it were not flipped/reversed, since we figured that was what we were doing anyway. Why not be happy if a standard changes in a way that makes us more conformant? :-)</p>
+<p>But one of the review feedback items that surprised us was how much more likely we were told that the LOCALE_SDECIMAL value was often expected for Persian (Farsi) to also be U+002f (aka SOLIDUS).</p>
+<p>Thus the whole original reason for having separate LOCALE_SDECIMAL and LOCALE_SMONDECIMALSEP values was perhaps not as true as we had thought!</p>
+<p>But obviously we couldn't remove a constant that had been around/documented/change-able since Windows 95, so we just changed the one setting -- the LOCALE_SMONDECIMALSEP for Persian (Farsi), and left it at that.</p>
+<p>Good thing we didn't fight those Unicode changes almost a decade ago for a theoretical currency formatting/parsing issue, since it seemed to also be a not-so-theoretical number formatting/parsing issue, too!</p>
+<p>And then the wheels started to comer off the wagon.</p>
+<p>Because it looks like Unicode may have also changed things back, too.</p>
+<p>And because even though Uniscribe/DWrite/Access/Excel handled the &lt;NUMBER&gt;/&lt;NUMBER&gt; issue "properly" -- in other words&nbsp;the same as &lt;NUMBER&gt;.&lt;NUMBER&gt; -- it turns out that Word/One Note/Internet Explorer did not!</p>
+<p>So the Windows 8 data change has now been reported as&nbsp;the cause of an&nbsp;Office regression.</p>
+<p>As has Office's own inconsistent behavior!</p>
+<p>The fact that those same apps are not comformant to wider Microsoft -- or perhaps even Unicode? --&nbsp; behavior for currency values for almost as long as Win32 has been around is now something that has to be carefully considered as a potential "should we revert the platform" issue, instead of a bug in the apps!</p>
+<p>Oops!</p>
+<p>We'll need to take another look at this issue (I'll fold in any feedback people give here to that discussion when/if it happens).</p>
+<p>And we'll have to never forget that not every part of Microsoft does things the same way!</p>
+<hr/><p><strong>PP</strong> on 26 Sep 2012 6:21 AM:</p><div style="margin-left: 1em"><p>Hello Michael, Is there (or will be) any full documentation about I18N in W8, especially changes in locale data, fixed bugs, new localized UI&#39;s etc ? It would be very useful.</p>
+<p>Cheers, Pawel.</p>
+</div>
+<hr/><p><em>go to <a id="newer" href="../25/10352917.html" title="Kevin knows where it will all end up- where &#39;Kevin&#39; is any random entity that doesn’t know nothin’ about nothin’">newer</a> or <a id="older" href="../20/10351244.html" title="Those keys that are so hot -- which ones should they be?">older</a> post, or back to <a href="../../../index-2.html">index</a> or <a href="../../../index-2.html#2012-09">month</a> or <a href="../../../index-2.html#2012-09-24">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2012/09/24/10352537.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:26 GMT -->
+</html>

@@ -1,0 +1,69 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2007/04/19/2185812.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:38 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>A picture that can't be easily described with words</title></head><body>
+<h1>A picture that can't be easily described with words</h1>
+<p><em>by Michael S. Kaplan, published on 2007/04/19 05:01 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2007/04/19/2185812.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<p>If only you could include screen shots in Microsoft Knowledge Base articles.</p>
+<p>I mean, could you imagine being in Product Support and trying to write up the text description for the following for a KB article?</p>
+<p><img src="http://msdnshared.blob.core.windows.net/media/MSDNBlogsFS/prod.evol.blogs.msdn.com/CommunityServer.Blogs.Components.WeblogFiles/00/00/00/33/81/6318.dpiconsequence.png" alt="" /></p>
+<p>Actually, a customer named Pavel had the same problem trying to describe the above when trying to find out about the situation in s newsgroup posting from a month or two ago.</p>
+<p>After I expressed some confusion about the description, he finally put up a screen shot and we started digging....</p>
+<p>It was not too long before we had a repro -- only on some machines, there was no indication yet as to the cause.</p>
+<p>Of course here we have access to checked builds; it turns out that just before this bug comes up, two asserts with huge callstacks come up -- they look something like this:</p>
+<p><img src="http://msdnshared.blob.core.windows.net/media/MSDNBlogsFS/prod.evol.blogs.msdn.com/CommunityServer.Blogs.Components.WeblogFiles/00/00/00/33/81/4606.dpiassert.png" alt="" /></p>
+<p>Wow, now that is disturbing.</p>
+<p>But that assert gives just the hint that was needed -- if you look at the item third from the bottom, we are actually near the end of the main form's InitializeComponent call -- this is the method that Visual Studio&nbsp;puts in&nbsp;that does all the grunt work of creating all of the controls and setting all of the properties of the form.</p>
+<p>It seems there is a specific case where the Resize event is being called long before any of the code in MSKLC runs -- like before the code initializes the "start size" of a bunch of controls. So those values are zero and when calculating the ratio between the new size and the original one, we divide by zero (since the uninitialized value is zero).</p>
+<p>Further digging, and we found that this only occurs with certain DPI values (120dpi or thereabouts), and only when the "XP compatible" mode is specified for the DPI.</p>
+<p>In fact, if you make sure not to click the "Disable display scaling on high DPI settings" for MSKLC or a shortcut to it (on the Compatibility tab):</p>
+<p><img src="http://msdnshared.blob.core.windows.net/media/MSDNBlogsFS/prod.evol.blogs.msdn.com/CommunityServer.Blogs.Components.WeblogFiles/00/00/00/33/81/1537.dpiprop.png" alt="" /></p>
+<p>And then you can also avoid the problem too.</p>
+<p>As to why this event is being called prematurely (yes, technically resizing happens in InitializeComponent but this code has been around since 2001 without ever hitting this problem before so it appears to be legitimate regression either in Vista or in WinForms in a set of circumstances narrow enough to mean that most people will never see the problem!), who knows?</p>
+<p>That will be followed up on in due course -- it might even make a KB article at some point, since it is much easier to put into words.</p>
+<p>Anyway, once you make sure you aren't using the XP compatible setting for MSKLC, everything looks good even on a machine that repros the problem:</p>
+<p><img src="http://msdnshared.blob.core.windows.net/media/MSDNBlogsFS/prod.evol.blogs.msdn.com/CommunityServer.Blogs.Components.WeblogFiles/00/00/00/33/81/1781.dpihappy.png" alt="" /></p>
+<p>But I am suddenly really not liking DPI settings for some reason. :-(</p>
+<p>Anyway, with a whole bunch of workarounds available (and the relative&nbsp;paucity of reports -- just one so&nbsp;far! --&nbsp;of the bug despite the huge number of MSKLC downloads), an immediate fix is presumably a hard sell. Especially since the real bug&nbsp;is in an event that is firing long before it is ever supposed to in a circumstance it is not documented as being supposed to fire.</p>
+<p>But even if it isn't going to be fixed until a future version of MSKLC or WinForms or whatever, it seemed worth a blog post, if only to show off that cool "keyboardless" MSKLC screen shot:</p>
+<p><img src="http://msdnshared.blob.core.windows.net/media/MSDNBlogsFS/prod.evol.blogs.msdn.com/CommunityServer.Blogs.Components.WeblogFiles/00/00/00/33/81/6318.dpiconsequence.png" alt="" /></p>
+<p>It isn't like the KB could do much without adding screen shot support. :-)</p>
+<p>&nbsp;</p>
+<p><span style="color: #ff00ff;"><em>This post brought to you by</em> <span style="font-size: large;">㉃</span> <em>(<a href="http://www.fileformat.info/info/unicode/char/3243">U+3243</a>, a.k.a. PARENTHESIZED IDEOGRAPH REACH)</em></span></p>
+<hr/><p><a id="2196172" href="#2196172">#</a> <strong>dmurillo</strong> on 19 Apr 2007 3:46 PM:</p><div style="margin-left: 1em"><p>Hi Michael,</p>
+<p>Oh... just this week we had this same kind of behaviour but in VB6 with Windows XP SP2!</p>
+<p>It's not the first time I've seen it, but it was a repeat of a similar problem that we first saw last year.</p>
+<p>We've introduced a new VB6 ActiveX control that did some processing in the &quot;UserControl_Resize&quot; event and got this kind of behaviour because the event got triggered twice, the first time being before some variables were initialized. &nbsp;But this event was only triggered if the Large Fonts option was set in the Advanced options of the Display Settings.</p>
+<p>I always thought that this was specific to VB6, I guess not! :-)</p>
+<p>Have a nice day!</p>
+<p>dm</p></div>
+<p><a id="2561350" href="#2561350">#</a> <strong>Serge K</strong> on 11 May 2007 11:55 PM:</p><div style="margin-left: 1em"><p>Hi Michael,</p>
+<p>I have the same issue with MSKLC on a notebook (Windows XP SP2).</p>
+<p>The display DPI setting is at 150% (144 dpi) - in order to make 15&quot; 1920&#215;1200 screen usable.</p>
+<p>Never thought seriously about reporting this bug - because of doubts that anyone cares.</p>
+<p>But now I have 22&quot; 3840&#215;2400 monitor connected to my desktop PC...</p></div>
+<p><a id="8373713" href="#8373713">#</a> <strong>Roland Fumey</strong> on 9 Apr 2008 9:05 PM:</p><div style="margin-left: 1em"><P>I have exactly that problem of a "keyboardless" MSKLC screen in Windows XP SP2, with a display setting of 120 DPI (125%).</P>
+<P>Unfortunately it does not seem to be possible to change anything about "Disable display scaling on high DPI settings" in the Compatibility tab.</P>
+<P>Is there any way to overcome this problem?</P>
+<P>Thanks!</P></div>
+<p><a id="8374162" href="#8374162">#</a> <strong>Michael S. Kaplan</strong> on 10 Apr 2008 2:19 AM:</p><div style="margin-left: 1em"><p>There is no setting in XP -- you have to lower the DPI to work around the bug.</p>
+</div>
+<p><a id="8378555" href="#8378555">#</a> <strong>Roland Fumey</strong> on 11 Apr 2008 1:34 AM:</p><div style="margin-left: 1em"><p>Thanks! I thought so.</p>
+<p>It would be a great help if this problem could be overcome some time as more and more people will probably have high resolution screens, where they normally have a greater than 100% DPI setting.</p>
+<p>Anyway, thank you very much for MSKLC!</p></div>
+<p><a id="8378754" href="#8378754">#</a> <strong>Michael S. Kaplan</strong> on 11 Apr 2008 2:30 AM:</p><div style="margin-left: 1em"><p>It is on the list of things to fix in a future version, so I assume that it will evenually be fixed. I'll forward this conversation on to the owners so that they know about it....</p>
+</div>
+<p><a id="8498118" href="#8498118">#</a> <strong>Konstantin P</strong> on 12 May 2008 9:41 PM:</p><div style="margin-left: 1em"><p>I just installed MKLC 1.4 on a Vista Business machine. I have desktop compositing and high DPI enabled. The &quot;Disable display scaling on high DPI settings&quot; box on the executable's Compatibility Settings tab is *unchecked* (as instructed). However, the layout still appears invisible.</p></div>
+<p><a id="8498138" href="#8498138">#</a> <strong>Michael S. Kaplan</strong> on 12 May 2008 9:47 PM:</p><div style="margin-left: 1em"><p>You might still have the main setting for DPI in that XP mode -- it is not just the shortcut (which does per app behavior), the overall setting also has a say here....</p>
+</div>
+<p><strong>Konstantin P</strong> on 14 May 2008 11:36 PM:</p><div style="margin-left: 1em"><p>&quot;the overall setting also has a say here....&quot;</p>
+<p>Ah, but turning that off would make all non-high-DPI-aware apps too blurry for comfort. Guess I'll just wait for the next version of the layout creator.</p></div>
+<p><strong>Michael S. Kaplan</strong> on 14 May 2008 11:56 PM:</p><div style="margin-left: 1em"><p>I don't have an ETA on that one though. Sorry. :-(</p>
+</div>
+<p><strong>Vlado Jamnicky</strong> on 15 Nov 2008 8:59 PM:</p><div style="margin-left: 1em"><p>MSKLC 1.4 gives me same grey screen with XP (MediaCenter Edition, version 2002, SP3). In Properties selecting 96 or 120 DPI made no difference. </p></div>
+<p><strong>Vlado Jamnicky</strong> on 16 Nov 2008 8:34 AM:</p><div style="margin-left: 1em"><p>Re my comment yesterday: Today I tried again (reducing DPI) and this time it worked, so thanks awfully for the tip. No idea why Ii failed yesterday. Cheers.</p></div>
+<p><strong>Michael S. Kaplan</strong> on 16 Nov 2008 10:28 AM:</p><div style="margin-left: 1em"><p>Have you logged off or rebooted in the interim? Glad you are working again, at least!</p>
+</div>
+<hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2015/05/21 <a href="http://archives.miloush.net/michkap/archive/2015/05/21/8770668856267196428.html">No words seem to make the picture any clearer</a></p><p>2010/06/24 <a href="http://archives.miloush.net/michkap/archive/2010/06/24/10028177.html">A picture that *still* can't be easily described with words</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2007/04/19/2190207.html" title="Is CharNextExA broken?">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2007/04/18/2179499.html" title="Will the real orthography please rise? (HINT: they should all stand up)">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2007-04">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2007-04-19">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2007/04/19/2185812.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:38 GMT -->
+</html>

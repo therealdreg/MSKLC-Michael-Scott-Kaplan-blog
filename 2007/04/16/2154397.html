@@ -1,0 +1,37 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2007/04/16/2154397.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:38 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Before jumping into the stream, you might want to peek at it</title></head><body>
+<h1>Before jumping into the stream, you might want to peek at it</h1>
+<p><em>by Michael S. Kaplan, published on 2007/04/16 10:59 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2007/04/16/2154397.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P>Chris asked:</P>
+<BLOCKQUOTE>
+<P><EM><FONT face="times new roman,times">I am using the following constructor for StreamReader:<BR><BR></FONT></EM><A class="" href="http://msdn2.microsoft.com/library/9y86s1a9.aspx" mce_href="http://msdn2.microsoft.com/library/9y86s1a9.aspx"><EM><FONT face="times new roman,times">StreamReader (String, Boolean)</FONT></EM></A><EM><FONT face="times new roman,times">&nbsp;&nbsp;&nbsp;&nbsp;Initializes a new instance of the StreamReader class for the specified file name, with the specified byte order mark detection option. <BR><BR>However, when I look at the “.CurrentEncoding” property of the StreamReader class; it always appears to be UTF8 no matter what the encoding is of the file that was opened.&nbsp; How can I get the encoding of the file that was opened?<BR><BR>--Chris</FONT></EM></P></BLOCKQUOTE>
+<P>Before anyone had a chance to respond (like maybe 10 minutes later!), he answered his own question though:</P>
+<BLOCKQUOTE>
+<P><EM><FONT face="times new roman,times">Never mind.&nbsp; By executing the .Peek() method the .CurrentEncoding property gets set appropriately.</FONT></EM></P></BLOCKQUOTE>
+<P>I thought about it later and looked at the docs, which had this to say about that <STRONG>bool</STRONG> parameter:</P>
+<BLOCKQUOTE>
+<P>The <SPAN class=parameter>detectEncodingFromByteOrderMarks</SPAN> parameter detects the encoding by looking at the first three bytes of the stream. It automatically recognizes UTF-8, little-endian Unicode, and big-endian Unicode text if the file starts with the appropriate byte order marks. Otherwise, the user-provided encoding is used. See the <A onclick="javascript:Track('ctl00_LibFrame_ctl22|ctl00_LibFrame_ctl25',this);" href="http://msdn2.microsoft.com/en-us/library/system.text.encoding.getpreamble.aspx">Encoding.GetPreamble</A> method for more information.</P></BLOCKQUOTE>
+<P>A part of me is hoping that there is a small do. bug and that given the existence of the <A class="" href="http://msdn2.microsoft.com/library/bxf7exc4.aspx" mce_href="http://msdn2.microsoft.com/library/bxf7exc4.aspx">UTF32Encoding class</A> that it is the first <STRONG>four</STRONG> bytes that are being looked at here, and not just the first three. :-)</P>
+<P>But then I thought about the idea that the <A class="" href="http://msdn2.microsoft.com/library/system.io.streamreader.currentencoding.aspx" mce_href="http://msdn2.microsoft.com/library/system.io.streamreader.currentencoding.aspx">StreamReader.CurrentEncoding</A> was not looking at even those first few bytes until after one started looking at the data in the stream. I couldn't really think of a case where this was weird other than code that was depending on the value to decide what to do and which therefore might be looking at the <A class="" href="http://msdn2.microsoft.com/library/system.io.streamreader.currentencoding.aspx" mce_href="http://msdn2.microsoft.com/library/system.io.streamreader.currentencoding.aspx">CurrentEncoding</A> first. In which case one's code could make the wrong decision, right?</P>
+<P>The moral of the story? Be sure to take a quick peek before you make any big decisions with the <A class="" href="http://msdn2.microsoft.com/library/6aetdk20.aspx" mce_href="http://msdn2.microsoft.com/library/6aetdk20.aspx">StreamReader</A>!</P>
+<P mce_keep="true">&nbsp;</P>
+<P><FONT color=#ff00ff><EM>This post brought to you by</EM> <A class="" href="http://www.fileformat.info/info/unicode/char/feff" mce_href="http://www.fileformat.info/info/unicode/char/feff">U+feff</A>, a.k.a. ZERO WIDTH NO-BREAK SPACE, a.k.a. the BYTE ORDER MARK</FONT></P>
+<hr/><p><a id="2157761" href="#2157761">#</a> <strong>Paul Dempsey</strong> on 16 Apr 2007 6:26 PM:</p><div style="margin-left: 1em"><p>I was just working in a similar area. I DID come across a mention in the documentation that you must read from the stream in order for detection to happen -- I just can't find it now to point you to the evidence that it's really in there somewhere.</p>
+<p>The .NET docs are quite insufficient/infuriating in explaining in detail how and when detection happens. Mentioning this in the docs for the constructors that turn on detection would be appropriate places to add this important bit of information.</p></div>
+<p><a id="2157778" href="#2157778">#</a> <strong>Paul Dempsey</strong> on 16 Apr 2007 6:34 PM:</p><div style="margin-left: 1em"><p>Ah, there is is, in the doc for StreamReader.CurrentEncoding:</p>
+<p>&quot;The current character encoding used by the current reader. The value can be different after the first call to any Read method of StreamReader, since encoding autodetection is not done until the first call to a Read method. &quot;</p></div>
+<p><a id="2158367" href="#2158367">#</a> <strong>Dean Harding</strong> on 16 Apr 2007 8:13 PM:</p><div style="margin-left: 1em"><p>Hehe, that's gotta be one of the best puns you've come up with :-)</p>
+</div>
+<p><a id="2164989" href="#2164989">#</a> <strong>Washu</strong> on 17 Apr 2007 2:07 PM:</p><div style="margin-left: 1em"><p>It would appear that it does check for UTF32Encoding, as seen below (pulled from the DetectEncoding() private method in StreamReader)</p>
+<p> else if ((((this.byteLen &gt;= 4) &amp;&amp; (this.byteBuffer[0] == 0)) &amp;&amp; ((this.byteBuffer[1] == 0) &amp;&amp; (this.byteBuffer[2] == 0xfe))) &amp;&amp; (this.byteBuffer[3] == 0xff))</p>
+<p> &nbsp; &nbsp; &nbsp; &nbsp;{</p>
+<p> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;this.encoding = new UTF32Encoding(true, true);</p>
+<p> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;flag = true;</p>
+<p> &nbsp; &nbsp; &nbsp; &nbsp;}</p></div>
+<p><a id="2166443" href="#2166443">#</a> <strong>Michael S. Kaplan</strong> on 17 Apr 2007 5:15 PM:</p><div style="margin-left: 1em"><p>Yep, I assumed this was just a doc. issue.... :-)</p>
+</div>
+<hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2007/04/17/2159574.html" title="In case of conflict, dump the indexes! (a.k.a. A day in the life of Jet)">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2007/04/16/2152451.html" title="Which one has the astigmatism?">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2007-04">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2007-04-16">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2007/04/16/2154397.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:38 GMT -->
+</html>

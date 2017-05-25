@@ -1,0 +1,38 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2008/05/09/8481353.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:36 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>It is okay to not be in favor of termination</title></head><body>
+<h1>It is okay to not be in favor of termination</h1>
+<p><em>by Michael S. Kaplan, published on 2008/05/09 14:36 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2008/05/09/8481353.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P><FONT color=#ff0000>No, this is not a post about abortion. I am talking about NULL termination, a way to end strings that is legal in all fifty states and that is widely used by software that is in regular use by people all over the world irregardless of their views about the other kind of termination. So it is a universally safe topic, even if this disclaimeresque&nbsp;introduction isn't, necessarily.</FONT></P>
+<P>There are many patterns to calling functions within the NLS API, most (<A class="" href="http://archives.miloush.net/michkap/archive/2006/04/24/581700.html" mce_href="http://archives.miloush.net/michkap/archive/2006/04/24/581700.html"><STRONG>but not all</STRONG></A>) of which have the following rules:</P>
+<UL>
+<LI>You can pass a NULL buffer and a 0 length to be returned&nbsp;the exact required length plus one for the terminating NULL.</LI>
+<LI>You can pass a buffer of the size above or larger to have the buffer filled, with the return being the exact length plus one for the terminating NULL.</LI>
+<LI>You can pass a buffer of just&nbsp;the required length without the terminating NULL, you get the buffer filled, with the return being the exact length with no terminating NULL</LI></UL>
+<P>This behavior can easily get confusing.</P>
+<P>It&nbsp;is even a <STRONG>security</STRONG> topic since if misused the filled buffer without a terminating NULL can lead to real bugs if not used properly.</P>
+<P>But there are times when it is exactly what you want.</P>
+<P>Say for example if you are using <A class="" href="http://msdn.microsoft.com/library/ms776290.aspx" mce_href="http://msdn.microsoft.com/library/ms776290.aspx">LCMapString</A> to do case conversion and you are doing it inline. Inserting a random NULL in the middle of a string with existing content that&nbsp;one wishes to preserve is seldom a good idea.</P>
+<P>Other calls can also require this behavior.</P>
+<P>But it does explain the following calls and results:</P>
+<BLOCKQUOTE>
+<P><FONT face="consolas,lucida console,courier new,courier"><STRONG>LCMapString(LOCALE_USER_DEFAULT, LCMAP_FULLWIDTH, L"\u00c4\u0170", -1, NULL, 0)<BR>return value: 3<BR><BR>LCMapString(LOCALE_USER_DEFAULT, LCMAP_FULLWIDTH, L"\u00c4\u0170", -1, wz, 3)<BR>return value: 3<BR>wz value: L"\u00c4\u0170\u0000"<BR><BR>LCMapString(LOCALE_USER_DEFAULT, LCMAP_FULLWIDTH, L"\u00c4\u0170", -1, wz, 10)<BR>return value: 3<BR>wz value: L"\u00c4\u0170\u0000"<BR><BR>LCMapString(LOCALE_USER_DEFAULT, LCMAP_FULLWIDTH, L"\u00c4\u0170", 2, wz, 3)<BR>return value: 2<BR>wz value: L"\u00c4\u0170"<BR><BR>LCMapString(LOCALE_USER_DEFAULT, LCMAP_FULLWIDTH, L"\u00c4\u0170", 2, wz, 2)<BR>return value: 2<BR>wz value: L"\u00c4\u0170"</STRONG></FONT></P></BLOCKQUOTE>
+<P mce_keep="true"><EM>(It helps to know that&nbsp;</EM><STRONG><FONT face=Consolas>L"\u00c4\u0170"</FONT></STRONG><EM> will have an implicit NULL at the end when one is looking at it from inside the function!)</EM></P>
+<P mce_keep="true">Now in this case the two characters:</P>
+<BLOCKQUOTE>
+<P mce_keep="true"><FONT size=5>Ä</FONT> (<A class="" href="http://www.fileformat.info/info/unicode/char/00c4" mce_href="http://www.fileformat.info/info/unicode/char/00c4">U+00c4</A>, aka LATIN CAPITAL LETTER A WITH DIAERESIS)</P>
+<P mce_keep="true"><FONT size=5>Ű </FONT>(<A class="" href="http://www.fileformat.info/info/unicode/char/0170" mce_href="http://www.fileformat.info/info/unicode/char/0170">U+0170</A>, aka LATIN CAPITAL LETTER U WITH DOUBLE ACUTE)</P></BLOCKQUOTE>
+<P mce_keep="true">have no full-width equivalents and thus will pass through the function with this flag, completely&nbsp;unchanged. Which provides an ideal opportunity to see all of this behavior, under the microscope so to speak....</P>
+<P mce_keep="true">&nbsp;</P>
+<P mce_keep="true"><EM><FONT color=#ff00ff>This blog sponsored by those two characters along for the ride, above</FONT></EM></P>
+<hr/><p><a id="8580845" href="#8580845">#</a> <strong>mirabilos</strong> on 8 Jun 2008 10:47 AM:</p><div style="margin-left: 1em"><p>It's “NUL” termination,</p>
+<p>not “NULL” termination.</p>
+<p>NUL = ASCII byte 0x00</p>
+<p>NULL = pointer value (void *)0L</p>
+<p>By the way, am I the only</p>
+<p>German around in favour of</p>
+<p>the uppercase eszett?</p></div>
+<hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2008/05/10/8482865.html" title="Whither disability discrimination?">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2008/05/09/8477363.html" title="The etymology of the Homo-Sus hypothesis">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2008-05">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2008-05-09">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2008/05/09/8481353.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:36 GMT -->
+</html>

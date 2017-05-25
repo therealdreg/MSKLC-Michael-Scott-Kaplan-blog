@@ -1,0 +1,78 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2007/09/13/4889199.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:37 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>A&P of Sort Keys, part 3 (aka Should you let a string make it's case? If so, Y?)</title></head><body>
+<h1>A&P of Sort Keys, part 3 (aka Should you let a string make it's case? If so, Y?)</h1>
+<p><em>by Michael S. Kaplan, published on 2007/09/13 03:16 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2007/09/13/4889199.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P>Previous posts in this series:</P>
+<UL>
+<LI>Part 0: <STRONG><A class="" href="http://archives.miloush.net/michkap/archive/2007/09/10/4847780.html" mce_href="http://archives.miloush.net/michkap/archive/2007/09/10/4847780.html">The empty string sorts the same in every language</A></STRONG> 
+<LI>Part 1: <STRONG><A class="" href="http://archives.miloush.net/michkap/archive/2007/09/11/4861436.html" mce_href="http://archives.miloush.net/michkap/archive/2007/09/11/4861436.html">The law of the letter -- e.g. Latin &lt; Greek &lt; Cyrillic</A></STRONG></LI>
+<LI>Part 2: <A class="" href="http://archives.miloush.net/michkap/archive/2007/09/12/4875560.html" mce_href="http://archives.miloush.net/michkap/archive/2007/09/12/4875560.html"><STRONG>The string that won? Didn't have a mark on him!</STRONG></A></LI></UL>
+<P>I had someone ask me what the A&amp;P stood for in the titles of the posts in the series. This made me feel good since I don't think I had any previous proof that people were paying attention to them! :-)</P>
+<P>A&amp;P stands for <STRONG>A</STRONG>natomy and <STRONG>P</STRONG>hysiology, just a holdover from my days when my career had more of a medical aim....</P>
+<P>So, let's move into today's post, shall we?</P>
+<P>The topic is going to be about those items that fill up the case weight section of the sort key.</P>
+<P>Our sample strings will be:</P>
+<BLOCKQUOTE>
+<P><FONT face=tahoma,arial,helvetica,sans-serif size=5>yyyyyyyy<BR><BR>yýÿỳỵỷỹʏ<BR><BR>YÝŸỲỴỶỸʏ</FONT></P></BLOCKQUOTE>
+<P>You might wonder Y I am using these strings, but it will become clear soon. The first row is obvious, but the second and third rows are the LATIN SMALL LETTER and LATIN CAPITAL LETTER versions of:</P>
+<P>Y,&nbsp;Y WITH ACUTE, Y WITH DIAERESIS, Y WITH GRAVE, Y WITH DOT BELOW, Y WITH HOOK ABOVE, Y WITH TILDE, and then a&nbsp;LATIN LETTER SMALL CAPITAL Y at the end of both, a.k.a.</P>
+<BLOCKQUOTE>
+<P><FONT face="courier new,courier"><A class="" href="http://www.fileformat.info/info/unicode/char/0059/index.htm" mce_href="http://www.fileformat.info/info/unicode/char/0059/index.htm">U+0059</A> <A class="" href="http://www.fileformat.info/info/unicode/char/00dd/index.htm" mce_href="http://www.fileformat.info/info/unicode/char/00dd/index.htm">U+00dd</A> <A class="" href="http://www.fileformat.info/info/unicode/char/0178/index.htm" mce_href="http://www.fileformat.info/info/unicode/char/0178/index.htm">U+0178</A> <A class="" href="http://www.fileformat.info/info/unicode/char/1ef2/index.htm" mce_href="http://www.fileformat.info/info/unicode/char/1ef2/index.htm">U+1ef2</A> <A class="" href="http://www.fileformat.info/info/unicode/char/1ef4/index.htm" mce_href="http://www.fileformat.info/info/unicode/char/1ef4/index.htm">U+1ef4</A> <A class="" href="http://www.fileformat.info/info/unicode/char/1ef6/index.htm" mce_href="http://www.fileformat.info/info/unicode/char/1ef6/index.htm">U+1ef6</A> <A class="" href="http://www.fileformat.info/info/unicode/char/1ef8/index.htm" mce_href="http://www.fileformat.info/info/unicode/char/1ef8/index.htm">U+1ef8</A> <A class="" href="http://www.fileformat.info/info/unicode/char/028f/index.htm" mce_href="http://www.fileformat.info/info/unicode/char/028f/index.htm">U+028f</A><BR><A class="" href="http://www.fileformat.info/info/unicode/char/0079/index.htm" mce_href="http://www.fileformat.info/info/unicode/char/0079/index.htm">U+0079</A> <A class="" href="http://www.fileformat.info/info/unicode/char/00fd/index.htm" mce_href="http://www.fileformat.info/info/unicode/char/00fd/index.htm">U+00fd</A> <A class="" href="http://www.fileformat.info/info/unicode/char/00ff/index.htm" mce_href="http://www.fileformat.info/info/unicode/char/00ff/index.htm">U+00ff</A> <A class="" href="http://www.fileformat.info/info/unicode/char/1ef3/index.htm" mce_href="http://www.fileformat.info/info/unicode/char/1ef3/index.htm">U+1ef3</A> <A class="" href="http://www.fileformat.info/info/unicode/char/1ef5/index.htm" mce_href="http://www.fileformat.info/info/unicode/char/1ef5/index.htm">U+1ef5</A> <A class="" href="http://www.fileformat.info/info/unicode/char/1ef7/index.htm" mce_href="http://www.fileformat.info/info/unicode/char/1ef7/index.htm">U+1ef7</A> <A class="" href="http://www.fileformat.info/info/unicode/char/1ef9/index.htm" mce_href="http://www.fileformat.info/info/unicode/char/1ef9/index.htm">U+1ef9</A> <A class="" href="http://www.fileformat.info/info/unicode/char/028f/index.htm" mce_href="http://www.fileformat.info/info/unicode/char/028f/index.htm">U+028f</A></FONT></P></BLOCKQUOTE>
+<P>I am sure you are as curious as me what the sort keys look like, right? :-)</P>
+<P>The case weights will be <STRONG><FONT color=#0000ff>blue</FONT></STRONG>!</P>
+<BLOCKQUOTE><FONT face="consolas,lucida console,courier new,courier"><B>
+<P><FONT color=#009900>0e a7 0e a7 0e a7 0e a7 0e a7 0e a7 0e a7 0e a7</FONT> 01 01 01 01 00&nbsp;<BR><FONT color=#009900>0e a7 0e a7 0e a7 0e a7 0e a7 0e a7 0e a7 0e a7</FONT> 01 <FONT color=#ff0000>02 0e 13 0f 58 44 19</FONT> 01 <FONT color=#0000ff>02 02 02 02 02 02 02 0a</FONT> 01 01 00 <BR><FONT color=#009900>0e a7 0e a7 0e a7 0e a7 0e a7 0e a7 0e a7 0e a7</FONT> 01 <FONT color=#ff0000>02 0e 13 0f 58 44 19</FONT> 01 <FONT color=#0000ff>12 12 12 12 12 12 12 0a</FONT> 01 01 00</P></B></FONT></BLOCKQUOTE>
+<P mce_keep="true">So similar to case weight, the cost is one byte of case weight and time the character has case weight. Of course just as with diacritics if placeholder minimal <STRONG>02</STRONG> bytes are needed.</P>
+<P mce_keep="true">You may notice that the SMALL letters have no weight (just that minimal <STRONG>02</STRONG> weight), and that CAPITAL letters have a <STRONG>10</STRONG> weight, and that most interestingly, that SMALL CAPITAL letter has a <STRONG>0a</STRONG> weight.</P>
+<P mce_keep="true">Makes you wonder what other weights might be there for other characters, doesn't it?</P>
+<P mce_keep="true">Let's try something fun, like:</P>
+<BLOCKQUOTE>
+<P mce_keep="true"><FONT face=tahoma,arial,helvetica,sans-serif size=5>+₊﹢⁺+</FONT></P></BLOCKQUOTE>
+<P mce_keep="true">a.k.a. <A class="" href="http://www.fileformat.info/info/unicode/char/002b" mce_href="http://www.fileformat.info/info/unicode/char/002b">U+002b</A> (PLUS SIGN), <A class="" href="http://www.fileformat.info/info/unicode/char/208a" mce_href="http://www.fileformat.info/info/unicode/char/208a">U+208a</A> (SUBSCRIPT PLUS SIGN), <A class="" href="http://www.fileformat.info/info/unicode/char/fe62" mce_href="http://www.fileformat.info/info/unicode/char/fe62">U+fe62</A> (SMALL PLUS SIGN), <A class="" href="http://www.fileformat.info/info/unicode/char/207a" mce_href="http://www.fileformat.info/info/unicode/char/207a">U+207a</A> (SUPERSCRIPT PLUS SIGN), and <A class="" href="http://www.fileformat.info/info/unicode/char/002b" mce_href="http://www.fileformat.info/info/unicode/char/002b">U+002b</A> (PLUS SIGN).</P>
+<P mce_keep="true">The sort key will look like this (again on Vista):</P>
+<BLOCKQUOTE><FONT face="consolas,lucida console,courier new,courier"><B>
+<P mce_keep="true"><FONT color=#009900>08 03 08 03 08 03 08 03 08 03</FONT> 01 01 <FONT color=#0000ff>02 04 08 0e</FONT> 01 01 00</P></B></FONT></BLOCKQUOTE>
+<P mce_keep="true">So there we have it:</P>
+<UL>
+<LI>
+<DIV mce_keep="true"><STRONG>02</STRONG> -- the minimal weight</DIV></LI>
+<LI>
+<DIV mce_keep="true">04 -- the&nbsp;subscript weight</DIV></LI>
+<LI>
+<DIV mce_keep="true"><STRONG>08</STRONG> -- the small weight (<EM>Wait! Wasn't that supposed to be 10?</EM>)</DIV></LI>
+<LI>
+<DIV mce_keep="true"><STRONG>0e</STRONG> -- the superscript weight</DIV></LI></UL>
+<P mce_keep="true">But luckily, there is probably a good compression story for these pieces of the sort key since in practice these weights will be pretty rare in text.</P>
+<P mce_keep="true">Another interesting case -- what if you pass NORM_IGNORECASE intending to strip some of this excess weight?</P>
+<BLOCKQUOTE><FONT face="consolas,lucida console,courier new,courier"><B>
+<P mce_keep="true"><FONT color=#009900>08 03 08 03 08 03 08 03 08 03</FONT> 01 01 <FONT color=#0000ff>02 04 00 06</FONT> 01 01 00</P></B></FONT></BLOCKQUOTE>
+<P mce_keep="true">Aha, these aren't all case weights, but it looks like some of the weight is case related....</P>
+<P mce_keep="true">Plus, does anyone notice that unexpected <STRONG>00</STRONG> in there? Looks like it really <EM>was</EM> supposed to be <STRONG>0a</STRONG> and not <STRONG>08</STRONG>, now doesn't it?</P>
+<P mce_keep="true">Is there an NLS tester in the house <STRONG>who would like to put in a bug</STRONG>? :-)</P>
+<P mce_keep="true">If you look at the values, you'll see that the case weight seems to have a bit of a bitwise component in it -- we'll talk more about this later....</P>
+<P mce_keep="true">Anyway, that's probably enough for this episode. Stay tuned tomorrow for us to start making things a little more complicated!</P>
+<P mce_keep="true">&nbsp;</P>
+<P mce_keep="true"><FONT color=#ff00ff><EM>This post brought to you by</EM> <FONT size=5>3</FONT> <EM>(<A class="" href="http://www.fileformat.info/info/unicode/char/0033" mce_href="http://www.fileformat.info/info/unicode/char/0033">U+0033</A>, DIGIT THREE)</EM></FONT></P>
+<hr/><p><a id="4891427" href="#4891427">#</a> <strong>Zooba</strong> on 13 Sep 2007 5:42 AM:</p><div style="margin-left: 1em"><p>Hi Michael,</p>
+<p>Just letting you know that I'm very much enjoying this series so far. It's all completely new to me (like most of your blog) and very interesting. Right up there with some of Raymond Chen's series (I hope that doesn't jinx you...)</p></div>
+<p><a id="4893761" href="#4893761">#</a> <strong>Kyle M Cowan</strong> on 13 Sep 2007 8:39 AM:</p><div style="margin-left: 1em"><p>Michael,</p>
+<p>You may confuse people with this post slightly, because you go in and out of how you display numbers, and I think you might have also confused yourself a little.</p>
+<p>&quot;You may notice that the SMALL letters have no weight (just that minimal 02 weight), and that CAPITAL letters have a 12 weight, and that most interestingly, that SMALL CAPITAL letter has a 10 weight.&quot;</p>
+<p>It should actually be 2 weight for small, 18 weight for capitals, and 10 weight for small capitals, or simply left in hex might have been an easier read. &nbsp;Referring to the 0x02 0x12 and 0x0a.</p>
+<p>&quot;Plus, does anyone notice that unexpected 00 in there? Looks like it really was supposed to be 10 and not 08, now doesn't it?&quot;</p>
+<p>If you submit the bug for this, you may want to clarify that it's 10 in Decimal, or 0x0A in hex. &nbsp;It looks like NORM_IGNORECASE toggles the '8' bit off. (or in more complicated text : Subtracts 8 if the number is greater than or equal to 8).</p></div>
+<p><a id="4896677" href="#4896677">#</a> <strong>Michael Dunn_</strong> on 13 Sep 2007 1:01 PM:</p><div style="margin-left: 1em"><p>Just to clear things up for myself (not nitpicking too much I hope): I think you swapped the 2nd and 3rd lines in the first group of sort keys. &nbsp;And sometimes you refer to ten as &quot;10&quot; and sometimes &quot;0a&quot;</p>
+</div>
+<p><a id="4897499" href="#4897499">#</a> <strong>Michael S. Kaplan</strong> on 13 Sep 2007 2:06 PM:</p><div style="margin-left: 1em"><p>No worries, that was not nitpicking -- and now fixed!</p>
+</div>
+<p><a id="4914142" href="#4914142">#</a> <strong>Maurits [MSFT]</strong> on 14 Sep 2007 12:35 PM:</p><div style="margin-left: 1em"><p>&gt; CAPITAL letters have a 0c weight</p>
+<p>? According to the sort key they have an 0x10 weight.</p>
+</div>
+<p><a id="4914618" href="#4914618">#</a> <strong>Michael S. Kaplan</strong> on 14 Sep 2007 1:18 PM:</p><div style="margin-left: 1em"><p>Indeed, you are correct (some over-correcting for a spot that had a decimal 10 weight)....</p>
+<p>This post will be correct, some day!</p>
+</div>
+<hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2010/03/06 <a href="http://archives.miloush.net/michkap/archive/2010/03/06/9972239.html">Burn Windows Burn (aka If we want to unsay *this* one, we cannot say "Mu")</a></p><p>2008/08/21 <a href="http://archives.miloush.net/michkap/archive/2008/08/21/8883467.html">A&P of Sort Keys, part 14: The Hangul is really getting OLD</a></p><p>2007/10/09 <a href="http://archives.miloush.net/michkap/archive/2007/10/09/5375754.html">A&P of Sort Keys, part 13 (About the function that is too lazy to get it right every time)</a></p><p>2007/10/08 <a href="http://archives.miloush.net/michkap/archive/2007/10/08/5270854.html">A&P of Sort Keys, part 12 (aka Han sorts first!)</a></p><p>2007/09/24 <a href="http://archives.miloush.net/michkap/archive/2007/09/24/5085893.html">A&P of Sort Keys, part 11 (aka It's not like ideographic sorts were developed idiopathically)</a></p><p>2007/09/21 <a href="http://archives.miloush.net/michkap/archive/2007/09/21/5027338.html">A&P of Sort Keys, part 10 (aka I've kana wanted to start talking about Japanese)</a></p><p>2007/09/20 <a href="http://archives.miloush.net/michkap/archive/2007/09/20/5008305.html">A&P of Sort Keys, part 9 (aka Not always transitive, but punctual and punctuating)</a></p><p>2007/09/18 <a href="http://archives.miloush.net/michkap/archive/2007/09/18/4971376.html">A&P of Sort Keys, part 8 (aka You can often think of ignoring weights as a form of ignorance)</a></p><p>2007/09/17 <a href="http://archives.miloush.net/michkap/archive/2007/09/17/4950008.html">A&P of Sort Keys, part 7 (aka You're very thin now, but I can still recognize you)</a></p><p>2007/09/16 <a href="http://archives.miloush.net/michkap/archive/2007/09/16/4937196.html">A&P of Sort Keys, part 6 (aka Relax, be calm, and deCOMPRESS if you are feeling out of sorts)</a></p><p>2007/09/15 <a href="http://archives.miloush.net/michkap/archive/2007/09/15/4924008.html">A&P of Sort Keys, part 5 (aka EXPANSIONing your horizons)</a></p><p>2007/09/14 <a href="http://archives.miloush.net/michkap/archive/2007/09/14/4905625.html">A&P of Sort Keys, part 4 (aka It isn't a race but let's make an EXCEPTION and cross the Finnish line)</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2007/09/13/4889299.html" title="Dr. Seuss does Unicode, aka HOP on POP [DIRECTIONAL FORMATTING]">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2007/09/12/4875986.html" title="Having your blog and posting to it, too?">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2007-09">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2007-09-13">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2007/09/13/4889199.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:37 GMT -->
+</html>

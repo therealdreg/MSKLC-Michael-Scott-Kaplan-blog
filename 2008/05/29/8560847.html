@@ -1,0 +1,51 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2008/05/29/8560847.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:36 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Ask a simple question, and then duck!</title></head><body>
+<h1>Ask a simple question, and then duck!</h1>
+<p><em>by Michael S. Kaplan, published on 2008/05/29 20:14 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2008/05/29/8560847.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P>The&nbsp;whole&nbsp;thread&nbsp;started innocently enough, with a simple question:</P>
+<BLOCKQUOTE><FONT face="times new roman,times">
+<P><EM>Check out this shell command I typed &amp; the result it got.&nbsp; Note the stuff in red.<BR><BR></EM><FONT face="consolas,lucida console,courier new,courier"><STRONG>&nbsp;&nbsp;&nbsp; C:\&gt;dir d:\enlistment\che<FONT color=#ff0000>f</FONT>*.* /s /b<BR>&nbsp;&nbsp;&nbsp; d:\enlistment\LHC\tools\che<FONT color=#ff0000>c</FONT>k_imports.cmd<BR>&nbsp;&nbsp;&nbsp; d:\enlistment\tools\che<FONT color=#ff0000>c</FONT>k_imports.cmd<BR>&nbsp;&nbsp;&nbsp; C:\&gt;<BR></STRONG></FONT><BR><EM>Is this correct behaviour?<BR><BR>Interestingly, though “chef*.*” finds things it shouldn’t, two variations (“chez*.*” and “cher*.*”) didn’t.<BR><BR>I’ve attached a screen shot of a cmd window where I saw it.<BR><BR>I’m using 64-bit Vista.&nbsp; I’ve attached a screen shot of my Computer/Properties window so you can see a more detailed description of the version.<BR><BR>I’ve attached a *.cpp file a coworker wrote which demonstrates the behaviour by calling FindFirstFile directly.&nbsp; He sees the same behaviour on 32-bit Vista.</EM></P></FONT></BLOCKQUOTE>
+<P mce_keep="true">You can probably guess what's going on here -- the miracle of short file names (both of the "found" files have a short name of <STRONG>CHEFB4~1.CMD</STRONG>, which of course fits into the wildcard quite nicely....</P>
+<P mce_keep="true">Now if you stop right here, it's a nice little story about the assumptions&nbsp;we all make about&nbsp;wildcards from time to time.</P>
+<P mce_keep="true">And then of course someone pointed out:</P>
+<BLOCKQUOTE>
+<P mce_keep="true"><FONT face="times new roman,times">This is really unfortunate for people doing deletes with wild card characters.</FONT></P></BLOCKQUOTE>
+<P mce_keep="true">Then someone else responded:</P>
+<BLOCKQUOTE>
+<P mce_keep="true"><FONT face="times new roman,times"><EM>Unless they do a dir /x foo* and then want to turn around and do a del foo*.&nbsp; It’s all a matter of perspective.</EM></FONT></P></BLOCKQUOTE>
+<P mce_keep="true">The original person asking then had a follow-up question:</P>
+<BLOCKQUOTE>
+<P mce_keep="true"><FONT face="times new roman,times">Is there a way to make FindFirstFile ignore the 8.3 names?&nbsp; Maybe a flag we can set?</FONT></P></BLOCKQUOTE>
+<P mce_keep="true">Of course someone pointed out KB 121007 (<A class="" href="http://support.microsoft.com/default.aspx/kb/121007" mce_href="http://support.microsoft.com/default.aspx/kb/121007">How to Disable the 8.3 Name Creation on NTFS Partitions</A>). </P>
+<P mce_keep="true">Uh oh!</P>
+<P mce_keep="true">Luckily someone else was there to start listing some of the downsides in that plan:</P>
+<BLOCKQUOTE>
+<P mce_keep="true"><FONT face="times new roman,times"><EM>Sorry, but that’s not great advice.<BR><BR>1.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Just because they’re not auto-created doesn’t mean that they don’t exist<BR>2.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Doesn’t help for existing volumes or network access etc.<BR>3.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Not very well tested; use at your own risk.&nbsp; E.g. as far as I know nobody ever runs any automated test passes with this feature disabled.<BR><BR>The only real answer is that you need to look at the set of files that you get back from FF as candidates and then apply your own filter.</EM></FONT></P></BLOCKQUOTE>
+<P mce_keep="true">This is of course in addition to the ones given in the KB article itself. Though someone who perhaps had not read #1 or #2 or the ones in the KB article asked:</P>
+<BLOCKQUOTE>
+<P mce_keep="true"><FONT face="times new roman,times">Just curious, can’t we stop generating them automatically? How many 8.3 applications do we still support?</FONT></P></BLOCKQUOTE>
+<P mce_keep="true">There is of course the huge appcompat burden here, plus #1 and #2 above, plus a sample of an attempt to do something like this that I mentioned in <A class="" href="http://archives.miloush.net/michkap/archive/2006/07/25/676295.html" mce_href="http://archives.miloush.net/michkap/archive/2006/07/25/676295.html"><STRONG>Our non-Unicode heritage</STRONG></A>, plus on top of that how such a thing would break the auto-path shrinking work the Shell folks did that I mentioned in <A class="" href="http://archives.miloush.net/michkap/archive/2006/12/13/1275292.html" mce_href="http://archives.miloush.net/michkap/archive/2006/12/13/1275292.html"><STRONG>Sometimes what a person really wants is a LACK of size</STRONG></A>&nbsp;that deals with the MAX_PATH issues.</P>
+<P mce_keep="true">So in summary, in order to go to an 8.3-less world, one would have to solve all of the following issues:</P>
+<UL>
+<LI>
+<DIV mce_keep="true"><STRONG>MAX_PATH limits</STRONG> throughout win32 (especially USER and SHELL but really everywhere, with no 8.3 reliance workarounds)</DIV></LI>
+<LI>
+<DIV mce_keep="true"><STRONG>non-Unicode applications</STRONG> that need to access paths (currently mungable out of Unicode via 8.3)</DIV></LI>
+<LI>
+<DIV mce_keep="true"><STRONG>16-bit application usage</STRONG> (which would miss out on anything that can't be handled via short names)</DIV></LI></UL>
+<P mce_keep="true">Now maybe if the entire Windows team did nothing else beyond solving all of the problems associated with these three issues, for real, we might be able to ship the next version of Windows within 5-6 years after that.</P>
+<P mce_keep="true">And the most compelling feature to describe would be that we solved three problems that most people don't really understand exist until after you explain&nbsp;them and even then would not be very impressed that it would be a&nbsp;terribly compelling release to them.</P>
+<P mce_keep="true">Of course one could go the Apple route, and start over completely, changing the new one to have none of the above problems. Screw the backcompat crowd and start with no limitations at all.</P>
+<P mce_keep="true">I suspect we'd end up with an Apple-sized install base, with most people wanting the version of Windows that didn't tell people who merely wanted stuff to keep working to <STRONG>just get bent</STRONG>.</P>
+<P mce_keep="true">Anyway, the moral of the story? Beware the simple questions!</P>
+<P mce_keep="true"><FONT color=#ff00ff><EM>This blog brought to you by</EM><FONT size=7> ঝ </FONT><EM>(<A class="" href="http://www.fileformat.info/info/unicode/char/099d" mce_href="http://www.fileformat.info/info/unicode/char/099d">U+099d</A>, aka BENGALI LETTER JHA)</EM></FONT></P>
+<hr/><p><a id="8562640" href="#8562640">#</a> <strong>Mike Dimmick</strong> on 30 May 2008 5:57 AM:</p><div style="margin-left: 1em"><p>Well, the 16-bit app problem is basically solved when going to the 64-bit OS, because the 16-bit compatibility subsystems are gone. (This is a processor limitation - it doesn't support the Virtual 8086 submode, required for DOS/BIOS interrupt compatibility, in 64-bit long mode.)</p></div>
+<p><a id="8565418" href="#8565418">#</a> <strong>John Cowan</strong> on 30 May 2008 11:23 PM:</p><div style="margin-left: 1em"><p>I was trying to think about why it was so un-traumatic for Unix to move from 14-character filenames to (essentially) unlimited length ones, and why nobody ever imagined the notion of keeping around two names (potentially) for every file, one short and one long. &nbsp;The only programs that changed were those that had hard-wired knowledge of the layout of directory blocks, and they were changed to use a library that could handle either old or new format file systems. &nbsp;Why didn't that happen for Windows?</p>
+<p>I think the source of the problem long predates the introduction of long file names to Windows 95 in 1994, and in fact actually goes back to 1982, when Microsoft was working on MS-DOS version 2. &nbsp;That was the first version of DOS to have directories and pathnames, and more importantly, to have a system interface which accepted a simple null-terminated string as a filename. &nbsp;In DOS version 1, system calls used &quot;filename blocks&quot;, fixed-length fixed-format objects in userland that had to be set up correctly for the call to work. &nbsp;That style in turn went back through CP/M through a chain of DEC operating systems to TOPS/10 in 1964 and perhaps further; read the Wikipedia article on RADIX-50 for details.</p>
+<p>In Unix, however, filenames have *always* been simple strings, even back in 1969 before Unix pathnames existed, so applications didn't have to have hard-wired knowledge about the formats of names. &nbsp;The basic filename-oriented system calls (open, link, unlink, etc.) haven't changed at all since then.</p>
+<p>If Microsoft had had the [organs] to break backward compatibility between DOS 1.0 and DOS 2.0, none of this matching nightmare would have had to exist.</p></div>
+<hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2008/05/29/8561477.html" title="Rhapsody, iTunes, Zune &amp; some @#%&amp;*! smiles about @#%&amp;*! Smilers :-)">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2008/05/28/8557298.html" title="Not to get in the middle [dot] of the problem, but...">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2008-05">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2008-05-29">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2008/05/29/8560847.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:36 GMT -->
+</html>

@@ -1,0 +1,44 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2007/06/03/3069028.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:38 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>The trouble with HKSCS, for me</title></head><body>
+<h1>The trouble with HKSCS, for me</h1>
+<p><em>by Michael S. Kaplan, published on 2007/06/03 18:21 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2007/06/03/3069028.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P>There is no real, official standard listing the characters used in Hong Kong.</P>
+<P>Unfortunately.</P>
+<P>I say unfortunately because of the whole repertoire fences thing I mentioned <STRONG><A class="" href="http://archives.miloush.net/michkap/archive/2007/01/19/1492539.html" mce_href="http://archives.miloush.net/michkap/archive/2007/01/19/1492539.html">previously</A></STRONG> in relation to the Hong Kong Supplemental Character Set, a.k.a. <A class="" href="http://en.wikipedia.org/wiki/HKSCS" mce_href="http://en.wikipedia.org/wiki/HKSCS">HKSCS</A>.</P>
+<P>But here is where we run into problems, though.</P>
+<P>Because HKSCS is not the full list of characters, not by a long shot.</P>
+<P>In its latest incarnation (HKSCS 2004) it is 4941 characters.</P>
+<P>But that is not the full list -- because it is basically a standard built atop <A class="" href="http://en.wikipedia.org/wiki/Big5" mce_href="http://en.wikipedia.org/wiki/Big5">Big5</A>, an industry created version of CNS11643, a Taiwan standard.</P>
+<P><EM>(Conventional wisdom is that it was named after "the five big companies" in Taiwan in this part of the industry agreeing on a de facto standard, yet no one can name any of the companies which in my mind lends doubt to the veracity of the claim!)</EM></P>
+<P>HKSCS&nbsp;replaces some of the reference glyphs with some forms preferred in Hong Kong, and no one ever claimed that all of the rest of&nbsp;Big5 was used in Hong Kong.</P>
+<P>Which is actually just as well, since <STRONG>which</STRONG> form of Big5 is to be used as the base&nbsp;is actually the one to start with is a big question -- because there are MANY of them.</P>
+<P>Now people who work on fonts have a way to&nbsp;go here -- if there is a different glyph they know what to do. Though you could have filled a mailbox with the communication deciding how best to support the alternate forms in fonts!</P>
+<P>But for collation, and even for code page, thins are much less clear.</P>
+<P>I knew someone who was once joking about someone being the "least distinguished of the Distinguished Engineers" (and no, I will not talk about&nbsp;either who said it or who was&nbsp;being talked about, thank you very much!).&nbsp;It is in this vein that I tend to think of HKSCS as&nbsp;one of&nbsp;the&nbsp;least standard of the encoding standards -- it is a poorly defined (across versions)&nbsp;set atop an uncertain and ill-defined base, sometimes acting as as glyph standard (in suggesting alternate preferred forms for glyphs) and other times as an encoding standard, I honestly don't know what can be expected of it.</P>
+<P>As a "repertoire fence", it clearly has a bunch of holes in it.</P>
+<P>But when people come and make suggestions/bug reports&nbsp;in Vista such as:</P>
+<BLOCKQUOTE>
+<P mce_keep="true"><EM><FONT face="times new roman,times">Some HKSCS 2004 characters , for example listed in Unicode codepoint below:</FONT></EM></P>
+<P mce_keep="true"><EM><FONT face="times new roman,times">u+216C1<BR>u+36C8</FONT></EM></P>
+<P mce_keep="true"><EM><FONT face="times new roman,times">are sorted by a wrong order according to the stroke-count.</FONT></EM></P></BLOCKQUOTE>
+<P mce_keep="true">I agree with them -- those code points (<A class="" href="http://www.fileformat.info/info/unicode/char/216c1" mce_href="http://www.fileformat.info/info/unicode/char/216c1">U+216c1</A> in Extension B&nbsp;CJK and <A class="" href="http://www.fileformat.info/info/unicode/char/36c8" mce_href="http://www.fileformat.info/info/unicode/char/36c8">U+36c8</A> in Extension A CJK), as well as&nbsp;several others like them, are not in the stroke count tables for Traditional Chinese in Vista. Since those tables are&nbsp;based on Taiwan's CNS 11643 and have 54,450 ideographs in them (and an unspecified number of other characters in Unicode that need no special ordering).</P>
+<P mce_keep="true">So how is one supposed to define where they go when the ordering is based on stroke count followed by position within CNS 11643 for ideographs that are not include of CNS 11643?</P>
+<P mce_keep="true">Which is not to say I would want or expect a standard in Taiwan to add characters to their standard that are not used in country. This is the point I find most annoying about the sorting data&nbsp;from the GB standards coming from PRC -- the fact that they order everything, including code points they do not use or recognize in any real sense as useful to people in country.</P>
+<P mce_keep="true">If those two code points were added using my belief in the stroke count or the PRC count (based on Simplified Chinese), or even based on the&nbsp;significantly more relevant&nbsp;Hong Kong stroke count data, what happens in the next version if CNS 11643 adds ideographs that sit in positions now set aside for Hong Kong to be either moved or have the sort in Taiwan be off a bit.</P>
+<P mce_keep="true">Ick.</P>
+<P mce_keep="true">What is truly needed is the repertoire fence for the Hong Kong data. That, an approved source for the stroke count data, and an official way to "break ties" for characters with equal stroke counts is what is needed to be support a sort for Hong Kong.</P>
+<P mce_keep="true">And HKSCS is not providing that, at the moment. At least&nbsp;not in a consumable form....</P>
+<P mce_keep="true">&nbsp;</P>
+<P mce_keep="true"><FONT color=#ff00ff><EM>This post brought to you by</EM>&nbsp;<FONT size=5>𡛁</FONT> <EM>(<A class="" href="http://www.fileformat.info/info/unicode/char/216c1" mce_href="http://www.fileformat.info/info/unicode/char/216c1">U+216c1</A>, a Unicode CJK Extension B ideograph)</EM></FONT></P>
+<hr/><p><a id="3074336" href="#3074336">#</a> <strong>Peter Karlsson</strong> on 4 Jun 2007 3:25 AM:</p><div style="margin-left: 1em"><p>The biggest problem I see with Big5-HKSCS is that it seems to be expected to replace Big5 whenever used, so that you can either use Big5-HKSCS on your system, or “regular” Big5, but never both. At least it seems that if you install the HKSCS updates on Windows, it will replace the regular version.</p>
+<p>Both forms are registered with IANA, as distinct encodings. This causes problems in several occasions, such as in <a rel="nofollow" target="_new" href="http://my.opera.com/community/forums/findpost.pl?id=2049828">http://my.opera.com/community/forums/findpost.pl?id=2049828</a> where the user expects to see HKSCS but sees regular Big5. Do you have any thoughts on this issue?</p></div>
+<p><a id="3076874" href="#3076874">#</a> <strong>SDiZ</strong> on 4 Jun 2007 4:57 AM:</p><div style="margin-left: 1em"><p>The Big5s are &quot;宏碁&quot;, &quot;神通&quot;, &quot;佳佳&quot;, &quot;零壹&quot; and &quot;大眾&quot;. AFAIK, only &quot;宏碁&quot; and &quot;神通&quot; are still alive -- haven't heard any news from other three since mid-1990s.</p>
+<p>Most HKSCS characters are not created in Hong Kong. Most of them are traditional Chinese characters used in 1800s.</p>
+<p>And the &quot;break-tire&quot; rules for stroke count. okay... Did anyone told you Chinese dictionary never, ever sorted in stroke count? (nor is it sorted phonetically until recently) They are sorted in Radicals (see <a rel="nofollow" target="_new" href="http://en.wikipedia.org/wiki/List_of_Kangxi_radicals">http://en.wikipedia.org/wiki/List_of_Kangxi_radicals</a>). </p></div>
+<p><a id="3079691" href="#3079691">#</a> <strong>Michael S. Kaplan</strong> on 4 Jun 2007 7:43 AM:</p><div style="margin-left: 1em"><p>Peter, the Big-5 change with HKSCS refers to the pre-Vista version -- I am refering to Vista and beyond....</p>
+</div>
+<hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2007/06/03/3071585.html" title="I Really Do Compare Strings">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2007/06/02/3053824.html" title="Azeri zeriouz LIP releaze">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2007-06">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2007-06-03">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2007/06/03/3069028.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:38 GMT -->
+</html>

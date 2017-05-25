@@ -1,0 +1,93 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2009/06/10/9723321.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:35 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>UCS-2 to UTF-16, Part 10: Variation[ Selector] on a theme...</title></head><body>
+<h1>UCS-2 to UTF-16, Part 10: Variation[ Selector] on a theme...</h1>
+<p><em>by Michael S. Kaplan, published on 2009/06/10 10:01 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2009/06/10/9723321.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<p>Previous blogs in this series of blogs on this Blog:</p>
+
+<ul>
+<li><b><a href="http://archives.miloush.net/michkap/archive/2008/08/30/8907667.html" mce_href="http://archives.miloush.net/michkap/archive/2008/08/30/8907667.html">Part 0: 
+The intro, sans content</a></b> 
+</li>
+
+<li><b><a href="http://archives.miloush.net/michkap/archive/2008/09/08/8931641.html" mce_href="http://archives.miloush.net/michkap/archive/2008/09/08/8931641.html">Part 1: 
+Getting the obvious out of the way</a></b> 
+</li>
+
+<li><b><a href="http://archives.miloush.net/michkap/archive/2008/09/15/8952073.html" mce_href="http://archives.miloush.net/michkap/archive/2008/09/15/8952073.html">Part 2: 
+A&amp;P of a 'linguistic character'</a></b> 
+</li>
+
+<li><b><a href="http://archives.miloush.net/michkap/archive/2008/09/18/8956650.html" mce_href="http://archives.miloush.net/michkap/archive/2008/09/18/8956650.html">Part 3: 
+It starts with cursor movement (where MS simultaneously gets better and 
+worse)</a></b> 
+</li>
+
+<li><b><a href="http://archives.miloush.net/michkap/archive/2008/10/06/8977552.html" mce_href="http://archives.miloush.net/michkap/archive/2008/10/06/8977552.html">Part 4: 
+Talking about the ask&nbsp;</a></b> 
+</li>
+
+<li><b><a href="http://archives.miloush.net/michkap/archive/2008/10/15/9000371.html" mce_href="http://archives.miloush.net/michkap/archive/2008/10/15/9000371.html">Part 5: 
+What's on the Next Level?</a></b> 
+</li>
+
+<li><b><a href="http://archives.miloush.net/michkap/archive/2008/11/24/9134826.html" mce_href="http://archives.miloush.net/michkap/archive/2008/11/24/9134826.html">Part 6: 
+An exercise left for whoever needs some exercise</a></b> 
+</li>
+
+<li><b><a href="http://archives.miloush.net/michkap/archive/2008/12/04/9173687.html" mce_href="http://archives.miloush.net/michkap/archive/2008/12/04/9173687.html">Part 7: 
+If it makes the SQL Server columns too small then it made the Oracle columns 
+either too smallER or too smallEST</a></b></li>
+
+<li><b><a href="http://archives.miloush.net/michkap/archive/2008/12/09/9187379.html" mce_href="http://archives.miloush.net/michkap/archive/2008/12/09/9187379.html">Part 8: It's the end of the string as we know it (and I feel ellipses)&nbsp;</a></b></li>
+<li><b><a href="http://archives.miloush.net/michkap/archive/2008/12/16/9223301.html" mce_href="http://archives.miloush.net/michkap/archive/2008/12/16/9223301.html">Part 9: The torrents of breaking CharNext/CharPrev</a><br></b></li>
+</ul>
+
+<p>It has been a while since the last part of this series. Kind of coinciding with when I took a break here.<br></p>
+
+<p>Sorry about that! :-) </p>
+<p>This part kind of starts with a previous blog -- <b><a href="http://archives.miloush.net/michkap/archive/2005/01/14/352802.html" mce_href="http://archives.miloush.net/michkap/archive/2005/01/14/352802.html">CharNext(ch) != ch+1, a lot of the time</a></b>.</p>
+<p>No, wait. That isn't the one.</p>
+<p>It really came from a follow-up to that blog, namely <b><a href="http://archives.miloush.net/michkap/archive/2005/01/30/363420.html" mce_href="http://archives.miloush.net/michkap/archive/2005/01/30/363420.html">We broke CharNext/CharPrev (or, bugs found through blogging?)</a></b>.</p>
+<p>Where I talked about the change of diacritics being thought of by <a href="http://msdn.microsoft.com/library/ms647481.aspx" mce_href="http://msdn.microsoft.com/library/ms647481.aspx">GetStringTypeW</a> as C3_DIACRITIC rather than C3_NONSPACING | C3_DIACRITIC.</p>
+<p>When I fixed this bug, I (wisely?) chose to make the check include C3_NONSPACING | C3_DIACRITIC rather than the minimal change of just C3_DIACRITIC.</p>
+<p>Because there is a whole class of character, pretty much added to Unicode at a time that made it new in Vista, that has the C3_NONSPACING classification.</p>
+<p><font size="5">UNICODE VARIATION SELECTORS!!!</font> <br></p>
+<p>These characters have the goal of changing the visible representation of the character preceding them, or (as the Unicode <a href="http://unicode.org/faq/unsup_char.html" mce_href="http://unicode.org/faq/unsup_char.html">Display of Unsupported Characters</a> FAQ states) be invisible, if not supported.</p>
+<p>Certainly either way it should never be treated independently of the character preceding it; any operation of selection or truncation must treat it like a part of the preceding character, as much as a low surrogate and its preceding high surrogate!</p>
+<p>Of course my <a href="http://msdn.microsoft.com/library/ms647481.aspx" mce_href="http://msdn.microsoft.com/library/ms647481.aspx">GetStringTypeW</a> discussion that I used to introduce the topic also points out the detection solution, one that would incidentally be used for a lot of the other cases I have discussed in the series.</p>
+<p>Of course this leads to another interesting case, which I will discuss next time.... </p>
+<p>And maybe more on variation selectors and other related matters, some either time entirely. <br></p>
+<p>&nbsp;</p>
+<p><font color="#ff00ff"><i>This blog brought to you by U+fe00, a Unicode Varation Selector.</i></font> <br></p>
+<hr/><p><strong>John Cowan</strong> on 10 Jun 2009 4:19 PM:</p><div style="margin-left: 1em"><p>I don't know about that. &nbsp;I'd rather see the VS truncated than both the whole previous character and the VS truncated. &nbsp;Without the VS, the result may look weird, but it'll be more usable than if the whole base character disappears as well.</p></div>
+<p><strong>Michael S. Kaplan</strong> on 10 Jun 2009 5:39 PM:</p><div style="margin-left: 1em"><p>That can depend on your customer -- someone Japanese may well disagree with you about that in regard to form. Also note that truncation is not the only operation we are talking about here of course...</p>
+</div>
+<p><strong>Andrew West</strong> on 11 Jun 2009 9:01 AM:</p><div style="margin-left: 1em"><p>Actually, the result is more likely to look weird with the VS; and if stripped of the VS the result would generally look normal. But, anyway I agree with John that I would not consider the VS and its base character as an inseperable entity like a surrogate pair, and personally like to be able to treat VS's as characters when editing text -- deleting them and trying new different VS's on different characters to get the desired result.</p></div>
+<p><strong>Michael S. Kaplan</strong> on 11 Jun 2009 10:10 AM:</p><div style="margin-left: 1em"><p>Okay, an opinion not brought up with Unicode (or at least not written in for its own recommendations...).</p>
+<p>But let's take the cut/paste case as an example -- you'd really want the VS to be left dangling alone with no base character, even though the user selected the &quot;changed&quot; character?</p>
+<p>Or cursor movement, when display works right. You really want the cursor weirdness that would manifest itself, with no other visual indication of what's going on?</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 11 Jun 2009 12:18 PM:</p><div style="margin-left: 1em"><p>Okay, differences in opinion are good, always. :-)</p>
+<p>But I am curious, especially of John and Andrew but really of everyone: in the myriad of cases, what is the best result? Imagine (in addition to the specific scenarios John and Andrew mentioned) the following:</p>
+<p>-- Delete a section, included an alternate glyph at the end &nbsp;-- Should the VS be left in the old text, and does the answer change when the VS is alone at the beginning vs. attached to a new (possibly illegal or potentially worse legal but unintended choice of) base character?</p>
+<p>-- Copy/Paste -- All of the above, plus: -- should the alternate glyph be lost? </p>
+<p>You see what I am getting at -- what do you think should happen with the orphaned VS, which is now just in the text, unintended? I am worried about two principles, 1) what to do with the original intent of the text, and 2) what to do with the potentially illegal, potentially unintended result of the remaining text....</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 11 Jun 2009 12:20 PM:</p><div style="margin-left: 1em"><p>As a by the way, this is one of the many reasons I was against the VS notion the entire time it has been alive. </p>
+<p>Does the answer to any above change with the argument (of some, and which I also disagree with) that new simplified characters should be traditional characters with variation selectors?</p>
+</div>
+<p><strong>Andrew West</strong> on 12 Jun 2009 5:17 AM:</p><div style="margin-left: 1em"><p>I think I'm too close to variation selectors to be able to answer your questions objectively. I like to have full control over my text, including variation selectors, but I can see that many users would be annoyed if the appearance of their text kept getting screwed up because of some invisible entity that was not staying in its place.</p></div>
+<p><strong>Andrew West</strong> on 12 Jun 2009 5:25 AM:</p><div style="margin-left: 1em"><p>&quot;new simplified characters should be traditional characters with variation selectors&quot;</p>
+<p>I know that their are certain people in the UTC who favour this approach, but I don't think it has any chance of being adopted, because there would be massive opposition from IRG and WG2. At this stage in the game it is simply too late to change the model for Han encoding; and all we can do is bite the bullet and encode all required simplified character forms as separate characters (about half of the CJK-D characters currently under ballot are simplified forms of existing traditional characters).</p></div>
+<p><strong>John Cowan</strong> on 23 Jun 2009 5:57 PM:</p><div style="margin-left: 1em"><p>Cut/paste isn't quite the same thing as selection: in some contexts, when we cut selected text, following whitespace also goes with it. &nbsp;In that case, I'd probably extend the selection to include any following invisible character (what is currently done for bidi marks in that situation?)</p>
+<p>In addition to Andrew's reasons, another reason why VSes shouldn't be used for simplified characters is that N traditional characters often map to the same simplified character, so it would be impossible to tell by looking at a text what underlies it. &nbsp;There are other situations where this is true, like:</p>
+<p>english = CIBARA</p>
+<p>(which word do you read first?), but that's no reason to add to it.</p></div>
+<p><strong>Michael S. Kaplan</strong> on 23 Jun 2009 7:45 PM:</p><div style="margin-left: 1em"><p>Not all clipboard cases grab surrounding spaces and most do not if you do not select the space.</p>
+<p>The Bidi marks are another case, one I talk about tomorrow....</p>
+</div>
+<hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2012/05/21 <a href="http://archives.miloush.net/michkap/archive/2012/05/21/10308135.html">Whither WM_UNICHAR in Windows 7 (and 8!)</a></p><p>2012/04/27 <a href="http://archives.miloush.net/michkap/archive/2012/04/27/10298345.html">Should considering UTF-16 be harmful be considered harmful?</a></p><p>2010/12/15 <a href="http://archives.miloush.net/michkap/archive/2010/12/15/10105168.html">I think MaxLength needs protection to assure safer text</a></p><p>2010/05/20 <a href="http://archives.miloush.net/michkap/archive/2010/05/20/10013737.html">Attempting to discourage some variations?</a></p><p>2009/06/29 <a href="http://archives.miloush.net/michkap/archive/2009/06/29/9800913.html">UCS-2 to UTF-16, Part 11: Turning it up to Eleven!</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2009/06/11/9725313.html" title="No disassemble Number 5!">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2009/06/09/9712595.html" title="When keeping things on a level Plane[ 1] doesn&#39;t work anymore">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2009-06">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2009-06-10">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2009/06/10/9723321.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:35 GMT -->
+</html>

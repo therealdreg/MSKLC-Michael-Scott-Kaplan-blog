@@ -1,0 +1,27 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2011/12/26/10251012.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Thanks for making it work; what happens now?</title></head><body>
+<h1>Thanks for making it work; what happens now?</h1>
+<p><em>by Michael S. Kaplan, published on 2011/12/26 07:01 -05:00, original URI: http://blogs.msdn.com/b/michkap/archive/2011/12/26/10251012.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<p>So a question got asked late last year:</p>
+<p style="padding-left: 60px;"><em><span style="font-family: times new roman,times; font-size: medium;">Hi,</span></em></p>
+<p style="padding-left: 60px;"><em><span style="font-family: times new roman,times; font-size: medium;">My customer reported an issue associated with XmlTextReader.ReadChars. The call to XmlTextReader.ReadChars enters an infinite loop:</span></em><br />&nbsp;<br /><strong><span style="font-family: courier new,courier; font-size: medium;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; While iRetour = BUFFER_SIZE</span></strong><br /><strong><span style="font-family: courier new,courier; font-size: medium;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 'Infinite Loop After this comment...</span></strong><br /><strong><span style="font-family: courier new,courier; font-size: medium;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;iRetour = myXmlTextReader.ReadChars(buffer, 0, BUFFER_SIZE)<br /></span></strong><strong><span style="font-family: courier new,courier; font-size: medium;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; End While</span></strong></p>
+<p style="padding-left: 60px;"><em><span style="font-family: times new roman,times; font-size: medium;">The problem happens in .NET 2.0.&nbsp; The same code works fine in .NET 4.0.</span></em></p>
+<p style="padding-left: 60px;"><em><span style="font-family: times new roman,times; font-size: medium;">Is it a bug? Any input is greatly appreciated.</span></em></p>
+<p style="padding-left: 60px;"><em><span style="font-family: times new roman,times; font-size: medium;">Regards,</span></em><br /><em><span style="font-family: times new roman,times; font-size: medium;">Allen</span></em></p>
+<p>This was indeed a bug in .NET 2.0, one that was found some time ago.</p>
+<p>Unforyunately, the whole red bits/green bits thing came up -- and some of the most important compatibility rules that the BCL (Base Class Libraries) faced were:</p>
+<ul>
+<li>You cannot break binary compatibility by causing recompilation to fail, and</li>
+<li>You cannot change the&nbsp; behavior that breaks the documented semantic of the code,</li>
+</ul>
+<p>In this class the basic determination went like this:</p>
+<p>1)&nbsp;The general code pattern was not recommended;</p>
+<p>2) Chaining the semantic of ReadChars in the existing red bits was&nbsp;a bad idea.</p>
+<p>Of course this leads to a different issue -- now that as of .NET 4.0 the code works, the question that is raised is in wondering what the code does now (in the case that used to fail but which now works).</p>
+<p>Do you think this was a good change?</p>
+<p>Extra credit for anyone who understand how to repro the failure case in 2.0, and who knows how the change was implemented....</p>
+<hr/><div style="margin-left: 1em"><em>no comments</em></div><hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2011/12/27/10251232.html" title="You don&#39;t waste my time if you &#39;reinvent the wheel&#39; but you often waste yours!">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2011/12/23/10250600.html" title="What I&#39;d do with my &#39;Microsoft 20% time&#39;">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2011-12">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2011-12-26">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2011/12/26/10251012.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+</html>

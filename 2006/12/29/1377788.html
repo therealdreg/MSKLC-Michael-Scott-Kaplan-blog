@@ -1,0 +1,64 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2006/12/29/1377788.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:38 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Converting a project to Unicode: Part 2 ('Sorry, you're not my type.' 'Um, maybe I could change that?')</title></head><body>
+<h1>Converting a project to Unicode: Part 2 ('Sorry, you're not my type.' 'Um, maybe I could change that?')</h1>
+<p><em>by Michael S. Kaplan, published on 2006/12/29 06:01 -05:00, original URI: http://blogs.msdn.com/b/michkap/archive/2006/12/29/1377788.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P>Previous posts in this series (including today's!): 
+<UL>
+<LI><A href="http://archives.miloush.net/michkap/archive/2006/12/27/1368334.html" mce_href="http://archives.miloush.net/michkap/archive/2006/12/27/1368334.html">Part 0 (The introduction)</A> 
+<LI><A href="http://archives.miloush.net/michkap/archive/2006/12/28/1372747.html" mce_href="http://archives.miloush.net/michkap/archive/2006/12/28/1372747.html">Part 1 (Business before pleasure)</A> 
+<LI><A class="" href="http://archives.miloush.net/michkap/archive/2006/12/29/1377788.html" mce_href="http://archives.miloush.net/michkap/archive/2006/12/29/1377788.html">Part 2 ('Sorry, you're not my type.' 'Um,&nbsp;maybe&nbsp;I could change that?)</A></LI></UL>
+<P><EM>The alternate title of this post is not something I would ever recommend using in a conversation about a relationship!</EM>&nbsp;</P>
+<P>Ok, first we'll start with the source code, you can either get it from the <A href="http://www.microsoft.com/downloads/details.aspx?familyid=484269E2-3B89-47E3-8EB7-1F2BE6D7123A&amp;displaylang=en" mce_href="http://www.microsoft.com/downloads/details.aspx?familyid=484269E2-3B89-47E3-8EB7-1F2BE6D7123A&amp;displaylang=en">Platform SDK</A> as I pointed out in <A href="http://archives.miloush.net/michkap/archive/2006/12/28/1372747.html" mce_href="http://archives.miloush.net/michkap/archive/2006/12/28/1372747.html">Part 1</A>, in the <STRONG>Samples\SysMgmt\Msi\setup.exe\</STRONG> folder, or you can just download it from right <A href="http://www.trigeminal.com/samples/SETUP_SOURCE/part02.zip" mce_href="http://www.trigeminal.com/samples/SETUP_SOURCE/part02.zip">here</A>. So far nothing has happened to it -- this is our <A href="http://en.wikipedia.org/wiki/Tabula_rasa" mce_href="http://en.wikipedia.org/wiki/Tabula_rasa">Tabula Rasa</A>.</P>
+<P>So now let's start dirtying it. :-)</P>
+<P>I am going to stick it in its own folder (E:\SETUP.EXE\), navigate there from within&nbsp;<STRONG>Visual Studio&nbsp;2005&nbsp;Command Prompt</STRONG>&nbsp;and use either <STRONG>NMAKE</STRONG> to do a build (I have tested with the Platform SDK command prompt and others as well, the steps should work either way).</P>
+<P>For starters, I'll make sure it can build:</P>
+<P><IMG height=451 src="http://trigeminal.fmsinc.com/images/cptu02.png" width=1068 mce_src="http://trigeminal.fmsinc.com/images/cptu02.png"></P>
+<P>Ok, good start. We probably won't be seeing success much until we are done so let's not get too used to it!</P>
+<P>The first thing that has to happen is a search for uses of Unicode that are happening now -- obvious ones like types such as WCHAR, LPWSTR, and LPCWSTR. Clearly if there is anything that supports Unicode now we want to know where it is so that we can look at it more closely later when we decide what to do with it. Here are the results:</P>
+<BLOCKQUOTE><FONT face="Consolas,Lucida Console,Courier New,Courier" size=1>
+<P>Find all "<STRONG>WCHAR</STRONG>", Whole word, Subfolders, Find Results 1, "All Open Documents"<BR>E:\setup.exe\vertrust.cpp(193): WCHAR *szwSetup = 0;<BR>E:\setup.exe\vertrust.cpp(194): WCHAR *szwPackage = 0;<BR>E:\setup.exe\vertrust.cpp(226): szwSetup = new WCHAR[cchWide];<BR>E:\setup.exe\vertrust.cpp(256): szwPackage = new WCHAR[cchWide];<BR>E:\setup.exe\utils.cpp(232): WCHAR *pch = 0;<BR>E:\setup.exe\utils.cpp(238): if ((pch = (WCHAR*)LockResource(hGlobal)) != 0)<BR>Matching lines: 6 Matching files: 6 Total files searched: 10</P>
+<P>Find all "<STRONG>LPCWSTR</STRONG>", Whole word, Subfolders, Find Results 1, "All Open Documents"<BR>E:\setup.exe\vertrust.cpp(62):itvEnum IsFileTrusted(LPCWSTR lpwFile, HWND hwndParent, DWORD dwUIChoice, bool *pfIsSigned, PCCERT_CONTEXT *ppcSigner)<BR>E:\setup.exe\setupui.h(87): HRESULT __stdcall OnProgress(ULONG ulProgress, ULONG ulProgressMax, ULONG ulStatusCode, LPCWSTR szStatusText);<BR>E:\setup.exe\setupui.h(88): HRESULT __stdcall OnStopBinding(HRESULT, LPCWSTR ) {return S_OK;}<BR>E:\setup.exe\setupui.cpp(372):HRESULT CDownloadBindStatusCallback::OnProgress(ULONG ulProgress, ULONG ulProgressMax, ULONG ulStatusCode, LPCWSTR /*szStatusText*/)<BR>E:\setup.exe\setup.h(85):itvEnum IsFileTrusted(LPCWSTR szwFile, HWND hwndParent, DWORD dwUIChoice, bool *pfIsSigned, PCCERT_CONTEXT *ppcSigner);<BR>Matching lines: 5 Matching files: 6 Total files searched: 10</P>
+<P>Find all "<STRONG>LPWSTR</STRONG>", Whole word, Subfolders, Find Results 1, "All Open Documents"<BR>Matching lines: 0 Matching files: 0 Total files searched: 10</P>
+<P>Find all "<STRONG>MultiByteToWideChar</STRONG>", Whole word, Subfolders, Find Results 1, "All Open Documents"<BR>E:\setup.exe\vertrust.cpp(225): cchWide = MultiByteToWideChar(CP_ACP, 0, szSetupExe, -1, 0, 0);<BR>E:\setup.exe\vertrust.cpp(233): if (0 == MultiByteToWideChar(CP_ACP, 0, szSetupExe, -1, szwSetup, cchWide))<BR>E:\setup.exe\vertrust.cpp(255): cchWide = MultiByteToWideChar(CP_ACP, 0, szPackage, -1, 0, 0);<BR>E:\setup.exe\vertrust.cpp(263): if (0 == MultiByteToWideChar(CP_ACP, 0, szPackage, -1, szwPackage, cchWide))<BR>Matching lines: 4 Matching files: 6 Total files searched: 10</P></FONT></BLOCKQUOTE>
+<P>We'll set these lists aside for later, now that we know what they are.</P>
+<P>Now of course this sets us up to the first set of changes -- using the handy dandy Replace in Files dialog:</P>
+<P><IMG src="http://trigeminal.fmsinc.com/images/cptu03.png" mce_src="http://trigeminal.fmsinc.com/images/cptu03.png"></P>
+<P>Note the important settings here -- all open documents, match whole words, and using the Find Next button to review followed by the Replace button if we like the change.</P>
+<P>LPSTR -&gt; LPTSTR (less than 25 occurrences, no surprises other than perhaps a few that are on our "review later" list)</P>
+<P>LPCSTR -&gt; LPCTSTR (less than 100 occurrences, no surprises)</P>
+<P>char --&gt; TCHAR (over 100&nbsp;occurrences, no big surprises in any of them)</P>
+<P><EM>Well, there are actually a few issues here that I will be talking about in later posts, but we're starting with the simple approach. :-)</EM></P>
+<P>And of course with these changes, note that we are not doing Unicode builds yet, so that so far the build will keep working.</P>
+<P>Some things to look forward to here that I'll be talking about in upcoming posts:</P>
+<UL>
+<LI>hardcoded strings</LI>
+<LI>GetProcAddress calls</LI>
+<LI>A few specialty functions</LI>
+<LI>Some cch/cb issues</LI>
+<LI>a few non-Unicode ("A") functions being called specifically</LI>
+<LI>The MSLU/Win9x question</LI></UL>
+<P>Believe it or not,&nbsp;what was done today is&nbsp;likely the second most widespread change we'll have to do for this project!</P>
+<P>Wasn't that easy? :-)</P>
+<P>Stay tuned for the next step....</P>
+<P mce_keep="true">&nbsp;</P>
+<P><FONT color=#ff0080><EM>This post brought to you by</EM>&nbsp;<FONT size=6>ഗ</FONT> <EM>(<A href="http://www.fileformat.info/info/unicode/char/0d17" mce_href="http://www.fileformat.info/info/unicode/char/0d17">U+0d17</A>, a.k.a. MALAYALAM LETTER GA)</EM></FONT></P>
+<hr/><p><strong>Mihai</strong> on 29 Dec 2006 7:07 PM:</p><div style="margin-left: 1em"><p>The screen-shot shows a replacement of char with WCHAR (instead of TCHAR).</p>
+<p>The text in the article is ok, but the image might puzzle some readers.</p></div>
+<p><strong>Michael S. Kaplan</strong> on 29 Dec 2006 7:58 PM:</p><div style="margin-left: 1em"><p>Oops! Good catch there. :-)</p>
+<p>Fixed now....</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 29 Dec 2006 11:28 PM:</p><div style="margin-left: 1em"><P>(plus its always good to know people are reading?)</P>
+<P>:-)</P></div>
+<p><strong>Mihai</strong> on 29 Dec 2006 11:43 PM:</p><div style="margin-left: 1em"><p>&lt;&lt;plus its always good to know people are reading?&gt;&gt;</p>
+<p>You can count on me reading. And if I don't say anything, it means you did not mess-up anything :-D</p>
+<p>But this series I find very interesting. I did some Unicode migrations myself, but never had the opportunity to compare with what others do. Not much shared experience in this area (ok, there are some pages on MS Globaldev with generalities, but does not feel &quot;real life&quot;).</p>
+<p>I have already downloaded the original project and migrated it.</p>
+<p>Now I am waiting and I am curious to compare it with your final result :-)</p></div>
+<p><strong>Michael S. Kaplan</strong> on 29 Dec 2006 11:54 PM:</p><div style="margin-left: 1em"><p>I swear this is something I have had in the back of my brain since the question first popped up in the suggestion box -- there just never seemed to be the right project in front of me.... </p>
+<p>When this one popped up in my face as a bug report, I decided it had to be a sign from somewhere (Bob only knows where!) and I knew I just had to go with it. :-)</p>
+</div>
+<hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2007/12/24 <a href="http://archives.miloush.net/michkap/archive/2007/12/24/6843995.html">VS just got served!, aka The ??? Shift, aka 'Converting a project to Unicode???' No, it's 'Converting a project??? ToUnicode!!!'</a></p><p>2007/01/05 <a href="http://archives.miloush.net/michkap/archive/2007/01/05/1413001.html">Converting a project to Unicode: Part 9 (The project's postpartum postmortem)</a></p><p>2007/01/04 <a href="http://archives.miloush.net/michkap/archive/2007/01/04/1409380.html">Converting a project to Unicode: Part 8 (Fitting MSLU into the mix)</a></p><p>2007/01/03 <a href="http://archives.miloush.net/michkap/archive/2007/01/03/1395788.html">Converting a Project to Unicode: Part 7 (What does it mean to fit things to a 'T', anyway?)</a></p><p>2007/01/02 <a href="http://archives.miloush.net/michkap/archive/2007/01/02/1395703.html">Converting a Project to Unicode: Part 6 (Upon the road not traveled)</a></p><p>2007/01/01 <a href="http://archives.miloush.net/michkap/archive/2007/01/01/1391798.html">Converting a Project to Unicode: Part 5 (Are we there yet? Well, not *just* yet)</a></p><p>2006/12/31 <a href="http://archives.miloush.net/michkap/archive/2006/12/31/1386486.html">Converting a Project to Unicode: Part 4 (It's /Delightful, it's /Delicious, it's /DUnicode!)</a></p><p>2006/12/30 <a href="http://archives.miloush.net/michkap/archive/2006/12/30/1382886.html">Converting a project to Unicode: Part 3 (Can I quote you on that?)</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2006/12/29/1378466.html" title="By design? Well, not beautifully so....">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2006/12/28/1372747.html" title="Converting a project to Unicode: Part 1 (Business before pleasure)">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2006-12">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2006-12-29">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2006/12/29/1377788.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:38 GMT -->
+</html>

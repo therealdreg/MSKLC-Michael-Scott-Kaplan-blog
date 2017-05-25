@@ -1,0 +1,29 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2007/01/18/1488052.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:38 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Even if it makes no sense it has to go somewhere</title></head><body>
+<h1>Even if it makes no sense it has to go somewhere</h1>
+<p><em>by Michael S. Kaplan, published on 2007/01/18 06:01 -05:00, original URI: http://blogs.msdn.com/b/michkap/archive/2007/01/18/1488052.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P>My first exposure to the Cyrillic script was back in the early 80s when I read Heinlein's Expanded Universe.</P>
+<P>He was talking about the trip that he and Ginny took to&nbsp;Russia, and about how half of the battle to learn Russian was in learning the script.</P>
+<P>He pointed out how words like Ресторан exist which kind of look like almost what they are, and I remember going out and learning a bit about Cyrillic just because the idea fascinated me. :-)</P>
+<P>Anyway, I was going to talk about software stuff....</P>
+<P><STRONG>Sometimes internationalization features need to define behavior even if it does not make sense for the behavior to be needed.</STRONG></P>
+<P>For example,&nbsp;there has to be way to sort a word in a list like <STRONG>aaaxxxxjoiae</STRONG>, even though really is no such word. Because if it ever was on a list, people would kind of intuitively know where it would be sorted alphabetically.</P>
+<P>Another example is a bug that someone reported several weeks ago related to a new Vista feature (which I will post about another day!). Right now I am just going to tie together the hodge podge of things I just talked about.</P>
+<P>The issue came up in relation to the Ukrainian locale, and specifically the sorting of the <A class="" href="http://en.wikipedia.org/wiki/Ukrainian_alphabet" mce_href="http://en.wikipedia.org/wiki/Ukrainian_alphabet">Ukrainian alphabet</A>. which I have talked about before along with other Cyrillic script languages <STRONG><A class="" href="http://archives.miloush.net/michkap/archive/2005/09/12/463483.html" mce_href="http://archives.miloush.net/michkap/archive/2005/09/12/463483.html">here</A></STRONG>.</P>
+<P>Now every child learning Ukrainian knows from a young age (and I know from listening to <A class="" href="http://www.ukrainianpower.com/game/alphabet.html" mce_href="http://www.ukrainianpower.com/game/alphabet.html">Boomchyk</A> teaching me!) that Ь and ь, the uppercase and lowercase forms of the CYRILLIC SOFT SIGN (<A class="" href="http://www.fileformat.info/info/unicode/char/042c" mce_href="http://www.fileformat.info/info/unicode/char/042c">U+042c</A> and <A class="" href="http://www.fileformat.info/info/unicode/char/042c" mce_href="http://www.fileformat.info/info/unicode/char/042c">U+044c</A>) come at the end of the alphabet. </P>
+<P>But as that Wikipedia article I pointed to above said, "The soft sign ь has no phonetic value, but indicates softening (palatalization) of a preceding consonant."</P>
+<P>Therefore, even though one would not create Ukrainian words that begin with <STRONG>Ь</STRONG>&nbsp;or <STRONG>ь</STRONG>, you have to define some kind of sorting behavior if you are asked to give a sort key for a made up word that begins with one of them. The fact that it is meaningless really is irrelevant to the need to define behavior.</P>
+<P>But the question then comes up -- where should it sort?</P>
+<P>Is it better to make it affect the preceding letter, acting as if it were some sort of diacritic (these characters also have no real meaning in the front of a word)? Probably not, since people who learn the alphabet expect it to be at the end of the alphabetical order,&nbsp;but it&nbsp;has to be considered since it has no meaning in some contexts.</P>
+<P>So in the end the decision is made to put it at the end of the Ukrainian alphabet. With the hopeful understanding that while it is true that a tester may be running into needing to test the behavior at some point, a typical user would never need to. :-)</P>
+<P>Anyway, coming up tomorrow, the actual feature (and bug!) that brings the whole issue up, and why it&nbsp;really isn't such&nbsp;a huge problem (I'll have some other examples too).</P>
+<P mce_keep="true">&nbsp;</P>
+<P><FONT color=#ff00ff><EM>This post brought to you by</EM>&nbsp;Ь <EM>(<A class="" href="http://www.fileformat.info/info/unicode/char/042c" mce_href="http://www.fileformat.info/info/unicode/char/042c">U+042c</A>, a.k.a. CYRILLIC CAPITAL LETTER SOFT SIGN)</EM></FONT></P>
+<hr/><p><a id="1494857" href="#1494857">#</a> <strong>roxfan</strong> on 19 Jan 2007 5:05 PM:</p><div style="margin-left: 1em"><p>That's pretty weird... I would expect Ukrainian to use the order of Russian and Belarusian and put Ь before ЭЮЯ.</p></div>
+<p><a id="1497097" href="#1497097">#</a> <strong>Michael S. Kaplan</strong> on 20 Jan 2007 1:20 AM:</p><div style="margin-left: 1em"><p>Every language can have its subtle differences in alphabet...</p>
+</div>
+<hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2007/01/19/1491959.html" title="What do keyboards and socks NOT have in common?">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2007/01/18/1487464.html" title="What the %$#&amp; is up with localized paths in Vista?">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2007-01">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2007-01-18">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2007/01/18/1488052.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:38 GMT -->
+</html>

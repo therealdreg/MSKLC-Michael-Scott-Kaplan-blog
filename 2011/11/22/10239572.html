@@ -1,0 +1,71 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2011/11/22/10239572.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>The evolving Story of Locale Support, part 10: Perhaps it is best to think of it as unintelligent design?</title></head><body>
+<h1>The evolving Story of Locale Support, part 10: Perhaps it is best to think of it as unintelligent design?</h1>
+<p><em>by Michael S. Kaplan, published on 2011/11/22 07:01 -05:00, original URI: http://blogs.msdn.com/b/michkap/archive/2011/11/22/10239572.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<p>Previous blogs from this series:</p>
+<ul>
+<li><strong><a title="part 9: Nastaleeq vs. Nastaliq? Either way, Windows 8 has got it!" href="http://archives.miloush.net/michkap/archive/2011/11/16/10237715.html">part 9: Nastaleeq vs. Nastaliq? Either way, Windows 8 has got it!</a></strong></li>
+<li><strong><a title="part 8: [Finally] taking care of some [more] languages in Pakistan" href="http://archives.miloush.net/michkap/archive/2011/11/15/10237317.html">part 8: [Finally] taking care of some [more] languages in Pakistan</a></strong></li>
+<li><strong><a title="part 7: That would be a " href="http://archives.miloush.net/michkap/archive/2011/11/11/10236194.html" a="" hawaiian="" for="" raise="" and="" call="">part 7: That would be a "call and a raise" for Hawaiian</a></strong></li>
+<li><strong><a title="part 6 (Behind the Cherokee Phonetic layout in Windows 8)" href="http://archives.miloush.net/michkap/archive/2011/11/09/10235391.html">part 6 (Behind the Cherokee Phonetic layout in Windows 8)</a></strong></li>
+<li><strong><a title="part 5 part 5 (...until the decision was made to not refuse to add it)" href="http://archives.miloush.net/michkap/archive/2011/11/08/10234995.html">part 5 (...until the decision was made to not refuse to add it)</a></strong></li>
+<li><strong><a title="part 4 (working beyond one's bugs, and the case for an MSKLC update)" href="http://archives.miloush.net/michkap/archive/2011/11/04/10233999.html">part 4 (working beyond one's bugs, and the case for an MSKLC update)</a></strong></li>
+<li><strong><a title="part 3 (working beyond one's bugs, the setup)" href="http://archives.miloush.net/michkap/archive/2011/11/03/10233591.html">part 3 (working beyond one's bugs, the setup)</a> </strong></li>
+<li><strong><a title="part 2 (raising the roof on keyboards)" href="http://archives.miloush.net/michkap/archive/2011/11/02/10232468.html">part 2 (raising the roof on keyboards)</a></strong></li>
+<li><strong><a title="part 1 (Some people don't want to double-d's)" href="http://archives.miloush.net/michkap/archive/2011/11/01/10232070.html">part 1 (Some people don't want to double-d's)</a></strong></li>
+<li><strong><a title="part 0 (The introduction)" href="http://archives.miloush.net/michkap/archive/2011/10/31/10231661.html">part 0 (The introduction)</a></strong></li>
+</ul>
+<p>Now I'm much bigger fan of evolution than intelligent design.</p>
+<p>Though as opposites go, they are a bit unbalanced.</p>
+<p>Design can be carefully planned yet be quite unintelligent, after all -- that is in fact lore provable.</p>
+<p>So here in this series that talks about the <strong>EVOLVING</strong> story of locale support, I thought I'd give such an example, in order to help out a colleague!</p>
+<p>Now in part 9, I took the following list that applied to all the prior parts:</p>
+<ol>
+<li>They are all features of Windows 8 (and.Net 4.5, where applicable), and</li>
+<li>They are all things that I think are really cool, and</li>
+<li>They have all been a long time coming, and</li>
+<li>I have been intimately involved with every of them.</li>
+</ol>
+<p>Then in part 9 I found one&nbsp;where only the first three applied.</p>
+<p>Now I'm going to point out something that none of them really apply to, but which nevertheless talks about the evolution of locale support at Microsoft....</p>
+<p>It started when we added a locale for "English - Caribbean" (LCID value of 0x2409).</p>
+<p>We already had several locales that conceivably fit under that grouping:</p>
+<table border="1" cellspacing="3" cellpadding="3">
+<tbody>
+<tr>
+<td>Locale</td>
+<td>LCID</td>
+</tr>
+<tr>
+<td>English - Jamaica</td>
+<td>0x2009</td>
+</tr>
+<tr>
+<td>English - Trinidad</td>
+<td>0x2c09</td>
+</tr>
+<tr>
+<td>English&nbsp;- Belize</td>
+<td>0x2809</td>
+</tr>
+</tbody>
+</table>
+<p>One could think of "English - Caribbean" as being an easy way to avoid having even more people ask for locales for the Cayman Islands and Barbados and Antigua and&nbsp;so on and so on.</p>
+<p>And in the world where everything was based on LCIDs, that was fine and dandy.</p>
+<p>But as we became more and more of the opinion that <strong><a title="Your LCID sucks" href="http://archives.miloush.net/michkap/archive/2007/07/23/4021529.html">LCIDs <strong>suck</strong></a></strong>, we at first for the sake of .Net used the "name" of en-CB until we rather embarrassingly realized how unintelligent we had been here -- what's the point of moving to a less proprietary solution to a more standards based one if we just start making up codes?</p>
+<p>Thus, as I discussed in <strong><a title="The road to standards compat is paved with app back-INcompat" href="http://archives.miloush.net/michkap/archive/2011/08/16/10196054.html">The road to standards compat is paved with app back-INcompat</a></strong>,&nbsp;we&nbsp;changed it to&nbsp;the ISO 3166 region code: <strong>en-029</strong>.</p>
+<p>Perhaps this points to the solution to the issue raised by former colleague S&eacute;bastien Molines in the Suggestion Box:</p>
+<p style="padding-left: 60px;"><span style="font-family: times new roman,times;">Hi Michael</span></p>
+<p style="padding-left: 60px;"><span style="font-family: times new roman,times;">I've read recently about es-419, or "Spanish appropriate to the UN-defined Latin America and Caribbean region" -- See <strong><span style="color: #006bad;" color="#006bad"><a href="http://www.inter-locale.com/ID/rfc5646.html#region">http://www.inter-locale.com/ID/rfc5646.html#region</a></span></strong></span></p>
+<p style="padding-left: 60px;"><span style="font-family: times new roman,times;">Such a language code would be really useful for the company where I work, which specifically targets the South American and Caribbean markets rather than Spain. But it seems that the .NET Framework doesn't support region subtags. Do you think it's something that will be supported some day? If not or in the meantime, what's the best way of supporting South American/Caribbean locales and in particular localizing for these markets in one go?</span></p>
+<p style="padding-left: 60px;"><span style="font-family: times new roman,times;">Hope all is good--I have good memories of working with you!</span></p>
+<p style="padding-left: 60px;"><span style="font-family: times new roman,times;">Seb</span></p>
+<p>Now whether or not Microsoft ever wanted to add <strong>es-419</strong>, the fact that we added <strong>en-029</strong> sets a clear precedent that could be used in any company's strategy for custom locales/custom cultures</p>
+<p>S&eacute;bastien's company could thus create an es-419 custom locale, though he may run into the big problem that our en-029 had -- that the date formats and currency preferences and even the dialect&nbsp;can vary between the Cayman Islands and Barbados and Antigua and Saint Vincent and the Virgin Islands and all of the other places where <a href="http://en.wikipedia.org/wiki/Caribbean_English">Caribbean English</a> is spoken.</p>
+<p>This points out the downside of such groupings -- it is hard to give consistent and correct data for them!</p>
+<p>Perhaps it would have made more sense to create en-BB for Barbados, en-JM for Jamaica, en-AG for Antigua, and so on. :-)</p>
+<hr/><div style="margin-left: 1em"><em>comments not archived</em></div><hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2012/10/26 <a href="http://archives.miloush.net/michkap/archive/2012/10/26/10362603.html">The evolving Story of Locale Support, part 28: We finally fixed that 'Install New Languages' thing!</a></p><p>2012/10/02 <a href="http://archives.miloush.net/michkap/archive/2012/10/02/10354988.html">The evolving Story of Locale Support, part 27: No, the T and the H aren't silent...</a></p><p>2012/08/20 <a href="http://archives.miloush.net/michkap/archive/2012/08/20/10341516.html">The evolving Story of Locale Support, part 26: Hey Windows 8, there's someone on the phone for you.</a></p><p>2012/07/11 <a href="http://archives.miloush.net/michkap/archive/2012/07/11/10327775.html">The evolving Story of Locale Support, part 25: Something old, something new, something repurposed, and something...</a></p><p>2012/06/07 <a href="http://archives.miloush.net/michkap/archive/2012/06/07/10316511.html">The evolving Story of Locale Support, part 24: I Adar you! Hell, I Double Adar you! (Windows 8 ed.)</a></p><p>2012/06/05 <a href="http://archives.miloush.net/michkap/archive/2012/06/05/10315033.html">The evolving Story of Locale Support, part 23: Tamazight? Outta sight!</a></p><p>2012/04/12 <a href="http://archives.miloush.net/michkap/archive/2012/04/12/10292952.html">The evolving Story of Locale Support, part 22: Digit Substitution 2.0</a></p><p>2012/03/08 <a href="http://archives.miloush.net/michkap/archive/2012/03/08/10278921.html">The evolving Story of Locale Support, part 21: The Windows 8 Hijripalooza extraordinaire!</a></p><p>2012/03/02 <a href="http://archives.miloush.net/michkap/archive/2012/03/02/10276258.html">The evolving Story of Locale Support, part 20: Yes, it's Bangla. Not Bengali!</a></p><p>2012/02/21 <a href="http://archives.miloush.net/michkap/archive/2012/02/21/10270502.html">The evolving Story of Locale Support, part 19: In honor of International Mother Language Day...</a></p><p>2012/02/15 <a href="http://archives.miloush.net/michkap/archive/2012/02/15/10268235.html">The evolving Story of Locale Support, part 18: Two scripts that share ten digits can be trouble</a></p><p>2012/02/02 <a href="http://archives.miloush.net/michkap/archive/2012/02/02/10263136.html">The evolving Story of Locale Support, part 17: Today I feel like translating you more than before</a></p><p>2012/01/24 <a href="http://archives.miloush.net/michkap/archive/2012/01/24/10259941.html">The evolving Story of Locale Support, part 16: We can't scale to a Xishuangbanna Dai locale, but…</a></p><p>2012/01/17 <a href="http://archives.miloush.net/michkap/archive/2012/01/17/10256884.html">The evolving Story of Locale Support, part 15: Fixing our listings up in Windows 8!</a></p><p>2011/12/22 <a href="http://archives.miloush.net/michkap/archive/2011/12/22/10250349.html">The evolving Story of Locale Support, part 14: Tifinagh, Tamazight, and Berber? Oh my!</a></p><p>2011/12/21 <a href="http://archives.miloush.net/michkap/archive/2011/12/21/10249983.html">The evolving Story of Locale Support, part 13: Divvying up locales, yet again!</a></p><p>2011/12/09 <a href="http://archives.miloush.net/michkap/archive/2011/12/09/10246051.html">The evolving Story of Locale Support, part 12: Logic dictates that we keep a sense of proportion about the RATIO</a></p><p>2011/11/23 <a href="http://archives.miloush.net/michkap/archive/2011/11/23/10240896.html">The evolving Story of Locale Support, part 11: What language is that keyboard for?</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2011/11/23/10240896.html" title="The evolving Story of Locale Support, part 11: What language is that keyboard for?">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2011/11/21/10239128.html" title="One disadvantage to being supplementary...or Japanese?">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2011-11">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2011-11-22">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2011/11/22/10239572.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+</html>

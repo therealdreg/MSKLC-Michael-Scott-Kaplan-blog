@@ -1,0 +1,227 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2010/04/07/9989346.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:35 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Anyone who says the console can't do Unicode isn't as smart as they think they are</title></head><body>
+<h1>Anyone who says the console can't do Unicode isn't as smart as they think they are</h1>
+<p><em>by Michael S. Kaplan, published on 2010/04/07 07:01 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2010/04/07/9989346.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P><FONT color=#ff0000><EM>Do you play the odds?</EM></FONT></P>
+<P><FONT color=#ff0000><EM>If you are a developer, the odds are&nbsp;that all things being equal you&nbsp;are not nearly as smart now before you read this blog as you will be once you have read it....</EM></FONT></P>
+<P>Back in the middle of February I mentioned in <A href="http://archives.miloush.net/michkap/archive/2010/02/15/9963784.html" mce_href="http://archives.miloush.net/michkap/archive/2010/02/15/9963784.html"><STRONG>The real problem(s) with all of these console "fallback" discussions</STRONG></A> that, of the many people talking about the console these days, most of them are wrong.</P>
+<P>Solving problems that don't exist, incorrectly impacting problems that do exist, and just generally making the situation worse overall....</P>
+<P>But I didn't really finish the work there; the blog was merely armchair criticisms of bugs, design flaws, mistaken assumptions spoken as fact, documentation problems, etc.</P>
+<P>100%&nbsp;accurate, but not described in a way that can help you move to the next&nbsp;step (getting it done right, in either native or managed code).</P>
+<P>Today's blog is going to change all that. :-)</P>
+<P><EM>All of this and much more will be covered in the upcoming training on the World-Ready Console, if you are on the Windows team....</EM></P>
+<P>After showing how the console&nbsp;could be 100% Unicode, which I did in March of 2008 after <A href="http://nuwen.net/stl.html" mce_href="http://nuwen.net/stl.html">STL</A> showed me, as I talked about in <A href="http://archives.miloush.net/michkap/archive/2008/03/18/8306597.html" mce_href="http://archives.miloush.net/michkap/archive/2008/03/18/8306597.html"><STRONG>Conventional wisdom is retarded, aka What the @#%&amp;* is _O_U16TEXT?</STRONG></A>, there is one piece of the puzzle still missing.</P>
+<P>I mean it is all well and good to show it in just a few lines of native code using the CRT.</P>
+<P>But the truth is that this problem exists in managed code too (some of which actually uses the CRT, and Win32), and also in native code that has no heavy&nbsp;CRT dependency or doesn't take one on.</P>
+<P>Behind the scenes, the CRT is doing all the right work in those circumstances to e.g.&nbsp;call <A href="http://msdn.microsoft.com/library/ms687401.aspx" mce_href="http://msdn.microsoft.com/library/ms687401.aspx">WriteConsoleW</A> or <A href="http://msdn.microsoft.com/library/aa365747.aspx" mce_href="http://msdn.microsoft.com/library/aa365747.aspx">WriteFile</A> (depending on whether the console's output streams are redirected or not).</P>
+<P>So anyone trying to do the same thing in native Win32 would have to do that same work.</P>
+<P>And although the CRT and .NET are both being developed in the same division of Microsoft, and .Net has its own internal CRT dependencies (it depends on .Net's version even when it ships with the OS), the managed Console class is not using this CRT functionality. And they are not doing it the hard way themselves, either.</P>
+<P>Now calling the CRT from VB.Net or C# (or other non-C++ languages) has some interesting challenges that I am not going to get into here (if someone wants to go that way they can). I&nbsp;thought instead I'd just give you the code really quick so you can do it in whatever language, without the version or CRT dependencies.</P>
+<P>Now this is&nbsp;C# code, this&nbsp;WriteLineRight sample&nbsp;function.</P>
+<P>But it&nbsp;is pretty much Win32 code written in C#. So Win32 developers should have no trouble&nbsp;grokking it or what it is doing:</P>
+<BLOCKQUOTE>
+<BLOCKQUOTE><PRE class=code><SPAN style="COLOR: blue">using </SPAN>System;
+<SPAN style="COLOR: blue">using </SPAN>System.Runtime.InteropServices;
+
+<SPAN style="COLOR: blue">public class </SPAN><SPAN style="COLOR: #2b91af">Test </SPAN>{
+    <SPAN style="COLOR: blue">public static void </SPAN>Main() {
+        <SPAN style="COLOR: blue">string </SPAN>st = <SPAN style="COLOR: #a31515">"\u0627\u0628\u0629 \u043a\u043e\u0448\u043a\u0430 \u65e5\u672c\u56fd\n\n"</SPAN>;
+        WriteLineRight(st);
+    }
+
+    <SPAN style="COLOR: blue">internal static bool </SPAN>IsConsoleFontTrueType(<SPAN style="COLOR: #2b91af">IntPtr </SPAN>std) {
+     CONSOLE_FONT_INFO_EX cfie = <SPAN style="COLOR: blue">new </SPAN>CONSOLE_FONT_INFO_EX();
+        cfie.cbSize = (<SPAN style="COLOR: blue">uint</SPAN>)<SPAN style="COLOR: #2b91af">Marshal</SPAN>.SizeOf(cfie);
+        <SPAN style="COLOR: blue">if</SPAN>(GetCurrentConsoleFontEx(std, <SPAN style="COLOR: blue">false</SPAN>, <SPAN style="COLOR: blue">ref </SPAN>cfie)) {
+            <SPAN style="COLOR: blue">return</SPAN>(((cfie.FontFamily &amp; TMPF_TRUETYPE) == TMPF_TRUETYPE));
+        }
+        <SPAN style="COLOR: blue">return false</SPAN>;
+    }
+
+    <SPAN style="COLOR: blue">public static void </SPAN>WriteLineRight(<SPAN style="COLOR: blue">string </SPAN>st) {
+        <SPAN style="COLOR: #2b91af">IntPtr </SPAN>stdout = GetStdHandle(STD_OUTPUT_HANDLE);
+        <SPAN style="COLOR: blue">if</SPAN>(stdout != INVALID_HANDLE_VALUE) {
+            <SPAN style="COLOR: blue">uint </SPAN>filetype = GetFileType(stdout);
+            <SPAN style="COLOR: blue">if</SPAN>(! ((filetype == FILE_TYPE_UNKNOWN) &amp;&amp; (<SPAN style="COLOR: #2b91af">Marshal</SPAN>.GetLastWin32Error() != ERROR_SUCCESS))) {
+                <SPAN style="COLOR: blue">bool </SPAN>fConsole;
+                <SPAN style="COLOR: blue">uint </SPAN>mode;
+                <SPAN style="COLOR: blue">uint </SPAN>written;
+                filetype &amp;= ~(FILE_TYPE_REMOTE);
+                <SPAN style="COLOR: blue">if </SPAN>(filetype == FILE_TYPE_CHAR) {
+                    <SPAN style="COLOR: blue">bool </SPAN>retval = GetConsoleMode(stdout, <SPAN style="COLOR: blue">out </SPAN>mode);
+                    <SPAN style="COLOR: blue">if </SPAN>((retval == <SPAN style="COLOR: blue">false</SPAN>) &amp;&amp; (<SPAN style="COLOR: #2b91af">Marshal</SPAN>.GetLastWin32Error() == ERROR_INVALID_HANDLE)) {
+                        fConsole = <SPAN style="COLOR: blue">false</SPAN>;
+                    } <SPAN style="COLOR: blue">else </SPAN>{
+                        fConsole = <SPAN style="COLOR: blue">true</SPAN>;
+                    }
+                } <SPAN style="COLOR: blue">else </SPAN>{
+                    fConsole = <SPAN style="COLOR: blue">false</SPAN>;
+                }
+
+                <SPAN style="COLOR: blue">if </SPAN>(fConsole) {
+                    <SPAN style="COLOR: blue">if </SPAN>(IsConsoleFontTrueType(stdout)) {
+                        WriteConsoleW(stdout, st, st.Length, <SPAN style="COLOR: blue">out </SPAN>written, <SPAN style="COLOR: #2b91af">IntPtr</SPAN>.Zero);
+                    } <SPAN style="COLOR: blue">else </SPAN>{
+                        <SPAN style="COLOR: green">//
+                        // Not a TrueType font, so the output may have trouble here
+                        // Need to check the codepage settings
+                        //
+                        // TODO: Add the old style GetConsoleFallbackUICulture code here!!!
+                    </SPAN>}
+                } <SPAN style="COLOR: blue">else </SPAN>{
+                    <SPAN style="COLOR: green">//
+                    // Write out a Unicode BOM to ensure proper processing by text readers
+                    //
+                    </SPAN>WriteFile(stdout, BOM, 2, <SPAN style="COLOR: blue">out </SPAN>written, <SPAN style="COLOR: #2b91af">IntPtr</SPAN>.Zero);
+                    WriteFile(stdout, st, st.Length * 2, <SPAN style="COLOR: blue">out </SPAN>written, <SPAN style="COLOR: #2b91af">IntPtr</SPAN>.Zero);
+                }
+            }
+        }
+    }
+
+    [<SPAN style="COLOR: #2b91af">DllImport</SPAN>(<SPAN style="COLOR: #a31515">"kernel32.dll"</SPAN>, CharSet=<SPAN style="COLOR: #2b91af">CharSet</SPAN>.Unicode, ExactSpelling=<SPAN style="COLOR: blue">true</SPAN>)]
+    <SPAN style="COLOR: blue">internal static extern bool </SPAN>WriteConsoleW(<SPAN style="COLOR: #2b91af">IntPtr </SPAN>hConsoleOutput, <BR>                                              <SPAN style="COLOR: blue">string </SPAN>lpBuffer, <BR>                                              <SPAN style="COLOR: blue">int </SPAN>nNumberOfCharsToWrite, 
+                                              <SPAN style="COLOR: blue">out uint </SPAN>lpNumberOfCharsWritten, <BR>                                              <SPAN style="COLOR: #2b91af">IntPtr </SPAN>lpReserved);
+
+    [<SPAN style="COLOR: #2b91af">DllImport</SPAN>(<SPAN style="COLOR: #a31515">"kernel32.dll"</SPAN>, CharSet=<SPAN style="COLOR: #2b91af">CharSet</SPAN>.Unicode, ExactSpelling=<SPAN style="COLOR: blue">true</SPAN>)]
+    <SPAN style="COLOR: blue">internal static extern bool </SPAN>WriteFile(<SPAN style="COLOR: #2b91af">IntPtr </SPAN>hFile, <BR>                                          <SPAN style="COLOR: blue">string </SPAN>lpBuffer, <BR>                                          <SPAN style="COLOR: blue">int </SPAN>nNumberOfBytesToWrite, 
+                                          <SPAN style="COLOR: blue">out uint </SPAN>lpNumberOfBytesWritten, <BR>                                          <SPAN style="COLOR: #2b91af">IntPtr </SPAN>lpOverlapped);
+
+    [<SPAN style="COLOR: #2b91af">DllImport</SPAN>(<SPAN style="COLOR: #a31515">"kernel32.dll"</SPAN>, ExactSpelling=<SPAN style="COLOR: blue">true</SPAN>, SetLastError=<SPAN style="COLOR: blue">true</SPAN>)]
+    <SPAN style="COLOR: blue">internal static extern bool </SPAN>GetConsoleMode(<SPAN style="COLOR: #2b91af">IntPtr </SPAN>hConsoleHandle, <SPAN style="COLOR: blue">out uint </SPAN>lpMode);
+
+    [<SPAN style="COLOR: #2b91af">DllImport</SPAN>(<SPAN style="COLOR: #a31515">"kernel32.dll"</SPAN>, ExactSpelling=<SPAN style="COLOR: blue">true</SPAN>)]
+    <SPAN style="COLOR: blue">internal static extern bool </SPAN>GetCurrentConsoleFontEx(<SPAN style="COLOR: #2b91af">IntPtr </SPAN>hConsoleOutput,<BR>                                                        <SPAN style="COLOR: blue">bool </SPAN>bMaximumWindow, <BR>                                                        <SPAN style="COLOR: blue">ref </SPAN>CONSOLE_FONT_INFO_EX lpConsoleCurrentFontEx);
+
+    [<SPAN style="COLOR: #2b91af">DllImport</SPAN>(<SPAN style="COLOR: #a31515">"Kernel32.DLL"</SPAN>, ExactSpelling=<SPAN style="COLOR: blue">true</SPAN>, SetLastError=<SPAN style="COLOR: blue">true</SPAN>)]
+    <SPAN style="COLOR: blue">internal static extern uint </SPAN>GetFileType(<SPAN style="COLOR: #2b91af">IntPtr </SPAN>hFile);
+
+    [<SPAN style="COLOR: #2b91af">DllImport</SPAN>(<SPAN style="COLOR: #a31515">"Kernel32.DLL"</SPAN>, ExactSpelling=<SPAN style="COLOR: blue">true</SPAN>)]
+    <SPAN style="COLOR: blue">internal static extern </SPAN><SPAN style="COLOR: #2b91af">IntPtr </SPAN>GetStdHandle(<SPAN style="COLOR: blue">int </SPAN>nStdHandle);
+
+    <SPAN style="COLOR: blue">internal struct </SPAN><SPAN style="COLOR: #2b91af">COORD </SPAN>{
+        <SPAN style="COLOR: blue">internal short </SPAN>X;
+        <SPAN style="COLOR: blue">internal short </SPAN>Y;
+        <SPAN style="COLOR: blue">internal </SPAN>COORD(<SPAN style="COLOR: blue">short </SPAN>x, <SPAN style="COLOR: blue">short </SPAN>y) {
+            X = x;
+            Y = y;
+        }
+    }
+
+    [<SPAN style="COLOR: #2b91af">StructLayout</SPAN>(<SPAN style="COLOR: #2b91af">LayoutKind</SPAN>.Sequential)]
+    <SPAN style="COLOR: blue">internal unsafe struct </SPAN><SPAN style="COLOR: #2b91af">CONSOLE_FONT_INFO_EX </SPAN>{
+        <SPAN style="COLOR: blue">internal uint </SPAN>cbSize;
+        <SPAN style="COLOR: blue">internal uint </SPAN>nFont;
+        <SPAN style="COLOR: blue">internal </SPAN>COORD dwFontSize;
+        <SPAN style="COLOR: blue">internal int </SPAN>FontFamily;
+        <SPAN style="COLOR: blue">internal int </SPAN>FontWeight;
+        <SPAN style="COLOR: blue">fixed char </SPAN>FaceName[LF_FACESIZE];
+    }
+
+    <SPAN style="COLOR: blue">internal const int </SPAN>TMPF_TRUETYPE = 0x4;
+    <SPAN style="COLOR: blue">internal const int </SPAN>LF_FACESIZE = 32;
+    <SPAN style="COLOR: blue">internal const string </SPAN>BOM = <SPAN style="COLOR: #a31515">"\uFEFF"</SPAN>;
+    <SPAN style="COLOR: blue">internal const int </SPAN>STD_OUTPUT_HANDLE = -11; <SPAN style="COLOR: green">// Handle to the standard output device.
+    </SPAN><SPAN style="COLOR: blue">internal const int </SPAN>ERROR_INVALID_HANDLE = 6;
+    <SPAN style="COLOR: blue">internal const int </SPAN>ERROR_SUCCESS = 0;
+    <SPAN style="COLOR: blue">internal const uint </SPAN>FILE_TYPE_UNKNOWN = 0x0000;
+    <SPAN style="COLOR: blue">internal const uint </SPAN>FILE_TYPE_DISK = 0x0001;
+    <SPAN style="COLOR: blue">internal const uint </SPAN>FILE_TYPE_CHAR = 0x0002;
+    <SPAN style="COLOR: blue">internal const uint </SPAN>FILE_TYPE_PIPE = 0x0003;
+    <SPAN style="COLOR: blue">internal const uint </SPAN>FILE_TYPE_REMOTE = 0x8000;
+    <SPAN style="COLOR: blue">internal static </SPAN><SPAN style="COLOR: #2b91af">IntPtr </SPAN>INVALID_HANDLE_VALUE = <SPAN style="COLOR: blue">new </SPAN><SPAN style="COLOR: #2b91af">IntPtr</SPAN>(-1);
+}</PRE><A href="http://11011.net/software/vspaste"></A></BLOCKQUOTE></BLOCKQUOTE>
+<P>And there you go!</P>
+<P><IMG style="WIDTH: 532px; HEIGHT: 235px" src="http://trigeminal.fmsinc.com/images/console01.jpg" width=532 height=235 mce_src="http://trigeminal.fmsinc.com/images/console01.jpg"></P>
+<P>A few things to note here:</P>
+<UL>
+<LI>Your console does have to have a TrueType font selected (mine has Consolas):<BR><BR><IMG style="WIDTH: 386px; HEIGHT: 474px" src="http://trigeminal.fmsinc.com/images/console02.jpg" width=386 height=474 mce_src="http://trigeminal.fmsinc.com/images/console02.jpg"><BR><BR>If you don't do this, the bitmap fonts will show question marks (though the redirect case will work just fine). Note that the code detects this case and currently has a huge <STRONG>TODO</STRONG> there; this is where the old logic of checkiing the encoding would be done.</LI>
+<LI>Writing a BOM on every call when redirection as this sample does is happening is probably overkill. But in quick tests where you redirect the output to a file, it lets you immediately use the <STRONG>type</STRONG> command rather than waiting until you open it in Notepad and save it to get the BOM in. Your mileage should vary based on what you are using it for, it is never needed if there is no redirection and needed only once on the first line if there is.</LI>
+<LI>If you mark the text that looks like three boxes, some Cyrillic, and three boxes and copy it to the clipboard and paste it somewhere, you will see it is valid Unicode:<BR><BR><FONT size=5>ابة кошка 日本国</FONT><BR><BR>So much for no complex scripts in the console!</LI>
+<LI>Ditto for the ones who said&nbsp;no CJK there when your default system locale isn't the&nbsp;right code page&nbsp;for the CJK!</LI>
+<LI>The text file you redirect to has the text 100% correct even if the font information is wrong due to it not being a TrueType font.</LI>
+<LI>This code will work the same no matter what you do with chcp.</LI>
+<LI>It will also work the same no matter what you do&nbsp; with&nbsp;any of the functions to set the console codepages.</LI>
+<LI>You can extend this code to both STDIN and STDERR by making similar calls to <A href="http://msdn.microsoft.com/library/ms683231.aspx" mce_href="http://msdn.microsoft.com/library/ms683231.aspx">GetStdHandle</A> for those handles, too.</LI>
+<LI>You can do similar&nbsp;work with <A href="http://msdn.microsoft.com/library/ms684958.aspx" mce_href="http://msdn.microsoft.com/library/ms684958.aspx">ReadConsoleW</A> and <A href="http://msdn.microsoft.com/library/aa365467.aspx" mce_href="http://msdn.microsoft.com/library/aa365467.aspx">ReadFile</A> to take care of the STDIN; the writing of the <STRONG>ReadLineRight</STRONG> function is left as an exercise for the student.</LI>
+<LI>The next time someone talks about SetThreadPreferredUILanguages(MUI_CONSOLE_FILTER, NULL, NULL) or GetConsoleFallbackUICulture, send them to this blog, as they are probably wrong.</LI>
+<LI>When I said "probably" in&nbsp;the previous bullet point, I was being nice. And you have two huge blogs that prove they are wrong and show how to make everything right.</LI>
+<LI><FONT color=#ff0000><STRONG>Anyone who say the console can't do Unicode in either native or managed code&nbsp;isn't as smart as they think they are.</STRONG>&nbsp;&nbsp;</FONT></LI></UL>
+<P>I know the last point because <STRONG>I</STRONG> used to say that, when I was not as smart as I am now.</P>
+<P>In fact, as I said way back in the beginning,&nbsp;the odds are in favor of the fact that you yourself were not nearly as smart before you read this blog as you are now that you have read it! :-)</P>
+<P><EM>And now if you will excuse me, I have to start conversations with the gazillion console applications in Windows that routinely punt bugs in console apps talking about their lack of Unicode support....</EM></P>
+<hr/><p><strong>Craig Peterson</strong> on 7 Apr 2010 1:14 PM:</p><div style="margin-left: 1em"><p>Is the 'W' at the end of ReadFileW and WriteFileW a typo? &nbsp;I can't find anything about it online or in the SDK headers.</p>
+<p>In any case, thanks for the post. &nbsp;I feel smarter already!</p></div>
+<p><strong>Michael S. Kaplan</strong> on 7 Apr 2010 1:17 PM:</p><div style="margin-left: 1em"><p>Those are the Unicode versions of the functions I link to -- but you want to call the Unicode ones, whether by compiling with UNICODE or by calling the &quot;W&quot; versions explicitly (the sample does the latter).</p>
+</div>
+<p><strong>Random832</strong> on 7 Apr 2010 2:52 PM:</p><div style="margin-left: 1em"><p>If you were to select a font which has the Arabic or CJK characters in it, will it appear correctly? I already notice that the [double-width] CJK characters take up only a single column each. So much for no complex scripts or CJK in the console, indeed.</p></div>
+<p><strong>Brendan Elliott</strong> on 7 Apr 2010 3:01 PM:</p><div style="margin-left: 1em"><p>Thank you so much for the console font trick! I now have a way to read Japanese console text on a Japanese machine with the system locale set to English (for compapiblity reasons). &nbsp;All my years of studying Japanese hadn't increased my ability to read a series of ASCII question marks, so a true type font plus copy &amp; paste is a very useful workaround to know.</p></div>
+<p><strong>Michael S. Kaplan</strong> on 7 Apr 2010 6:15 PM:</p><div style="margin-left: 1em"><p>@Random832 - if such a font is available (generally they aren't unless your system locale matches). But the redirect case works fine and the copy/paste works as well.....</p>
+<p>@Brendan Elliott: Great! Glad to assist. :-)</p>
+</div>
+<p><strong>Mike Dimmick</strong> on 8 Apr 2010 6:57 AM:</p><div style="margin-left: 1em"><p>Craig, Mike: there's no ReadFileW or WriteFileW because the functions operate on binary data - therefore, not safe to convert anything. The documentation does not include the &quot;Unicode and ANSI names&quot; section for that reason. There is only ReadFile and WriteFile.</p>
+<p>Mostly functions that have A and W versions have string parameters, or structure parameters (or pointer-to-structure) where the structure contains one or more string parameters.</p>
+<p>ReadConsole and WriteConsole have A/W variants as they deal with string parameters even though the parameters are declared as VOID*. I'm not actually sure why this is, perhaps because the strings are not required to be null-terminated.</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 8 Apr 2010 8:00 AM:</p><div style="margin-left: 1em"><p>And the weird thing is that I knew that (note the WriteFile p/invoke above!). :-)</p>
+</div>
+<p><strong>Igor Tandetnik</strong> on 8 Apr 2010 10:14 AM:</p><div style="margin-left: 1em"><p>This line</p>
+<p>if(! (filetype == FILE_TYPE_UNKNOWN) &amp;&amp; (Marshal.GetLastWin32Error() != ERROR_SUCCESS)) {</p>
+<p>doesn't look right. Perhaps the closing paren after UNKNOWN and an opening one before Marshal shouldn't be there. Personally, I'd write</p>
+<p>if(filetype != FILE_TYPE_UNKNOWN ||</p>
+<p> &nbsp; Marshal.GetLastWin32Error() == ERROR_SUCCESS) {</p></div>
+<p><strong>Michael S. Kaplan</strong> on 8 Apr 2010 12:15 PM:</p><div style="margin-left: 1em"><p>Actually, the check is kind of right, believe it or not -- it is attempting to catch the case where it is unknown yet succeeded. Weird code behavior trying to key off weird function results....</p>
+</div>
+<p><strong>Pavanaja U B</strong> on 8 Apr 2010 9:24 PM:</p><div style="margin-left: 1em"><p>You (I mean MS) are still putting me down by not allowing complex scripts (opentype fonts) in console.</p>
+<p>-Pavanaja</p></div>
+<p><strong>Michael S. Kaplan</strong> on 8 Apr 2010 11:38 PM:</p><div style="margin-left: 1em"><p>Well, putting down is a relative term....</p>
+</div>
+<p><strong>Seth</strong> on 9 Apr 2010 11:02 AM:</p><div style="margin-left: 1em"><p>Am I missing something? In the line</p>
+<p>if(! (filetype == FILE_TYPE_UNKNOWN) &amp;&amp; (Marshal.GetLastWin32Error() != ERROR_SUCCESS)) {</p>
+<p>say filetype is FILE_TYPE_CHAR, then &quot;filetype == FILE_TYPE_UNKNOWN&quot; evaluates to false, and so &quot;! (filetype == FILE_TYPE_UNKNOWN)&quot; evaluates to true. Since there wasn't an error GetLastError() returns ERROR_SUCCESS and GetLastError() != ERROR_SUCCESS evaluates to false, and the whole expression evalutes to false and the function exits without writing anything?</p>
+<p>It seems like the condition you want to return on is if the type is unknown because there was an error. So if it's unknown but there is no error then you still continue on with the write. I think that's the same as just making sure there's no error, so should that check be replaced with the following?</p>
+<p>if(GetLastError() != ERROR_SUCCESS) {</p>
+<p> &nbsp; &nbsp;return;</p>
+<p>}</p>
+<p>Also, why do we need to check that filetype is FILE_TYPE_CHAR? Isn't it enough to just check that out is a console (are all consoles FILE_TYPE_CHAR?), and does the following do that?</p>
+<p>bool fConsole = (GetConsoleMode(out,&amp;mode) || (GetLastError() != ERROR_INVALID_HANDLE));</p>
+<p>So could it be right to do the following?</p>
+<p>void WriteLineRight(std::string const &amp;s) {</p>
+<p>//...</p>
+<p>HANDLE out = GetStdHandle(STD_OUTPUT_HANDLE);</p>
+<p>if(out == INVALID_HANDLE_VALUE) {</p>
+<p> &nbsp; &nbsp;return;</p>
+<p>}</p>
+<p>// we don't directly check the filetype of output handle, we only check if it's a console</p>
+<p>DWORD mode;</p>
+<p>bool fConsole = (GetConsoleMode(out,&amp;mode) || (GetLastError() != ERROR_INVALID_HANDLE));</p>
+<p>if(fConsole) {</p>
+<p> &nbsp; &nbsp;//... don't care about non-true-type consoles</p>
+<p> &nbsp; &nbsp;//... convert to wchar here</p>
+<p> &nbsp; &nbsp;WriteConsoleW(...)</p>
+<p>} else {</p>
+<p> &nbsp; &nbsp;WriteFile(out,&amp;s[0],s.size(),&amp;written,NULL);</p>
+<p>}</p>
+<p>}</p>
+<p>...</p></div>
+<p><strong>Michael S. Kaplan</strong> on 9 Apr 2010 1:22 PM:</p><div style="margin-left: 1em"><P>In my opinion, you are missing something, yes. :-)</P>
+<P>If you look at the docs for GetFileType, it is clear that:</P>
+<BLOCKQUOTE>
+<P><EM>You can distinguish between a "valid" return of FILE_TYPE_UNKNOWN and its return due to a calling error (for example, passing an invalid handle to GetFileType) by calling GetLastError.</EM></P>
+<P><EM>If the function worked properly and FILE_TYPE_UNKNOWN was returned, a call to GetLastError will return NO_ERROR.</EM></P>
+<P><EM>If the function returned FILE_TYPE_UNKNOWN due to an error in calling GetFileType, GetLastError will return the error code.</EM></P></BLOCKQUOTE>
+<P>This sample code is distinguishing the two cases.</P></div>
+<p><strong>Seth</strong> on 9 Apr 2010 2:11 PM:</p><div style="margin-left: 1em"><p>Okay, was something wrong with my analysis of the expression? When I ran the sample code it seemed to confirm my analysis by skipping over printing when my own version does do the printing.</p>
+<p>My understanding of the requirements is that there are three possible cases:</p>
+<p>1. file type is not unknown. therefore we know the call succeeded</p>
+<p>2. file type is unknown, but the call succeeded</p>
+<p>3. file type is unknown and the call failed</p>
+<p>In case one we want to continue on with printing. In case two we also want to continue on with printing. In case three there was an error, and we cannot continue with printing and must return. This reduces down to just checking for success of the call, and checking if the type is unknown or not is unneeded.</p>
+<p>However the sample code seems to only cause printing in a fourth, impossible case: when filetype is not unknown, but the call failed.</p>
+<p>I think the expression contains a typo. ! has higher precedence than &amp;&amp; right? so ! applies only to the left side, not the whole expression. If the ! were instead applied to the entire expression then it looks like it would be correct to me.</p></div>
+<p><strong>Seth</strong> on 9 Apr 2010 2:16 PM:</p><div style="margin-left: 1em"><p>Also I'm still curious about checking for FILE_TYPE_CHAR specifically. Can consoles be anything else? Isn't a successful call to GetConsoleMode enough to distinguish between when we need to do &nbsp;special things for console output vs. when we need to use WriteFile to write to the file that output's being redirected to?</p></div>
+<hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2010/09/23 <a href="http://archives.miloush.net/michkap/archive/2010/09/23/10066660.html">A confluence of circumstances leaves a stone unturned...</a></p><p>2010/06/27 <a href="http://archives.miloush.net/michkap/archive/2010/06/27/10028282.html">Bugs hidden in plain sight, and commented that way too ANSWERS</a></p><p>2010/06/18 <a href="http://archives.miloush.net/michkap/archive/2010/06/18/10024976.html">Bugs hidden in plain sight, and commented that way too</a></p><p>2010/05/07 <a href="http://archives.miloush.net/michkap/archive/2010/05/07/10008232.html">Cunningly conquering communicated console caveats. Comprende, mon Capitán?</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2010/04/08/9991592.html" title="Are you old enough to get your Bosnian on?">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2010/04/06/9989320.html" title="Arabic? English? Both? Neither?">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2010-04">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2010-04-07">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2010/04/07/9989346.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:35 GMT -->
+</html>

@@ -1,0 +1,42 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2008/12/18/9234559.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:35 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>How are the Danes doing it?</title></head><body>
+<h1>How are the Danes doing it?</h1>
+<p><em>by Michael S. Kaplan, published on 2008/12/18 10:01 -05:00, original URI: http://blogs.msdn.com/b/michkap/archive/2008/12/18/9234559.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<p><span style="color: rgb(255, 0, 0); font-style: italic;">WARNING: This blog has <b>nothing whatsoever</b>¹ do with Nordic sex.</span><br></p><p>Regular reader Santhosh Pillai had a question not too long ago that I found to be rather kick ass and cool, professionally speaking. </p><p>It was:</p>
+<blockquote>
+<blockquote>
+<p><font face="times new roman,times">Hi,<br><br>I am trying to figure out how these characters sort in Danish: A, Å, Æ, B, Ø, Z<br><br></font></p>
+<ol>
+<li><font face="times new roman,times">If I follow the <a href="http://msdn.microsoft.com/en-us/library/cc194875.aspx" mce_href="http://msdn.microsoft.com/en-us/library/cc194875.aspx">Danish and Norwegian Sort Order documentation</a> in MSDN, it should be: A, B, Z, Å, Æ, Ø.</font></li>
+<li><font face="times new roman,times">If I follow, Unicode sort order, it will be: A, Å, Æ, B, Ø, Z</font></li>
+<li><font face="times new roman,times">If I follow the order by which they are pronounced, it will be: A, Å, Æ, B, Ø, Z (because Å is Aa, Æ is Ae, and Ø is Oe)</font></li>
+<li><font face="times new roman,times">And if I look at the alphabet list and <a href="http://en.wikipedia.org/wiki/Danish_alphabet" mce_href="http://en.wikipedia.org/wiki/Danish_alphabet">how they appear in the list</a>, the order will be: A, B, Z, Æ, Ø, Å</font></li>
+</ol>
+<p><font face="times new roman,times"><br>Which one is “more correct”?<br><br>In the product I work on, here is what happens:<br></font></p>
+<ul>
+<li><font face="times new roman,times">In "task list”, the letters are sorted as: A, B, Z, Æ, Ø, Å</font></li>
+<li><font face="times new roman,times"></font>In "event list", the letters are sorted as: Å. A, B, Z, Æ, Ø</li>
+<li><font face="times new roman,times"></font>In "contact list", the letters are sorted as: B, A, Z, Æ, Ø, Å (don’t know where this comes from!)<br></li>
+</ul>
+<p><font face="times new roman,times">Thanks</font></p>
+</blockquote>
+</blockquote>
+<p>Fascinating! </p>
+<p>The MSDN "topic" he was talking about in #1 above is from the appendix from <a href="http://msdn.microsoft.com/en-us/library/aa163290.aspx" mce_href="http://msdn.microsoft.com/en-us/library/aa163290.aspx">v1 of Developing International Software</a>. That table doesn't appear to be as complete as I once thought it was, and I'll have to remember to consider giving Cathy a hard time about that at some point in the not too distant future! :-)<br></p>
+<p>We know that #2 (the "Unicode" order) is wrong because it is from the default table and we know Danish has some different rules.</p>
+<p>And we know that #3 is wrong since it is not how someone in Denmark would pronounce things....</p>
+<p>And that #4 list from Wikipedia is tempting though the format doesn't appeal to me quite as much. I am much more of glutton for punishment. :-)<br></p>
+<p>Looking at what Windows does, we can go to the <a href="http://msdn.microsoft.com/en-us/library/cc201070.aspx" mce_href="http://msdn.microsoft.com/en-us/library/cc201070.aspx">protocol documents</a> and (excerpting the relevant data from the Active Directory Sort Table it points to to get both the entries in the default table and the ones that control exceptions for Danish):</p>
+<blockquote>
+<p><b><font face="consolas,lucida console,courier new,courier,fixed">0x0041 &nbsp; 14&nbsp;&nbsp;&nbsp; 2&nbsp;&nbsp;&nbsp; 2 &nbsp; 18 ; A&nbsp;&nbsp; Latin Capital Letter A<br>0x0042 &nbsp; 14&nbsp;&nbsp;&nbsp; 9 &nbsp;&nbsp; 2&nbsp;&nbsp; 18 ; B &nbsp; Latin Capital Letter B<br>0x005a &nbsp; 14&nbsp; 169&nbsp;&nbsp;&nbsp; 2&nbsp;&nbsp; 18 ; Z&nbsp;&nbsp; Latin Capital Letter Z<br>0x00c6 &nbsp; 14&nbsp; 172 &nbsp;&nbsp; 2&nbsp;&nbsp; 18 ; Æ&nbsp;&nbsp; </font></b><b><font face="consolas,lucida console,courier new,courier,fixed">Latin Capital Letter</font></b><b><font face="consolas,lucida console,courier new,courier,fixed"> AE<br>0x00d8 &nbsp; 14&nbsp; 174 &nbsp;&nbsp; 2&nbsp;&nbsp; 18 ; Ø&nbsp;&nbsp; </font></b><b><font face="consolas,lucida console,courier new,courier,fixed">Latin Capital Letter O With Stroke</font></b><br><b><font face="consolas,lucida console,courier new,courier,fixed">0x00c5 &nbsp; 14&nbsp; 177 &nbsp;&nbsp; 2&nbsp;&nbsp; 18 ; Å&nbsp;&nbsp; </font></b><b><font face="consolas,lucida console,courier new,courier,fixed">Latin Capital Letter </font></b><b><font face="consolas,lucida console,courier new,courier,fixed">A With Ring Above<br></font></b></p></blockquote><p>And there we have it -- the Wikipedia article is right.</p><p>And 2/3 of the pieces of the nameless product are doing their own thing, off the reservation. And they definitely aren't doing it like Danes do it!</p><p>&nbsp;</p><p><font face="times new roman,times">1 - Sorry if you jumped in, based on the title, thinking I was go all totally inappropriate about my last stay in Copenhagen².<br>2 - It was actually for a trip to Malmo³ with several evenings in Copenhagen</font><font face="times new roman,times">⁴</font><font face="times new roman,times">.<br>3 - For the Festival, you see....<br>4 - This was done primarily⁵ for the cooler hotel on the Denmark side.<br>5 - Oh, and also the nightlife⁶ in Copenhagen on the non-Malmo nights.</font><br><font face="times new roman,times">6 - Ah, never mind; I said this blog wouldn't be about Nordic sex! :-)</font></p><p><br></p><p><span style="color: rgb(255, 0, 255);"><span style="font-style: italic;">This blog brought to you by</span><font size="7"> Ø </font><span style="font-style: italic;">(<a href="http://www.fileformat.info/info/unicode/char/00d8" mce_href="http://www.fileformat.info/info/unicode/char/00d8">U+00d8</a>, aka LATIN CAPITAL LETTER O WITH STROKE)</span></span> <br></p>
+<hr/><p><strong>Michael Madsen</strong> on 18 Dec 2008 4:41 PM:</p><div style="margin-left: 1em"><p>...Additionally, Aa is sorted as &#197;, for historic reasons (we Danes didn't always have &#197; - it didn't get officially introduced until 1948, and many cities and surnames are still spelled with the double-A). Aardvarks tend to suffer from this. :)</p></div>
+<p><strong>Michael S. Kaplan</strong> on 18 Dec 2008 5:06 PM:</p><div style="margin-left: 1em"><p>Yes, I limited myself to the letters in the original question. The more thorny issue of Aa (which also leads into the disunification with Norwegian) I discuss a bit <a href="http://archives.miloush.net/michkap/archive/2006/04/27/584439.html" style="font-weight:bold;">here</a> and <b><a href="http://archives.miloush.net/michkap/archive/2008/03/27/8338664.html">here</a></b>....</p>
+<p>And we should all feel bad for the poor aardvarks! :-)</p></div>
+<p><strong>Jesper Larsen-Ledet</strong> on 23 Oct 2013 7:01 AM:</p><div style="margin-left: 1em"><p>I have a list of names (some Danish) that I would like to group by first letter and I would like &quot;Aage&quot; (Åge) to be placed under Å.</p>
+<p>If I sort the list it&#39;s easy enough to get him to show up next to Åmund and Åse but how can I get just &#39;Å&#39; from &quot;Aage&quot;?</p>
+</div>
+<hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2008/12/19/9240482.html" title="Black hole sun, Vista gadget come, don&#39;t predict China&#39;s rain?">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2008/12/18/9234330.html" title="Whither ICU.NET? I don&#39;t see it thither...">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2008-12">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2008-12-18">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2008/12/18/9234559.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:35 GMT -->
+</html>

@@ -1,0 +1,51 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2005/03/29/403216.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:42 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Flag behavior for the NLS APIs</title></head><body>
+<h1>Flag behavior for the NLS APIs</h1>
+<p><em>by Michael S. Kaplan, published on 2005/03/29 02:18 -05:00, original URI: http://blogs.msdn.com/b/michkap/archive/2005/03/29/403216.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P>Flags for APIs are an interesting thing, especially when you have APIs that you improve between versions. And the NLS APIs are no exception to this.</P>
+<P>There are two ways one could handle flag values that are undefined in the current version of an API:</P>
+<OL>
+<LI>You can disallow any unknown flag value. 
+<UL>
+<LI>PRO -- you never have to worry about a future version "changing" behavior 
+<LI>CON -- callers have to write version dependent code if they want to call multiple versions</LI></UL>
+<LI>You can allow but ignore any unknown flag value. 
+<UL>
+<LI>PRO -- Only one call semantic is needed across all versions 
+<LI>CON -- You never know when flags are used and when they are ignored</LI></UL></LI></OL>
+<P>Just in case people were not sure, by and large the NLS API use #1, something that I think most APIs do. While the ability to call the code just one way is nice, never being sure what the behavior is really not so nice. And when you look at APIs from the point of view of not knowing what will come next, you never want to add that kind of uncertainty to the mix for the future.</P>
+<P><EM>(Note that the one glaring exception to this is the LOCALE_NOUSEROVERRIDE flag, which actually gets pretty controversial when you get down to it (cf: </EM><A id=CategoryEntryList href="http://archives.miloush.net/michkap/archive/2005/03/18/398572.html"><EM>When is it a backcompat break and when is it fulfilling not-yet-fulfilled technology?</EM></A><EM>)</EM></P>
+<P>It was interesting working on the <A title="Microsoft Layer for Unicode" href="http://www.microsoft.com/globaldev/handson/dev/mslu_announce.mspx" target=_blank>Microsoft Layer for Unicode</A>, which tries to let people write Unicode applications. What to do with the flags that are NT-specific becomes an even more interesting set of debates with people who start each meeting claiming they have no strong feelings about the issue and end each meeting ready to kill the ignorant wingnuts who want&nbsp;Microsoft to go down in flames via their own bad decisions. Hopefully you'll see the counterpoint there....</P>
+<P>On the whole I am happy with the behavior of the rest of the APIs (and with most of the behavior of <A title=GetLocaleInfo href="http://msdn.microsoft.com/library/en-us/intl/nls_34rz.asp" target=_blank>GetLocaleInfo</A>, et. al., ignoring the LOCALE_NOUSEROVERRIDE stuff). And that is speaking as a former external developer who had to write all of that version-specific code. Because I&nbsp;would rather see the API fail up front than appear to succeed while actually ignoring what I told it to do. An API that accepts but ignores random crap (and if you think about, all it is random crap when it is not yet defined) is not a very robust API....</P>
+<P>Though I must admit as that same former external developer who had to write code against up to ten versions of Windows that the flags only working in some version and not others can be quite a pain to keep straight.</P>
+<P>A smattering of flags that were added later:</P>
+<UL>
+<LI><FONT size=2>MB_ERR_INVALID_CHARS -- Used with <A title=MultiByteToWideChar href="http://msdn.microsoft.com/library/en-us/intl/unicode_17si.asp" target=_blank>MultiByteToWideChar</A>. Illegal to use in UTF-8 until Windows XP, at which point it became supported.</FONT> 
+<LI><FONT size=2>WC_NO_BEST_FIT_CHARS -- Used with <A title=WideCharToMultiByte href="http://msdn.microsoft.com/library/en-us/intl/unicode_2bj9.asp" target=_blank>WideCharToMultiByte</A>. Valid on all platforms other than Windows 95, 95 OSR-2, NT 3.1 and NT 3.51.</FONT> 
+<LI><FONT size=2>LOCALE_FONTSIGNATURE -- Used with GetLocaleInfo. Valid on all platforms other NT 3.1 and NT 3.51.</FONT> 
+<LI><FONT size=2>LOCALE_IDEFAULTEBCDICCODEPAGE -- Used with GetLocaleInfo. Valid on XP, Server 2003, and later.</FONT> 
+<LI><FONT size=2>LOCALE_IDIGITSUBSTITUTION -- Used with GetLocaleInfo. Valid on XP, Server 2003, and later.</FONT> 
+<LI><FONT size=2>LOCALE_IPAPERSIZE -- Used with GetLocaleInfo. Valid on XP, Server 2003, and later.</FONT> 
+<LI><FONT size=2>LOCALE_RETURN_NUMBER -- Used with GetLocaleInfo. Valid on all platforms other than Windows 95, 95 OSR-2, NT 3.1 and NT 3.51.</FONT> 
+<LI><FONT size=2>LOCALE_SENGCURRNAME -- Used with GetLocaleInfo. Valid on all platforms other than Windows 95, 95 OSR-2, NT 3.1 and NT 3.51.</FONT> 
+<LI><FONT size=2>LOCALE_SISO3166CTRYNAME -- Used with GetLocaleInfo. Valid on all platforms other than Windows 95, 95 OSR-2, NT 3.1 and NT 3.51.</FONT> 
+<LI><FONT size=2>LOCALE_SISO639LANGNAME -- Used with GetLocaleInfo. Valid on all platforms other than Windows 95, 95 OSR-2, NT 3.1 and NT 3.51.</FONT> 
+<LI><FONT size=2>LOCALE_SNATIVECURRNAME&nbsp;-- Used with GetLocaleInfo. Valid on all platforms other than Windows 95, 95 OSR-2, NT 3.1 and NT 3.51.</FONT> 
+<LI><FONT size=2>LOCALE_SSORTNAME -- Used with GetLocaleInfo. Valid on all platforms other than Windows 95, 95 OSR-2, NT 3.1 and NT 3.51.</FONT> 
+<LI><FONT size=2>LOCALE_SYEARMONTH&nbsp;-- Used with GetLocaleInfo. Valid on all platforms other than Windows 95, 95 OSR-2, NT 3.1 and NT 3.51.</FONT> 
+<LI><FONT size=2>LCID_ALTERNATE_SORTS -- Used with <A title=EnumSystemLocales href="http://msdn.microsoft.com/library/en-us/intl/nls_9qk3.asp" target=_blank>EnumSystemLocales</A>. Valid on all platforms other than Windows 95, 95 OSR-2, NT 3.1 NT 3.51, and NT 4.0.</FONT></LI></UL>
+<P>And so on. All flags added for new functionality that on prior versions would cause the API to fail with an ERROR_INVALID_FLAGS return from <A title=GetLastError href="http://msdn.microsoft.com/library/en-us/debug/base/getlasterror.asp" target=_blank>GetLastError</A>()...</P>
+<P>&nbsp;</P>
+<P><FONT color=#ff0000 size=2><EM>This post brought to you by "ᾮ" (<A href="http://www.fileformat.info/info/unicode/char/1fae/index.htm">U+1fae</A>, GREEK CAPITAL LETTER OMEGA WITH PSILI AND PERISPOMENI AND PROSGEGRAMMENI)</EM></FONT></P>
+<hr/><p><a id="403406" href="#403406">#</a> <strong>AC</strong> on 29 Mar 2005 11:42 AM:</p><div style="margin-left: 1em">Why aren't the new flags wrapped in proper #IFDEF values for Windows version? This would make passing the wrong flag a compile time error and then you could allow any flag without fear of breaking clients.</div>
+<p><a id="403417" href="#403417">#</a> <strong>Michael Kaplan</strong> on 29 Mar 2005 12:06 PM:</p><div style="margin-left: 1em">That is an excellent question! I'll cover this in a future posting....</div>
+<p><a id="403498" href="#403498">#</a> <strong>Dean Harding</strong> on 29 Mar 2005 3:45 PM:</p><div style="margin-left: 1em">Well, most people would just stick a #define _WINNT_WIN32 0x501 before they include windows.h anyway, so a #ifdef isn't going to help them.  Besides, that would then mean if you want to use the new flag on newer Windows, but fallback to old behaviour on old windows, you don't have a choice but to test for the windows version...</div>
+<p><strong>Bartosz W&#243;jcik</strong> on 5 Jan 2010 10:51 AM:</p><div style="margin-left: 1em"><P>Hi, I have a question, what to use instead of LOCALE_SISO3166CTRYNAME on Windows 95??? </P></div>
+<p><strong>Michael S. Kaplan</strong> on 5 Jan 2010 11:07 AM:</p><div style="margin-left: 1em"><p>A system upgrade to a supported OS?</p>
+</div>
+<p><strong>Bartosz W&#243;jcik</strong> on 5 Jan 2010 2:05 PM:</p><div style="margin-left: 1em"><p>Hi Michael :), I can't. Well I think I will stick to LOCALE_SENGCOUNTRY (I just hope those english country names &nbsp; from WinNls.h [comments Country/Region Codes.] are correct :P), this looks like a most compatible solution...</p></div>
+<hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2005/03/30/403636.html" title="What does the the third letter in GIFT stand for?">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2005/03/28/402839.html" title="The WinForms DateTimePicker and MonthCalendar do not support culture settings">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2005-03">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2005-03-29">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2005/03/29/403216.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:42 GMT -->
+</html>

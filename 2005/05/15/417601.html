@@ -1,0 +1,25 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2005/05/15/417601.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:41 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Not all SQL Server collations are created equal</title></head><body>
+<h1>Not all SQL Server collations are created equal</h1>
+<p><em>by Michael S. Kaplan, published on 2005/05/15 12:01 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2005/05/15/417601.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P><FONT face=Tahoma>Not all of the collations in SQL Server 2005 (a.k.a. Yukon) and earlier versions&nbsp;have coverage over the same full sets of Unicode code points.</FONT></P>
+<P><FONT face=Tahoma><EM>(By the way, this topic will be covered during my TechEd sessions, particularly <STRONG>DAT290: </STRONG>Databases for the World: Designing Multilingual Databases Using SQL Server 2005, along with several of the&nbsp;other&nbsp;posts I have done lately like </EM><a href="http://archives.miloush.net/michkap/archive/2005/05/06/415199.html"><EM>this</EM></A><EM> one, </EM><a href="http://archives.miloush.net/michkap/archive/2005/05/11/416293.html"><EM>this</EM></A><EM> one, and </EM><a href="http://archives.miloush.net/michkap/archive/2005/05/11/416290.html"><EM>this other</EM></A><EM> one....)</EM></FONT></P>
+<P><FONT face=Tahoma>There are basically four different "families" of collations in SQL Server:</FONT></P>
+<UL>
+<LI><FONT face=Tahoma><STRONG>SQL collations</STRONG>, which exist for compatibility with versions of SQL Server prior to SQL Server 2000. They are missing many code points that have since been added to later collations.</FONT> 
+<LI><FONT face=Tahoma><STRONG>Binary collations</STRONG>, which cover every single code point, even unassigned/invalid ones.</FONT> 
+<LI><FONT face=Tahoma><STRONG>Windows collations</STRONG> that first shipped in SQL Server 2000, which all have identical code point repertoires between them.</FONT> 
+<LI><FONT face=Tahoma><STRONG>New Windows collations</STRONG> that have been introduced in SQL Server 2005, each of which may have additional code points added.</FONT></LI></UL><FONT face=Tahoma>
+<P>This can become an issue if you have data that is using a collation in one of these families and then try to run a query on the data that attempts to use a collation in one of the other families. You may find data being ignored in one that is recognized in the other.</FONT></P>
+<P><FONT face=Tahoma>Because of this fact, it is crucial to make sure that you do not arbitrarily move between collations in these different families without working through the potential consequences of the move.</FONT></P><FONT face=Tahoma>
+<P><FONT face=Tahoma>Now note that <EM>this is not a bug</EM> -- if one of the older collations were to have code points added to it between versions and nothing is re-inexed, then any upgrade would return different results than the indexes, which can lead to index corruption and data inonsistencies. Now <STRONG>that</STRONG> would be a bug!</FONT></P>
+<P>And it is certainly better than the 'safe' alternatives -- (a) forcing everyone to reindex on upgrade or (b) never adding support for new languages. Both of those alternatives would bw pretty bad in my opinion, too.</P>
+<P>But it does mean you have to plan out what you want to do when it comes to changing collations....</P>
+<P>Another time, I will give some examples of these "gotcha" cases (including talking about the non-Unicode scenarios).</P>
+<P>&nbsp;</P>
+<P><FONT color=#ff0000><EM>This post brought to you by</EM> "<FONT size=4>ޓ</FONT>" <EM>(<A href="http://www.fileformat.info/info/unicode/char/0793/index.htm">U+0793</A>, a.k.a. THAANA LETTER TAVIYANI)</EM></FONT></FONT></P>
+<hr/><div style="margin-left: 1em"><em>no comments</em></div><hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2006/05/25 <a href="http://archives.miloush.net/michkap/archive/2006/05/25/607504.html">SQL Server's cross-version collation support</a></p><p>2005/05/18 <a href="http://archives.miloush.net/michkap/archive/2005/05/18/419112.html">No data loss (as long as it is Unicode data)</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2005/05/15/417663.html" title="Dry the rain">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2005/05/14/417384.html" title="Encoding questions from the Suggestion Box">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2005-05">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2005-05-15">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2005/05/15/417601.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:41 GMT -->
+</html>

@@ -1,0 +1,41 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2005/02/13/371895.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:42 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>If the shoe [best-]fits....</title></head><body>
+<h1>If the shoe [best-]fits....</h1>
+<p><em>by Michael S. Kaplan, published on 2005/02/13 10:33 -05:00, original URI: http://blogs.msdn.com/b/michkap/archive/2005/02/13/371895.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P>When you call the <A title=WideCharToMultiByte href="http://msdn.microsoft.com/library/en-us/intl/unicode_2bj9.asp" target=_blank mce_href="http://msdn.microsoft.com/library/en-us/intl/unicode_2bj9.asp">WideCharToMultiByte</A> API&nbsp;with almost all code pages<SUP><FONT size=1>1</FONT></SUP>&nbsp;the number of possible characters that can be represented on the target code page is always going to be smaller than what Unicode can represent. When this happens, there are one of two possibilities:</P>
+<OL>
+<LI>If you did not pass the WC_NO_BEST_FIT_CHARS flag and there is a "best fit" mapping, then the best fit mapping will happen. 
+<LI>If you did pass the WC_NO_BEST_FIT_CHARS flag or if there is no "best fit" mapping, then the default character will be placed in the target.</LI></OL>
+<P>But what is a best fit mapping?</P>
+<P>Well, there is really little more than a warning in the Platform SDK:</P>
+<BLOCKQUOTE dir=ltr style="MARGIN-RIGHT: 0px">
+<P><FONT size=2>For strings that require validation, such as file, resource and user names, always use the WC_NO_BEST_FIT_CHARS flag with WideCharToMultiByte. This flag prevents the function from mapping characters to characters that appear similar but have very different semantics. In some cases, the semantic change can be extreme e.g., symbol for ‘∞’ (infinity) maps to 8 (eight) in some code pages.</FONT></P></BLOCKQUOTE>
+<P>This hints at the extremes to which these bit fit mappings can take us (unless you are one of those who feel that the infinity sign is just a hungover digit eight that has fallen and cannot get up -- in which case the&nbsp;mapping only goes in one direction).</P>
+<P>What do these two behaviors have in common? Well, in both cases information has been lost&nbsp;-- whether you replace with the wrong charcter or a question mark, you are always losing a little bit of data. The best fit mappings are also pretty uneven. Here are some quick approximate counts:</P>
+<UL>
+<LI><FONT face="Courier New">&nbsp;874 -- 138 characters</FONT> 
+<LI><FONT face="Courier New">1250 -- 437 characters</FONT> 
+<LI><FONT face="Courier New">1251 -- 384 characters</FONT> 
+<LI><FONT face="Courier New">1252 --&nbsp;442 characters</FONT> 
+<LI><FONT face="Courier New">1253 --&nbsp;366 characters</FONT> 
+<LI><FONT face="Courier New">1254 --&nbsp;438 characters</FONT> 
+<LI><FONT face="Courier New">1255 --&nbsp; 96 characters</FONT> 
+<LI><FONT face="Courier New">1256 --&nbsp;288 characters</FONT> 
+<LI><FONT face="Courier New">1257 --&nbsp; 94 characters</FONT> 
+<LI><FONT face="Courier New">1258 --&nbsp; 94 characters</FONT></LI></UL>
+<P>The above just notes that for single-byte code pages the MBTABLE always has 256 entries and the WCTABLE has more. The DBCS code pages are a bit tougher to do since they are designed differently. But I think the above shows that the actual number of best-fit entries varies from code page to code page.</P>
+<P>Some of the entries even make sense (e.g. 1256 does not have Arabic digits in it, so those digits are best-fit mapped to ASCII 0 to 9 -- beats question marks any day!).</P>
+<P>Other entries are just funny (like the infinity turns to eight thing -- the next time someone tells you its just an eight-hour work day you will know why it seems to take forever!).</P>
+<P>But most fall in between -- arguably better than nothing.</P>
+<P>Perhaps that what they should have been called (rather than "best fit" mappings) -- "better than nothing fit" mappings. Seems like the real mappings are the ones that are the <STRONG>best</STRONG> fit. :-)</P>
+<P mce_keep="true">&nbsp;</P>
+<P><EM><FONT size=1>1 - Pretty much all of them other than UTF-7, UTF-8, and GB18030, in fact.</FONT></EM></P>
+<P mce_keep="true">&nbsp;</P>
+<P><FONT color=#800080><EM>This post sponsored by </EM>"Å"<EM> and </EM>"Æ"<EM> (<A href="http://www.fileformat.info/info/unicode/char/00c5/index.htm" mce_href="http://www.fileformat.info/info/unicode/char/00c5/index.htm">U+00c5</A> and <A href="http://www.fileformat.info/info/unicode/char/00c6/index.htm" mce_href="http://www.fileformat.info/info/unicode/char/00c6/index.htm">U+00c6</A>, a.k.a. LATIN CAPITAL LETTER A WITH RING ABOVE and LATIN CAPITAL LETTER AE)<BR><FONT size=1>Both of which "better than nothing fit"&nbsp;map to U+0041 (LATIN CAPITAL LETTER A) on code page 1250!</FONT></EM></FONT></P>
+<hr/><p><a id="9451503" href="#9451503">#</a> <strong>Avi D</strong> on 28 Feb 2009 7:44 PM:</p><div style="margin-left: 1em"><p>I guess that explains this: <a href="http://www.comsecglobal.com/FrameWork/Upload/SQL_Smuggling.pdf" rel="nofollow" target="_new">http://www.comsecglobal.com/FrameWork/Upload/SQL_Smuggling.pdf</a> (in short, non-quote characters can be best-fit into a quote character, post-validation, leading to SQL Injection in some situations).</p>
+<p>Apparently SQL Server calls WideCharToMultiByte with the WC_NO_BEST_FIT_CHARS set, when it shouldnt be. &nbsp;I was curious as to how this occurs, now I know :-). (If you can convince MSRC that this should be changed, I'd be thrilled)</p></div>
+<hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2012/02/20 <a href="http://archives.miloush.net/michkap/archive/2012/02/20/10269748.html">Where short file names can fail</a></p><p>2008/05/08 <a href="http://archives.miloush.net/michkap/archive/2008/05/08/8466991.html">In hindsight, they may have BEST FIT these files where the sun never shines</a></p><p>2006/11/16 <a href="http://archives.miloush.net/michkap/archive/2006/11/16/1086283.html">The problem of string comparisons, WORD sorts, and the minus that is treated like the hyphen</a></p><p>2006/02/14 <a href="http://archives.miloush.net/michkap/archive/2006/02/14/531572.html">Every character has a story #18: U+06cc and U+064a (ARABIC LETTER FARSI YEH and ARABIC LETTER YEH)</a></p><p>2006/01/20 <a href="http://archives.miloush.net/michkap/archive/2006/01/20/515238.html">Getting the characters in a code page (the code)</a></p><p>2006/01/07 <a href="http://archives.miloush.net/michkap/archive/2006/01/07/510411.html">Getting the characters in a code page</a></p><p>2005/10/29 <a href="http://archives.miloush.net/michkap/archive/2005/10/29/486617.html">Why an 8-hour day seems to take forever</a></p><p>2005/04/18 <a href="http://archives.miloush.net/michkap/archive/2005/04/18/409095.html">A few of the gotchas of WideCharToMultiByte</a></p><p>2005/02/15 <a href="http://archives.miloush.net/michkap/archive/2005/02/15/373713.html"><strike>Best</strike>Better than nothing fit mappings, unleashed, #1</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2005/02/14/372259.html" title="Reminder - Speaking Engagement.NET, tonight">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2005/02/12/371737.html" title="Every character has a story #6: U+02eb U+02ea (Chinese departing tone marks)">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2005-02">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2005-02-13">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2005/02/13/371895.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:42 GMT -->
+</html>

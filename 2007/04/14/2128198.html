@@ -1,0 +1,84 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2007/04/14/2128198.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:38 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Rhymes with Amharic (a.k.a. How about a little breakfast embed, dear?)</title></head><body>
+<h1>Rhymes with Amharic (a.k.a. How about a little breakfast embed, dear?)</h1>
+<p><em>by Michael S. Kaplan, published on 2007/04/14 03:40 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2007/04/14/2128198.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<p>I have&nbsp;a lot of ideas for blog posts that are on my generic "to do" list.</p>
+<p>In fact, any time someone suggests a potential topic these days, I already had the topic on my list of things to cover some day....</p>
+<p>I was looking at my blog summary page a moment ago and I realized that this is going to be blog post #1708.</p>
+<p>Apropos of nothing, you might be thinking. But I'll explain why this was interesting to me.</p>
+<p>You see, I tend to think that there are a few core posts that I do which have a lot more to do with real influencing/assistance, like <a href="http://archives.miloush.net/michkap/archive/2005/01/18/355210.html"><strong>The jury will give this string no weight</strong></a> or&nbsp;the <a href="http://archives.miloush.net/michkap/archive/2006/12/27/1368334.html"><strong>Converting a project to Unicode</strong></a> series or the&nbsp;<a href="http://archives.miloush.net/michkap/archive/2005/11/20/494829.html"><strong>Private fonts: for members only</strong></a> post&nbsp;or&nbsp;the <a href="http://archives.miloush.net/michkap/archive/2006/03/23/558658.html"><strong>Getting all you can out of a keyboard layout</strong></a> series.</p>
+<p>I have been building this one up in my mind for a while now -- in fact, since I first talked about it&nbsp;last year in&nbsp;<a href="http://archives.miloush.net/michkap/archive/2006/05/13/596774.html"><strong>Font embedding -- the intro</strong></a>: a sample that really shows how font embedding can work. I hadn't gotten to it yet, but it was on the list.</p>
+<p>Then a few days ago Scott Hanselman asked me:</p>
+<blockquote>
+<p><em><span style="font-family: Times New Roman;">I&rsquo;ve seen the Custom Culture stuff, but I&rsquo;m wondering if anyone&rsquo;s done a sample (and with what font) showing Amharic on Vista? I&rsquo;d like to post about it and enable some Ethiopians.</span></em></p>
+</blockquote>
+<p>I had to remind him that we actually added Amharic&nbsp;as a locale to Vista (as I <a href="http://archives.miloush.net/michkap/archive/2005/09/29/475174.html"><strong>sometimes</strong></a> have to do with Scott!), and it did suggest to him something that really&nbsp;might be important:</p>
+<blockquote>
+<p><em><span style="font-family: Times New Roman;">Hm&hellip;I&rsquo;ll try making a WinForms app in Amharic&hellip;I&rsquo;ll let you know. Since Vista [h]as am-ET I guess we don&rsquo;t need it&hellip;although, it&rsquo;d be nice to talk about how to write a WinForms app that is ONE SOURCE, TWO OS&rsquo;s. Meaning, it would know what to do on XP vs. Vista. Can we copy the font over to XP? <br /><br />That &ldquo;straddling&rdquo; sample would be VERY valuable for those languages that were added in Vista.</span></em></p>
+</blockquote>
+<p>Now copying the font file for <strong>Nyala</strong> is indeed a violation of the EULA, even to another Windows box. But it suddenly occurred to me that this might be the perfect time to provide a font embedding sample!</p>
+<p>After a bunch of work between other work and meetings and email and such (and by the way special thanks to Sergey Malkin and David Brown for their assistance here!).</p>
+<p><em><span style="font-size: medium;">Warning: do not violate the license for any font file from Microsoft or any other source. You can use the licensing information in the </span></em><a href="http://www.microsoft.com/typography/TrueTypeProperty21.mspx"><em><span style="font-size: medium;">Font Properties Extension</span></em></a><em><span style="font-size: medium;"> to find out if you are allowed to do it!</span></em></p>
+<p>First a few gratuitous screen shots of the sample, on Vista (with higher DPI settings):</p>
+<p><img src="http://msdnshared.blob.core.windows.net/media/MSDNBlogsFS/prod.evol.blogs.msdn.com/CommunityServer.Blogs.Components.WeblogFiles/00/00/00/33/81/0508.embed01.png" alt="" /></p>
+<p>and on Server 2003 (which does not have the font or the locale or anything, and with ClearType turned off):</p>
+<p><img src="http://msdnshared.blob.core.windows.net/media/MSDNBlogsFS/prod.evol.blogs.msdn.com/CommunityServer.Blogs.Components.WeblogFiles/00/00/00/33/81/7181.embed02.png" alt="" /></p>
+<p>and on XP SP2 (again without the font or the locale or anything, and with ClearType turned on):</p>
+<p><img src="http://msdnshared.blob.core.windows.net/media/MSDNBlogsFS/prod.evol.blogs.msdn.com/CommunityServer.Blogs.Components.WeblogFiles/00/00/00/33/81/7268.embed03.png" alt="" /></p>
+<p>Notice how the bottom TextBox control does not show the text on the platforms that do not have the font, while all of them can display the text in that one on top.</p>
+<p>And in fact if you used a custom culture to add <strong>am-ET</strong>, also known as Amharic (Ethiopia) or አማርኛ (ኢትዮጵያ),&nbsp;one can get even more of the support running on both platforms, just as Scott was hoping for!</p>
+<p>Ok, enough with the build-up, let's jump in....</p>
+<p>You can download the project from <a href="http://msdnshared.blob.core.windows.net/media/MSDNBlogsFS/prod.evol.blogs.msdn.com/CommunityServer.Blogs.Components.WeblogFiles/00/00/00/33/81/3771.EmbeddedSample.zip"><strong>here</strong></a>. It basically relies on a few of the font embedding API functions:</p>
+<ul>
+<li><a href="http://msdn2.microsoft.com/library/ms536748.aspx">TTEmbedFont</a>&nbsp;-- given a device context containing a specific font that is legal to embed, creates the compressed binary file that can be embedded;</li>
+<li><a href="http://msdn2.microsoft.com/library/ms536775.aspx">TTLoadEmbeddedFont</a> -- given that compressed file, uncompresses it and turns it into a font that can be used within the process;</li>
+<li><a href="http://msdn2.microsoft.com/en-us/library/ms536746.aspx">TTDeleteEmbeddedFont</a> -- removes the embedded font's information when you are done with it.</li>
+</ul>
+<p>The sample was a bit more involved as it had to make use of the <a href="http://msdn2.microsoft.com/library/system.drawing.text.privatefontcollection.aspx">PrivateFontCollection class</a> to load the font within WinForms, because the load is only valid within the process but GDI+ does not load any font that is not known to it at the time it has started up. Luckily, by using a technique similar to the one I used in <a href="http://archives.miloush.net/michkap/archive/2005/11/20/494829.html"><strong>Private fonts: for members only</strong></a>, you can load up the font that is ready to go in GDI/Uniscribe and cause it to be available to your managed application controls as well!</p>
+<p>The logic is:</p>
+<ul>
+<li>On &gt;= Vista, if the embedded font file has not there, it is created.</li>
+<li>On all platforms, it tries to use the font, loading it up into a private name so it won't have trouble loading on platforms that contain the font.</li>
+</ul>
+<p><strong>NOTE: The sample download&nbsp;does NOT include the binary file containing the embedded font file. </strong>To get that file you have to run the sample on Vista and it will create a ~150kb file named "NyalaSIAO.bin" in the same directory as the EXE. From there you can put the EXE and the .BIN file on the downlevel machine and display Amharic in your application to your heart's content, provided you are just using it in your application.</p>
+<p>In the real world you probably would not set up your application the way I did the sample&nbsp;-- you would probably embed the font as a resource like that font about private fonts did, and you'd likely only create it during development, not on the user's machine later. But it should be enough to get you started....</p>
+<p>I will&nbsp;talk more about the code soon (and the embedding support and what happens with it)&nbsp;in an upcoming post. :-)</p>
+<p>And I'll probably do an unmanaged sample too, at some point. Because I knew even 15 years ago that when someone at Microsoft talks about how easy something is to use, if they provide no samples for it, even&nbsp;after years pass, that we might well&nbsp;be full of crap and that it is hard.</p>
+<p>&nbsp;</p>
+<p><span style="color: #ff0080;"><em>This post brought to you by</em> <span style="font-size: large;">ኢ</span> <em>(<a href="http://www.fileformat.info/info/unicode/char/12a2">U+12a2</a>, a.k.a. ETHIOPIC SYLLABLE GLOTTAL I)</em></span></p>
+<hr/><p><a id="2134749" href="#2134749">#</a> <strong>orcmid</strong> on 14 Apr 2007 2:08 PM:</p><div style="margin-left: 1em"><p>This is fascinating. &nbsp;It is a great example of the dependence of successful transformations on small details too (like comparing resampled GIFs that were produced by different apps from the same vector-graphic original).</p>
+<p>I notice two things here. &nbsp;First, the impact of Cleartype is amazing. &nbsp;Secondly, the Vista rendering seems fuzzy somehow and not as crisp as the XP SP2 Cleartype. &nbsp;I realize the sizes are different, with different assumed resolutions, but the subjective experience at scale is important. &nbsp;(I think I see this on my Vista-equipped Tablet PC too, so I really wonder ... )</p>
+<p>If you use the same DPI, how well does Vista match the XP Cleartype case?</p>
+</div>
+<p><a id="2135092" href="#2135092">#</a> <strong>Michael S. Kaplan</strong> on 14 Apr 2007 3:02 PM:</p><div style="margin-left: 1em"><p>Well, the Vista machine happened to be running at 134 DPI, which does warp the perspective a bit. :-)</p>
+<p>(I was looking at a dfifferent issue at the time!)</p>
+<p>When they match, the results are actually about the same to the untrained eye....</p>
+</div>
+<p><a id="2135139" href="#2135139">#</a> <strong>Scott Hanselman</strong> on 14 Apr 2007 3:10 PM:</p><div style="margin-left: 1em"><P>Great stuff...just an FYI, the code download is missing a number of resource files and what not, and I had to manually edit the csproj to remove those in order to get it to build.</P>
+<P>Thanks for doing this series, Michael.</P>
+<P>Thanks...Betam amessagganalehugn...አመስግናለሁ</P></div>
+<p><a id="2135191" href="#2135191">#</a> <strong>Michael S. Kaplan</strong> on 14 Apr 2007 3:18 PM:</p><div style="margin-left: 1em"><p>Whoops, forgot that pesky property dir. Fixed now....</p>
+<p>Always a pleasure. :-)</p>
+</div>
+<p><a id="2839909" href="#2839909">#</a> <strong>Yosias</strong> on 24 May 2007 7:38 AM:</p><div style="margin-left: 1em"><p>Greetings here in Addis we have heard of Vista but very few use it. So what is the use ny friends? XP is what most have loaded but we want the Vista feature of locale and Ethiopic font back loaded into XP. Otherwise it is loading another keyboard software such as Keyman etc...Is it possible I do not know much about Locales and all but whatever that wachamacallit in Vista that does all the Ethiopic stuf to be ripped out from VIsta and loaded into XP? HELP</p></div>
+<p><a id="2840191" href="#2840191">#</a> <strong>Michael S. Kaplan</strong> on 24 May 2007 7:54 AM:</p><div style="margin-left: 1em"><p>Hi Yosias, </p>
+<p>I hate to say it, but upgrading does have its privileges. And support of custom locales was a ton of work which as far as I know there are no plans to backport. Maybe it is worth looking into a copy of Vista?</p>
+</div>
+<p><a id="2984952" href="#2984952">#</a> <strong>Yosias</strong> on 30 May 2007 5:10 AM:</p><div style="margin-left: 1em"><p>Greeting Michael</p>
+<p>Thank you for your response. Yes definitely I agree with you in that upgrading to Vista does have its privileges. But upgrading is not an option for most here in Addis (Ethiopia). I invite you to come and see for yourself what I mean, the hardware situation in Addis and elsewhere unless it is some big business most common folks at least 70% use XP and the rest use Win 95, 98, Win2k, seriously. So if Microsoft really wants to serve the needs of folks here in Addis (Ethiopia) they definitely have to plan according to these numbers, I would say. Do you agree? It sure would be nice if they thougt about backporting.</p>
+<p>Thanks again!</p></div>
+<p><a id="2989995" href="#2989995">#</a> <strong>Michael S. Kaplan</strong> on 30 May 2007 12:33 PM:</p><div style="margin-left: 1em"><p>I am not on the NLS team anymore, so I can't say what the backport decision would be, for sure. But I know what the cost would be, so I know it is unlikely....</p>
+<p>Given what it would break to add things like collation support downlevel, I can't say I agree (breaking active directory worldwide to enable a small market to not have to buy a new OS is a high price to pay!).</p>
+<p>But the whole point of this post is that a developer can use the knowledge to create an application that uses a script such as Ethiopic and propely display the strings -- it is an enabling post!</p>
+</div>
+<p><a id="9930716" href="#9930716">#</a> <strong>abebe</strong> on 1 Dec 2009 4:42 AM:</p><div style="margin-left: 1em"><P>i have give to the letter ih amharic.</P></div>
+<p><strong>doron</strong> on 30 Apr 2011 11:19 AM:</p><div style="margin-left: 1em"><p>why so much A strive! write your amharic pages in any editor and save it as image file and upload it to your web server!that is it!it worked perfectly to me so long! every body with windows and with out windows ,all will see the selected font.what is wrong with this method and,why people search for WEFT!i like to hear from you.i donot see any reason for one e-mail even!my pages download with out any delay!!!</p>
+<p>no need &nbsp;EULA UVULA OR ANY thing ELSE.</p>
+<p>thank you</p></div>
+<p><strong>Michael S. Kaplan</strong> on 30 Apr 2011 11:48 AM:</p><div style="margin-left: 1em"><p>Images are not search-able, and they do not scale as well. They do not allow one to copy/paste text or edit it. Consigning a language to images only is to make a language a second-class citizen. And I simplyu can&#39;t support that as anything but an interim plan.</p>
+</div>
+<hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2013/10/23 <a href="http://archives.miloush.net/michkap/archive/2013/10/23/10459401.html">I finally got to meet ali eteraz in person...</a></p><p>2007/12/12 <a href="http://archives.miloush.net/michkap/archive/2007/12/12/6742301.html">SiaO as The Red Carpet (aka Characters just want to be seen)</a></p><p>2007/04/15 <a href="http://archives.miloush.net/michkap/archive/2007/04/15/2145619.html">Rhymes with Amharic #5 (a.k.a. [Sub]setting up this code where it can do the most good?)</a></p><p>2007/04/14 <a href="http://archives.miloush.net/michkap/archive/2007/04/14/2137215.html">Rhymes with Amharic #4 (a.k.a. we're all [sub]set so turning out the lights and going to [em]bed!)</a></p><p>2007/04/14 <a href="http://archives.miloush.net/michkap/archive/2007/04/14/2134278.html">Rhymes with Amharic #3 (a.k.a. Read and write a language w/o even getting out of my [em]bed? Kewl!)</a></p><p>2007/04/14 <a href="http://archives.miloush.net/michkap/archive/2007/04/14/2133650.html">Rhymes with Amharic #2 (a.k.a. Before you embed, you have build something to embed)</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2007/04/14/2133650.html" title="Rhymes with Amharic #2 (a.k.a. Before you embed, you have build something to embed)">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2007/04/14/2128155.html" title="I don&#39;t want you to go">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2007-04">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2007-04-14">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2007/04/14/2128198.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:38 GMT -->
+</html>

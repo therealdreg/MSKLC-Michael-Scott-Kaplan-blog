@@ -1,0 +1,42 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2007/11/14/6212351.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:37 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Leaving our mark on the keyboards we create</title></head><body>
+<h1>Leaving our mark on the keyboards we create</h1>
+<p><em>by Michael S. Kaplan, published on 2007/11/14 10:16 -05:00, original URI: http://blogs.msdn.com/b/michkap/archive/2007/11/14/6212351.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P>Way back when MSKLC 1.3 was created, we wanted there to be an easy way that anyone (particularly someone from Product Support) would be able to look at a keyboard layout DLL and tell that it came from MSKLC.</P>
+<P>We even imagined that if there was ever some need to service the files due to a security bug or whatever that some easy detection mechanism would be needed....</P>
+<P>So we added a string to the version resource entitled <STRONG>Release Information</STRONG> with this info:</P>
+<P><IMG height=502 src="http://trigeminal.fmsinc.com/images/msklcxpproop.png" width=367></P>
+<P><EM>The email thread to get this name was one of the more annoying that I had ever been on, it seemed like everyone had an opinion!</EM></P>
+<P><EM>And there was one person on the thread (not me) who suggested using a known, commonly used property and one other person (also not me) who felt like it had to be something completely custom that would not overlap what some user might want to do -- remember this argument for later irony since the former person lost and the latter person won!</EM></P>
+<P>Anyway, once Vista came along, our custom thing was no longer available:</P>
+<P><IMG src="http://trigeminal.fmsinc.com/images/msklcvistaprop.png"></P>
+<P>Damn. What happened?</P>
+<P>There were some changes here in Vista. Per Chris Guzak:</P>
+<BLOCKQUOTE>
+<P><EM>If it is an OLE DocFile then you can register the property handler for that file per these docs:<BR><BR></EM><A href="http://msdn2.microsoft.com/en-us/library/bb266532.aspx"><U><FONT color=#0000ff><EM>http://msdn2.microsoft.com/en-us/library/bb266532.aspx#systemsupplied_prophandlers</EM></U></FONT></A><BR><BR><EM>this page contains other info on how to configure the system to present properties for this file type.<BR><BR>If this is not a DocFile and this was depending on the secondary stream property handler that support has been removed in Vista. <BR><BR>Chris</EM></P></BLOCKQUOTE>
+<P>And random, unknown strings in the version resource were also removed (the props Chris refers to above are the ones that adding custom props from the Shell in XP used to be).</P>
+<P>Now people getting at them programatically would still find the information, but that was only half the scenario -- there had to be a known property to hook into....</P>
+<P>So, for MSKLC 1.4 and Vista a known property get used, instead:</P>
+<P><IMG src="http://trigeminal.fmsinc.com/images/msklc14vistaprop.png"></P>
+<P>Of course this one works on XP too, and of course the old one is still there for people&nbsp;to use if they were depending on getting it from code or elsewhere:</P>
+<P><IMG src="http://trigeminal.fmsinc.com/images/msklc14xpprop01.png">&nbsp;&nbsp;&nbsp; <IMG src="http://trigeminal.fmsinc.com/images/msklc14xpprop02.png"></P>
+<P><EM>You can still get to both of them by code even in Vista, but that handy use of the Shell file properties dialog is not to be ignored!</EM></P>
+<P>Now we have never had to do any kind of update to the keyboard layout DLLs so that requirement has (knock on wsood) stayed theoretical, but more than a few people have had to look in the Shell quickly to see that a keyboard layout DLL was created by MSKLC....</P>
+<P mce_keep="true">&nbsp;</P>
+<P><FONT color=#ff00ff><EM>This post brought to you by</EM><FONT size=5> ՛ </FONT><EM>(<A class="" href="http://www.fileformat.info/info/unicode/char/055b" mce_href="http://www.fileformat.info/info/unicode/char/055b">U+055b</A>, a.k.a. ARMENIAN EMPHASIS MARK)</EM></FONT></P>
+<hr/><p><a id="6218571" href="#6218571">#</a> <strong>Mihai</strong> on 14 Nov 2007 12:34 PM:</p><div style="margin-left: 1em"><p>Custom properties in VersionInfo are not depending on the secondary streams.</p>
+<p>Anyway, the new (Vista) design of the dialog strikes me as bad in other area.</p>
+<p>Not only that it removes the version custom properties (supported &quot;since forever&quot;), but also truncates properties that are too long (XP was doing this for File description only, Vista does it for everything).</p>
+<p>True, Vista shows me all the info at once, while in XP I had to click on each property.</p>
+<p>But at least I was able to see them!</p></div>
+<p><a id="6219083" href="#6219083">#</a> <strong>Michael S. Kaplan</strong> on 14 Nov 2007 12:49 PM:</p><div style="margin-left: 1em"><p>Well, that is a separate issue (not my balliwick, really), but I see your poiont. For the moment I was more focused on what we did in MSKLC. :-)</p>
+</div>
+<p><a id="6268636" href="#6268636">#</a> <strong>Mihai</strong> on 15 Nov 2007 12:50 PM:</p><div style="margin-left: 1em"><p>I think what you did is ok.</p>
+<p>Custom fields in version info are there to be used :-)</p>
+<p>Now, the Vista redesign might argue that they are not necessarily there to be displayed. And it might be right.</p>
+<p>But thing is, it takes away functionality that existed since forever.</p></div>
+<hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2007/11/15/6252257.html" title="Michael&#39;s Keyboard Laws for Developers, Part 1">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2007/11/14/6198491.html" title="Whither code pages 1.25012511252125E+26 and 2.50125112521253E+25 ????">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2007-11">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2007-11-14">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2007/11/14/6212351.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:37 GMT -->
+</html>

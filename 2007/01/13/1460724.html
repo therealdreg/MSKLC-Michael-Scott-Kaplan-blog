@@ -1,0 +1,58 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2007/01/13/1460724.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:38 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Output on customer input on MSLU's ReadConsoleInputW</title></head><body>
+<h1>Output on customer input on MSLU's ReadConsoleInputW</h1>
+<p><em>by Michael S. Kaplan, published on 2007/01/13 06:01 -05:00, original URI: http://blogs.msdn.com/b/michkap/archive/2007/01/13/1460724.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P>There is a bug in the <A class="" href="http://www.microsoft.com/globaldev/handson/dev/mslu_announce.mspx" mce_href="http://www.microsoft.com/globaldev/handson/dev/mslu_announce.mspx">Microsoft Layer for Unicode on Win9x Systems</A> in the <A class="" href="http://msdn2.microsoft.com/library/ms684961.aspx" mce_href="http://msdn2.microsoft.com/library/ms684961.aspx ">ReadConsoleInput</A> function.</P>
+<P>This was actually just recently reported for the very first time (that I have ever heard of) this last Novermber. The report from Ross Ridge in the MSLU newsgroup said:</P>
+<BLOCKQUOTE><FONT face="Times New Roman,Times" size=2><I>
+<P>ReadConsoleInputW() seems to be broken using MSLU. The KEY_EVENT event,&nbsp;the only one that needs translation isn't handled. The event doesn't get&nbsp;copied to the destination buffer. Here's an example:</P></I>
+<BLOCKQUOTE><B><FONT face="Consolas,Lucida Console,Courier New,Courier">
+<P>#include &lt;windows.h&gt;<BR>#include &lt;stdio.h&gt;<BR><BR>int main() {<BR>&nbsp;&nbsp;&nbsp; int i;<BR>&nbsp;&nbsp;&nbsp;&nbsp;HANDLE console = GetStdHandle(STD_INPUT_HANDLE);<BR><BR>&nbsp;&nbsp;&nbsp;&nbsp;if (console == INVALID_HANDLE_VALUE) {<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;fprintf(stderr, "GetStdHandle failed (%ld)",&nbsp;GetLastError());<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return 1;<BR>&nbsp;&nbsp;&nbsp;&nbsp;}<BR><BR>#if 1<BR>&nbsp;&nbsp;&nbsp;&nbsp;HMODULE unicows = LoadLibraryA("unicows.dll");<BR><BR>&nbsp;&nbsp;&nbsp;&nbsp;if (unicows == NULL) {<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;fprintf(stderr, "LoadLibraryA failed (%ld)",&nbsp;GetLastError());<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return 1;<BR>&nbsp;&nbsp;&nbsp;&nbsp;}<BR>&nbsp;&nbsp;&nbsp;&nbsp;BOOL _stdcall (*ReadConsoleInputW)(HANDLE, INPUT_RECORD *,&nbsp;DWORD, DWORD *)&nbsp;= <BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ((BOOL _stdcall (*)(HANDLE, INPUT_RECORD *,&nbsp;DWORD, DWORD *))GetProcAddress(unicows, "ReadConsoleInputW"));<BR>#endif<BR><BR>&nbsp;&nbsp;&nbsp;&nbsp;for (i = 0; i &lt; 10; i++) {<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;static INPUT_RECORD ir;<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;DWORD events;<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ir.EventType = -1;<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if (ReadConsoleInputW(console, &amp;ir, 1, &amp;events) == 0) {<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;fprintf(stderr, "ReadConsoleInputW failed (%ld)", GetLastError());<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return 1;<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;printf("event %d\n", ir.EventType);<BR>&nbsp;&nbsp;&nbsp;&nbsp;}<BR>&nbsp;&nbsp;&nbsp;&nbsp;return 0;<BR>}</P></FONT></B></BLOCKQUOTE><I>
+<P>If you type something on the keyboard you'll see output like:</P>
+<BLOCKQUOTE>
+<P>event 65535<BR>event 65535<BR>event 65535<BR>event 65535<BR>event 65535<BR>event 65535<BR>event 65535<BR>event 65535<BR>event 65535<BR>event 65535</P></BLOCKQUOTE>
+<P>instead of "event 1", which is KEY_EVENT.<BR><BR>The example code dynamically loads UNICOWS.DLL because ultimately I'm&nbsp;trying to use ReadConsoleInputW in Python using ctypes to call the function.</P></I></FONT></BLOCKQUOTE>
+<P>Well, Ross is at least partially correct here -- there is a bug in MSLU's <A class="" href="http://msdn2.microsoft.com/library/ms684961.aspx" mce_href="http://msdn2.microsoft.com/library/ms684961.aspx ">ReadConsoleInput</A>. Though it is not exactly the bug that Ross thought it was....</P>
+<P>It turns out that MSLU is doing all the approproate work to copy over every piece of information of the INPUT_RECORD from its own call to ReadConsoleInputA, except for the EventType <STRONG>in the case where it is a KEY_EVENT</STRONG>. But everything other than the EventType value is copied, and in al other event types even that one WORD is copied too.</P>
+<P>To work around this, all you have to do is make sure that you put a value in&nbsp;the EventType&nbsp;that is guaranteed to never exist on Win9x (-1 or 0xFFFF makes a good example of such a value), and if you get that value back when the function returns success, then you can be sure that MSLU did it's job.</P>
+<P>One thought (that&nbsp;won't help the Python case of course) but in the C/C++ case you can even provide an override for the function that does this work and then calls the MSLU version; this will allow you to just write one bit of code for all platforms in the actual callers of <A class="" href="http://msdn2.microsoft.com/library/ms684961.aspx" mce_href="http://msdn2.microsoft.com/library/ms684961.aspx ">ReadConsoleInput</A>. Kind of like Ross actually did in his test (though assigning -1 to a WORD will not fare so well in all languages; 0xFFFF is safer!).</P>
+<P>This is the kind of bug that, had it been reported several years ago,&nbsp;reallly any time before the last update that was done, would almost certainly have been fixed given the low degree of risk of assigning a WORD value. It hadd never been reported, however, and&nbsp;the tests on the function turned out to not be exhaustive as they might have been. And this is not a bug that at this point that is likely to ever be fixed in unicows.dll, given that <STRONG><A class="" href="http://archives.miloush.net/michkap/archive/2006/07/11/662550.html" mce_href="http://archives.miloush.net/michkap/archive/2006/07/11/662550.html">MSLU is no longer officially supported</A></STRONG> and all. </P>
+<P>But I figured it would at least be worth mentioning&nbsp;the bug and how to work around it&nbsp;in case anyone else ran across the problem. :-)</P>
+<P mce_keep="true">&nbsp;</P>
+<P><FONT color=#ff00ff><EM>This post brought to you by</EM>&nbsp;<FONT size=5>W</FONT> <EM>(<A class="" href="http://www.fileformat.info/info/unicode/char/0057" mce_href="http://www.fileformat.info/info/unicode/char/0057">U+0057</A>, a.k.a. LATIN CAPITAL LETTER W)</EM></FONT></P>
+<hr/><p><a id="9306309" href="#9306309">#</a> <strong>Yuhong Bao</strong> on 11 Jan 2009 3:39 PM:</p><div style="margin-left: 1em"><p>"One thought (that won't help the Python case of course) but in the C/C++ case you can even provide an override for the function that does this work and then calls the MSLU version; this will allow you to just write one bit of code for all platforms in the actual callers of ReadConsoleInput. "</p>
+<p>I just wrote that override:</p>
+
+
+
+
+
+<p>typedef BOOL (WINAPI *PREADCONSOLEINPUTW)(<br>&nbsp;&nbsp; __in &nbsp; HANDLE hConsoleInput,<br>&nbsp;&nbsp; __out &nbsp;PINPUT_RECORD lpBuffer,<br>&nbsp;&nbsp; __in &nbsp; DWORD nLength,<br>&nbsp;&nbsp; __out &nbsp;LPDWORD lpNumberOfEventsRead<br>);</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<p>BOOL WINAPI HookReadConsoleInputW(<br>&nbsp;&nbsp;&nbsp; __in &nbsp; HANDLE hConsoleInput,<br>&nbsp;&nbsp;&nbsp; __out &nbsp;PINPUT_RECORD lpBuffer,<br>&nbsp;&nbsp;&nbsp; __in &nbsp; DWORD nLength,<br>&nbsp;&nbsp; __out &nbsp;LPDWORD lpNumberOfEventsRead<br>)<br>{<br>&nbsp;&nbsp; if (!ReadConsoleInputA(hConsoleInput, lpBuffer, nLength, lpNumberOfEventsRead))<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; return 0;<br><br>&nbsp;&nbsp; DWORD i;<br>&nbsp;&nbsp; for (i=0; i &lt; *lpNumberOfEventsRead; i++)<br>&nbsp;&nbsp; {<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; if (lpBuffer[i].EventType == KEY_EVENT)<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; MultiByteToWideChar(CP_ACP, 0, &amp;lpBuffer[i].Event.KeyEvent.uChar.AsciiChar, 1, &amp;lpBuffer[i].Event.KeyEvent.uChar.UnicodeChar, 1);<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }</p>
+
+<p>&nbsp;&nbsp; return 1;<br>}</p>
+<p>extern "C" PREADCONSOLEINPUTW Unicows_ReadConsoleInputW = &amp;HookReadConsoleInputW;</p>
+<p>BTW, this was easy because KEY_EVENT_RECORD uses a union instead of using KEY_EVENT_RECORDW and KEY_EVENT_RECORDA, which means I can convert in-place instead of copying.</p>
+<p>BTW, I am not sure for ReadConsoleInput if I should use CP_ACP or CP_OEMCP for the conversion.</p></div>
+<p><strong>Yuhong Bao</strong> on 16 Dec 2010 4:02 PM:</p><div style="margin-left: 1em"><p>&quot;BTW, I am not sure for ReadConsoleInput if I should use CP_ACP or CP_OEMCP for the conversion.&quot;</p>
+<p>It is GetConsoleCP().</p>
+</div>
+<hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2007/01/14/1463873.html" title="The &#39;in&#39; process for out of process keyboard work">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2007/01/13/1460188.html" title="RichTextBox breaking ranks?">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2007-01">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2007-01-13">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2007/01/13/1460724.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:38 GMT -->
+</html>

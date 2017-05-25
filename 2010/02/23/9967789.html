@@ -1,0 +1,142 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2010/02/23/9967789.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:35 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>The game is over, people!</title></head><body>
+<h1>The game is over, people!</h1>
+<p><em>by Michael S. Kaplan, published on 2010/02/23 07:01 -05:00, original URI: http://blogs.msdn.com/b/michkap/archive/2010/02/23/9967789.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P>NOTEPAD adds a BOM (Byte Order Mark) when you save a file in the UTF-8 encoding.</P>
+<P>Always<FONT size=1><SUP>1</SUP></FONT>.</P>
+<P>You'd think that since Windows Notepad has been doing this for over 319680000 seconds<FONT size=1><SUP>2</SUP></FONT>, and that the combined usage of Windows 2000<FONT size=1><SUP>3</SUP></FONT>, Windows XP, Windows Server 2003, Windows XP 64-bit, Vista, Windows Server 2008, Windows 7, and Windows Server 2008 R2 is so high that it may well blow your mind to calculate the number, that people would have gotten over this by now.</P>
+<P>But no.</P>
+<P>As recently as yesterday<FONT size=1><SUP>4</SUP></FONT>, people were making comments again in that <A href="http://archives.miloush.net/michkap/archive/2008/03/11/8152232.html" mce_href="http://archives.miloush.net/michkap/archive/2008/03/11/8152232.html"><STRONG>Why are UTF-8 encoded Unix shell scripts *ever* written or edited in Notepad?</STRONG></A> blog, the one where I officially&nbsp;suggested that these people who don't like the Notepad behavior of inserting a BOM in front of UTF-8 files had a simple remedy:</P>
+<P><FONT size=7>STOP USING WINDOWS NOTEPAD!</FONT></P>
+<P>Yet for some reason people are still arguing it.</P>
+<P>Please give up, it is over. If you were in a contest or duel for this<SUP><FONT size=1>5</FONT></SUP>, then you have lost the contest, been bested in the duel. The game is over<SUP><FONT size=1>6</FONT></SUP>.</P>
+<P>A long time ago, someone decided that:</P>
+<UL>
+<LI>if your file was 100% ASCII<SUP><FONT size=1>7</FONT></SUP> and</LI>
+<LI>you chose to save it as UTF-8 and</LI>
+<LI>you opened the file up again and</LI>
+<LI>added some &gt;0x007f character and</LI>
+<LI>later saved again that</LI></UL>
+<P mce_keep="true">you should not be prompted<SUP><FONT size=1>8</FONT></SUP> in a way like this:</P>
+<P mce_keep="true"><IMG style="WIDTH: 497px; HEIGHT: 214px" title="This file contains characters in Unicode format which will be lost if you save this file as an ANSI encoded text file. To keep the Unicode information, click Cancel below and then select one of the Unicode options from the Encoding drop down list. Continue?" border=1 alt="This file contains characters in Unicode format which will be lost if you save this file as an ANSI encoded text file. To keep the Unicode information, click Cancel below and then select one of the Unicode options from the Encoding drop down list. Continue?" src="http://trigeminal.fmsinc.com/images/notepaddialog.jpg" width=497 height=214 mce_src="http://trigeminal.fmsinc.com/images/notepaddialog.jpg"></P>
+<P mce_keep="true">and so that was the way the feature was coded.</P>
+<P mce_keep="true">Game over.</P>
+<P mce_keep="true">There is probably an alt.i.hate.microsoft newsgroup somewhere on USENET that would be happy to hear your complaint on the matter.</P>
+<P mce_keep="true">But the world has moved on.</P>
+<P mce_keep="true">And Notepad (the apparent premiere tool of UNIX shell script authors throughout the world) has let down a segment of customers who could have updated whatever is reading the scripts in less than a day, rather than complaining about this on and off for the last ~3700<SUP><FONT size=1>9</FONT></SUP>&nbsp;plus days.</P>
+<P mce_keep="true">Your sacrifice is appreciated.</P>
+<P mce_keep="true">But please, go home now.</P>
+<P mce_keep="true">P.S. Isn't there some tool on UNIX that does this correctly<SUP><FONT size=1>10</FONT></SUP>?</P>
+<P mce_keep="true">P.P.S. I will not include a screenshot of my private Notepad; I'm not trying to tease you here that badly....</P>
+<P mce_keep="true">&nbsp;</P>
+<P><FONT size=1>1 - Well, not on the private Notepad I build from time to time from the Windows source, but that one is not one that is released to the public.<BR>2 - Over ten years, give or take<BR>3 - Where this first started happening.<BR>4 - The day before today.<BR>5 - Which none of you were, who are you kidding?<BR>6 - Even more over than the Canadians in that game last night.<BR>7 - Which ironically, most UNIX shell scripts are.<BR>8 - This is a cool feature too, by the way.<BR>9 - Over ten years, give or take.<BR>10 - By your definition of "correctness", at least - a BOM-less UTF-8 save.</FONT></P>
+<hr/><p><a id="9968031" href="#9968031">#</a> <strong>hair beauty</strong> on 23 Feb 2010 7:20 AM:</p><div style="margin-left: 1em"><P>STOP USING WINDOWS NOTEPAD!</P></div>
+<p><a id="9968261" href="#9968261">#</a> <strong>Paul Clapham</strong> on 23 Feb 2010 12:44 PM:</p><div style="margin-left: 1em"><p>But that's not a remedy at all. The usual problem is that some other donkey (not me) thought that Notepad was a suitable editor for producing an XML document.</p>
+<p>However I'm not one of the people complaining. It's quite obvious to me that even if somebody at Microsoft did decide to fix the problem (or however you want to look at it) it would take years for the problem to actually go away. So it's easier to just deal with the situation.</p></div>
+<p><a id="9968269" href="#9968269">#</a> <strong>Michael S. Kaplan</strong> on 23 Feb 2010 12:49 PM:</p><div style="margin-left: 1em"><P>For the XML case, you can blame the parser. From the <A href="http://www.w3.org/TR/2008/REC-xml-20081126/">spec</A> [Emphasis mine]:</P>
+<P>4.3.3 Character Encoding in Entities</P>
+<P>Each external parsed entity in an XML document may use a different encoding for its characters. All XML processors MUST be able to read entities in both the UTF-8 and UTF-16 encodings. The terms "UTF-8" and "UTF-16" in this specification do not apply to related character encodings, including but not limited to UTF-16BE, UTF-16LE, or CESU-8.</P>
+<P>Entities encoded in UTF-16 MUST <STRONG><FONT color=#ff0000>and entities encoded in UTF-8 MAY</FONT></STRONG> begin with the Byte Order Mark described by Annex H of [ISO/IEC 10646:2000], section 16.8 of [Unicode] (the ZERO WIDTH NO-BREAK SPACE character, #xFEFF). This is an encoding signature, not part of either the markup or the character data of the XML document. <STRONG><FONT color=#ff0000>XML processors MUST be able to use this character to differentiate between UTF-8 and UTF-16 encoded documents.</FONT></STRONG></P></div>
+<p><a id="9968281" href="#9968281">#</a> <strong>William Reading</strong> on 23 Feb 2010 1:11 PM:</p><div style="margin-left: 1em"><p>Notepad++ supports syntax highlighting and multiple encodings. It seems silly to edit unix shell scripts with vanilla notepad, especially since it doesn't represent linebreaks in the same way.</p></div>
+<p><a id="9968283" href="#9968283">#</a> <strong>Seth</strong> on 23 Feb 2010 1:12 PM:</p><div style="margin-left: 1em"><p>Sweet, a blog post just for me!</p>
+<p>I'm not entirely sure what you mean by 'game over,' but it seems to be something along the lines of 'this is what Notepad does and that's final.' I have to agree that that's probably never going to be fixed (though developers for new apps probably have other options today, like using a file attribute, say). The thing we can forever lament (loudly, at every opportunity) is that people don't take your advice and we end up with people complaining about problems like <a rel="nofollow" target="_new" href="http://support.microsoft.com/kb/301623">http://support.microsoft.com/kb/301623</a></p>
+<p>And then there's another kind of problem:</p>
+<p><a rel="nofollow" target="_new" href="http://connect.microsoft.com/VisualStudio/feedback/details/341454/compile-error-with-source-file-containing-utf8-strings-in-cjk-system-locale">http://connect.microsoft.com/VisualStudio/feedback/details/341454/compile-error-with-source-file-containing-utf8-strings-in-cjk-system-locale</a></p>
+<p>Anyone who agrees with Peter Constable's reasoning: &quot;for better or worse, plain text processes that support UTF-8 are going to encounter UTF-8 data beginning with a BOM: learn to live with it!&quot; should also agree that processes that support UTF-8 are going to encounter UTF-8 data that doesn't begin with U+FEFF, and that they should 'learn to live with it.' For what reason wouldn't cl.exe support a switch for encoding?</p></div>
+<p><a id="9968326" href="#9968326">#</a> <strong>John Cowan</strong> on 23 Feb 2010 2:17 PM:</p><div style="margin-left: 1em"><p>To be fair, that language about UTF-8 BOMs wasn't added by the XML Core WG &nbsp;until the Third Edition of 2004, six years after XML first became a W3C Recommendation.</p>
+<p>Not feeling as belligerent today as when your previous post came out, I guess.</p></div>
+<p><a id="9968366" href="#9968366">#</a> <strong>Mihai</strong> on 23 Feb 2010 3:30 PM:</p><div style="margin-left: 1em"><p>&quot;Why are UTF-8 encoded Unix shell scripts *ever* written or edited in Notepad?&quot;</p>
+<p>Ok, I am not happy about Notepad doing that, but I got over it.</p>
+<p>I would ask something else though: if UNIX/Linux claims to be Unicode aware at least a little bit (after 19 years of Unicode), why the shell does honor the BOM, using it to detect the UTF-8 even if (for some crazy reason) my locale is set to en_US.iso88591?</p>
+<p>Any reason to choke on it?</p></div>
+<p><a id="9968417" href="#9968417">#</a> <strong>Cheong</strong> on 23 Feb 2010 5:25 PM:</p><div style="margin-left: 1em"><p>But... for such an old question, people had developed bash/tcsh scripts that performs &quot;replacement of \r\n to \n&quot; and &quot;trim BOM from the begining of files&quot; in the specified folders. *nix fans should be familiar with usage of such tool(s).</p>
+<p>Why should people complain when handy workarounds are readily available? :O</p></div>
+<p><a id="9968483" href="#9968483">#</a> <strong>Dranorter</strong> on 23 Feb 2010 9:27 PM:</p><div style="margin-left: 1em"><p>Just happened upon your blog because of some posts about Khmer. (I've always been interested in Unicode and now I'm trying to teach myself a thing or two about how foreign writing systems actually work.) Just thought I'd say, I like what you have to say here and might keep reading. :)</p></div>
+<p><a id="9968652" href="#9968652">#</a> <strong>Doug Ewell</strong> on 24 Feb 2010 5:48 AM:</p><div style="margin-left: 1em"><p>@Seth: &quot;I have to agree that that's probably never going to be fixed&quot;</p>
+<p>How would you propose &quot;fixing&quot; it? &nbsp;With the message box in Michael's post?</p></div>
+<p><a id="9969460" href="#9969460">#</a> <strong>Yuhong Bao</strong> on 25 Feb 2010 11:00 AM:</p><div style="margin-left: 1em"><p>What about the Subsystem for UNIX-based Applications?</p>
+</div>
+<p><a id="9969663" href="#9969663">#</a> <strong>Michael S. Kaplan</strong> on 25 Feb 2010 6:04 PM:</p><div style="margin-left: 1em"><p>I have been waiting for a long time to suggest that for a reason -- and no one has, yet!</p>
+</div>
+<p><a id="9969752" href="#9969752">#</a> <strong>Seth</strong> on 25 Feb 2010 10:45 PM:</p><div style="margin-left: 1em"><p>Doug Ewell,</p>
+<p>One way to maintain that feature of Notepad without prohibiting the storage of UTF-8 text that doesn't ﻿begin with a certain character would be to stick the encoding metadata in a file attribute. Someone else may be able to think of a better way though.</p>
+<p>Another possibility I hope to see someday is Windows using a UTF-8 codepage. Michael has said that's not possible, and if that's the case then it's a real shame that we'll never be able to move away from using legacy encodings as the default.</p></div>
+<p><a id="9969847" href="#9969847">#</a> <strong>Michael S. Kaplan</strong> on 26 Feb 2010 2:38 AM:</p><div style="margin-left: 1em"><p>Seth, there is no file attribute that can be supported on every file system that Windows can support as not all of them have such mechanisms.</p>
+<p>And a UTF-8 &quot;code page&quot; (which exists now -- 65001) would not change the nature of the problem. </p>
+<p>The signature fixes the problem, and since the user who might hit that bug has no workarolund while the user of Unix shell scripts has many, the current resolution, determined over a decade ago, can and will stand.</p>
+</div>
+<p><a id="9970111" href="#9970111">#</a> <strong>Seth</strong> on 26 Feb 2010 11:48 AM:</p><div style="margin-left: 1em"><p>I guess I should have specified 'using a UTF-8 codepage _by default_', i.e. set the CP_ACP to UTF-8.</p>
+<p>See:</p>
+<p><a rel="nofollow" target="_new" href="http://archives.miloush.net/michkap/archive/2006/10/11/816996.html">http://blogs.msdn.com/michkap/archive/2006/10/11/816996.aspx</a></p>
+<p><a rel="nofollow" target="_new" href="http://archives.miloush.net/michkap/archive/2006/07/14/665714.html">http://blogs.msdn.com/michkap/archive/2006/07/14/665714.aspx</a></p>
+<p>Currently Notepad has the option to save files using the CP_ACP, UTF-16 and UTF-8. As the UTF-8 signature is intended to disambiguate between files specified as UTF-8 the ACP, if the ACP and UTF-8 options were the same then that dialogue you showed would never be needed even without a disambiguating mark. It seems to me that that does change the nature of the problem.</p>
+<p>&quot;The signature fixes the problem, and since the user who might hit that bug has no workarolund _[1]_ while the user of Unix shell scripts has many, the current resolution, determined over a decade ago, can and will stand.&quot;</p>
+<p>Again, I think the solution you offered (STOP USING WINDOWS NOTEPAD!) is perfectly reasonable. As long as that solution is always preferred over, say, changing standards to require parsers to accept a ZWNBS that doesn't fit into their grammar at the beginning of files, then there's little to complain about here. (Though we can still complain about other programs failing to handle UTF-8 that doesn't begin with ZWNBS.)</p>
+<p>Re: file attributes</p>
+<p>Well, perhaps it's enough if just NTFS supports it. Or maybe someday the file system support could be extended to support attributes on any file system the way some other systems support storing their arbitrary attributes even on e.g. FAT32.</p>
+<p>I don't care too much about this, since really I'd like to just get away from legacy encodings, but something like this is necessary to support legacy encodings. Without it you have to put a special signature at the beginning of all text files to identify which encoding, or you have to guess at encoding, or you just have to put up with potential data corruption when a file created on a system with one code page is edited on a system with a different code page.</p>
+<p>1. I would suggest that the dialogue box you showed, or better yet, a dialogue that presents the encoding options directly, _is_ a workaround.</p></div>
+<p><a id="9970150" href="#9970150">#</a> <strong>Michael S. Kaplan</strong> on 26 Feb 2010 1:27 PM:</p><div style="margin-left: 1em"><p>The current design of over a decade is the design. There are easily thousands of alternate tools that can be used here if one has other requirements, my advice is to look into one of those (I can't imagine many people holding out for hope of change after waiting over 10 years!)....</p>
+</div>
+<p><strong>Yuhong Bao</strong> on 9 Mar 2010 12:01 AM:</p><div style="margin-left: 1em"><p>Or you can write a program to truncate the BOM from the beginning of file. The hard part is while the Windows API make it easy to truncate from the *end* of a file, it do not make it easy to truncate from the *beginning* of a file. </p>
+</div>
+<p><strong>Nemo</strong> on 31 Mar 2010 2:30 PM:</p><div style="margin-left: 1em"><p>Just because you've done it wrong for a decade is no reason not to fix it now... also, while fixing that, how about having notepad recognize Unix-style line endings, like every other editor on the planet?</p>
+<p>The correct solution: save UTF-8 as default, use it everywhere in Windows, strongly deprecate legacy encodings, and stop adding a stupid BOM where it doesn't belong.</p>
+<p>Personally, of course, I DON'T use notepad. But it's the default text editor in Windows, which means that a lot of other people do use it, which means that I have to deal with what notepad does, and/or patiently explain over and over again why notepad is crap. So telling me &quot;stop using notepad&quot; is not helpful.</p></div>
+<p><strong>malcontent</strong> on 31 Mar 2010 3:40 PM:</p><div style="margin-left: 1em"><p>Ms has programmers right? </p>
+<p>Why can't they just improve it. You know.. Fix it.</p>
+<p>Or replace it with something better. Maybe something open sourced. </p>
+<p>Or buy any one of ten thousand better editors and rename it to &quot;notepad.exe&quot;.</p>
+<p>I mean Ms has money right? They have programmers right?</p>
+<p>Why can't they do that?</p></div>
+<p><strong>Michael S. Kaplan</strong> on 31 Mar 2010 4:48 PM:</p><div style="margin-left: 1em"><p>I suppose people could do what I did/do -- work for Microsoft, get access to the source, and build your own after making the changes you want.... :-)</p>
+</div>
+<p><strong>Kale</strong> on 31 Mar 2010 6:11 PM:</p><div style="margin-left: 1em"><p>One word for everyone: vim</p>
+<p><a rel="nofollow" target="_new" href="http://www.vim.org/">http://www.vim.org/</a></p></div>
+<p><strong>Cheong</strong> on 31 Mar 2010 6:34 PM:</p><div style="margin-left: 1em"><p>@malcontent: Because Notepad is designed to be a lightweight tool, it can't afford to be too complex.</p>
+<p>You suggestion will be fine if you propose the replacement for Wordpad, it just doesn't make sense for Notepad.</p></div>
+<p><strong>Paul Betts</strong> on 31 Mar 2010 6:49 PM:</p><div style="margin-left: 1em"><p>Re: footnote 9, Vim is of course the tool of choice for editing shell scripts, even though it *does* understand the BOM.</p></div>
+<p><strong>Robert</strong> on 31 Mar 2010 6:54 PM:</p><div style="margin-left: 1em"><p>If you are creating a script for Unix on Windows using Notepad you are an idiot to the nth degree.</p></div>
+<p><strong>Miral</strong> on 31 Mar 2010 7:12 PM:</p><div style="margin-left: 1em"><p>I'm probably coming in on this argument late, but why don't people like the BOM?</p>
+<p>Personally, I think it should be absolutely mandated that every UTF-8 file must start with a BOM, just like UTF-16 files. &nbsp;Otherwise there isn't any useful way to tell whether any given file is in UTF-8 or ANSI, short of scanning the file and hoping to encounter useful characters you can use to guess correctly (which seems undesirable).</p>
+<p>And for the people arguing &quot;just ignore the ANSI files, they're old and crusty&quot; -- do you *know* how many plain ANSI files there are lying around? &nbsp;Do you *really* think it'd be a good idea to render a significant number of them unreadable?</p></div>
+<p><strong>Stephen Harrison</strong> on 31 Mar 2010 7:46 PM:</p><div style="margin-left: 1em"><p>I recently made the mistake of making a robots.txt file in Visual Studio, Google tools and a robots.txt validator then complained that my first line wasn't valid. &nbsp;</p>
+<p>Guess what, the Visual Studio text editor had added the BOM marker, not great for adding something so simple as the robots.txt to a website! &nbsp;</p>
+<p>Maybe it's time for me to stop using Visual Studio?</p></div>
+<p><strong>Michael S. Kaplan</strong> on 31 Mar 2010 9:56 PM:</p><div style="margin-left: 1em"><p>Kind of funny that Google tools can't handle a BOM. I mean, with people like President of Unicode working for them and all... ;-)</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 31 Mar 2010 10:02 PM:</p><div style="margin-left: 1em"><P>But with that said, Visual Studio gives one the option to save UTF-8 without a BOM, and to change the line endings:</P>
+<P><IMG src="http://trigeminal.fmsinc.com/images/utf8nobom.jpg"></P>
+<P>:-)</P></div>
+<p><strong>Sachin</strong> on 31 Mar 2010 10:30 PM:</p><div style="margin-left: 1em"><p>I use VIM...it is the best</p></div>
+<p><strong>Yuhong Bao</strong> on 31 Mar 2010 10:41 PM:</p><div style="margin-left: 1em"><p>&quot;I suppose people could do what I did/do -- work for Microsoft, get access to the source, and build your own after making the changes you want.... :-)&quot;</p>
+<p>Or disassemble Notepad in something like IDA Pro and do binary patching, after all the code to add the BOM is in Notepad itself.</p></div>
+<p><strong>Yuhong Bao</strong> on 31 Mar 2010 10:51 PM:</p><div style="margin-left: 1em"><p>In fact, I just did this, and it turned out it would be very easy. I found the SaveFile function in the Vista version of Notepad, and found the WriteFile call that inserts the UTF-8 BOM. You can patch this out with NOPs using a debugger or by binary file editing. Yep, the curse of non open-source software.</p></div>
+<p><strong>David</strong> on 31 Mar 2010 10:55 PM:</p><div style="margin-left: 1em"><p>To paraphrase the manual, EDIT is the standard editor.</p>
+<p>C:\&gt; EDIT.COM</p></div>
+<p><strong>Michael S. Kaplan</strong> on 31 Mar 2010 11:41 PM:</p><div style="margin-left: 1em"><P>That's okay, Yuhong -- though working for Microsoft gives you better benefits. :-)</P></div>
+<p><strong>Yuhong Bao</strong> on 31 Mar 2010 11:55 PM:</p><div style="margin-left: 1em"><p>&quot;and found the WriteFile call that inserts the UTF-8 BOM&quot;</p>
+<p>BTW, there are several similar WriteFile calls, you have to patch out the right one. A key clue here is that in the x86 Vista SP2 version it pushes a pointer to the symbol _BOM_UTF8 as a second parameter. If you follow that pointer, you should see the bytes of the UTF-8 BOM.</p>
+<p>Yea, it is an unfortunate curse of non open-source software and the Microsoft development process that a simple option like this would be so hard to add.</p></div>
+<p><strong>Michael S. Kaplan</strong> on 31 Mar 2010 11:57 PM:</p><div style="margin-left: 1em"><p>Or you can just use WordPad. Or a zillion editors that you don't risk breaking....</p>
+</div>
+<p><strong>Yuhong Bao</strong> on 31 Mar 2010 11:59 PM:</p><div style="margin-left: 1em"><p>Of course. Not my point, though, I already know this.</p></div>
+<p><strong>Yuhong Bao</strong> on 1 Apr 2010 12:04 AM:</p><div style="margin-left: 1em"><p>In fact, I am now off to WinDbg disassembling notepad!SaveFile and trying this patch myself.</p></div>
+<p><strong>Yuhong Bao</strong> on 1 Apr 2010 12:08 AM:</p><div style="margin-left: 1em"><p>Found the right WriteFile call and just used the WinDbg E comment to enter NOP (0x90) instructions in place of it. I had to take some time to ensure I enter the right number of NOPs and no less and no more.</p></div>
+<p><strong>Jan</strong> on 1 Apr 2010 12:10 AM:</p><div style="margin-left: 1em"><p>STOP WRITING BLOG POSTS ABOUT PEOPLE COMPLAINING ABOUT NOTEPAD!</p></div>
+<p><strong>Yuhong Bao</strong> on 1 Apr 2010 12:12 AM:</p><div style="margin-left: 1em"><p>Just opened the test.txt file that was saved as UTF-8 using the patched in memory Notepad in HexEdit and confirmed that no BOM was inserted.</p></div>
+<p><strong>maht</strong> on 1 Apr 2010 2:55 AM:</p><div style="margin-left: 1em"><p>When we invented UTF-8 at Bell-Labs it didn't have BOM. It was intentional. As usual, you fools messed it up.</p></div>
+<p><strong>Davin</strong> on 1 Apr 2010 4:09 AM:</p><div style="margin-left: 1em"><p>My guess? They're using the notepad in Wine for a bit of nostalgia :).</p></div>
+<p><strong>ReallyEvilCanine</strong> on 1 Apr 2010 6:26 AM:</p><div style="margin-left: 1em"><p>&gt; P.S. Isn't there some tool on UNIX that does this correctly</p>
+<p>pico, which is as narrowly focused and limited in scope as Notepad.</p>
+<p>There's also MinEd (<a rel="nofollow" target="_new" href="http://towo.net/mined/features.html">http://towo.net/mined/features.html</a>) if you need flexibility.</p></div>
+<p><strong>ScriptErrorRetrying</strong> on 1 Apr 2010 9:17 AM:</p><div style="margin-left: 1em"><p>&gt; P.S. Isn't there some tool on UNIX that does this correctly</p>
+<p>Any decent text editor on unix or linux will let you specify the encoding to use when writing files, and will likely default to either ISO8859-1, or UTF-8 WITHOUT stupid BOM.</p>
+<p>E.g. GNU Emacs: set-buffer-file-coding-system (C-x RET f) will let you choose from a large range of utf-8 variants (and many other encoding schemes, including various ebcdic variants...). &nbsp;The -with-signature ones write a BOM. &nbsp;The -unix/-dos/-mac ones use LF / CRLF/ CR line endings.</p></div>
+<p><strong>Shameer</strong> on 3 Apr 2010 10:01 AM:</p><div style="margin-left: 1em"><P>50 years back, these people would have been complaining about <A href="http://en.wikipedia.org/wiki/3:2_pulldown#3:2_pulldown">3:2 pulldown</A>.</P>
+<P>When something becomes a de-facto standard, you live with it and try to make it work.</P></div>
+<hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2010/08/14 <a href="http://archives.miloush.net/michkap/archive/2010/08/14/10050078.html">(It wasn't me)</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2010/02/24/9968410.html" title="I have not, generally speaking, been a &quot;flasher&quot; (for the last few years at least!)">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2010/02/22/9967111.html" title="Will someone take up the job of Calendar support in .Net, please?">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2010-02">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2010-02-23">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2010/02/23/9967789.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:35 GMT -->
+</html>

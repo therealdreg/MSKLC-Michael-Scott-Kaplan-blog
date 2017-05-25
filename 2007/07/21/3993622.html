@@ -1,0 +1,40 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2007/07/21/3993622.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:38 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Avoiding an international mailto maelstrom</title></head><body>
+<h1>Avoiding an international mailto maelstrom</h1>
+<p><em>by Michael S. Kaplan, published on 2007/07/21 20:01 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2007/07/21/3993622.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P>The mail I got the other day from Wes Miller (yes, <STRONG><A class="" href="http://archives.miloush.net/michkap/archive/2005/06/09/427136.html" mce_href="http://archives.miloush.net/michkap/archive/2005/06/09/427136.html">that</A></STRONG> Wes Miller!) forwarding someone else's question:</P>
+<BLOCKQUOTE>
+<P><EM>Hi all,</EM></P>
+<P><EM>We encountered a problem when localizing the subject of mailto hyper link. The sample html is below:</EM></P>
+<P>&lt;html&gt;<BR>&lt;head&gt;<BR>&lt;meta http-equiv="Content-Type" content="text/html; charset=utf-8" /&gt;<BR>&lt;title&gt;Contact Us&lt;/title&gt;<BR>&lt;/head&gt;<BR>&lt;body&gt;<BR>&lt;a href="mailto:someone@domain.com?subject=最終更新"&gt;Contact Us&lt;/a&gt;<BR>&lt;/body&gt;<BR>&lt;/html&gt;</P>
+<P><EM>When user clicks the link, the subject in outlook can not be rendered correctly. How can we resolve/workaround this problem? Your comment will be very much appreciated.</EM></P>
+<P><EM>Thanks in advance.</EM></P></BLOCKQUOTE>
+<P>(For people who want to test the results in their own browser/mail client, I'll reproduce the link here: <STRONG><A class="" href="mailto:someone@domain.com?subject=最終更新" mce_href="mailto:someone@domain.com?subject=最終更新">Contact Us</A></STRONG>)</P>
+<P>As&nbsp;regular readers&nbsp;can probably guess (especually if they remember <STRONG><A class="" href="http://archives.miloush.net/michkap/archive/2006/05/27/608351.html" mce_href="http://archives.miloush.net/michkap/archive/2006/05/27/608351.html">this</A></STRONG> post!), the text (Japanese for something like "Final Renewal" I think?), looks like: <STRONG>æœ€çµ‚æ›´æ–°</STRONG></P>
+<P>So the browser was perhaps being smart enough to take the charset info of the page and use it but then the mail client was not being smart enough to see it as UTF-8.</P>
+<P>It can be tempting to look to the new IE7 "International" setting about using UTF-8 for mailto links:</P>
+<P><IMG height=512 src="http://trigeminal.fmsinc.com/images/utf8mailto_ie7.png" width=413></P>
+<P><EM>(more on this setting in the IEBlog post </EM><A class="" href="http://blogs.msdn.com/ie/archive/2007/02/12/International-Mailto-URIs-in-IE7.aspx" mce_href="http://blogs.msdn.com/ie/archive/2007/02/12/International-Mailto-URIs-in-IE7.aspx"><EM>International Mailto URIs in IE7</EM></A><EM> for those who are curious)</EM></P>
+<P>But I don't think that setting will always solve the problem here since, as the post indicates:</P>
+<BLOCKQUOTE>
+<P><EM><FONT face="times new roman,times">First, you must have a mail program that correctly handles these mailto URIs, such as Outlook 2007 or Mozilla Thunderbird. Second, you must ensure that the ‘Use UTF-8 for mailto links’ checkbox on the ‘Advanced’ tab of your Internet Options is checked.</FONT></EM></P></BLOCKQUOTE>
+<P>So you have to be running a browser that does the right thing, along with the setting in the browser configured properly, plus a mail client that can read it.</P>
+<P>Though to be honest I am seeing the right results in IE6 too even without that setting (though I still get the wrong results in some mail clients!</P>
+<P>Since the text in question was UTF-8 being read as if it were not, it appears that the first two conditions were being met (or the browser was doing the right thing anyway), and that the problem was that the mail client did not understand what&nbsp;to do with the results it was being asked to make use of.</P>
+<P>Well, I guess the article will help if it encourages you to upgrade your mail client to a program that understandd UTF-8, so you can avoid the international mailto <A class="" href="http://en.wikipedia.org/wiki/Maelstrom" mce_href="http://en.wikipedia.org/wiki/Maelstrom">maelstrom</A>!</P>
+<P>And it very nice to see products working to better follow standards, too....</P>
+<P mce_keep="true">&nbsp;</P>
+<P><FONT color=#ff00ff><EM>This post brought to you by</EM> <FONT size=6>ཙ</FONT>&nbsp; <EM>(<A class="" href="http://www.fileformat.info/info/unicode/char/0f59" mce_href="http://www.fileformat.info/info/unicode/char/0f59">U+0f59</A>, a.k.a. TIBETAN LETTER TSA)</EM></FONT></P>
+<hr/><p><a id="4000262" href="#4000262">#</a> <strong>jonlfh</strong> on 22 Jul 2007 1:16 PM:</p><div style="margin-left: 1em"><P>According to the WWWJDIC:</P>
+<P>-最終 【さいしゅう】 (n) last; final; closing;</P>
+<P>-更新 【こうしん】 (n,vs) renewal; update; innovation; renovation;</P>
+<P>but I think the more appropriate translation would be "update" (in the context of software, website, etc). So the text reads "Final Update". BTW, it means about the same thing in Chinese too.</P></div>
+<p><a id="4006184" href="#4006184">#</a> <strong>Wilhelm Svenselius</strong> on 23 Jul 2007 1:32 AM:</p><div style="margin-left: 1em"><p>I tried clicking the link from IE7 and Firefox, opening into Outlook 2007, on Vista. In both cases, the text rendered perfectly.</p></div>
+<p><a id="4011395" href="#4011395">#</a> <strong>Michael S. Kaplan</strong> on 23 Jul 2007 12:09 PM:</p><div style="margin-left: 1em"><p>That sounds like very good news!</p>
+</div>
+<p><a id="9118650" href="#9118650">#</a> <strong>&#216;yvind Volden</strong> on 18 Nov 2008 9:05 AM:</p><div style="margin-left: 1em"><p>I can verify that this works with Outlook 2007, since you can choose to use UTF-8 with the mailto protocol. However, I'm having difficulties with Outlook 2003, where this options doesn't exist. Anyone know if there's a workaround for Outlook 2003?</p></div>
+<hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2007/07/21/3995389.html" title="She typed in &#39;God damn clippy&#39;">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2007/07/21/3991927.html" title="Theory vs. practice in software development">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2007-07">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2007-07-21">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2007/07/21/3993622.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:38 GMT -->
+</html>

@@ -1,0 +1,45 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2011/03/04/10136788.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>RDP doesn't do MUI</title></head><body>
+<h1>RDP doesn't do MUI</h1>
+<p><em>by Michael S. Kaplan, published on 2011/03/04 07:01 -05:00, original URI: http://blogs.msdn.com/b/michkap/archive/2011/03/04/10136788.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<p>The question was easy:</p>
+<p style="padding-left: 60px;"><span style="font-family: times new roman,times;">Hi,</span></p>
+<p style="padding-left: 60px;"><span style="font-family: times new roman,times;">I have installed French and English MUI on the server.<br /><br />Now when users RDP to the server they get the language as per what is set on the server.<br /><br />Is there any way to get the same MUI applied for the user depending on the language on the client machine from where they establish the RDP session?<br /><br />i.e. English MUI when clients have English <br />i.e. French MUI when clients have French <br /><br />Is there a way to achieve this functionality over the RDP session ?</span></p>
+<p>Unfortunately the answer is easy, too.</p>
+<p>Well, it is not unfortunate that it is easy to formulate an answer. That would be a dumb thing to call unfortunate.</p>
+<p>The unfortunateness is in the nature of the answer.</p>
+<p>Which is that <strong>no, there is no way to achieve that functionality</strong>.</p>
+<p>Although </p>
+<ul>
+<li>it is a reasonable idea, and </li>
+<li>there are so many other features that the Remote Desktop Client allows one to configure for that user session, and </li>
+<li>it could work as an override for that session like most of the other</li>
+<li>it would be totally possible to do</li>
+</ul>
+<p>The truth is that it is not something RDP supports.</p>
+<p>But for what its worth, it would be kind of cool if it did. It just makes sense -- not just as an option but as the default option.</p>
+<p>It is&nbsp;what we do with default keyboard layouts, which are often assigned by the default user locale in a per-session way that is not saved. So maybe the user interface language could do the same!</p>
+<p>But it doesn't actually do that, unfortunately....</p>
+<hr/><p><strong>Raymond Chen - MSFT</strong> on 4 Mar 2011 8:40 AM:</p><div style="margin-left: 1em"><p>It would also create havoc if somebody RDP&#39;d in from a French system, then disconnected, then reconnected from a German system. Changing the MUI language requires a logoff, so when the German user connected, they&#39;d be told &quot;This session cannot be resumed because it is running a different language. I will log off now. Please wait for logoff to complete, and then reconnect.&quot; Oh, and the message would be in French.</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 4 Mar 2011 8:51 AM:</p><div style="margin-left: 1em"><p>Ah, details....but those could all be worked out. Perhaps by keeping the old sessions around by fast user switching? Or if not then by doing the right thing with resources for that in-between state during the &quot;logging off&quot; period. That&#39;s a tractable problem....</p>
+</div>
+<p><strong>Cheong</strong> on 6 Mar 2011 5:27 PM:</p><div style="margin-left: 1em"><p>Alternatively, perheps we should set the rules to apply MUI according to RDP langauge preference only if the logon is creating new user session. When attempting to connect to a session already created, the RDP option will be ignored and session not restarted.</p></div>
+<p><strong>Ian Boyd</strong> on 6 Mar 2011 7:59 PM:</p><div style="margin-left: 1em"><p>This is similar to my longstanding wish that the rdp server honor my font/dpi preferences.</p>
+<p>And while we&#39;re at it, my color scheme preferences.</p>
+<p>But mostly my 14pt font preference - 8pt (or 9pt) is so small.</p>
+</div>
+<p><strong>Azarien</strong> on 7 Mar 2011 2:48 AM:</p><div style="margin-left: 1em"><p>Now, having such feature request, what are the odds that it actually gets implemented, in</p>
+<p>1. a hotfix</p>
+<p>2. Windows 7 Service Pack 2</p>
+<p>3. next Windows release?</p>
+</div>
+<p><strong>Mike Dimmick</strong> on 7 Mar 2011 6:24 AM:</p><div style="margin-left: 1em"><p>Azarien: Microsoft&#39;s priority for servicing released software is nearly always stability, above all. Changes to behaviour only occur if someone asks for it formally, via support (paying for the incident), and only if in the appropriate time frame for the product (mainstream support, typically first five years). The exceptions have generally been where the product org leaders feel that they&#39;re missing a market opportunity if the change was delayed to the next full release. These are, now, more often an R2/R3 release rather than a service pack.</p>
+<p>If someone were to submit a Design Change Request via Customer Support Services, they would get a hotfix. My assessment is that the hotfix would not be made generally available, that is, it wouldn&#39;t be on Windows Update even as an optional update. However, it would go into the trunk for the next major version of Windows, and into the branch for the next service pack. It would also be in the QFE branch for the component, so anyone who&#39;s already on the QFE branch - has installed another hotfix affecting the component - would get it in the next generally-available update for that branch.</p>
+<p>If a Program Manager at MS (presumably on the RDP team, or at least part of the Windows organization) felt strongly enough, he could write a spec for a change to RDP, then try to convince the development team to implement it (PMs and devs are peers at Microsoft). That would almost certainly be in the next full release only, though sometimes this kind of change might go in a service pack if this component had a major change anyway. For example, the addition of RemoteFX and Dynamic Memory for Hyper-V in Windows 7/Server 2008 R2 SP1, a &#39;market opportunity&#39; change (competing virtual server products already had dynamic memory and were adding 3D acceleration).</p>
+</div>
+<hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2011/03/05/10137218.html" title="Those who don&#39;t learn from their mistakes are bound to break the Turkish &quot;I&quot; again">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2011/03/03/10134774.html" title="Is the fault with the politicians, or the journalists?">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2011-03">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2011-03-04">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2011/03/04/10136788.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+</html>

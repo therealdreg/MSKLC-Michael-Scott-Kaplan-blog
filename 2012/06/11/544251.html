@@ -1,0 +1,137 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2012/06/11/544251.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:48 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>chcp can't do everything</title></head><body>
+<h1>chcp can't do everything</h1>
+<p><em>by Michael S. Kaplan, published on 2006/03/06 04:01 -05:00, original URI: http://blogs.msdn.com/b/michkap/archive/2006/03/06/544251.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P><FONT face=Tahoma>The chcp.com utility is a simple little program sitting in the \WINDOWS\SYSTEM32 subdirectory. Running it with /? willl give some helpful information about its purpose:</FONT></P>
+<BLOCKQUOTE dir=ltr style="MARGIN-RIGHT: 0px">
+<P><FONT face="Courier New"><STRONG>C:\WINDOWS\system32&gt;chcp /?<BR>Displays or sets the active code page number.</STRONG></FONT></P>
+<P><FONT face="Courier New"><STRONG>CHCP [nnn]</STRONG></FONT></P>
+<P><FONT face="Courier New"><STRONG>&nbsp; nnn&nbsp;&nbsp; Specifies a code page number.</STRONG></FONT></P>
+<P><FONT face="Courier New"><STRONG>Type CHCP without a parameter to display the active code page number.</STRONG></FONT></P></BLOCKQUOTE>
+<P><FONT face=Tahoma>There is also&nbsp;more information in the <A HREF="http://blogs.msdn.com/controlpanel/blogs/www.microsoft.com/resources/documentation/windows/xp/all/proddocs/en-us/chcp.mspx">Windows XP documentation</A>, which does hint at a problem in its small list of "supported" code pages:</FONT></P>
+<P><FONT face=Tahoma>
+<TABLE cellSpacing=0 cellPadding=0 width="40%" border=1>
+<THEAD>
+<TR vAlign=top>
+<TD>Code page</TD>
+<TD>Country/region or language</TD></TR></THEAD>
+<TBODY>
+<TR vAlign=top>
+<TD>
+<P>437</P></TD>
+<TD>
+<P>United States</P></TD></TR>
+<TR vAlign=top>
+<TD>
+<P>850</P></TD>
+<TD>
+<P>Multilingual (Latin I)</P></TD></TR>
+<TR vAlign=top>
+<TD>
+<P>852</P></TD>
+<TD>
+<P>Slavic (Latin II)</P></TD></TR>
+<TR vAlign=top>
+<TD>
+<P>855</P></TD>
+<TD>
+<P>Cyrillic (Russian)</P></TD></TR>
+<TR vAlign=top>
+<TD>
+<P>857</P></TD>
+<TD>
+<P>Turkish</P></TD></TR>
+<TR vAlign=top>
+<TD>
+<P>860</P></TD>
+<TD>
+<P>Portuguese</P></TD></TR>
+<TR vAlign=top>
+<TD>
+<P>861</P></TD>
+<TD>
+<P>Icelandic</P></TD></TR>
+<TR vAlign=top>
+<TD>
+<P>863</P></TD>
+<TD>
+<P>Canadian-French</P></TD></TR>
+<TR vAlign=top>
+<TD>
+<P>865</P></TD>
+<TD>
+<P>Nordic</P></TD></TR>
+<TR vAlign=top>
+<TD>
+<P>866</P></TD>
+<TD>
+<P>Russian</P></TD></TR>
+<TR vAlign=top>
+<TD>
+<P>869</P></TD>
+<TD>
+<P>Modern Greek</P></TD></TR></TBODY></TABLE></FONT></P>
+<P><FONT face=Tahoma>None of the ACP values are there, though this is I think a bit of social engineering -- to keep people thinking of it as the OEM code page. The 125x series code pages also work well here.</FONT></P>
+<P><FONT face=Tahoma>However, another set that is missing from the list&nbsp;is the ideographic code pages. You cannot use chcp to change to one of the ideographic code pages unless it is also the default system OEM code page.</FONT></P>
+<P><FONT face=Tahoma>Thus on a system with an 0x0409 default system code page:</FONT></P>
+<BLOCKQUOTE dir=ltr style="MARGIN-RIGHT: 0px">
+<P><FONT face="Courier New"><STRONG>C:\WINDOWS\system32&gt;chcp 932<BR>Invalid code page</STRONG></FONT></P>
+<P><FONT face="Courier New"><STRONG>C:\WINDOWS\system32&gt;chcp 936<BR>Invalid code page</STRONG></FONT></P>
+<P><FONT face="Courier New"><STRONG>C:\WINDOWS\system32&gt;chcp 949<BR>Invalid code page</STRONG></FONT></P>
+<P><FONT face="Courier New"><STRONG>C:\WINDOWS\system32&gt;chcp 950<BR>Invalid code page</STRONG></FONT></P></BLOCKQUOTE>
+<P><FONT face=Tahoma>This is a known and expected limitation for which there is no workaround....</FONT></P>
+<P><FONT face=Tahoma></FONT>&nbsp;</P>
+<P><FONT face=Tahoma color=#ff1493><EM>This post brought to you by</EM> "Ā" <EM>(<A href="http://www.fileformat.info/info/unicode/char/0100">U+0100</A>, a.k.a. LATIN CAPITAL LETTER A WITH MACRON)</EM></FONT></P>
+<P><FONT face=Tahoma></FONT>&nbsp;</P>
+<hr/><p><a id="544504" href="#544504">#</a> <strong>Ilya Konstantinov</strong> on 6 Mar 2006 10:11 AM:</p><div style="margin-left: 1em">While we're at it, why not try &quot;chcp 65001&quot; (65001 = CP_UTF8)? Amazing but it actually works... but only if you set the console to use a TrueType font (and of course, unless you switch to full-screen text mode).<br><br>Too bad Lucida Console doesn't contain Hebrew glyphs. Given that there are other monospaced TrueType fonts in my system (such as Courier New, which happens to contain Hebrew glyphs), what makes a TrueType font appear in the console's Properties | Font screen?</div>
+<p><a id="544651" href="#544651">#</a> <strong>Ben Cooke</strong> on 6 Mar 2006 1:42 PM:</p><div style="margin-left: 1em">When you enable codepage 65001, batch files and cmd scripts no longer run. No idea why, but it's a bit of a show-stopper for chcp 65001.</div>
+<p><a id="544862" href="#544862">#</a> <strong>Dean Harding</strong> on 6 Mar 2006 6:06 PM:</p><div style="margin-left: 1em">Ilya: See here: <a rel="nofollow" target="_new" href="http://support.microsoft.com/default.aspx?scid=kb;EN-US;Q247815">http://support.microsoft.com/default.aspx?scid=kb;EN-US;Q247815</a></div>
+<p><a id="553457" href="#553457">#</a> <strong>Mike Myers</strong> on 17 Mar 2006 12:42 AM:</p><div style="margin-left: 1em">&quot;However, another set that is missing from the list is the ideographic code pages. You cannot use chcp to change to one of the ideographic code pages unless it is also the default system OEM code page.&quot;<br><br>I installed support for East Asian Languages into my English Windows XP Pro system, and have documents with filenames using ideograph characters. Is there really no way for me to work in the command shell (cmd.exe) with these files? Do I need to go buy a version of XP for the East Asian language I am interested in? I was hoping there was something easier I could do.</div>
+<p><a id="553487" href="#553487">#</a> <strong>Michael S. Kaplan</strong> on 17 Mar 2006 1:50 AM:</p><div style="margin-left: 1em">It means you cannot change to one of the CJK code pages, Mike. You can certainly try 'chcp 65001' and you can also try 'cmd /u' to see if you can work with them.<br><br>Or you can even change the default system locale and then the oemcp will match by default if you switch to the right one.<br><br>Lots of options....</div>
+<p><a id="556723" href="#556723">#</a> <strong>Mike Myers</strong> on 21 Mar 2006 12:19 PM:</p><div style="margin-left: 1em">Thanks for the suggestions Michael. <br><br>I have seen mention of code page 65001, but I don't see any effect by switching to it. I have created test data in Arabic, in Cyrillic, and in Japanese, and code page 65001 cannot display any of it correctly. At certain font sizes, if I choose Courier New as my console font I can work with Arabic and Cyrillic (on any code page, does not require a chcp).<br><br>Likewise, 'cmd /u' does not appear to affect the display, although it does a very good job of creating proper Unicode output. That is, I can do a 'dir' and still not *see* anything in the console, but if I do a 'dir &gt; results.txt' then I get a Unicode text file (I believe) that is readable with Notepad and all of the characters display there correctly.<br><br>I will attempt to change the system locale but had hesitated on trying this because I was hoping to avoid system-wide changes requiring a reboot, whenever I needed to work with certain file data.</div>
+<p><a id="556771" href="#556771">#</a> <strong>Michael S. Kaplan</strong> on 21 Mar 2006 12:58 PM:</p><div style="margin-left: 1em">Hi Mike,<br><br>Well, perhaps moving out of the [legacy] console world might be the best solution, in that case? Unicode apps have a much easier time when they are not stuck there....<br><br>With that said, I had very little trouble converting console projects to Unicode in the past (I'll be blogging about this soon)....</div>
+<p><a id="568971" href="#568971">#</a> <strong>Michael S. Kaplan</strong> on 5 Apr 2006 10:25 AM:</p><div style="margin-left: 1em">Apologies to Stanislav Kniazev -- I removed the table, since it is really unreadable in that format? Better to just provide tre link to the MSDN topic, instead?</div>
+<p><a id="593564" href="#593564">#</a> <strong>Stanislav Kniazev</strong> on 9 May 2006 8:43 AM:</p><div style="margin-left: 1em">If you need unicode output in file, you must use command CMD with option /U.<br>If you need unicode output in MS console, you must use the following command:<br>chcp 65001 &amp;&amp; &lt;your_command&gt;, where &lt;your_command&gt; is any command or batch file. Font property for MS console in this case must be of course changed to &quot;Lucida Console&quot;.<br>In the following table you find code pages for all charsets:<br><a rel="nofollow" target="_new" href="http://msdn.microsoft.com/workshop/author/dhtml/reference/charsets/charset4.asp">http://msdn.microsoft.com/workshop/author/dhtml/reference/charsets/charset4.asp</a><br></div>
+<p><a id="7379853" href="#7379853">#</a> <strong>Ran Ever-Hadani</strong> on 1 Feb 2008 6:43 PM:</p><div style="margin-left: 1em"><p>I got here via a mutual friend (Google). &nbsp;I want to use the 1252 code page. &nbsp;Chcp 1252 seems to respond well (it says 1252 is now active) but then when I type a file that contains upper ascii in it, it still display it as one would expect under page 437. &nbsp;I try writing to the screen from a program, I try to type characters directly holding down ALT and typing the decimal value - it still show me the page 437 characters, not the 1252 characters. &nbsp;As far as I can tell, all CHCP does under XP is tell you that your page is active, otherwise nothing. :( &nbsp;I would greatly appreciate any pointers. &nbsp;Thank.</p></div>
+<p><a id="8313275" href="#8313275">#</a> <strong>Michael S. Kaplan</strong> on 18 Mar 2008 7:39 AM:</p><div style="margin-left: 1em"><P>Change out of the raster font, perhaps? Move to Lucida Console....</P></div>
+<p><a id="8977470" href="#8977470">#</a> <strong>rbouman</strong> on 6 Oct 2008 1:17 AM:</p><div style="margin-left: 1em"><p>interesting reading here, thank you.</p>
+<p>I've had an occurrance of the path variable on xp pro being displayed correctly once only as human readable then as ascii chars only.</p>
+<p>turned out the codepage for this machine was set to 850, if I then manually set the codepage to 437, the path variable remains human readable [that is; from a command prompt screen output].</p>
+<p>the mystery is ; the machine is set to australian english in regional settings; there's no multi linguallity [is that a word?] other than that.</p>
+<p>what else could possibly cause the path variable [and it's the only environment variable to be affected] to display ascii chars?</p>
+<p>I'm also making the assumption that the ascii chars may cause some apps. to not read the path var. properly, right?</p></div>
+<p><a id="9026969" href="#9026969">#</a> <strong>Accsem3</strong> on 31 Oct 2008 1:15 PM:</p><div style="margin-left: 1em"><p>&gt;If you need unicode output in file, you must use command CMD with option /U. </p>
+<p>I've tried </p>
+<p>CMD /U Tree /a &gt; temp.txt</p>
+<p>in line 1 of batch file, which stop in this command and nothing is actually executed.</p>
+<p>temp.txt is not generated and the script does not continue.</p>
+<p>Using a Japanese Windows XP, eastern language enabled of course</p>
+<p>And for CHCP, the dos batch script will just close after running CHCP, anything below CHCP will not be executed as well.</p></div>
+<p><a id="9068293" href="#9068293">#</a> <strong>sslaith</strong> on 13 Nov 2008 9:53 PM:</p><div style="margin-left: 1em"><p>Is there a replacement for chcp on a 64bit client, I was browsing through the system32 and found chcp,</p>
+<p>but looking through sysWoW64, &nbsp;I saw nothing that resembles a chcp setting.</p></div>
+<p><strong>DevoMax</strong> on 21 Oct 2009 10:38 PM:</p><div style="margin-left: 1em"><p>1. Running CHCP 65001 causes subsequent batch files not to be executed at all.</p>
+<p>2. In my case, the offending character is &quot;&#246;&quot;, which is contained in the 437 code page, so I don't understand why the batch file fails if it contains that character. Works fine if I copy/paste into the command prompt.</p>
+<p>3. Running CMD /U means subsequent commands in the batch file will be ignored.</p>
+<p>Mike</p></div>
+<p><strong>Yuhong Bao</strong> on 30 Jul 2010 5:33 PM:</p><div style="margin-left: 1em"><p>Are you editing the batch file using Notepad, which uses the ANSI code page not the OEM code page?</p>
+</div>
+<p><strong>Yuhong Bao</strong> on 11 Oct 2010 11:33 PM:</p><div style="margin-left: 1em"><p>BTW, why do DBCS/CJK console support require that the OEMCP set to the needed codepage?</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 11 Oct 2010 11:36 PM:</p><div style="margin-left: 1em"><p>Um, because that is how they decide how to hook up some core plumbing the console uses to display text?</p>
+</div>
+<p><strong>yong</strong> on 7 Jan 2011 10:40 PM:</p><div style="margin-left: 1em"><p>in sv_SV OS, I set chcp 437, looks the codepage has changed to 437, but when I input diskpart command, MS-Dos still output localization language, it&#39;s amazing.....</p>
+</div>
+<p><strong>Yuhong Bao</strong> on 12 Jan 2011 6:14 PM:</p><div style="margin-left: 1em"><p>This can be a pain on DBCS-localized OSes. When you chcp to 437 and run a command, all the DBCS chars turn into question marks. Is there a way to change the console language to English?</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 12 Jan 2011 8:35 PM:</p><div style="margin-left: 1em"><p>Mostly no. But chcp was not designed to do that either -- you are only getting what you requested.</p></div>
+<p><strong>PierreMic</strong> on 11 Jun 2012 12:30 PM:</p><div style="margin-left: 1em"><p>Is it true that one can&#39;t add SimSun as a TrueType command box font on a Windows 7 Ultimate box unless the OS default locale is already Chinese!? </p>
+<p>What is a *good* reason for this limitation?</p>
+</div>
+<p><strong>riceD</strong> on 26 Sep 2012 12:59 AM:</p><div style="margin-left: 1em"><p>use CHCP 950 successful</p>
+<p>thanks</p>
+</div>
+<hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2012/06/13 <a href="http://archives.miloush.net/michkap/archive/2012/06/13/10318676.html">Console limitations</a></p><p>2008/10/07 <a href="http://archives.miloush.net/michkap/archive/2008/10/07/8981958.html">Even the prisoners of the motherland use cp1252 (though they escaped 037)</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2006/03/06/544257.html" title="Grouping and Sorting in a ListView">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2006/03/05/544150.html" title="Microsoft is giving people some LIP again">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2006-03">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2006-03-06">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2012/06/11/544251.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:48 GMT -->
+</html>

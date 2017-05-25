@@ -1,0 +1,40 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2005/05/11/416624.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:41 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Why UnicoWS.dll forwards to the OS on Unicode platforms</title></head><body>
+<h1>Why UnicoWS.dll forwards to the OS on Unicode platforms</h1>
+<p><em>by Michael S. Kaplan, published on 2005/05/11 19:01 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2005/05/11/416624.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P><FONT face=Tahoma>The original version of the Microsoft Layer for Unicode's DLL only ran on Win9x. Ever.</FONT></P>
+<P><FONT face=Tahoma>Now it had the loader , mind you, which would properly call the operating system or MSLU depending on where you were running, but there was no code in place to handle what would happen if you stuck the DLL on your Windows 2000 box and took the trouble to call LoadLibrary/GetProcAddress on the various APIs.</FONT></P>
+<P><FONT face=Tahoma>Two things changed that, though:</FONT></P>
+<P><FONT face=Tahoma>1) From my past heritage, I understood that the MSLU loader, while a very cool and elegant solution (cf </FONT><A id=_ctl0__ctl0__ctl0__ctl0_BlogSearcher__ctl0_SearchPostList__ctl0_EntryItems__ctl1_PostTitle HREF="http://archives.miloush.net/michkap/archive/2005/01/24/359555.html"><FONT face=Tahoma>Challenges behind MSLU: the loader! (Part 1)</FONT></A><FONT face=Tahoma>&nbsp;and </FONT><A id=_ctl0__ctl0__ctl0__ctl0_BlogSearcher__ctl0_SearchPostList__ctl0_EntryItems__ctl3_PostTitle HREF="http://archives.miloush.net/michkap/archive/2005/05/01/413835.html"><FONT face=Tahoma>Exploiting the linker's rules in unicows.lib</FONT></A><FONT face=Tahoma>), really did not solve the problem for the legions of developers using C#, VB.Net, Classic VB, Visual&nbsp;FoxPro, VBA, and so on. They were still kind of left out of the mix, and they really did constitue a majority of potential callers.</FONT></P>
+<P><FONT face=Tahoma>2) Many assumptions that MSLU makes about the platform simply cannot be sustained for very long -- trying to use MSLU on an NT platform where the dll code is called will probably crash very soon into the run, if we did not aggressively work to disallow it. This was especially true in relation to window management.</FONT></P>
+<P><FONT face=Tahoma>After some intense discussion internally, the decision to address the problem was made. I got to add the small bit of code to each API to make sure if not running on Win9x, then forward to the operating system. The actual size/perf hit of this code was pretty small even on Win9x, but the ability to make sure MSLU wuld simply work (rather than providing a list of things that would not work) was pretty stellar. </FONT></P>
+<P><FONT face=Tahoma>I also ran into an interesting optimization issue. </FONT></P>
+<P><FONT face=Tahoma>Let's say that this is one of the functions (it is not, but it is close enough):</FONT></P>
+<BLOCKQUOTE dir=ltr>
+<P><FONT face="Courier New"><STRONG>int __stdcall<BR>GodotAddFontResourceW(LPCWSTR lpszFilename)<BR>{<BR>&nbsp;&nbsp;&nbsp; if(IS_ON_NT())<BR>&nbsp;&nbsp;&nbsp; {<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; return AddFontResourceW(lpszFilename);<BR>&nbsp;&nbsp;&nbsp; }<BR>&nbsp;&nbsp;&nbsp; else<BR>&nbsp;&nbsp;&nbsp; {</STRONG></FONT></P>
+<P><FONT face="Courier New"><STRONG>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // Insert the wrapper here to convert the<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; //&nbsp;the string and call AddFontResourceA.<BR></STRONG></FONT><FONT face="Courier New"><STRONG>&nbsp;&nbsp;&nbsp; }<BR>}</STRONG></FONT></P></BLOCKQUOTE>
+<P><FONT face=Tahoma>Now I and others looked at that code and the fact that we were getting parameters that were identical to what the OS wanted -- so couldn't we just jump right to it in assembly language, changing the </FONT></P>
+<BLOCKQUOTE dir=ltr>
+<P><FONT face=Tahoma><FONT face="Courier New"><STRONG>return AddFontResourceW(lpszFilename);</STRONG></FONT></FONT></P></BLOCKQUOTE>
+<P><FONT face=Tahoma>to a</FONT></P>
+<BLOCKQUOTE dir=ltr>
+<P><FONT face=Tahoma><FONT face="Courier New"><STRONG>__asm jmp AddFontResourceW</STRONG></FONT></FONT></P></BLOCKQUOTE>
+<P><FONT face=Tahoma>instead?</FONT></P>
+<P><FONT face=Tahoma>I mean, thinking about functions that take a lot of parameters -- the time you would save pushing parameters onto the stack twice alone would be a win, right?</FONT></P>
+<P><FONT face=Tahoma>Unfortunately, this assumption is actually <EM>wrong</EM>. Using a <STRONG>jmp</STRONG> here actually makes the DLL 50% bigger and a little slower, too!</FONT></P>
+<P><FONT face=Tahoma>It turns out that the compiler is smart enough all on its own to handle these kinds of situations. But when you plunk down inline assembly, it stops doing many of the basic optimizations. So I can actually do better here by not trying to be quite so clever....</FONT></P><FONT face=Tahoma>
+<P><FONT face=Tahoma>I have to admit that it was a little sad since I had not been able to use inline assembler in a long time. It&nbsp; was exciting to do it again, though it would have been cooler if I had been able to actually use it. :-)</FONT></P>
+<P>Anyway, thats why and how MSLU forwards calls that belong to the OS any time they are received. </FONT></P>
+<P><FONT face=Tahoma></FONT>&nbsp;</P>
+<P><FONT face=Tahoma><FONT color=#ff0000><EM>This post brought to you by</EM> "<FONT size=5>લ</FONT>" <EM>(<A href="http://www.fileformat.info/info/unicode/char/0ab2/index.htm">U+0ab2</A>, a.k.a. GUJARATI LETTER LA)</EM></FONT></FONT></P>
+<hr/><p><a id="416658" href="#416658">#</a> <strong>Eusebio Rufian-Zilbermann</strong> on 11 May 2005 6:39 PM:</p><div style="margin-left: 1em">Your adding code to each API function reminds me of a conversation I had with a Microsoft developer about a case of enabling CJK display in non-CJK systems. He asked me if I knew how it could be done. I thought it was one of those &quot;trick&quot; questions with an ellegant sollution and after thinking for a minute and not figuring it out I ended up saying I didn't know. He just said: &quot;We created dlls with all the APIs patched&quot;. Sometimes brute force is the solution, and because of the many rules and exceptions we have to deal with, those of us working in internationalization we often get an extra dose...</div>
+<p><strong>Yuhong Bao</strong> on 12 Apr 2009 1:48 AM:</p><div style="margin-left: 1em"><p>Unfortuately, disassembling with IDA Pro, there seems to be many functions in the latest version of UNICOWS.DLL where this optimization was not performed by the compiler.</p></div>
+<p><strong>Michael S. Kaplan</strong> on 13 Apr 2009 2:39 AM:</p><div style="margin-left: 1em"><p>In another blog on this Blog, I pointed out that over 250 of the functions have additional code in them -- that is what you are seeing here, I believe.</p>
+</div>
+<p><strong>Yuhong Bao</strong> on 14 Mar 2010 5:36 PM:</p><div style="margin-left: 1em"><p>And I realize it now after looking at it another time.</p>
+</div>
+<hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2006/09/02 <a href="http://archives.miloush.net/michkap/archive/2006/09/02/736881.html">Every character has a story #23: U+00ad (SOFT HYPHEN)</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2005/05/11/416717.html" title="Dealing with backcompat across many versions">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2005/05/11/416552.html" title="UCS-2 vs. UTF-16 (not quite Kramer vs. Kramer)">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2005-05">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2005-05-11">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2005/05/11/416624.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:41 GMT -->
+</html>

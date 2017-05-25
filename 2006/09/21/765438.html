@@ -1,0 +1,32 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2006/09/21/765438.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:39 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Font sizes vary more than one might expect</title></head><body>
+<h1>Font sizes vary more than one might expect</h1>
+<p><em>by Michael S. Kaplan, published on 2006/09/21 21:35 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2006/09/21/765438.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<FONT face=Tahoma>
+<P>Regular reader Mike Dimmick commented in response to a post I did <STRONG><A href="http://archives.miloush.net/michkap/archive/2006/09/20/763219.html">yesterday</A></STRONG>: </P>
+<BLOCKQUOTE dir=ltr style="MARGIN-RIGHT: 0px">
+<P><FONT face="Times New Roman" size=2>The Windows CE team decided on Tahoma 9pt as their system font way back in the mists of antiquity, so I'm used to it. <BR><BR>And if you want the 'normal' Windows 2000/Office 2000 appearance, you actually want 8.25pt, because 8pt gives you a different pixel count. </FONT></P></BLOCKQUOTE>
+<P>The real situation is slightly more complicated (though still quite interesting) and it came up in another question that was asked the other day: </P><FONT face="Times New Roman" size=2>
+<BLOCKQUOTE dir=ltr style="MARGIN-RIGHT: 0px">
+<P><STRONG>GDI part of the question:</STRONG></P>
+<BLOCKQUOTE dir=ltr style="MARGIN-RIGHT: 0px">
+<P>&nbsp;I found the following explanation on a newsgroup:<BR><BR>You cannot set the size of a font to any value you want. This is because Windows does all its graphic work in pixels and it therefore likes to set the font size to a value that will result in an integer pixel value. So, if you are running at the standard Windows Small Fonts Setting (15 Twips per pixel) then Windows will set display font sizes to the nearest value that results in an exact multiple of 15 Twips (or an integer value of pixels). <BR><BR>For example, if you set a Text Box font to Arial size 10 (which is effectively asking for a font size of 200 Twips, since there are always 20 Twips per Point) then you are effectively asking Windows to set the font size to 200/15 pixels (since there are 15 Twips per Pixel at the standard Windows setting as mentioned above). That means you are asking Windows for a font size of (10 * 20) / 15 =&nbsp; 13.3333 pixels. Windows doesn't like this, and so it will actually set the font size to 9.75 Points, resulting in a font size of (9.75 * 20) / 15 = 13 pixels. Ask for a size of 12, however, and you will get what you ask for, because (12 * 20) / 15 = 16 and is an integer. <BR><BR>Is this correct?</P></BLOCKQUOTE>
+<P><STRONG>&nbsp;Windows Forms part:</STRONG></P>
+<BLOCKQUOTE dir=ltr style="MARGIN-RIGHT: 0px">
+<P>It appears that if I assign a font of ‘Arial, 10pt” to the TabControl, it treats it as if the size is 9.75.&nbsp; When it calculates the tab width, and when it draws the text.&nbsp; The problem is I have taken over drawing the text, but it is still calculating the tab width.&nbsp; When I use a font of “Arial, 10pt” with the TextRenderer it truly uses a 10pt size.&nbsp; This means on some tabs I overflow the tab.</P></BLOCKQUOTE></BLOCKQUOTE></FONT>
+<P>The truth is essentially much more sordid than Mike was thinking, and at least as sordid as this other situation where the scaling, which differs between</P>
+<UL>
+<LI>managed controls using GDI+, </LI>
+<LI>managed controls using GDI through the .NET 2.0 TextRenderer,</LI>
+<LI>unmanaged controls using GDI, and </LI>
+<LI>managed wrappers around unmanaged conrtols, which can work like any of these.</LI></UL>
+<P>So determining how best to scale is going to always be dependent on both the control type and the rendering technology, and thus any measuring that is done with them has to take that into account....</P>
+<P>One workaround that can be used is to ALWAYS request font sizes that will be on the right pixel boundary for GDI -- thus the size that is passed will be the same as the rounded size would be. </P>
+<P>Note that this means you have to set the font size at runtime, since the twips and pixel settings can be different depending on runtime settings....</P>
+<P>&nbsp;</P>
+<P><FONT color=#ff1493><EM>This post brought to you by</EM> <FONT size=6><STRONG>ꇜ</STRONG></FONT> <EM>(<A href="http://www.fileformat.info/info/unicode/char/a1dc">U+a1dc</A>, YI SYLLABLE GI)</EM></FONT></P></FONT>
+<hr/><div style="margin-left: 1em"><em>no comments</em></div><hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2011/06/10 <a href="http://archives.miloush.net/michkap/archive/2011/06/10/10173190.html">What do fonts and keyboards have in common? Not "crap bag" compatibility!</a></p><p>2008/02/28 <a href="http://archives.miloush.net/michkap/archive/2008/02/28/7934894.html">Font size scaling -- GDI vs. GDI+</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2006/09/22/765506.html" title="Inaccurate localization can make you bust out laughing">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2006/09/21/764291.html" title="Aim higher if you are trying to hit Plane 2!">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2006-09">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2006-09-21">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2006/09/21/765438.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:39 GMT -->
+</html>

@@ -1,0 +1,64 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2010/11/24/10095816.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>UTF-8 on a platform whose support is overwhelmingly, almost oppressively, UTF-16</title></head><body>
+<h1>UTF-8 on a platform whose support is overwhelmingly, almost oppressively, UTF-16</h1>
+<p><em>by Michael S. Kaplan, published on 2010/11/24 07:01 -05:00, original URI: http://blogs.msdn.com/b/michkap/archive/2010/11/24/10095816.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<p>I had some developers running an interesting scenario by me the other day.</p>
+<p>They had some strings that were being kept in a cache.</p>
+<p>Pretend that the title has given you no clues as to what is about to happen, please.</p>
+<p><em>The nature of the strings and the purpose of the cache isn't relevant to the topic of this blog, I'll just say that the strings aren't file paths but are potentially much longer than that.</em></p>
+<p>Anyway, the cache itself had certain limitations which amount to a maximum size per string, and the strings themselves can be visible to the user.</p>
+<p>If you are a regular long-time reader here then at this point, your first thought may be the same as mine was -- the&nbsp;lessons&nbsp;from my whole <a href="http://archives.miloush.net/michkap/archive/2009/06/29/9800913.html" title="UCS-2 to UTF-16 series"><strong>UCS-2 to UTF-16 series</strong></a>, in particular the blogs within it dealing with truncation and not changing the meaning/appearance of the strings in unexpected ways.</p>
+<p>Under ordinary circumstances, that would handle it --somewhere between implementing nothing in that series and (to cover all of the locale-specific and linguistic issues)&nbsp;implementing all 110% of it, the truth lies (sadly enough in most cases the final decision ends up closer to the 0% than the 110%, but finding that sad&nbsp;is the occupational hazard of being me, something I wouldn't recommend if you can avoid it!).</p>
+<p>However, in this case there was an additional complication.</p>
+<p>The string cache I mentioned? The strings were being stored in UTF-8.</p>
+<p>In fact, they were looking for help since their attempted solution code was using <a href="http://msdn.microsoft.com/library/dd318667.aspx">IsDbcsLeadByteEx</a> and <a href="http://msdn.microsoft.com/library/ms647470.aspx">CharNextExA</a>, neither of which seemed to support UTF-8.</p>
+<p>Very true, neither function does (I previously discussed this in <a href="http://archives.miloush.net/michkap/archive/2007/04/19/2190207.html" title="Is CharNextExA broken?"><strong>Is CharNextExA broken?</strong></a>).</p>
+<p>And now we have a ball game.</p>
+<p>The problem here points to a different smaller series, the You may want to rethink your choice of UTF one:</p>
+<ul>
+<li><a href="http://archives.miloush.net/michkap/archive/2005/05/20/420317.html" title="You may want to rethink your choice of UTF, #1 (if the size matters)"><strong>Part #1 (if the size matters)</strong></a></li>
+<li><a href="http://archives.miloush.net/michkap/archive/2005/05/22/420822.html" title="Part #2 (Speed of operations)"><strong>Part #2 (Speed of operations)</strong></a></li>
+<li><a href="http://archives.miloush.net/michkap/archive/2005/05/25/421828.html" title="Part #3 (Platform?)"><strong>Part #3 (Platform?)</strong></a></li>
+</ul>
+<p>In this particular case, the tripping point is in Part #3 -- by implementing a solution using UTF-8 on a platform whose support is overwhelmingly, almost oppressively, UTF-16.</p>
+<p>Certainly one can crack the byte semantics of UTF-8 (you can use the information in <a href="http://archives.miloush.net/michkap/archive/2005/05/21/420708.html" title="Getting exactly ONE Unicode code point out of UTF-8"><strong>Getting exactly ONE Unicode code point out of UTF-8</strong></a>&nbsp;as a roadmap), and figure out code point boundaries.</p>
+<p>But if one is using either native or managed&nbsp;code coming from Microsoft, then all of the rest of the goodies aren't available to you, since all of that is in UTF-16.</p>
+<p><em>Maybe it's time to talk to someone about that implementation decision to use UTF-8 here?</em></p>
+<p>Okay, most of the time in these situations if someone is talking to me at the point where they are asking the "Does CharPrevExA support UTF-8?" question, then my knowledge isn't the issue, and neither is my ability to make implementation suggestions.</p>
+<p>At this point everything is already written and potentially already shipped in some other, lesser manner that is only now being looked at in order to try and fix this problem.</p>
+<p>I don't take it personally. :-)</p>
+<p>Things are now complicated though.</p>
+<p>If the string is too long, one has to walk back a certain number of bytes, and that number can only be known after one knows a lot more about the characters....</p>
+<p>There is no easy answer here.</p>
+<p>Though thinking&nbsp;about the&nbsp;Microsoft developer interview question, how would you attack the problem?</p>
+<p><em>And don't suggest including ICU, we don't currently do that, as I <a href="http://archives.miloush.net/michkap/archive/2010/11/23/10095182.html">said</a> yesterday!</em></p>
+<hr/><p><strong>Stuart</strong> on 24 Nov 2010 9:20 AM:</p><div style="margin-left: 1em"><p>OK, I&#39;ll give it a shot.</p>
+<p>I would take advantage of the fact that every byte in a UTF-8 encoding can be put into one of six categories (depending on its value).</p>
+<p>1. Values: 00-7F - Single byte character (SB)</p>
+<p>2. Values: 80-BF - Trailing byte (TB)</p>
+<p>3. Values: C0-DF - Leading byte of two byte character (LB2)</p>
+<p>4. Values: E0-EF - Leading byte of three byte character (LB3)</p>
+<p>5. Values: F0-F7 - Leading byte of four byte character (LB4)</p>
+<p>6. Values: F8-FF - Illegal (ILL)</p>
+<p>And every Unicode code point is encoding into UTF-8 in one of four forms.</p>
+<p>1. SB</p>
+<p>2. LB2 TB</p>
+<p>3. LB3 TB TB</p>
+<p>4. LB4 TB TB TB</p>
+<p>then if I wanted a solution similar to CharNextExA, I would write a function something like this:</p>
+<p>LPSTR UTF8CharNext(LPCSTR lpCurrentChar, UINT32 *pCodePoint);</p>
+</div>
+<p><strong>Joshua</strong> on 24 Nov 2010 2:36 PM:</p><div style="margin-left: 1em"><p>They tell me &quot;Don&#39;t truncate strings.&quot;</p>
+<p>Therefore I conclude if its too long, bail the insert.</p>
+</div>
+<p><strong>jmdesp</strong> on 25 Nov 2010 3:30 PM:</p><div style="margin-left: 1em"><p>My first though would to ask &quot;Are you sure you need to know where the characters are ? As long as you don&#39;t *edit* the string you don&#39;t need to&quot;. In this case there&#39;s truncation so that counts as edition, but it&#39;s surprising the number of people who are convinced they need to do very complex things when in fact they just want to know where the string ends, and don&#39;t actually need to handle individual characters. &quot;Stop caring&quot; is surprisingly often the correct answer to &quot;where are the characters&quot;.</p>
+<p>My second would be to say &quot;Do you realize even if CharPrevExA, or the like, supported UTF-8 that would still *not* be enough to do things properly in a large number of cases ?&quot;. The first obvious case is combining characters, but actually if you go deep inside things, clean truncation can only be done once you know in which language, or according to which locale rules it should be done. Only positions where the language rules say hyphenation can occur are definitively places where it&#39;s guaranteed nothing inappropriate at all can happen if you truncate.</p>
+<p>So you need to define what is &quot;good enough&quot; for your need. Once you&#39;ve done that I&#39;d say most of the time the most appropriate is to convert the whole string to UTF16 using MultiByteToWideChar and then have the whole WIN32 i18n API available. Once you&#39;re done truncating, convert back to UTF8 with WideCharToMultiByte.</p>
+<p>But if you define that truncating at code point boundary is good enough for you, then maybe you don&#39;t need to do that much. Any UTF8 char is unambiguously either a one byte sequence, the start of a longer sequence, or in the middle of a sequence. &nbsp;In fact, if the value is lower than C0, it&#39;s the start of a sequence (of maybe only one byte), else the middle of one. So you just need to go back, comparing each byte to C0, and can truncate just before as soon as you find one that&#39;s lower than that. Note that UTF8 is the *only* multibyte encoding that&#39;s that convenient and easy WRT finding where the code point boundaries are.</p></div>
+<p><strong>Yuhong Bao</strong> on 26 Nov 2010 7:49 PM:</p><div style="margin-left: 1em"><p>Yea, IsDBCSLeadByteEx do not even make sense for character sets that is more than two byte per char.</p>
+</div>
+<hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2010/11/25/10095782.html" title="One Uyghur walked into a Blog, and...">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2010/11/23/10095182.html" title="Perhaps not evil, but certainly getting hella snarky">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2010-11">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2010-11-24">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2010/11/24/10095816.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+</html>

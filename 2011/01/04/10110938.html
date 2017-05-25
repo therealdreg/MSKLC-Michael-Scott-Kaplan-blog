@@ -1,0 +1,136 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2011/01/04/10110938.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Short-sighted text processing #4: Squeezing every bit of text you possibly can out of MacOffice 2011</title></head><body>
+<h1>Short-sighted text processing #4: Squeezing every bit of text you possibly can out of MacOffice 2011</h1>
+<p><em>by Michael S. Kaplan, published on 2011/01/04 07:01 -05:00, original URI: http://blogs.msdn.com/b/michkap/archive/2011/01/04/10110938.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<p>Previous blogs in this series:</p>
+<ul>
+<li><a href="http://archives.miloush.net/michkap/archive/2010/12/18/10106789.html"><strong><span style="color: #006bad;">#1: Uniscribe filters nothing</span></strong></a></li>
+<li><a href="http://archives.miloush.net/michkap/archive/2010/12/20/10107008.html"><strong><span style="color: #006bad;">#2: Getting hurt while playing on the bleeding edge</span></strong></a></li>
+<li><a href="http://archives.miloush.net/michkap/archive/2010/12/30/10110184.html" title="#3: The Protocols of the EDIT for i18n"><strong>#3: The Protocols of the EDIT for i18n</strong></a></li>
+</ul>
+<p>&nbsp;Let's change tracks for a bit, and head over to Mac OS X and Office 2011. it can't always about Uniscribe, can it?</p>
+<p>Oh, wait.</p>
+<p><img height="324" width="442" src="http://blogs.msdn.com/cfs-file.ashx/__key/CommunityServer-Blogs-Components-WeblogFiles/00-00-00-33-81/4075.UniscribeFramework.jpg" /></p>
+<p>I guess it can! :-)</p>
+<p>Yes, I finally got MacOffice 2011 installed (see <a href="http://archives.miloush.net/michkap/archive/2010/12/02/10099342.html"><strong>here</strong></a> for more about <em>those</em> travails).</p>
+<p>Now the text processing story on OS X and on Mac Office is an interesting one, more because of the differences between OT (OpenType) vs. AAT (Apple Advanced Typography) on the Apple platform than the general philosophical&nbsp;Microsoft vs. Apple (<a href="http://archives.miloush.net/michkap/archive/2007/06/15/3307647.html" title="The pixel grid vs. the font designer"><strong>The pixel grid vs. the font designer</strong></a>) differences.</p>
+<p>Now almost every&nbsp;font maker&nbsp;I have talked to likes AAT better than OT, and some of them can even articulate reasons for this. In fact,&nbsp;that issue might make a good blog on its own in the future. But for now I will focus only on the upshot for Tamil support.</p>
+<p>I'll mention Tom Gewecke's question from the Suggestion Box:</p>
+<p style="padding-left: 30px;"><span style="font-family: times new roman,times;">Do you still have a MacBook? &nbsp;As you probably know, Office for Mac is notorious for its inability to do RTL, Indic, and numerous other scripts which Office for Windows and all other Mac apps can handle. &nbsp;But I think that the new Office 2011 may be able to do Tamil, which I know is a favorite of yours. &nbsp;It is listed in the keyboard support Help and I think the InaMaithai font is recognized. &nbsp;I'm not able to test this myself, as there is no free trial and I don't use Office, but you might want to see if it really does correct Tamil. &nbsp;That would be something of a breakthrough.<br /><br /></span><span style="font-family: times new roman,times;">Office 2008 claimed to do Tamil when it came out, but as far as I know that was incorrect, it could never recognize the right font and generated boxes or other garbage.</span></p>
+<p>There are also a few interesting blog comments elsewhere like <a href="http://m10lmac.blogspot.com/2010/11/ms-office-2011-language-support.html">MS Office 2011 Language Support </a>&nbsp;where Tom specifically questions whether Tamil works at all&nbsp;and <a href="http://www.officeformac.com/ms/ProductForums/Word/12007/0">this product support forum page</a> where as far as I can tell someone is claiming it works while other have problems.</p>
+<p>For now, let's just go in and try to make everything work.</p>
+<p>First I'll add some fonts to Mac OS X, in their own special group, to support Tamil (one is already there, two others I will add):</p>
+<p><img src="http://blogs.msdn.com/cfs-file.ashx/__key/CommunityServer-Blogs-Components-WeblogFiles/00-00-00-33-81/0410.FontList01.jpg" /></p>
+<p>The three fonts shown here in Font Book, are:</p>
+<ul>
+<li>InaiMathi -- the AAT font that ships with OS X and supports Tamil;</li>
+<li>Latha -- the OT font that ships with Windows; Disclosure: <em>I was in violation of my license for a few days before I took this font off my Mac partition</em>;</li>
+<li>Anajl Munivar -- A font provided to me by my friend Muthu Nedumaran that has both OT and AAT support in it.</li>
+</ul>
+<p>Now there are no cases where Latha worked 100% of the the time but one case where it worked some of the time;&nbsp;(suggesting some OpenType support). There is one case where InaiMathi did not work at all, suggesting that app has no AAT support at all. There&nbsp;is just one case where only Anjal Muivar worked completely, which suggests that supporting both OT and AAT simultaneously gives some benefit, though no font shipping in OS X and/or Mac Office does this at present, for Indic at least. </p>
+<p>There are some dangers in this kind of indirect speculation about support but good and bad results both make for a compelling case for what works (and doesn't), even if not for the backstory behind what works (and doesn't).</p>
+<p>Obviously, the OT support between Latha and Anjal Munivar may not be exactly the same (there are sometimes different ways to solve the same problem in OpenType, with the downside being that they may not all be supported fully -- this is especially true here!).</p>
+<p>Let me also say that Muthu Nedumaran's help -- both to Apple (to whom he provided the input methods) and to me (to whom he provided several of the bug reports you'll be seeing below, and the font that works nearly everywhere) -- has been invaluable, and highly appreciated. Thanks, Muthu!</p>
+<p>Now let's look at each Office application:</p>
+<p><img src="http://blogs.msdn.com/cfs-file.ashx/__key/CommunityServer-Blogs-Components-WeblogFiles/00-00-00-33-81/7824.FontList02.jpg" /></p>
+<p><img src="http://blogs.msdn.com/cfs-file.ashx/__key/CommunityServer-Blogs-Components-WeblogFiles/00-00-00-33-81/0383.FontList03.jpg" /></p>
+<p><img height="507" width="986" src="http://blogs.msdn.com/cfs-file.ashx/__key/CommunityServer-Blogs-Components-WeblogFiles/00-00-00-33-81/8473.FontList04.jpg" /></p>
+<p><img src="http://blogs.msdn.com/cfs-file.ashx/__key/CommunityServer-Blogs-Components-WeblogFiles/00-00-00-33-81/7673.FontList05.jpg" /></p>
+<p>Wow, interesting! Even though the font is in Font Book, only Outlook puts it in the font list of all the Mac Office 2011 applications! The rest show my custom group but only with the two fonts that have AAT support! Or maybe the filtering is done for some other reason.</p>
+<p><em>The big font list has the same story; my custom font group is just for your benefit, as it&nbsp;makes it easier to see results all at once</em>.</p>
+<p>Okay, let's look at actual support in the apps of Tamil, a script that requires some amount of glyph reordering and glyph substitution (relatively speaking, a smaller amount than some other Indic scripts).</p>
+<p>I will use&nbsp;the Anjal keyboard, which also ships with OS X and which I wish shipped in Windows (and would if not for some unrelated short-sighted text&nbsp;issues that maybe I can discuss another day!).</p>
+<p>It is inconceivable that the Mac Office test team would have been unable to have done this kind of testing before the product shipped....</p>
+<p>Let's take some text and try things out with as many fonts as each application will let us try:</p>
+<p><img src="http://blogs.msdn.com/cfs-file.ashx/__key/CommunityServer-Blogs-Components-WeblogFiles/00-00-00-33-81/2388.FontSupportExcel.jpg" /></p>
+<p><img src="http://blogs.msdn.com/cfs-file.ashx/__key/CommunityServer-Blogs-Components-WeblogFiles/00-00-00-33-81/5460.FontSupportPowerPoint.jpg" /></p>
+<p><img src="http://blogs.msdn.com/cfs-file.ashx/__key/CommunityServer-Blogs-Components-WeblogFiles/00-00-00-33-81/8535.FontSupportWord.jpg" /></p>
+<p><img src="http://blogs.msdn.com/cfs-file.ashx/__key/CommunityServer-Blogs-Components-WeblogFiles/00-00-00-33-81/8551.FontSupportOutlook.jpg" /></p>
+<p>Now this is all pretty fascinating -- especially the way Word seems to only do OpenType (yet blocks the OpenType only font) while Excel and PowerPoint seem to only do AAT, while Outlook seems comfortable sort of doing both.</p>
+<p>Though that Outloook support?&nbsp;It is deceptive, I'll explain why in a moment.</p>
+<p>First we'll try a little matrix of support for all applications:</p>
+<table cellpadding="5" cellspacing="5" border="1">
+<tbody>
+<tr>
+<td style="TEXT-ALIGN: center"><strong>Application</strong></td>
+<td style="TEXT-ALIGN: center"><strong>AAT <br />Support</strong></td>
+<td style="TEXT-ALIGN: center"><strong>OpenType <br />support</strong></td>
+</tr>
+<tr>
+<td>Word</td>
+<td>NO</td>
+<td>MOSTLY</td>
+</tr>
+<tr>
+<td>PowerPoint</td>
+<td>YES</td>
+<td>NO</td>
+</tr>
+<tr>
+<td>Excel</td>
+<td>YES</td>
+<td>NO</td>
+</tr>
+<tr>
+<td>Outlook</td>
+<td>YES</td>
+<td>KINDA</td>
+</tr>
+</tbody>
+</table>
+<p>Here you can see some broken text,&nbsp;in an Outlook message&nbsp;-- if you try to type my name (Michael) in Tamil in Outlook using the Latha font (click on the image to see how it looks&nbsp;it typed one character at a time):</p>
+<p><a target="_blank" href="http://blogs.msdn.com/cfs-filesystemfile.ashx/__key/CommunityServer-Blogs-Components-WeblogFiles/00-00-00-33-81/8640.Outlook.gif"><img src="http://blogs.msdn.com/cfs-filesystemfile.ashx/__key/CommunityServer-Blogs-Components-WeblogFiles/00-00-00-33-81/6874.Outlook11.jpg" border="1" /></a></p>
+<p>&nbsp;To repro it, you would just type &lt;SPACE&gt;&lt;m&gt;&lt;a&gt;&lt;i&gt;&lt;k&gt;&lt;k&gt;&lt;a&gt;&lt;l&gt;&lt;SPACE&gt;. If&nbsp;you look at the first two letters of that string on top, they are not properly reordered in the case where Latha is used.</p>
+<p>So OpenType is supported here, somewhat. Though it appears to be OpenType support minus </p>
+<ul>
+<li>GSUB (<a href="http://partners.adobe.com/public/developer/opentype/index_table_formats1.html">The Glyph Substitition Table</a>)</li>
+<li>GPOS (<a href="http://partners.adobe.com/public/developer/opentype/index_table_formats2.html">The Glyph Positioning Table</a>)</li>
+</ul>
+<p>which&nbsp;as any OoenType expert will tell you is really is not all that supportive yet (these are again some core tables, especially GSUB).</p>
+<p>Given that OpenType support is incomplete in OS X itself and MacOffice 2011 has that "Uniscribe framework component", I assume this bug is mostly on the Microsoft side, with some strange negotiation between the two potential OpenType support sides, unless it is just MacOffice's fault entirely, of course. This might also help explain some if the differences between Outlook and Word.</p>
+<p>I have to wonder, though. These tables obviously have to work for other scripts that are supported or otherwise there is no support at all. So why would they go to the trouble to add shaping engines that don't even support the easy stuff that the font maker can specify before the full support is available? This seems like a bad decision, whoever is ignoring these crucial pieces of OpenType like GSUB/GPOS&nbsp;that can a long way for font authors in the "fake it til you make it" department....</p>
+<p>To be honest this is one of the reasons that font makers can prefer AAT to OpenType: they don't have be so much at the mercy of what isn't in the shaping engine(s) yet.</p>
+<p>And of course there is the fact that Word doesn't support AAT in the meantime; this seems very short-sighted. As does the very poor job the clipboard does when you move between these different apps that may be using different fonts. It suggests that there is no good notion of font fallback or interop there, either.</p>
+<p>Overall, the fact that it is possible to get these languages working but not enough interop work to get one around the rough spots is really unfortunate. Because some of that interop work would really have allowed Mac Office 2011 to fail more gracefully while support is not fully there yet (one of the most crucial&nbsp;points of the Office suite is interop between the various Office applications).</p>
+<p>And there are other problems too.</p>
+<p>Like the fact that Word does not show some combined forms properly that the input method tries to add (e.g. click on these three pictures to see the effect of typing &lt;SPACE&gt;&lt;n&gt;&lt;a&gt;&lt;n&gt;&lt;a&gt;&lt;SPACE&gt; in TextEdit and PowerPoint and Word, where the first two&nbsp;look correct&nbsp;and the third does not):</p>
+<p><a target="_blank" href="http://blogs.msdn.com/cfs-filesystemfile.ashx/__key/CommunityServer-Blogs-Components-WeblogFiles/00-00-00-33-81/0027.TextPad.gif"><img src="http://blogs.msdn.com/cfs-filesystemfile.ashx/__key/CommunityServer-Blogs-Components-WeblogFiles/00-00-00-33-81/6888.TextPad07.jpg" border="0" /></a></p>
+<p><a target="_blank" href="http://blogs.msdn.com/cfs-file.ashx/__key/CommunityServer-Blogs-Components-WeblogFiles/00-00-00-33-81/4572.PowerPoint.gif"><img src="http://blogs.msdn.com/cfs-filesystemfile.ashx/__key/CommunityServer-Blogs-Components-WeblogFiles/00-00-00-33-81/7444.PowerPoint07.jpg" border="0" /></a></p>
+<p><a target="_blank" href="http://blogs.msdn.com/cfs-filesystemfile.ashx/__key/CommunityServer-Blogs-Components-WeblogFiles/00-00-00-33-81/7840.Word.gif"><img src="http://blogs.msdn.com/cfs-filesystemfile.ashx/__key/CommunityServer-Blogs-Components-WeblogFiles/00-00-00-33-81/7416.Word07.jpg" border="0" /></a></p>
+<p>That is a bug. Something Word is doing to the input stream.</p>
+<p>And even beyond that there are other random display&nbsp;issues.</p>
+<p>Like if you&nbsp;type certain strings in PowerPoint you will see visual weirdness like the following (click on the picture to see it "typed"):</p>
+<p><a target="_blank" href="http://blogs.msdn.com/cfs-file.ashx/__key/CommunityServer-Blogs-Components-WeblogFiles/00-00-00-33-81/0317.Broken.gif"><img src="http://blogs.msdn.com/cfs-file.ashx/__key/CommunityServer-Blogs-Components-WeblogFiles/00-00-00-33-81/6560.Broken09.jpg" border="0" /></a></p>
+<p>Now note that this type of problem in PowerPoint is two-fold; first the cursor ends up between the "m" and the "ai" and then that weird space appears that you can see above. But these problems in PowerPoint do not corrupt the actual text, it just leads to ugliness in the display. However, problems like this can really affect overall usability.</p>
+<p><strong><span style="font-size: large;">So, to sum up, the answer to the question "does Office 2011 support Tamil?".</span></strong></p>
+<p>I'd say at a "beta quality" level, it does. </p>
+<p>But if you are looking for the kind of&nbsp;polish in each and any app, or good interop between them, then you are waiting for either a mondo service pack or a new version....</p>
+<hr/><p><strong>Daniel</strong> on 4 Jan 2011 8:47 AM:</p><div style="margin-left: 1em"><p>I wonder if tweaking Word&#39;s Advanced typography settings in Format - Font - Advanced would make a difference.</p>
+<p>That&#39;s how you can turn on ligatures and such for simpler scripts at least.</p>
+<p>I also found that fonts often go missing in Office 2011 font listings, but I thought it&#39;s due to having a large number of fonts installed on your system.</p>
+</div>
+<p><strong>orcmid</strong> on 4 Jan 2011 12:41 PM:</p><div style="margin-left: 1em"><p>Oh my. &nbsp;Is there some sort of reference implementation or tool somewhere that would show folks how to get this right?</p>
+</div>
+<p><strong>Rick Schaut</strong> on 4 Jan 2011 1:20 PM:</p><div style="margin-left: 1em"><p>Michael,</p>
+<p>First, thanks for noticing Mac Office! We toil over here in the netherlands (well, less so now that we&#39;re in MOD and have moved from bldg 115 to bldg 31), doing the best we can with the resources we have, and, as you&#39;ve noticed, that leads to some interesting trade-offs.</p>
+<p>One of these days, I&#39;ll get around to writing a complete blog post about this, but a couple of points to keep in mind with Mac Office:</p>
+<p>1) Both Mac Office and Mac OS are in transition regarding text rendering. Among other things, ATSUI is now deprecated. This transition means that putting effort into getting things like Tamil and RTL languages right would have involved work that we&#39;d have to throw away in the very near future.</p>
+<p>2) While compatibility with Win Office is an important design decision for Mac Office, each of the four apps defines &quot;compatible&quot; in rather different terms. Outlook, for example, defines &quot;compatibility&quot; in terms of support for the services of Exchange, while, for Excel, the most important compatibility issue involves dates. As a consequence, we actually have four different text rendering engines in Mac Office. Outlook uses WebKit. Word, where line and page layout are the most important issues, uses a combination of PTLS, Uniscribe and ATSUI.</p>
+<p>Lastly, I&#39;ll endorse Daniel&#39;s suggestion to play with Word&#39;s advanced typography settings in the Format/Font dialog box. You can also add the Typography pod to the Ribbon via Word/Preferences/Ribbon.</p></div>
+<p><strong>Michael S. Kaplan</strong> on 4 Jan 2011 4:19 PM:</p><div style="margin-left: 1em"><p>Hi Rick,</p>
+<p>I did try the advanced typography settings but it did not really help. For Word, the #1 font was the font that had both AAT and OT (this is something that does not ship by default so it would require a third party font such as Muthu&#39;s) and there still do remain some issues that I hope can be fixed in the future. I am definitely happy to help in any way I can, though. :-)</p></div>
+<p><strong>Michael S. Kaplan</strong> on 5 Jan 2011 4:17 AM:</p><div style="margin-left: 1em"><p>In the end though, my fondest hope is that there is a tester or testers over there who can extract the bugs from this blog so that they can be addressed in the future, where it makes sense....</p>
+</div>
+<p><strong>Kalaimani  (Singapore)</strong> on 30 Jan 2011 6:20 AM:</p><div style="margin-left: 1em"><p>Just to share...</p>
+<p>I had just completed a Tamil input driver based on the &#39;Old Typewriter layout&quot; with which I am more familiar with.</p>
+<p>I tested the driver with my own unicode font UniParanar and with Latha in WORD_MAC 2011.</p>
+<p>Happily, I could type successfully. However, I could not use the Inaimathi fontor Arial unicode which appeared as boxes.</p>
+<p>But I could not use my driver in Pages - GSUB did not work.</p>
+<p>Will do more testing using my driver and Tamil Unicode fonts in different programs.</p>
+<p>Kalaimani</p>
+<p>Singapore</p></div>
+<hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2011/08/10 <a href="http://archives.miloush.net/michkap/archive/2011/08/10/10194367.html">'If you want a happy ending, it depends on where you stop the story.'</a></p><p>2011/01/06 <a href="http://archives.miloush.net/michkap/archive/2011/01/06/10111881.html">Short-sighted text processing #6: OpenType and Apple and OpenType</a></p><p>2011/01/05 <a href="http://archives.miloush.net/michkap/archive/2011/01/05/10111348.html">Short-sighted text processing #5: PU[A]! That pad THAI is pretty spicy....</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2011/01/05/10111348.html" title="Short-sighted text processing #5: PU[A]! That pad THAI is pretty spicy....">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2011/01/03/10110996.html" title="Bad news: you may have to clear the cache; Good news: you *can* clear the cache">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2011-01">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2011-01-04">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2011/01/04/10110938.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+</html>

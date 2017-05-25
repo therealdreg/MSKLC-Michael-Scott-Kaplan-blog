@@ -1,0 +1,27 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2009/10/22/9911298.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:35 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Fastest? Perhaps. Wrongest? Certainly!</title></head><body>
+<h1>Fastest? Perhaps. Wrongest? Certainly!</h1>
+<p><em>by Michael S. Kaplan, published on 2009/10/22 07:01 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2009/10/22/9911298.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P>The question was deceptively simple:</P>
+<BLOCKQUOTE>
+<BLOCKQUOTE>
+<P><FONT face="times new roman,times">Hi,</FONT></P>
+<P><FONT face="times new roman,times">I used all three and I find ToLower() to be fastest .But the Msdn article says that ToLowerInvariant should be faster. </FONT><A href="http://msdn.microsoft.com/en-us/library/system.string.tolowerinvariant(VS.85).aspx"><FONT face="times new roman,times">http://msdn.microsoft.com/en-us/library/system.string.tolowerinvariant(VS.85).aspx</FONT></A><FONT face="times new roman,times"> . <BR>Which one is better with respect to performance. </FONT></P>
+<P><FONT face="times new roman,times">Results are ,</FONT></P>
+<P><FONT face="times new roman,times">173ms ToLower<BR>260ms ToLowerInvariant<BR>265ms ToLowerCultureInfoInvariant</FONT></P></BLOCKQUOTE></BLOCKQUOTE>
+<P>The results seem okay to me, it is the link that is off a bit....</P>
+<P>It is a matter of where/how you aim expectations.</P>
+<P>You see, starting in .Net 2.0 (and subsequent versions), "invariant" casing actually means "use the operating system casing results" and also "don't do those weird linguistic results".</P>
+<P>Thus just using ToLower() will cause you to miss hundreds of characters being mapped, and it will map some characters likely best left alone.</P>
+<P>Performance is&nbsp;one reasonable axis to use for the judging of results, but correctness is, too, right?</P>
+<P>The ad campaign "ToLower may be wrongest, but at least it can be fastest!" is unlikely to be as effective as that 5-year old using Windows 7. :-)</P>
+<hr/><p><strong>c</strong> on 6 Jan 2010 6:39 AM:</p><div style="margin-left: 1em"><P>No examples? :-|</P>
+<P>What would ToLower() miss? And which characters are likely best left alone?</P>
+<P>Aren't some languages more affected than others?</P></div>
+<p><strong>Michael S. Kaplan</strong> on 6 Jan 2010 9:51 AM:</p><div style="margin-left: 1em"><p>I have spoken, in many other blogs, about how the casing table was updated in Vista to add hundreds of case pairs that are not in the older tables .Net uses....</p>
+</div>
+<hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2009/10/24/9912471.html" title="On the avoidance of being too tired to move, and the iBot">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2009/10/21/9910388.html" title="On not discrimniating, and on overheating an iBot">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2009-10">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2009-10-22">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2009/10/22/9911298.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:35 GMT -->
+</html>

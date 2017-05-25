@@ -1,0 +1,47 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2006/11/29/1170815.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:39 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Where'd *that* language come from?</title></head><body>
+<h1>Where'd *that* language come from?</h1>
+<p><em>by Michael S. Kaplan, published on 2006/11/29 05:28 -05:00, original URI: http://blogs.msdn.com/b/michkap/archive/2006/11/29/1170815.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<FONT face="Segoe UI,Tahoma">
+<P>Now I have talked in the past about how the international settings of other accounts on the system can affect settings such as <STRONG><A class="" href="http://archives.miloush.net/michkap/archive/2005/01/07/348944.html" mce_href="http://archives.miloush.net/michkap/archive/2005/01/07/348944.html">the keyboard list in the logon dialog</A></STRONG> and <STRONG><A class="" href="http://archives.miloush.net/michkap/archive/2006/05/05/590504.html" mce_href="http://archives.miloush.net/michkap/archive/2006/05/05/590504.html">the actual setting of MS Shell Dlg and DEFAULT_GUI_FONT</A></STRONG>. </P>
+<P>The truth is that these other accounts can have interesting additional effects on any services that run under them, and these just happened to be two of the more noticeable affects.</P>
+<P>Until now, I mean. :-)</P>
+<P>The question Kenichi asked was simple enough:</P>
+<BLOCKQUOTE><FONT face="Times New Roman,Times"><I>
+<P>I am playing with Vista Ultimate and lang-pack and found some resources are not covered by MUI...<BR><BR>...the System Property dialog is not in French but in Japanese - Native Language of this installation.<BR><BR>Is this expected?</P></I></FONT></BLOCKQUOTE>
+<P>The question was asked of an alias I did not belong to, but&nbsp;luckily Tim Wegner of the MUI test team had the answer:</P>
+<BLOCKQUOTE><FONT face="Times New Roman,Times"><I>
+<P>This is expected...&nbsp;...The reason for the behavior you see is that the dialog is runs on an impersonated thread which by default uses the language selected at install time (Japanese in your case).&nbsp; The account you have set to French does not affect other accounts on the system.&nbsp; You can use the “Copy to reserved accounts…” button on the Adminstrative tab of intl.cpl to get the dialog to use French.&nbsp; Please be aware however that this will affect other accounts on your system that have not specifically set a language. </P></I></FONT></BLOCKQUOTE>
+<P>The fact that any dialog coming up under LUA a.k.a. UAC type elevation might show in a different language is going to be pretty obvious to anyone working on a machine with MUI installed. </P>
+<P>Thankfully this will not always happen, especially in mixed&nbsp;apps like our own Regional and Language Options that handle resource loading more consistently. But it will pop up sometimes, and when it does, it can be jarring. And not in a good way, especially if you don't know the other language....</P>
+<P>So even though this is currently considered by design, in the long run, I can imagine wanting to&nbsp;see this issue addressed by making it easier for these elevated dialogs to pick up the settings of the desktop they are sitting on top of even if they are not really interacting with it otherwise due to the isolation of these elevated processes. It simply makes sense for there to be such an option for resource loading, to allow things to feel more integrated.</P>
+<P mce_keep="true">&nbsp;</P>
+<P><FONT color=#ff00ff><EM>This post brought to you by</EM>&nbsp;<FONT size=4>ஹ</FONT> <EM>(<A class="" href="http://www.fileformat.info/info/unicode/char/0bb9" mce_href="http://www.fileformat.info/info/unicode/char/0bb9">U+0bb9</A>, a.k.a. TAMI LETTER HA)</EM></FONT></P></FONT>
+<hr/><p><strong>Mike Dimmick</strong> on 29 Nov 2006 7:16 AM:</p><div style="margin-left: 1em"><p>OK, I thought elevated UI was meant to be running as the current user, but with all the administrative privileges and groups enabled in the token (assuming that the user was actually a member of the Administrators group)? Why would that then show the wrong UI language, unless the elevated token didn't link to the user's own profile?</p>
+<p>Now, if you were an ordinary user and supplied someone else's credentials to elevate, I would expect their profile to be loaded and their selected UI language to be used. It still shouldn't involve the 'reserved accounts' (i.e. the default profile).</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 29 Nov 2006 7:55 AM:</p><div style="margin-left: 1em"><p>Yes, it is that whole &quot;over the shoulder&quot; elevation thing.</p>
+<p>If you don't see it, then we know that you are running as anadmin who is being restrained by UAC, rather than a standard user whose superior lent a hand.</p>
+<p>FWIW I agree with you about the experience and what it ought to be -- to me this doesn't really seem by design....</p>
+</div>
+<p><strong>ReallyEvilCanine</strong> on 29 Nov 2006 2:40 PM:</p><div style="margin-left: 1em"><p>That woman is HAWT! Despite my standing rule concerning models and actrons and avoiding both like the plague, she appears to have become a more... regular person, based on his description and her comment.</p>
+<p>Does this post mean you don't want to know about my incredible layout which manages to get almost every cp1252 letter onto a standard 102-key keyboard in an intuitive fashion? I could get almost all the symbols, too, if only you'd open up the numerical pad to alteration &lt;evil grin&gt;.</p>
+<p>Completely off-topic: Why does Microsoft still have no support for UTF-8 in SQL Server? Is it just managerial stubbornness? Surely you see the superiority of UTF-8 to UCS-2.</p>
+<p>Speaking of which, is there a way to join the Consortium as just some guy who's interested and who can maybe help out with some ideas without being sponsored by some company for 15 big ones a year?</p></div>
+<p><strong>Michael S. Kaplan</strong> on 29 Nov 2006 6:29 PM:</p><div style="margin-left: 1em"><P>I have no interest in your insane layout that no normal person would ever use. :-)</P>
+<P>I'll talk more about SQL Server and UTF-8 soon.</P>
+<P>But there is no way to join the Unicode Consortium as a voting member without shelling out the shekels....</P></div>
+<p><strong>Jondr</strong> on 30 Nov 2006 7:19 PM:</p><div style="margin-left: 1em"><p>Oh. &nbsp;That just answered why, when I go to my.yahoo.com page, where I have some French &quot;headlines,&quot; some of the French glyphs get displayed as Japanese Kanji. &nbsp;I was blaming it on yahoo.</p>
+<p>Biocarburants: coup d'acc幨廨ateur aux huiles v嶲彋ales pures</p>
+<p>La croissance fulgurante des 廩liennes met sous tension les industriels</p>
+<p>La Nasa donne son feu vert pour un lancement de Discovery le 7 d嶰embre</p>
+<p>La navette Discovery devrait 皻re lanc嶪 de nuit le 7 d嶰embre pour sa prochaine mission</p>
+<p>L'union fait la force, les chimpanz廥 femelles l'ont bien compris</p>
+<p>(in my IE browser those are mixed language).</p></div>
+<p><strong>Michael S. Kaplan</strong> on 30 Nov 2006 7:51 PM:</p><div style="margin-left: 1em"><p>That would be a different issue, Jondr -- wrong guessing about the encoding in MLang, perhaps?</p>
+</div>
+<hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2006/11/30/1176671.html" title="Subsets of subsets of subsets of subsets of subsets">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2006/11/28/1170048.html" title="Your layout (in all likelihood) bores me">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2006-11">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2006-11-29">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2006/11/29/1170815.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:39 GMT -->
+</html>

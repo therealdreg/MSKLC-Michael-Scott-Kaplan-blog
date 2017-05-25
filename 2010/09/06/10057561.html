@@ -1,0 +1,66 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2010/09/06/10057561.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:35 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Acrobat PDF: the Yugo vs. the BMW vs. the Ferrari</title></head><body>
+<h1>Acrobat PDF: the Yugo vs. the BMW vs. the Ferrari</h1>
+<p><em>by Michael S. Kaplan, published on 2010/09/06 07:01 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2010/09/06/10057561.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<p>Thinking back to July 6th's <a href="http://archives.miloush.net/michkap/archive/2010/07/06/10031112.html" title="Beauty isn't only glyph deep"><strong>Beauty isn't only glyph deep</strong></a> and July 16th's <a href="http://archives.miloush.net/michkap/archive/2010/07/16/10038461.html" title="Beauty isn't only glyph deep, even for Microsoft"><strong>Beauty isn't only glyph deep, even for Microsoft</strong></a>,&nbsp;one of major concerns was how truly awful the story is for PDF with complex scripts.</p>
+<p>After talking to some really knowledgeable people when it comes to PDF, I thought I'd fill in some of the holes about the intricacies of the format and some of the plans for the future....</p>
+<p>As this is an area that a lot of people care about, I thought it would be good to do that update.</p>
+<p>The update you are about to read. :-)</p>
+<p>It started when Eric got me in touch with Leonard, who knows more about PDF than just about anyone out there you might know.</p>
+<p>He is the one who (for example) reminded me of something I already knew but seldom really think about: that Adobe Acrobat is <strong>not</strong> a&nbsp;tool for creating PDFs. It is at least half a dozen different tools for creating PDFs, under a wide range of different circumstances.</p>
+<p>There is a definite bias toward my definition of "high quality" if you want to group these different implementations that way -- just look at main Acrobat UI, say. Or the add-in for Microsoft Office products like Word. These will always do better than the lowest level, which is little more than a print driver, primarily for use with applications that Adobe knows nothing about and which really only support printing. In which case there is an "Acrobat" solution even for them.</p>
+<p>But proclaiming the three of them (that print driver and the Adobe add-in for Microsoft Word and the main Acrobat UI) to all be "Acrobat PDF creation solutions" is akin to looking at a Yugo and a BMW and a Ferrari, and just caling them all&nbsp;<strong>cars</strong>. </p>
+<p>Sure, you are right, they are all cars. But the difference between them in regard to quality and performance is so staggering that you may as well not put them in the same category for most purposes.</p>
+<p>Now I could have&nbsp;told you about that first category -- I mean sometimes all that will be sent to a printer is glyphids and features that Windows has like <a href="http://archives.miloush.net/michkap/archive/2007/09/24/5082103.html" title="Documented, schmockumented! It's still kind of cool...."><strong>Documented, schmockumented! It's still kind of cool....</strong></a> are only useful in the simple cases but that printer driver could indeed use it to get string data back in those simple cases. And thus even our "Acrobat Yugo" PDF writer cantheoretically&nbsp;get string data in the PDF if it wants.</p>
+<p><em>Note that some PDF writers and readers&nbsp;won't even do that, but doing it won't help you in this Indic case anyway. It works great with English and other simple cases, though!</em></p>
+<p>Some might object to my characterization of the Adobe Word add-in as the "Acrobat BMW" PDF writer, in contrast to the main UI from Adobe as the "Acrobat Ferrari" PDF writer. I might have objected myself, up until about a month ago.</p>
+<p>And then, with some helpful hints (e.g. that Acrobat can load an XPS file), I took that 19,669 word Tolkāppiyam (தொல்காப்பியம்) document, and created two different PDFs from it.</p>
+<p>One with the BMW, and one with the Ferrari.</p>
+<p>The BMW produces a 450kb PDF file that still cannot find the word. Copy/paste to notepad shows that</p>
+<p style="PADDING-LEFT: 30px"><span style="font-size: large;">செந்தமிழ் </span></p>
+<p>becomes</p>
+<p style="PADDING-LEFT: 30px"><span style="font-size: large;">செசெந்தமிமி ழ்</span></p>
+<p>And yes that space is in there, as are the incorrect characters.</p>
+<p>I think I may wait for the BMW recall. It created a huge number of these errors.</p>
+<p>Now the Ferrari tells a different story. </p>
+<p>When I create an XPS file from the .DOCX, it has 100% text fidelity. And when I run it through the Ferrari (in Acrobat from XPS) creates is a 648kb file still cannot find the word. </p>
+<p>In this case</p>
+<p style="padding-left: 30px;"><span style="font-size: large;">செந்தமிழ்</span></p>
+<p>became</p>
+<p style="padding-left: 30px;"><span style="font-size: large;">ெசந்தமிழ்</span></p>
+<p>Note this one is much closer, it is just the U+0b9a U+0bc6 that became U+0bc6 U+0b9a &ndash; a small reordering issue, multiplied by many other similar occurrences throughout the document - note that these are cases that rendering technologies like Uniscribe do the reordering for since </p>
+<p style="padding-left: 30px;"><span style="font-size: large;">ச + <span style="font-size: large;">ெ = <span style="font-size: large;">செ</span></span></span></p>
+<p>Well, it should at least. :-)</p>
+<p>Okay, so it turns out that all four of the PDF creation options&nbsp;I have mentioned in these three blogs:</p>
+<ol>
+<li>Microsoft Office 2007/2010's PDF writing feature</li>
+<li>Adobe Acrobat PDF writing via print driver</li>
+<li>Adobe Acrobat PDF via Word 2010 add-in</li>
+<li>Adobe Acrobat PDF vis its UI loading an XPS file</li>
+</ol>
+<p>are all currently inadequate for Tamil and obviously some other complex scripts (though perhaps #4 will work even better for scripts that do not specifically do glyph reordering).</p>
+<p>In the meantime, XPS does offer the full lossless fidelity that I really wish PDF did, and it (the <a href="http://en.wikipedia.org/wiki/Open_XML_Paper_Specification">Open XML Paper Specification</a>) is an open, cross-platform solution.</p>
+<p>In the back of mind I am imagining taking stuff like the thoughts behind <a href="http://archives.miloush.net/michkap/archive/2007/09/24/5082103.html" title="Documented, schmockumented! It's still kind of cool...."><strong>Documented, schmockumented! It's still kind of cool....</strong></a>and finding a way to try to recover the text in all of the broken PDFs created&nbsp;by these tools. </p>
+<p>This <strong>Forensic Text Recovery</strong> is of course largely fantasy without a lot more internal knlowledge of all of these writers, but a guy can dream!</p>
+<p>I'll talk about more issues in this sphere another day, in another blog....</p>
+<hr/><p><strong>Joe Clark</strong> on 6 Sep 2010 7:38 AM:</p><div style="margin-left: 1em"><p>And, as I told you before, issues of text direction and conjuncts are barely known at all at Adobe. I told you that at the time you were complaining that all the people you asked (who didn&rsquo;t know the answer to the problem) didn&rsquo;t know the answer. So I can understand how you&rsquo;d forget.</p>
+<p>You can offer up any weirdo MS file format as an alternative to PDF if you want, but nothing will come of it, just as nothing came of Silverlight. (Few users, if any, want Microsoft formats.) The solution is to repair the PDF specification so it works for something more bizarre to an American developer than English, Japanese, or Hebrew. This will not happen in our lifetimes.</p></div>
+<p><strong>Michael S. Kaplan</strong> on 6 Sep 2010 8:07 AM:</p><div style="margin-left: 1em"><p>Um, ignoring the Word bug, if PDF created directly by other Office 2007/2010 products works with full fidelity, then there is as solution already -- using PDF.</p>
+<p>And it was an Adobe employee who recommended to me that using XPS (created by Microsoft) in Adobe Acrobat gives better results than Adobe&#39;s own Office add-in does. So there are others outside of Microsoft who see value in the fidelity of XPS. I am not saying it is a replacement -- I was Adobe to fix the bugs in Acrobat, all of them. But in the meantime there is a way to store data with 100% fidelity that even Adobe can use later. There is something significant there....</p>
+<p>Not to mention the cross-platform products for XPS are hardly all coming from Microsoft, either. So XPS clearly has its uses to some people.</p>
+<p>And of course Silverlight has nothing to do with any of this (though Silverlight 4 supports complex scripts even better than InDesign due to known bugs there in Indic and other scripts -- maybe Adobe will find that loading Silverlight in Flash using some new conversion gives better international support THERE too? &lt;grin&gt;).</p>
+</div>
+<p><strong>Naga Ganesan</strong> on 6 Sep 2010 1:27 PM:</p><div style="margin-left: 1em"><p>Hi Mike,</p>
+<p>Is it only Tamil, Hindi, ... having the problem of extract the original text from PDF?</p>
+<p>What about Thai and Korean - do these scripts&#39; PDF yield the text correctly?</p>
+<p>N. Ganesan</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 6 Sep 2010 2:25 PM:</p><div style="margin-left: 1em"><p>I have only been looking at the Indics, so far. I suspect Thai might also have problems. But Korean might be okay here. Of course until it is tried your guess is as good as mine. :-)</p>
+</div>
+<p><strong>Aaron</strong> on 7 Sep 2010 11:45 AM:</p><div style="margin-left: 1em"><p>So what you&#39;re saying is that XPS is like the Caterham R500. &nbsp;It&#39;s faster than a Ferrari around a track, much cheaper, and you can order it as a kit!</p>
+</div>
+<hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2010/09/29 <a href="http://archives.miloush.net/michkap/archive/2010/09/29/10069077.html">Dotting the t's and crossing the i's is more work than that, PDF edition</a></p><p>2010/09/16 <a href="http://archives.miloush.net/michkap/archive/2010/09/16/10062966.html">Providing more information is the best way to assure correct information is received</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2010/09/07/10058112.html" title="Refusing to ignore some particular character&#39;s width isn&#39;t [always] an act of discrimination…">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2010/09/05/10058180.html" title="Out of touch? No, just out of scope...">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2010-09">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2010-09-06">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2010/09/06/10057561.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:35 GMT -->
+</html>

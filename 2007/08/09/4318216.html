@@ -1,0 +1,36 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2007/08/09/4318216.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:37 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Some of the less intuitive parts of MSKLC's user interface</title></head><body>
+<h1>Some of the less intuitive parts of MSKLC's user interface</h1>
+<p><em>by Michael S. Kaplan, published on 2007/08/10 02:04 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2007/08/09/4318216.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P>A while back, Giovanni asked me via the contact link:</P>
+<BLOCKQUOTE><FONT face="times new roman,times" size=2>
+<P><EM>Hi Michael,<BR><BR>I am writing this to you because I have found your blog and you seem pretty well informed about MSKLC.<BR><BR>Using MSKLC (a tool I've long waited for!), I've been trying to create a windows keyboard layout that duplicates the very convenient "italian pro" layout of Mac OS X, in which the Alt key allows to enter a wide selection of unicode characters.<BR><BR>But now I have a problem: MSKLC seems not to allow me to define a AltGr state as a dead key. In AltGr state, the "set dead key" menu entry is shadowed.<BR><BR>For example, I would like to use AltGr+u as a dead key for umlauts, etc, the way macintoshes do.<BR><BR>Do you know if this is possible?<BR><BR>Thanks!</EM></P></FONT></BLOCKQUOTE>
+<P>I do fear that I may have taken too long to get back to Giovanni, especially since the answer is that it is quite possible and works quite well! :-(</P>
+<P>First I had better explain.</P>
+<P>Let's say that you load up MSKLC and get to be looking near that VK_U key in the ALTGR shift state:</P>
+<P><IMG style="WIDTH: 763px; HEIGHT: 415px" height=515 src="http://trigeminal.fmsinc.com/images/AltGrDead1.png" width=1022></P>
+<P>As Giovanni indicated, the dead key choice is disabled:</P>
+<P><IMG src="http://trigeminal.fmsinc.com/images/AltGrDead2.png"></P>
+<P>However, the truth is that the option is also disabled in every other shift state too!</P>
+<P>The problem here is that you have to make sure a&nbsp;Unicode code point&nbsp;is assigned to the key before the option is enabled. So one can assign (for example)&nbsp;U+00a8 (DIAERESIS) to the key:</P>
+<P><IMG src="http://trigeminal.fmsinc.com/images/AltGrDead3.png"></P>
+<P>and then once a single code point is assigned:</P>
+<P><IMG src="http://trigeminal.fmsinc.com/images/AltGrDead4.png"></P>
+<P>the menu option is enabled:</P>
+<P><IMG src="http://trigeminal.fmsinc.com/images/AltGrDead5.png"></P>
+<P>Now note that if at any time you chose that <STRONG>Properties for VK_U in all shift states</STRONG> you would always have the dead key option available once you added a character.</P>
+<P>The particular bit of non-intuitivosity of the shortcut menu item is a side effect of the MSKLC development process I first described in <STRONG><A class="" href="http://archives.miloush.net/michkap/archive/2005/01/03/345719.html" mce_href="http://archives.miloush.net/michkap/archive/2005/01/03/345719.html">this post</A></STRONG>:</P>
+<BLOCKQUOTE>
+<P>...<EM>it highlighted the pattern of those weekly meetings. I would show the current state of the UI, Simon or Cathy would bring up a feature they felt was crucial,&nbsp;I would push back and explain why it was not feasible, they would grudgingly accept this, but the issues they brought up would keep bothering me until I thought of a way to make it feasible. Then I would show it to them the next week. I am pretty sure that was how the meeting became known as D&amp;P in the first place....</EM></P></BLOCKQUOTE>
+<P>The particular problem they had was how hard it was to go to the full dialog and hit the dead key button -- they wanted a way to get there more directly.</P>
+<P>Finally, I put in that shortcut menu item and all it required to work was a key assignment. They&nbsp;loved it, since it was so much easier to reach than the other way&nbsp;(and in out&nbsp;informal usability testing it seemed much more discoverable).</P>
+<P>However, I'll admit that it is really only intuitive for people who would naturally be putting in the&nbsp;character assignment&nbsp;first; for people who go into it wanting to assign a dead key, it is too easy to run into the same problems as Giovanni did.</P>
+<P>I had prototyped a separate dialog popping up to let you enter the dead key first, but this appeared less intuitive and more complex to people (not to mention the extra test cost), so in the end this idea was scrapped.</P>
+<P>Though perhaps it could be considered for a future version....</P>
+<P mce_keep="true">&nbsp;</P>
+<P><FONT color=#ff00ff><EM>This post brought to you by</EM> <FONT size=5>¨</FONT> <EM>(<A class="" href="http://www.fileformat.info/info/unicode/char/00a8" mce_href="http://www.fileformat.info/info/unicode/char/00a8">U+00a8</A>, a.k.a. DIAERESIS)</EM></FONT></P>
+<hr/><div style="margin-left: 1em"><em>no comments</em></div><hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2007/08/10 <a href="http://archives.miloush.net/michkap/archive/2007/08/10/4322536.html">I've been to the desert on a dead key with no name</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2007/08/10/4322536.html" title="I&#39;ve been to the desert on a dead key with no name">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2007/08/09/4317492.html" title="The phantom kern get smashed, but he may invade someone else&#39;s space if he does">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2007-08">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2007-08-09">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2007/08/09/4318216.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:37 GMT -->
+</html>

@@ -1,0 +1,47 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2010/01/18/9949627.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:35 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Yet another digit substitution[.Net] problem</title></head><body>
+<h1>Yet another digit substitution[.Net] problem</h1>
+<p><em>by Michael S. Kaplan, published on 2010/01/18 07:01 -05:00, original URI: http://blogs.msdn.com/b/michkap/archive/2010/01/18/9949627.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P>I have a blog I have been writing off and on for a couple of years now all about <STRONG>digit substitution</STRONG>.</P>
+<P>That blog is coming soon and will be my definitive and final thoughts on the feature and its implementation(s).</P>
+<P>This is not that blog. </P>
+<P>This is a blog about <STRONG>digit substitution</STRONG>, though.</P>
+<P><STRONG>Digit substitution</STRONG>&nbsp;and GDI+, this one is about, actually.</P>
+<P>The question:</P>
+<BLOCKQUOTE>
+<P><STRONG>Issue:</STRONG></P>
+<BLOCKQUOTE>
+<P>Need to get the lang id and “standard digits” values that the user has chosen for digits.</P></BLOCKQUOTE>
+<P><STRONG>Scenario:</STRONG></P>
+<BLOCKQUOTE>
+<P>the user locale is set to "English (United Status)" <BR>In "Additional settings..." in Region and Language,<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "Standard digits" has been set to ٠١٢٣٤٥٦٧٨٩.<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "Use native digits" has been set to National.</P></BLOCKQUOTE>
+<P><STRONG>Problem:</STRONG></P>
+<BLOCKQUOTE>
+<P>In the above scenario, all the windows UIs like shell, notepad, etc are showing ٠١٢٣٤٥٦٧٨٩.<BR>However, when I render text using GDIplus drawstring, it is rendered as 0123456789</P></BLOCKQUOTE>
+<BLOCKQUOTE>
+<P>I was able to get the desired output when I used format.SetDigitSubstitution(0x0C01, Gdiplus::StringDigitSubstituteNational); (Our code is in C++.)</P></BLOCKQUOTE>
+<P><STRONG>Question:</STRONG></P>
+<BLOCKQUOTE>
+<P>Does anyone know the win 32 api or how to get the lang id and “standard digits” values that the user has chosen for digits.</P></BLOCKQUOTE></BLOCKQUOTE>
+<P>This ought to be easy enough to answer, one might expect.</P>
+<P>Unless of course one has spent any time dealing with digit substitution, of course!</P>
+<P>Unfortunately, the answer is that there is no way to query for this information, this scenario where one changes&nbsp; the fundamental digit choice to be different than the user's <STRONG>standards&nbsp;and formats</STRONG> language, al so known as the default user&nbsp;locale for the given user.</P>
+<P>Now if one looks at the internal tables behind Uniscribe and GDI+ one will see lots of hard-coded, locale based info (as discussed in <A href="http://archives.miloush.net/michkap/archive/2006/01/18/514171.html" mce_href="http://archives.miloush.net/michkap/archive/2006/01/18/514171.html"><STRONG>Digits -- there is no substitute</STRONG></A>) but the fact that they are kind of locale based is hidden from the caller of both technologies, though hidden in very different ways (in the case of GDI+ this way is a lot harder to work around as this problem illustrates, as there is no intrinsic way to say "use the default user locale setting as modified by the user when appropriate". This is the setting that would easily solve this <A href="http://msdn.microsoft.com/library/ms534725.aspx" mce_href="http://msdn.microsoft.com/library/ms534725.aspx">StringFormat::SetDigitSubstitution Method</A>-based question.</P>
+<P>Now in theory one could hope that not calling the above method with its limitations would lead to correct behavior, but this is apparently not the case. Before one gets too haughty it is reasonable to consider that one of the most common reported performance complaints about Uniscribe is its overabundant interest in user locale settings due to the anal retentive checking of the digit substitution settings. </P>
+<P>So GDI+ is giving us some gain for the lack of this functionality - one less performance issue!</P>
+<P>Unfortunately,&nbsp;if it is&nbsp;not giving a parameter on a <A href="http://msdn.microsoft.com/library/ms534725.aspx" mce_href="http://msdn.microsoft.com/library/ms534725.aspx">StringFormat::SetDigitSubstitution Method</A>&nbsp;overload that lets one say this (like the Uniscribe <A href="http://msdn.microsoft.com/library/dd368563.aspx" mce_href="http://msdn.microsoft.com/library/dd368563.aspx">ScriptRecordDigitSubstitution Function</A> not only allows but explicitly documents) then GDI+ is leaving this hole in support, a hole that really has no good excuse (if the lookup is only triggered by a <A href="http://msdn.microsoft.com/library/ms534725.aspx" mce_href="http://msdn.microsoft.com/library/ms534725.aspx">StringFormat::SetDigitSubstitution Method</A>&nbsp;call with LOCALE_USER_DEFAULT then it is hardly a negative performance issue since no one is monitoring anything at all, really -- it can be a one-time lookup.</P>
+<P>Note also that the Uniscribe <A href="http://msdn.microsoft.com/library/dd368563.aspx" mce_href="http://msdn.microsoft.com/library/dd368563.aspx">ScriptRecordDigitSubstitution Function</A> and in&nbsp;particular the <A href="http://msdn.microsoft.com/library/dd368801.aspx" mce_href="http://msdn.microsoft.com/library/dd368801.aspx">SCRIPT_DIGITSUBSTITUTE structure</A> that both it and the <A href="http://msdn.microsoft.com/library/dd319116.aspx" mce_href="http://msdn.microsoft.com/library/dd319116.aspx">ScriptApplyDigitSubstitution Function</A> depend on, introduces the notion of separate NationalDigitLanguage and TraditionalDigitLanguage values that do not have to be the same as the user locale since they can be updated via other processes.</P>
+<P>There is a part of me that would like to mistrust the report from the questioner that LOCALE_USER_DEFAULT to the GDI+ <A href="http://msdn.microsoft.com/library/ms534725.aspx" mce_href="http://msdn.microsoft.com/library/ms534725.aspx">StringFormat::SetDigitSubstitution Method</A>&nbsp;really fails here, but I'm going to trust that it did fail to fix the problem as they told me when I made the suggestion. </P>
+<P>Worst case has me reporting that I was mistaken here and I will only be the second most embarrassed person and I can live with that! :-)</P>
+<P><EM>Plus if it does actually work I'll still get the last word about how weird it would be that LOCALE_USER_DEFAULT and the LCID that is the current default user locale would have different behavior, despite all the work that NLS does to make them the same thing. Even though it is a screwy semantic at times,&nbsp;it has been there for a long time and it really ought to be respected&nbsp;by people who wish to opt in to the "LCID" datatype....</EM></P>
+<hr/><p><a id="9950495" href="#9950495">#</a> <strong>Mihai</strong> on 19 Jan 2010 11:39 AM:</p><div style="margin-left: 1em"><p>&quot;Unfortunately, the answer is that there is no way to query for this information&quot;</p>
+<p>Unless I don't understand the problem, then GetLocaleInfoEx with LOCALE_SNATIVEDIGITS to get the digits, and LOCALE_IDIGITSUBSTITUTION to find out if the setting is in effect is exactly what's needed here.</p></div>
+<p><a id="9950527" href="#9950527">#</a> <strong>Michael S. Kaplan</strong> on 19 Jan 2010 12:40 PM:</p><div style="margin-left: 1em"><p>That will not tell you the locale to pass to the GDI+ method.</p>
+</div>
+<p><a id="9950528" href="#9950528">#</a> <strong>Michael S. Kaplan</strong> on 19 Jan 2010 12:43 PM:</p><div style="margin-left: 1em"><p>Note that GDI+ wants the locale so *it* can look up the digits. It doesn't want the digits themselves....</p>
+</div>
+<hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2010/11/12 <a href="http://archives.miloush.net/michkap/archive/2010/11/12/10088056.html">Suddenly, in a bit more time than a blink of an eye, "standards support" becomes "less i18n support"</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2010/01/19/9950377.html" title="You down with .OCP (Yeah you know me!)">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2010/01/16/9949421.html" title="Culture: don&#39;t have none, won&#39;t be none!">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2010-01">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2010-01-18">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2010/01/18/9949627.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:35 GMT -->
+</html>

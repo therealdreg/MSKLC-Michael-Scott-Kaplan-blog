@@ -1,0 +1,35 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2008/06/30/8669810.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:36 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Give people their SPACE, and most of the time they still go with the defaults</title></head><body>
+<h1>Give people their SPACE, and most of the time they still go with the defaults</h1>
+<p><em>by Michael S. Kaplan, published on 2008/06/30 03:01 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2008/06/30/8669810.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P>In general, people will follow the defaults more often than they will override them.</P>
+<P>The simple fact of human nature and how humans relate to software is why stuff like I talked about in <A class="" href="http://archives.miloush.net/michkap/archive/2005/05/13/417167.html" mce_href="http://archives.miloush.net/michkap/archive/2005/05/13/417167.html"><STRONG>What it means to be in the default install</STRONG></A> ends up being so effective in changing the perception of the application in all situations by simply changing the default.</P>
+<P>Because if most people accept the defaults, then most people will get the defaults....</P>
+<P>Now over in the Suggestion Box, Andy asked:</P>
+<BLOCKQUOTE>
+<BLOCKQUOTE>
+<P><EM><FONT face="times new roman,times">Hi Michael,<BR><BR>Do you know why Ctrl-Space is mapped to the space character in many keyboard layouts instead of leaving it unmapped like most other Ctrl combinations?<BR><BR>I was working on the keyboard handler of a terminal program and was trying to give priority to the keyboard layout wherever possible. Ctrl-Space is meant to send 0x00, so I was quite surprised to get 0x20 instead, but quickly tracked it down to the keyboard layout. It's easy to override of course, but it still seems curious as it's a shortcut in many applications anyway.</FONT></EM></P></BLOCKQUOTE></BLOCKQUOTE>
+<P>Now there are&nbsp;three different "defaults" at work here:</P>
+<P><STRONG>#1</STRONG>: The&nbsp;command line tool that builds keyboard layout DLLs, whether in </P>
+<UL>
+<LI>the non-Unicode form (kbdtool.exe) that is used within Windows or </LI>
+<LI>the Unicode form (kbdutool.exe) that is used by MSKLC</LI></UL>
+<P>both have an interesting behavior in regard to the SPACE character (scan code 0x39, virtual key VK_SPACE) -- if the key is not assigned in the base, shift, or control states, a space (U+0020) is assigned automatically.</P>
+<P>The upside is that for most keyboards that have been built and shipped in NT-based Windows since March of 1995 (when the tool was first built), the space key has been inserted any time something else wasn't. Which is to say most times.</P>
+<P><STRONG>#2</STRONG>: MSKLC's <STRONG><U>L</U>oad Existing keyboard...</STRONG> functionality takes existing keyboards and loads them up. Since most existing keyboards have U+0020 assigned to all three shift states and since most users never assign any of these three states on the shift key, the default setting persists.</P>
+<P><STRONG>#3</STRONG>: MSKLC's creating a blank keyboard functionality, because&nbsp;although not the most common ways that keyboards are created, it begins the life of a layout free from the "defaults" of #1 and #2, above.</P>
+<P>Users have the opportunity to change the layout if they would like to, but most people do not.</P>
+<P>MSKLC has a slightly different default of its own, though -- it assigns U+0020 to the space bar in the base and shift states, but <STRONG>not</STRONG> the control state. It breaks free of the defaults of the past.</P>
+<P>Its default is to assign nothing there.</P>
+<P>That difference could in theory be thought of as a legitimate bug in MSKLC....</P>
+<P>However, it doesn't really matter. When&nbsp;you are&nbsp;done and you build your keyboard, MSKLC calls kbdutool.exe to do the build, and the unassigned CONTROL+SHIFT will be given U+0020 due to <STRONG>#1</STRONG>, above -- unless you override the default.</P>
+<P>Which almost no one ever does, since almost no one ever changes the defaults....</P>
+<P mce_keep="true">&nbsp;</P>
+<P><EM><FONT color=#ff00ff>This blog brought to you by U+0020, aka SPACE)</FONT></EM></P>
+<hr/><p><strong>Andy</strong> on 6 Jul 2008 8:25 AM:</p><div style="margin-left: 1em"><p>Thanks for the quick and comprehensive explanation, so probably just a case of &quot;it seemed a good idea at the time&quot; when kbdtool was build.</p>
+<p>(I twice managed to overlook your post when I checked back earlier in the week since I didn't expect it be so far down the page already. Good luck with your quest to empty suggestion box quest! )</p></div>
+<hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2008/07/01/8674304.html" title="Is that character in the font or isn&#39;t it?">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2008/06/30/8669123.html" title="Behold the Table Driven Text Service, Part 12 (The knights who say நீ, redux, #2)">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2008-06">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2008-06-30">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2008/06/30/8669810.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:36 GMT -->
+</html>

@@ -1,0 +1,38 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2006/10/15/827944.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:39 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Not everything you might want out of a GetDateFormatEx, but think of it as a fixer-upper</title></head><body>
+<h1>Not everything you might want out of a GetDateFormatEx, but think of it as a fixer-upper</h1>
+<p><em>by Michael S. Kaplan, published on 2006/10/15 03:01 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2006/10/15/827944.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<FONT face=Tahoma size=3>
+<P>Some may remember when I asked the question <A href="http://archives.miloush.net/michkap/archive/2005/05/12/416761.html" mce_href="http://archives.miloush.net/michkap/archive/2005/05/12/416761.html"><STRONG>Why doesn't GetDateFormat take a CALID?</STRONG></A> </P>
+<P>Some&nbsp;will recall when I pointed out how even ignoring the CALID issue, <A href="http://archives.miloush.net/michkap/archive/2006/02/08/527375.html" mce_href="http://archives.miloush.net/michkap/archive/2006/02/08/527375.html"><STRONG>They make 'em smarter than GetDateFormat</STRONG></A>. </P>
+<P>Some will have vague recollections of the updated GetDateFormat wrapper I got from colleague Tarek and talked about in <A href="http://archives.miloush.net/michkap/archive/2006/09/01/735817.html" mce_href="http://archives.miloush.net/michkap/archive/2006/09/01/735817.html"><STRONG>Cue the smarter version of GetDateFormat... ok, it's a wrap!</STRONG></A> (note that this had another update done to it to address an additional corner case). </P>
+<P>And the keenest among my readers will remember when I pointed out how there is an updated GetDateFormatEx (along with many other functions) in <A href="http://archives.miloush.net/michkap/archive/2006/01/31/520694.html" mce_href="http://archives.miloush.net/michkap/archive/2006/01/31/520694.html"><STRONG>New in Vista: What's your name? Who's your daddy?</STRONG></A> </P>
+<P>So, we have&nbsp;three posts pointing out limitations in <A href="http://msdn.microsoft.com/library/en-us/intl/nls_5w6s.asp" mce_href="http://msdn.microsoft.com/library/en-us/intl/nls_5w6s.asp">GetDateFormat</A> (all of which provide either the methodology to work around the problems or actual code to do so), and one of which points out that there will be in Vista new <A href="http://msdn.microsoft.com/library/en-us/intl/nls_GetDateFormatEx.asp" mce_href="http://msdn.microsoft.com/library/en-us/intl/nls_GetDateFormatEx.asp">GetDateFormatEx</A> that uses a locale name rather than a locale ID (LCID). </P>
+<P>No, the new function does nothing for the problems pointed out in the original post (I'll get back to that in a second), but if you look at the prototype: </P>
+<BLOCKQUOTE><FONT face="Consolas,Courier New,Lucida Sans Console,Courier">
+<P><STRONG>int GetDateFormatEx(<BR>&nbsp; LPCWSTR lpLocaleName,<BR>&nbsp; DWORD dwFlags,<BR>&nbsp; CONST SYSTEMTIME* lpDate,<BR>&nbsp; LPCWSTR lpFormat,<BR>&nbsp; LPWSTR lpDateStr,<BR>&nbsp; int cchDate,<BR>&nbsp; LPCWSTR lpCalendar<BR>);</STRONG></P></FONT></BLOCKQUOTE>
+<P>You'll see that a little bit of thought/planning happened&nbsp;about/with the first problem with the missing CALID (for now&nbsp; that parameter is "Reserved; must be a null pointer" but at least a new GetDateFormatExEx won't be needed when the problem is eventually fixed. </P>
+<P>And of course the remaining issues related to handling bidirectional text can be fixed in a future version with a new flag that does everything Tarek's wrapper does (and makes sure not to break anyone who is using the wrapper!).</P>
+<P>Now of course the obvious question that comes up here is wondering why, if a new function is being added, no one just bit the bullet and fixed all of these known limitations in the existing functions. I mean after all, one problem was something I posted about in March of 2005, and the other one was first pointed out in February of this year. So its not like nobody knew about it with any warning or anything....</P>
+<P>One of the biggest source of posts that I do here on technical NLS issues (way bigger then new features or possible features) is bugs and how to work around them or at least know about them. In fact the only source of posts that is bigger is warnings relating to using the NLS API and its managed analogue correctly and the consequences of not doing so. </P>
+<P>If the folks who were triaging the work to be done decided to fix these issues, I could have blogged about that. But since they didn't, I went ahead and did the next best thing and told all of you about it. :-)</P>
+<P mce_keep="true">&nbsp;</P>
+<P><FONT color=#ff0080><EM>This post brought to you by</EM> <STRONG><FONT size=6>ഗ</FONT></STRONG> <EM>(<A href="http://www.fileformat.info/info/unicode/char/0d17" mce_href="http://www.fileformat.info/info/unicode/char/0d17">U+0d17</A>, a.k.a. MALAYALAM LETTER GA)</EM></FONT></P></FONT>
+<hr/><p><strong>Mihai</strong> on 16 Oct 2006 3:43 AM:</p><div style="margin-left: 1em"><p>&lt;&lt; that parameter is &quot;Reserved; must be a null pointer&quot;&gt;&gt;</p>
+<p>I have seen tons of APIs with reserved parameters. And none of them was extended. In most cases a *Ex version was created.</p>
+<p>One of the season why the &quot;reserved parameter&quot; cannot be used is because of backward compatibility.</p>
+<p>I think Raimond Chen at some point explained in detail why it is a problem to start using a parameter that was requested for a long time to be NULL.</p>
+<p>So, some ppl at MS know that &quot;reserved parameter, must be null&quot; will never be used (because it is dangerous). But there are others that keep adding them.</p>
+<p>Now, what is the point of this post?</p>
+<p>No point :-) Just saying :-)</p></div>
+<p><strong>Michael S. Kaplan</strong> on 16 Oct 2006 4:05 AM:</p><div style="margin-left: 1em"><p>You need to have faith, Mihai. :-)</p>
+</div>
+<p><strong>Dean Harding</strong> on 16 Oct 2006 4:46 AM:</p><div style="margin-left: 1em"><p>I guess as long as the API actually enforces the &quot;must be NULL&quot; then it's OK. If, at any time, it allowed non-NULL values without reporting an error, then you can't all-of-a-sudden start using non-NULL values, because you can no longer be assured that callers passing in non-NULL know what they're doing.</p>
+<p>Well, that was a long, confusing sentence :-)</p></div>
+<p><strong>Michael S. Kaplan</strong> on 16 Oct 2006 9:50 AM:</p><div style="margin-left: 1em"><p>Exactly, Dean. Not confusing, at all!</p>
+</div>
+<hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2006/10/15/829978.html" title="Compatibility is inconsistent; consistency is not compatible...">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2006/10/14/825404.html" title="Understanding (and explaining) why English is everywhere">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2006-10">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2006-10-15">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2006/10/15/827944.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:39 GMT -->
+</html>

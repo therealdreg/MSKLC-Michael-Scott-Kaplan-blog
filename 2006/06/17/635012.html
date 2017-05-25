@@ -1,0 +1,38 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2006/06/17/635012.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:39 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>On the first day of Microsoft</title></head><body>
+<h1>On the first day of Microsoft</h1>
+<p><em>by Michael S. Kaplan, published on 2006/06/17 03:11 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2006/06/17/635012.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P><FONT face=Tahoma>No, I am not going to burst into song here -- that takes at a minimum a great deal of alcohol. :-)</FONT></P>
+<P><FONT face=Tahoma>I am also not going to write about Bill Gates and the early days of the company that was once known as Micro-Soft. :-)</FONT></P>
+<P><FONT face=Tahoma>I am going to talk about some confusion around the meaning of "the first day" in the locale/culture data, though....</FONT></P>
+<P><FONT face=Tahoma>A few days ago, I pointed out that <STRONG><A href="http://archives.miloush.net/michkap/archive/2006/06/13/629804.html">Size matters (when it comes to day names, at least)</A></STRONG>. And Josh raised an interesting <A href="http://archives.miloush.net/michkap/archive/2006/06/13/629804.html#634228">question</A> about it:</FONT></P>
+<BLOCKQUOTE dir=ltr style="MARGIN-RIGHT: 0px">
+<P><FONT face="Times New Roman" size=2>This documentation seems to imply that Monday is always the first day of the week... Different revisions of the docs?</FONT></P></BLOCKQUOTE>
+<P><FONT face=Tahoma>Now the underlying issue is interesting on a few different levels.</FONT></P>
+<P><FONT face=Tahoma>First of all, there is the fact that there is a small documentation bug here, since all three of:</FONT></P>
+<UL>
+<LI><FONT face="Consolas,Courier New" size=2><STRONG>LOCALE_SDAYNAME1</STRONG></FONT> 
+<LI><STRONG><FONT face="Consolas,Courier New" size=2>LOCALE_SABBREVDAYNAME1</FONT></STRONG> 
+<LI><STRONG><FONT face="Consolas,Courier New" size=2>LOCALE_SSHORTESTDAYNAME1</FONT></STRONG></LI></UL>
+<P><FONT face=Tahoma>are always Monday, across all locales. Yet two of them are <A href="http://msdn.microsoft.com/library/en-us/intl/nls_8rse.asp">documented</A> as being Monday and the third just has the vague language about "the first day of the week".</FONT></P>
+<P><FONT face=Tahoma>Second of all, there is the confusion that in the managed&nbsp;members that contain all of the analagous items:</FONT></P>
+<UL>
+<LI><FONT face="Consolas,Courier New" size=2><STRONG>DateTimeFormatInfo.</STRONG><A href="http://msdn2.microsoft.com/en-us/library/system.globalization.datetimeformatinfo.daynames.aspx"><STRONG>DayNames</STRONG></A><STRONG> property</STRONG></FONT> 
+<LI><FONT face="Consolas,Courier New" size=2><STRONG>DateTimeFormatInfo.</STRONG><A href="http://msdn2.microsoft.com/en-us/library/system.globalization.datetimeformatinfo.abbreviateddaynames.aspx"><STRONG>AbbreviatedDayNames</STRONG></A><STRONG> property</STRONG></FONT> 
+<LI><FONT face="Consolas,Courier New" size=2><STRONG>DateTimeFormatInfo.</STRONG><A href="http://msdn2.microsoft.com/en-us/library/system.globalization.datetimeformatinfo.shortestdaynames.aspx"><STRONG>ShortestDayNames</STRONG></A><STRONG> property</STRONG></FONT> 
+<LI><FONT face="Consolas,Courier New" size=2><STRONG>DateTimeFormatInfo.</STRONG><A href="http://msdn2.microsoft.com/en-us/library/system.globalization.datetimeformatinfo.getdayname.aspx"><STRONG>GetDayName()</STRONG></A><STRONG> method</STRONG></FONT> 
+<LI><FONT face="Consolas,Courier New" size=2><STRONG>DateTimeFormatInfo.</STRONG><A href="http://msdn2.microsoft.com/en-us/library/system.globalization.datetimeformatinfo.getabbreviateddayname.aspx"><STRONG>GetAbbreviatedDayName()</STRONG></A><STRONG> method</STRONG></FONT> 
+<LI><FONT face="Consolas,Courier New" size=2><STRONG>DateTimeFormatInfo.</STRONG><A href="http://msdn2.microsoft.com/en-us/library/system.globalization.datetimeformatinfo.getshortestdayname.aspx"><STRONG>GetShortestDayName()</STRONG></A><STRONG> method</STRONG></FONT></LI></UL>
+<P><FONT face=Tahoma>each start with Sunday, rather than Monday. Makes things kinda confusing for the <A href="http://archives.miloush.net/michkap/archive/2006/02/21/535813.html"><STRONG>Microsoft Locale Builder</STRONG></A>, don't it? :-)</FONT></P>
+<P><FONT face=Tahoma>And now let's add yet another wrinkle to the mix: the <A href="http://msdn.microsoft.com/library/en-us/intl/nls_8rse.asp">LCTYPE</A> named <FONT face="Consolas,Courier New" size=2><STRONG>LOCALE_IFIRSTDAYOFWEEK</STRONG></FONT> (a number 0-6 signifying which day from Monday to Sunday is the first day of the week within a locale) and <FONT face="Consolas,Courier New" size=2><STRONG>DateTimeFormatInfo.<A href="http://msdn2.microsoft.com/en-us/library/system.globalization.datetimeformatinfo.firstdayofweek.aspx">FirstDayOfWeek</A></STRONG></FONT> (a member of the <FONT face="Consolas,Courier New" size=2><STRONG><A href="http://msdn2.microsoft.com/en-us/library/system.dayofweek.aspx">DayOfWeek</A></STRONG></FONT> enumeration that has the analagous role within a culture).</FONT></P>
+<P><FONT face=Tahoma>Isn't it weird to think about the first day of the week being the first member of an&nbsp;enumerated list and also to think about it being its own configurable setting?</FONT></P>
+<P><FONT face=Tahoma>Especially if the two do not match in your locale/cultures? :-)</FONT></P>
+<P><FONT face=Tahoma>Now remembering that all that is in .NET's cultures was originally based on the locales of Windows, the exact reason behind why managed code moved back a day is an interesting one to ponder. I'll open it up to readers if someone wants to give their theory for why the change was made (remembering that if, when DateTimeFormatInfo was created, it were known they would come back together for custom cultures/locales no change probably would have happened!)....</FONT></P>
+<P><FONT face=Tahoma></FONT>&nbsp;</P>
+<P><FONT face=Tahoma color=#ff1493><EM>This post brought to you by</EM> <STRONG><FONT size=6>Δ</FONT></STRONG> <EM>(<A href="http://www.fileformat.info/info/unicode/char/0394">U+0394</A>, a.k.a. GREEK CAPITAL LETTER DELTA)</EM></FONT></P>
+<hr/><p><a id="636371" href="#636371">#</a> <strong>Mihai</strong> on 18 Jun 2006 8:02 PM:</p><div style="margin-left: 1em">&quot;open it up to readers if someone wants to give their theory for why the change was made&quot;<br><br>Because the developers had not clue and thought &quot;what is this stupid thing with Monday as first day? Everybody knows the first day of week is Sunday.&quot;<br>There you have it :-)<br></div>
+<hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2006/06/18/635831.html" title="Feature ideas don&#39;t always turn out to be good ones">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2006/06/17/634936.html" title="64-bit thoughts, and an apology">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2006-06">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2006-06-17">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2006/06/17/635012.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:39 GMT -->
+</html>

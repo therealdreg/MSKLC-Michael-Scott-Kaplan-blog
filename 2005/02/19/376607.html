@@ -1,0 +1,37 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2005/02/19/376607.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:42 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Challenges behind MSLU: The hardest API to wrap</title></head><body>
+<h1>Challenges behind MSLU: The hardest API to wrap</h1>
+<p><em>by Michael S. Kaplan, published on 2005/02/19 10:20 -05:00, original URI: http://blogs.msdn.com/b/michkap/archive/2005/02/19/376607.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P><A title=MSLU href="http://www.microsoft.com/globaldev/handson/dev/mslu_announce.mspx" target=_blank>MSLU</A> covers a lot of territory, considering how small it is -- less than 250k yet it covers over 500 APIs!</P>
+<P>One of the questions I was often asked was what I thought was the most difficult API to wrap. </P>
+<P>My answer, without hesitation, was always the same: <A title=FormatMessage href="http://msdn.microsoft.com/library/en-us/debug/base/formatmessage.asp" target=_blank>FormatMessage</A>.</P>
+<P>Let's look at how the Platform SDK describes it:</P>
+<BLOCKQUOTE dir=ltr>
+<P><FONT size=2>The <B>FormatMessage</B> function formats a message string. The function requires a message definition as input. The message definition can come from a buffer passed into the function. It can come from a message table resource in an already-loaded module. Or the caller can ask the function to search the system's message table resource(s) for the message definition. The function finds the message definition in a message table resource based on a message identifier and a language identifier. The function copies the formatted message text to an output buffer, processing any embedded insert sequences if requested.</FONT></P></BLOCKQUOTE>
+<P>Ok, so it sounds complicated. When I started out, I figured it would be easy. Of the 32 different Unicode layers inside of Microsoft almost half of them had a FormatMessage wrapper already. With so<BR>much code to work from, we should be covered, right? The reality was far stranger, unfortunately! It seems that even with 14 samples to steal from, no one had ever implemented the whole function. After all, FormatMessage is pretty complicated:<BR><BR>You can load from system messages, from your own binary, or format a string you pass in</P>
+<UL>
+<LI>The API can allocate the string or you can allocate it yourself 
+<LI>You can use inserts in the form of an array of arguments (including strings!) 
+<LI>You can use inserts in the form of a va_list * (which can also include strings!) 
+<LI>Just about every 4-byte arg type is supported (only some of the larger ones like the float types are not allowed)</LI></UL>
+<P>Turns out no one had ever done it all -- in fact, none of them used arguments at all, except in the simplest of ways to avoid problems (i.e. a version that only accepted strings, a version that never accepted them, and so on). I won't names or anything, but I really don't have to -- from my point of view everyone stunk at this point, and I did not care how many interesting bugs for ExtTextOutW on Win9x had been fixed....</P>
+<P>So, the <STRONG>MSLU Triage Committee</STRONG> met (which sounds more impressive than it was -- it was just my lead and a PM and me talking).&nbsp;We decided that ideally MSLU ought to just to do it right, for all of the cases. After all, you never know what a user might be depending on!</P>
+<P>But trying to completely support all possible aspects was tricky. After all, you have to accept an arbitrary number of parameters, only some of which might be strings (and of course all strings have to be converted!). They can be used in any order and although it is not documented it it entirely legal to skip inserts in the actual string being used (thank God for beta testers, thats all I can say!).<BR></P>
+<P>In the end,&nbsp;I kept a very simple strategy to handle all the weirdnesses of inserts:</P>
+<OL>
+<LI>Preload the string, using the FORMAT_MESSAGE_IGNORE_INSERTS dwFlag so that the raw string could be obtained (and the API allocates this time) 
+<LI>Parse the string for insert tags (which are always in the %n format, up to %99), being sure to get the highest id number and also to store whether each insert has a string in it per the raw string 
+<LI>Free the allocated string, we do not need it anymore 
+<LI>Build a new array of items based on the old array or va_list (converting all strings&nbsp;out of&nbsp;Unicode as needed). 
+<LI>Call the OS API with the newly created inserts, using the allocation preference of the one who called us.</LI></OL>
+<P>Lots of minor flourishes about allocations and language info, etc., but in the end this was a pretty hellaciously complicated API to try to totally support!</P>
+<P>&nbsp;</P>
+<P><FONT color=#800080><EM>This post brought to you by</EM> "ฑ" <EM>(<A href="http://www.fileformat.info/info/unicode/char/0e11/index.htm">U+0e11</A>, a.k.a. THAI CHARACTER THO NANGMONTHO)</EM></FONT></P>
+<hr/><p><a id="376704" href="#376704">#</a> <strong>AC</strong> on 19 Feb 2005 1:01 PM:</p><div style="margin-left: 1em">Why wouldn't you copy the Unicode <a title="FormatMessage" href="http://msdn.microsoft.com/library/en-us/debug/base/formatmessage.asp" target="_blank">FormatMessage</a> code from NT and use that?</div>
+<p><a id="376768" href="#376768">#</a> <strong>CN</strong> on 19 Feb 2005 4:42 PM:</p><div style="margin-left: 1em">Another question/suggestion: Were you ever, in this method or others in <a title="MSLU" href="http://www.microsoft.com/globaldev/handson/dev/mslu_announce.mspx" target="_blank">MSLU</a> able/allowed/helped by looking at how SomeWeirdFunctionA wrapped SomeWeirdFunctionW in NT? I would imagine that some issues should be quite similar, even if the devil in the details would be proper assumptions of total buffer sizes and so on.</div>
+<p><a id="376801" href="#376801">#</a> <strong>Michael Kaplan</strong> on 19 Feb 2005 7:52 PM:</p><div style="margin-left: 1em">Hello AC -- The design goal of <a title="MSLU" href="http://www.microsoft.com/globaldev/handson/dev/mslu_announce.mspx" target="_blank">MSLU</a> was *not* to support Unicode on Win9x. It was to provide a Unicode programming interface so that the same application running on NT would be able to support everything the platform could.<br><br>CN -- sometimes it would help, I did look at most of them at some point....</div>
+<hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2005/02/19/376617.html" title="Stripping diacritics....">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2005/02/18/376225.html" title="Ready... set... Reboot!">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2005-02">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2005-02-19">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2005/02/19/376607.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:42 GMT -->
+</html>

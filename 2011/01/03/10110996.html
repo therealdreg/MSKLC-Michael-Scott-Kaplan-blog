@@ -1,0 +1,22 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2011/01/03/10110996.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Bad news: you may have to clear the cache; Good news: you *can* clear the cache</title></head><body>
+<h1>Bad news: you may have to clear the cache; Good news: you *can* clear the cache</h1>
+<p><em>by Michael S. Kaplan, published on 2011/01/03, original URI: http://blogs.msdn.com/b/michkap/archive/2011/01/03/10110996.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNewMonth -->
+<p>The question that came up was pretty clear:</p>
+<p style="padding-left: 60px;"><em>Hi All,</em></p>
+<p style="padding-left: 60px;"><em>Get-Date cmdlet in powershell does not reflect the changes done in TimeZone setting. New changes are reflected only after I open a new powershell window.</em></p>
+<p style="padding-left: 60px;"><em>Repro steps:<br />1. Open a PowerShell window<br />2. execute get-date [current time is shown]<br />3. change timezone settings to different timezone.<br />4. execute get-date [new time zone changes are not reflected]<br />5. Open another PowerShell window, execute get-date [new timezone changes are reflected]</em></p>
+<p style="padding-left: 60px;"><em>Is this a BUG or by design?</em></p>
+<p style="padding-left: 60px;"><em>I checked that cmd.exe reflects the change in TimeZone settings on the same window and expect powershell to behave no differently.</em></p>
+<p style="padding-left: 60px;"><em>Thanks, </em></p>
+<p>One might be thinking about my <a href="http://archives.miloush.net/michkap/archive/2005/04/05/405443.html" title="So what happened in v.Next?"><strong>So what happened in v.Next?</strong></a>&nbsp;that explained how in .NET &gt;= 1.1 there is a way to properly automate getting updates to locale data and calling ClearCachedData, described in <a href="http://archives.miloush.net/michkap/archive/2005/04/03/404931.html" title="How ClearCachedData found its way into the .NET Framework"><strong>How ClearCachedData found its way into the .NET Framework</strong></a>.</p>
+<p>And the reason I was reminded? Because we are talking about the same bug, with the same solution, really!</p>
+<p>In regard to time zone stuff, this is even covered in a Connect bug report: <a href="http://connect.microsoft.com/VisualStudio/feedback/details/305300/datetime-now-does-not-appear-to-recognize-timezone-changes-the-documentation-must-reflect-this">DateTime.Now does not appear to recognize timezone changes. The documentation must reflect this</a>.</p>
+<p>Now there may or may not be notifications that work in this scenario, even though functions that change time zone info like <a href="http://msdn.microsoft.com/library/ms724944.aspx">SetTimeZoneInformation</a> specifically recommend broadcasting&nbsp;a WM_SETTINGCHANGE message. Because you may not have a way to get messages when in a PowerShell command line script. And not everyone sends that message....</p>
+<p>However, you can always call ClearCachedData before making the <strong>get-date</strong> call if&nbsp;you are&nbsp;worried about the scenario.</p>
+<p><em>If you ask me, it should be an optional parameter for things like <strong>get-date</strong> to do this for you, but I'm not going to quibble....</em></p>
+<hr/><div style="margin-left: 1em"><em>comments not archived</em></div><hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2011/01/04/10110938.html" title="Short-sighted text processing #4: Squeezing every bit of text you possibly can out of MacOffice 2011">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2011/01/02/10110880.html" title="Even now, I continue to watch TV like a blind man">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2011-01">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2011-01-03">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2011/01/03/10110996.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+</html>

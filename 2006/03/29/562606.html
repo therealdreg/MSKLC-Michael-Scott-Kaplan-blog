@@ -1,0 +1,49 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2006/03/29/562606.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:40 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Is the CAPS LOCK on?</title></head><body>
+<h1>Is the CAPS LOCK on?</h1>
+<p><em>by Michael S. Kaplan, published on 2006/03/29 03:01 -05:00, original URI: http://blogs.msdn.com/b/michkap/archive/2006/03/29/562606.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P><FONT face=Tahoma>A few days ago, Mohammed asked:</FONT></P>
+<BLOCKQUOTE dir=ltr style="MARGIN-RIGHT: 0px">
+<P><FONT face="Times New Roman" size=2>I am using System.Windows.Forms.SendKeys to send some keystrokes to the active application. When the CAPS lock on the hosting keyboard is turned on, all my keystrokes get sent with the opposite case, which is an acceptable behavior (SendKeys is dependant on the state of the keyboard).<BR><BR></FONT><FONT face="Times New Roman" size=2>To work around this issue, I’m trying to detect the state of the CAPS lock key to account for case changes. Does anyone know a way to do this using a .NET library call? I’m using C#. <BR><BR>Thanks,</FONT></P></BLOCKQUOTE>
+<P><FONT face=Tahoma>There is unfortunately nothing built in, which is not to say there shouldn't be!</FONT></P>
+<P><FONT face=Tahoma>The&nbsp;trick is to use the <A href="http://msdn.microsoft.com/library/en-us/winui/winui/windowsuserinterface/userinput/keyboardinput/keyboardinputreference/keyboardinputfunctions/getkeystate.asp">GetKeyState</A> function in the Win32 API, which has the following info about its return value:</FONT></P>
+<BLOCKQUOTE dir=ltr style="MARGIN-RIGHT: 0px">
+<BLOCKQUOTE dir=ltr style="MARGIN-RIGHT: 0px">
+<P><FONT face=Tahoma size=2><EM>The return value specifies the status of the specified virtual key, as follows: </EM></FONT></P>
+<UL>
+<LI><FONT face=Tahoma size=2><EM>If the high-order bit is 1, the key is down; otherwise, it is up.</EM></FONT></LI>
+<LI><FONT face=Tahoma size=2><EM>If the low-order bit is 1, the key is toggled. A key, such as the CAPS LOCK key, is toggled if it is turned on. The key is off and untoggled if the low-order bit is 0. A toggle key's indicator light (if any) on the keyboard will be on when the key is toggled, and off when the key is untoggled.</EM></FONT></LI></UL></BLOCKQUOTE></BLOCKQUOTE>
+<P><FONT face=Tahoma>That first half may sound familiar to those who read <STRONG><A HREF="http://archives.miloush.net/michkap/archive/2006/03/28/561541.html">Getting all you can out of a keyboard layout, Part #5</A></STRONG>, since I used it to give information on whether the shift keys were pressed or not.</FONT></P>
+<P><FONT face=Tahoma>Well, the second half is what we're dealing with now -- the low order bit must be set to indicate a toggle key like CAPS LOCK has been pressed. So, you can use code something like this:</FONT></P>
+<BLOCKQUOTE dir=ltr style="MARGIN-RIGHT: 0px">
+<BLOCKQUOTE dir=ltr style="MARGIN-RIGHT: 0px">
+<P><FONT face="Courier New" size=2><STRONG>[DllImport("user32.dll", ExactSpelling=true)]<BR>internal static extern ushort GetKeyState(uint nVirtKey);<BR><BR>internal const byte VK_CAPITAL&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;= 0x14;</STRONG></FONT></P>
+<P><FONT face="Courier New" size=2><STRONG>if(0 != (GetKeyState(VK_CAPITAL) &amp; 1))<BR>{<BR>&nbsp;&nbsp;&nbsp; // do whatever here<BR>}</STRONG></FONT></P></BLOCKQUOTE></BLOCKQUOTE>
+<P><FONT face=Tahoma>(You may remember that I hate the Keys enumeration, as I pointed out in <A HREF="http://archives.miloush.net/michkap/archive/2006/03/23/558658.html">Part 0</A>; also, I&nbsp;did not know about&nbsp;VB.Net's <A href="http://msdn2.microsoft.com/en-us/library/6z820yx2(VS.80).aspx">My.Computer.Keyboard.CapsLock</A>&nbsp;but luckily <A HREF="http://blogs.msdn.com/SaraFord">Sara Ford</A> was nearby to point this out for those who are using VB and wanted avoid the const definition!)</FONT></P>
+<P><FONT face=Tahoma>And there you have it -- how to find out if the CAPS LOCK is toggled.</FONT></P>
+<P><FONT face=Tahoma>As I am sure you can imagine, we're going to be making use of this in a future post in the series. :-)</FONT></P>
+<P><FONT face=Tahoma></FONT>&nbsp;</P>
+<P><FONT face=Tahoma color=#ff1493><EM>This post brought to you by</EM> "Ŧ" <EM>(<A href="http://www.fileformat.info/info/unicode/char/0166">U+0166</A>, a.k.a. LATIN CAPITAL LETTER T WITH STROKE)</EM></FONT></P>
+<hr/><p><a id="563853" href="#563853">#</a> <strong>Anonymous</strong> on 29 Mar 2006 7:10 AM:</p><div style="margin-left: 1em">Maybe you should mention that using SendKeys is VERY rarely the right approach. If there really is no programming interface for an application, enumerating its windows and sending messages directly to them is usually a better choice.</div>
+<p><a id="563976" href="#563976">#</a> <strong>Michael S. Kaplan</strong> on 29 Mar 2006 10:46 AM:</p><div style="margin-left: 1em">Well, the problems you refer to about SendKeys are not really internationalization issues, so it would not be for me to say in this blog. :-)<br><br>But never fear, I'll be getting to the problems with SendKeys from an internationalization standpoint eventually. When I do, the other things may get mentioned in passing....</div>
+<p><a id="564530" href="#564530">#</a> <strong>Mihai</strong> on 30 Mar 2006 12:36 AM:</p><div style="margin-left: 1em">In fact, there is no good solution to &quot;automate&quot; an application withouy a programming interface.<br><br>The problem is finding the right window. Enumerating is fine, but there is nothing to say &quot;this is the window I am looking for&quot; in a language-independent manner. One only has access to the window class (and that is the same for most dialogs) and the window text (which changes in localized versions).<br><br>Sending messages or SendKey, it does not matter, if you cannoy properly identify the target window.<br></div>
+<p><a id="602770" href="#602770">#</a> <strong>Luke Ogg</strong> on 20 May 2006 2:31 PM:</p><div style="margin-left: 1em">I ran across this method in the Framework 2.0:<br><br>public static bool IsKeyLocked (<br> &nbsp; &nbsp;Keys keyVal<br>)<br><br>Using the following will determine if the caps lock is on:<br><br>Control.IsKeyLocked(Keys.CapsLock)<br></div>
+<p><a id="602786" href="#602786">#</a> <strong>Michael S. Kaplan</strong> on 20 May 2006 3:09 PM:</p><div style="margin-left: 1em">Hi Luke,<br><br>Interesting! I had not seen this one before....<br><br>I've been working hard to try and make sure the code works with either 1.1 or 2.0 (or even unmanaged techniques), but I will applaud new stuff that makes it easier for people!</div>
+<p><a id="621450" href="#621450">#</a> <strong>Ray Woods</strong> on 7 Jun 2006 10:22 PM:</p><div style="margin-left: 1em">The information was excellent. &nbsp;I have it bookmarked.<br><br>Thanks!!!!!!!!!!!!!!!!</div>
+<p><a id="8317226" href="#8317226">#</a> <strong>Caio Proiete</strong> on 18 Mar 2008 12:23 PM:</p><div style="margin-left: 1em"><P>Wouldn't be easier to just use the CapsLock property of the Console class?</P>
+<P>if (Console.CapsLock)</P>
+<P>{</P>
+<P>&nbsp; &nbsp;// Caps Lock is on...</P>
+<P>}</P>
+<P>Cheers,</P>
+<P>Caio Proiete</P></div>
+<p><a id="8317331" href="#8317331">#</a> <strong>Michael S. Kaplan</strong> on 18 Mar 2008 12:30 PM:</p><div style="margin-left: 1em"><p>In a non-Console app? That kind of thing makes me nervous if it is not either documented as supported (or at least I've had a chance to look at the code behind the implementation!)....</p>
+<p>Beyond all that and most significantly</p>
+<p>a) there is the fact that it doesn't exist in .Net 1.0/1.1 (the pinvoke solution works in any version)</p>
+<p>b) this technique will work for any toggle key. including ones that have no property available.</p>
+</div>
+<hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2006/04/10 <a href="http://archives.miloush.net/michkap/archive/2006/04/10/570570.html">Getting all you can out of a keyboard layout, Part #8</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2006/03/30/564598.html" title="If at first you don&#39;t succeed, there&#39;s probably still a bug">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2006/03/28/561725.html" title="Only ONE WCHAR per dead key">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2006-03">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2006-03-29">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2006/03/29/562606.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:40 GMT -->
+</html>

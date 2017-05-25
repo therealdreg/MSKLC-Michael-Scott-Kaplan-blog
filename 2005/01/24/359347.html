@@ -1,0 +1,304 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2005/01/24/359347.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:42 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>In Tamil -- sometimes, they are digits; other times, just numbers</title></head><body>
+<h1>In Tamil -- sometimes, they are digits; other times, just numbers</h1>
+<p><em>by Michael S. Kaplan, published on 2005/01/24 00:04 -08:00, original URI: http://blogs.msdn.com/michkap/archive/2005/01/24/359347.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostOld -->
+<P>Early last year, <a href="http://blogs.msdn.com/oldnewthing">Raymond Chen</A> talked about how <a href="http://blogs.msdn.com/oldnewthing/archive/2004/03/09/86555.aspx">Char.IsDigit matches more than just 0 through 9</A>&nbsp;and later last year I talked about <A id=viewpost href="http://archives.miloush.net/michkap/archive/2004/12/01/272864.html">Crossing the <B>DIGIT</B>al divide</A>. But in both cases the&nbsp;conversation is limited to digits, and not the wide world of numbers which includes a lot more than just different ways of&nbsp;saying 0123456789.&nbsp;</P>
+<P>The distinction between digits and numbers in Unicode is an important one, since the formatting and&nbsp;parsing of numeric values is highly dependent on whether a number acts like the ASCII digits 0 - 9 or not.</P>
+<P>Now the bulk of the modern number systems use the same Arabic-Indic system&nbsp;conventions to which software developers are accustomed,&nbsp;but others do exist, some of which are still see use today.</P>
+<P>As an example people can relate to, most of us are aware of the Roman numeral system where there is no Zero and you sometimes have to use a lot of addition in subtraction in a deterministic manner (such that any time a smaller number comes before a larger one, the smaller one is subtracted; otherwise if they are the same value or the larger one comes first, it is added). Thus <STRONG>Ⅰ</STRONG> is one, <STRONG>Ⅲ</STRONG> is three, <STRONG>Ⅳ</STRONG> is 4, <STRONG>Ⅴ</STRONG> is 5, and so on. Although it is not used too much, it is still commonly seen in the credits of movies and television shows for the copyright date (e.g.&nbsp;<STRONG>MCMLXXXIX</STRONG> for 1989). Many people who are not used to Roman numerals breathed a sigh of relief at the year 2000 since <STRONG>MM</STRONG>&nbsp;is so much easier to read....</P>
+<P>It is of note that the Roman Numerals are encoded in Unicode even though they can all be represented as existing letters. The primary reason for this is that there are character properties associated with each encoded character, and these properties are used by many implementations of Unicode to get actual work done. Therefore, the letter&nbsp;V (<A href="http://www.fileformat.info/info/unicode/char/0056/index.htm">U+0056</A>, LATIN CAPITAL LETTER V) has a General Category of <A href="http://www.fileformat.info/info/unicode/category/Lu/list.htm">Lu</A> (Letter, Uppercase) while&nbsp;<STRONG>Ⅴ</STRONG>(<A href="http://www.fileformat.info/info/unicode/char/2164/index.htm">U+2164</A>, ROMAN NUMBERAL FIVE) has a general category of <A href="http://www.fileformat.info/info/unicode/category/Nl/list.htm">Nl</A> (Letter, Number).</P>
+<P>And yes, even that claim falls apart a little since the hexidecimal digits ABCDEF are not separately encoded for reasons of backwards compatibility with decades of existing practice on computers which is not the case with Roman numerals. Even the argument for having encoded the Roman numerals is a little specious since for the most part they have not been encoded and when they are the style never seems to be consistent typographically. Though YMMV since you may have better fonts than I do! Try&nbsp;"<STRONG>ⅯⅭⅯⅬⅩⅩⅩⅨ</STRONG>" for the test....</P>
+<P><EM>All of this goes to show that Unicode is a very complex standard. In the end, Unicode can always do what it needs to do without fear of the occasional contradiction, since there will always be some precedent with which to be consistent. :-)</EM></P>
+<P>Ethiopic numbers are based on a different alternative system, one that can really wreak havoc with a formatting/parsing architecture like that in Windows or the .NET Framework if you try to bring Ethiopic data in without writing code do the work (just like with Roman numerals). I'll talk about Ethiopic numbers another time....</P>
+<P>Yet another system, the one I will talk about here, is&nbsp;that of Tamil numerals. It is an additive and positional system (unlike Roman numerals,&nbsp;there is no subtraction involved) that has no zero but includes characters for 10, 100, and 1000. </P>
+<P>In the traditional system the number 3,782 would be represented&nbsp;as&nbsp;௩௲௭௱௮௰௨ (literally Three-Thousand(s)-Seven-Hundread(s)-Eight-Ten(s)-Two, or மூன்று-ஆயிரத்து-எழு-நூற்று-எண்-பத்து-இரண்டு in Tamil).</P>
+<P>At least since the early 1800s, however, usage of the Tamil numerals as digits has been more and more common. Thus the number 3,782 would often be represented as ௩௭௮௨ (literally 3782). </P>
+<P>The&nbsp;following table gives a bunch of different numbers and how they are represented in both the older, more traditional&nbsp;style and in the "modern" style where they act as digits. Note that the table is treating U+0eb6 as TAMIL DIGIT ZERO even though it is not being added to Unicode until version 4.1. Up until now the ASCII DIGIT ZERO was used as needed, as I do in the table below for display purposes, and if you want to represent these numbers before Unicode 4.1 is released you should likely use U+0030 (DIGIT ZERO). The <EM>modern Tamil </EM>column using the LOCALE_SGROUPING setting of Tamil....</P>
+<TABLE cellSpacing=0 cellPadding=5>
+
+<TR>
+<TH>Arabic-Indic Digit</TH>
+<TH>old style Tamil</TH>
+<TH>modern Tamil</TH>
+<TH>old style Tamil code points</TH>
+<TH>modern Tamil code points for number</TH></TR>
+
+<TR>
+<TD align=right>0<FONT size=1><SUP>&nbsp;</SUP></FONT></TD>
+<TD>&nbsp;<SUP><FONT size=2>(<EM>not available)</EM></FONT></SUP></TD>
+<TD align=right>0</TD>
+<TD><SUP><FONT size=2>(<EM>not available)</EM></FONT></SUP>&nbsp;</TD>
+<TD>0be6</TD></TR>
+<TR>
+<TD align=right>1<FONT size=1><SUP>&nbsp;</SUP></FONT></TD>
+<TD>௧</TD>
+<TD align=right>௧</TD>
+<TD>0be7</TD>
+<TD>0be7</TD></TR>
+<TR>
+<TD align=right>2<FONT size=1><SUP>&nbsp;</SUP></FONT></TD>
+<TD>௨</TD>
+<TD align=right>௨</TD>
+<TD>0be8</TD>
+<TD>0be8</TD></TR>
+<TR>
+<TD align=right>3<FONT size=1><SUP>&nbsp;</SUP></FONT></TD>
+<TD>௩</TD>
+<TD align=right>௩</TD>
+<TD>0be9</TD>
+<TD>0be9</TD></TR>
+<TR>
+<TD align=right>4<FONT size=1><SUP>&nbsp;</SUP></FONT></TD>
+<TD>௪</TD>
+<TD align=right>௪</TD>
+<TD>0bea</TD>
+<TD>0bea</TD></TR>
+<TR>
+<TD align=right>5<FONT size=1><SUP>&nbsp;</SUP></FONT></TD>
+<TD>௫</TD>
+<TD align=right>௫</TD>
+<TD>0beb</TD>
+<TD>0beb</TD></TR>
+<TR>
+<TD align=right>6<FONT size=1><SUP>&nbsp;</SUP></FONT></TD>
+<TD>௬</TD>
+<TD align=right>௬</TD>
+<TD>0bec</TD>
+<TD>0bec</TD></TR>
+<TR>
+<TD align=right>7<FONT size=1><SUP>&nbsp;</SUP></FONT></TD>
+<TD>௭</TD>
+<TD align=right>௭</TD>
+<TD>0bed</TD>
+<TD>0bed</TD></TR>
+<TR>
+<TD align=right>8<FONT size=1><SUP>&nbsp;</SUP></FONT></TD>
+<TD>௮</TD>
+<TD align=right>௮</TD>
+<TD>0bee</TD>
+<TD>0bee</TD></TR>
+<TR>
+<TD align=right>9<FONT size=1><SUP>&nbsp;</SUP></FONT></TD>
+<TD>௯</TD>
+<TD align=right>௯</TD>
+<TD>0bef</TD>
+<TD>0bef</TD></TR>
+<TR>
+<TD align=right>10<FONT size=1><SUP>&nbsp;</SUP></FONT></TD>
+<TD>௰</TD>
+<TD align=right>௧0</TD>
+<TD>0bf0</TD>
+<TD>0be7 0be6</TD></TR>
+<TR>
+<TD align=right>11<FONT size=1><SUP>&nbsp;</SUP></FONT></TD>
+<TD>௰௧</TD>
+<TD align=right>௧௧</TD>
+<TD>0bf0 0be7</TD>
+<TD>0be7 0be7</TD></TR>
+<TR>
+<TD align=right>12<FONT size=1><SUP>&nbsp;</SUP></FONT></TD>
+<TD>௰௨</TD>
+<TD align=right>௧௨</TD>
+<TD>0bf0 0be8</TD>
+<TD>0be7 0be8</TD></TR>
+<TR>
+<TD align=right>13<FONT size=1><SUP>&nbsp;</SUP></FONT></TD>
+<TD>௰௩</TD>
+<TD align=right>௧௩</TD>
+<TD>0bf0 0be9</TD>
+<TD>0be7 0be9</TD></TR>
+<TR>
+<TD align=right>14<FONT size=1><SUP>&nbsp;</SUP></FONT></TD>
+<TD>௰௪</TD>
+<TD align=right>௧௪</TD>
+<TD>0bf0 0bea</TD>
+<TD>0be7 0bea</TD></TR>
+<TR>
+<TD align=right>15<FONT size=1><SUP>&nbsp;</SUP></FONT></TD>
+<TD>௰௫</TD>
+<TD align=right>௧௫</TD>
+<TD>0bf0 0beb</TD>
+<TD>0be7 0beb</TD></TR>
+<TR>
+<TD align=right>16<FONT size=1><SUP>&nbsp;</SUP></FONT></TD>
+<TD>௰௬</TD>
+<TD align=right>௧௬</TD>
+<TD>0bf0 0bec</TD>
+<TD>0be7 0bec</TD></TR>
+<TR>
+<TD align=right>17<FONT size=1><SUP>&nbsp;</SUP></FONT></TD>
+<TD>௰௭</TD>
+<TD align=right>௧௭</TD>
+<TD>0bf0 0bed</TD>
+<TD>0be7 0bed</TD></TR>
+<TR>
+<TD align=right>18<FONT size=1><SUP>&nbsp;</SUP></FONT></TD>
+<TD>௰௮</TD>
+<TD align=right>௧௮</TD>
+<TD>0bf0 0bee</TD>
+<TD>0be7 0bee</TD></TR>
+<TR>
+<TD align=right>19<FONT size=1><SUP>&nbsp;</SUP></FONT></TD>
+<TD>௰௯</TD>
+<TD align=right>௧௯</TD>
+<TD>0bf0 0bef</TD>
+<TD>0be7 0bef</TD></TR>
+<TR>
+<TD align=right>100<FONT size=1><SUP>&nbsp;</SUP></FONT></TD>
+<TD>௱</TD>
+<TD align=right>௧00</TD>
+<TD>0bf1</TD>
+<TD>0be7 0be6 0be6</TD></TR>
+<TR>
+<TD align=right>156<FONT size=1><SUP>&nbsp;</SUP></FONT></TD>
+<TD>௱௫௰௬</TD>
+<TD align=right>௱௫௬</TD>
+<TD>0bf1 0beb 0bf0 0bec</TD>
+<TD>0be7 0beb 0bec</TD></TR>
+<TR>
+<TD align=right>200<FONT size=1><SUP>&nbsp;</SUP></FONT></TD>
+<TD>௨௱</TD>
+<TD align=right>௨00</TD>
+<TD>0be8 0bf1</TD>
+<TD>0be8 0be6 0be6</TD></TR>
+<TR>
+<TD align=right>300<FONT size=1><SUP>&nbsp;</SUP></FONT></TD>
+<TD>௩௱</TD>
+<TD align=right>௩00</TD>
+<TD>0be9 0bf1</TD>
+<TD>0be9 0be6 0be6</TD></TR>
+<TR>
+<TD align=right>1,000<FONT size=1><SUP>&nbsp;</SUP></FONT></TD>
+<TD>௲</TD>
+<TD align=right>௧,000</TD>
+<TD>0bf2</TD>
+<TD>0be7 0be6 0be6 0be6</TD></TR>
+<TR>
+<TD align=right>1,001<FONT size=1><SUP>&nbsp;</SUP></FONT></TD>
+<TD>௲௧</TD>
+<TD align=right>௧,00௧</TD>
+<TD>0bf2 0BE7</TD>
+<TD>0be7 0be6 0be6 0be7</TD></TR>
+<TR>
+<TD align=right>1,040<FONT size=1><SUP>&nbsp;</SUP></FONT></TD>
+<TD>௲௪௰</TD>
+<TD align=right>௧,0௪0</TD>
+<TD>0bf2 0bea 0bf0</TD>
+<TD>0be7 0be6 0bea 0be6</TD></TR>
+<TR>
+<TD align=right>8,000<FONT size=1><SUP>&nbsp;</SUP></FONT></TD>
+<TD>௮௲</TD>
+<TD align=right>௮,000</TD>
+<TD>0bee 0bf2</TD>
+<TD>0bee 0be6 0be6 0be6</TD></TR>
+<TR>
+<TD align=right>10,000<FONT size=1><SUP>&nbsp;</SUP></FONT></TD>
+<TD>௰௲</TD>
+<TD align=right>௧0,000</TD>
+<TD>0bf0 0bf2</TD>
+<TD>0be7 0be6 0be6 0be6 0be6</TD></TR>
+<TR>
+<TD align=right>70,000<FONT size=1><SUP>&nbsp;</SUP></FONT></TD>
+<TD>௭௰௲</TD>
+<TD align=right>௭0,000</TD>
+<TD>0bed 0bf0 0bf2</TD>
+<TD>0bed 0be6 0be6 0be6 0be6</TD></TR>
+<TR>
+<TD align=right>90,000<FONT size=1><SUP>&nbsp;</SUP></FONT></TD>
+<TD>௯௰௲</TD>
+<TD align=right>௯0,000</TD>
+<TD>0bef 0bf0 0bf2</TD>
+<TD>0bef 0be6 0be6 0be6 0be6</TD></TR>
+<TR>
+<TD align=right>100,000<FONT size=1><SUP>1</SUP></FONT></TD>
+<TD>௱௲</TD>
+<TD align=right>௧,00,000</TD>
+<TD>0bf1 0bf2</TD>
+<TD>0be7 0be6 0be6 0be6 0be6 0be6</TD></TR>
+<TR>
+<TD align=right>800,000<FONT size=1><SUP>&nbsp;</SUP></FONT></TD>
+<TD>௮௱௲</TD>
+<TD align=right>௮,00,000</TD>
+<TD>0bee 0bf1 0bf2</TD>
+<TD>0bee 0be6 0be6 0be6 0be6 0be6</TD></TR>
+<TR>
+<TD align=right>1,000,000<FONT size=1><SUP>2</SUP></FONT></TD>
+<TD>௰௱௲</TD>
+<TD align=right>௧0,00,000</TD>
+<TD>0bf0 0bf1 0bf2</TD>
+<TD>0be7 0be6 0be6 0be6 0be6 0be6 0be6</TD></TR>
+<TR>
+<TD align=right>9,000,000<FONT size=1><SUP>&nbsp;</SUP></FONT> 
+<TD>௯௰௱௲</TD>
+<TD align=right>௯0,00,000</TD>
+<TD>0bef 0bf0 0bf1 0bf2</TD>
+<TD>0bef 0be6 0be6 0be6 0be6 0be6 0be6</TD></TR>
+<TR>
+<TD align=right>10,000,000<FONT size=1><SUP>3</SUP></FONT></TD>
+<TD>௱௱௲</TD>
+<TD align=right>௧,00,00,000</TD>
+<TD>0bf1 0bf1 0bf2</TD>
+<TD>0be7 0be6 0be6 0be6 0be6 0be6 0be6 0be6</TD></TR>
+<TR>
+<TD align=right>100,000,000<FONT size=1><SUP>4</SUP></FONT></TD>
+<TD>௰௱௱௲</TD>
+<TD align=right>௧0,00,00,000</TD>
+<TD>0bf0 0bf1 0bf1 0bf2</TD>
+<TD>0be7 0be6 0be6 0be6 0be6 0be6 0be6 0be6 0be6</TD></TR>
+<TR>
+<TD align=right>1,000,000,000<FONT size=1><SUP>5</SUP></FONT></TD>
+<TD>௱௱௱௲</TD>
+<TD align=right>௧,00,00,00,000</TD>
+<TD>0bf1 0bf1 0bf1 0bf2</TD>
+<TD>0be7 0be6 0be6 0be6 0be6 0be6 0be6 0be6 0be6 0be6</TD></TR>
+<TR>
+<TD align=right>10,000,000,000<FONT size=1><SUP>6</SUP></FONT></TD>
+<TD>௲௱௱௲</TD>
+<TD align=right>௧0,00,00,00,000</TD>
+<TD>0bf2 0bf1 0bf1 0bf2</TD>
+<TD>0be7 0be6 0be6 0be6 0be6 0be6 0be6 0be6 0be6 0be6 0be6</TD></TR>
+<TR>
+<TD align=right>100,000,000,000<FONT size=1><SUP>7</SUP></FONT></TD>
+<TD>௰௲௱௱௲</TD>
+<TD align=right>௧,00,00,00,00,000</TD>
+<TD>0bf1 0bf1 0bf2</TD>
+<TD>0be7 0be6 0be6 0be6 0be6 0be6 0be6 0be6 0be6 0be6 0be6 0be6</TD></TR>
+<TR>
+<TD align=right>1,000,000,000,000<FONT size=1><SUP>8</SUP></FONT></TD>
+<TD>௱௲௱௱௲</TD>
+<TD align=right>௧0,00,00,00,00,000</TD>
+<TD>0bf1 0bf2 0bf1 0bf1 0bf2</TD>
+<TD><FONT size=2>0be7 0be6 0be6 0be6 0be6 0be6 0be6 0be6 0be6 0be6 0be6 0be6 0be6</FONT></TD></TR>
+<TR>
+<TD align=right>100,000,000,000,000<FONT size=1><SUP>9</SUP></FONT></TD>
+<TD>௱௱௲௱௱௲</TD>
+<TD align=right>௧0,00,00,00,00,00,000</TD>
+<TD><FONT size=2>0bf1 0bf1 0bf2 0bf1 0bf1 0bf2</FONT></TD>
+<TD><FONT size=2>0be7 0be6 0be6 0be6 0be6 0be6 0be6 0be6 0be6 0be6 0be6 0be6 0be6 0be6 0be6</FONT></TD></TR></TABLE>
+<P><FONT size=2><EM>1 - a.k.a. Lakh<BR>2 - a.k.a. 10 Lakhs<BR>3 - a.k.a. crore<BR>4 - a.k.a. 10 crore<BR>5 - a.k.a. 100 crore<BR>6 - a.k.a. thousand crore<BR>7 - a.k.a. 10 thousand crore<BR>8 - a.k.a. lakh crore<BR>9 - a.k.a. crore crore</EM></FONT></P>
+<P>Some examples of both types of usage:</P>
+<UL>
+<LI>Modern practice, using Tamil digits for chapter numbers: mozi varalARu, by munucAmi varatarAcan, published by The South India Saiva Siddhanta Works Publishing Society, Tinnevelly, Limited, November 1954, p. 357-358 (page numbers from 14th Edition, December 1996). 
+<LI>Traditional practice, using the&nbsp;older format (and the source for large parts of the table above!): iniya tamiz ilakkaNam by yokisri cuttAnan~ta pAratiyAr, published by Kavitha Publications, p. 201-204. (you can see the scanned source of some of it <A href="http://www.geocities.com/Athens/5180/numeral.html">here</A>).</LI></UL>
+<P>Note that the traditional form is not currently handled by any code in either Windows or the .NET Framework, though it is sometimes seen in even modern contexts such as calendars. The system is not too complicated and figuring out the algorithm to parse or format with it seems like the sort of thing that would make an interesting Microsoft interview question. Though perhaps I will post some potential solutions another day....</P>
+<P>&nbsp;</P>
+<P><EM>Special thanks to </EM>Sivaraj Doddannan, <EM>Dr. N. Ganesan, and Working&nbsp;Group 02 of INFITT&nbsp;(of which&nbsp;they are both&nbsp;members) for helping to dig up the excellent resources for Tamil numbers. INFITT (International Forum for Information Technology&nbsp;in Tamil) is a liaison member of Unicode and has been instrumental in providing character addition and usage reports to help finish up the Tamil block in Unicode.</EM></P>
+<P><EM></EM>&nbsp;</P>
+<P><FONT color=#800080><EM>This post brought to you by</EM> "<FONT size=1>௧௨௩௪௫௬௭௮௯</FONT>" </FONT><EM><FONT color=#800080>(<A href="http://www.fileformat.info/info/unicode/char/0be7/index.htm">U+0be7</A> - <A href="http://www.fileformat.info/info/unicode/char/0bef/index.htm">U+0bef</A>, a.k.a. TAMIL DIGIT ONE - TAMIL DIGIT NINE)<BR><FONT size=2>and they all welcome their new compadre U+0be6, which is coming soon to a Unicode near you!</FONT></FONT></EM></P>
+<hr/><p><a id="359502" href="#359502">#</a> <strong>Bhakthan</strong> on Monday, January 24, 2005 7:06 AM:</p><div style="margin-left: 1em">Thanks Kaplan</div>
+<p><a id="359540" href="#359540">#</a> <strong>Andrew Quinn</strong> on Monday, January 24, 2005 8:15 AM:</p><div style="margin-left: 1em">In the table, 1,040 in modern Tamil appears to be 4,040.</div>
+<p><a id="359550" href="#359550">#</a> <strong>Michael Kaplan</strong> on Monday, January 24, 2005 8:29 AM:</p><div style="margin-left: 1em">Whoops, you're right -- fixed now. Thanks!</div>
+<p><a id="359687" href="#359687">#</a> <strong>Dr. N. Ganesan</strong> on Monday, January 24, 2005 11:34 AM:</p><div style="margin-left: 1em"><br>It appears that the then government of Madras <br>(now, Chennai, capital of Tamil Nadu, India)<br>introduced the &quot;zero&quot; (0) in Tamil computations<br>in early 19th century. Found a school textbook<br>from 1825 CE describing both the traditional<br>and modern (which employs &quot;zero&quot;(0) ) methods<br>of writing Tamil numerals. This 1825 CE textbook<br>pages are reprinted in a work on the History of Tamil<br>literature in the 19th century (published 1962).<br>Those pages can be seen at<br><a target="_new" href="http://www.geocities.com/thamizh@sbcglobal.net/tamil_zero.PDF">http://www.geocities.com/thamizh@sbcglobal.net/tamil_zero.PDF</a><br><br>Good to know the zero will be available in<br>Tamil code chart from unicode 4.1 onwards,<br>N. Ganean<br><br></div>
+<p><a id="360494" href="#360494">#</a> <strong>Scott Hanselman</strong> on Tuesday, January 25, 2005 3:29 PM:</p><div style="margin-left: 1em">That would ROCK if you would do Ethiopic sometime.<br><br>Tenastilign'</div>
+<p><a id="363279" href="#363279">#</a> <strong>Ambarish Sridharanarayanan</strong> on Saturday, January 29, 2005 9:59 PM:</p><div style="margin-left: 1em">Fascinating article. I had a question - in the traditional style, why is 1,000,000 ௰௱௲ rather than ௲௲? Similarly for larger powers of 10.</div>
+<p><a id="363283" href="#363283">#</a> <strong>Michael Kaplan</strong> on Saturday, January 29, 2005 10:12 PM:</p><div style="margin-left: 1em">The numbers came from a classical source, but if I had to guess, I'd say to match the build-up from prior characters. <br><br>Though since both forms would work, anyone who recognized one would probably be able to recognize the other...</div>
+<p><a id="363298" href="#363298">#</a> <strong>Vatsan </strong> on Saturday, January 29, 2005 11:15 PM:</p><div style="margin-left: 1em">Why is 1,000,000 ௰௱௲ and not ௲௲ ? The difference has to do with how the language is spoken. <br><br>100,000 is 1 lakh, which is called 'laksham' in Tamil. So, 1 Million is 10 * 100,000 = 10 Lakhs ('Pattu Laksham'). So, the representation of 1,000,000 would be <br><br>&lt;symbol for 10&gt; &lt;representation of 100,000&gt; <br><br>100,000 is 100 * 1000 , i.e., 'Nooru Aayiram'. <br>So, representation of 100,000 is <br><br>&lt;representation of 100&gt; &lt;representation of 1000&gt;<br><br>In effect, 1,000,000 is written as <br><br>&lt;ten&gt; &lt;hundred&gt; &lt;thousand&gt; = ௰௱௲. <br></div>
+<p><a id="363300" href="#363300">#</a> <strong>Vatsan </strong> on Saturday, January 29, 2005 11:25 PM:</p><div style="margin-left: 1em">&quot;Though since both forms would work, anyone who recognized one would probably be able to recognize the other... &quot; <br><br>The chances are, it would. In spoken tamil, two numbers uttered one after another is considered to have a multiplicative effect. For eg, 'eerezhu' (a form of saying, 'irandu ezhu', i.e., 'two seven') means 14. Similarly, 'Aayiram Aaryiram' (1000.1000) could be used to mean 1,000,000. So ௲௲ is probably also correct. <br><br>I must add though, this whole idea of the written notation of representing numbers closely following the spoken language is my conjecture, but I haven't been able to find a counterexample that disproves my theory :-)</div>
+<p><a id="363379" href="#363379">#</a> <strong>Mani</strong> on Sunday, January 30, 2005 8:03 AM:</p><div style="margin-left: 1em">Good article &amp; discussion. <br>However anyone had a chance to explore in the other direction, which is decimals and fractions? In Tamil it is &quot;binnam&quot; (some examples like &quot;arai&quot; &quot;kaal&quot; &quot;araikkaal&quot; &quot;veesam&quot; so on). Oh yeah, whole new topic (somewhat related to this)...<br><br>-மணி</div>
+<p><a id="363390" href="#363390">#</a> <strong>Michael Kaplan</strong> on Sunday, January 30, 2005 8:51 AM:</p><div style="margin-left: 1em">I have not, myself -- not sure how the items between the integers are handled in the old style....</div>
+<p><a id="368790" href="#368790">#</a> <strong>Paul</strong> on Monday, February 07, 2005 4:26 PM:</p><div style="margin-left: 1em">Not related to Tamil, but there's an interesting post by Ian Hickson on Traditional Hebrew numbering at <a target="_new" href="http://ln.hixie.ch/?start=1033524738&amp;count=1">http://ln.hixie.ch/?start=1033524738&amp;count=1</a><br><br>Now THAT looks fun...</div>
+<hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2007/02/14 <a href="http://archives.miloush.net/michkap/archive/2007/02/14/1675303.html">Nothing seems to be parsing the crap out of *this* number</a></p><p>2006/08/10 <a href="http://archives.miloush.net/michkap/archive/2006/08/10/694191.html">Roman numerals are Latin script!</a></p><p>2005/02/01 <a href="http://archives.miloush.net/michkap/archive/2005/02/01/364376.html">Why that is positively Ethiopic!</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2005/01/24/359555.html" title="Challenges behind MSLU: the loader! (Part 1)">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2005/01/23/358946.html" title="SQL Server has its own version of .NET &quot;ordinal&quot; comparisons">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2005-01">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2005-01-24">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2005/01/24/359347.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:42 GMT -->
+</html>

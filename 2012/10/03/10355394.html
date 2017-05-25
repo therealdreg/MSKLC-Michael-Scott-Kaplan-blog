@@ -1,0 +1,44 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2012/10/03/10355394.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:25 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>The temptation to channel Grumpy Code Reviewer can be almost overwhelming!</title></head><body>
+<h1>The temptation to channel Grumpy Code Reviewer can be almost overwhelming!</h1>
+<p><em>by Michael S. Kaplan, published on 2012/10/03 07:01 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2012/10/03/10355394.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<p>First, a few prior blogs so you can understand where I'm heading today:</p>
+<ol>
+<li><strong><a title="Vietnamese is a complex language on Windows" href="../../../2005/08/27/457224.html">Vietnamese is a complex language on Windows</a></strong></li>
+<li><strong><a title="On my &quot;Vietnamese Plus&quot; and &quot;pseudo-Form V&quot; constructs" href="../../../2010/01/12/9946880.html">On my "Vietnamese Plus" and "pseudo-Form V" constructs</a></strong></li>
+<li><strong><a title="What's the difference between Tiếng Việt, Ti&amp;ecirc;́ng Việt, and Tiếng Việt? (other than the obvious, I mean)" href="../../02/29/10274340.html">What's the difference between Tiếng Việt, Ti&ecirc;́ng Việt, and Tiếng Việt? (other than the obvious, I mean)</a></strong></li>
+<li><strong><a title="How would *you* define debacle?" href="../../09/18/10350350.html">How would *you* define debacle?</a></strong></li>
+</ol>
+<p>&nbsp;While these blogs are placed correctly in a chronological&nbsp;sense, they may not be in a "understand where I'm coming from here" sense.</p>
+<p>Basically, I'm talking about the Vietnamese keyboard, and how to get information from the data typed with it.</p>
+<p>In&nbsp;blog 3 I described (with the help of John Cowan) the basis for why the "pseudo-Form V" (described in blog 2)&nbsp;exists, and how hard it would be fix with a regular code page.</p>
+<p><em>Blog 4 was just about why all of that had to happen.</em></p>
+<p>But there were some comments put into blog 1 from 2005&nbsp;by <em>Vadim Berman</em> in 2011-2012 on that original blog:</p>
+<p style="padding-left: 30px;">October 10, 2011</p>
+<p style="padding-left: 60px;"><span style="font-family: times new roman,times; font-size: medium;">Hi Michael,</span><br />&nbsp;<br /><span style="font-family: times new roman,times; font-size: medium;">It's a very old post but still important. I was wondering whether there is some kind of workaround for WideCharToMultiByte in Vietnamese. Everything is OK except for the letters with double diacritics, like ệ or ữ.</span></p>
+<p style="padding-left: 60px;"><span style="font-family: times new roman,times; font-size: medium;">What I don't understand is how it is different from Thai. Thai worked without any tweaking!</span></p>
+<p style="padding-left: 60px;"><span style="font-family: times new roman,times; font-size: medium;">Is it possible to change the input and then recreate the characters that the conversion could not handle? I mean they exist in both cp1258 and Unicode, so this should be possible.</span></p>
+<p style="padding-left: 60px;"><span style="font-family: times new roman,times; font-size: medium;">Best regards,</span><br />&nbsp;<br /><span style="font-family: times new roman,times; font-size: medium;">Vadim</span></p>
+<p style="padding-left: 30px;">October 12, 2011</p>
+<p style="padding-left: 60px;"><span style="font-family: times new roman,times; font-size: medium;">You might want to read the last comment <a href="http://stackoverflow.com/questions/7703114/using-widechartomultibyte-with-codepage-1258-vietnamese">here</a>. There is a workaround for the broken conversion.</span></p>
+<p style="padding-left: 30px;">April 27, 2012</p>
+<p style="padding-left: 60px;"><span style="font-family: times new roman,times; font-size: medium;">In the unlikely case that anyone still cares. <em><a href="http://stackoverflow.com/questions/7703114/using-widechartomultibyte-with-codepage-1258-vietnamese">here</a></em></span></p>
+<p>The Stack Overflow link to code to "solve" the problem which&nbsp;actually points back to&nbsp;Vadim Berman's own blog!)&nbsp;is only a partial solution, mind you.</p>
+<p><em>You can see Vadim Berman's blog <a href="../../../../../../digitalsonata.blogspot.com.es/2012/04/workaround-for-conversion-of-unicode.html">here</a>.</em></p>
+<p>It solved replacing <strong><span style="font-family: courier new,courier;">WideCharToMultiByte(1258, ...)</span></strong> in its mjwc2mbstr function.</p>
+<p>I didn't put my tester hat on to check results, but I put my program manager who used to be a dev hat on to do a bit of code review, and the code seems reasonable.</p>
+<p>Though it doesn't do it in a very scalable way.</p>
+<p>And if you needed to go back to Unicode, it doesn't handle <strong><span style="font-family: courier new,courier;">MultiByteToWideChar(1258, ...)</span></strong> properly in its mjmb2wcstr function at all. Which means lots of question marks. :-(</p>
+<p>I tell you, the temptation to channel <a title="Grumpy Code Reviewer" href="http://blogs.msdn.com/b/oldnewthing/">Grumpy Code Reviewer</a> can be almost overwhelming!</p>
+<p>As can the temptation to feel guilty enough about&nbsp;not doing the code work for so long that someone else felt annoyed if to do it himself incorrectly that I'd go and write the solution myself.</p>
+<p>I'll resist that fate, since it's code pages, and sublimate that guilt into honest keyboard work. :-)</p>
+<p><em>Which reminds me of the time I recently violated the First Tester's Axiom for Vietnamese, and nothing was broken! Another day...</em></p>
+<hr/><p><strong>Nick</strong> on 3 Oct 2012 8:13 AM:</p><div style="margin-left: 1em"><p>Raymond Chen as &quot;Grumpy Code Reviewer,&quot; I love it.</p>
+</div>
+<p><strong>Joshua</strong> on 5 Oct 2012 8:23 AM:</p><div style="margin-left: 1em"><p>News Flash: If you&#39;re failing to do something right so long that multiple people publish replacements, you are in no position to complain when they do it wrong until you do go back and do it right.</p>
+</div>
+<hr/><p><em>go to <a id="newer" href="../04/10355814.html" title="LIMITED TIME OFFER: Your chance to be NLS MacGyver, right here in this very blog!">newer</a> or <a id="older" href="../02/10354988.html" title="The evolving Story of Locale Support, part 27: No, the T and the H aren&#39;t silent...">older</a> post, or back to <a href="../../../index-2.html">index</a> or <a href="../../../index-2.html#2012-10">month</a> or <a href="../../../index-2.html#2012-10-03">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2012/10/03/10355394.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:25 GMT -->
+</html>

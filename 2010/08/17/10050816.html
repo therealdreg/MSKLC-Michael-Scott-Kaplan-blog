@@ -1,0 +1,68 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2010/08/17/10050816.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:35 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>It would be like spelling it Anerica or something.</title></head><body>
+<h1>It would be like spelling it Anerica or something.</h1>
+<p><em>by Michael S. Kaplan, published on 2010/08/17 07:01 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2010/08/17/10050816.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<p>Now in the past I have talked about Microsoft's relationship with the Unicode Collation Algorithm, in blogs such as:</p>
+<ul>
+<li><a href="http://archives.miloush.net/michkap/archive/2004/11/28/271121.html" title="Microsoft does not use the Unicode Collation Algorithm"><strong>Microsoft does not use the Unicode Collation Algorithm</strong></a>&nbsp;in 2004</li>
+<li><a href="http://archives.miloush.net/michkap/archive/2008/02/10/7579576.html" title="Microsoft still does not use the UCA; the converse is also true"><strong>Microsoft still does not use the UCA; the converse is also true</strong></a> in 2008</li>
+</ul>
+<p>And I talked about some of the technical differences between the two, as well as&nbsp;some of the reasons behind the differences.</p>
+<p><em>In my personal view, the UCA and the tailors in the CLDR&nbsp;still change a bit too often for my tastes, and I am mostly happy with what Microsoft does. But neither those facts nor the exceptions to the latter&nbsp;that make me say "mostly" are the subject of today's blog.</em></p>
+<p>Today I'm going to talk about one of the biggest philosophical differences that I see as a blocking issue to the idea of using either the Unicode Collation Algorithm or several other Unicode standards in Microsoft products, except in the case of data being transmitted elsewhere.</p>
+<p>It is not I am calling them bad -- they are not. It is just that the issue can really block the notion of considering certain operations to be desirable as built-in operations performed on all data.</p>
+<p><em>Note that insome cases, such operations may be built in already in some applications or APIs -- my opinion on such is either already known and mentioned, or you can likely guess what it would be.</em></p>
+<p>It is a principle you can see in Microsoft platform pieces,&nbsp;in for example&nbsp;other parts of Windows like NLS encodings and the code in and atop NTFS file system, a principle you can see in Jet Blue products (e.g. Exchange, Active Directory) and SQL Server.</p>
+<p>It was not totally mention but sort of applies in <a href="http://archives.miloush.net/michkap/archive/2004/11/29/271476.html" title="Normalization and Microsoft -- whats the story?"><strong>Normalization and Microsoft -- whats the story?</strong></a>, too.</p>
+<p>You may be able to guess what that principle is.</p>
+<p>Your guess?</p>
+<p>I'll just mention it, you can pretend you knew what I was getting at all along. :-)</p>
+<p><span style="font-size: large;">It is leaving the data alone and <strong>not</strong> screwing with it.</span></p>
+<p>Thus not uppercasing or lowercasing text just because you wanted to ignore case (and losing the information) and not normalizing to Unicode Normalization Form C or Form D (and losing something unque about the original form it was in) and ignoring certain "ignorable" characters (which turn out to change meanings when the characters are gone).</p>
+<p>Just in case you were doing something special with that text that showed different results or looked different.</p>
+<p>Now each of these operations from Microsoft's and/or a language's point of view can really be destructive to data, whether one imagines the stuff I mentioned in <a href="http://archives.miloush.net/michkap/archive/2006/08/22/708503.html"><strong>this blog</strong></a> or <a href="http://archives.miloush.net/michkap/archive/2010/01/12/9946880.html"><strong>this other blog</strong></a> or 2.3b of Unicode's UAX 31 (<a href="http://www.unicode.org/reports/tr31/#Layout_and_Format_Control_Characters">Unicode Identifier and Pattern Syntax</a>).</p>
+<p>For that last case, the original assumptions about characters like the ignorability of ZERO WIDTH JOINER and ZERO WIDTH NON-JOINER led to several problems that languages such as Sinhalese were seeing strings broken through normal processes that Unicode was originally recommending, because the full consequences of algorithms and layout/shaping rules (and the interaction of all of them) were not fully understood. thus the following two strings:</p>
+<table align="left" cellpadding="10" cellspacing="10" border="1">
+<tbody>
+<tr>
+<td>Text (in case your browser knows <br />how to render this properly)</td>
+<td>Image (in case the text <br />doesn't render right for you)</td>
+<td>Unicode code points</td>
+</tr>
+<tr>
+<td><span style="font-size: xx-large;">ශ්&zwj;රී ලංකා</span></td>
+<td><img src="http://trigeminal.fmsinc.com/images/srilanka01.jpg" border="0" /></td>
+<td>0dc1 0dca <strong><span style="color: #ff0000;">200d </span></strong>0dbb 0dd3 0020 0dbd 0d82 0d9a 0dcf</td>
+</tr>
+<tr>
+<td><span style="font-size: xx-large;">ශ්රී ලංකා</span></td>
+<td><img src="http://trigeminal.fmsinc.com/images/srilanka02.jpg" border="0" /></td>
+<td>0dc1 0dca 0dbb 0dd3 0020 0dbd 0d82 0d9a 0dcf</td>
+</tr>
+</tbody>
+</table>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>The first one of them is meaningful -- it actually is the term for the country name of <strong>Sri Lanka </strong>in Sinhala, the other is not. And the UAX lists other similar examples, though none perhaps as top level bad to get wrong as the name of a country.</p>
+<p>Like spelling <strong>America</strong> as <strong>Anerica</strong> or something, because of some truncation operation that clipped a letter. Would you want&nbsp;such an&nbsp;operation running on your machine? :-)</p>
+<p>Anyway, the fact that database platforms like Jet or SQL Server (and file system platforms like NTFS) do not normalize means that no version of these products screwed these strings up. And comparison operations worked to treat the equal things as being the same by storing the different forms with the same weights, never transforming the strings as part of the storage or the comparison logic.</p>
+<p><em>As a point of comparison (by which I mean contrast), I am told that some platforms and databases transform the data and store just one form, since Unicode "rules" allow it and it makes some operations easier.</em></p>
+<p>Now I could claim that this was because we were smarter, but I would be lying.</p>
+<p>It was just that these platforms and products were formed in the primordial stew before Unicode had ideas like canonical equivalence and ignorable characters and such, then later no one wanted to change anything.</p>
+<p>Partially this may have been laziness, and partially it was a reluctance to change code that worked. But even then&nbsp;for some&nbsp;the idea of not "screwing up" data was present in the minds of some people. I mean if people took the time to make something different then they may have had their reasons.</p>
+<p>Thus Microsoft has had a long history of not wanting to go the Unicode way, since its eagerness for process and algorithm and operations has messed up things in an earlier version then fixed it in a later version feels a bit young, at times.</p>
+<p>Of course with a new generation of people in charge of things and those who were there before either gone or just elsewhere, I am clearly speaking of the past; I have no idea if these philosophical principles still guide the product.</p>
+<p>Though I am pretty sure NTFS will still keep working the same way no matter what happens. :-)</p>
+<hr/><div style="margin-left: 1em"><em>no comments</em></div><hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2011/01/14 <a href="http://archives.miloush.net/michkap/archive/2011/01/14/10114517.html">Would you install the Emglish language version?</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2010/08/18/10050189.html" title="The Portguese version. No, the other Portuguese version...">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2010/08/16/10050409.html" title="Must see: The successes and challenges of making low-data languages available in online automatic translation portals and software">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2010-08">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2010-08-17">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2010/08/17/10050816.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:35 GMT -->
+</html>

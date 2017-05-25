@@ -1,0 +1,57 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2007/03/22/1929762.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:38 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>When language codes are reported that don't actually exist</title></head><body>
+<h1>When language codes are reported that don't actually exist</h1>
+<p><em>by Michael S. Kaplan, published on 2007/03/22 06:01 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2007/03/22/1929762.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P>Marvin asked in the Suggestion Box:</P>
+<BLOCKQUOTE>
+<P><FONT face="times new roman,times"><EM>Looks like GetLocaleInfo(0x46C, LOCALE_SISO639LANGNAME,...)<BR><BR>returns "ns" on XP. Which is not a legal ISO-639-1 abbreviation. Should have been "nso" from ISO-639-2.<BR><BR>Is it a bug or something by [unimaginable] design?</EM></FONT></P></BLOCKQUOTE>
+<P>Yes, Marvin is correct. The locale represented by the LCID 0x046c (Sesotho sa Leboa - South Africa) should never have returned a two-letter code since it has no two letter ISO 639 code.</P>
+<P>There are a few such mistakes that can be found in the code from the various ELK locales that shipped <A class="" href="http://archives.miloush.net/michkap/archive/2005/01/26/360685.html" mce_href="http://archives.miloush.net/michkap/archive/2005/01/26/360685.html"><STRONG>with XP SP2</STRONG></A> and <STRONG><A class="" href="http://archives.miloush.net/michkap/archive/2005/08/09/449405.html" mce_href="http://archives.miloush.net/michkap/archive/2005/08/09/449405.html">after XP SP2</A></STRONG>.</P>
+<P>I don't really have an excuse to claim here, it was a transitional period for the custodian of the data and there were some misunderstandings about how to produce some of the data. It is the sort of thing that could normally be caught in review but perhaps the eagerness people had to see some of this support they missed a few things.</P>
+<P>These problems were fixed in Vista, for what its worth (it is actually one of the issues behind differences between XP and Vista that were discussed in <A class="" href="http://archives.miloush.net/michkap/archive/2006/09/06/742245.html" mce_href="http://archives.miloush.net/michkap/archive/2006/09/06/742245.html"><STRONG>this post</STRONG></A>, though not the cause of problems described in <STRONG><A class="" href="http://archives.miloush.net/michkap/archive/2007/02/04/1596987.html" mce_href="http://archives.miloush.net/michkap/archive/2007/02/04/1596987.html">this other post</A></STRONG>). As was the process for reviewing and verifying this kind of data....</P>
+<P>Sorry about that. :-(</P>
+<P mce_keep="true">&nbsp;</P>
+<P><FONT color=#ff00ff><EM>This post brought to you by</EM> <FONT size=4>⧳</FONT> <EM>(<A class="" href="http://www.fileformat.info/info/unicode/char/29f3" mce_href="http://www.fileformat.info/info/unicode/char/29f3">U+29f3</A>, a.k.a. ERROR-BARRED BLACK CIRCLE)</EM></FONT></P>
+<hr/><p><a id="1932402" href="#1932402">#</a> <strong>Marvin</strong> on 22 Mar 2007 2:31 PM:</p><div style="margin-left: 1em"><p>Ok. Sh^H^Hbugs happen. ;-)</p>
+<p>Is there an authoritative list of non-standard names returned by LOCALE_SISO639LANGNAME (and by LOCALE_SISO3166CTRYNAME if those exist) on all Windows versions?</p></div>
+<p><a id="1932522" href="#1932522">#</a> <strong>Michael S. Kaplan</strong> on 22 Mar 2007 3:04 PM:</p><div style="margin-left: 1em"><p>I do not know of such a list, no. But the actual amount of them is not terribly huge (thankfully!).</p>
+</div>
+<p><a id="1932641" href="#1932641">#</a> <strong>Marvin</strong> on 22 Mar 2007 3:30 PM:</p><div style="margin-left: 1em"><p>The reason I am interested in this is that I am working on a portable &quot;language id&quot; class that uses ISO stuff as its canonical representation but obviously has to be able to interoperate with LANGID on Windows. </p>
+<p>I can handle broken LOCALE_SISO639LANGNAME by exhaustive testing on existing Windows versions but having an authoritative table from MS would help a lot. </p>
+<p>Obviously in any event I will still have to do something sensible when I hit a new bug on future Windows that do not yet exist but at least I want to be safe for what exists now ;-) &nbsp;</p></div>
+<p><a id="1933038" href="#1933038">#</a> <strong>Michael S. Kaplan</strong> on 22 Mar 2007 4:16 PM:</p><div style="margin-left: 1em"><p>Well, for that you really should use the downlevel NLS dll (and the LOCALE_SNAME on Vista) to convert between locale names and LCIDs, not trying to construct the names independently. This will allow you to avoid the bugs, and it will also allow you to get the right results in all cases, including ones where script info is also needed....</p>
+</div>
+<p><a id="1933070" href="#1933070">#</a> <strong>Marvin</strong> on 22 Mar 2007 4:24 PM:</p><div style="margin-left: 1em"><p>And bring yet another DLL? Nah...</p>
+<p>Then I still need the individual parts for other reasons so &quot;take everything&quot; API wouldn't work well.</p>
+<p>Anyway since it is a bug probably somebody at MS should make a KB out of it. </p></div>
+<p><a id="1933120" href="#1933120">#</a> <strong>Michael S. Kaplan</strong> on 22 Mar 2007 4:46 PM:</p><div style="margin-left: 1em"><p>Which won't help you here, really....</p>
+<p>Why not compromise? Download the DLL, use it to enumerate all of the data that you will hardcode into your own table?</p>
+</div>
+<p><a id="1950843" href="#1950843">#</a> <strong>Alexey Provotorov</strong> on 26 Mar 2007 4:11 AM:</p><div style="margin-left: 1em"><p>Sorry in advance, if the message is a bit offtopic, but I think it is somehow related to incorrect work of NLS API for the new XP SP2 locales.</p>
+<p>In XP SP2, when we set system locale to any from the newly added list (e.g., Zulu), DAO 3.6 cannot create or open database. The following VB6 line returns E_INVALIDARG:</p>
+<p>Set DB = DBEngine.CreateDatabase(&quot;c:\temp.mdb&quot;, dbLangGeneral, dbVersion40)</p>
+<p>The &quot;dbLangGeneral&quot; parameter instructs DAO to use ANSI-1252 code page (Note that the same value is returned by the GetACP() API function for the Zulu locale).</p>
+<p>Changing system locale to any of the pre-SP2 values resolves the problem.</p>
+<p>We suspect that some of NLS API functions called inside DAO.DBEngine.CreateDatabase() method returns an invalid value, so DAO just can't handle it. Could you shed some light on this, please?</p>
+<p>Thanks in advance for your help!</p></div>
+<p><a id="1950874" href="#1950874">#</a> <strong>Michael S. Kaplan</strong> on 26 Mar 2007 4:21 AM:</p><div style="margin-left: 1em"><P>That is a DAO/Jet bug, due to their collation list being approximnately NINE YEARS behind Windows. Nothing to do with NLS unless one thinks the bug is supporting new languages rather than being tolerant of new ones being supported....</P></div>
+<p><a id="1950990" href="#1950990">#</a> <strong>Michael S. Kaplan</strong> on 26 Mar 2007 4:52 AM:</p><div style="margin-left: 1em"><p>I am checking to see if this is an issue they are aware of and if so whether a fix is pending....</p>
+</div>
+<p><a id="1951107" href="#1951107">#</a> <strong>Alexey Provotorov</strong> on 26 Mar 2007 5:25 AM:</p><div style="margin-left: 1em"><p>Thanks for the quick answer!</p>
+<p>I would have understood DAO team's point if we had passed Zulu LANGID inside DBEngine.CreateDatabase() method. But we use dbLangGeneral here, which is defined as:</p>
+<p>Const dbLangGeneral = &quot;;LANGID=0x0409;CP=1252;COUNTRY=0&quot;</p>
+<p>That's why we think that something returned from the NLS API is &quot;indigestible&quot; for DAO. Or do just they compare GetSystemDefaultLCID() to a some hard-coded list of collations?</p>
+<p>Thanks again for your help!</p></div>
+<p><a id="1951184" href="#1951184">#</a> <strong>Michael S. Kaplan</strong> on 26 Mar 2007 5:49 AM:</p><div style="margin-left: 1em"><p>It is hard to know exactly what the exact bug is here, but it does not matter -- the fault lies in the most intolerant. :-(</p>
+<p>You actually cannot specify any language outside of their known lang list.</p>
+<p>Given that there are actually XP RTM languages that are also not supported in the timeframe here, I supect there are a few additional locales that might fail here, too....</p>
+</div>
+<p><a id="1953744" href="#1953744">#</a> <strong>Michael S. Kaplan</strong> on 26 Mar 2007 2:31 PM:</p><div style="margin-left: 1em"><p>More info!</p>
+<p>They have a fix available for this bug.</p>
+<p>ref: <a rel="nofollow" target="_new" href="http://support.microsoft.com/kb/913296/en-us">http://support.microsoft.com/kb/913296/en-us</a></p>
+</div>
+<hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2007/03/22/1934083.html" title="Dumb ellipses?">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2007/03/21/1924167.html" title="Warning: when private is used in public, it can really suck">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2007-03">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2007-03-22">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2007/03/22/1929762.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:38 GMT -->
+</html>

@@ -1,0 +1,47 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2011/03/01/10134580.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Are they different? It's all Greek to me!</title></head><body>
+<h1>Are they different? It's all Greek to me!</h1>
+<p><em>by Michael S. Kaplan, published on 2011/03/01 07:01 -05:00, original URI: http://blogs.msdn.com/b/michkap/archive/2011/03/01/10134580.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<p>The question I got via email:</p>
+<p style="padding-left: 60px;"><span style="font-family: times new roman,times;">Hi Michael,<br />A random question for you. :D<br />There are some Greek characters that have the same weight in unisort.txt like the below case, and LCMapString actually return the same sort key.<br />&nbsp; 0x1f12&nbsp;&nbsp;&nbsp; 15&nbsp;&nbsp;&nbsp; 10&nbsp;&nbsp;&nbsp; 85&nbsp;&nbsp;&nbsp; 2&nbsp;&nbsp;&nbsp;&nbsp; ;Greek Small Epsilon With Psili And Varia<br />&nbsp; 0x1f15&nbsp;&nbsp;&nbsp; 15&nbsp;&nbsp;&nbsp; 10&nbsp;&nbsp;&nbsp; 85&nbsp;&nbsp;&nbsp; 2&nbsp;&nbsp;&nbsp;&nbsp; ;Greek Small Epsilon With Dasia And Oxia</span></p>
+<p style="padding-left: 60px;"><span style="font-family: times new roman,times;">What&rsquo;s the story behind these chars?<br />It seems there are noticeably many more instances of these among Greek characters.</span></p>
+<p style="padding-left: 60px;"><span style="font-family: times new roman,times;">Thank you</span></p>
+<p>Interesting, huh?</p>
+<p>If you look at the two characters, you will get a hinmt of what is&nbsp;going on here.</p>
+<p>Let's take a look:</p>
+<p style="padding-left: 30px;">ἒἕ</p>
+<p>They look&nbsp;kind of the same,&nbsp;or similar, depending on the font you use. Let's&nbsp;zoom in to see differences&nbsp;more clearly:</p>
+<p><span style="font-size: xx-large;">ἒἕ</span></p>
+<p>Yes, some differences there, obviously. </p>
+<p>One suggestion I have heard before is that they actually represent slightly different traditions of showing the same Polytonic Greek text, and when it comes to collation, the benefit of finding the different traditions when looking for Greek words that use the different traditions is very beneficial. Because you&nbsp;will have an easier&nbsp;time finding things.</p>
+<p>I have even parroted it once or twice over the years myself, this idea that GREEK SMALL LETTER EPSILON WITH PSILI AND VARIA and GREEK SMALL LETTER EPSILON WITH DASIA AND OXIA are connected that way.</p>
+<p>It may be true, what with all the polytonic etc. stuff.&nbsp;It may be&nbsp;a reasonable idea, but it is not the original basis for the weights being the same.</p>
+<p>For insight into the actual reason, let's&nbsp;take these letters and put them in Unicode Normalization form D, which will give us:</p>
+<p><strong><span style="font-family: courier new,courier;">&nbsp;&nbsp;&nbsp; U+1f12&nbsp;&nbsp;&nbsp;--&gt; U+03B5 U+0313 U+0300<br /><br /></span><span style="font-family: courier new,courier;">&nbsp;&nbsp;&nbsp; U+1f15&nbsp;&nbsp;&nbsp;--&gt; U+03B5 U+0314 U+0301</span></strong></p>
+<p>Let's look at the weights behind these characters:</p>
+<p><span style="font-family: courier new,courier;"><strong>0x03b5&nbsp;15&nbsp;10&nbsp;2&nbsp; 2&nbsp;;Greek Small Epsilon<br />0x0300&nbsp;1&nbsp; 0 &nbsp;13&nbsp;0&nbsp;;Non-Spacing Grave Accent<br />0x0301&nbsp;1&nbsp; 0&nbsp; 12&nbsp;0&nbsp;;Non-Spacing Acute Accent<br />0x0313&nbsp;1&nbsp; 0&nbsp; 70&nbsp;0&nbsp;;Non-Spacing Comma Above<br />0x0314&nbsp;1&nbsp; 0&nbsp; 71&nbsp;0&nbsp;;Non-Spacing Reversed Comma Above</strong></span></p>
+<p>Do you see what's going on here? Simple addition!</p>
+<p style="padding-left: 30px;">2 + 13 + 70 == 2 + 12 + 71</p>
+<p>If these weights didn't work out the same, then different Unicode Nornalization forms won't be treated like they are equal to each oher....</p>
+<p>Now perhaps these two characters shouldn't be consdered the same, but it isn't like the are the only four combining characters -- there are hundreds of them. Can you imagine being able to detect every single one of these cases across every language? These two were probably&nbsp;largely by accident -- an accident of applying canonical equivalence, since U+1f12 and U+1f15 weren't even in the tables before Vista/Server 2008&nbsp;and before that only existed in their "normalization form D" constructs....</p>
+<p>Canonical equivalence helped make the weights what they were here, though.</p>
+<p>So ...are they actually different? I have no idea, man. They're all greek to me.</p>
+<hr/><p><strong>John Cowan</strong> on 1 Mar 2011 10:37 AM:</p><div style="margin-left: 1em"><p>In Ancient Greek the grave (varia) is just a variant of the acute (oxia) used in the last syllable of a word when another word follows. &nbsp;The breathings were used only on the first syllable of a word. &nbsp;So ἒ would only be useful in a monosyllabic word beginning with epsilon. &nbsp;The Greek dictionary lookup at Perseus shows no such words. &nbsp;The (obsolete) polytonic orthography of Modern Greek might have some, I don&#39;t know.</p>
+</div>
+<p><strong>Nick Nicholas</strong> on 1 Mar 2011 6:22 PM:</p><div style="margin-left: 1em"><p>The case where it will make a difference is eta: ἥ is the fem.nom.sg relative pronoun, ἤ (and by extension ἢ) is &quot;or&quot;. </p>
+<p>That said, in indexes, where this is most critical, grave is always normalised to acute (because they&#39;re words in isolation, and grave indicates that a word is followed by another word, rather than punctuation.) You&#39;ll *almost* never see a grave in a dictionary headword.</p>
+<p>So while it&#39;s wrong, the default use case for sorting words is not affected by it.</p>
+</div>
+<p><strong>Nick Nicholas</strong> on 1 Mar 2011 6:31 PM:</p><div style="margin-left: 1em"><p>... But while the grave and acute are not by default contrastive, rough and smooth breathing definitely are. So if it weren&#39;t for the fact that indexes normalise graves to acutes, you would be in trouble.</p>
+<p>This applies to pre-1960 polytonic for Modern Greek; around 1960 Modern Greek dropped graves completely.</p>
+<p>There one or two word pairs differentiated by being acute-only vs unaccented in Ancient Greek: τίς &quot;who?&quot; (which always has an acute) vs τις &quot;someone&quot;. In at least one dictionary, I&#39;ve seen them differentiated at the headword level as τίς vs. τὶς, acute vs grave as opposed to acute vs unaccented. (The grave actually represented a neutral pitch grammatically, and it was originally marked on all unaccented syllables.) As far as I know, no such pairs involve an initial breathing: to Unicode&#39;s stupendous good fortune, the feminine definite article can only be ἡ, and not ἣ.</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 1 Mar 2011 8:17 PM:</p><div style="margin-left: 1em"><p>Grave and acute alone are different -- it is only these unique combinations that lose the distinction....</p></div>
+<p><strong>Nick Nicholas</strong> on 15 Mar 2011 9:10 AM:</p><div style="margin-left: 1em"><p>Posted more about this <a href="http://hellenisteukontos.blogspot.com/2011/03/sorting-of-breathings-and-accents-in.html">at my blog</a>. Michael, feel free to correct misrepresentations of Microsoft... :-)</p></div>
+<p><strong>Michael S. Kaplan</strong> on 15 Mar 2011 9:20 AM:</p><div style="margin-left: 1em"><p>No, I think you covered it quite nicely. Thanks for the thorough answer to my question! :-)</p>
+</div>
+<hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2011/03/02/10135888.html" title="My kingdom for a Kyrgyz keyboard layout!">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2011/02/28/10134642.html" title="&quot;Now you know what it&#39;s like to live in my brain....&quot;">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2011-03">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2011-03-01">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2011/03/01/10134580.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+</html>

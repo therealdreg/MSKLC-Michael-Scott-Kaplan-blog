@@ -1,0 +1,22 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2012/05/21/10308135.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:33 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Whither WM_UNICHAR in Windows 7 (and 8!)</title></head><body>
+<h1>Whither WM_UNICHAR in Windows 7 (and 8!)</h1>
+<p><em>by Michael S. Kaplan, published on 2012/05/21 07:01 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2012/05/21/10308135.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<p>The&nbsp; <a href="http://msdn.microsoft.com/library/windows/desktop/ms646288">WM_UNICHAR message</a> has had an interesting history.</p>
+<p>Over time it has come up in this Blog occasionally, in blogs like <strong><a title="Will the real Unicode character message please stand up?" href="../../../2007/03/25/1945659.html">Will the real Unicode character message please stand up?</a></strong>, which tend to&nbsp;be more generous in suggesting apps on Windows should just take it if they want to, but by 2008 questions like <strong><a title="Why is my WM_UNICHAR handler never called?" href="http://stackoverflow.com/questions/378296/why-is-my-wm-unichar-handler-never-called">Why is my WM_UNICHAR handler never called?</a></strong> in Stack Overflow pointed out that the message itself crystallized&nbsp;it's&nbsp;intent/purpose pretty clearly:</p>
+<p style="padding-left: 30px;"><span style="font-family: times new roman,times; font-size: medium;">The WM_UNICHAR message is equivalent to WM_CHAR, but it uses Unicode Transformation Format (UTF)-32, whereas WM_CHAR uses UTF-16. It is designed to send or post Unicode characters to ANSI windows and it can can handle Unicode Supplementary Plane characters.</span></p>
+<p>But the other day, when Marc asked (on behalf of&nbsp;a customer):</p>
+<p style="padding-left: 60px;"><span style="font-family: times new roman,times;">When is WM_UNICHAR used in Windows 7?&nbsp; I thought that I might be able to create WM_UNICHAR&nbsp; from an IME by entering a surrogate pair through Unicode input but I only saw WM_CHAR messages.&nbsp; Under what conditions will the&nbsp; WM_UNICHAR message be used?</span></p>
+<p>There are reportedly still some 3rd party IMEs that use it even for Unicode windows, but IMEs from Microsoft have largely moved away from that.</p>
+<p>I suspect it is largely a philosophical idea, and how strongly you feel that a single discrete character should always be returned -- an issue some 3rd party IMEs do vote with their opinion.</p>
+<p>But Microsoft IMEs have another good reason to move away from the view of "one character at a time" in such messages -- <strong>Unicode Variation Selectors</strong>, discussed in blog like <strong><a title="UCS-2 to UTF-16, Part 10: Variation[ Selector] on a theme..." href="../../../2009/06/10/9723321.html">UCS-2 to UTF-16, Part 10: Variation[ Selector] on a theme...</a></strong>.</p>
+<p>Now not every Microsoft IME is putting out variation selectors in its output, even in Windows 8.</p>
+<p>But some of them do, and that's enough to convince the IME team at Microsoft to not bother with the "incomplete" WM_UNICHAR.</p>
+<p>I still believe that if you get the message, whether it is a Unicode window or not, you should accept it.</p>
+<p>For the sake of those 3rd party IMEs, if nothing else.</p>
+<p>But there are people who don't bother now, since the docs now make it clear that&nbsp;this is "off brand" usage. So perhaps at this point I am tilting at windmills?</p>
+<hr/><div style="margin-left: 1em"><em>no comments</em></div><hr/><p><em>go to <a id="newer" href="../22/10308620.html" title="Special casing of locale specific number formatting....">newer</a> or <a id="older" href="../18/10305223.html" title="There&#39;s no &quot;I&quot; in IDN, part 13: Desktop and Managed and Metro; oh my!">older</a> post, or back to <a href="../../../index-2.html">index</a> or <a href="../../../index-2.html#2012-05">month</a> or <a href="../../../index-2.html#2012-05-21">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2012/05/21/10308135.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:33 GMT -->
+</html>

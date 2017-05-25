@@ -1,0 +1,76 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2011/06/14/10174165.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Since nobody @#%&*! owns en-US…</title></head><body>
+<h1>Since nobody @#%&*! owns en-US…</h1>
+<p><em>by Michael S. Kaplan, published on 2011/06/14 07:01 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2011/06/14/10174165.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<p>Long time readers may recall <strong><a href="http://archives.miloush.net/michkap/archive/2006/11/06/993944.html" title="Who owns English, exactly?">Who owns English, exactly?</a></strong>&nbsp;from back in November 2006 where I talked about the philosophical issues underlying who was the "owner" of transliterations and/or translations of native language names into English.</p>
+<p>Everything I said there was of course true, and the issues are of course very complicated.</p>
+<p>But there is an additional factor to be considered here too, on much wider than the "corner case" of translated/transliterated language names.</p>
+<p>The factor can be summed up in a simple question:</p>
+<p><span style="font-size: x-large;"><strong>Who the @#%&amp;*! owns en-US?</strong></span></p>
+<p>I mean, it's not like we have an English Language Academy we are beholden to, and there is no special ANSI standard we claim to be compliant with.</p>
+<p>The original locale was put together by people in the US, sure. And English Windows has never suffered from not enough beta testers.</p>
+<p>But all of that is hardly official, is it?</p>
+<p>This occurred to me the other day when someone asked me via mail:</p>
+<p style="padding-left: 30px;"><em><span style="font-family: times new roman,times; font-size: medium;">You have the value for LOCALE_IPOSITIVEPERCENT for the US locales as 0, shouldn&rsquo;t this be 1?</span></em></p>
+<p>Now the <a href="http://msdn.microsoft.com/library/dd373800.aspx">LOCALE_IPOSITIVEPERCENT</a>&nbsp;lctype documentation delineates the choices pretty clearly:</p>
+<table cellpadding="3" cellspacing="3" border="1">
+<tbody>
+<tr>
+<th>Value</th><th>Format</th>
+</tr>
+<tr>
+<td>0</td>
+<td>Number, space, percent; for example, # %</td>
+</tr>
+<tr>
+<td>1</td>
+<td>Number, percent; for example, #%</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Percent, number; for example, %#</td>
+</tr>
+<tr>
+<td>3</td>
+<td>Percent, space, number; for example, % #</td>
+</tr>
+</tbody>
+</table>
+<p>Now I have lived in the USA my entire life, though I have traveled abroad a lot (enough to make filling out an SF-86 ti be too troublesome to ever&nbsp;bother trying to get cleared!).</p>
+<p>If you showed me a formatted string like</p>
+<p style="padding-left: 30px;"><strong><span style="font-size: large;">%50</span></strong></p>
+<p>or</p>
+<p style="padding-left: 30px;"><strong><span style="font-size: large;">% 50</span></strong></p>
+<p>I'd know it was wrong. But looking at</p>
+<p style="padding-left: 30px;"><strong><span style="font-size: large;">50%</span></strong></p>
+<p>vs.</p>
+<p style="padding-left: 30px;"><strong><span style="font-size: large;">50 %&nbsp;</span></strong></p>
+<p>I could go either way; I see both of them, all the time.</p>
+<p>To be honest I don't like either of them; I think</p>
+<p style="padding-left: 30px;"><strong><span style="font-size: large;">50&thinsp;%</span></strong></p>
+<p>or</p>
+<p style="padding-left: 30px;"><strong><span style="font-size: large;">50 %</span></strong></p>
+<p>using a HAIR SPACE (U+2009) or a THIN SPACE (U+200a)&nbsp;in between is better than any of the other choices -- between the original two "not wrong" choices, one is too close and the other is too far</p>
+<p>But we don't have&nbsp;either as an option.</p>
+<p>And it's not like we have an authority we can ask.</p>
+<p><span style="font-size: x-large;">Since nobody @#%&amp;*! owns en-US....</span></p>
+<hr/><p><strong>Michael S. Kaplan</strong> on 14 Jun 2011 8:26 AM:</p><div style="margin-left: 1em"><p>At least the blog censors/filters didn&#39;t catch that @#%&amp;*! I used!</p></div>
+<p><strong>Joshua</strong> on 14 Jun 2011 8:31 AM:</p><div style="margin-left: 1em"><p>Back-compatibility here: en-US has to fit in 7bit ASCII so hair space cannot be used.</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 14 Jun 2011 8:34 AM:</p><div style="margin-left: 1em"><p>The percent formatting was not introduced until Windows 7. :-)</p>
+<p>But I doubt people want to add these constants, so....</p></div>
+<p><strong>Richard</strong> on 14 Jun 2011 8:58 AM:</p><div style="margin-left: 1em"><p>But since England obviously owns &quot;en&quot; - since we&#39;re the people who invented the @#%&amp;*! language! - that must mean we own any unclaimed &quot;en-*&quot; cultures, right?! :o)</p>
+</div>
+<p><strong>Skip</strong> on 14 Jun 2011 9:40 AM:</p><div style="margin-left: 1em"><p>Well FWIW, I don&#39;t think I&#39;ve ever once seen the n% with a space included, so on my last .net project I ended up having to &quot;fix&quot; that everywhere I displayed percentages. &nbsp; I always just assumed it was a bug in the .net layer, I guess it actually inherits it from lower down though.</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 14 Jun 2011 12:28 PM:</p><div style="margin-left: 1em"><p>Well, it&#39;s only inherited in .Net 4.0 running on Win7....</p>
+</div>
+<p><strong>Henry</strong> on 15 Jun 2011 2:48 AM:</p><div style="margin-left: 1em"><p>Aren&#39;t they breaking? I&#39;d like to have some non-breaking space U+00A0, U+202F, or (why not?) U+FEFF (U+2060) within numbers and their units.</p>
+</div>
+<p><strong>Jan Kučera</strong> on 17 Jun 2011 2:35 PM:</p><div style="margin-left: 1em"><p>Speaking of the Czech language, both 50 % and 50% are correct here. However, the meaning is different: the former is a standard number, while the latter is an adjective. Their usage is therefore different and they cannot be exchanged. I wonder how this fits in a global per-locale setting - it would probably make sense if it could be used as a number formatting parameter...</p>
+</div>
+<hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2011/06/15/10174716.html" title="Does your code avoid the [government sanctioned] Y1.45K bug?">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2011/06/13/10173796.html" title="“Word isn&#39;t always ‘smart’.” You can quote me on that (since I said it in English)...">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2011-06">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2011-06-14">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2011/06/14/10174165.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+</html>

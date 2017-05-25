@@ -1,0 +1,136 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2012/01/10/10255017.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>It's not that they're putting the Pressure on Windows, but maybe the Pressure.Net? :-)</title></head><body>
+<h1>It's not that they're putting the Pressure on Windows, but maybe the Pressure.Net? :-)</h1>
+<p><em>by Michael S. Kaplan, published on 2012/01/10 07:01 -05:00, original URI: http://blogs.msdn.com/b/michkap/archive/2012/01/10/10255017.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<p>The other day when I blogged abut&nbsp;how <strong><a title="If someone blathers on about how Windows supports Unicode, you can suggest they just ZIP it, if you like!" href="http://archives.miloush.net/michkap/archive/2012/01/04/10252916.html">If someone blathers on about how Windows supports Unicode, you can suggest they just ZIP it, if you like!</a></strong>, I didn't tell the whole story.</p>
+<p>I focused on Windows, and a peculiar engineered schizophrenia that is Windows compressed folders, the most non-Unicode piece of Windows outside of stuff that was yanked out of the product years ago.</p>
+<p>But if you look to Windows 8, there is a component shipping with it that is aspiring to do more.</p>
+<p>I'm referring to the .Net Framework, whose version 4.5 has added the new <a href="http://msdn.microsoft.com/en-us/library/system.io.compression.ziparchive(v=VS.110).aspx">ZipArchive Class</a> to the venerable (for .Net, at leas!)&nbsp;<a href="http://msdn.microsoft.com/en-us/library/3z72378a(v=VS.110).aspx">System.IO.Compression Namespace</a>.</p>
+<p>Done right, too -- using UTF-8 so they can support whatever kind of characters you want&nbsp;-- anything in Unicode!</p>
+<p>The code was in no way connected to the code Windows licensed for the Compressed Folders feature.</p>
+<p>And you know how Windows isn't&nbsp;isn't allowed to provide a programmatic way to get int those compressed folders?</p>
+<p>Well everything you do in .Net is something programmatic!</p>
+<p>On top of all of that, you can install the <a href="http://www.microsoft.com/download/en/details.aspx?id=27537">Microsoft&reg; .NET Framework&reg; 4.5 Developer Preview - Full</a> on Server 2008, Windows 7, or Server 2008 R2 as well as&nbsp;just using it on the Developer Preview of Windows 8.</p>
+<p>Amazing!</p>
+<p>There must be&nbsp;a catch though, right?</p>
+<p>Don't worry, there is.</p>
+<p>The catch is most easily described by comparing/contrasting&nbsp;the CP_ACP code page-based support of ZIP in Windows and the UTF-8-based support of ZIP n the Developer Preview of .Net 4.5.</p>
+<p>These two technologies, much like the two encodings supporting them, have one thing in common.</p>
+<p>And when I say one thing, I mean 127 things.</p>
+<p>That's right -- what they have in common, all they have in common, is <strong>ASCII</strong>.</p>
+<p>So although .NET is doing the right thing here, it s essentially only doing the right thing if either:</p>
+<ul>
+<li>everything is English only, or</li>
+<li>People use .Net to build the original .ZIP files, and decrypt them, themselves.</li>
+</ul>
+<p>Otherwise, I suppose bugs like <a href="https://connect.microsoft.com/VisualStudio/feedback/details/711235/system-io-ziparchive-zipped-only-utf-8-encoding">System.IO.ZipArchive zipped only UTF-8 encoding</a> are just going to be par for the course in markets like Japan, where all that JIS X 213 and IVS and Emoji are important, lots of people are still happy within their own code page, at least.</p>
+<p>This suggests one of the big problems of having no user interface:</p>
+<p><span style="font-size: large;"><strong>You have no user interface!</strong></span></p>
+<p>Damn.</p>
+<p>So we still have this flaw in Windows, though this design means that for many customers it is too easy to be dragged down in .Net, too.</p>
+<p>Now of course the is not too much of a sign that .Net wouldn't try to help here, to at least bridge the scenario a little.</p>
+<p>Or maybe they could take advantage of some of that new managed side by side stuff and provide a couple of context menu items for zipping and unzipping files? Though that approach would also be fraught with peril an confusion for many people in the Long run, unless they literally took over the ZIP handling for always, even though they localize into just ~10% of the languages of Windows.</p>
+<p>They would be saviors, but not everyone would fully appreciate their largess.</p>
+<p>Perhaps including Windows....</p>
+<p>Or maybe Windows could do this same thing themselves and use the managed code <strong>ZipArchive Class</strong>. I mean, they know about shell handlers than anyone in the universe, and they have a much larger <strong>Extent Of Localization</strong>. Hooking up .NET here might be caper than fixing their ZIP problem they never have fixed yet.</p>
+<p>They could take the Notepad approach to Unicode support:</p>
+<ul>
+<li>Do it using the CP_ACP</li>
+<li>If you at any point ever detect anything off the codepage, show some magic UI (fix the text to more reasonably capture what it would do, of course!):<br /><br /><br /><a href="http://msdnshared.blob.core.windows.net/media/MSDNBlogsFS/prod.evol.blogs.msdn.com/CommunityServer.Blogs.Components.WeblogFiles/00/00/00/33/81/1881.UnicodeInNotepad.jpg"><img style="max-width: 550px;" border="0" alt="" src="http://msdnshared.blob.core.windows.net/media/MSDNBlogsFS/prod.evol.blogs.msdn.com/CommunityServer.Blogs.Components.WeblogFiles/00/00/00/33/81/1881.UnicodeInNotepad.jpg" /></a></li>
+<li>Then use .Net in this case, as needed.</li>
+</ul>
+<p>Not perfect, but certainly it has been good enough for text files in Notepad since the Windows 2000 beta!</p>
+<p>Or they could just fix the bug they have now....</p>
+<p>Okay enough spitballing, you get the idea.</p>
+<p>The current work highlight both the best and&nbsp;the worst of two different business units within Microsoft.</p>
+<p>Looking at <a href="https://connect.microsoft.com/VisualStudio/feedback/details/711235/system-io-ziparchive-zipped-only-utf-8-encoding">that bug report</a> I mentoned above, the needs are expressed pretty clearly:</p>
+<p style="padding-left: 180px;"><span style="font-family: times new roman,times; font-size: medium;">Greg,</span><br /><span style="font-family: times new roman,times; font-size: medium;">Here is what Mr./Ms. Kamegawa wrote back (with some edit by me). Hope it helps.</span><br /><span style="font-family: times new roman,times; font-size: medium;">I think you've already answered most of the issue, but could you please recap it and/or add any comment?</span><br /><span style="font-family: times new roman,times; font-size: medium;">(Personally I would agree with him/her. Whatever the ZIP file specification is, it seems like the de facto standard in Japan has been MBCS ZIP files. For a very long time. It is great that the .NET API uses UTF-8 for globalization, but I'm afraid the lack of a viable option to create MBCS ZIP files would make the .NET API practically useless in Japan.)</span><br /><span style="font-family: times new roman,times; font-size: medium;">Thanks.</span><br /><br /><span style="font-family: times new roman,times; font-size: medium;">---</span><br /><span style="font-family: times new roman,times; font-size: medium;">[Summary]</span><br /><span style="font-family: times new roman,times; font-size: medium;">System.IO.Compress.ZipArchive stores MBCS file names in UTF-8.</span><br /><span style="font-family: times new roman,times; font-size: medium;">Windows Explorer can't handle UTF-8 ZIP files.</span><br /><span style="font-family: times new roman,times; font-size: medium;">So the ZIP files compressed by System.IO.Compress.ZipArchive are not extracted correctly by Windows Explorer.</span><br /><span style="font-family: times new roman,times; font-size: medium;">Windows Explorer should support extracting UTF-8 ZIP files. Otherwise System.IO.Compress.ZipArchive should support storing MBCS file names. And the latter seems more practical.</span><br /><br /><span style="font-family: times new roman,times; font-size: medium;">[Background]</span><br /><span style="font-family: times new roman,times; font-size: medium;">Most Japanese users extract Windows Explorer to extract ZIP files. Japanese file names are used so frequently in Japan that the incompatibility between Windows Explorer and the ZIP files compressed by System.IO.Compress.ZipArchive is unacceptable.</span><br /><br /><span style="font-family: times new roman,times; font-size: medium;">[Repro Steps]</span><br /><span style="font-family: times new roman,times; font-size: medium;">1. Create Japanese named files in c:\temp\.</span><br /><span style="font-family: times new roman,times; font-size: medium;">2. Compress them into ziptest.zip using the code below.</span><br /><span style="font-family: times new roman,times; font-size: medium;">--- Begin ---</span><br /><span style="font-family: times new roman,times; font-size: medium;">using (var zip = new ZipArchive(@"c:\temp\あ\ziptest.zip", ZipArchiveMode.Create)){</span><br /><span style="font-family: times new roman,times; font-size: medium;">var files = new DirectoryInfo(@"c:\temp").GetFiles("*.*");</span><br /><span style="font-family: times new roman,times; font-size: medium;">Array.ForEach(files, x =&gt; zip.CreateEntryFromFile(x.FullName, x.Name));</span><br /><span style="font-family: times new roman,times; font-size: medium;">}</span><br /><span style="font-family: times new roman,times; font-size: medium;">--- End ---</span><br /><span style="font-family: times new roman,times; font-size: medium;">3. Extract ziptest.zip using Windows Explorer.</span><br /><span style="font-family: times new roman,times; font-size: medium;">-&gt; The Japanese file names are corrupted as Greg depicted before.</span><br /><br /><span style="font-family: times new roman,times; font-size: medium;">[Expected Behavior]</span><br /><span style="font-family: times new roman,times; font-size: medium;">Twofold:</span><br /><span style="font-family: times new roman,times; font-size: medium;">1. Make Windows Explorer support extracting UTF-8 ZIP files.</span><br /><span style="font-family: times new roman,times; font-size: medium;">2. Make System.IO.Compress.ZipArchive support compressing ZIP files using MBCS or the system locale.</span><br /><br /><span style="font-family: times new roman,times; font-size: medium;">The best would be 1. But I don't think it possible to make all the widespread Windows versions (i.e. XP/Vista/7/2003/2008/2008 R2) support UTF-8 ZIP files.</span><br /><br /><span style="font-family: times new roman,times; font-size: medium;">So I would like to ask for 2. It will provide the maximum compatibility with Windows including the legacy-but-widely-used versions of Windows.</span></p>
+<p>I could hardly say more here than this.</p>
+<p>So no matter how you look at it, the new <a href="http://msdn.microsoft.com/en-us/library/system.io.compression.ziparchive(v=VS.110).aspx">ZipArchive Class</a> of the&nbsp;<a href="http://www.microsoft.com/download/en/details.aspx?id=27537">Microsoft&reg; .NET Framework&reg; 4.5 Developer Preview - Full</a> is certainly putting the pressure on them to do the right thing, huh?</p>
+<p>Or at least the Pressure.Net!</p>
+<hr/><p><strong>Mike Dimmick</strong> on 10 Jan 2012 8:43 AM:</p><div style="margin-left: 1em"><p>.NET strings are all Unicode, all the time. If you need to convert to some serialization format, you need to specify the Encoding you&#39;re going to use. You might be implementing some dynamic website that creates a zip file on the fly, and you might want to set the filename of the contained files according to the user&#39;s preferred language, rather than the selected locale of the server. This isn&#39;t that unlikely, I&#39;ve certainly seen websites where you can select multiple documents to download as a single ZIP file, and the filenames could well depend on what language the user agent asked for.</p>
+<p>My suggestion - which I&#39;ve just posted as a comment - is to add new overloaded constructors that take an Encoding specifying what character set the filenames are in. &nbsp;</p>
+<p>You could encounter ZIP files that were created on one system, then updated on another with a different character set, but these would be pretty rare. You&#39;d probably want to prevent .NET creating one, of course!</p>
+</div>
+<p><strong>cheong00</strong> on 10 Jan 2012 8:23 PM:</p><div style="margin-left: 1em"><p>Actually the NTFS driver will convert any filename you specified for creating new file to Unicode when it writes to the filename entry. So it&#39;s pretty pointless waste of effort for making ZipArchive support changing filename to MBCS and then actually have filesystem driver change it back on the fly.</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 10 Jan 2012 10:29 PM:</p><div style="margin-left: 1em"><p>Ah, you are missing the point of the plan -- it is to support CP_ACP and failing if there are characters outside of it )working like Notepad does)....</p>
+</div>
+<p><strong>HomeCloset</strong> on 10 Jan 2012 11:37 PM:</p><div style="margin-left: 1em"><p>As for Windows, the suggested approach like Notepad would be great. In this way people will be able to migrate to Unicode gradually.</p>
+<p>If the current situation is left as it is, people in Japan will not use ZipArchive at all. Neither will they migrate to Unicode.</p>
+</div>
+<p><strong>Random832</strong> on 11 Jan 2012 7:33 AM:</p><div style="margin-left: 1em"><p>The zip format does have a flag - which I hope that the ZipArchive class is setting - to specify if filenames are in UTF-8 or not. (The standard is vague on what &quot;not&quot; means, so it can just be whichever of ACP/OEMCP the compressed folders app does now). That&#39;s better than the notepad method (text files, of course, contain no metadata)</p>
+</div>
+<p><strong>HomeCloset</strong> on 11 Jan 2012 8:44 AM:</p><div style="margin-left: 1em"><p>ZipArchive class sets the flag, reportedly. Of course the notepad method should also set the flag when saving in UTF-8 after presenting the &quot;magic UI&quot;.</p>
+</div>
+<p><strong>Peter Gibbons</strong> on 11 Jan 2012 8:59 AM:</p><div style="margin-left: 1em"><p>I would appreciate if Microsoft would extend the support for codepages in the ZipArchive Class beyond japanese MBCS! How many times do we receive ZIP files from e.g. Russia encoded in their codepages! Even Microsoft AppLocale doesn&#39;t help with this because it only affects the ANSI not the most often used OEM codepage and it doesn&#39;t work for 64 Bit programs either. The same the other way around. Even nowadays some russians can&#39;t cope with Unicode in ZIP most times because Windows&#39; lack of support for it. It is a hassle whenever I want to send them ZIP files with russian filenames in it.</p>
+<p>Final cut: _Please_ support _all encodings_, especially UTF-8, OEM, ANSI AND MBCS, when creating AND unpacking ZIP files with System.IO.Compress.ZipArchive !!! Powershell will be our friend with this.</p>
+</div>
+<p><strong>cheong00</strong> on 12 Jan 2012 9:59 PM:</p><div style="margin-left: 1em"><p>Oh, I was commenting on their demand for ZipArchive MBCS support. It&#39;d make more sense for Windows compressed folder feature to add Unicode support, or suggest them to use any of the alternatives which provides handling to Unicode-filename containing ZIP files if it&#39;s not going to change.</p>
+</div>
+<p><strong>HomeCloset</strong> on 13 Jan 2012 10:15 AM:</p><div style="margin-left: 1em"><p>cheong00,</p>
+<p>It is fine and really nice to add Unicode support to Windows compressed folder. However - </p>
+<p>Will Microsoft push the Unicode ZIP feature update to Windows XP via Windows Update as a critical update? Unless it happens, ZIP API without MBCS support could make no sense.</p>
+<p>Even pure bug fixes are not to be released these days for Windows XP.</p>
+</div>
+<p><strong>Joshua</strong> on 13 Jan 2012 12:51 PM:</p><div style="margin-left: 1em"><p>Meh. We had to dump .zip for .7z for format exchange due to massive incompatibility between .zip versions.</p>
+</div>
+<p><strong>Dave Bacher</strong> on 29 Jan 2012 1:13 PM:</p><div style="margin-left: 1em"><p>Here&#39;s the standard:</p>
+<p><a rel="nofollow" target="_new" href="http://www.pkware.com/documents/casestudies/APPNOTE.TXT">www.pkware.com/.../APPNOTE.TXT</a></p>
+<p>So lets read what it says:</p>
+<p>-----</p>
+<p>APPENDIX D - Language Encoding (EFS)</p>
+<p>------------------------------------</p>
+<p>The ZIP format has historically supported only the original IBM PC character </p>
+<p>encoding set, commonly referred to as IBM Code Page 437. &nbsp;This limits storing </p>
+<p>file name characters to only those within the original MS-DOS range of values </p>
+<p>and does not properly support file names in other character encodings, or </p>
+<p>languages. To address this limitation, this specification will support the </p>
+<p>following change. </p>
+<p>-----</p>
+<p>So, either the file is CP437 or it is UTF8, according to the standard. &nbsp;You get to pick one or the other. &nbsp;Now, they do add some ambiguity later:</p>
+<p>-----</p>
+<p>Applications may choose to supplement this file name storage through the use </p>
+<p>of the 0x0008 Extra Field. &nbsp;Storage for this optional field is currently </p>
+<p>undefined, however it will be used to allow storing extended information </p>
+<p>on source or target encoding that may further assist applications with file </p>
+<p>name, or file content encoding tasks. &nbsp;Please contact PKWARE with any</p>
+<p>requirements on how this field should be used.</p>
+<p>The 0x0008 Extra Field storage may be used with either setting for general </p>
+<p>purpose bit 11. &nbsp;Examples of the intended usage for this field is to store </p>
+<p>whether &quot;modified-UTF-8&quot; (JAVA) is used, or UTF-8-MAC. &nbsp;Similarly, other </p>
+<p>commonly used character encoding (code page) designations can be indicated </p>
+<p>through this field. &nbsp;Formalized values for use of the 0x0008 record remain </p>
+<p>undefined at this time. &nbsp;The definition for the layout of the 0x0008 field</p>
+<p>will be published when available. &nbsp;Use of the 0x0008 Extra Field provides</p>
+<p>for storing data within a ZIP file in an encoding other than IBM Code</p>
+<p>Page 437 or UTF-8.</p>
+<p>-----</p>
+<p>Now despite this, out in the wild you&#39;ll find plenty (looking at you, FidoNet) of files that were exchanged and have directory entries in multiple code pages, without any indication anywhere in the file as to which encoding was used. &nbsp;As files moved around through FidoNet -- and that was a very real use case, back in 1995, for Microsoft -- bulletin boards would often add additional files, kind of an advertisement for the systems that the file had passed through, as well as some standardized control files. &nbsp;</p>
+<p>Anyway, if I&#39;m zipping up a file, here&#39;s what I want out of the library:</p>
+<p>* Zip32 until/unless there&#39;s a file that needs Zip64. (2.04g version marker)</p>
+<p>* US-ASCII 8.3 names, using only upper case letters, numbers, tilde and a single period.</p>
+<p>* Some synthesized short name (file0000.000 is fine) based off the above rule, when the file name doesn&#39;t match.</p>
+<p>* InfoZip&#39;s UTF8 extension -- regardless of if the name actually randomly complied with the above or not -- with the actual file name.</p>
+<p>The reason I want to produce files following that pattern is that every archiver on the planet can read that file. &nbsp;Sure, the user might get some bad file names -- but that&#39;s better than it crashing the application that tries to read it (as the GP11 technique is known to) and still getting a bad file name if the archiver writes UTF8 names using CP437 (heart, brick, double left .txt?)</p>
+<p>When reading the files, I would look for the InfoZip extensions. &nbsp;If I found them, I would use them and ignore the original name in the entry. &nbsp;Then things get complicated.</p>
+<p>The GP11 technique was a bad idea, and crashes older archivers. &nbsp;It evolved over time, but just because the bit is set, you can&#39;t assume every directory entry you read is UTF8 because some archivers will add entries to the end of the directory without clearing the bit. &nbsp;Likewise, just because the bit is clear, you can&#39;t assume the entries aren&#39;t UTF8 -- because Java wrote UTF8 without setting GP11, then after they figured out it was crashing archivers, they changed it to setting bit 11 -- and then later asked PkWare to add it to the standard.</p>
+<p>And so if either GP11 is set or if there is a Java metadata.xml file, you want to try UTF8 processing on the name. &nbsp;If the UTF8 processing fails, then you want to use CP437.</p>
+<p>If GP11 is clear, then either you assume CP437 (and are wrong a lot of the time), or you try to use a heuristic like Notepad uses (and are also wrong a lot of the time). &nbsp;You can let the application specify -- if you really think the person reading the zip file has a clue how code pages work.</p>
+<p>If I were designing the library, I would probably just provide the raw bytes parallel to the CP437 or UTF8 decoded file name. &nbsp;I&#39;d process the file according to the stanard (which says those two cases), and then I&#39;d provide the byte data so that if someone wanted to process data that way outside the standard, they&#39;d have that option.</p>
+<p>That&#39;s where the nightmare is, though -- from Microsoft (and your Vendor&#39;s) viewpoint, you have users downloading zip files made on random websites with random software. &nbsp;If the shell fails to open it, then they blame Microsoft -- not the site that wrote the bad file in the first place. &nbsp;Also despite the fact that PkZip says that CP437 is &quot;the correct&quot; code page, version 4 was the first one that tried to convert anything down to 437 -- older versions just memcpy&#39;d whatever the File I/O stuff returned.</p>
+<p>The issue is that Zip is the most widely used archive format on the planet, and people depend on their old files being able to open with newer software. &nbsp;And so any time you&#39;re providing a general purpose Zip library, that library must be compatible with the down-level files. &nbsp;For example, System.IO.Packaging.ZipPackage only needs to be compliant with the ISO OPC spec, not with some PkZip 1.04-era file downloaded from a BBS that hasn&#39;t been in operation for over a decade.</p>
+<p>Incidentally:</p>
+<p>The GP11 UTF8 technique became standard in September of 2006, and so Vista would have been the first version of Windows that could use that (and that format has known back-compat issues)</p>
+<p>The InfoZip extension became standard in September of 2007, and so that would be post-launch for Vista.</p>
+<p>The Zip support in .NET 4.5 was being written (at one time) by an intern, who had a blog on MSDN talking about it (didn&#39;t bookmark it)</p>
+<p>And yeah, I can definitely see using 7z, RAR, etc. instead of Zip if you have a choice.</p>
+<p>Another real good way to get compatibility is to use InfoZip&#39;s DLL -- InfoZip has excellent compatibility with other archivers, and the license is compatible with most commercial software. &nbsp;For example, IBM uses it -- a lot.</p>
+</div>
+<p><strong>DooBeDoo</strong> on 1 Mar 2012 1:08 AM:</p><div style="margin-left: 1em"><p>In Windows 8 Consumer Preview you still get the old errormessage when you try to zip files with non CP_ACP characters in the filenames :-((</p>
+</div>
+<hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2012/01/11/10255558.html" title="Better know an Exec part 2 (Quality time with Rich Kaplan, his wife Karmann &amp; 13 others)">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2012/01/09/10254462.html" title="Better know an Exec, part 1 (Hanging with Marlena Werder + her skip &amp; skipskip level!)">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2012-01">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2012-01-10">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2012/01/10/10255017.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+</html>

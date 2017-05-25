@@ -1,0 +1,31 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2006/07/17/668787.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:39 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>'A' and 'W' are sometimes living in two different worlds</title></head><body>
+<h1>'A' and 'W' are sometimes living in two different worlds</h1>
+<p><em>by Michael S. Kaplan, published on 2006/07/17 17:01 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2006/07/17/668787.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P><FONT face=Tahoma>When you think about the 'A' and 'W' decorated versions of functions, in most cases the 'A' version is a simple wrapper that converts the strings, calls the 'W' version, and then when needed converts the string back. </FONT></P>
+<P><FONT face=Tahoma>However, there are exceptions to this general principle.... </FONT></P>
+<P><FONT face=Tahoma>The other day, when I posted <STRONG><A href="http://archives.miloush.net/michkap/archive/2006/07/15/666717.html">How long is that non-Unicode string?</A></STRONG>, Mihai <A href="http://archives.miloush.net/michkap/archive/2006/07/15/666717.html#667793">commented</A> at one point (in relation to potentially using CharNextExA in the solution): </FONT></P>
+<BLOCKQUOTE dir=ltr style="MARGIN-RIGHT: 0px">
+<P><FONT face=Garamond>"<EM>CharNextExA would work here</EM>" <BR>Unless you run it on Win XP, where is broken :-) </FONT></P></BLOCKQUOTE>
+<P><FONT face=Tahoma>He was referring of course to what was posted way back in January of last year in <STRONG><A href="http://archives.miloush.net/michkap/archive/2005/01/30/363420.html">We broke CharNext/CharPrev (or, bugs found through blogging?)</A></STRONG>. The bug that made me decide I enjoyed having a technical blog....</FONT></P>
+<P><FONT face=Tahoma>And the issue here seemed worthy of a wee little post of its own -- the post you are reading right now, in fact!</FONT></P>
+<P><FONT face=Tahoma>Now if you look at <A href="http://msdn.microsoft.com/library/en-us/winui/winui/windowsuserinterface/resources/strings/stringreference/stringfunctions/charnext.asp">CharNext</A> and <A href="http://msdn.microsoft.com/library/en-us/winui/winui/windowsuserinterface/resources/strings/stringreference/stringfunctions/charprev.asp">CharPrev</A>, they do not have sepa</FONT><FONT face=Tahoma>rate topics for CharNextW/CharNextA and CharPrevW/CharPrevA. Because for both functions, what they do from a text description standpoint is about the same. </FONT></P>
+<P><FONT face=Tahoma>But if you look at what each function has to do:</FONT></P>
+<UL>
+<LI><FONT face=Tahoma>The 'A' versions have to go one byte at a time, skipping a byte any time the two bytes together make up a double byte CJK idedograph. This never has to happen in the 'W' versions.</FONT> 
+<LI><FONT face=Tahoma>The 'W' versions have to go on WCHAR at a time, and continuing past any situation where one is dealing with either a surrogate pair(as of Vista) or a combining/nonspacing character (all versions of Windows except when the aforementioned bug was going on). This never happens in the 'A' versions.</FONT></LI></UL>
+<P><FONT face=Tahoma size=2><EM>(Of course there is the fact that the Vietamese code page also has some combining characters on it as I mentioned <STRONG><A href="http://archives.miloush.net/michkap/archive/2005/04/19/409566.html">previously</A></STRONG>, but CharNext and CharPrev have never handled this case properly. I suppose one could call this a bug, though I am unaware of plans to fix this.)</EM></FONT></P>
+<P><FONT face=Tahoma>In any case, since there is no real overlap of the functionality needed in the 'A' and 'W' versions, the functions are kept entirely separate. There is no "convert and call" logic, and it would not be useful if there were.</FONT></P>
+<P><FONT face=Tahoma>Funny how the desctiptions are the same though, huh?</FONT></P>
+<P><FONT face=Tahoma>You can think of it as the difference between riding a bicycle and riding a unicycle -- similar principles, but a very different set of skills.</FONT></P>
+<P><FONT face=Tahoma>The bonus trivia question -- do you know why the "convert and call" logic would actually be hard to do here if it had been a good idea?</FONT></P>
+<P><FONT face=Tahoma>And the bonus hard trivia question -- can you think of a function where it <STRONG>is</STRONG> a good idea even with that difficulty?</FONT></P>
+<P><FONT face=Tahoma></FONT>&nbsp;</P>
+<P><FONT face=Tahoma><FONT color=#ff1493><EM>This post brought to you by </EM><STRONG><FONT size=6>À</FONT></STRONG> <EM>(</EM></FONT><EM><FONT color=#ff1493><A href="http://www.fileformat.info/info/unicode/char/00c0">U+00c0</A></FONT></EM><EM><FONT color=#ff1493>, a.k.a. LATIN CAPITAL LETTER A WITH GRAVE)</FONT></EM></FONT></P>
+<hr/><p><a id="669459" href="#669459">#</a> <strong>Sebastian Redl</strong> on 18 Jul 2006 5:12 AM:</p><div style="margin-left: 1em">The problem seems fairly obvious to me: to convert the string to Unicode, you still need to know how to get from one character to the next, thus you have to implement the functionality anyway.</div>
+<p><a id="669469" href="#669469">#</a> <strong>Michael S. Kaplan</strong> on 18 Jul 2006 5:24 AM:</p><div style="margin-left: 1em">Hi Sebastian -- <br><br>Exactly! You got the bonus trivia question....<br><br>Now do you know the answer to the bonus hard trivia question? A function that acually has to do that conversion and return the right answer related to position(s) within that string?</div>
+<hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2006/07/18/669277.html" title="How is that pronounced, exactly?">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2006/07/17/667809.html" title="Appreciation, embarrassment, and redirecting thanks">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2006-07">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2006-07-17">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2006/07/17/668787.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:39 GMT -->
+</html>

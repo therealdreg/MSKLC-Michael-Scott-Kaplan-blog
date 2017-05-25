@@ -1,0 +1,31 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2011/03/30/10147538.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Error code 31 means "Use Unicode, please!"</title></head><body>
+<h1>Error code 31 means "Use Unicode, please!"</h1>
+<p><em>by Michael S. Kaplan, published on 2011/03/30 07:01 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2011/03/30/10147538.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<p>The question came in a message to&nbsp;a few of the distribution lists I follow, a few months ago:</p>
+<p style="padding-left: 60px;"><span style="font-family: times new roman,times;">Hi,</span></p>
+<p style="padding-left: 60px;"><span style="font-family: times new roman,times;">Our LOC team is hitting an issue where WriteConsole fails with error code 31. The user locale in which this happens is German (the OS&nbsp; Windows Server 2k8). Replacing WriteConsole with WriteFile(stdout) does not fail, but prints garbage.<br />I tried to repro the problem on another machine, by changing the locale to German, but did not hit this issue.</span></p>
+<p style="padding-left: 60px;"><span style="font-family: times new roman,times;">What does this error indicate? There seems to be very little information on the net about Unicode programming with windows consoles.</span></p>
+<p>Regular readers might know what is going on here.</p>
+<p>Though the point about the lack of information is valid (ignoring this Blog, of course!).</p>
+<p>It turns out the problem was happening with a <strong>Japanese</strong> system locale on that German machine, which should give the clues for everyone else!</p>
+<p>Now when you get down to it, any time the default system OEM code page ends up being</p>
+<ul>
+<li>932 (Japanese)</li>
+<li>936 (Simplified&nbsp;Chinese)</li>
+<li>949 (Korean)</li>
+<li>950 (Traditional Chinese)</li>
+</ul>
+<p>there are going to be some illegal byte combinations.</p>
+<p>And as it turns out, the WriteConsoleA function&nbsp;can have trouble if some of the text you send to it is interpreted as if it is one of these code pages and converted, if in fact it in some other code page.</p>
+<p>If ever there was a time to use <strong>WriteConsoleW </strong>and to just use Unicode, this would be it - when a mismatch between application language and console code page can leave one with either corrupt text or a nothing but an error code.</p>
+<hr/><p><strong>Random832</strong> on 30 Mar 2011 8:53 AM:</p><div style="margin-left: 1em"><p>Why is it error 31 [ERROR_GENERAL_FAILURE] instead of error 582 [ERROR_ILLEGAL_CHARACTER]?</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 31 Mar 2011 3:55 PM:</p><div style="margin-left: 1em"><p>Not a bad idea, though it may be a generic failure handler that wasn&#39;t communicating more specific info, which no one wanted to change....</p>
+<p>Definitely changing it now would be complicated.</p>
+</div>
+<hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2011/03/31/10148063.html" title="&quot;Digit substitution is maybe a tolerable hack for displaying UI, but it’s definitely bad if you’re creating content.&quot;">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2011/03/29/10146439.html" title="Both Google *and* Bing fail to support accessibility, dammit!">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2011-03">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2011-03-30">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2011/03/30/10147538.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+</html>

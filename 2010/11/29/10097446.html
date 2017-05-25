@@ -1,0 +1,65 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2010/11/29/10097446.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Math is hard, let's do keyboards...that do math.</title></head><body>
+<h1>Math is hard, let's do keyboards...that do math.</h1>
+<p><em>by Michael S. Kaplan, published on 2010/11/29 07:01 -05:00, original URI: http://blogs.msdn.com/b/michkap/archive/2010/11/29/10097446.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<p>Back at the beginning of the month, swalleh asked over in the <a href="http://archives.miloush.net/michkap/archive/2007/07/27/4120528.html" title="Suggestion Box">Suggestion Box</a>:</p>
+<p style="padding-left: 60px;"><span style="font-family: times new roman,times;">Is there a way I can use MSKLC to type [characters outside theBMP]?</span></p>
+<p style="padding-left: 60px;"><span style="font-family: times new roman,times;">I am trying to type the unicode&nbsp;&nbsp; character&nbsp;&nbsp;&nbsp; 𝖳&nbsp; 1D5B3&nbsp; using&nbsp; MSKLC&nbsp; .</span></p>
+<p style="padding-left: 60px;"><span style="font-family: times new roman,times;">The character appear on my keyboard layout plan, but&nbsp; nothing appear when I try to use it to type in word 2010&nbsp; using cambrian math font.</span></p>
+<p style="padding-left: 60px;"><span style="font-family: times new roman,times;">I need 4&nbsp; characters&nbsp; with&nbsp;&nbsp; fixed case&nbsp; namely :&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; T&nbsp; D&nbsp; H&nbsp; and W&nbsp; in capital form.&nbsp;&nbsp;&nbsp; I found them in the extended characters -plane 1&nbsp; series.</span></p>
+<p style="padding-left: 60px;"><span style="font-family: times new roman,times;">I could not find them anywhere else in unicode.</span></p>
+<p style="padding-left: 60px;"><span style="font-family: times new roman,times;">Is there a way&nbsp; I can use&nbsp; MSKLC&nbsp; to type them?&nbsp;&nbsp;&nbsp; I note the code for them is a&nbsp; 5&nbsp; character one compared to the usual&nbsp; 4 for others.</span></p>
+<p style="padding-left: 60px;"><span style="font-family: times new roman,times;">If MSKLC&nbsp; is not suitable , would you be able to suggest&nbsp; an alternative .</span></p>
+<p style="padding-left: 60px;"><span style="font-family: times new roman,times;">Many thanks</span></p>
+<p style="padding-left: 60px;"><span style="font-family: times new roman,times;">ASwalleh</span></p>
+<p>Crap.</p>
+<p>That was my first thought when I read this -- had someone broken that core piece of MSKLC that supports characters beyond the Basic Multilingual Plane?</p>
+<p>I created a special "math symbols" keyboard by typing all of the U+1d### characters in directly:</p>
+<p><img src="http://trigeminal.fmsinc.com/images/math01.jpg" border="0" />&nbsp;<img src="http://trigeminal.fmsinc.com/images/math02.jpg" border="0" />&nbsp;<img src="http://trigeminal.fmsinc.com/images/math03.jpg" border="0" /></p>
+<p>You may not be convinced I actually did anything here. </p>
+<p>People who know me will often say I am not above a little smoke and mirrors.</p>
+<p>Fine, I'll change the font to Cambria Math:</p>
+<p><img src="http://trigeminal.fmsinc.com/images/math04.jpg" border="0" /></p>
+<p>I also made the size really small because this font's metrics are pretty outrageous.</p>
+<p>Let's try again:</p>
+<p><img src="http://trigeminal.fmsinc.com/images/math05.jpg" border="0" />&nbsp;<img src="http://trigeminal.fmsinc.com/images/math06.jpg" border="0" />&nbsp;<img src="http://trigeminal.fmsinc.com/images/math07.jpg" border="0" /></p>
+<p>&nbsp;Anyway, it works just fine.</p>
+<p><em>I also tried other methods of adding characters to keys in MSKLC like copy/paste from other applications and drag/drop from IE to the MSKLC key -- the former always worked, the latter had mixed results.</em></p>
+<p>If you still don't trust me, then</p>
+<ol>
+<li>shame on you, and</li>
+<li>you can download the .KLC file <a target="_blank" href="http://www.trigeminal.com/code/MATHSYMB.zip">here</a> if you want to play with it</li>
+</ol>
+<p><em>The download can make it easier than the DIY aspects of reproducing all of the results in this blog.</em></p>
+<p>I did notice a&nbsp;few bugs in MSKLC itself that have never (as far as I know) been reported:</p>
+<ul>
+<li>The "AutoCasing" behavor that hooks up CAPSLOCK and shift state doesn't work with supplementary characters;</li>
+<li>When typing U+####[#][#] characters, they case of the "U" is important, the case of the # isn't (e.g. U+fEfF is legal but u+0061 isn't);</li>
+<li>When adding via drag/drop, characters outside the BMP don't always seem to work -- much worse in IE than FireFox.</li>
+</ul>
+<p><span style="color: #ff0000;"><span style="font-size: medium;">Someone on the GDX team should put those bugs in, just in case Microsoft ever ships another version. </span></span></p>
+<p><em>Though no one seems interested these days, even for the meaningful bugs....</em></p>
+<p>Okay, so it works in MSKLC. Let's try the next part, and type in Word 2010 using Cambria Math:</p>
+<p><img src="http://trigeminal.fmsinc.com/images/math08.jpg" border="0" /></p>
+<p>Okay, that sort of worked maybe.</p>
+<p>Word decided to autoselect <strong>MS Mincho</strong> instead of the font it started with (Calibri) even though it didn't change the language. </p>
+<p>Even choosing the font first and then typing didn't work -- I am prepared to forgive the former much more readily than the latter.</p>
+<p>I'd say somewhere between Word 2010's "be clever with font stuff" and MS Mincho's font definitions. I would guess that it is at least 90% Word's fault and MS Mincho happens to claim it supports some math stuff, even if not this particular math stuff.</p>
+<p><span style="color: #ff0000;"><strong><span style="font-size: medium;">Word should fix its bug after all the work they did for math suppport. Any Word testers hanging out here? :-)</span></strong></span>&nbsp;</p>
+<p>Okay, let's just select the text and change the font ourselves, that should do the trick:</p>
+<p><img src="http://trigeminal.fmsinc.com/images/math09.jpg" border="0" /></p>
+<p>Ta da!</p>
+<p>So minus a Word 2010 bug for some Plane 1 recognition weirdness, I'd say we are all set here with MSKLC 1.4.</p>
+<p>And then there are some other bugs that won't block users that someone may want to look in some day.</p>
+<p>One thing I must admit about MSKLC is that it has many different ways to enter characters because of some unofficial usability studies we did by giving it people to try and see what they did. So&nbsp;on the assumption that swalleh was simply trying to enter the characters in a way that did not work but maybe ought to in some future versions, knowing what that method was would also be useful....</p>
+<hr/><p><strong>This has to be the least comprehensible posting you have ever published</strong> on 12 Dec 2010 1:05 PM:</p><div style="margin-left: 1em"><p>Even – especially – the illustrations fail to make sense.</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 12 Dec 2010 1:47 PM:</p><div style="margin-left: 1em"><p>Hmmm -- someone reported problems with MSKLC that I thoroughly looked into. And while I couldn&#39;t reproduce the reported issues, I showed what&nbsp;I did try,&nbsp;with pictures&nbsp;to go&nbsp;go along with the descriptions and a sample file for people to try themselves. And I found a bunch of other bugs and problems while I did it, especially in Word.</p>
+<p>I agree: utterly confusing, that. I am heartless.</p></div>
+<p><strong>zander</strong> on 4 Oct 2011 8:38 AM:</p><div style="margin-left: 1em"><p>On my laptop it gets even worse. &nbsp;after downloadeding and building package in MSKLC the keyboard does not work at all except when pressing the Q key hehehe, the same bug haunts me in the keyboard layout i designed that again contains codes outside the BMP.</p>
+</div>
+<hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2010/11/30/10098113.html" title="If you lie, that replacement character might pop in (the one that isn&#39;t Paul Westerberg)">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2010/11/27/10097342.html" title="Oh I know that I am no sage but I won&#39;t be an ANSI code page">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2010-11">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2010-11-29">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2010/11/29/10097446.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+</html>

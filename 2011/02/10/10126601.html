@@ -1,0 +1,75 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2011/02/10/10126601.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>A design flaw not being fixed is not a bug. And it's not "By Design", either.</title></head><body>
+<h1>A design flaw not being fixed is not a bug. And it's not "By Design", either.</h1>
+<p><em>by Michael S. Kaplan, published on 2011/02/10 07:01 -05:00, original URI: http://blogs.msdn.com/b/michkap/archive/2011/02/10/10126601.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<p>There are situations where a design decision made by Windows can cause a <strong>problem</strong> that some may reasonably consider to be a&nbsp;<strong>bug</strong> while the team owning the functionality might resolve the issue as <strong>by design</strong>.</p>
+<p>Interestingly, neither is technically right in many of these cases. Not if an honest assessment is made of the intent of the product and the described behavior.</p>
+<p>The problem may be caused by a <strong>design flaw</strong>.</p>
+<p>The fact that the owning team decides it is by design in this case means that it is a <strong>desugn flaw that is not going to be addressed</strong>.</p>
+<p>I'll give a couple of examples of this pattern to make it clearer....</p>
+<p>You may remember my <a href="http://archives.miloush.net/michkap/archive/2007/09/21/5025885.html" title="If you had gotten there first, you might have staked your claim too!"><strong>If you had gotten there first, you might have staked your claim too!</strong></a> blog, where I explained how the first language installed with a copy of Windows has special privileges in terms of the language of the directory names, the langauge of account names like the <strong>Administrator</strong> account, and so on.</p>
+<p>Now if you have other languages installed via various <strong>Lanuage Packs</strong>, then you may install a <strong>Language Pack</strong> which, had it been installed first, might have called the <strong>Administrator</strong> account <strong>Administrateur</strong>. But now, since you installed English first, it will be named <strong>Administrator</strong> and it won't change.</p>
+<p>However, documentation that discusses the <strong>Administrator account</strong> that you may look up in help will follow the <strong>default user interface language</strong> currently set.</p>
+<p>And it will talk about <strong>Administrateur</strong>.</p>
+<p>This is the <strong>design flaw</strong> that I described in <a href="http://archives.miloush.net/michkap/archive/2005/12/27/507404.html" title="Administrator vs. Administrateur, et. al.'"><strong>Administrator vs. Administrateur, et. al.</strong></a>.</p>
+<p>Could it be fixed? Sure it could. By a complicated help authoring scheme that did the actual account name lookup based on wel known SIDs and RIDs and inserted that name into the help content, this problem where help content refers to things that are not actually true in a reasonable MUI scenario would be solved.</p>
+<p>As a bonus, it would fix cases where the account is renamed, as well. Which might be interesting.</p>
+<p>But the latter could have security consequences and really all that work is just generally rejected as too much effort for too little gain. </p>
+<p>And although the documentation could in theory be edited to try to cover this case, it is a widespread issue that would almost certainly make everything ovwer-complicated and confusing.</p>
+<p>So everything is left as is, and this <strong>design flaw</strong> is considered <strong>by design</strong>.</p>
+<p>Even though any reasonable person looking at documentation that looks wrong will consider it a bug.</p>
+<p>See? :-)</p>
+<p>I'll give you another example....</p>
+<p>say you are on another language version of Windows. Let's say the Italian version of Windows 7. On a machine you deceided to name <strong>italianmachine</strong> just for simplicity.</p>
+<p>The "<strong>C:\Program Files</strong>" directory will actually be "<strong>C:\Programmi</strong>" on this Italian installation.</p>
+<p>Now if you are like me, the machine next to this Italian one might actually be Brazilian Portguese copy of Windows 7.</p>
+<p>And on that machinethe "<strong>C:\Program Files</strong>" directory will actually be "<strong>C:\Arquivos de Programas</strong>".</p>
+<p>If you used the UNC path to look at this remote path, it will not be "<strong>\\brazilianmachine\C$\Arquivos de Programas</strong>".</p>
+<p>It will be "<strong>\\brazilianmachine\C$\Programmi</strong>".</p>
+<p>Yikes!</p>
+<p>Just because you're on an Italian machine doesn't mean&nbsp;you expect the whole worled to be Italian, right?</p>
+<p>But there is a good reason for this behavior.</p>
+<p>The reason that happens is that if you look at the <strong>desktop.ini</strong> in that directory on that Brazilian machine, it will say:</p>
+<p style="padding-left: 60px;"><br />[.ShellClassInfo]<br />LocalizedResourceName=@%SystemRoot%\system32\shell32.dll,-21781</p>
+<p>and since the Italian copy of Windows you are running will have no problems resolving that path and finding that file, it will look up the directory name by loading that string on its own machine instead of the remote one. and of course it will get&nbsp;the Italian string....</p>
+<p>Now perhaps if you are a developer you might be thinking about ways you could fix this problem. You could </p>
+<ul>
+<li>since it is using enviornment variables use WMI to get the remote machine's environment variables, and</li>
+<li>resolve the local path on a remote machine to get the remote machine's directory, and </li>
+<li>load the remote file to get the string</li>
+</ul>
+<p>for example. But is that a great plan for&nbsp;good performance? Is there hope that it would even be readable in all cases, as compared to just making it Italian?</p>
+<p>In the end, this behavior which is easy to consider to be a <strong>bug</strong> and which the core team might consider to be <strong>by design</strong> is yet again a <strong>design flaw that is not worth the cost to address</strong>.</p>
+<p>if you work for Microsoft, a more honest resolution for this kind of bug is <strong>Won't Fix</strong>, not <strong>By Design</strong>.</p>
+<p>Or, if you are one of those users of Mac or Linux who hates Microsoft, you could (in both cases) just see it as pointing out that <strong>Microsoft software is buggy</strong>.... :-)</p>
+<hr/><p><strong>Mike</strong> on 10 Feb 2011 7:27 AM:</p><div style="margin-left: 1em"><p>In my experience, what you just said seems to apply to almost every bug I&#39;ve submitted to Microsoft.</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 10 Feb 2011 7:41 AM:</p><div style="margin-left: 1em"><p>No, not really all bugs are like this&nbsp;-- many are actual bugs! Or perhaps you don&#39;t bother reporting *those* issues, since they seem simpler or something. :-)</p></div>
+<p><strong>htd</strong> on 10 Feb 2011 8:10 AM:</p><div style="margin-left: 1em"><p>&#39;as documented&#39;</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 10 Feb 2011 8:30 AM:</p><div style="margin-left: 1em"><p>In the first case the documentation is incorrect sometimes, and in the second case the issue in question is not documented at all (it is a side effect of the design). So I would definitely not consider it &quot;as documented&quot;....</p>
+</div>
+<p><strong>John Cowan</strong> on 10 Feb 2011 8:48 AM:</p><div style="margin-left: 1em"><p>I think the mistake was to localize the name of such a fundamental directory in the first place. &nbsp;I&#39;m all for localization, but not all the way down to the bottom. &nbsp;Does the C: drive become the Г: or С: (i.e S) drive in Russian localization?</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 10 Feb 2011 8:53 AM:</p><div style="margin-left: 1em"><p>Drive letters are not localized; the localizable dirs are a specific known and documented set. </p>
+<p>And of course since we&#39;ve been doing it for so long it is too late to rethink that without appearing broken to a lot more people.</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 10 Feb 2011 10:22 AM:</p><div style="margin-left: 1em"><p>I suppose the entire architecture of localized drive names might be considered the original design flaw? :-)</p>
+</div>
+<p><strong>Raymond Chen - MSFT</strong> on 12 Feb 2011 11:41 PM:</p><div style="margin-left: 1em"><p>The magically morphing directory name is actually by design. The directory marked itself as &quot;Program Files translated into the language the user prefers&quot; and in this case, the visitor from a machine running the Italian UI prefers Italian. The Brazilian machine is a red herring. Consider the case where a visitor on an Italian machine sets his preferred language to German and visits the C:\Programmi directory. It&#39;s going to say &quot;C:\Programme&quot;.</p>
+<p>These desktop.ini files are sort of like that science fiction creature that looks like whatever the viewer wants it to look like.</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 13 Feb 2011 10:18 AM:</p><div style="margin-left: 1em"><p>I suppose I cam buy that, though it is unexpected to many. Especially compared to other &quot;remote machine&quot; Shell scenarios, like the special icon on the main drive Windows is installed on. There usually seems to be something different about your installation of Windows (compared to some other that you browse to on another drive or another machine)....</p>
+</div>
+<p><strong>Alex Cohn</strong> on 13 Feb 2011 11:40 AM:</p><div style="margin-left: 1em"><p>It&#39;s &nbsp; worse than magically translating ditectory names. Somebody has right to create C:\Programmi on an English system, which will be hidden from the users who choose Italian UI.</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 13 Feb 2011 12:00 PM:</p><div style="margin-left: 1em"><p>I&#39;m not convinced it will be hidden -- in many such cases you will just see two directories with the same name!</p>
+</div>
+<p><strong>Cheong</strong> on 13 Feb 2011 5:39 PM:</p><div style="margin-left: 1em"><p>Possible. Consider the case when you have two folder with same name in your personal user desktop and the &quot;All User&quot; desktop. You&#39;ll see two folder with the same name there.</p>
+<p>As long as the underlying filesystem knows they&#39;re different, it shouldn&#39;t really matter when they appear to have the same name in the eyes of user.</p>
+</div>
+<hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2011/02/11/10128045.html" title="When good functions [seem to] go bad">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2011/02/09/10125506.html" title="Win 7 RTM &amp; Arabic: &quot;We can fix up August and April. But it&#39;ll cost you July to do it…&quot;">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2011-02">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2011-02-10">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2011/02/10/10126601.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+</html>

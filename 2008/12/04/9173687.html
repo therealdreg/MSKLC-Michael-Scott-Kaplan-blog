@@ -1,0 +1,61 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2008/12/04/9173687.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:35 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>UCS-2 to UTF-16, Part 7: If it makes the SQL Server columns too small then it made the Oracle columns either too smallER or too smallEST</title></head><body>
+<h1>UCS-2 to UTF-16, Part 7: If it makes the SQL Server columns too small then it made the Oracle columns either too smallER or too smallEST</h1>
+<p><em>by Michael S. Kaplan, published on 2008/12/04 10:01 -05:00, original URI: http://blogs.msdn.com/b/michkap/archive/2008/12/04/9173687.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<p>Previous blogs in this series of blogs on this Blog:</p>
+
+<ul>
+<li><b><a href="http://archives.miloush.net/michkap/archive/2008/08/30/8907667.html" mce_href="http://archives.miloush.net/michkap/archive/2008/08/30/8907667.html">Part 0: 
+The intro, sans content</a></b> 
+</li>
+<li><b><a href="http://archives.miloush.net/michkap/archive/2008/09/08/8931641.html" mce_href="http://archives.miloush.net/michkap/archive/2008/09/08/8931641.html">Part 1: 
+Getting the obvious out of the way</a></b> 
+</li>
+<li><b><a href="http://archives.miloush.net/michkap/archive/2008/09/15/8952073.html" mce_href="http://archives.miloush.net/michkap/archive/2008/09/15/8952073.html">Part 2: 
+A&amp;P of a 'linguistic character'</a></b> 
+</li>
+<li><b><a href="http://archives.miloush.net/michkap/archive/2008/09/18/8956650.html" mce_href="http://archives.miloush.net/michkap/archive/2008/09/18/8956650.html">Part 3: 
+It starts with cursor movement (where MS simultaneously gets better and 
+worse)</a></b> 
+</li>
+<li><b><a href="http://archives.miloush.net/michkap/archive/2008/10/06/8977552.html" mce_href="http://archives.miloush.net/michkap/archive/2008/10/06/8977552.html">Part 4: 
+Talking about the ask&nbsp;</a></b> 
+</li>
+<li><b><a href="http://archives.miloush.net/michkap/archive/2008/10/15/9000371.html" mce_href="http://archives.miloush.net/michkap/archive/2008/10/15/9000371.html">Part 5: 
+What's on the Next Level?</a></b></li>
+<li><b><a href="http://archives.miloush.net/michkap/archive/2008/11/24/9134826.html" mce_href="http://archives.miloush.net/michkap/archive/2008/11/24/9134826.html">Part 6: An exercise left for whoever needs some exercise</a></b><b><br></b></li>
+</ul>
+
+<p>Now that I have gone out of my way to try to get people to stop thinking only about surrogate pairs, I am now going to talk about a case study that is about someone thinking only about surrogate pairs. :-)</p>
+<p>But first a brief foray into something that I wouldn't usually be caught dead talking about.... <br></p>
+<p>Given the current economy, lots if people are looking to lower their overall TCO (total cost of ownership). </p>
+<p>It tends to make SQL Server look a bit more compelling than Oracle in a lot of cases, not because SQL Server is faster and not just because the SQL Server solutions cost less, but also because the SQL Server DBAs do. :-)</p>
+<p>Ok, enough of that -- enough flame bait <span style="font-weight: bold;">of that kind</span>, foray over. And onto the actual issue -- questions about migrating from Oracle to SQL Server that came up the other day:</p>
+<blockquote>
+<p><i><font face="times new roman,times">Let us assume that our Customer is having 70,000 Unique characters in oracle .&nbsp; When we migrate this data to SQLServer we have ability to store 65536 unique characters in Unicode data types. <br><br>What would happen to&nbsp; remaining characters which are above 65536&nbsp; Limit ? and how the remaining&nbsp; 4436 (70000-65536) will be stored in SQLServer?<br><br>Do we need to change any settings in SQLServer to achieve this (or) If we store&nbsp; any characters which fall beyond 65536 range in Unicode column like Nchar, Nvarchar and Ntext it will be automatically stored as surrogate pairs?<br><br>One final question<br><br>When we store&nbsp; Characters which is beyond 65536 range they are stored as surrogate pairs which will take up 4 bytes for each character.<br><br>So if I have a column with Nchar(4000) I will be able to store maximum of 2000 characters if all characters are beyond 65536 range, and I will be able to store 4000 characters if all the characters are within 65536 range.<br><br>Please confirm if my understanding is right.</font></i></p>
+</blockquote>
+<p>That's a lot of questions packed into one question, isn't it? :-) </p>
+<p>Now first of all, it is important to focus on the irony of being so worried about needing to use up to four bytes per Unicode code point rather than just two when one is looking at converting from a system that uses one, two, three, and four bytes per Unicode code point.</p>
+<p>An irony made all the more delicious by the fact that so many Oracle installations use <a href="http://www.unicode.org/reports/tr26/" mce_href="http://www.unicode.org/reports/tr26/">CESU-8</a> rather than UTF-8 (which Oracles calls UTF8 rather than AL32UTF8), which means that they are usually looking at converting from a system that uses one, two, three, or six bytes per Unicode code point....</p>
+<p>Ok, delicious irony savoring over, now back to work. </p>
+<p>Now obviously we can't be unhappy about storing supplementary characters (what the customer is thinking of as "the remaining characters which are above the 65336 limit" for a few reasons.</p>
+<p>I mean, first of all that it is unlikely that they are using every Unicode code point from <a href="http://www.fileformat.info/info/unicode/char/0001" mce_href="http://www.fileformat.info/info/unicode/char/0001">U+0001</a> to <a href="http://www.fileformat.info/info/unicode/char/ffff" mce_href="http://www.fileformat.info/info/unicode/char/ffff">U+ffff</a>, given the fact that so many of those code points are not actually usable, meaning that if they truly are using "70,0000 unique characters" then a lot more of them are supplementary characters than just 4,436 of them.</p>
+<p>But also we have to realize that UTF-16 storage is going to not be worse than UTF-8 storage, the fact that they are stored in UTF-16 as surrogate pairs which will take up four bytes -- just as they do in Oracle (unless they use the old Oracle format that will take up SIX bytes in their <a href="http://www.unicode.org/reports/tr26/" mce_href="http://www.unicode.org/reports/tr26/">CESU-8</a> encoding).</p>
+<p>Data that really does run the gamut of Unicode is gonna take up the same kind of space, probably more, in UTF-8. the breakdown is like this: </p>
+<ul>
+<li><a href="http://www.fileformat.info/info/unicode/char/0001" mce_href="http://www.fileformat.info/info/unicode/char/0001">U+0001</a> to <a href="http://www.fileformat.info/info/unicode/char/007f" mce_href="http://www.fileformat.info/info/unicode/char/007f">U+007f</a> -- one byte per Unicode code point</li>
+<li><a href="http://www.fileformat.info/info/unicode/char/0080" mce_href="http://www.fileformat.info/info/unicode/char/0080">U+0080</a> to <a href="http://www.fileformat.info/info/unicode/char/07ff" mce_href="http://www.fileformat.info/info/unicode/char/07ff">U+07ff</a> -- two bytes per Unicode code point</li>
+<li><a href="http://www.fileformat.info/info/unicode/char/0800" mce_href="http://www.fileformat.info/info/unicode/char/0800">U+0800</a> to <a href="http://www.fileformat.info/info/unicode/char/ffff" mce_href="http://www.fileformat.info/info/unicode/char/ffff">U+ffff</a> -- three bytes per Unicode code point</li>
+<li><a href="http://www.fileformat.info/info/unicode/char/10000" mce_href="http://www.fileformat.info/info/unicode/char/10000">U+10000</a> to <a href="http://www.fileformat.info/info/unicode/char/10ffff" mce_href="http://www.fileformat.info/info/unicode/char/10ffff">U+10ffff</a> -- four bytes per Unicode code point, <b>unless it is actually six bytes per Unicode code point using the most common Oracle encoding of the data</b></li>
+</ul>
+<p>Kind of puts it all in perspective, doesn't it? :-)</p>
+<p>Moving on to the question about additional settings, the support is automatic for Unicode code points; no change have to be made, and it will work in any version of SQL Server that supports the Unicode data types (SQL Server 7.0 and later).</p>
+<p>Easy!</p>
+<p>And I think I have readily dismissed the storage concerns implicit in the last question -- any time the buffers are too small in SQL Server they are even too small<b>er</b> in Oracle, and possibly too small<b>est</b> in their most common Unicode encoding....</p>
+<p><br></p>
+<p><font color="#ff00ff"><i>This blog brought to you by <a href="http://www.fileformat.info/info/unicode/char/10ffff" mce_href="http://www.fileformat.info/info/unicode/char/10ffff">U+10ffff</a>, a non-character holding the position of the biggest theoretical legal character in Unicode</i></font><br></p>
+<hr/><div style="margin-left: 1em"><em>no comments</em></div><hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2009/06/29 <a href="http://archives.miloush.net/michkap/archive/2009/06/29/9800913.html">UCS-2 to UTF-16, Part 11: Turning it up to Eleven!</a></p><p>2009/06/10 <a href="http://archives.miloush.net/michkap/archive/2009/06/10/9723321.html">UCS-2 to UTF-16, Part 10: Variation[ Selector] on a theme...</a></p><p>2008/12/16 <a href="http://archives.miloush.net/michkap/archive/2008/12/16/9223301.html">UCS-2 to UTF-16, Part 9: The torrents of breaking CharNext/CharPrev</a></p><p>2008/12/09 <a href="http://archives.miloush.net/michkap/archive/2008/12/09/9187379.html">UCS-2 to UTF-16, Part 8: It's the end of the string as we know it (and I feel ellipses)</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2008/12/04/9173920.html" title="ImmGetDescription: another casualty of the IMM to TSF migration">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2008/12/03/9168086.html" title="Want to hear about a cool new typographic convention? Khmer, and I&#39;ll tell you about it...">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2008-12">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2008-12-04">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2008/12/04/9173687.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:35 GMT -->
+</html>

@@ -1,0 +1,40 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2007/10/29/5754348.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:37 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Japanese line breaking rules can be quite complex</title></head><body>
+<h1>Japanese line breaking rules can be quite complex</h1>
+<p><em>by Michael S. Kaplan, published on 2007/10/29 09:16 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2007/10/29/5754348.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P>A very long time ago, John Black asked in what had been the oldest post in the Suggestion Box:</P>
+<BLOCKQUOTE>
+<P><EM><FONT face="times new roman,times">I've noticed when developing web pages that use Japanese characters that many web browsers treat *every* character as a potential word boundary, meaning if you try to rely on minimum-width side effects of text blocking, you end up with a lot of overly-wrapped Japanese text. <BR><BR>This seems to be particular to Japanese language sets, and on more than one browser, so that's why I thought I would ask here (rather than rant about a potential browser bug.) <BR><BR>How are word-boundary rules for different locales handled by Windows apps -- is it different from app to app, or is there some centralized property of the maps that have this info? </FONT></EM></P></BLOCKQUOTE>
+<P>And then&nbsp;not very long ago, a slightly different question was asked on an internal list:</P>
+<BLOCKQUOTE>
+<BLOCKQUOTE>
+<P><EM>Hi,</EM></P>
+<P><EM>I am facing this problem in one Microsoft portals Japanese locale, below is the description of the problem:-</EM></P>
+<P><EM>We experience problems with kinsoku shori, where the line breaks at a specific character that shouldn't be broken.&nbsp; This is also inconsistent in every browser because of personal preferences with resolution and font-size.<BR>&nbsp;<BR>The content is being pulled from a content management system (intaglio) and coupled with the product's css styles. </EM></P>
+<P><EM>Most Japanese websites I visited do not seem to have any special CSS styles within their blocks of text, so I am unclear of how they handle the issue or if they even handle it.&nbsp; The available CSS styles that resolve these problems are CSS3, which every browser is yet to be compatible with.<BR></EM><A href="http://www.css3.com/css-line-break/"><EM>http://www.css3.com/css-line-break/</EM></A><EM> (Please go thru this link for better understanding)</EM></P>
+<P><EM>As a temporary fix, we have manually entered in white spaces in the content to introduce or force a line break, which may still be inconsistent in other browser settings.&nbsp; I was hoping that you could give me a little insight on what can be done if you have seen any methods to resolve this.&nbsp; We may need to have a more permanent solution in the future.</EM></P>
+<P><EM>Please reply to me if you have any information/suggestions on handling Kinsuko.</EM></P></BLOCKQUOTE></BLOCKQUOTE>
+<P>Anyway, there are lots of other people noticing problems relating to Japanese text in the browser, an issue which almost gives lie to the cultural worries about lack of complexity in Japanese I talked about a bit in <A class="" href="http://archives.miloush.net/michkap/archive/2007/10/11/5396360.html" mce_href="http://archives.miloush.net/michkap/archive/2007/10/11/5396360.html"><STRONG>If you aren't adequate, I guess that means you're inadequate; if you're not complex, I suppose that means you're simple?</STRONG></A>, if you ask me....</P>
+<P>The truth is that there is indeed much complexity that is captured in CSS, it just isn't as well understood as it could be, I think.</P>
+<P>Michel Suignard responded to the second question:</P>
+<BLOCKQUOTE>
+<P><FONT face="times new roman,times">To me it does not look like a bug, it is basically loose kinsoku which allows break inside syllable like ‘sho’. If you want to disable that you have to set kinsoku (line-break) to strict. I could not find the sequence for ‘apurikeeshono’ in the appended txt file which seems to be the kana sequence that is ‘problematic’. This is consistent with typical Japanese text processing.</FONT></P></BLOCKQUOTE>
+<P>And then Paul Nelson provided a sample that you&nbsp;could put in an .HTM page and then watch line breaking act a bit more appropriately:</P>
+<BLOCKQUOTE>
+<BLOCKQUOTE>
+<P>&lt;html&gt;<BR>&lt;body&gt;<BR>&lt;p&gt;ビジネス アプリケーション&lt;/p&gt;<BR>&lt;p&gt;ビジネスを実行するオンラインアプリケーション&lt;/p&gt;<BR>&lt;p style="line-break:strict;"&gt;ビジネスを実行するオンラインアプリケーション&lt;/p&gt;<BR>&lt;/body&gt;<BR>&lt;/html&gt;</P></BLOCKQUOTE></BLOCKQUOTE>
+<P>The full info on this subject is itself worthy of an article or a blog post probably, though I don't have the expertise to get into it without a bit of research being done first.... </P>
+<P>So consider this post to be an acknowledgment of complexity, a promise of future effort,&nbsp;and then&nbsp;if you're interested you can just&nbsp;stay tuned. :-)</P>
+<P mce_keep="true">&nbsp;</P>
+<P><FONT color=#ff00ff><EM>This post brought to you by</EM><FONT size=5> ビ </FONT><EM>(<A class="" href="http://www.fileformat.info/info/unicode/char/30d3" mce_href="http://www.fileformat.info/info/unicode/char/30d3">U+30d3</A>, a.k.a. KATAKANA LETTER BI)</EM></FONT></P>
+<hr/><p><a id="5768540" href="#5768540">#</a> <strong>Joe Clark</strong> on 29 Oct 2007 1:53 PM:</p><div style="margin-left: 1em"><p>Under CSS3, you mean word-break, not line-break, and please don’t put it inline on P.</p>
+<p><a rel="nofollow" target="_new" href="http://www.w3.org/TR/css3-text/#word-break">http://www.w3.org/TR/css3-text/#word-break</a></p></div>
+<p><a id="5779276" href="#5779276">#</a> <strong>SDiZ</strong> on 30 Oct 2007 7:14 AM:</p><div style="margin-left: 1em"><p>&gt; ... that you could put in an .HTM page ..</p>
+<p>Use .html, not .htm! No OS have the 8.3 constant now.</p></div>
+<p><a id="5784907" href="#5784907">#</a> <strong>Michael S. Kaplan</strong> on 30 Oct 2007 3:14 PM:</p><div style="margin-left: 1em"><p>It probably does not matter all that much, since every browser on the planet can support either extension. :-)</p>
+</div>
+<hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2007/10/29/5754751.html" title="Sometimes RunOnce is one time too many">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2007/10/29/5752998.html" title="Sometimes everyone is happier when the game is Fixed (aka Consoling Consolas lovers)">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2007-10">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2007-10-29">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2007/10/29/5754348.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:37 GMT -->
+</html>

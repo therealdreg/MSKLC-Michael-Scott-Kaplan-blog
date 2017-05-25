@@ -1,0 +1,28 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2006/02/01/522164.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:40 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>On [not] localizing a MessageBox from code</title></head><body>
+<h1>On [not] localizing a MessageBox from code</h1>
+<p><em>by Michael S. Kaplan, published on 2006/02/01 13:01 -05:00, original URI: http://blogs.msdn.com/b/michkap/archive/2006/02/01/522164.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<p><font face=Tahoma>Mohit Gogia&nbsp;asked me via the contact link (though the suggestion box would have better!):</font></p>
+<blockquote dir=ltr style="MARGIN-RIGHT: 0px">
+<p><font size=2><em>Hello Michael,</em></font></p>
+<p><font size=2><em>I have posted this internally and on forums but couldn't get any definitive answer to the question. Please help me with the following.</em></font></p>
+<p><font size=2><em>I am having a situation where OS locale is different from Application locale. Now since MessageBox come from OS so they are in OS locale (Yes, no, OK buttons) rather that in the application locale. I am reluctant to make custom messageboxes in resource dlls.&nbsp; MSDN mentions about an MessageBoxIndirect API which is supposed to take a langid parameter and show the MessageBox in user specified language on a MUI m/c (I have installed the MUI pack). But I couldn't make this scenario work with MessageBoxIndirect, messageboxes were still in the OS language rather than in application specified language.</em></font></p>
+<p><font size=2><em>Here is the code tried on a MUI setup with current OS locale English.</em></font></p>
+<blockquote dir=ltr style="MARGIN-RIGHT: 0px">
+<p><font face="Courier New" size=2>MSGBOXPARAMS mBox;<br />memset((void*)&amp;mBox, 0, sizeof(MSGBOXPARAMS));<br />mBox.cbSize = sizeof(MSGBOXPARAMS);<br />mBox.dwLanguageId = 1041;<br />mBox.dwStyle = MB_YESNO;<br />mBox.lpszCaption = L"Hello";<br />mBox.lpszText = L"Hello";</font></p>
+<p><font face="Courier New" size=2>::MessageBoxIndirect(&amp;mBox);</font></p></blockquote>
+<p><font size=2><em>-Thanks</em></font></p></blockquote>
+<p><font face=Tahoma>I just tried to look for it and could not find it, but it was more than five years ago that I asked this very same question!</font></p>
+<p><font face=Tahoma>I remember Björn Rettig responding to me, and telling me that the work to support this "pre-MUI" mechanism of UI language switching was never actually hooked up.</font></p>
+<p><font face=Tahoma>At the time, I was pretty pissed off. And being a contract resource, in a conversation that was not with anyone in my reporting chain, I think I talked about how lame it was for Microsoft to put in teasers like this, without ever adding the functionality.</font></p>
+<p><font face=Tahoma>But to his credit, Björn (who is one of the original "concept wizards" behind MUI) talked about why it really was not a good idea. And it was hard to get around the fact that I just didn't feel like doing the work.</font></p>
+<p><font face=Tahoma>So I admitted it. :-)</font></p>
+<p><font face=Tahoma>Thinking about it now, and as I pointed out in the post <a href="http://archives.miloush.net/michkap/archive/2006/01/19/514656.html"><strong>Just when you think you know a function...</strong></a>, trying to handle localization tasks in developer code rather than putting the job in the hands of localizers is really not a very scalable plan. There is a huge difference for the developer between making things localizable and trying to be clever about the localization.</font></p>
+<p><font face=Tahoma>So it is probably all for the best that this parameter does indeed represent the road not travelled.</font></p>
+<p><font face=Tahoma></font>&nbsp;</p>
+<p><font face=Tahoma color=#ff1493><em>This post brought to you by</em> "ö" <em>(<a href="http://www.fileformat.info/info/unicode/char/00f6">U+00f6</a>, a.k.a. LATIN SMALL LETTER O WITH DIAERESIS)</em></font></p>
+<hr/><div style="margin-left: 1em"><em>no comments</em></div><hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2006/05/25 <a href="http://archives.miloush.net/michkap/archive/2006/05/25/607504.html">SQL Server's cross-version collation support</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2006/02/02/522919.html" title="What is equal to some may not be equal to others">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2006/02/01/521864.html" title="It speaks my language (well, almost!)">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2006-02">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2006-02-01">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2006/02/01/522164.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:40 GMT -->
+</html>

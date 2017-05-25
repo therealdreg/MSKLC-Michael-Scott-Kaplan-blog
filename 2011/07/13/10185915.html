@@ -1,0 +1,100 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2011/07/13/10185915.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>It's ultimately your call, but your PowerShell cmdlets really don't need to SUCK this much</title></head><body>
+<h1>It's ultimately your call, but your PowerShell cmdlets really don't need to SUCK this much</h1>
+<p><em>by Michael S. Kaplan, published on 2011/07/13 07:01 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2011/07/13/10185915.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<p>I remember years ago, when the groundswell of opinion that wanted a replacement for CMD.EXE found itself with <strong>budget</strong>.</p>
+<p>And <strong>headcount</strong>.</p>
+<p>And <strong>executive sponsorship</strong>.</p>
+<p>And a <strong>code name</strong>.</p>
+<p>You may heard of it.</p>
+<p><strong><span style="font-size: large;">Monad.</span></strong></p>
+<p>Now everyone involved had their own reasons for wanting this, but for me and several others like me, there was one basic feature we wanted.</p>
+<p>We wanted the ability to support Unicode and complex scripts within Unicode (okay, maybe that's two basic features).</p>
+<p>Now&nbsp;fairly early on (though I remember in talking with several old timers that we collectively realized&nbsp;it earlier)&nbsp;it became clear that only the Unicode part was possible in CMD.EXE; the complex script part was never gonna happen there.</p>
+<p>Thus was born the <strong>Graphical PowerShell</strong>.</p>
+<p>Now this became my PowerShell, because it supported everything that one could ever want in terms of the display and reading of Unicode text, with the only limitations coming out of scripts built targeting older, non-Unicode type support that had dominated the console for so long.</p>
+<p>Unfortunately, this was not the PowerShell of most people.</p>
+<p>The vast majority of PowerShell work apparently happens in the CMD.EXE-hosted version of PowerShell.</p>
+<p>And the vast majority of PowerShell cmdlets target that least common denominator of non-Unicode, non-complexity that the CMD.EXE-hosted PowerShell has the easiest time supporting.</p>
+<p><strong>Have you (the reader of this blog) ever heard of Unicode support in the console, which has been there almost since the birth of CMD.EXE?</strong></p>
+<p>These cmdlet authors had not heard of this.</p>
+<p><strong>Have you (the reader of this blog) ever heard of writing light-up features that do better when running where better can be done (e.g. in the redirected console, or in the Graphical PowerShell)?</strong></p>
+<p>These cmdlet authors had not heard of this either.</p>
+<p><strong>Have you (the reader of this blog) ever heard of using terrible features like the console fallback language any time the console was deemed to be unable to support a given language?</strong></p>
+<p>Unfortunately, a lot of cmdlet authors who had been napping while those earlier questions came out were bright eyed and bushy tailed when this one became available.</p>
+<p>Crap.</p>
+<p>And this is&nbsp;a ledge I have been trying to convince cmdlet authors to stop jumping off for some time. Although there has been some success, it isn't nearly as much as I would like there to be.</p>
+<p>Now I could blame this on a small team if I wanted to.</p>
+<p>But since PowerShell was widely embraced by components needed&nbsp;by administrators all throughout many groups in Microsoft and by many people outside of Microsoft, the only small group of people I could ever hope to reasonably blame is the early group of people tasked with writing up the best practices for PowerShell cmdlets.</p>
+<p>I lacked the authority to see the guilty "punished (i.e.&nbsp;laid off or reviews impacted) for the decades of man years worth of cmdlets written both inside and outside of Microsoft that were written incorrectly due to the piss-poor best practices produced. Though the people, through failure of due dilligence, deserved a bit of feeling the pain they inflicted....</p>
+<p>The plan currently there in most cmdlets -- to take the fallback language for anytime either the CurrentCulture or the CurrentUICulture has the benefit of keeping them from printing out question marks to a CMD.EXE console using a bitmap font. but with a downside of it being the wrong language and the wrong cultural preferences -- a&nbsp;bad thing to do in&nbsp;ordinary circumstances, but terrible when the platform is able to&nbsp;support so much more (which is more often than anything people are being told in marketing materials how much people can do in the CMD.EXE based technology -- because rather than just showing question marks or square boxes there to push people to move on they'd rather dumb down everywhere.</p>
+<p>That is, quite simply, bad engineering.</p>
+<p>But if you are a PowerShell cmdlet author, either inside or outside of Microsoft, you have a chance to break that pattern.</p>
+<p>Let's inject some good engineering -- and some simple "light-up" work to make the better locations produce better results!</p>
+<p>The code, most of which comes from <strong><a title="Cunningly conquering communicated console caveats. Comprende, mon Capit&aacute;n?" href="http://archives.miloush.net/michkap/archive/2010/05/07/10008232.html">Cunningly conquering communicated console caveats. Comprende, mon Capit&aacute;n?</a></strong>, over a year ago, with one small change to handle the complex script case, is code that I wish could end up either in some central module to be used by all PowerShell cmdlet authors, or in as many cmdlets as humanly possible, to allow the <strong>Graphical PowerShell</strong> that you may know of as <strong>PowerShell ISE</strong> to get the job done for the many many languages that are supported</p>
+<p>Or if nothing else you could make sure that your own cmdlets don't suck.&nbsp; Because they don't have to....</p>
+<p>The one small change?</p>
+<p>A small addition, an interesting utility function for the sake of the CMD.EXE based world, which still hosts the CMD.EXE-based PowerShell.</p>
+<p>If you look at the contrived function that is Main:</p>
+<p><span style="font-family: Consolas,LucidaConsole,Courier New,Courier,Fixed;" face="Consolas,LucidaConsole,Courier New,Courier,Fixed"><b>&nbsp;&nbsp;&nbsp; <span style="color: blue;">public static void </span>Main() {<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: blue;">if</span>(IsConsoleRedirected()) {<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: #2b91af;">Console</span>.WriteLine(<span style="color: #a31515;">"You are running in a redirected console.\r\nWrite Unicode via WriteFile and be happy!"</span>);<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; } <span style="color: blue;">else </span>{<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: blue;">if</span>(IsPowerShellIse()) {<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: #2b91af;">Console</span>.WriteLine(<span style="color: #a31515;">"You are running in PowerShell ISE and can support complex scripts."</span>);<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; } <span style="color: blue;">else </span>{<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: blue;">if</span>(IsConsoleFontTrueType()) {<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: #2b91af;">Console</span>.WriteLine(<span style="color: #a31515;">"No PowerShell ISE, but a TrueType font is selected;\r\nyou can at least display some Unicode in CMD."</span>);<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; } <span style="color: blue;">else </span>{<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: #2b91af;">Console</span>.WriteLine(<span style="color: #a31515;">"No PowerShell ISE, no TrueType font; you are limited to one code page."</span>);<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }<br />&nbsp;&nbsp;&nbsp; }<br /><br /></b></span></p>
+<p>Basically there is no built-in <strong>IsTooComplexForCmd()</strong> method in the CultureInfo class to further figure out what works in the "it's TrueType" case beyond the "some Unicode works" comment, but we can make our own -- using the same technology currently being used to dumb down everyone.</p>
+<p>The solution&nbsp;can be easily derived from the following algorithm:</p>
+<ol>
+<li>Retrieve the <strong>CurrentUICulture</strong>.<strong>GetConsoleFallbackUICulture</strong>().<strong>TwoLetterISOLanguageName</strong>;</li>
+<li>Retrieve the <strong>CurrentUICulture</strong>.<strong>TwoLetterISOLanguageName</strong>;</li>
+<li>If the result from #1&nbsp;is either "en" or "fr" and it doesn't match the result of #2, then you have a complex script;</li>
+<li>Retrieve the <strong>CurrentCulture</strong>.<strong>GetConsoleFallbackUICulture</strong>().<strong>TwoLetterISOLanguageName</strong>;</li>
+<li>Retrieve the <strong>CurrentCulture</strong>.<strong>TwoLetterISOLanguageName</strong>;</li>
+<li>If the result from #4 is either "en" or "fr" and it doesn't match the result of #5, then you have a complex script;</li>
+<li>If either #3 or #6 claims to be a complex script, just call it complex, otherwise don't.</li>
+</ol>
+<p>And that's it.</p>
+<p>I'll leave writing the most elegant version of that last function based on these seven steps&nbsp;as an exercise for the reader. Anyone want to give it a shot?</p>
+<p>Braver developers might just use this code to warn people when they should be using the Graphical PowerShell entirely -- they could simply choose to NEVER fallback, and always support languages fully, but in deference to CMD.EXE they could warn users when the results may not be as good as they could be.</p>
+<p>And this bit of code can help you single handedly create&nbsp;<strong>PowerShell cmdlets that don't suck</strong> for all users!</p>
+<hr/><p><strong>Yuhong Bao</strong> on 14 Jul 2011 12:20 AM:</p><div style="margin-left: 1em"><p>Again, CMD.EXE don&#39;t host the Windows built-in console. CSRSS or CONHOST does.</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 14 Jul 2011 1:21 AM:</p><div style="margin-left: 1em"><p>But CMD.EXE hosts the non-ISE PowerShell. Even though something hosts it....</p>
+</div>
+<p><strong>rjcox</strong> on 14 Jul 2011 1:50 AM:</p><div style="margin-left: 1em"><p>&gt; But CMD.EXE hosts the non-ISE PowerShell</p>
+<p>Not here it doesn&#39;t. No instance of cmd.exe running. I agree with @Yuhong: Win32 console subsystem != cmd.exe.</p>
+<p>Of course a s/cmd.exe/Win32 console subsystem/ would still make sense and be more, pedantically, accurate.</p>
+</div>
+<p><strong>Blake</strong> on 14 Jul 2011 7:28 AM:</p><div style="margin-left: 1em"><p>Yuhong Bao &amp; rjcox are exactly correct. &nbsp; cmd.exe is not special in any fashion, it is just another executable flagged to use the console subsystem, exactly the same as powershell.exe. &nbsp; No version of powershell has any direct or indirect dependancy on cmd.exe.</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 14 Jul 2011 8:39 AM:</p><div style="margin-left: 1em"><p>Hmmm... when I run the &quot;PowerShell&quot; shortcut (not the ISE one) from a default Windows 7 install, it is inside CMD.EXE. That is what I&#39;m referring to here....</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 14 Jul 2011 1:22 PM:</p><div style="margin-left: 1em"><p>Put another way -- PowerShell hosted by the default console provider, which for 99.999% of all users in CMD.EXE.</p>
+<p>Wow, my first official nitpickers! :-)</p>
+</div>
+<p><strong>Blake</strong> on 14 Jul 2011 4:51 PM:</p><div style="margin-left: 1em"><p>No, I&#39;m not sure what you are seeing that makes you think this, but it is not running &quot;inside cmd.exe&quot;. &nbsp;</p>
+<p>To confirm this for yourself, consider using Process Explorer, or tlist, or other diagnostic tool to examine the parent processes. &nbsp;</p>
+<p>When you run an instance of powershell.exe there is no new cmd.exe process involved. &nbsp; What you will find (on Vista or later) is a new conhost.exe process launched as a child of csrss.exe. &nbsp; That is what owns the window and manages IO for any console application. &nbsp;(Pre Vista, csrss.exe did this internally, it was split out for security/stability reasons.)</p>
+<p>This isn&#39;t a nit being picked, this is a significant misunderstanding of how the console subsystem works.</p></div>
+<p><strong>Michael S. Kaplan</strong> on 14 Jul 2011 5:19 PM:</p><div style="margin-left: 1em"><p>Since the legacy PowerShell window has limitations that are completely identical to CMD.EXE in relation to fonts and complex scripts, and since both dev and test members regularly refer to these as windows as being CMD based, and further since the details you prfovide have nothing to do with the points I was making about font and complex script support, this IS nitpicking.</p>
+<p>The diferences, even if true, are irrelevant to the point of the blog, which is about writing for the ISE in order to improve support, and getting away from the legacy PowerShell....</p></div>
+<p><strong>Blake</strong> on 14 Jul 2011 6:38 PM:</p><div style="margin-left: 1em"><p>Choosing to be aggressively misinformed about how the console subsystem works makes everything you do say about Unicode and complex script support within console applications rather suspect.</p>
+<p>It is your blog, you are free to promote inaccuracies on it, but it costs you credibility.</p></div>
+<p><strong>Michael S. Kaplan</strong> on 14 Jul 2011 6:48 PM:</p><div style="margin-left: 1em"><p>&quot;aggessively misinformed&quot;</p>
+<p>Yes, these two screenshots look like they are from entirely separate components that have nothing to do with each other and share no code.</p>
+<p><img src="http://msdnshared.blob.core.windows.net/media/MSDNBlogsFS/prod.evol.blogs.msdn.com/CommunityServer.Blogs.Components.WeblogFiles/00/00/00/33/81/2063.cmd02.jpg" width="386" height="474" alt=" " />&nbsp; <img src="http://msdnshared.blob.core.windows.net/media/MSDNBlogsFS/prod.evol.blogs.msdn.com/CommunityServer.Blogs.Components.WeblogFiles/00/00/00/33/81/7065.cmd03.jpg" width="386" height="474" alt=" " /></p>
+<p>Good point.</p></div>
+<p><strong>Blake</strong> on 14 Jul 2011 9:16 PM:</p><div style="margin-left: 1em"><p>Yes, aggressively misinformed, because the true situation has now been explained several times, both by myself and by previous posters and you are avoiding actually listening.</p>
+<p>Nothing in those property pages comes from cmd.exe. &nbsp;Correlation is not causation. &nbsp; All the things that are common between cmd.exe and powershell.exe are provided by the console subsystem. &nbsp;The console subsystem is implemented primarily in csrss.exe and conhost.exe and has supporting code in various pieces of the windows shell and the loader. &nbsp;All the painting of glyphs on the screen for both cmd.exe and powershell.exe is done by conhost.exe in modern versions of Windows.</p>
+<p>X looking just like Y does not imply X is built on Y. &nbsp;In this case, it means X &amp; Y are both built on Z.</p>
+<p>The reason this matters in the current blog entry, is that the owners of cmd.exe couldn&#39;t do anything about complex scripts anymore than the owners of powershell.exe could. &nbsp;Those sorts of changes would need to be made by the folks who own conhost.exe.</p>
+</div>
+<p><strong>ErikF</strong> on 14 Jul 2011 9:40 PM:</p><div style="margin-left: 1em"><p>To the nitpickers: Good boys. Have a cookie and run along.</p>
+<p>You kind of failed to see the point of the post: it&#39;s not whether PowerShell is hosted under CMD.EXE or not, but that cmdlet authors aren&#39;t bothering to make their code work with Unicode! Regarding the, I&#39;ll simply note that most cmdlets that I see in regular use don&#39;t do a lot of stuff where Unicode is really necessary (the majority of the stuff I see is basically the Registry-whacking or Exchange-modifying variety.) Anything that&#39;s remotely interactive tends to get the full non-scripted programming treatment, where proper Unicode support is still very much hit-and-miss.</p>
+</div>
+<p><strong>Blake</strong> on 14 Jul 2011 11:17 PM:</p><div style="margin-left: 1em"><p>Poor Erik, did you get called in just to play defense? &nbsp;Yes, you&#39;re clearly a good boy.</p>
+<p>For the record, there wasn&#39;t anything that merited comment in the primary point of the post. &nbsp;I, and presumably the others, understood it and agreed with it. &nbsp;The repeated confusion about cmd.exe is spreading misinformation. &nbsp;Doing so from an authoritative blog like this should be corrected. &nbsp;</p>
+<p>I certainly know I won&#39;t be reading this blog any longer if Michael continues to show a complete unwillingness to learn.</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 15 Jul 2011 11:46 AM:</p><div style="margin-left: 1em"><p>There are a bunch of people I wouldn&#39;t mind ever hearing from again....</p>
+</div>
+<hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2011/07/18 <a href="http://archives.miloush.net/michkap/archive/2011/07/18/10187271.html">Pedantic nitpickery, turned up to 11</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2011/07/14/10186414.html" title="There&#39;s no &quot;I&quot; in IDN, part 6: It isn&#39;t like there&#39;s an &quot;I&quot; in EAI, either!">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2011/07/12/10185373.html" title="The first isn&#39;t always #1">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2011-07">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2011-07-13">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2011/07/13/10185915.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+</html>

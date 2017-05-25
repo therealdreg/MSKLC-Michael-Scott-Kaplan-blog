@@ -1,0 +1,51 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2005/10/19/482694.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:40 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>How to get at Jet warnings that are not errors</title></head><body>
+<h1>How to get at Jet warnings that are not errors</h1>
+<p><em>by Michael S. Kaplan, published on 2005/10/19 13:01 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2005/10/19/482694.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P><FONT face=Tahoma><EM>(this article is reconstituted from several different tips I wrote for publications, years ago)</EM></FONT></P>
+<P><FONT face=Tahoma>VB, VBA, and .NET for that matter work on an exception based model for error handling (in VB and VBA they are called errors but they are implemented as exceptions, anyway).</FONT></P>
+<P><FONT face=Tahoma>Usually, this is fine. But Jet's internal API can return either warnings (which come back as positive numbers) or errors (which come back as negative numbers).</FONT></P>
+<P><FONT face=Tahoma>Now warnings are often ignorable. A few examples of ones you would often have ignored even if you could have trapped the value:</FONT></P>
+<UL>
+<LI><FONT face=Tahoma>1039 -- returned by Jet when you do a seek for "&lt;=" or "&gt;=" and it did not find an exact match</FONT> 
+<LI><FONT face=Tahoma>1058 -- no idle activity occurred (happens when you tell Jet to do its idle processing with e.g. a DBEngine.Idle() call</FONT> 
+<LI><FONT face=Tahoma>1208 -- the database you just opened was encrypted</FONT> 
+<LI><FONT face=Tahoma>1301 -- the table you just opened is empty</FONT> 
+<LI><FONT face=Tahoma>1616 -- cannot undo the update if it is committed</FONT> 
+<LI><FONT face=Tahoma>1624 -- additional records beyond the ones you updated were also updated, due to referntial integrity rules</FONT> 
+<LI><FONT face=Tahoma>1625 -- additional records beyond the ones you deleted were also deleted, due to referntial integrity rules</FONT> 
+<LI><FONT face=Tahoma>1626 -- additional records beyond the ones you updated/deleted were also updated and deleted, due to referntial integrity rules</FONT> 
+<LI><FONT face=Tahoma>5032 -- could not find the BDE (Borland Database Engine) to open the Pardox database, so the internal engine was used</FONT></LI></UL>
+<P><FONT face=Tahoma>But I am sure you can imagine situations where these errors would be useful.</FONT></P>
+<P><FONT face=Tahoma>And if you use Access a lot, you will notice times that Access is taking advantage of some of these warnings to give a better user experience -- for example that 1616 one.</FONT></P>
+<P><FONT face=Tahoma>Unfortunately, there is no way to get those error values if you are just a regular developer.</FONT></P>
+<P><FONT face=Tahoma>Wait, it turns out there is!</FONT></P>
+<P><FONT face=Tahoma>If you look at the ADO Error object, it contains a NativeError property. And the Jet OLE DB provider actually uses this property to return the internal Jet error/warning information from Jet API calls!</FONT></P>
+<P><FONT face=Tahoma>In addition, the Error object has a SQLState property that contains the string resource that contains the error returned to the user when there is an error (often many errors will map to the same string, do you can think of the NatuveError property as returning more information even in the case of errors!).</FONT></P>
+<P><FONT face=Tahoma>The way it is stored is that the two 16-bit numbers for the major and minor error are both jammed into the 32-bit NativeError property (in my experience when there is no minor error, the major error is put in both pieces).</FONT></P>
+<P><FONT face=Tahoma>EXAMPLE: so let us say that the 1624 warning was returned after an update operation on some ADO connection. </FONT><FONT face=Tahoma>The connection's Error object would have one member even though no error was raised to you. The number in the NativeError property will be 106432088. Obviously not too useful unless you look at it hexidecimal form: 0x06580658. Now you can see it is error 0x0658, which is to say error 1624!</FONT></P>
+<P><FONT face=Tahoma>Now, to move beyond interesting theory into a place that you may want to use. :-)</FONT></P>
+<P><FONT face=Tahoma>There is&nbsp;the Jet 4.0 feature of record level locking that people love, so I will talk about that.</FONT></P>
+<P><FONT face=Tahoma>Now the rule is that once the database is opened (by anybody), that is the mode of the datasbase until all user are out of it; this makes sense since locking schemes have to apply to all concurrent users to have any meaning.</FONT></P>
+<P><FONT face=Tahoma>So what this means is that the Access setting in the Tools|Options Advanced tab (the chekbox "Open databases using rec<U>o</U>rd-level locking") is a <STRONG>request</STRONG>, not a demand. If the database is already opened in the other mode, your open will not fail, and with the current design you are not even warned that your preference was not heeded since your request could not be honored.</FONT></P>
+<P><FONT face=Tahoma>But two additional warnings that you my find useful here exist:</FONT></P>
+<UL>
+<LI><FONT face=Tahoma>3811 -- Attempt to open the datasbase with the requested record level locking failed; page level locking will be used</FONT> 
+<LI><FONT face=Tahoma>3812 -- Attempt to open the datasbase with the requested page level locking failed; record level locking will be used</FONT></LI></UL>
+<P><FONT face=Tahoma>What this means is that if in your database you run the following code after it is open:</FONT></P>
+<P><FONT face="Courier New"><STRONG>&nbsp;&nbsp;&nbsp; Set con = New ADODB.Connection<BR>&nbsp;&nbsp;&nbsp; con.Provider = "Microsoft.JET.OLEDB.4.0"<BR>&nbsp;&nbsp;&nbsp; con.Properties("Data Source") = CurrentDb.Name<BR>&nbsp;&nbsp;&nbsp; con.Properties("Jet OLEDB:Database Locking Mode") =&nbsp;1 ' use 0 for page level check<BR>&nbsp;&nbsp;&nbsp; con.CursorLocation = adUseServer<BR>&nbsp;&nbsp;&nbsp; con.Open</STRONG></FONT></P>
+<P><FONT face=Tahoma>and the database was not in the mode you asked for tht you will see one of those warnings in the NativeError property, right in con.Errors(0).NativeError! You will see one of the following values (depending on whether you set the locking mode to 0 or 1 in the code) if there is something in that collection (on 100% success it will be empty):</FONT></P>
+<UL>
+<LI><FONT face=Tahoma>249761507 -- Warning 3811 above (in hex it is 0x0ee30ee3, and 0x0ee3 is indeed 3811)</FONT> 
+<LI><FONT face=Tahoma>249827044 -- Warning 3812 above (in hex it is 0x0ee40ee4, and 0x0ee4 is indeed 3812)</FONT></LI></UL>
+<P><FONT face=Tahoma>So it is as simple as that. You can obviously combine this with an Application.GetOption("Use Row Level Locking") to see if the user running the code is the cause of the problem so you can kick them out or whatever. This becomes a much cooler way to solve problems such as those documented in KB article <A href="http://support.microsoft.com/?scid=kb;en-us;237333">237333</A>, which just tells people to change the setting in Access and does not help people to fix the problem of the fact that it is not always that user's settings which are causing the problem....</FONT></P>
+<hr/><p><a id="482744" href="#482744">#</a> <strong>Michael S. Kaplan</strong> on 19 Oct 2005 2:48 PM:</p><div style="margin-left: 1em">Just to be clear, there is no &quot;secret squirrel&quot; NDA only info in this post; all of it was found independent of such knowledge. :-)</div>
+<p><a id="483136" href="#483136">#</a> <strong>Jerry Pisk</strong> on 20 Oct 2005 2:22 PM:</p><div style="margin-left: 1em">How reliable is this? As in, is this documented somewhere or is the Jet provider team free to change this at will? Using something just because it's there now is asking for trouble, remember people using the high bit of their pointers because Windows was ignoring it or using the the reserved properties in critical sections to see who holds it.</div>
+<p><a id="483183" href="#483183">#</a> <strong>Michael S. Kaplan</strong> on 20 Oct 2005 4:24 PM:</p><div style="margin-left: 1em">Hi Jerry,<br><br>This is actually very reliable as it is public information in the documentation of the Jet OLE DB provider. Further, Jet errors themselves have never changed in the history of Jet.<br><br>So I would say this is info you can count on....</div>
+<p><a id="483251" href="#483251">#</a> <strong>Morocco Mole</strong> on 20 Oct 2005 7:54 PM:</p><div style="margin-left: 1em">&gt;&gt; &quot;secret squirel&quot; <br><br>Pssst!  That's &quot;secret squirrel,&quot; Boss.</div>
+<p><a id="483292" href="#483292">#</a> <strong>Michael S. Kaplan</strong> on 20 Oct 2005 10:31 PM:</p><div style="margin-left: 1em">Thats what I have there!<br><br>(smiling innocently, hiding the magic marker that wrote in the extra 'r')</div>
+<hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2006/01/08 <a href="http://archives.miloush.net/michkap/archive/2006/01/08/510673.html">Is the Jet no longer invisible?</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2005/10/20/482896.html" title="Behold the PersianCalendar class">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2005/10/19/482609.html" title="Suggest a topic (October 19, 2005)">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2005-10">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2005-10-19">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2005/10/19/482694.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:40 GMT -->
+</html>

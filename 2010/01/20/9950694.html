@@ -1,0 +1,88 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2010/01/20/9950694.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:35 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>It isn't always Internet Explorer's fault, dammit!</title></head><body>
+<h1>It isn't always Internet Explorer's fault, dammit!</h1>
+<p><em>by Michael S. Kaplan, published on 2010/01/20 07:01 -05:00, original URI: http://blogs.msdn.com/b/michkap/archive/2010/01/20/9950694.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P><EM><FONT color=#ff0000>Warning: this blog will not be as nice as some of the other blogs in this Blog have been, previously.</FONT></EM></P>
+<P>Remember how I used to have a Unicode character sponsor&nbsp;every blog in this Blog?</P>
+<P>Well yesterday I was in my Twitter account&nbsp;(<A href="http://twitter.com/michkap">http://twitter.com/michkap</A>)&nbsp;having some random goofy moments, so I was tweeting some sponsorship tweets, with characters sponsoring <STRONG>me</STRONG>.</P>
+<P>Like this one:</P>
+<BLOCKQUOTE>
+<P><STRONG>is sponsored by ䷲ (U+4df2, aka HEXAGRAM FOR THE AROUSING THUNDER). This one spins itself, no additional comment required. #fb</STRONG></P></BLOCKQUOTE>
+<P>Now people who had seen the feature on the blog would see this as nothing new. But this was a novel thing for me in Twitter and probably a good reason that most people think Twitter can be a waste of time since it was not doing anything useful.</P>
+<P>Now since the primary purpose for Twitter (for me) is to being some of the discipline that its 140-character limits bring to its tweets and extend it to the statuses in my&nbsp;Facebook account (<A href="http://facebook.com/michkap">http://facebook.com/michkap</A>), that #fb hashtag at the end causes a Facebook app to pick up the tweet and make it a Facebook status.</P>
+<P>This lets me waste twice as much in the way of people's time while spending half the time that would usually require.</P>
+<P>Anyway, I managed to [re]discover a problem this way.</P>
+<P>You see, fellow blogger <A href="http://blogs.msdn.com/larryosterman/" mce_href="http://blogs.msdn.com/larryosterman/">Larry Osterman</A> is also a Facebook friend of mine, and he noticed a problem with this tweet:</P>
+<BLOCKQUOTE>
+<P><STRONG>do you have a link for those of us who are running a unicode challenged browser like IE?</STRONG></P></BLOCKQUOTE>
+<P>&nbsp;Now I had been running in FireFox for reasons not terribly relevant here relating to a bug which I am told has been fixed but it takes me a while to recover.</P>
+<P>So my view was like this:</P>
+<P><IMG style="WIDTH: 995px; HEIGHT: 483px" title="In FireFox" border=1 alt="In FireFox" src="http://trigeminal.fmsinc.com/images/FireFox01.jpg" width=995 height=483 mce_src="http://trigeminal.fmsinc.com/images/FireFox01.jpg"></P>
+<P>Clearly I was able to see the character.</P>
+<P>So I launched Internet Explorer to see it as Larry was seeing it:</P>
+<P><IMG style="WIDTH: 1091px; HEIGHT: 438px" border=1 src="http://trigeminal.fmsinc.com/images/InternetExplorer01.jpg" width=1091 height=438 mce_src="http://trigeminal.fmsinc.com/images/InternetExplorer01.jpg"></P>
+<P>and yes, the character is not visible there. Bummer.</P>
+<P>Now I know some people hate Internet Explorer.</P>
+<P>And one could jump on the bandwagon and show this is convincing proof that <STRONG>FireFox rules while Internet Explorer drools</STRONG> but one would be wrong to do so.</P>
+<P>Because this problem is not Internet Explorer's fault.</P>
+<P>Well, not really.</P>
+<P>It is a problem of <STRONG>group focus</STRONG> versus <STRONG>customer scenarios</STRONG>, in actuality. I should probably explain:</P>
+<P>You see, the Windows team is most focused on and concerned with the product version they are working on. This makes sense since for the most part there is another <STRONG>sustained engineering</STRONG> group that is most focused on prior versions.</P>
+<P>But if you are a member of a group that produces <STRONG>Microsoft Office</STRONG> or <STRONG>Visual Studio</STRONG> or the<STRONG> .NET Framework</STRONG> or <STRONG>SQL Server </STRONG>or <STRONG>Internet Explorer</STRONG> then you know you have to run on other versions. So the exciting features of th latest version of <STRONG>Windows</STRONG> are of interest but hardly the only consideration since these products have minimal interest in sucking on earlier versions of the operating system.</P>
+<P>The picture:</P>
+<UL>
+<LI>The NLS or Globalization Services team was primarily concerned with international features on the latest version of Windows.</LI>
+<LI>But Office have had&nbsp;to create their own library to ship support for those same languages downlevel for their latest version.</LI>
+<LI>And Visual Studio/.NET Framework have had the System.Globalization classes to provide their analogous support.</LI>
+<LI>And SQL Server was getting periodic updates when they had to or a big major update once in while like <A href="http://archives.miloush.net/michkap/archive/2008/03/16/8238240.html" mce_href="http://archives.miloush.net/michkap/archive/2008/03/16/8238240.html"><STRONG>this one</STRONG></A>.</LI>
+<LI>And Internet Explorer created <STRONG>MLang</STRONG> to have all of the international support that they needed/wanted.</LI></UL>
+<P>Got it?</P>
+<P>Now the NLS folks have owned <STRONG>MLang</STRONG> for years now, part of a restructuring from I believe when the original IE6 team kind of disbanded and went to the four winds, which in its own way is kind of unfortunate since the reconstituted IE team did not take it back but relied on the NLS team to continue to own this library.</P>
+<P>Why is it unfortunate?</P>
+<P>Because the NLS team didn't touch it.</P>
+<P>They fixed security bugs and occasionally fixed major reported problems (though usually did not touch those either due to lack of testing resources to verify changes or backcompat concerns.</P>
+<P>In my opinion every time a feature was better developed in Windows than MLang, the MLang feature should have been gutted and made into a wrapper around the non-MLang version. And any feature that did not exist elsewhere but was needed by the IE team should continue to be maintained for the simple reason that Internet Explorer was depending on it and they are a partner team that for some people is the only time that some international features would ever be used with any kind of frequency. And if not then we should just give it back to them and let them control their destiny here. This worked with .Net (where we chose to continue to own the globalization pieces) and in Office (where we provided them with snapshots of the data)</P>
+<P>I was regularly overruled on this opinion.</P>
+<P>So support for several international features in Microsoft's premier Internet platform piece just started falling farther and farther behind.</P>
+<P>In this particular case, the case that Larry noticed here is yet another side effect of the problem I mentioned in <A href="http://archives.miloush.net/michkap/archive/2008/04/18/8403631.html" mce_href="http://archives.miloush.net/michkap/archive/2008/04/18/8403631.html"><STRONG>The importance of Tagalog to Burmese, aka "Of course I'd lie to you, I'm a font!"</STRONG></A>.</P>
+<P>Yet another bit of font support that the typography team worked so hard to support - in this case to add to the new <STRONG>Segoe UI Symbol</STRONG>:</P>
+<P><IMG style="WIDTH: 490px; HEIGHT: 516px" border=1 src="http://trigeminal.fmsinc.com/images/CharMap01.jpg" width=490 height=516 mce_src="http://trigeminal.fmsinc.com/images/CharMap01.jpg"></P>
+<P>becomes a great opportunity to make FireFox look better on Windows 7 while Internet Explorer 8 gets to look dumb for no good reason.</P>
+<P>Note that after I first put up <A href="http://archives.miloush.net/michkap/archive/2008/04/18/8403631.html" mce_href="http://archives.miloush.net/michkap/archive/2008/04/18/8403631.html"><STRONG>The importance of Tagalog to Burmese, aka "Of course I'd lie to you, I'm a font!"</STRONG></A>&nbsp;I made the recommendation that at a minimum the two bugs get fixed (since those were scripts that Windows claimed to support and were legitimate bugs) but ideally the basic table get updated to support everything in Unicode (which would be harder; the bug only involved entries in a table while the full fix involves some new script IDs which means other work).</P>
+<P>I was overruled since the idea of updating MLang was simply not one that the folks deciding stuff wanted to entertain.</P>
+<P><STRONG>Personally, I think Internet Explorer should just make a land grab and take back MLang</STRONG>, doing a good solid job on it to bring their support to where it ought to be. Because being owned by the NLS team is a good thing when they are supporting you and your goals, but it really sucks if you are being put in maintenance mode. IE8 is&nbsp;by report a pretty good browser and&nbsp;deserves to be treated with more respect by its partners.</P>
+<P>Perhaps this won't happen either, but if nothing else maybe the team that owns MLang now (post&nbsp;Windows re-org I cannot claim to know with 100% certainty who that is)&nbsp;can be shamed into updating a frigging table. Either on their own or with help.</P>
+<P>I could do the bug fix work myself in afternoon by updates to one source file. I'll even give them the updated mlflink.cpp source file myself if they are worried about the time sink to look up the latest Unicode information. I'll even give the update to the SE folks in case they would like to unlameify any of the prior versions of IE. Plus I'd help whoever wanted to do the full fix any way I could....</P>
+<P><STRONG>Internet Explorer 9</STRONG> (and frankly <STRONG>Internet Explorer 8</STRONG> and <STRONG>Internet Explorer 7</STRONG>) deserve better.</P>
+<P mce_keep="true">&nbsp;</P>
+<P><FONT color=#ff00ff><EM>This post brought to you by</EM> ䷐ <EM>aka</EM> ䷐ <EM>if you explicitly tag the font (<A href="http://www.fileformat.info/info/unicode/char/4dd0/index.htm" mce_href="http://www.fileformat.info/info/unicode/char/4dd0/index.htm">U+4dd0</A>, aka HEXAGRAM FOR FOLLOWING<FONT size=1> - as @DaleSchultz&nbsp;pointed out to me, a great character for Twitter!</FONT>)</EM></FONT></P>
+<hr/><p><a id="9950862" href="#9950862">#</a> <strong>Ahsanejaz</strong> on 20 Jan 2010 7:12 AM:</p><div style="margin-left: 1em"><p>hmm one thing i cant understand y people use face book ????</p>
+<p>i mean its wastage of time ..</p></div>
+<p><a id="9950903" href="#9950903">#</a> <strong>Michael S. Kaplan</strong> on 20 Jan 2010 8:19 AM:</p><div style="margin-left: 1em"><p>I primarily use it for the social events I go to that announce when they are happening, and random status messages (including blogs -- they are a decent source of early traffic!), and to hook up with old friends....</p>
+<p>Everything else there is a huge time suck and best to avoid! :)</p>
+</div>
+<p><a id="9950958" href="#9950958">#</a> <strong>Joe</strong> on 20 Jan 2010 9:57 AM:</p><div style="margin-left: 1em"><p>Your link for U+4dd0 is incorrect, should be <a rel="nofollow" target="_new" href="http://www.fileformat.info/info/unicode/char/4dd0/index.htm">http://www.fileformat.info/info/unicode/char/4dd0/index.htm</a>. I had to look because the character doesn't render for me. :)</p></div>
+<p><a id="9950999" href="#9950999">#</a> <strong>Michael S. Kaplan</strong> on 20 Jan 2010 11:05 AM:</p><div style="margin-left: 1em"><p>Ok, fixed now! My add-in for adding the links had a bug in it...</p>
+</div>
+<p><a id="9951161" href="#9951161">#</a> <strong>Mihai</strong> on 20 Jan 2010 3:30 PM:</p><div style="margin-left: 1em"><p>&quot;the MLang feature should have been gutted and made into a wrapper around the non-MLang version&quot;</p>
+<p>+= 100</p>
+<p>:-)</p></div>
+<p><a id="9951236" href="#9951236">#</a> <strong>Bj&#246;rn Graf</strong> on 20 Jan 2010 7:19 PM:</p><div style="margin-left: 1em"><p>Hm, but won't IE9 get some love when it really switches to DirectWrite as its texting service (at least on the platforms on which DirectWrite is supported)?</p></div>
+<p><a id="9951256" href="#9951256">#</a> <strong>Michael S. Kaplan</strong> on 20 Jan 2010 8:14 PM:</p><div style="margin-left: 1em"><p>Unknown what the final result will be; though I suspect it will be better after this blog. :)</p>
+</div>
+<p><a id="9951517" href="#9951517">#</a> <strong>Andrew West</strong> on 21 Jan 2010 9:00 AM:</p><div style="margin-left: 1em"><p>That's really bad news! I am still a dedicated IE8 user, but only because I don't think Firefox is much better, and I need vertical left-to-right layout, which only IE8 gives me. If the folks won't (or can't be bothered to) fix egregious bugs such as this one, then sooner or later other browsers will provide everything I need, and you'll lose yet one more long-time user.</p>
+<p>If anyone is interested, I have loggged the Mongolian/Myanmar bugs here (with no feedback from anyone on the IE team):</p>
+<p><a rel="nofollow" target="_new" href="https://connect.microsoft.com/IE/feedback/ViewFeedback.aspx?FeedbackID=442875">https://connect.microsoft.com/IE/feedback/ViewFeedback.aspx?FeedbackID=442875</a></p>
+<p><a rel="nofollow" target="_new" href="https://connect.microsoft.com/IE/feedback/ViewFeedback.aspx?FeedbackID=442880">https://connect.microsoft.com/IE/feedback/ViewFeedback.aspx?FeedbackID=442880</a></p></div>
+<p><a id="9951563" href="#9951563">#</a> <strong>Michael S. Kaplan</strong> on 21 Jan 2010 10:38 AM:</p><div style="margin-left: 1em"><p>Feel free to add another one for this bug, too....</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 27 Jan 2010 1:52 PM:</p><div style="margin-left: 1em"><p>I am now being told this works on some machines but not others in IE8/Windows 7; it is unclear what the difference is but perhaps it is new installs versus upgrades?</p>
+</div>
+<p><strong>Yuhong Bao</strong> on 10 Feb 2010 10:31 PM:</p><div style="margin-left: 1em"><p>And don't forget Jet/ACE! Has the outdated collision data be fixed in Access 2010?</p>
+</div>
+<p><strong>Michael Teper</strong> on 18 Feb 2010 1:44 AM:</p><div style="margin-left: 1em"><p>Having read this post, I can't help but come to the conclusion that this *is* IE team's fault, for not having cared enough to take over the code in question. Hope for better things to come in IE9.</p></div>
+<hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2010/01/21/9951284.html" title="Can&#39;t I pick the candidate list font if I don&#39;t speak fluent square box?">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2010/01/19/9950377.html" title="You down with .OCP (Yeah you know me!)">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2010-01">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2010-01-20">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2010/01/20/9950694.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:35 GMT -->
+</html>

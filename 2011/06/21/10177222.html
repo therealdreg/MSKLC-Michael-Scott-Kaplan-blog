@@ -1,0 +1,95 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2011/06/21/10177222.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>The downside of managing to go native...</title></head><body>
+<h1>The downside of managing to go native...</h1>
+<p><em>by Michael S. Kaplan, published on 2011/06/21 07:01 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2011/06/21/10177222.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<p>It is common knowledge to&nbsp;those not guilty of <strong><a href="http://archives.miloush.net/michkap/archive/2004/11/28/271121.html">my dear boy</a></strong>&nbsp;type offenses that native, Win32 NLS pre-dates the managed System.Globalization classes by several years.</p>
+<p>And it is perhaps not as completely well known but still fairly common knowledge that the principal developer of the former was in fact the initial architect of the latter.</p>
+<p>It is also pretty common knowledge that the underlying data of one has always a minimum been an extension of the other, eventually leading to a common data store and format, and a not insignificant amount of code sharing.</p>
+<p>But even&nbsp;knowing all that, it is easy to forget some basic compatibility issues that exist between these two fraternal twins.</p>
+<p>Like just yesterday when a tester asked:</p>
+<p style="padding-left: 60px;"><em><span style="font-family: times new roman,times; font-size: small;">Hi,</span></em></p>
+<p style="padding-left: 60px;"><em><span style="font-family: times new roman,times; font-size: small;">A component writes a date string using GetDateFormatEx() API with DATE_AUTOLAYOUT:</span></em></p>
+<p style="padding-left: 90px;"><strong><span style="font-family: courier new,courier;">GetDateFormatEx(</span></strong><br /><strong><span style="font-family: courier new,courier;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; LOCALE_NAME_INVARIANT,</span></strong><br /><strong><span style="font-family: courier new,courier;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; DATE_AUTOLAYOUT | DATE_SHORTDATE,</span></strong><br /><strong><span style="font-family: courier new,courier;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; SysTime,</span></strong><br /><strong><span style="font-family: courier new,courier;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; NULL,</span></strong><br /><strong><span style="font-family: courier new,courier;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; dateStr,</span></strong><br /><strong><span style="font-family: courier new,courier;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; MAX_PATH,</span></strong><br /><strong><span style="font-family: courier new,courier;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; NULL))</span></strong></p>
+<p style="padding-left: 60px;"><em><span style="font-family: times new roman,times; font-size: small;">This produces a string containing 'LEFT-TO-RIGHT MARK' (U+200E)&nbsp; characters:</span></em></p>
+<p style="padding-left: 60px;"><em><span style="font-family: times new roman,times; font-size: small;"><img src="http://msdnshared.blob.core.windows.net/media/MSDNBlogsFS/prod.evol.blogs.msdn.com/CommunityServer.Blogs.Components.WeblogFiles/00/00/00/33/81/4377.200e.jpg" /></span></em></p>
+<p style="padding-left: 60px;"><em><span style="font-family: times new roman,times; font-size: small;">DateTime.Parse() for this string is failing with &ldquo;String was not recognized as a valid DateTime&rdquo; because of this extra chars.</span></em></p>
+<p style="padding-left: 60px;"><em><span style="font-family: times new roman,times; font-size: small;">What is the correct way to parse the date string (in C#)??</span></em></p>
+<p>&nbsp;Now <a href="http://msdn.microsoft.com/library/dd318088.aspx">GetDateFormat[Ex]</a>&nbsp;has had this support in some form for quite a while:</p>
+<table border="1" cellspacing="3" cellpadding="3">
+<tbody>
+<tr><th>Value</th><th>Meaning</th></tr>
+<tr>
+<td><strong><span style="font-family: courier new,courier;">DATE_AUTOLAYOUT</span></strong></td>
+<td>
+<p><strong>Windows&nbsp;7 and later:</strong> Detect the need for right-to-left and left-to-right reading layout using the locale and calendar information, and add marks accordingly. This value cannot be used with DATE_LTRREADING or DATE_RTLREADING. DATE_AUTOLAYOUT is preferred over DATE_LTRREADING and DATE_RTLREADING because it uses the locales and calendars to determine the correct addition of marks.</p>
+</td>
+</tr>
+<tr>
+<td><strong><span style="font-family: courier new,courier;">DATE_LTRREADING</span></strong></td>
+<td>
+<p>Add marks for left-to-right reading layout. This value cannot be used with DATE_RTLREADING.</p>
+</td>
+</tr>
+<tr>
+<td><strong><span style="font-family: courier new,courier;">DATE_RTLREADING</span></strong></td>
+<td>
+<p>Add marks for right-to-left reading layout. This value cannot be used with DATE_LTRREADING</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p>&nbsp;But the last decade of managed code support in the System.Globalization namespace has been unable to produce any version that will either use this functionality to format date strings.</p>
+<p>And that same decade has failed to produce any code designed to parse strings produced via any of these flags.</p>
+<p><em>Note that "support" for parsing would simply be adding the ability to ignore U+200e and U+200f, but supporting the parsing would certainly lead to a demand for support of the formatting.</em></p>
+<p>Unfortunately, it is very common for tests of many different&nbsp;components to be written in managed code -- which means this question comes up a lot more often than one might expect, given the need to use these flags to get strings that will display properly....</p>
+<p>The workaround?</p>
+<p>You will need to walk the string, stripping out all instances of the following characters -- the first two in the table below are inserted by&nbsp;<a href="http://msdn.microsoft.com/library/dd318088.aspx">GetDateFormat[Ex]</a> when passing any of the three flags above, the rest could be inserted by other, more sophisticated&nbsp;processes (or RtL language localizers doing their job):</p>
+<table border="1" cellspacing="3" cellpadding="3">
+<tbody>
+<tr>
+<td><strong>Code point</strong></td>
+<td><strong>Character name</strong></td>
+</tr>
+<tr>
+<td><em>U+200e</em></td>
+<td><em>LEFT-TO-RIGHT MARK</em></td>
+</tr>
+<tr>
+<td><em>U+200f</em></td>
+<td><em>RIGHT-TO-LEFT MARK</em></td>
+</tr>
+<tr>
+<td>U+202a</td>
+<td>LEFT-TO-RIGHT EMBEDDING</td>
+</tr>
+<tr>
+<td>U+202b</td>
+<td>RIGHT-TO-LEFT EMBEDDING</td>
+</tr>
+<tr>
+<td>U+202c</td>
+<td>POP DIRECTIONAL FORMATTING</td>
+</tr>
+<tr>
+<td>U+202d</td>
+<td>LEFT-TO-RIGHT OVERRIDE</td>
+</tr>
+<tr>
+<td>U+202e</td>
+<td>RIGHT-TO-LEFT OVERRIDE</td>
+</tr>
+</tbody>
+</table>
+<p>Now looking at the reason that we could really go more than a decade without managed code supporting something that native code added so long ago, there are a&nbsp;few (competing?) theories:</p>
+<ul>
+<li>the flags are primarily for UI strings, so a programmatic library like .NET might simply decide that support is not a priority;</li>
+<li>while the globalization classes are owned by the same team that owns the NLS code, the parsing/formatting code is not; this support would be a fairly significant feature to add to the code that the current owners might consider out of scope;</li>
+<li>with different owners of different pieces, the situation is fairly stable/functional; a big effort to enhance the code might lead to a change in ownership, and the status quo is often preferred (note that this is one of the main issues that blocks custom calendar support, as I discuss in <strong><a title="../../../2010/02/22/9967111.html" href="http://archives.miloush.net/michkap/archive/2010/02/22/9967111.htmlx">Will someone take up the job of Calendar support in .Net, please?</a></strong>, arguably a more "important" issue to solve).</li>
+</ul>
+<p>In the long run, given that there are such issues, it would be nice if some team just forgot about the politics and tried to solve the problems....</p>
+<p>From a Microsoft standpoint, the number of groups that write automation that use managed code is significant enough that I think fixing these problems could be justified solely on a "being a good internal Microsoft citizen" standpoint. But maybe that's just me. :-)</p>
+<hr/><div style="margin-left: 1em"><em>no comments</em></div><hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2011/06/22/10177704.html" title="There and Back Again (aka ACP --> UTF-8 --> ACP)">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2011/06/20/10176769.html" title="There&#39;s a ™ joke in here somewhere, I just don&#39;t know what is (aka And if a &#39;t&#39; turned out to be &#39;m&#39;…)">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2011-06">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2011-06-21">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2011/06/21/10177222.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+</html>

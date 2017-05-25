@@ -1,0 +1,71 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2012/04/03/10290188.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>When you have just one model, the easiest place to fall short is when something's missing…</title></head><body>
+<h1>When you have just one model, the easiest place to fall short is when something's missing…</h1>
+<p><em>by Michael S. Kaplan, published on 2012/04/03 07:01 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2012/04/03/10290188.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<p>Yesterday in <strong><a title="When you have two different models, the easiest place to fall short is in the interaction between 'em..." href="http://archives.miloush.net/michkap/archive/2012/04/02/10289808.html">When you have two different models, the easiest place to fall short is in the interaction between 'em&hellip;</a></strong>, I talked about the problems with the way there were two different models for time and date formatting, one of them clearly inadequate.</p>
+<p>And how over the last several versions of Windows that POSIX model for date/time formatting had largely been gutted, to avoid duplication and the bugs that can, and occasionally have, come from duplication.</p>
+<p>A pretty satisfactorily happy ending to the story, right?</p>
+<p>Well, yes.</p>
+<p>In fact, there is just one problem here.</p>
+<p>And by one problem, I mean three problems: the formatting of numbers, currency, and percent values.</p>
+<p>All three are supported only by&nbsp;(for lack of a better term, since some if them are in fact POSIX based)&nbsp;"POSIX"-style settings.</p>
+<p>And we try to make up for the problems there by being somewhat exhaustive in our options.</p>
+<p>The price?</p>
+<p>Well, rather than a small number of properties, we have all of the following:</p>
+<p>LOCALE_ICURRENCY, LOCALE_IDIGITS, LOCALE_IINTLCURRDIGITS, LOCALE_IMONLZERO, LOCALE_INEGATIVEPERCENT, LOCALE_INEGCURR, LOCALE_INEGNUMBER, LOCALE_INEGSEPBYSPACE, LOCALE_INEGSIGNPOSN, LOCALE_INEGSYMPRECEDES, LOCALE_IPOSITIVEPERCENT, LOCALE_IPOSSEPBYSPACE, LOCALE_IPOSSIGNPOSN, LOCALE_IPOSSYMPRECEDES, LOCALE_SCURRENCY, LOCALE_SDECIMAL, LOCALE_SGROUPING, LOCALE_SMONDECIMALSEP, LOCALE_SMONGROUPING, LOCALE_SMONTHOUSANDSEP, LOCALE_SNEGATIVESIGN, LOCALE_SPERCENT, LOCALE_SPOSITIVESIGN, and LOCALE_STHOUSAND.</p>
+<p>A lot of them are closely connected and interdependent. Enough so that the table at the bottom of <a title="Locale Information Constants" href="http://msdn.microsoft.com/library/windows/desktop/dd464799.aspx">Locale Information Constants</a>:</p>
+<hr />
+<p><b>Closely Related Locale Information Constants</b></p>
+<p>Many of the locale information constants previously listed are closely related, so that changing one affects the value of the others. The following table shows the relationships among these constants.</p>
+<table border="1" align="centetr">
+<tbody>
+<tr><th>Value</th><th>Constants affected</th></tr>
+<tr>
+<td>LOCALE_ICURRENCY</td>
+<td>LOCALE_IPOSSEPBYSPACE, LOCALE_IPOSSYMPRECEDES</td>
+</tr>
+<tr>
+<td>LOCALE_INEGCURR</td>
+<td>LOCALE_SPOSITIVESIGN, LOCALE_INEGSEPBYSPACE, LOCALE_INEGSYMPRECEDES, LOCALE_INEGSIGNPOSN, LOCALE_IPOSSIGNPOSN</td>
+</tr>
+<tr>
+<td>LOCALE_SSHORTDATE</td>
+<td>LOCALE_SDATE, LOCALE_IDATE, LOCALE_ICENTURY, LOCALE_IDAYLZERO, LOCALE_IMONLZERO</td>
+</tr>
+<tr>
+<td>LOCALE_SLONGDATE</td>
+<td>LOCALE_ILDATE</td>
+</tr>
+<tr>
+<td>LOCALE_STIMEFORMAT</td>
+<td>LOCALE_STIME, LOCALE_ITIME, LOCALE_ITLZERO, LOCALE_ITIMEMARKPOSN</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<p>&nbsp;is all quite woefully inadequate since all it really tries to cover is a few fields that you can change; the rest of the spaghetti mess isn't covered anywhere!</p>
+<p>Well, okay.</p>
+<p>Who cares if you need to take 24 separate properties with mostly undocumented&nbsp;connections between them&nbsp;instead of a much smaller number of properties with clear dependencies, as long as everything is covered, right?</p>
+<p>I mean, it's not like we've never had confusing stuff come out of Microsoft before!</p>
+<p>All things considered, we could forgive all this if support was adequate.</p>
+<p><em>Do you hear the evil music soundtrack playing now?</em></p>
+<p>Because despite those 24 properties, there is something missing here.</p>
+<p>Something fairly crucial.</p>
+<p>Like whether to put&nbsp;a positive sign in front of&nbsp;(or right next to in some other way)&nbsp;a number.</p>
+<p>Try it out, see if you can figure out how to do it.</p>
+<p>I'll wait.</p>
+<p><strong>Hint: there is no way to do it</strong>.</p>
+<p>Didn't you ever wonder why they took out the LOCALE_SPOSITIVESIGN from intl.cpl and the example so seldom has a plus sign in it?</p>
+<p><a href="http://msdnshared.blob.core.windows.net/media/MSDNBlogsFS/prod.evol.blogs.msdn.com/CommunityServer.Blogs.Components.WeblogFiles/00/00/00/33/81/0640.number01.jpg"><img title="The Numbers format details in Regional Options" border="0" alt="The Numbers format details in Regional Options" src="http://blogs.msdn.com/resized-image.ashx/__size/550x0/__key/communityserver-blogs-components-weblogfiles/00-00-00-33-81/0640.number01.jpg" /></a></p>
+<p>I think they notice that LOCALE_SPOSITIVESIGN wasn't really getting used! :-)</p>
+<p>Whopsie Daisy!</p>
+<p>Now all of this becomes an interesting challenge as one considers what WinRT's <a title="Windows.Globalization.NumberFormatting namespace" href="http://msdn.microsoft.com/library/windows/apps/windows.globalization.numberformatting.aspx">Windows.Globalization.NumberFormatting namespace</a> could do here -- since in so many ways it uses a superior model for these thiings.</p>
+<p>Well, except for trying to get the data from NLS on points like this one, I mean. Though one sometimes turns to one's parents for ideas/advice.</p>
+<p>Oh well, there's always some random future version to work all of this out.</p>
+<p>Or they'll probably figure something out for this version for the Modern stuff.</p>
+<p>I should probably start talking about that new&nbsp;stuff one of these days, instead of just obliquely referencing it, huh? :-)</p>
+<hr/><div style="margin-left: 1em"><em>no comments</em></div><hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2012/06/28 <a href="http://archives.miloush.net/michkap/archive/2012/06/28/10324848.html">You've got to ACCentuate the positive (or perhaps it would be better not to be so quick to do so!)</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2012/04/04/10290614.html" title="Can&#39;t Touch This! (unless you have the hardware, I mean)">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2012/04/02/10289808.html" title="When you have two different models, the easiest place to fall short is in the interaction between &#39;em…">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2012-04">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2012-04-03">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2012/04/03/10290188.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+</html>

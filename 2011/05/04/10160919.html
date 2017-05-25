@@ -1,0 +1,93 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2011/05/04/10160919.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Regarding the overthinking and underimplementing of names</title></head><body>
+<h1>Regarding the overthinking and underimplementing of names</h1>
+<p><em>by Michael S. Kaplan, published on 2011/05/04 07:01 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2011/05/04/10160919.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<p>It is time to come clean.</p>
+<p>Those two blogs about questions Tom was asking me (<strong><a href="http://archives.miloush.net/michkap/archive/2011/04/29/10159418.html" title="Sometimes the things that used to be different aren't anymore">Sometimes the things that used to be different aren't anymore</a></strong>&nbsp;and <strong><a href="http://archives.miloush.net/michkap/archive/2011/05/03/10160402.html" title="Leave it to Microsoft to take the most confusing thing and make it worse!">Leave it to Microsoft to take the most confusing thing and make it worse!</a></strong>)?</p>
+<p>Well, it was just one email that he sent.</p>
+<p>And that one email actually had three questions in it.</p>
+<p>The only way I can get away with stretching one email with three questions into three separate blogs is that Tom only asks hard questions that have really complicated histories and underscore serious issues (I assume he figures the easier stuff out on his own, or that he knows it already!).</p>
+<p>Anyway, without further adieu, I give you question number three:</p>
+<p style="padding-left: 60px;"><span style="font-family: times new roman,times; font-size: medium;">Why do we have LOCALE_SENGCURRNAME and LOCALE_SNATIVECURRNAME, but not have LOCALE_SCURRNAME?</span></p>
+<p>Oh boy.</p>
+<p>Let's first jump into the whole area of some of the name properties we store in locales.</p>
+<p>There are a few major ones I'm going to discuss here now:</p>
+<ul>
+<li>Display names</li>
+<li>Language names</li>
+<li>Country/region names</li>
+<li>Currency names</li>
+<li>Calendar names</li>
+</ul>
+<p>And there are three potential items that can exist of each of them:</p>
+<ul>
+<li>Native name (name in the native language of whatever that thing is)</li>
+<li>English name (name of the thing in English)</li>
+<li>Localized name (name translated into the same language as the platform)</li>
+</ul>
+<p>Okay, so let's look at the grid here:</p>
+<table cellpadding="5" cellspacing="5" border="1">
+<tbody>
+<tr>
+<td></td>
+<td><strong>Native name</strong></td>
+<td><strong>English name</strong></td>
+<td><strong>Localized name</strong></td>
+</tr>
+<tr>
+<td><strong>Display Name</strong></td>
+<td><a href="http://msdn.microsoft.com/library/dd373863.aspx">LOCALE_SNATIVEDISPLAYNAME</a></td>
+<td><a href="http://msdn.microsoft.com/library/dd373843.aspx">LOCALE_SENGLISHDISPLAYNAME</a></td>
+<td><a href="http://msdn.microsoft.com/library/dd373853.aspx">LOCALE_SLOCALIZEDDISPLAYNAME</a><br />(aka <a href="http://msdn.microsoft.com/library/dd373851.aspx">LOCALE_SLANGUAGE</a>)</td>
+</tr>
+<tr>
+<td><strong>Language</strong></td>
+<td><a href="http://msdn.microsoft.com/library/dd373863.aspx">LOCALE_SNATIVELANGUAGENAME</a><br />(aka <a href="http://msdn.microsoft.com/library/dd373863.aspx">LOCALE_SNATIVELANGNAME</a>)</td>
+<td><a href="http://msdn.microsoft.com/library/dd373843.aspx">LOCALE_SENGLISHLANGUAGENAME</a><br />(aka&nbsp;<a href="http://msdn.microsoft.com/library/dd373844.aspx">LOCALE_SENGLANGUAGE</a>)</td>
+<td>
+<p><a href="http://msdn.microsoft.com/library/dd373853.aspx">LOCALE_SLOCALIZEDLANGUAGENAME</a><br />(aka <a href="http://msdn.microsoft.com/library/dd373850.aspx">LOCALE_SLANGDISPLAYNAME</a>)</p>
+</td>
+</tr>
+<tr>
+<td><strong>Region/Country</strong></td>
+<td><a href="http://msdn.microsoft.com/library/dd373863.aspx">LOCALE_SNATIVECOUNTRYNAME</a><br />(aka <a href="http://msdn.microsoft.com/library/dd373863.aspx">LOCALE_SNATIVECTRYNAME</a>)</td>
+<td><a href="http://msdn.microsoft.com/library/dd373843.aspx">LOCALE_SENGLISHCOUNTRYNAME</a><br />(aka <a href="http://msdn.microsoft.com/library/dd373844.aspx">LOCALE_SENGCOUNTRY</a>)</td>
+<td><a href="http://msdn.microsoft.com/library/dd373853.aspx">LOCALE_SLOCALIZEDCOUNTRYNAME</a><br />(aka <a href="http://msdn.microsoft.com/library/dd373835.aspx">LOCALE_SCOUNTRY</a>)</td>
+</tr>
+<tr>
+<td><strong>Currency</strong></td>
+<td><a href="http://msdn.microsoft.com/library/dd373863.aspx">LOCALE_SNATIVECURRNAME</a></td>
+<td><a href="http://msdn.microsoft.com/library/dd373844.aspx">LOCALE_SENGCURRNAME</a></td>
+<td>not available, and we don't have it</td>
+</tr>
+<tr>
+<td><strong>Calendar</strong></td>
+<td><a href="http://msdn.microsoft.com/library/dd317734.aspx">CAL_SCALNAME</a></td>
+<td>not available, but we have it</td>
+<td>
+<p>Kind of available, sometimes</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p><strong><em><span style="color: #ff0000;">POP QUIZ: Even the native name have some locale specific issues. Do you know what they are?</span></em></strong></p>
+<p>Now perhaps it would be even more interesting if I added a third dimension, indicating the "source product" (the display name concept was first regularized in .Net and was only "imported" into Win32 when they started working to share data better. That dimension would better identify items added specifically for the sake of parity between native and managed code.</p>
+<p>&nbsp;And then a fourth dimension could be added&nbsp; describing where each item is used in Windows, if any (some were added only to complete grids like the one above).</p>
+<p>Of course you would then be quite distracted by how I was able to give you a four dimensional representation in a two-dimensional web browser without requiring special glasses or screens.And you wouldn't be reading very carefully!</p>
+<p>None of this gets into the core issue of why this information is considered important to have.</p>
+<p>Like all the "English" constants are a very useful fallback for "ANSI" applications, since even the localized name a given UI language does not have to be well-represented by default system locale. Though the English name is always "safe" in that case.</p>
+<p>And that the grid of languages that have a translation for every other country name and language name is more filled in than the same grid looking at currency names.</p>
+<p>And that grid, in turn, is much more filled in than the same grid for calendar names.</p>
+<p>We could obviously full in English names for the calendars ourselves if we wanted to -- every calendar has an English name, one that we use in the comments surrounding the calendar's data and it is used to form the constants for the given calendar's CALTYPE.</p>
+<p>I suppose we don't because no one is asking for it. Or not enough people are. Maybe the people are simply don't manage to sound convincing enough (sounds like a weak justification&nbsp;if one can't convince the addition of one constant, a small number of strings, and a tiny bit of code!).</p>
+<p>The issue with only the "native" name being available for calendars is one I also talk about in <strong><a href="http://archives.miloush.net/michkap/archive/2011/04/06/10150467.html" title="The example was wrong, but the point of the example was spot on!">The example was wrong, but the point of the example was spot on!</a></strong>&nbsp;and that issue is one that haunts us now and will haunt us even more in the future. If it isn't addressed, I mean.</p>
+<p>Anyway, thinking about the big grid, all of this blather&nbsp;leaves us with the currency names.</p>
+<p>Yes, it is true that not every language has a name for every currency. But many do.</p>
+<p>The real question is where we would use it. I mean, in Windows UI.&nbsp;After all, in Windows, where our cross-language currency story is so terrible, doing a bunch of work to better support the naming scheme of cross-language currency values would simply highlight how much we don't do for the currencies themselves!</p>
+<p>You may be willing to accept my de facto explanation for why this may be the case, even if you think it's dumb. Though you may wonder why I'm writing about it here.</p>
+<p><em>If that is the case then you probably don't know <strong>me </strong>very well; I too&nbsp;think it's dumb to not do some work here, and I don't tend to be afraid to say such things in this Blog! </em>:-)</p>
+<hr/><div style="margin-left: 1em"><em>no comments</em></div><hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2012/08/22 <a href="http://archives.miloush.net/michkap/archive/2012/08/22/10342205.html">There is no LOCALE_INATIVENAMECANBECAPITALIZEDIFYOUREALLYREALLYWANTTODOTHAT flag</a></p><p>2012/06/19 <a href="http://archives.miloush.net/michkap/archive/2012/06/19/10321621.html">Maybe they're just showing off their fancy fonts? ;-)</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2011/05/05/10161374.html" title="Worked like a dog trying to make Tuesday Wednesday? Maybe he just needed Windows. And Bollywood.">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2011/05/03/10160402.html" title="Leave it to Microsoft to take the most confusing thing and make it worse!">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2011-05">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2011-05-04">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2011/05/04/10160919.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+</html>

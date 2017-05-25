@@ -1,0 +1,50 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2006/09/19/761547.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:39 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Ready... set... Don't Reboot!</title></head><body>
+<h1>Ready... set... Don't Reboot!</h1>
+<p><em>by Michael S. Kaplan, published on 2006/09/19 10:01 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2006/09/19/761547.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<FONT face=Tahoma>
+<P><EM>(Note the subtle allusions in the title to previous posts like <STRONG><A href="http://archives.miloush.net/michkap/archive/2005/02/18/376225.html">this one</A></STRONG> and <STRONG><A href="http://archives.miloush.net/michkap/archive/2005/12/12/502463.html">this one</A></STRONG>? Allusions. A good sign of quality literature!)</EM></P>
+<P>Sometimes Vista will tell you that you need to reboot. </P>
+<P>This is just the way it is, the reboot is a necessary colonic to just make sure the system is cleaned out and ready to go. </P>
+<P>But there is at least one time that Vista will tell you to reboot that it doesn't really mean that you should reboot.</P>
+<P>Interested?</P>
+<P>Great!</P>
+<P>Though you need to pay attention, it is kind of tricky....</P>
+<P>You start in Regional and Language Options:</P>
+<P><IMG src="http://trigeminal.fmsinc.com/images/noreboot01.png"></P>
+<P>Then you decide to change the system locale (also known as the language for non-Unicode programs) by clicking on that button:</P>
+<P><IMG src="http://trigeminal.fmsinc.com/images/noreboot02.png"></P>
+<P>and you change it from the locale it was, in this case English (United States) to another locales that has the same ACP, OEMCP, and MACCP, such as English (Zimbabwe). Click okay...</P>
+<P><IMG src="http://trigeminal.fmsinc.com/images/noreboot03.png"></P>
+<P>wait for a second, and it takes you back to the main dialog without asking you to reboot. In fact it looks like nothing has changed!</P>
+<P><IMG src="http://trigeminal.fmsinc.com/images/noreboot04.png"></P>
+<P>&nbsp;Then if you close the dialog, you will be asked to reboot:</P>
+<P><IMG src="http://trigeminal.fmsinc.com/images/noreboot05.png"></P>
+<P>and you CAN ignore it. Truly. It is just not needed. In fact if you go back to the Advanced tab of Regional and Language Options, it will have changed the default system locale:</P>
+<P><IMG src="http://trigeminal.fmsinc.com/images/noreboot06.png"></P>
+<P>You'll get the same results if you call <A href="http://msdn.microsoft.com/library/en-us/intl/nls_85yc.asp">GetSystemDefaultLCID</A>. No reboot needed!</P>
+<P>Now all is not perfect. Let's say you go back in and try to change it something that has one or more code page differences. Like say Japanese:</P>
+<P><IMG src="http://trigeminal.fmsinc.com/images/noreboot07.png"></P>
+<P>If you click ok it will think for a moment:</P>
+<P><IMG src="http://trigeminal.fmsinc.com/images/noreboot08.png"></P>
+<P>(I guess that teething ring means it is thinking), and then it will prompt you to reboot right away:</P>
+<P><IMG src="http://trigeminal.fmsinc.com/images/noreboot09.png"></P>
+<P>This is a real reboot prompt. You can cancel all you want but when you leave the dialog it will prompt again, and nothing will take effect until you reboot.</P>
+<P>All clear now?</P>
+<P>To review:</P>
+<P>Just click OK on this dialog:</P>
+<P><IMG src="http://trigeminal.fmsinc.com/images/noreboot08.png"></P>
+<P>and if you immediately see this dialog:</P>
+<P><IMG src="http://trigeminal.fmsinc.com/images/noreboot09.png"></P>
+<P>then the reboot is required. If not, then it really isn't. :-)</P>
+<P>Now yes this is a little bit of a bug in the UI, but no big deal. It will get fixed evenually. Some may find it all confusing, but if you read this blog then you are probably the sort of person who will like how a few reboot requirements have been removed and you'll be happy for the tip. </P>
+<P>Enjoy!</P>
+<P>&nbsp;</P>
+<P><FONT color=#ff1493><EM>This post brought to you by</EM> <STRONG><FONT size=6>༨</FONT></STRONG> <EM>(<A href="http://www.fileformat.info/info/unicode/char/0f28">U+0f28</A>, a.k.a. TIBETAN DIGIT EIGHT)</EM></FONT></P></FONT>
+<hr/><p><strong>Mihai</strong> on 19 Sep 2006 12:26 PM:</p><div style="margin-left: 1em">&lt;&lt;a little bit of a bug in the UI, but no big deal. It will get fixed evenually.&gt;&gt;<br><br>It will get fixed, unless you consider backward compatibility.<br>There are applications (I know about some of them) that use the system locales for formatting (date/time/number/etc).<br>Fixing this will break them :-)<br>Unless we consider them already broken :-)<br></div>
+<p><strong>Michael S. Kaplan</strong> on 19 Sep 2006 1:11 PM:</p><div style="margin-left: 1em">Well, two points there: <BR><BR>1) They are already broken. :-) <BR>2) The fix does not really break them, any more than changing the user locale breaks people who rely on *it* for formatting.<BR><BR>:-)</div>
+<hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2008/10/28 <a href="http://archives.miloush.net/michkap/archive/2008/10/28/9020410.html">Ready... set... Reboot Redux, part Deux!</a></p><p>2008/10/07 <a href="http://archives.miloush.net/michkap/archive/2008/10/07/8981958.html">Even the prisoners of the motherland use cp1252 (though they escaped 037)</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2006/09/19/762106.html" title="Put in on my Tab, please">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2006/09/18/760289.html" title="&#39;I don&#39;t understand&#39; vs. &#39;That is not understandable&#39;">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2006-09">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2006-09-19">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2006/09/19/761547.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:39 GMT -->
+</html>

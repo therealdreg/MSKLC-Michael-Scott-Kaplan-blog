@@ -1,0 +1,48 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2007/09/24/5085893.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:37 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>A&P of Sort Keys, part 11 (aka It's not like ideographic sorts were developed idiopathically)</title></head><body>
+<h1>A&P of Sort Keys, part 11 (aka It's not like ideographic sorts were developed idiopathically)</h1>
+<p><em>by Michael S. Kaplan, published on 2007/09/24 03:01 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2007/09/24/5085893.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P>Previous posts in this series:</P>
+<UL>
+<LI>Part 0: <STRONG><A class="" href="http://archives.miloush.net/michkap/archive/2007/09/10/4847780.html" mce_href="http://archives.miloush.net/michkap/archive/2007/09/10/4847780.html">The empty string sorts the same in every language</A></STRONG> 
+<LI>Part 1: <STRONG><A class="" href="http://archives.miloush.net/michkap/archive/2007/09/11/4861436.html" mce_href="http://archives.miloush.net/michkap/archive/2007/09/11/4861436.html">The law of the letter -- e.g. Latin &lt; Greek &lt; Cyrillic</A></STRONG> 
+<LI>Part 2: <A class="" href="http://archives.miloush.net/michkap/archive/2007/09/12/4875560.html" mce_href="http://archives.miloush.net/michkap/archive/2007/09/12/4875560.html"><STRONG>The string that won? Didn't have a mark on him!</STRONG></A> 
+<LI>Part 3: <A class="" href="http://archives.miloush.net/michkap/archive/2007/09/13/4889199.html" mce_href="http://archives.miloush.net/michkap/archive/2007/09/13/4889199.html"><STRONG>Should you let a string make it's case? If so, Y?</STRONG></A> 
+<LI>Part 4: <A class="" href="http://archives.miloush.net/michkap/archive/2007/09/14/4905625.html" mce_href="http://archives.miloush.net/michkap/archive/2007/09/14/4905625.html"><STRONG>It isn't a race but let's make an EXCEPTION and cross the Finnish line</STRONG></A> 
+<LI>Part 5: <A class="" href="http://archives.miloush.net/michkap/archive/2007/09/15/4924008.html" mce_href="http://archives.miloush.net/michkap/archive/2007/09/15/4924008.html"><STRONG>EXPANSIONing your horizons</STRONG></A> 
+<LI>Part 6: <A class="" href="http://archives.miloush.net/michkap/archive/2007/09/16/4937196.html" mce_href="http://archives.miloush.net/michkap/archive/2007/09/16/4937196.html"><STRONG>Relax, be calm, and deCOMPRESS if you are feeling out of sorts</STRONG></A> 
+<LI>Part 7: <A class="" href="http://archives.miloush.net/michkap/archive/2007/09/17/4950008.html" mce_href="http://archives.miloush.net/michkap/archive/2007/09/17/4950008.html"><STRONG>You're very thin now, but I can still recognize you</STRONG></A> 
+<LI>Part 8: <A class="" href="http://archives.miloush.net/michkap/archive/2007/09/18/4971376.html" mce_href="http://archives.miloush.net/michkap/archive/2007/09/18/4971376.html"><STRONG>You can often think of ignoring weights as a form of ignorance</STRONG></A> 
+<LI>Part 9: <A class="" href="http://archives.miloush.net/michkap/archive/2007/09/20/5008305.html" mce_href="http://archives.miloush.net/michkap/archive/2007/09/20/5008305.html"><STRONG>Not always transitive, but punctual and punctuating</STRONG></A></LI>
+<LI>Part 10: <A class="" href="http://archives.miloush.net/michkap/archive/2007/09/21/5027338.html" mce_href="http://archives.miloush.net/michkap/archive/2007/09/21/5027338.html"><STRONG>I've kana wanted to start talking about Japanese</STRONG></A></LI></UL>
+<P>Now that I have been talking about collation in Windows across ten separate blog posts, I thought it might make sense to talk about the characters in Unicode that take up more space in the standard than any others -- <STRONG>ideographs</STRONG>.</P>
+<P>Whether you call them Han or Hanja or Kanji, they are all basically Chinese characters used in either Chinese, Korean, or Japanese.</P>
+<P>The story for collating these items was not created in a vacuum, but there also were not simple uncomplicated sources that were used in their creation.</P>
+<P>The collation story is in fact kind of a messy one, due to many different factors:</P>
+<UL>
+<LI>The tables were mostly not updated for multiple versions of Windows despite the fact that more and more characters were coming into general use;</LI>
+<LI>Most of the characters that were not added to the tables had <EM>some</EM> weight, just not the one to put them in the correct order;</LI>
+<LI>Some of the characters actually had no weight, with the <A class="" href="http://archives.miloush.net/michkap/archive/2005/01/18/355210.html" mce_href="http://archives.miloush.net/michkap/archive/2005/01/18/355210.html"><STRONG>predictable results</STRONG></A> thereof;</LI>
+<LI>In the case of pronunciation based sorts, the "most common" pronunciation of some characters actually changed over the course of the last 10+ years.</LI></UL>
+<P>But the goal is quite simple:</P>
+<OL>
+<LI>In the default table, put all of the ideographs after almost everything else in Unicode -- first regular CJK, then Extension A, then Extension B, in code point order for each section.</LI>
+<LI>For each specific East Asian language, put the relevant ideographs in the expected order for the expected sort in question.</LI></OL>
+<P>There are many different collations across the various locales, and I have talked about various issues in many different posts, from <A class="" href="http://archives.miloush.net/michkap/archive/2004/12/27/332618.html" mce_href="http://archives.miloush.net/michkap/archive/2004/12/27/332618.html"><STRONG>Why is there no pronunciation-based sort for Japanese?</STRONG></A> to <A class="" href="http://archives.miloush.net/michkap/archive/2005/12/07/500827.html" mce_href="http://archives.miloush.net/michkap/archive/2005/12/07/500827.html"><STRONG>Supporting a pronunciation based sort for East Asian languages...</STRONG></A> to Is it <STRONG><A class="" href="http://archives.miloush.net/michkap/archive/2005/06/11/428351.html" mce_href="http://archives.miloush.net/michkap/archive/2005/06/11/428351.html">Macau or is it Macao?</A></STRONG> to <A class="" href="http://archives.miloush.net/michkap/archive/2006/01/03/508579.html" mce_href="http://archives.miloush.net/michkap/archive/2006/01/03/508579.html"><STRONG>'Acceptable' Japanese sort order?</STRONG></A> and more. </P>
+<P>The simple fact is that trying order over 70,000 items is going to be complicated, though hopefully as intuitive as it can be....</P>
+<P>Now prior to Vista there were several specific problems in the tables:</P>
+<UL>
+<LI>Missing ideographs</LI>
+<LI>Some overlap between the language specific table and the extras meant to be put in the end</LI>
+<LI>A few mistakes</LI>
+<LI>A&nbsp;few changes in official source data (like for most common pronunciation)</LI>
+<LI>Missing support of the expected repertoire in several national standards.</LI></UL>
+<P>Though even with addressing all of these problems, there was a problem (in some people's minds) starting with Vista -- an issue I hypothetically discussed in <A class="" href="http://archives.miloush.net/michkap/archive/2006/11/01/916477.html" mce_href="http://archives.miloush.net/michkap/archive/2006/11/01/916477.html"><STRONG>If you add enough characters to a sort, intuitive distinction can suffer</STRONG></A> and then more directly in <A class="" href="http://archives.miloush.net/michkap/archive/2007/02/15/1667070.html" mce_href="http://archives.miloush.net/michkap/archive/2007/02/15/1667070.html"><STRONG>On distinctions that are primarily with [and without] difference</STRONG></A>. That latter post even had a nice high-view narrative of several the various East Asian sorts, </P>
+<P>In the next post I'll dig in a bit and provide some examples with different sort keys across different locales....</P>
+<P mce_keep="true"><FONT color=#ff00ff><EM></EM></FONT>&nbsp;</P>
+<P mce_keep="true"><FONT color=#ff00ff><EM>This post brought to you by</EM> <FONT size=5>⑾</FONT> <EM>(<A class="" href="http://www.fileformat.info/info/unicode/char/247e" mce_href="http://www.fileformat.info/info/unicode/char/247e">U+247e</A>, a.k.a. PARENTHESIZED NUMBER ELEVEN)</EM></FONT></P>
+<hr/><div style="margin-left: 1em"><em>no comments</em></div><hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2008/08/21 <a href="http://archives.miloush.net/michkap/archive/2008/08/21/8883467.html">A&P of Sort Keys, part 14: The Hangul is really getting OLD</a></p><p>2007/10/09 <a href="http://archives.miloush.net/michkap/archive/2007/10/09/5375754.html">A&P of Sort Keys, part 13 (About the function that is too lazy to get it right every time)</a></p><p>2007/10/08 <a href="http://archives.miloush.net/michkap/archive/2007/10/08/5270854.html">A&P of Sort Keys, part 12 (aka Han sorts first!)</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2007/09/25/5111148.html" title="*Not* new in Vista SP1 -- the Add font dialog....">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2007/09/24/5082103.html" title="Documented, schmockumented! It&#39;s still kind of cool....">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2007-09">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2007-09-24">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2007/09/24/5085893.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:37 GMT -->
+</html>

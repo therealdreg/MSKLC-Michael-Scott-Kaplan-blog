@@ -1,0 +1,43 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2005/10/07/478127.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:41 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>It does not always pay to be compatible</title></head><body>
+<h1>It does not always pay to be compatible</h1>
+<p><em>by Michael S. Kaplan, published on 2005/10/07 03:01 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2005/10/07/478127.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P><FONT face=Tahoma>A few months ago, someone emailed me about some trouble they were having with their Arabic keyboard that had created with <A href="http://www.microsoft.com/globaldev/tools/msklc.mspx">MSKLC</A>. They were confused about the fact that none of the letters seemedd to ever shape. I asked them to send me the .KLC file so I could take a look. I went ahead and loaded it up in MSKLC on my machine:</FONT></P>
+<P><FONT face=Tahoma><IMG src="http://trigeminal.fmsinc.com/images/ArabicKbd.jpg" border=1></FONT></P>
+<P><FONT face=Tahoma>It looked okay, although frankly it looked pretty similar to the Arabic 101 keyboard that has been in Windows.</FONT></P>
+<P><FONT face=Tahoma>But then I ran a tool that showed the code points instead of the characters:</FONT></P>
+<P><FONT face=Tahoma><IMG src="http://trigeminal.fmsinc.com/images/ArabicCompat.jpg" border=1></FONT></P>
+<P><FONT face=Tahoma>Yikes! They were using characters in the Arabic Presentation Forms (<A href="http://www.fileformat.info/info/unicode/block/arabic_presentation_forms_a/index.htm">A</A> and <A href="http://www.fileformat.info/info/unicode/block/arabic_presentation_forms_b/images.htm">B</A>). Suddenly it became clear.</FONT></P>
+<P><FONT face=Tahoma>You see, Arabic is a language that shapes. So let us take <A href="http://www.fileformat.info/info/unicode/char/0628/index.htm">U+0628</A> (ARABIC LETTER BEH). By itself, it looks like this:</FONT></P>
+<P><FONT face=Tahoma size=5>ب</FONT></P>
+<P><FONT face=Tahoma>But things change when you combine it. Let us say it is at the beginning of the word, followed by <A href="http://www.fileformat.info/info/unicode/char/062a/index.htm">U+062a</A> (ARABIC LETTER TEH):</FONT></P>
+<P><FONT face=Tahoma size=5>بت</FONT></P>
+<P><FONT face=Tahoma>That character on the far right is the BEH -- see how it looks different now?</FONT></P>
+<P><FONT face=Tahoma>Ok, let us say that its surrounded by two different letters, say preceeded by <A href="http://www.fileformat.info/info/unicode/char/062e/index.htm">U+062e</A> (ARABIC LETTER KHAH) and followed by <A href="http://www.fileformat.info/info/unicode/char/062a/index.htm">U+062a</A> (ARABIC LETTER TEH):</FONT></P>
+<P><FONT face=Tahoma size=5>خبت</FONT></P>
+<P><FONT face=Tahoma>See that&nbsp; BEH in the middle there?</FONT></P>
+<P><FONT face=Tahoma>And now to round things out, let us say that the BEH is at the end, say after <A href="http://www.fileformat.info/info/unicode/char/062e/index.htm">U+062e</A> (ARABIC LETTER KHAH):</FONT></P>
+<P><FONT face=Tahoma size=5>خب</FONT></P>
+<P><FONT face=Tahoma>Well, these four forms are known as the ISOLATED, INITIAL, MEDIAL, and FINAL forms.</FONT></P>
+<P><FONT face=Tahoma>Now back in the days before fonts were smart enough to do this sort of shaping, many legacy standards were built by actually encoding very possible form for each letter, thus:</FONT></P>
+<P><FONT face=Tahoma><FONT size=5>ﺏ</FONT>&nbsp;&nbsp;&nbsp;U+fe8f (ARABIC LETTER BEH ISOLATED FORM)</FONT></P>
+<P><FONT face=Tahoma><FONT size=5>ﺑ</FONT>&nbsp;&nbsp;&nbsp;U+fe91 (ARABIC LETTER BEH INITIAL FORM)</FONT></P>
+<P><FONT face=Tahoma><FONT size=5>ﺒ</FONT>&nbsp;&nbsp;&nbsp;U+fe92 (ARABIC LETTER BEH MEDIAL FORM)</FONT></P>
+<P><FONT face=Tahoma><FONT size=5>ﺐ</FONT>&nbsp;&nbsp;&nbsp;U+fe90 (ARABIC LETTER BEH FINAL FORM)</FONT></P>
+<P><FONT face=Tahoma>By combining the correct form with the correct form of KHAH or TEH you can make something look right, sometimes (other times the way they shape will cause these presentation forms to look not quite right). Combining that problem with the need for not quite four times the number of letters, and to train people to type the correct letter depending on where it is in the word, and it is just a nightmare.</FONT></P>
+<P><FONT face=Tahoma>If you do not know the language this can be hard to conceptualize. So let us try doing with the Latin script, using cursive writing. It is even more complicated, due to the wide variety of attatchment points.</FONT></P>
+<P><FONT face=Script size=6>b</FONT></P>
+<P><FONT face=Script size=6>ob</FONT></P>
+<P><FONT face=Script size=6>oba</FONT></P>
+<P><FONT face=Script size=6>ba</FONT></P>
+<P><FONT face=Tahoma>and so on -- to support English alone in such cases would easily require 1000 or more glyphs, and you would have a really hard time writing without constantly picking the right letters.</FONT></P>
+<P><FONT face=Tahoma>So, the rule with presentation forms is that they are "pre-shaped" and thus do not need to be shaped again. But, like Latin, the exact attachment points may not always be the same, so it is best to use the real Arabic letter rather than the presentation forms. It will save you from needing to remember every form before you type a letter.... because as the title says, it cannot always pay to be compatible -- especially when one is being compatible with a hard to use legacy standard....</FONT></P>
+<P><FONT face=Tahoma></FONT>&nbsp;</P>
+<P><FONT face=Tahoma color=#ff1493><EM>This post brought to you by</EM> "<FONT size=5>ب</FONT>" <EM>(<A href="http://www.fileformat.info/info/unicode/char/0628/index.htm">U+0628</A>, a.k.a. ARABIC LETTER BEH)</EM></FONT></P>
+<hr/><p><a id="478781" href="#478781">#</a> <strong>Jonathan</strong> on 9 Oct 2005 4:00 AM:</p><div style="margin-left: 1em">Actually, a better example is U+062D ARABIC LETTER HAH, whose forms are even more different (or was it MEEM, I forget).</div>
+<p><a id="478831" href="#478831">#</a> <strong>Michael S. Kaplan</strong> on 9 Oct 2005 8:01 AM:</p><div style="margin-left: 1em">There are several different choices that are possible here, of course....</div>
+<hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2010/09/16 <a href="http://archives.miloush.net/michkap/archive/2010/09/16/10062966.html">Providing more information is the best way to assure correct information is received</a></p><p>2009/02/04 <a href="http://archives.miloush.net/michkap/archive/2009/02/04/9394864.html">The road to hell is paved with attempts at being compatible</a></p><p>2008/09/04 <a href="http://archives.miloush.net/michkap/archive/2008/09/04/8923871.html">Staying away from the compatibility zone is still a good idea</a></p><p>2008/05/04 <a href="http://archives.miloush.net/michkap/archive/2008/05/04/8457270.html">Who bells the cat when it comes to glyph substitution?</a></p><p>2006/06/01 <a href="http://archives.miloush.net/michkap/archive/2006/06/01/613641.html">Presentation forms in Microsoft keyboards?</a></p><p>2006/04/22 <a href="http://archives.miloush.net/michkap/archive/2006/04/22/580636.html">Dial 911, code page 864 isn't breathing</a></p><p>2006/02/14 <a href="http://archives.miloush.net/michkap/archive/2006/02/14/531572.html">Every character has a story #18: U+06cc and U+064a (ARABIC LETTER FARSI YEH and ARABIC LETTER YEH)</a></p><p>2006/01/14 <a href="http://archives.miloush.net/michkap/archive/2006/01/14/512985.html">Getting out of the compatibility zone, redux</a></p><p>2005/12/02 <a href="http://archives.miloush.net/michkap/archive/2005/12/02/498889.html">Getting out of dodge (or at least out of the compatibility range!)</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2005/10/07/478235.html" title="How to build the 8.0 MFC and CRT DLLs with MSLU">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2005/10/06/477930.html" title="I will stipulate that 64-bit is the future">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2005-10">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2005-10-07">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2005/10/07/478127.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:41 GMT -->
+</html>

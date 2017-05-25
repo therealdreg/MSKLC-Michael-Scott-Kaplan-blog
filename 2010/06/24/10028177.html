@@ -1,0 +1,52 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2010/06/24/10028177.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:35 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>A picture that *still* can't be easily described with words</title></head><body>
+<h1>A picture that *still* can't be easily described with words</h1>
+<p><em>by Michael S. Kaplan, published on 2010/06/24 07:01 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2010/06/24/10028177.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<p>And over in the Suggestion Box again, this time it is <a href="http://blogs.msdn.com/members/CFynn/">CFynn</a> asking:</p>
+<p style="padding-left: 30px;"><span style="font-family: times new roman,times;"><em>Suggested Topic: Getting MSKLC working properly on Windows 7!</em></span></p>
+<p style="padding-left: 30px;"><span style="font-family: times new roman,times;"><em>MSKLC 1.4 installs and runs - but when I load an existing keyboard, all I get is a blank screen in the middle (no keyboard layout displayed). </em></span></p>
+<p style="padding-left: 30px;"><span style="font-family: times new roman,times;"><em>Searching around for a solution it appears others have the same problem - but I cannot find a solution. </em></span></p>
+<p>I wonder, is <a href="http://blogs.msdn.com/members/CFynn/">CFynn</a>&nbsp;Chris Fynn? :-)</p>
+<p>Well, either way, this looks like <a title="A picture that can't be easily described with words" href="http://archives.miloush.net/michkap/archive/2007/04/19/2185812.html"><strong>A picture that can't be easily described with words</strong></a> all over again, and clearly it still can't be described any easier with words.</p>
+<p>It isn't just a Windows 7 issue, or even just an MSKLC 1.4 issue (it has been repro'd on XP with 1.3), in fact.</p>
+<p>I'll add the picture again:</p>
+<p><img src="http://msdnshared.blob.core.windows.net/media/MSDNBlogsFS/prod.evol.blogs.msdn.com/CommunityServer.Blogs.Components.WeblogFiles/00/00/00/33/81/6318.dpiconsequence.png" alt="" /></p>
+<p>Now once again the problem is a known WinForms issue that as far as I know has never been fixed.</p>
+<p>This bug was found for MSKLC during the 1.4 beta in our very last RC.</p>
+<p>I coded a fix for it, and we tested the fix.</p>
+<p>And then we had a meeting.</p>
+<p>There had to be a very&nbsp;serious conversation about whether this was a <strong>recall class</strong> bug.</p>
+<p>We knew it could be worked around by futzing with DPI settings, we knew that it was rare (half a million downloads, just a few reports of the problem).</p>
+<p>In the end we decided not to hold up the release.</p>
+<p>In retrospect that decision was probably a mistake (given that the MSKLC project was moved to another team that has never shipped an updated version and as far as I know does not have such a release scheduled -- they have a whole bunch of other work they are doing and none of the scenarios I listed in my internal-eyes-only vision document about <strong>v.Next MSKLC and v.Next MSLB</strong>&nbsp;are priorities for them).</p>
+<p>So we should have just fixed the bug.</p>
+<p>But no one knew it was going to be moved and buried, so it isn't like anyone knew how it would turn out....</p>
+<p><strong>Anyway, to work around the problem, just futz with the per-application and overall DPI settings, and eventually it will work.</strong></p>
+<p>I wish I had a better answer; this is the one serious problem that really remains in MSKLC that I think a fix is truly needed for (there are a few other less common issues with specific layout problems that aren't MSKLC bugs so much as KBDUTOOL/KBDTOOL bugs that no one wants to touch for stability reasons).</p>
+<hr/><p><strong>Azarien</strong> on 27 Jun 2010 11:27 AM:</p><div style="margin-left: 1em"><p>Now this makes me sad. *You* may compile and use a fixed version of MSKLC (or Notepad, or whatever)--but the rest of the world can&#39;t. Even if the fix would be trivial, it is never released because the project got shelved. I&#39;m not a big fan of open-source, but I think that all abandoned software should be eventually released with source code. Not neccessarily on GPL, of course.</p></div>
+<p><strong>Michael S. Kaplan</strong> on 28 Jun 2010 7:00 AM:</p><div style="margin-left: 1em"><p>For what it&#39;s worth, it makes me sad too, though more because something got (maybe temporarily, maye not) shelved that I don&#39;t think should have been....</p>
+</div>
+<p><strong>KAIFS</strong> on 14 Aug 2010 10:09 AM:</p><div style="margin-left: 1em"><p>all right, had the same problem. Attempt to install custom Russian and Ukrainian keyboards (I learned to type in those two by phonetically modifying my keyboards as I have never had a REAL comi keyboard(s) to learn on...). &nbsp;at any rate, msklc 1.3 and 1.4 has not worked. &nbsp;1.4 gave me a &#39;twin&#39; screen as above. &nbsp;All I had to do is change DPI on my win7 64-bit over to 200% (was default at 125% with my new custom Lenovo W701) and normal settings have displayed (you have to log off/on each time you change DPI for setting to take effect, just an FYI). &nbsp;After I loaded and validated my .klc, i was able to verify my install package and create an MCI. &nbsp;After that back to 125% on DPI and add a keyboard on your &#39;languages&#39; screen. &nbsp;Good luck</p>
+</div>
+<p><strong>Ice-Wolf</strong> on 14 Jan 2011 2:04 AM:</p><div style="margin-left: 1em"><p>And finding this blog post with a &quot;solution&quot; took a long time. &nbsp;I&#39;ve been futzing with it off and on for over a month trying to get it to work. &nbsp;I never would have considered trying the DPI settings.</p>
+</div>
+<p><strong>Steve C</strong> on 5 Dec 2011 6:51 PM:</p><div style="margin-left: 1em"><p>THANK YOU! I used to use MSKLC on my old computer that ran Vista without a problem. My new PC has Windows 7 Home 64bit, and for the past 2 hours I&#39;ve been trying to get MSKLC to work. Although other have written about this problem online, yours is the first work-around that actually works for me.</p>
+<p>I fiddled around with my DPI setting and got the keyboard to appear at 126%, only 1% over the default.</p>
+<p>Again, THANK YOU!</p></div>
+<p><strong>Michael S. Kaplan</strong> on 5 Dec 2011 9:27 PM:</p><div style="margin-left: 1em"><p>Glad I could help! Feel free to leave comments on those other sites pointing them here.... :-)</p>
+</div>
+<p><strong>Steve C</strong> on 6 Dec 2011 9:05 AM:</p><div style="margin-left: 1em"><p>Sure will! Thanks again.</p>
+</div>
+<p><strong>TomHR</strong> on 28 Mar 2012 2:00 AM:</p><div style="margin-left: 1em"><p>Hi guys.</p>
+<p>Sorry, but for the uninitiated, what&#39;s the DPI fix all about.</p>
+<p>No idea where/how to do that, so could you please explain.</p>
+<p>Thx</p>
+<p>Tom</p>
+</div>
+<p><strong>sba923</strong> on 9 Nov 2012 11:05 PM:</p><div style="margin-left: 1em"><p>Is there any chance we might get a fix for that? 100% scaling yields text that&#39;s just too small for me...</p>
+</div>
+<hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2015/05/21 <a href="http://archives.miloush.net/michkap/archive/2015/05/21/8770668856267196428.html">No words seem to make the picture any clearer</a></p><p>2011/11/04 <a href="http://archives.miloush.net/michkap/archive/2011/11/04/10233999.html">The evolving Story of Locale Support, part 4 (working beyond one's bugs, and the case for an MSKLC update)</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2010/06/25/10025030.html" title="Майкрософт vs. Microsoft, aka On choosing the most reasonable inconsistency">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2010/06/23/10028788.html" title="On getting a quality Tamil translation. And what happens after....">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2010-06">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2010-06-24">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2010/06/24/10028177.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:35 GMT -->
+</html>

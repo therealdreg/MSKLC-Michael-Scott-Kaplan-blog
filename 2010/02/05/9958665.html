@@ -1,0 +1,81 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2010/02/05/9958665.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:35 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Adding the requisite number of mistakes to the code</title></head><body>
+<h1>Adding the requisite number of mistakes to the code</h1>
+<p><em>by Michael S. Kaplan, published on 2010/02/05 07:01 -05:00, original URI: http://blogs.msdn.com/b/michkap/archive/2010/02/05/9958665.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P>The other day Eric asked:</P>
+<BLOCKQUOTE>
+<P><FONT face="times new roman,times">I tried to change this API to CharToOemBuff, however that API is also banned.&nbsp; The suggested replacement on MSDN (</FONT><A href="http://msdn.microsoft.com/en-us/library/bb288454.aspx"><FONT face="times new roman,times">http://msdn.microsoft.com/en-us/library/bb288454.aspx</FONT></A><FONT face="times new roman,times">) is to use WideCharToMultibyte.&nbsp; CharToOem is ansi to ansi, however WideCharToMultibyte/MultiByteToWideChar is Unicode/ansi.&nbsp; Should I be upconverting to wide char and then converting back to ansi to accomplish this?&nbsp; Is there another API that might make more sense?</FONT></P></BLOCKQUOTE>
+<P>Some of the confusion here is admittedly in that table in Michael Howard's <A href="http://msdn.microsoft.com/library/bb288454.aspx" mce_href="http://msdn.microsoft.com/library/bb288454.aspx">Security Development Lifecycle (SDL) Banned Function Calls</A>:</P>
+<BLOCKQUOTE>
+<BLOCKQUOTE>
+<P class=label><STRONG>Table 17. Banned OEM conversion functions and replacements</STRONG></P>
+<TABLE border=1>
+<TBODY>
+<TR>
+<TH>Banned APIs</TH>
+<TH>Windows Replacement</TH></TR>
+<TR>
+<TD>CharToOem, CharToOemA, CharToOemW, OemToChar, OemToCharA, OemToCharW, CharToOemBuffA, CharToOemBuffW</TD>
+<TD>WideCharToMultiByte</TD></TR></TBODY></TABLE></BLOCKQUOTE></BLOCKQUOTE>
+<P>Now of course at the top there is some help here:</P>
+<BLOCKQUOTE>
+<P><EM><FONT face="times new roman,times">Also note that some of the function names might be a little different, depending on whether the function takes ASCII, Unicode, _T (ASCII or Unicode), or multibyte chars. Some function names might include A or W at the end of the name. For example, the StrSafe StringCbCatEx function is also available as StringCbCatExW (Unicode) and StringCbCatExA (ASCII).</FONT></EM></P></BLOCKQUOTE>
+<P>Now from this one can (with a bit of effort) derive:</P>
+<UL>
+<LI>CharToOem - depends on whether it is compiled with UNICODE</LI>
+<LI>CharToOemA - WideCharToMultiByte w/CP_ACP, MultiByteToWideChar w/CP_OEMCP</LI>
+<LI>CharToOemW - WideCharToMultiByte w/CP_ACP</LI>
+<LI>OemToChar - depends on whether it is compiled with UNICODE</LI>
+<LI>OemToCharA - MultiByteToWideChar w/CP_OEMCP, WideCharToMultiByte w/CP_ACP</LI>
+<LI>OemToCharW - MultiByteToWideChar w/CP_OEMCP</LI>
+<LI><FONT color=#999999>CharToOemBuff - didn't include, but&nbsp;depends on whether it is compiled with UNICODE</FONT></LI>
+<LI>CharToOemBuffA - WideCharToMultiByte w/CP_ACP, MultiByteToWideChar w/CP_OEMCP</LI>
+<LI>CharToOemBuffW - WideCharToMultiByte w/CP_ACP</LI>
+<LI><FONT color=#999999>OemToCharBuff - didn't include, but&nbsp;depends on whether it is compiled with UNICODE</FONT></LI>
+<LI><FONT color=#999999>OemToCharBuffA - didn't include, MultiByteToWideChar w/CP_OEMCP, WideCharToMultiByte w/CP_ACP</FONT></LI>
+<LI><FONT color=#999999>OemToCharBuffW - didn't include, MultiByteToWideChar w/CP_OEMCP</FONT></LI></UL>
+<P mce_keep="true">Now Eric already noticed the issue with the functions to call and the fact that the suggested replacements weren't entirely complete as a list, but the functions are just bad news for a whole host of reasons, from a security perspective because of all of the buffer size assumptions that can cause problems if any mistakes are made.</P>
+<P mce_keep="true">There aren't better functions out there, and actually the above with is pretty much all of these functions do. With the following rules that you would have to follow as well:</P>
+<OL type=i>
+<LI>
+<DIV mce_keep="true">For the non-*Buff versions, assume the source buffer is NULL-terminated and the target buffer is big enough to hold the target plus the NULL;</DIV></LI>
+<LI>
+<DIV mce_keep="true">For the "A" non-*Buff&nbsp;versions, assume the buffer size refers to CHARs (bytes)&nbsp;on both sides, of equal size;</DIV></LI>
+<LI>
+<DIV mce_keep="true">For the "W" non-*Buff versions, assume the buffer size refers to&nbsp;CHARs (bytes)&nbsp;on the OEM side and WCHARs on the Char side, with equal counts of the two different sized parameters*;</DIV></LI>
+<LI>
+<DIV mce_keep="true">For the "W" non-*Buff versions on a CJK system locale, the byte count will need to be up to twice the size of the character count to allow for the maximum potential bytes vs. character difference in these code pages.</DIV></LI></OL>
+<P mce_keep="true">Now here is where Michael Howard and I tend to have a small difference of opinion.</P>
+<P mce_keep="true"><EM><STRONG><FONT color=#ff0000>Disclaimer: I have known Michael Howard for years and have a ton of respect for him and the work he does. I know he won't take any of this as a personal attack, but I don't want anyone reading this to doubt for a second that he can solve more computer security problems in his sleep then I can do with all of his books and hours to find/fix issues in a code base. Because to be perfectly honest, in all likelihood he probably can.</FONT></STRONG></EM></P>
+<P mce_keep="true">Look at those rules for a second.</P>
+<P mce_keep="true">I mean really look at them.</P>
+<P mce_keep="true">Now imagine you give all of the information in this blog&nbsp;you are reading to 10,000 competent developers with instructions to write up these functions.</P>
+<P mce_keep="true">Ok, have the scenario in mind?</P>
+<P mce_keep="true">Now answer the following questions <STRONG>honestly</STRONG>:</P>
+<OL>
+<LI>
+<DIV mce_keep="true">What percentage of those developers will write the code correctly&nbsp;with no security errors?</DIV></LI>
+<LI>
+<DIV mce_keep="true">If you didn't give them the information in this blog you are reading (the functions to call and the rules), what percentage of those developers will be able to write the functions correctly without security errors?</DIV></LI>
+<LI>
+<DIV mce_keep="true">Do you believe that percentage in the above two questions will be higher or lower than the percentage who might make a mistake in the simplified wrappers provided in the Win32 API on this "banned" list if the calling rules were fully enumerated/explained?</DIV></LI></OL>
+<P mce_keep="true">The Win32 API functions <STRONG>are</STRONG> correct on the four rules; is the answer for this grouping of functions truly to say "do it yourself without enough information" if you want the behavior to be safer?</P>
+<P mce_keep="true">I don't think all of the functions on the full list would be this way, but this small grouping of functions is likely adding some bugs to code for anyone who is just following the rules about the "banned" list.</P>
+<P mce_keep="true">This I believe to be true even given allowing for the percentage of those developers who are able to spot the problems given all of the various buffer sizes and such right in front of them, not hidden by the wrappers (which is presumably one of the main reasons fir why these functions are not considered safe).</P>
+<P mce_keep="true">The real, best answer is to use Unicode instead of all of these code page functions, with no conversions needed since they are all extraneous.</P>
+<P mce_keep="true">The one time that some of these functions are theoretically useful is to use the "W" versions in your Unicode console applications, since the console itself is using the OEMCP. But since that value can be changed, the functions are of limited use and likely will lead to bugs anyway (not that the replacement code would be likely to do better unless someone really smart reading this blog were to grok the scope of the issue and come up with the improved versions....</P>
+<hr/><p><a id="9959199" href="#9959199">#</a> <strong>jmdesp</strong> on 6 Feb 2010 3:11 AM:</p><div style="margin-left: 1em"><p>Well, even using Unicode only you can make mistakes, as I learned the hard way recently (fortunately the problem was obvious) because you can quite easily get a mix a C language operators that works on byte length and other that will work with WCHAR_T length. As your pointer will be on WCHAR_T and adding 1 will add WCHAR_T length, the better option is to carefully make sure to only use functions that work on WCHAR_T units. At the end the best conclusion is probably to drop C/C++ as much as you can. With genericity, lambda, the ngen native compilation option, c# is becoming a more and more porwerful language every day.</p></div>
+<p><a id="9959256" href="#9959256">#</a> <strong>Michael S. Kaplan</strong> on 6 Feb 2010 10:19 AM:</p><div style="margin-left: 1em"><p>Does claiming to use Unicode but mixing it with non-Unicode functions count as just using Unicode? :-)</p>
+<p>But it is a fair point; there are no answers that are *too* easy.</p>
+</div>
+<p><a id="9959319" href="#9959319">#</a> <strong>Michael S. Kaplan</strong> on 6 Feb 2010 5:48 PM:</p><div style="margin-left: 1em"><p>Now of course there is an actual solution here: WRITE the new, safe versions of the functionality, and mark them as the replacements. It seems no one wanted to do that, though. :-(</p>
+</div>
+<p><a id="9961756" href="#9961756">#</a> <strong>yuhong2</strong> on 10 Feb 2010 10:15 PM:</p><div style="margin-left: 1em"><p>&quot;For the &quot;W&quot; non-*Buff versions, assume the buffer size refers to CHARs (bytes) on the OEM side and WCHARs on the Char side, with equal counts of the two different sized parameters*;</p>
+<p>For the &quot;W&quot; non-*Buff versions on a CJK system locale, the byte count will need to be up to twice the size of the character count to allow for the maximum potential bytes vs. character difference in these code pages.&quot;</p>
+<p>Now, you mean the *Buff versions? Anyway, this could be a source of buffer-overflow bugs that show up on only CJK system locales! Another reason to use WideCharToMultibyte/MultiByteToWideChar, IMO, beside the fact that it works in Win9x unlike CharToOem*W and OemToChar*W.</p>
+</div>
+<hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2010/02/06/9959263.html" title="If it was not intended for that, don&#39;t do it. No, really. Stop. Now. Please?">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2010/02/04/9958063.html" title="Being in the zone may not be the best way to get the time right">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2010-02">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2010-02-05">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2010/02/05/9958665.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:35 GMT -->
+</html>

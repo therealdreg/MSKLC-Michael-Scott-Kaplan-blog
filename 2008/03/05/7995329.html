@@ -1,0 +1,104 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2008/03/05/7995329.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:36 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Hints on how to unhint, aka We're not comparing apples and oranges; it's more like apples and apple seeds!</title></head><body>
+<h1>Hints on how to unhint, aka We're not comparing apples and oranges; it's more like apples and apple seeds!</h1>
+<p><em>by Michael S. Kaplan, published on 2008/03/05 10:16 -05:00, original URI: http://blogs.msdn.com/b/michkap/archive/2008/03/05/7995329.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P><EM><FONT color=#ff0000 size=1>Please read the <A class="" href="http://archives.miloush.net/michkap/archive/2008/02/28/7934999.html" mce_href="http://archives.miloush.net/michkap/archive/2008/02/28/7934999.html">disclaimer</A>; content not approved by Microsoft!</FONT></EM></P>
+<P>Over in the microsoft.public.win32.programmer.international newsgroup, prevodcilac's question was:</P>
+<BLOCKQUOTE>
+<P><FONT face="times new roman,times"><EM>Is there way to disable font hinting in Uniscribe, while using for example ScriptPlace???<BR><BR>I know how to disable it for GetGlyphOutline, but not for Uniscribe....</EM></FONT></P></BLOCKQUOTE>
+<P mce_keep="true">Now the one thing that both GDI and Uniscribe have in common is their use of <STRONG>device contexts</STRONG> to store information like the font that can be used to draw text.</P>
+<P mce_keep="true">In this particular case, both GDI's <A class="" href="http://msdn2.microsoft.com/library/ms534013.aspx" mce_href="http://msdn2.microsoft.com/library/ms534013.aspx">GetGlyphOutline</A> and Uniscribe's <A class="" href="http://msdn2.microsoft.com/library/ms776477.aspx" mce_href="http://msdn2.microsoft.com/library/ms776477.aspx">ScriptPlace</A> happen to take an HDC, <STRONG>a handle to a device context</STRONG> -- which contains the HFONT that is used to identify the font that the function will use for its work....</P>
+<P mce_keep="true">And that HFONT comes from a call to a function like <A class="" href="http://msdn2.microsoft.com/library/ms534009.aspx" mce_href="http://msdn2.microsoft.com/library/ms534009.aspx">CreateFontIndirect</A>, which takes a <A class="" href="http://msdn2.microsoft.com/library/ms533931.aspx" mce_href="http://msdn2.microsoft.com/library/ms533931.aspx">LOGFONT</A>. And that LOGFONT has an lfQuality member, defined as follows:</P>
+<BLOCKQUOTE>
+<BLOCKQUOTE>
+<BLOCKQUOTE>
+<DT><B>lfQuality</B> 
+<DD>Specifies the output quality. The output quality defines how carefully the graphics device interface (GDI) must attempt to match the logical-font attributes to those of an actual physical font. It can be one of the following values. 
+<TABLE class="" border=1>
+<TBODY>
+<TR vAlign=top>
+<TH class="" align=left width="25%">
+<BLOCKQUOTE dir=ltr style="MARGIN-RIGHT: 0px">
+<P>Value</P></BLOCKQUOTE></TH>
+<BLOCKQUOTE>
+<TH class="" align=left>Meaning</TH></BLOCKQUOTE></TR>
+<TR vAlign=top>
+<TD class="" width="25%">
+<BLOCKQUOTE dir=ltr style="MARGIN-RIGHT: 0px">
+<P>ANTIALIASED_QUALITY</P></BLOCKQUOTE></TD>
+<TD class="">
+<BLOCKQUOTE dir=ltr style="MARGIN-RIGHT: 0px">
+<P><B>Windows NT 4.0 and later: </B>Font is always antialiased if the font supports it and the size of the font is not too small or too large. </P>
+<P><B>Windows 95 Plus!, Windows 98/Me:</B> The display must greater than 8-bit color, it must be a single plane device, it cannot be a palette display, and it cannot be in a multiple display monitor setup. In addition, you must select a TrueType font into a screen DC prior to using it in a DIBSection, otherwise antialiasing does not occur.</P></BLOCKQUOTE></TD></TR>
+<TR vAlign=top>
+<TD class="" width="25%">
+<BLOCKQUOTE dir=ltr style="MARGIN-RIGHT: 0px">
+<P>CLEARTYPE_QUALITY</P></BLOCKQUOTE></TD>
+<TD class="" ?>
+<BLOCKQUOTE dir=ltr style="MARGIN-RIGHT: 0px">
+<P><B>Windows XP:</B> If set, text is rendered (when possible) using ClearType antialiasing method. See Remarks for more information.</P></BLOCKQUOTE></TD></TR>
+<TR vAlign=top>
+<TD class="" width="25%">
+<BLOCKQUOTE dir=ltr style="MARGIN-RIGHT: 0px">
+<P>DEFAULT_QUALITY</P></BLOCKQUOTE></TD>
+<TD class="">
+<BLOCKQUOTE dir=ltr style="MARGIN-RIGHT: 0px">
+<P>Appearance of the font does not matter.</P></BLOCKQUOTE></TD></TR>
+<TR vAlign=top>
+<TD class="" width="25%">
+<BLOCKQUOTE dir=ltr style="MARGIN-RIGHT: 0px">
+<P>DRAFT_QUALITY</P></BLOCKQUOTE></TD>
+<TD class="">
+<BLOCKQUOTE dir=ltr style="MARGIN-RIGHT: 0px">
+<P>Appearance of the font is less important than when PROOF_QUALITY is used. For GDI raster fonts, scaling is enabled, which means that more font sizes are available, but the quality may be lower. Bold, italic, underline, and strikeout fonts are synthesized if necessary.</P></BLOCKQUOTE></TD></TR>
+<TR vAlign=top>
+<TD class="" width="25%">
+<BLOCKQUOTE dir=ltr style="MARGIN-RIGHT: 0px">
+<P>NONANTIALIASED_QUALITY</P></BLOCKQUOTE></TD>
+<TD class="">
+<BLOCKQUOTE dir=ltr style="MARGIN-RIGHT: 0px">
+<P><B>Windows 95/98/Me, Windows NT 4.0 and later: </B>Font is never antialiased.</P></BLOCKQUOTE></TD></TR>
+<TR vAlign=top>
+<TD class="" width="25%">
+<BLOCKQUOTE dir=ltr style="MARGIN-RIGHT: 0px">
+<P>PROOF_QUALITY</P></BLOCKQUOTE></TD>
+<TD class="" ?>
+<BLOCKQUOTE dir=ltr style="MARGIN-RIGHT: 0px">
+<P>Character quality of the font is more important than exact matching of the logical-font attributes. For GDI raster fonts, scaling is disabled and the font closest in size is chosen. Although the chosen font size may not be mapped exactly when PROOF_QUALITY is used, the quality of the font is high and there is no distortion of appearance. Bold, italic, underline, and strikeout fonts are synthesized if necessary.</P></BLOCKQUOTE></TD></TR></TBODY></TABLE><BR>
+<P>If neither ANTIALIASED_QUALITY nor NONANTIALIASED_QUALITY is selected, the font is antialiased only if the user chooses smooth screen fonts in Control Panel. </P></DD></BLOCKQUOTE></BLOCKQUOTE></BLOCKQUOTE>
+<P mce_keep="true">This particular parameter is what defines the kind of anti-aliasing/hinting that is going&nbsp;to happen in text drawing operations, such as the ones used by Uniscribe....</P>
+<P mce_keep="true">The fun question of course, should be obvious.</P>
+<P mce_keep="true">Given the fact that <A class="" href="http://msdn2.microsoft.com/library/ms534013.aspx" mce_href="http://msdn2.microsoft.com/library/ms534013.aspx">GetGlyphOutline</A>&nbsp;both takes an HDC which can have this defined and also has a <STRONG>GGO_UNHINTED</STRONG> uFormat flag that can be passed, is why would <STRONG>GGO_UNHINTED</STRONG> even be needed?</P>
+<P mce_keep="true">Well, there are some hints in looking at a few of the flags that <A class="" href="http://msdn2.microsoft.com/library/ms534013.aspx" mce_href="http://msdn2.microsoft.com/library/ms534013.aspx">GetGlyphOutline</A>&nbsp;can take -- note the many hinting differences above not captured in the below - it is almost like we are talking about two different technologies:</P>
+<BLOCKQUOTE>
+<BLOCKQUOTE>
+<BLOCKQUOTE>
+<BLOCKQUOTE>
+<P mce_keep="true">
+<TABLE class="" border=1>
+<TBODY>
+<TR vAlign=top>
+<TD class="" width="20%">GGO_BEZIER</TD>
+<TD class=""><STRONG>Windows 2000/XP: </STRONG>The function retrieves the curve data as a cubic Bézier spline (not in quadratic spline format).</TD></TR>
+<TR vAlign=top>
+<TD class="" width="20%">GGO_NATIVE</TD>
+<TD class="">The function retrieves the curve data points in the rasterizer's native format and uses the font's design units. </TD></TR>
+<TR vAlign=top>
+<TD class="" width="20%">GGO_UNHINTED</TD>
+<TD class=""><B>Windows 2000/XP:</B> The function only returns unhinted outlines. This flag only works in conjunction with GGO_BEZIER and GGO_NATIVE.</TD></TR></TBODY></TABLE></P></BLOCKQUOTE></BLOCKQUOTE></BLOCKQUOTE></BLOCKQUOTE>
+<P mce_keep="true">Something else to consider --&nbsp;<A class="" href="http://msdn2.microsoft.com/library/ms534013.aspx" mce_href="http://msdn2.microsoft.com/library/ms534013.aspx">GetGlyphOutline</A>&nbsp;withy GGO_UNHINTED is not exactly giving you a letter you could then put on the screen or something. It is giving you the specific information within the font itself -- the outlines (sans hints) that are provided within the font. But what comes out of that <A class="" href="http://msdn2.microsoft.com/library/ms533931.aspx" mce_href="http://msdn2.microsoft.com/library/ms533931.aspx">LOGFONT</A> setting is a lot more -- some more info on how much more in blog posts like Chris Jackson's <A class="" href="http://blogs.msdn.com/cjacks/archive/2006/05/11/595525.aspx" mce_href="http://blogs.msdn.com/cjacks/archive/2006/05/11/595525.aspx">Windows Forms Font Hinting with TextRenderingHint</A> (for concepts, not for his GDI+ preference!), or Bill Hill's MSDN Magazine article <A class="" href="http://msdn2.microsoft.com/en-us/magazine/cc163790.aspx" mce_href="http://msdn2.microsoft.com/en-us/magazine/cc163790.aspx">It's Not Just Fonts</A>, which talks a great deal about what is behind hinting and the many different levels at which hinting takes place.</P>
+<P mce_keep="true">So you can think of what <A class="" href="http://msdn2.microsoft.com/library/ms534013.aspx" mce_href="http://msdn2.microsoft.com/library/ms534013.aspx">GetGlyphOutline</A>'s GGO_UNHINTED provides as the very first level of hinting, the hints that are closest to the font itself. The bulk of the later possible levels cannot be turned on and off individually by any means except for indirectly by the <STRONG>lfQuality</STRONG> type settings, the DPI settings,&nbsp;and.or the size of the letters (the font size has a definite influenec here, with many types of hinting such as Cleartype disappearing at larger sizes and or higher DPI display resolution settings.</P>
+<P mce_keep="true">So it is not that we are talking about apples and oranges.</P>
+<P mce_keep="true"><STRONG>We are talking about apples and apple seeds!</STRONG></P>
+<P mce_keep="true">And then developer David Brown had a slightly different take on the question, which led to some additonal thoughts that I'd like to quote as is since (a) they seem too&nbsp;clever to just cast aside and (b) in case they aren't relevant someone else gets the "blame" for&nbsp;the new direction of parts of the answer! :-)</P>
+<BLOCKQUOTE>
+<P mce_keep="true"><FONT size=1>I’m not clear where Uniscribe comes into this question as stated, though I have a possible interpretation and a suggestion further below.<BR><BR>You see the answer to: "<EM>how to get the same effect as GetGlyphOutline with the GGO_UNHINTED flag in their Uniscribe operations so that their Uniscribe-produced text has no hinting.</EM>" should be the same as the answer to: "<EM>how to get the same effect as GetGlyphOutline with the GGO_UNHINTED flag in their ExtTextOut operations so that their ExtTextOut-produced text has no hinting</EM>."<BR><BR>In other words, Uniscribe doesn’t do anything that is hinting specific – it just calls GDI, both to get metrics and to render to a dc.<BR><BR>What I think we need to know is, how does&nbsp;the customer want to render the glyphs?<BR><BR>Is it obtaining glyph paths using GetGlyphOutline, and then rendering the paths themselves? Maybe they haven’t been using ExtTextOut at all? <BR><BR>If this is the case then it makes sense that they are asking about Uniscribe – they would have been doing OK until they needed to add support for complex scripts.<BR><BR>If this is the case, the answer is a little more complex than just passing a flag, because, while they have been avoiding ExtTextOut in the non-complex script cases, for complex scripts they cannot avoid calling ScriptTextOut. (This is because some complex script specific code happens in ScriptTextOut.)<BR><BR>Assuming all the above is where the customer is going, (a bit of a long shot, but I can’t think what else may be wanted), I would suggest that they proceed as follows:<BR><BR>1) In order to ‘disable hinting’, select the fonts at large sizes. Scale all the fonts up the same, such that the smallest is 1024 pixels per em. (i.e. lfHeight = -1024).<BR>2) Render the text to an off-screen DC<BR>3) Use BeginPath/EndPath to capture the glyph outlines.<BR>4) Render the captured glyph outlines using the inverse scale to that chosen above.<BR><BR>(Aside, TrueType fonts contain an outline and an interpreted program that moves the points on the outline. This interpreted program is often referred to as ‘hinting’, however it is not always restricted to adjusting the shape for lower resolutions. For example there are a number of East Asian fonts in which the glyph outlines are provided with all the strokes positioned at the glyph origin, and it is necessary to run the interpreted program to move them to their correct positions. The effect of GGO_UNHINTED is not necessarily as expected. Selecting the font at a high pixels per em size is a better way to get a resolution independent outline.)</FONT></P></BLOCKQUOTE>
+<P mce_keep="true">That aside is kind of what I was talking about before with the apple vs. apple seed thing, with one being really just a subset -- the first level --&nbsp;of the&nbsp;other. And it even gives a better answer than the GetGlyphOutline route as well.</P>
+<P mce_keep="true">So in the end there may be enough hints on how to unhint? :-)</P>
+<P mce_keep="true">&nbsp;</P>
+<P mce_keep="true"><FONT color=#ff00ff><EM>This blog brought to you by</EM><FONT size=5> ញ </FONT><EM>(<A class="" href="http://www.fileformat.info/info/unicode/char/1789" mce_href="http://www.fileformat.info/info/unicode/char/1789">U+1789</A>, aka KHMER LETTER NYO)</EM></FONT></P>
+<hr/><div style="margin-left: 1em"><em>no comments</em></div><hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2008/03/06/8004266.html" title="As Forrest Gump used to [sorta] say, &quot;Smarmy is as Smarmy Does.&quot;">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2008/03/05/7994313.html" title="Where was that Locale Builder again? The Platform SDK ain&#39;t telling....">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2008-03">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2008-03-05">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2008/03/05/7995329.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:36 GMT -->
+</html>

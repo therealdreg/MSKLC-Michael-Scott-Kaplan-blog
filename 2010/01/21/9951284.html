@@ -1,0 +1,29 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2010/01/21/9951284.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:35 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Can't I pick the candidate list font if I don't speak fluent square box?</title></head><body>
+<h1>Can't I pick the candidate list font if I don't speak fluent square box?</h1>
+<p><em>by Michael S. Kaplan, published on 2010/01/21 07:01 -05:00, original URI: http://blogs.msdn.com/b/michkap/archive/2010/01/21/9951284.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P>Over in the Suggestion Box, Andrew West asked:</P>
+<BLOCKQUOTE>
+<P><FONT face="times new roman,times"><EM>Hi Michael,</EM></FONT></P>
+<P><FONT face="times new roman,times"><EM>I have used the Table Driven Text Service to create an input method for a not-yet-encoded script (Tangut) using PUA codepoints. It was easy and it works great, except that the PUA Tangut characters do not display on the candidate list, which is quite inconvenient, especially in those cases where two or three characters share the same input sequence. So I was wondering, is there any way to specify what font to use for the candidate list?</EM></FONT></P>
+<P><FONT face="times new roman,times"><EM>Thanks,</EM></FONT></P>
+<P><FONT face="times new roman,times"><EM>Andrew</EM></FONT></P></BLOCKQUOTE>
+<P>Now it is interesting that you ask this question, Andrew.</P>
+<P>As you know, we aim to please here. :-)</P>
+<P>As it turns out, the folks in Taiwan were not thrilled about the way that the <STRONG>Array</STRONG> and <STRONG>DaYi</STRONG> IMEs looked on non-CJK UI language systems -- since DEFAULT_GUI_FONT was being used, the size ended up being 8 on those machines, which is not great for those IMEs on Chinese, Japanese, or Korean UI language systems.</P>
+<P>They wanted 9pt, darn it!</P>
+<P>Plus any time they were on Simplified Chinese UI language system, they were getting the font chosen in the IME that they just didn't want (SimSun). </P>
+<P>They wanted PMingLiU, gosh darn and to heck with it!</P>
+<P>So in Windows 7, the information/option to support them was added to the TableTextService text files. You can check it out in the Windows 7 files for TableTextServiceDaYi.txt and TableTextServicesArray.txt in the configuration section:</P>
+<BLOCKQUOTE><FONT face="Consolas,Lucida Console,Courier New,Courier,Fixed"><B>
+<P>[Configuration]<BR>FontFaceName=PMingLiU<BR>FontSize=9</P></B></FONT></BLOCKQUOTE>
+<P>And there you go! </P>
+<P>You can put in some other font facename/size there and that font will be used instead (otherwise it will default to whatever GetStockObject(DEFAULT_GUI_FONT) returns, as it does for most of the built-in IMEs, and in Vista....</P>
+<P>So I guess maybe you could say that you love Windows 7, and that it was your [independently requested] idea, Andrew!</P>
+<hr/><p><strong>Andrew West</strong> on 21 Jan 2010 8:36 AM:</p><div style="margin-left: 1em"><p>That's great news, and with my eyesight I'll definitely be upping the font size as well. My only problem now is getting my daughter to let me use the Windows 7 laptop whenever I need to type Tangut ... I bought it for myself, but I ended up with the old Vista machine :-(</p></div>
+<p><strong>Andrew West</strong> on 21 Jan 2010 2:15 PM:</p><div style="margin-left: 1em"><p>I've just tried installing my input method on my 64-bit Windows 7 system, and for some reason it is not showing up in the Add Input Language dialog at the end of the process. I followed your instructions at <a rel="nofollow" target="_new" href="http://archives.miloush.net/michkap/archive/2008/06/30/8669123.html">http://blogs.msdn.com/michkap/archive/2008/06/30/8669123.aspx</a> exactly (duplicating steps for both Program Files directories as necessary), and also tried installing your Tamil input method, but also with no success. I had no problems installing it on Vista, so I wonder if you have any ideas about what I might be doing wrong?</p></div>
+<hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2010/03/20 <a href="http://archives.miloush.net/michkap/archive/2010/03/20/9978451.html">Watch your language, Michael! (aka What the @#%&*! is an Elevated Command Prompt?)</a></p><p>2010/03/17 <a href="http://archives.miloush.net/michkap/archive/2010/03/17/9976645.html">And if you don't speak fluent "square box Traditional Chinese"...</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2010/01/22/9951970.html" title="From TTE to EUF: Possible?">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2010/01/20/9950694.html" title="It isn&#39;t always Internet Explorer&#39;s fault, dammit!">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2010-01">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2010-01-21">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2010/01/21/9951284.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:35 GMT -->
+</html>

@@ -1,0 +1,34 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2010/06/11/10022741.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:35 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Call it Reversible Error, aka Yes it has no weight; it was supposed to have no weight!</title></head><body>
+<h1>Call it Reversible Error, aka Yes it has no weight; it was supposed to have no weight!</h1>
+<p><em>by Michael S. Kaplan, published on 2010/06/11 07:01 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2010/06/11/10022741.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<p>.Net globalization's collation&nbsp;lives in an unusual world.</p>
+<p>It was originally architected by a developer in Windows based on the detailed design doc written largely by another developer in windows that he reported to.</p>
+<p>It more or less has the same data as Windows Server 2003 (plus or minus some Turkic stuff) in its first version (1.0), as well as every subsequent version for many years (up to and including 3.5, which still carried the 2.0 code).</p>
+<p>Then add the Windows-Only cultures added in &gt;= 2.0, which grab data from the operating system if the OS has a locale for which .Net has no matching culture.</p>
+<p>Now take code like this code, based on something in a test:</p>
+<blockquote><span style="font-family: Consolas,Lucida Console,Courier New,Courier;"><b>
+<p>using System;<br />using System.Threading;<br />using System.Globalization;<br /><br />public class Test {<br />&nbsp;&nbsp;&nbsp; public static void Main() {<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Console.WriteLine("\r\nWith en-US:");<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Thread.CurrentThread.CurrentCulture = new CultureInfo("en-US");<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; testing();<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Console.WriteLine("\r\nWith en-IN:");<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Thread.CurrentThread.CurrentCulture = new CultureInfo("en-IN");<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; testing();<br />&nbsp;&nbsp;&nbsp; }<br /><br />&nbsp;&nbsp;&nbsp; public static void testing() {<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Console.WriteLine("\u00AD");<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Console.WriteLine("test".StartsWith("\u00AD"));<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Console.WriteLine("test".EndsWith("\u00AD"));<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Console.WriteLine("test".IndexOf("\u00AD"));<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Console.WriteLine("test".LastIndexOf("\u00AD"));<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Console.WriteLine("test"[0] == "\u00AD"[0]);<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Console.WriteLine(string.IsNullOrEmpty("\u00AD"));<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Console.WriteLine("\u00AD".Length);<br />&nbsp;&nbsp;&nbsp; }<br />}</p>
+</b></span></blockquote>
+<p>And let's run it to see what we get using Windows 7 and .Net 3.5:</p>
+<blockquote><span style="font-family: Consolas,Lucida Console,Courier New,Courier;"><b>
+<p>With en-US:<br />-<br />False<br />False<br />-1<br />-1<br />False<br />False<br />1</p>
+<p>With en-IN:<br />-<br />True<br />True<br />0<br />4<br />False<br />False<br />1</p>
+</b></span></blockquote>
+<p>Wow, look at that! The English (United States) culture uses the old tables built into .Net, while the English (India) culture uses the Windows tables.</p>
+<p>Now in .Net 4.0, they both use the more up-to-date tables. So both will give the results that only <strong>en-IN </strong>does in the code above running in earlier versions.</p>
+<p>The reason for the change?</p>
+<p>Well, I have talked about U+00ad, the SOFT HYPHEN, previously in blogs like <a href="http://archives.miloush.net/michkap/archive/2006/09/02/736881.html"><strong>this one</strong></a>.</p>
+<p>Well in prior versions this character was weighed a lot like a regular hyphen:</p>
+<blockquote><span style="font-family: Consolas,Lucida Console,Courier New,Courier;"><b>
+<p>...<br />0x002d&nbsp;&nbsp; 6&nbsp;130&nbsp;&nbsp;&nbsp;2&nbsp;&nbsp; 2&nbsp;&nbsp; ;Hyphen-Minus<br />...<br />0x00ad&nbsp;&nbsp; 6 131&nbsp;&nbsp;&nbsp;2&nbsp;&nbsp; 2&nbsp;&nbsp; ;Soft Hyphen<br />...</p>
+</b></span></blockquote>
+<p><em>I explain the "6" weight there in </em><a href="http://archives.miloush.net/michkap/archive/2007/09/20/5008305.html"><strong><em>A&amp;P of Sort Keys, part 9 (aka Not always transitive, but punctual and punctuating)</em></strong></a><em>. This is why I'm saying it is being weighed in a hyphen-ey way.</em></p>
+<p>While in Vista and beyond, it is given no&nbsp;weight (ref:&nbsp;<a href="http://archives.miloush.net/michkap/archive/2005/01/18/355210.html"><strong>The jury will give this string no weight</strong></a>), though it does it in purpose in this case, because you aren't supposed to see it from a linguistic standpoint.</p>
+<p>So the change is expected -- the old behavior was a bug, an error.</p>
+<p>And the update was considered <strong>reversible error</strong> to use a legal term, and reversed in a major version update....</p>
+<hr/><div style="margin-left: 1em"><em>no comments</em></div><hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2010/06/12/10023838.html" title="The &quot;Taking the THE out of the string&quot; thing, aka The importance of ignoring the unimportant">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2010/06/10/10021417.html" title="WORD SORT...Why&#39;d it have to be...WORD SORT?">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2010-06">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2010-06-11">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2010/06/11/10022741.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:35 GMT -->
+</html>

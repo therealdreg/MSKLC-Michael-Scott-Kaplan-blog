@@ -1,0 +1,41 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2008/06/18/8614758.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:36 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>How Do You Solve a Problem Like Meiryo? (Windows XP edition)</title></head><body>
+<h1>How Do You Solve a Problem Like Meiryo? (Windows XP edition)</h1>
+<p><em>by Michael S. Kaplan, published on 2008/06/18 03:01 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2008/06/18/8614758.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P><EM><FONT color=#ff0000>Apologies for the Sound of Music allusion!</FONT></EM></P>
+<P>Via the Contact link, tiwunster asked me:</P>
+<BLOCKQUOTE><SPAN lang=EN>
+<P><EM><FONT face="times new roman,times">Hi I have a question regarding the changing of default East Asian fonts. Recently Microsoft has release East Asian ClearType fonts for Windows XP.<BR><BR></FONT></EM></SPAN><SPAN lang=EN><EM><FONT face="times new roman,times">I've installed all of them however I have to configure the applications individually to make use of them since Windows XP default to non-ClearType ones.<BR><BR>Is there any way to 'force' XP to default to the new fonts when rendering East Asian characters? Thanks.<BR><BR>Best regards</FONT></EM></P></SPAN></BLOCKQUOTE>
+<P>Now indeed, the cool Vista ClearType fonts are now available for XP (for genuine XP installations only!):</P>
+<UL>
+<LI><A href="http://www.microsoft.com/downloads/info.aspx?na=22&amp;p=1&amp;SrcDisplayLang=en&amp;SrcCategoryId=&amp;SrcFamilyId=&amp;u=%2fdownloads%2fdetails.aspx%3fFamilyID%3d87e726a9-5c79-4a73-9347-78a557314d0b%26DisplayLang%3den">Traditional Chinese ClearType fonts for Windows XP</A>&nbsp;(Microsoft JhengHei Regular and Bold)</LI>
+<LI><A href="http://www.microsoft.com/downloads/info.aspx?na=22&amp;p=2&amp;SrcDisplayLang=en&amp;SrcCategoryId=&amp;SrcFamilyId=&amp;u=%2fdownloads%2fdetails.aspx%3fFamilyID%3db15774c0-5b42-48b4-8ba8-9293fdc72099%26DisplayLang%3den">Simplified Chinese ClearType fonts for Windows XP</A>&nbsp;(Microsoft YaHei Regular and Bold)</LI>
+<LI><A href="http://www.microsoft.com/downloads/info.aspx?na=22&amp;p=3&amp;SrcDisplayLang=en&amp;SrcCategoryId=&amp;SrcFamilyId=&amp;u=%2fdownloads%2fdetails.aspx%3fFamilyID%3dc55a8c2b-b451-4d1f-87f3-690f78342ae8%26DisplayLang%3den">Korean ClearType fonts for Windows XP</A>&nbsp;(Malgun Gothic Regular and Bold)</LI>
+<LI><A href="http://www.microsoft.com/downloads/info.aspx?na=22&amp;p=4&amp;SrcDisplayLang=en&amp;SrcCategoryId=&amp;SrcFamilyId=&amp;u=%2fdownloads%2fdetails.aspx%3fFamilyID%3df7d758d2-46ff-4c55-92f2-69ae834ac928%26DisplayLang%3den">Japanese ClearType fonts for Windows XP</A>&nbsp;(Meiryo and Meiryo Bold)</LI></UL>
+<P>But no, there is no supported (or indeed&nbsp;supportable!) way to change the defaults here.</P>
+<P>There are several reasons for this....</P>
+<P>The first is that the reason these fonts were made available on XP is (as the various blurbs indicate) for the benefit of WPF (Windows Presentation Foundation), which really does not work as well with the conventional East Asian fonts that ship in Windows prior to Vista, since they are TrueType fonts that contain embedded bitmaps (and those embedded bitmaps do not work in WPF, or in GDI+ incidentally), which means at smaller sizes the fonts are pretty unsightly in WPF.</P>
+<P>That is the scenario, and the reason they were released. Their use in ways beyond that -- such as adding them to the GDI font link chain -- was not tested or verified.</P>
+<P>And&nbsp;everyone remembers the First <A class="" href="http://archives.miloush.net/michkap/archive/2005/11/12/491519.html" mce_href="http://archives.miloush.net/michkap/archive/2005/11/12/491519.html"><STRONG>Tester's Axiom</STRONG></A>, right? <STRONG>If you have not tested it, assume it is broken</STRONG>.</P>
+<P>What could be broken? Well, any application using default fonts that was suddenly getting glyphs from a different font, just as the most obvious example!</P>
+<P>Second, if you look at the GDI font link registry key (HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\FontLink\SystemLink) for these values of these fonts in Vista, you will see something different. For example the Meiryo value:</P>
+<BLOCKQUOTE>
+<P>MSGOTHIC.TTC,MS UI Gothic<BR>MSJH.TTF,128,96<BR>MSJH.TTF<BR>MSYH.TTF,128,96<BR>MSYH.TTF<BR>MALGUN.TTF,128,96<BR>MALGUN.TTF</P></BLOCKQUOTE>
+<P>See all of those numbers? That was some crucial scaling support that was added to Vista to help allow for the very different nature of these fonts and the way that&nbsp;GDI font linking was causing very strange effects as the font link chain as being followed. The underlying support for this different format requires work that was done in GDI in Vista, and that support could not be backported for the sake of a WPF, which never even uses the settings anyway....</P>
+<P>Adding these fonts to the font link chain, in addition to being unsupported (and therefore probably buggy) and lacking the scaling support to have the font sizes appear properly in XP when picked up through font linking (and therefore pretty much guaranteed to be incorrectly scaled in an unknown number of cases, is also something that was neither done&nbsp;for or&nbsp;tested in XP or Server 2003.</P>
+<P>You can certainly try to add values yourself without the scaling information (since that feature does not exist prior to Vista) but if you make a mistake in the registry key you could break all font linking, which is a very big risk to take to pick up some other fonts for your applications without specifying them....</P>
+<P mce_keep="true">&nbsp;</P>
+<P><FONT color=#ff00ff><EM>This blog brought to you by</EM><FONT size=7> ㅀ </FONT><EM>(<A class="" href="http://www.fileformat.info/info/unicode/char/3140" mce_href="http://www.fileformat.info/info/unicode/char/3140">U+3140</A>, aka HANGUL LETTER RIEUL-HIEUH)</EM></FONT></P>
+<hr/><p><a id="8617353" href="#8617353">#</a> <strong>Mihai</strong> on 18 Jun 2008 12:46 PM:</p><div style="margin-left: 1em"><p>Really cool having these fonts!</p>
+<p>But try installing them on an English XP :-)</p>
+<p> - The license agreement is all &quot;mojibake&quot; (including the French accented characters!)</p>
+<p> - At the end you get a MessageBox with &quot;mojibake&quot;, no clue if it's about a failure or a success</p></div>
+<p><a id="8617419" href="#8617419">#</a> <strong>Michael S. Kaplan</strong> on 18 Jun 2008 12:57 PM:</p><div style="margin-left: 1em"><p>Is the font installed, at least? :-)</p>
+</div>
+<p><a id="8618959" href="#8618959">#</a> <strong>Mihai</strong> on 18 Jun 2008 6:52 PM:</p><div style="margin-left: 1em"><p>&quot;Is the font installed, at least? :-)&quot;</p>
+<p>Yes, no problem there :-)</p></div>
+<hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2012/04/18 <a href="http://archives.miloush.net/michkap/archive/2012/04/18/10294867.html">How on earth does that scale, anyhow?</a></p><p>2012/01/26 <a href="http://archives.miloush.net/michkap/archive/2012/01/26/10260726.html">If font linking doesn't fit the text to a T (or ț!), a Romanian letter may be right but not quite look it</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2008/06/18/8617581.html" title="The &#39;honor&#39; of being #523 out of 5486">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2008/06/17/8611290.html" title="It isn&#39;t Unicode yet?">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2008-06">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2008-06-18">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2008/06/18/8614758.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:36 GMT -->
+</html>

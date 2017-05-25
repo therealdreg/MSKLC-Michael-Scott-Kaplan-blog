@@ -1,0 +1,23 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2005/05/25/421828.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:41 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>You may want to rethink your choice of UTF, #3 (Platform?)</title></head><body>
+<h1>You may want to rethink your choice of UTF, #3 (Platform?)</h1>
+<p><em>by Michael S. Kaplan, published on 2005/05/25 17:20 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2005/05/25/421828.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P><FONT face=Tahoma>Ok, by now you know the drill -- I am comparing the various ways of expressing text in Unicode.</FONT></P>
+<P><FONT face=Tahoma>In prior posts I have talked about the issues related to <a href="http://archives.miloush.net/michkap/archive/2005/05/20/420317.html">size</A> and to <a href="http://archives.miloush.net/michkap/archive/2005/05/22/420822.html">speed</A>. However, both of those posts were working in a theoretical vacuum that was independent of the world in which the code would have to live.</FONT></P>
+<P><FONT face=Tahoma>This may be suitable for the internal engine of your component, but once your component has to talk to the world outside, the need to take into account the environment on which the code must rest (in other words, <STRONG>the platform</STRONG>) becomes important.</FONT></P>
+<P><FONT face=Tahoma>What is crucial here is that the fastest and best encoding to use for these communications is <STRONG>the "native" type of the platform</STRONG>.</FONT></P>
+<P><FONT face=Tahoma>The key is to match that encoding form, whatever it may be.</FONT></P>
+<P><FONT face=Tahoma>If you do then all of the native APIs of that platform are available to you, and you maximize performance while minimizing the chance of logical errors corrupting data if you minimize the number of conversions.</FONT></P>
+<P><FONT face=Tahoma>If you are running against a Windows platform, then that means you are using UTF-16. Period.</FONT></P>
+<P><FONT face=Tahoma>If you are a web service that has to deal with Internet protocols like SOAP and such (or if your platform's Unicode support story happens through UTF-8) then your best bet may be UTF-8.</FONT></P>
+<P><FONT face=Tahoma>And if you are running on a UNIX box that uses those four byte code points then UTF-32 is really your only good option.</FONT></P>
+<P><FONT face=Tahoma>Now remember that this only refers to those external communications. </FONT></P>
+<P><FONT face=Tahoma>If you do extensive string processing in an existing application, then it will often make more sense to leave it in that alternate form and just make sure to use the platform type for when that communication is required. You may also find certain operations to be much more cumbersome in the areas of string process, formatting, and parsing. If that is the case, then youyr internal engine might be using UTF-16 or UTF-32, even if the underlying platform's default type is not.</FONT></P>
+<P><FONT face=Tahoma>This may also be the case if you create cross-platform libraries -- it may prove to be an unmaintainable mess to try make the underlying identity of strings change on different platform compiles, but it would make perfect sense for the library to use one for all of its internal code....</FONT></P>
+<P><FONT face=Tahoma></FONT>&nbsp;</P>
+<P><FONT face=Tahoma><FONT color=#ff0000><EM>This post brought to you by</EM> "∂" <EM>(<A href="http://www.fileformat.info/info/unicode/char/2202/index.htm">U+2202</A>, a.k.a. PARTIAL DIFFERENTIAL)</EM></FONT></FONT></P>
+<hr/><div style="margin-left: 1em"><em>no comments</em></div><hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2010/11/24 <a href="http://archives.miloush.net/michkap/archive/2010/11/24/10095816.html">UTF-8 on a platform whose support is overwhelmingly, almost oppressively, UTF-16</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2005/05/26/421987.html" title="The last word on the FINAL SIGMA">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2005/05/24/421343.html" title="Encoding scheme, encoding form, or other">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2005-05">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2005-05-25">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2005/05/25/421828.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:41 GMT -->
+</html>

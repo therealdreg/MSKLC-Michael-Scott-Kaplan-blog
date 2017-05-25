@@ -1,0 +1,97 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2010/03/04/9971425.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:35 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Having neither army nor navy, Invariant is apparently just a dialect</title></head><body>
+<h1>Having neither army nor navy, Invariant is apparently just a dialect</h1>
+<p><em>by Michael S. Kaplan, published on 2010/03/04 07:01 -05:00, original URI: http://blogs.msdn.com/b/michkap/archive/2010/03/04/9971425.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P>One of the very first blogs I ever wrote was <A href="http://archives.miloush.net/michkap/archive/2004/12/08/278170.html" mce_href="http://archives.miloush.net/michkap/archive/2004/12/08/278170.html"><STRONG>Where is the locale? "Its Invariant." In <EM>where</EM>?</STRONG></A></P>
+<P>All the way back in the end of 2004.</P>
+<P>I had maybe ten blogs in this Blog back then, instead of more like 3010 like I have now.</P>
+<P>Those were innocent days....</P>
+<P>Looking at Windows 7, the locale data for this locale is getting impressive (note the shiny new constants with the same values as many old ones, to assist in consistency and predictability - I'll speak more on this another time):</P>
+<TABLE border=1>
+<TBODY>
+<TR>
+<TD><B>LCType</B></TD>
+<TD><B>Value</B></TD></TR>
+<TR>
+<TD>LOCALE_SLOCALIZEDLANGUAGENAME<FONT size=1><SUP>1,2</SUP></FONT></TD>
+<TD>Invariant Language</TD></TR>
+<TR>
+<TD>LOCALE_SENGLISHLANGUAGENAME<SUP><FONT size=1>3</FONT></SUP></TD>
+<TD>Invariant Language</TD></TR>
+<TR>
+<TD>LOCALE_SNATIVELANGUAGENAME<SUP><FONT size=1>4</FONT></SUP></TD>
+<TD>Invariant Language</TD></TR>
+<TR>
+<TD>LOCALE_SLOCALIZEDCOUNTRYNAME<SUP><FONT size=1>1</FONT></SUP></TD>
+<TD>Invariant Country</TD></TR>
+<TR>
+<TD>LOCALE_SENGLISHCOUNTRYNAME</TD>
+<TD>Invariant Country</TD></TR>
+<TR>
+<TD>LOCALE_SNATIVECOUNTRYNAME</TD>
+<TD>Invariant Country</TD></TR>
+<TR>
+<TD>LOCALE_SLOCALIZEDDISPLAYNAME<SUP><FONT size=1>1,5</FONT></SUP></TD>
+<TD>Invariant Language (Invariant Country)</TD></TR>
+<TR>
+<TD>LOCALE_SENGLISHDISPLAYNAME</TD>
+<TD>Invariant Language (Invariant Country)</TD></TR>
+<TR>
+<TD>LOCALE_SNATIVEDISPLAYNAME</TD>
+<TD>Invariant Language (Invariant Region)</TD></TR>
+<TR>
+<TD>LOCALE_SABBREVLANGNAME</TD>
+<TD>IVL</TD></TR>
+<TR>
+<TD>LOCALE_SABBREVCTRYNAME</TD>
+<TD>IVC</TD></TR>
+<TR>
+<TD>LOCALE_SISO639LANGNAME</TD>
+<TD>iv</TD></TR>
+<TR>
+<TD>LOCALE_SISO3166CTRYNAME</TD>
+<TD>IV</TD></TR>
+<TR>
+<TD>LOCALE_SISO639LANGNAME2</TD>
+<TD>ivl</TD></TR>
+<TR>
+<TD>LOCALE_SISO3166CTRYNAME2</TD>
+<TD>{EMPTY}</TD></TR>
+<TR>
+<TD>LOCALE_IGEOID</TD>
+<TD>244<SUP><FONT size=1>6</FONT></SUP></TD></TR></TBODY></TABLE>
+<P mce_keep="true">Well, we certainly have&nbsp;come a long way. </P>
+<P mce_keep="true">I&nbsp;mean there is the odd nuance here and there (e.g. the native country name&nbsp;vs. the native display name nominally meant to contain the native country name), but on the whole we now have a fully formed fake locale. It has a language (kind of) and a region/country (kind of). What more could we ask for, really?</P>
+<P mce_keep="true"><EM>Disclaimer: I myself added the first instance of <STRONG>Invariant Country</STRONG> in response to a bug put in related to no return value coming back and a long-ish conversation with the PM on the desired behavior (imagine how much I would enjoy discussing a country that does not exist - not!). But rather than removing it in later versions, they put it in all of other the related fields,&nbsp;so clearly they kept heading down that path rather than not doing so.</EM></P>
+<P mce_keep="true">So we (by which I mean <STRONG>I</STRONG>) can be perhaps forgiven our (by which I mean <STRONG>my</STRONG>) surprise when the following question came in recently:</P>
+<BLOCKQUOTE>
+<P mce_keep="true"><EM><FONT face="times new roman,times">An ISV sent me some code which fails under Windows 7, preventing their application from starting. They’re gone into the week-end now and I cannot ask them if it ever ran in Vista, let alone XP...</FONT></EM></P>
+<P mce_keep="true"><EM><FONT face="times new roman,times">That said, although I don’t know that much about Globalization related topics, this error message seems clear but I cannot understand why it would fail on Windows 7 and not on XP/Vista.</FONT></EM></P>
+<P mce_keep="true"><EM><FONT face="times new roman,times">I should have more information on Monday but meanwhile, I was wondering if you know about any related “breaking” change.</FONT></EM></P>
+<P mce_keep="true"><EM><FONT face="times new roman,times">Thanks.</FONT></EM></P>
+<P mce_keep="true">________________________________________<BR><FONT face="Consolas,Lucida Console,Courier New,Courier,Fixed"><B>CultureInfo[] cultures=System.Globalization.CultureInfo.GetCultures(CultureTypes.AllCultures &amp; ~CultureTypes.NeutralCultures);<BR>System.Collections.Generic.List&lt;RegionInfo&gt; r = new System.Collections.Generic.List&lt;RegionInfo&gt;();<BR>foreach (CultureInfo ci in cultures) {<BR>&nbsp;&nbsp;&nbsp; RegionInfo region = new RegionInfo(ci.LCID);<BR>}<BR>________________________________________<BR><FONT size=1>0:000&gt; !pe<BR>Exception object: 01b5d26c<BR>Exception type: System.ArgumentException<BR>Message: There is no region associated with the Invariant Culture (Culture ID: 0x7F).<BR>InnerException: &lt;none&gt;<BR>StackTrace (generated):<BR>&nbsp;&nbsp;&nbsp; SP&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; IP&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Function<BR>&nbsp;&nbsp;&nbsp; 0042EC24 6575B7BE mscorlib_ni!System.Globalization.RegionInfo..ctor(Int32)+0x2335b2<BR>&nbsp;&nbsp;&nbsp; 0042EC3C 002B971A ISV_Admin!isv.LTP.Admin.OfficeManager.LoadCultureInfo()+0xba<BR>&nbsp;&nbsp;&nbsp; 0042EC60 002B2A1F ISV_Admin!isv.LTP.Admin.OfficeManager..ctor()+0x37<BR>&nbsp;&nbsp;&nbsp; 0042EC6C 002B04CA PAdministrator!isv.LTP.Admin.FrmAdmin.InitializeComponent()+0x2ba<BR>&nbsp;&nbsp;&nbsp; 0042F094 002B01BC PAdministrator!isv.LTP.Admin.FrmAdmin..ctor()+0x14<BR>&nbsp;&nbsp;&nbsp; 0042F0A0 002B00FD PAdministrator!isv.LTP.Admin.Program.Main()+0x8d<BR><BR>StackTraceString: &lt;none&gt;<BR>HResult: 80070057</FONT></B></FONT></P></BLOCKQUOTE>
+<P mce_keep="true">Hmmm. There is no region associated with the Invariant Culture? Really?</P>
+<P mce_keep="true">I responded to this saying that as a rule when stuff like this has been coming up in Windows 7 or CLRv4 that it is deemed&nbsp;by the area owners to be by design, even if at times perhaps not expected.</P>
+<P mce_keep="true">Usually this turned out to be due to the complex efforts to normalize models of behavior that had diverged quite a bit.</P>
+<P mce_keep="true">The official answer came by soon after my response, confirming this idea I put forth and including the specific reason for this behavior:</P>
+<BLOCKQUOTE>
+<P mce_keep="true"><FONT face="times new roman,times">The reason that the behavior changed with Win7 is that in Win7, the Invariant Culture is considered to be an installed culture as returned by IsValidLocale(0x7f, LCID_INSTALLED). You can also see this property on the Invariant culture (culture.CultureTypes &amp; CultureTypes.InstalledWin32Cultures).</FONT></P>
+<P mce_keep="true"><FONT face="times new roman,times">The Invariant culture is normally included with NeutralCultures enumerations. It is also specifically excluded from SpecificCulture enumerations. However, there is no attempt to remove it from the InstalledWin32Cultures enumeration and since CultureTypes.AllCultures == CultureTypes.NeturalCultures | CultureTypes.SpecificCultures | CultureTypes.InstalledWin32Cultures, the InvariantCulture is showing up as one of the InstalledWin32Cultures.</FONT></P>
+<P mce_keep="true"><FONT face="times new roman,times">Hope that helps explain why you are seeing the behavior.</FONT></P></BLOCKQUOTE>
+<P mce_keep="true">There you have it.</P>
+<P mce_keep="true">In the managed world it is NEUTRAL despite the fact that it is fully filled in like a specific.</P>
+<P mce_keep="true">And in the native world it is (startuing in Win7) a SPECIFIC even though in prior versions it was not enumerated at all (which would give someone reason to realize they could have been consistent if they had wanted to).</P>
+<P mce_keep="true">And they deeemed CultueTypes.InstalledWin32Cultures to be managed way of saying "do some native-ey kind of thing, please!". :-)</P>
+<P mce_keep="true">Thus in the end, the place that lists a region/country in almost every field where one is indicated is really thought of as not having a country or region.</P>
+<P mce_keep="true">What was that Yiddish phrase again? Oh yeah! <STRONG>A shprakh iz a dialekt mit an armey un a flot</STRONG>, as I discuss in my updaterd version (<A href="http://archives.miloush.net/michkap/archive/2005/07/25/443046.html" mce_href="http://archives.miloush.net/michkap/archive/2005/07/25/443046.html"><STRONG>A subkultur iz a shprakh mit an armey un a flot</STRONG></A>).</P>
+<P mce_keep="true">Clearly, LOCALE_INVARIANT jumped ahead of Yiddish enough to make it in the box, and to have a place in the native (if not the managed) world. :-)</P>
+<P mce_keep="true">Yet still, lacking a region in the managed world&nbsp;(not to mention lacking both an army and a navy!) I suppose we should think of <STRONG>Invariant</STRONG> as a dialect of English....</P>
+<P mce_keep="true">&nbsp;</P>
+<P mce_keep="true"><FONT size=1>1 - These are on an English system, so the localized names and english names should be the same. On a localized system they will often be different.<BR>2&nbsp;- a.k.a. LOCALE_SLANGDISPLAYNAME in versions prior to Windows 7 (new constants to normalize names).<BR>3 - a.k.a. LOCALE_SENGLANGUAGE in versions prior to Windows 7 (new constants to normalize names).<BR>4 - a.k.a. LOCALE_SNATIVELANGNAME in versions prior to Windows 7 (new constants to normalize names).<BR>5 - a.k.a LOCALE_SLANGUAGE in versions prior to Windows 7 (new constants to normalize names).<BR>6 - This is the GEOID value for the United States of America. We don't vary much here, I guess.<BR>7 - Aren't unreferenced footnotes grand?</FONT></P>
+<hr/><p><strong>rs</strong> on 4 Mar 2010 9:53 AM:</p><div style="margin-left: 1em"><p>&gt; I suppose we should think of Invariant as a dialect of English...</p>
+<p>I believe you are correct -- according to the table, native Invariants use the same words for &quot;Invariant&quot;, &quot;Language&quot;, &quot;Country&quot;, &quot;Region&quot;.</p></div>
+<hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2011/07/11 <a href="http://archives.miloush.net/michkap/archive/2011/07/11/10183229.html">Only ask the question if you have the cache to spend on the answer</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2010/03/05/9971222.html" title="For the Swedish Chef, March comes in like a Bork and goes out like a Bork...">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2010/03/03/9971878.html" title="Nordic duck duck goose -- Bokmål, Bokmål, Bokmål, Nynorsk!">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2010-03">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2010-03-04">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2010/03/04/9971425.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:35 GMT -->
+</html>

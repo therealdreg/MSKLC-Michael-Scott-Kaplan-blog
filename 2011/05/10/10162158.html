@@ -1,0 +1,58 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2011/05/10/10162158.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>On Compare ≠ Equals, and the Relevance of both</title></head><body>
+<h1>On Compare ≠ Equals, and the Relevance of both</h1>
+<p><em>by Michael S. Kaplan, published on 2011/05/10 07:01 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2011/05/10/10162158.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<p>After I wrote <strong><a href="http://archives.miloush.net/michkap/archive/2011/05/06/10161793.html" title="Compare &amp;ne; Equals, Invariant &amp;ne; Ordinal, readers of this blog &amp;ne; everyone else, and so on">Compare &ne; Equals, Invariant &ne; Ordinal, readers of this blog &ne; everyone else, and so on</a></strong>&nbsp;the other day, I got some interesting responses. </p>
+<p>Including many that reminded me that not every reader has been around since the end of 2004 when I started writing here.</p>
+<p>And that of that huge set of people who have been here for a time less than those nearly six years, very few of them have gone back and read deeply prior blogs on subjects that they might find interesting.</p>
+<p>So the vast majority of people here have no idea what I was taking about in that blog!</p>
+<p>So today is some quick review to get people back on that page that I was mentally assuming they were in already....</p>
+<hr />
+<p>It kind of starts with a point I made in a blog I wrote back in August of 2006 entitled <strong><a href="http://archives.miloush.net/michkap/archive/2006/08/01/685351.html" title="Sometimes, ignoring case is stupid">Sometimes, ignoring case is stupid</a></strong>.</p>
+<p>The whole issue centers around the fundamental difference between two questions:</p>
+<ol>
+<li><strong>Regarding&nbsp;these two: Which comes first?</strong></li>
+<li><strong>Regarding&nbsp;these two: are these the same?</strong></li>
+</ol>
+<p>Now, at a fundamental level, you should NEVER ignore case, diacritics, width, kana, or any other difference in question #1. EVER.</p>
+<p>You should always have a deterministic ordering, even in items you would nominally consider to be equal in some way. </p>
+<p>Because the truth is they will still be right next to each other and the only difference is that the order will indeed be unchanging and deterministic. \</p>
+<p>And then even if the sorting methid you use isn't transitive, the order of the list won't "change" if you re-sort it.</p>
+<p>But in #2, you should ignore anything you consider it irrelevant to the question you are asking.</p>
+<p>Ignoring increases the size of the list of things you are looking for, and therefore casts a wider net.</p>
+<p>But that may be just what you want in many cases!</p>
+<p>Thus (for example)&nbsp;if you are searching for a list of names in a contact list, you might want to ignore a bunch of stuff so that you will get more contacts in your search results.</p>
+<p>These two fundamental questions are the basis of the shorthand about saying that <strong>Compare &ne; Equals</strong>, since <strong>Compare</strong> relates to the first question while <strong>Equals</strong> relates to the second.</p>
+<p>And so the fact that an "identity" question has different results than an "ordering" one is by design, and despite the fact that it is only intuitive to a few of us doesn't mean it's not true....</p>
+<p>Now there is a third word I'm going to add here, one that is very topical since I threw out an example involving search,</p>
+<p><strong>Relevance</strong>.</p>
+<p>I'd explain that one but I think everybody knowe what I mean. :-)</p>
+<p>Now Exchange and Outlook give an interesting example how to misapply these concepts.</p>
+<p>When you search in the Global Address List (GAL), the results come back based on a "starting at the beginning" substring <strong>Equals</strong> result, and displayed in an order using a <strong>Compare</strong> operation. </p>
+<p>And it starts you at the beginning of the list, which is&nbsp;as good as&nbsp;they can get when it comes to <strong>Relevance</strong>.</p>
+<p>Not all of this is bad.</p>
+<p>The <strong>Equals</strong> part is okay, and as long as results use the client side language setting then the <strong>Compare</strong> side is okay too.</p>
+<p>But the beginning of the list is not always <strong>Relevant</strong>.</p>
+<p>Imagine if Google&nbsp;and Bing brought back the their lists of results alphabetically!</p>
+<p>Now Bing has made some waves attacking the <strong>Relevance</strong> issues -- like figuring out when a search is about buying&nbsp;stuff or seeing shows -- and Google worked to try to catch up because they knew this would be a big thing to miss for users. Both of them now do a good job pointing out directions as an option when it makes sense for that same reason.</p>
+<p>Now the GAL problem I mentioned&nbsp;earlier&nbsp;is an interesting one -- what would you do to try to make the list more relevant?</p>
+<p>Note that file search has the same problem in a lot of places -- in Windows Explorer, in Visual Studio's "Find in Files" and so on. Trying to figure ways to solve the relevance problems here&nbsp;could actually help people a lot.</p>
+<p>When you consider the central importance that Google and Microsoft place on search, doing better at all three operations would do us all some good.</p>
+<p>What are ways you imagine any product or company could be doing better than they are now? There is no shortage of potential areas of improvement!</p>
+<p>But it is important to alwys remember that they should never be confused with each other....</p>
+<hr/><p><strong>Random832</strong> on 11 May 2011 6:38 AM:</p><div style="margin-left: 1em"><p>&quot;Now, at a fundamental level, you should NEVER ignore case, diacritics, width, kana, or any other difference in question #1. EVER.</p>
+<p>You should always have a deterministic ordering, even in items you would nominally consider to be equal in some way. &quot;</p>
+<p>Yeah, but unless your records are bare strings, it&#39;s perfectly reasonable to want to consider column B before you consider the case/diacritics/etc of column A.</p>
+<p>And it&#39;s possible to use a stable sorting algorithm (what you call &#39;transitive&#39;, though I think the word you were looking for was &#39;idempotent&#39;) deliberately - it makes it easier to interactively sort by multiple columns by clicking on headers, for example.</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 11 May 2011 7:10 PM:</p><div style="margin-left: 1em"><p>Sort keys are built such that you are always considering the primary weight before the secondary weights. You do *not* need to ignore anything to get this behavior. </p></div>
+<p><strong>Random832</strong> on 12 May 2011 10:04 AM:</p><div style="margin-left: 1em"><p>You&#39;re missing the point. The problem is when you want to consider the primary weight, then _something unconnected to the string_ [maybe it&#39;s the primary weight of some other string, maybe it&#39;s a numeric or date field], and then maybe the other weights. So either you have to ignore the other weights, or you have to crack open the sort key.</p>
+<p>And you can argue that you should always _eventually_ come back to the other weights, but if one of the other fields you&#39;re looking at is a unique key [and &#39;original index&#39; counts if you have a stable sorting agorithm], there&#39;s no need to go beyond that.</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 12 May 2011 6:01 PM:</p><div style="margin-left: 1em"><p>In such cases, a better sort key should be built up. Otherwise you are building in your inefficiencies, which makes them no more efficient!</p>
+</div>
+<hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2011/05/11/10163240.html" title="What do Ian Anderson and Samoa have in common? They&#39;re both tired of Living in the Past!">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2011/05/09/10162156.html" title="The blame game is for the people in the cheap seats (and in the very expensive ones)">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2011-05">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2011-05-10">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2011/05/10/10162158.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+</html>

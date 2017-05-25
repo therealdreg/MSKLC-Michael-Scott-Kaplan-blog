@@ -1,0 +1,75 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2008/09/02/8918959.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:35 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>The hacks of yesterday become the workarounds of today when corroborated by the features of tomorrow</title></head><body>
+<h1>The hacks of yesterday become the workarounds of today when corroborated by the features of tomorrow</h1>
+<p><em>by Michael S. Kaplan, published on 2008/09/02 10:01 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2008/09/02/8918959.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<p>So the question that came in was along the following lines:</p>
+<blockquote>
+  <p><font face="times new roman,times">We have Windows Server 2003 installed with Turkish regional settings. I have to change it to English US.<br>
+  <br>
+But if we do it through the<br>
+  <br>
+  <b>&nbsp;&nbsp;&nbsp; Control Panel -&gt; Regional and Language Options -&gt; Advanced Settings</b><br>
+  <br>
+option only the logged on profile and new profiles created later (Default User) are affected by the change.<br>
+  <br>
+Unfortunately we have to change the settings for the "<b>Network Service</b>" profile, as well. I was able to accomplish the change to the "<b>Network Service</b>" profile by importing the registry from the changed user<br>
+  <br>
+  <b>&nbsp;&nbsp;&nbsp; HKEY_CURRENT_USER\Control Panel\International</b><br>
+  <br>
+And copy everything under it to<br>
+  <br>
+&nbsp;&nbsp;&nbsp; <b>HKEY_USERS\S-1-5-20\Control Panel\International</b><br>
+  <br>
+This action looks like it solves the problem but I’m not sure if it’s a supported action. <br>
+  <br>
+So I would appreciate if someone can answer the following questions:<br>
+  <br>
+&nbsp;&nbsp;&nbsp; - Is the mentioned action enough to change the Regional Settings for a profile?<br>
+&nbsp;&nbsp;&nbsp; - Is it a supported way to do from PSS perspective?<br>
+&nbsp;&nbsp;&nbsp; - Are there other methods to change the RLO settings for the "<b>Network Service</b>" and "<b>Local Service</b>" profiles?<br>
+&nbsp;&nbsp;&nbsp; - Or do we have to reinstall the OS?</font></p>
+</blockquote>
+<p>Now the setting in question, the famous "<b>Apply all settings to the current user account and to the default user profile</b>" has a strange and tortuous history.</p>
+<p>In NT4 and Windows 2000, the feature did not exist.</p>
+<p>But the operation, and more specifically the need to update the settings of </p>
+<ul><li>the settings under various services and <br>
+  </li><li>the LocalSystem account and<br>
+  </li><li>the template used for new users</li></ul>
+<p>has existed for quite some time. The settings live in specific
+places, such as under the above mentioned S-1-5-20 subkey in the
+registry for NetworkService. So the instructions how to change the
+settings has been out there for some time.<br>
+</p><p>Now starting in XP and Server 2003 the ability to have <b>some</b> settings applied automatically to:</p>
+<ul><li>LocalSystem (aka .DEFAULT)<br>
+  </li><li>NetworkService</li><li>LocalService</li><li>the "Default User" profile<br>
+  </li></ul>
+<p>happened, via a section at the bottom of the <b>Advanced</b> tab of <b>Regional and Language Options</b>:</p><p><img src="http://www.i18nwithvb.com/images/RLO_Tab3.jpg" style="width: 404px; height: 478px;" mce_src="http://www.i18nwithvb.com/images/RLO_Tab3.jpg" width="404" height="478"> <br>
+</p><p>This helped solve lots of random problems that would crop up
+like adding a keyboard layout but not seeing it on the login screen
+(ref: <b><a href="http://archives.miloush.net/michkap/archive/2005/01/07/348944.html" mce_href="http://archives.miloush.net/michkap/archive/2005/01/07/348944.html">here</a></b>),
+or changing the user interface language but having some services return
+information in the old language you thought you had switched out of.</p><p>Though there is a problem with features that are basically architected bug fixes, and that is that they aren't <i>really</i>
+features; they are bug fixes, and they often don't address the wider
+issues like applying changes beyond the ones that someone points to in
+a bug report.</p><p>Especially when they are "bolt-on" changes like updating the MUI settings of service accounts.</p><p>Now Vista actually handles this more like an actual feature and explicitly talks about copying everything to several places:</p><p><img src="http://trigeminal.fmsinc.com/images/vistaadvanced.png"> <br>
+</p><p>Now of course the original question is about Server 2003,</p><p>So
+fascinating information about the features of versions that a person
+does not have may be fascinating marketization opportunities in the
+hands of the Sales folks, but for everyone else it is somewhere between a good answer on a geek Trivial Pursuit game and a blatant marketing slime move, so let's get back to the original inquiry. :-)<br>
+</p><p>Luckily, these accounts are very local to the system so the <b><a href="http://blogs.msdn.com/oldnewthing/archive/2005/06/30/434209.aspx" mce_href="http://blogs.msdn.com/oldnewthing/archive/2005/06/30/434209.aspx">roaming profile issue</a></b>
+is not so much to worry about. So the main question about whether it is
+safe to change those registry settings is kind of answred -- it is
+essentially the way this happens officially, so as long as it is done
+carefully and properly (and with all of the PSS warnings about
+modifying the registry in mind!), then that will be fine.</p><p>Though
+the fact that the product has finally been able to start doing this
+right is a good sign when one is looking at the future (and it really
+doesn't make sense to do it the registry hack way on the newer
+platforms since who knows what the future holds -- but stick to the
+older versions and you will be on pretty solid ground!).</p><p>&nbsp;</p><p><font color="#ff00ff"><i>This blog brought to you by</i><font size="6"> Ḫ </font><i>(<a href="http://www.fileformat.info/info/unicode/char/1e2a" mce_href="http://www.fileformat.info/info/unicode/char/1e2a">U+1e2a</a>, aka LATIN CAPITAL LETTER H WITH BREVE BELOW)</i></font><br>
+</p>
+<hr/><div style="margin-left: 1em"><em>no comments</em></div><hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2008/11/13 <a href="http://archives.miloush.net/michkap/archive/2008/11/13/9065195.html">On reverting unexplained spontaneous alteration of language</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2008/09/02/8919248.html" title="Internationalization in Silverlight?">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2008/09/01/8917599.html" title="Bidi, in your face[book]">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2008-09">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2008-09-02">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2008/09/02/8918959.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:35 GMT -->
+</html>

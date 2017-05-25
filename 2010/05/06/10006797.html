@@ -1,0 +1,74 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2010/05/06/10006797.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:35 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Dude! Not so Lao'd!</title></head><body>
+<h1>Dude! Not so Lao'd!</h1>
+<p><em>by Michael S. Kaplan, published on 2010/05/06 07:01 -07:00, original URI: http://blogs.msdn.com/michkap/archive/2010/05/06/10006797.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostOld -->
+<P>There are times that one can be looking for information about a somewhat errant behavior, spelunking through code and data tables and emails and standards documents that one has not looked at for many years that one can feel a bit off.</P>
+<P>Almost the same way one feels when one is hungover after a wild night involving too many T&amp;Ts (Tanqueray and tonics) for an adult male to consider healthy.</P>
+<P>Even when one is completely sober at the time and in no way hungover.</P>
+<P>So looking through these sources, one may channel that hungover guy when people talk to him and instead of complaining :</P>
+<BLOCKQUOTE>
+<P><STRONG>Dude! Not so loud!</STRONG> </P></BLOCKQUOTE>
+<P>can take the fact that the research relates to Laotian and say:</P>
+<BLOCKQUOTE>
+<P><STRONG>Dude! Not so Lao'd!</STRONG></P></BLOCKQUOTE>
+<P>So, after I blogged <A href="http://archives.miloush.net/michkap/archive/2010/04/17/9997539.html" mce_href="http://archives.miloush.net/michkap/archive/2010/04/17/9997539.html"><STRONG>Sing. Sing a song. Sing it Lao'd (just in case the sort's still wrong!)</STRONG></A>, I was not entirely certain that John Durdin would respond, but I was pretty sure.</P>
+<P>And I was not disappointed. :-)</P>
+<P>He responded with an amazing catalog of issues that have all been forwarded on to the right people, including a little bit about the sorting that I will be talking about today....</P>
+<P>First, you will probably want to read the bottom half of that previous blog and especially the footnotes from John and Marc.</P>
+<P>Then you can read the part of John's response that related to Lao sorting:</P>
+<BLOCKQUOTE>
+<P><FONT face="times new roman,times">Sorting of tables in Office 2010 by Lao text keys is not consistent with any of the alphabetization rules normally used for sorting Lao.&nbsp; It roughly follows the (orthographic) sorting conventions used for Thai, but does not handle prefix vowels correctly, so that all words with prefix vowels are grouped at the end, instead of being grouped by the initial consonant.&nbsp; It has many of the same problems that beset Thai sorting - for example, consonants and vowels are ordered in a single sequence, so words with characters that can have either use often appear in unexpected places in the list.&nbsp; It is not clear what is being done with tone marks - they appear to result in the marked consonant being ordered before the unmarked consonant.<BR><BR>The most accepted method of sorting Lao (c.f. Kerr's 1972 Lao-English Dictionary) orders words according to syllables, then the sorting of each syllable is by initial consonant (or cluster), final consonant, vowel, tone mark (if any).&nbsp; This makes the Lao dictionary much easier to use than a Thai dictionary when the pronunciation of the word is known approximately, but not the exact spelling.</FONT></P></BLOCKQUOTE>
+<P>After I got his response I dug into the support added in Windows 7 a little bit.</P>
+<P>And John is completely correct here.</P>
+<P>Perhaps I should give a little background, though.</P>
+<P>If you go back to almost the very beginning of the Unicode Collation Algorithm until version <A href="http://www.unicode.org/reports/tr10/tr10-11.html" mce_href="http://www.unicode.org/reports/tr10/tr10-11.html">TR10-11</A> released in January of 2004 around the time of Unicode 4.0, it contained text like the following:</P>
+<BLOCKQUOTE>
+<BLOCKQUOTE>
+<H4><A title=Rearrangement name=Rearrangement></A>3.1.3 Rearrangement</H4>
+<P>Certain characters are not coded in logical order, such as the Thai vowels เ through ไ and the Lao vowels ເ through ໄ (this list is indicated by the <A href="http://www.unicode.org/Public/UNIDATA/PropList.html">Logical_Order_Exception</A> property). For collation, they are rearranged by swapping with the following character before further processing, since logically they belong afterwards. For example, here is a string processed by rearrangement:</P>
+<P>
+<TABLE class=wide class="wide">
+<TBODY>
+<TR>
+<TD width="15%">input string:</TD>
+<TD><TT>0E01 <B>0E40</B> 0E02 0E03</TT></TD></TR>
+<TR>
+<TD>normalized string:</TD>
+<TD><TT>0E01 0E02 <B>0E40</B> 0E03</TT></TD></TR></TBODY></TABLE></P></BLOCKQUOTE></BLOCKQUOTE>
+<P>Now Microsoft, in its own support <A href="http://archives.miloush.net/michkap/archive/2004/11/28/271121.html" mce_href="http://archives.miloush.net/michkap/archive/2004/11/28/271121.html"><STRONG>that doesn't support the UCA</STRONG></A>, had three very important differences in this area:</P>
+<OL>
+<LI>We really didn't support Lao at all, and</LI>
+<LI>Thai support was done by means of compressions (which the UCA calls contractions) rather than re-ordering, and</LI>
+<LI>Since Thai support used compressions (which due Microsoft's implementation cannot be in its <STRONG>default table</STRONG>), Thai sorting only worked when the Thai locale was specified.</LI></OL>
+<P>Then some time before the next release of <A href="http://www.unicode.org/reports/tr10/tr10-14.html" mce_href="http://www.unicode.org/reports/tr10/tr10-14.html">TR10-14</A> in May of 2005, there was a meeting (involving if memory serves Mark Davis, Ken Whistler, Cathy Wissink, and I and maybe some others I don't remember), where Mark made the suggestion that rather than all of that reordering stuff which was quite less than ideal from a processing standpoint, that the UCA should instead define contractions that would support the same results as the Thai and Lao reordering did.</P>
+<P>Both Cathy and I pointed out that this was something we were essentially already doing and had been for years&nbsp;in Microsoft Windows, so we could hardly fault Unicode making such a technical decision. :-)</P>
+<P>And in that next release of <A href="http://www.unicode.org/reports/tr10/tr10-14.html" mce_href="http://www.unicode.org/reports/tr10/tr10-14.html">TR10-14</A> in May of 2005 version of the Unicode Collation Algorithm, the following text replaced the text that had been there before about Thai/Lao reordering:</P>
+<BLOCKQUOTE>
+<BLOCKQUOTE>
+<H4>3.1.3 <A title=Rearrangement name=Rearrangement></A>Rearrangement</H4>
+<P>Certain characters are not coded in logical order, such as the Thai vowels เ through ไ and the Lao vowels ເ through ໄ (this list is indicated by the Logical_Order_Exception property in the Unicode Character Database [<A href="http://www.unicode.org/reports/tr10/tr10-14.html#UCD">UCD</A>]). For collation, they are rearranged by swapping with the following character before further processing, because logically they belong afterwards. This is done by providing these sequences as contractions in the Collation Element Table.</P></BLOCKQUOTE></BLOCKQUOTE>
+<P>with of course the indicated changes in the Unicode Character Database.</P>
+<P>Of course Microsoft still had those remaining two differences:</P>
+<OL>
+<OL>
+<LI>We really didn't support Lao at all, and</LI>
+<LI>Since Thai support used compressions which due Microsoft's implementation cannot be in its <STRONG>default table</STRONG>, Thai sorting only worked when the Thai locale was specified.</LI></OL></OL>
+<P>when compared to the UCA.</P>
+<P>but since Microsoft was shipping no Lao fonts and had no Lao locale, this lack was not considered to be too terribly high by way of priority.</P>
+<P>The Vista and Windows 7 story can be summed up in <A href="http://archives.miloush.net/michkap/archive/2008/02/23/7861817.html" mce_href="http://archives.miloush.net/michkap/archive/2008/02/23/7861817.html"><STRONG>Despite progression, the bug calls out to me quite LAOdly</STRONG></A>, the aforementioned <A href="http://archives.miloush.net/michkap/archive/2010/04/17/9997539.html" mce_href="http://archives.miloush.net/michkap/archive/2010/04/17/9997539.html"><STRONG>Sing. Sing a song. Sing it Lao'd (just in case the sort's still wrong!)</STRONG></A>,&nbsp;and John Durdin's comment, quoted earlier in this blog.</P>
+<P>After looking at everything, the following conclusions can be stated authoritatively:</P>
+<P><STRONG>1. Microsoft did not add the appropriate support for "Lao preceding vowel weight reordering"</STRONG>. This support, which Microsoft added for Thai before the UCA was even originally written, was apparently skipped for Lao entirely (the 2-to-1 compressions added in Windows 7 were only consonant-vowel combinations. <EM>Try to imagine if over 1/3 of the Thai collation support were simply missing</EM>.</P>
+<P><STRONG>2. Microsoft improperly weighs the Lao tone marks as having Alphabetic Weight (AW) before all of the other letters</STRONG>. In contrast to Thai, which adds tone marks at the end of appropriate compressions to slightly alter the overall weight of Thai sort elements, the Lao tone marks will generally not cause affected syllables to be placed appropriately since primary weight differences are being added to the end of those syllables. <EM>Try to imagine if U+0301 (COMBINING ACUTE ACCENT) were treated as a full letter that sorted right before A</EM>.</P>
+<P><STRONG>3. Neither Microsoft nor Unicode supports the "most accepted method of Lao sorting (c.f. Kerr's 1972 Lao-English Dictionary)</STRONG>. Given the table-based methods that both algorithms use, support of what this dictionary does&nbsp;for Lao (which would require real analysis to determine syllable boundaries) is pretty much impossible to support without either insanely big tables and lots of "look ahead" and "jump back" logic, or else&nbsp;the kind of&nbsp;pre-processing step that Microsoft has never had and Unicode specifically worked to drop.</P>
+<P>So #3 is really out of scope for general purpose implementations on both sides, but #1 and #2 will tend to baffle people looking at the Lao collation support in Windows 7, which matches neither dictionaries nor the full orthographic order&nbsp;supported by Thai.</P>
+<P>I'll admit that even years out and conceptually even further away from the code, things like this pain me. Like I want to apologize to a country or something. </P>
+<P>Irrational, I suppose.</P>
+<P>Yet still....</P>
+<hr/><p><a id="10008635" href="#10008635">#</a> <strong>John Cowan</strong> on Thursday, May 06, 2010 10:19 AM:</p><div style="margin-left: 1em"><p>*sigh*</p>
+<p>Of course it's INCONCEIVABLE that anyone with Thai or Lao data might want to DO The Right Thing with it, even in a non-Thai (or non-Lao) locale.</p></div>
+<p><a id="10008781" href="#10008781">#</a> <strong>Michael S. Kaplan</strong> on Thursday, May 06, 2010 2:20 PM:</p><div style="margin-left: 1em"><p>I call shenanigans the premise of your statement John; this happens for EVERY OTHER LANGUAGE; the only reason Unicode takes the hit here is their guilt over the encoding model. If you aren't going to fix Hindi or every other language that would benefit, then dinging Microsoft for being unable to do something architecturally that for 99% of all cases is a non-goal for Unicode is not realistic....</p></div>
+<hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2010/05/07/10008232.html" title="Cunningly conquering communicated console caveats. Comprende, mon Capitán?">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2010/05/05/10007589.html" title="Are MALAYALAM KA &amp; TAMIL KA confusable? Only if you think &quot;all those Dravidians look alike&quot; !">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2010-05">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2010-05-06">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2010/05/06/10006797.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:35 GMT -->
+</html>

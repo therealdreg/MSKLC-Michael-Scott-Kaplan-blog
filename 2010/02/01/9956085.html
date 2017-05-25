@@ -1,0 +1,99 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2010/02/01/9956085.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:35 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Cautionary thoughts on embedding</title></head><body>
+<h1>Cautionary thoughts on embedding</h1>
+<p><em>by Michael S. Kaplan, published on 2010/02/01 07:01 -05:00, original URI: http://blogs.msdn.com/b/michkap/archive/2010/02/01/9956085.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P>It was a bit ago that a colleague forwarded a request to me about font embedding:</P>
+<BLOCKQUOTE>
+<P><FONT face="times new roman,times"><EM>“I was wondering if you knew about the legality of embedding Microsoft's fonts in software or web pages?&nbsp; For example, I've packaged the Abyssinica SIL font with my software because SIL has permitted free commercial distribution.&nbsp; Do you know if Microsoft Nyala's font allows that?&nbsp; I'd love to embed it in my web page as well as the software.&nbsp; I suppose there's a difference between embedding and full installation, but I'm concerned about both.”</EM></FONT></P></BLOCKQUOTE>
+<P>Now allow me to preface my response by pointing out <STRONG>IANAL</STRONG>, by which I mean <STRONG>I AM NOT&nbsp;A LAWYER</STRONG>.</P>
+<P>It is important&nbsp;that this be recognized. If you truly want legal advice because your question relates to legality, then neither I nor this blog are the best sources of information.</P>
+<P>I briefly touched on the technical side of the legal issues with font embedding in that <A href="http://archives.miloush.net/michkap/archive/2007/04/15/2145619.html" mce_href="http://archives.miloush.net/michkap/archive/2007/04/15/2145619.html"><STRONG>Rhymes with Amharic</STRONG></A> series I did back in 2007, especially in part 3.</P>
+<P>I'll now point to the <A href="http://www.microsoft.com/typography/" mce_href="http://www.microsoft.com/typography/">Microsoft Typography site</A>, in particular the OpenType spec, in detailed particular <A href="http://www.microsoft.com/typography/otspec/os2ver0.htm#fst" mce_href="http://www.microsoft.com/typography/otspec/os2ver0.htm#fst">the fsType member of the OS/2 - OS/2 and Windows Metrics (Version 0) table</A>. I'll just quote the whole chunk of text:</P>
+<BLOCKQUOTE>
+<H2><A id=fst title=fst name=fst></A>fsType </H2>
+<P>
+<TABLE class=variable class="variable">
+<TBODY>
+<TR>
+<TD>Format:</TD>
+<TD>2-byte unsigned short</TD></TR>
+<TR>
+<TD>Title:</TD>
+<TD>Type flags.</TD></TR>
+<TR>
+<TD>Description:</TD>
+<TD>Indicates font embedding licensing rights for the font. Embeddable fonts may be stored in a document. When a document with embedded fonts is opened on a system that does not have the font installed (the remote system), the embedded font may be loaded for temporary (and in some cases, permanent) use on that system by an embedding-aware application. Embedding licensing rights are granted by the vendor of the font. <BR><BR>The <B>OpenType Font Embedding DLL Specification</B> and DLL release notes describe the APIs used to implement support for OpenType font embedding and loading. <I>Applications that implement support for font embedding, either through use of the Font Embedding DLL or through other means, must not embed fonts which are not licensed to permit embedding. Further, applications loading embedded fonts for temporary use (see Preview &amp; Print and Editable embedding below) <B>must</B> delete the fonts when the document containing the embedded font is closed. </I></TD></TR></TBODY></TABLE>
+<TABLE class=gray class="gray">
+<TBODY>
+<TR>
+<TH style="WIDTH: 10%">Bit</TH>
+<TH style="WIDTH: 20%">Bit Mask</TH>
+<TH style="WIDTH: 70%">Description</TH></TR>
+<TR>
+<TD>&nbsp;</TD>
+<TD>0x0000</TD>
+<TD>Installable Embedding: No fsType bit is set. Thus fsType is zero. <BR>Fonts with this setting indicate that they may be embedded and permanently installed on the remote system by an application. The user of the remote system acquires the identical rights, obligations and licenses for that font as the original purchaser of the font, and is subject to the same end-user license agreement, copyright, design patent, and/or trademark as was the original purchaser.</TD></TR>
+<TR>
+<TD>0</TD>
+<TD>0x0001</TD>
+<TD>Reserved, must be zero.</TD></TR>
+<TR>
+<TD>1</TD>
+<TD>0x0002</TD>
+<TD>Restricted License embedding: <BR>Fonts that have <B>only </B>this bit set <B>must not be modified, embedded or exchanged in any manner</B> without first obtaining permission of the legal owner. <BR><I>Caution: </I>For Restricted License embedding to take effect, it must be the only level of embedding selected.</TD></TR>
+<TR>
+<TD>2</TD>
+<TD>0x0004</TD>
+<TD>Preview &amp; Print embedding: When this bit is set, the font may be embedded, and temporarily loaded on the remote system. Documents containing Preview &amp; Print fonts must be opened “read-only;” no edits can be applied to the document.</TD></TR>
+<TR>
+<TD>3</TD>
+<TD>0x0008</TD>
+<TD>Editable embedding: When this bit is set, the font may be embedded but must only be installed <B>temporarily </B>on other systems. In contrast to Preview &amp; Print fonts, documents containing Editable fonts <I>may</I> be opened for reading, editing is permitted, and changes may be saved.</TD></TR>
+<TR>
+<TD>4-15</TD>
+<TD>&nbsp;</TD>
+<TD>Reserved, must be zero.</TD></TR></TBODY></TABLE>
+<TABLE class=variable class="variable">
+<TBODY>
+<TR>
+<TD>Comments:</TD>
+<TD>If multiple embedding bits are set, the <I>least</I> restrictive license granted takes precedence. For example, if bits 1 and 3 are set, bit 3 takes precedence over bit 1and the font may be embedded with Editable rights. For compatibility purposes, most vendors granting Editable embedding rights are also setting the Preview &amp; Print bit (0x000C). This will permit an application that only supports Preview &amp; Print embedding to detect that font embedding is allowed.</TD></TR>
+<TR>
+<TD>&nbsp;</TD>
+<TD><B>Restricted License embedding (0x0002):</B> Fonts that have this bit set <B>must not be modified, embedded or exchanged in any manner</B> without first obtaining permission of the legal owner. Caution: note that for Restricted License embedding to take effect, it must be the only level of embedding selected (as noted in the previous paragraph).</TD></TR>
+<TR>
+<TD>&nbsp;</TD>
+<TD><B>Preview &amp; Print embedding (0x0004):</B> Fonts with this bit set indicate that they may be embedded within documents but must only be installed temporarily on the remote system. Any document which includes a Preview &amp; Print embedded font must be opened “read-only;” the application must not allow the user to edit the document; it can only be viewed and/or printed.</TD></TR>
+<TR>
+<TD>&nbsp;</TD>
+<TD><B>Editable embedding (0x0008):</B> Fonts with this bit set indicate that they may be embedded in documents, but must only be installed temporarily on the remote system. In contrast to Preview &amp; Print fonts, documents containing Editable fonts may be opened “read-write;” editing is permitted, and changes may be saved.</TD></TR>
+<TR>
+<TD>&nbsp;</TD>
+<TD><B>Installable embedding (0x0000):</B> Fonts with this setting indicate that they may be embedded and permanently installed on the remote system by an application. The user of the remote system acquires the identical rights, obligations and licenses for that font as the original purchaser of the font, and is subject to the same end-user license agreement, copyright, design patent, and/or trademark as was the original purchaser.</TD></TR></TBODY></TABLE></P></BLOCKQUOTE>
+<P>Clear now? :-)</P>
+<P>Now note that companies that have an oar in this particular pond will have specific information on how it applies to them and the fonts that their customers might work with; note Adobe's <A href="http://www.adobe.com/type/browser/info/embedding.html" mce_href="http://www.adobe.com/type/browser/info/embedding.html">Fonts: Embedding Permissions</A> information page.</P>
+<P>In fact one could probably glean some insight into the biggest concerns of companies when you read how they try to shape the message.</P>
+<P>But irregardless of shape, all will pretty much in the end suggest talking to the actual owners of the font. </P>
+<P>You know, the ones who could sue you if you misused it in some way. </P>
+<P>That seems like safe advice to me.... :-)</P>
+<P>I remember talking with some folks once, about four years after I had gotten my own <STRONG>Cease and Desist</STRONG> due to something I was doing with some Microsoft's fonts that I thought was okay though as it turns out it wasn't.</P>
+<P>In the end I sort of gathered that the most common cases were like mine - honest mistakes where no misuse was intended.</P>
+<P>But obviously even the honest mistakes can be costly to font foundries, which is why they try to keep an eye on things. And especially to look for when people ask the question since that is the best time to help guide them down the right path.</P>
+<P>Now one of the most important things to keep in mind is that when this information was added to fonts, embedding was still thought of primarily in respect to <STRONG>documents</STRONG>. You don't have to be a lawyer to see how the descriptions above focus on a very document-centric universe.</P>
+<P>Of course there are gray areas (the New York Times reader&nbsp;and&nbsp;the Kindle come to mind immediately) where one might find the meaning of the word <STRONG>document</STRONG> to shift around in ways that some might find uncomfortable. But by and large for most uses one can make the honest assessment about usage and with that quick legal consultation (one to which that honest assessment can be source material!) you can go forward with confidence.</P>
+<P>In the specific example of the original question, my default answer would be that it is probably okay in web pages&nbsp;with&nbsp;an embedding technology like .EOT files, with&nbsp;a font like Nyala that allows such embedding. But I would not be too hasty to apply logic&nbsp;such as&nbsp;that&nbsp;to software, as well. For that case it clearly seems beyond the scope of the description of the embedding levels, so even though it may be fine with them&nbsp;it is safer to assume it is not and ask.</P>
+<P>After all, as sources like <A href="http://en.wikipedia.org/wiki/Embedded_OpenType" mce_href="http://en.wikipedia.org/wiki/Embedded_OpenType">this one</A> discuss:</P>
+<BLOCKQUOTE>
+<P><FONT face="times new roman,times">Simply including fonts in webpages might lead to unrestricted copying of copyrighted font files. Embedded OpenType includes features to discourage copying. Subsetting reduces the value of copying, as subsetted fonts will typically omit more than half of the characters. Other copy protection measures used are encryption and a list of "trusted roots" at the source end, and a proprietary decrypting DLL at the receiving end.</FONT></P></BLOCKQUOTE>
+<P>Some of those means to discourage might not be practical in the application case, since subsetting may not be practical if the content is itself dynamic. A foundry might want to be able to make sure that anyone who wants to use a font in such a way was adequately compensating the foundry for this extended usage.</P>
+<P>This is kind of the reason you have to make sure&nbsp;you <STRONG>really</STRONG>&nbsp;ask the font foundry before you embed the font in your application or game or whatever, if it is not a document.</P>
+<P>Perhaps this is all indirectly a technical suggestion -- such as a possible need to add additional embedding levels to cover the "application" scenario.</P>
+<P>Now as I read this blog, which is pretty steadfast and clear about talking to lawyers who will work to make sure that no mistakes are made, I realize that it could indeed be cited in some legal situation - like by the owner of a font someone was misusing as an example of proof that a reasonable person would have asked. But in a deposition I would refute that notion given how seldom people pay attention to this blog and how there are much more qualified people to ask those questions. :-)</P>
+<P><EM>Let me close by reminding people that <STRONG>I AM NOT A LAWYER</STRONG>; that and the fact that the meat of my advice is to talk to one should make that clear. My legal knowledge consists of multiple man-decades of watching various Law &amp; Order/CSI/JAG type TV shows, which is great for random Latin phrases but not so great for advice that will keep you from bankrupting your startup!</EM></P>
+<hr/><p><strong>Cheong</strong> on 4 Feb 2010 5:21 PM:</p><div style="margin-left: 1em"><p>Just want to point out that if you want to use a font that you're not sure of legal issue in web sites, you might found solutions like GlyphGate that actually converts your paragraphs into image before output valuable.</p>
+<p>And with ASP.NET plus a little bit knowledge on writing web plugins, it's not difficult to program it yourself. :)</p></div>
+<hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2010/02/02/9956547.html" title="Arabic ≠ Hebrew, and Hebrew ≠ Arabic">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2010/01/31/9955888.html" title="Not quite so portable as that...">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2010-02">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2010-02-01">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2010/02/01/9956085.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:35 GMT -->
+</html>

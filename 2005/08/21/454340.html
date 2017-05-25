@@ -1,0 +1,39 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2005/08/21/454340.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:41 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Unicode text in a VB6 RichTextBox?</title></head><body>
+<h1>Unicode text in a VB6 RichTextBox?</h1>
+<p><em>by Michael S. Kaplan, published on 2005/08/21 23:00 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2005/08/21/454340.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P><FONT face=Tahoma>Galit Avieli asked (via email):</FONT></P>
+<BLOCKQUOTE dir=ltr style="MARGIN-RIGHT: 0px">
+<P><FONT face=Tahoma><FONT face="Times New Roman" size=2><EM>My name is Galit, we are a few students from Israel working on a project using visual basic. We ran into a problem we're dealing for a few days now. Searching for a solution on the web, we saw a response you wrote in a forum that answered our problem, only it referred to Microsoft Access. We'll be more than happy if you'll help us since we can't find the answer to the problem elsewhere.</EM></FONT></FONT></P>
+<P><FONT face=Tahoma><FONT face="Times New Roman" size=2><EM>Our problem is:</EM></FONT></FONT></P>
+<P><FONT face=Tahoma><FONT face="Times New Roman" size=2><EM>I'm writing in RichTextBox under "ARIAL" font, when I switch (alt-shift) to Hebrew the font is changed to "ARIAL (Hebrew)". When I send the text to TextBox the fonts are changed to "ARIAL" and on the screen appear unreadable chars.</EM></FONT></FONT></P>
+<P><FONT face=Tahoma><FONT face="Times New Roman" size=2><EM>I would like to know how can I send the proper font name so that it would stay as "ARIAL (Hebrew)" (exactly like Microsoft WordPad is working).</EM></FONT></FONT></P>
+<P><FONT face=Tahoma><FONT face="Times New Roman" size=2><EM>That was an example, our problem is wider and refers to all languages (not just Hebrew).</EM></FONT></FONT></P>
+<P><FONT face=Tahoma><FONT face="Times New Roman" size=2><EM>Again, it would be a great help and would save months of work.</EM></FONT></FONT></P>
+<P><FONT face=Tahoma><FONT face="Times New Roman" size=2><EM>Thanks a lot and have a wonderful weekend</EM></FONT></FONT></P>
+<P><FONT face=Tahoma><FONT face="Times New Roman" size=2><EM>Galit Avieli<BR>Israel</EM></FONT></FONT></P></BLOCKQUOTE>
+<P><FONT face=Tahoma>Unfortunately the answer is not a good one. :-(</FONT></P>
+<P><FONT face=Tahoma>In this particular case, at the point where you switch to the Hebrew keyboard layout, the RichEdit control underneath the RichTextBox notices the switch and changes the charset of the underlying font to Hebrew (this is also what happens in WordPad).</FONT></P>
+<P><FONT face=Tahoma>However, when text is sent to the control, VB does not keep&nbsp;it in Unicode; instead it sets the text using methods that convert it to the default system code page, which may or may not contain the characters in question. the RchEdit control is smart enough to know that the text it is being sent is not, in fact, Hebrew text. So it converts the font back.</FONT></P>
+<P><FONT face=Tahoma>The same problem will happen for any text that is not on the system default code page....</FONT></P><FONT face=Tahoma>
+<P><FONT face=Tahoma>Unfortunately, as I talk about in <A href="http://i18nwithvb.com/chapters/">Chapter 6</A> of <A href="http://i18nwithvb.com/">my book</A>&nbsp;(no longer in print, sorry!), the answer to the question "is VB &lt;= 6.0 Unicode or not?" is not a simple one.</FONT></P>
+<P>The answer is to not use the MS-provided RichTextBox ActiveX control; instead use one of the controls specially designed to keep Unicode text as it is, like the <A href="http://www.unitoolbox.com/">UniToolbox controls</A> from&nbsp;<A href="http://www.woodbury.co.uk/">Woodbury Associates, Ltd.</A>&nbsp;The intrinsic controls and the VB-provided ActiveX controls for the most part will not do this.</P>
+<P>This problem is for the most part solved with .NET, though in some cases Win9x will not see the right "Unicode" behavior due to use of underlying OS controls. But that is a subject for another post, on another day....</P>
+<P>&nbsp;</P>
+<P><FONT color=#ff0000><EM>This post brought to you by</EM> "ג" <EM>(<A href="http://www.fileformat.info/info/unicode/char/05d2/index.htm">U+05d2</A>, a.k.a. HEBREW LETTER GIMEL)</EM></FONT></P></FONT>
+<hr/><p><strong>Yuhong Bao</strong> on 20 Apr 2010 6:16 PM:</p><div style="margin-left: 1em"><p>&quot;However, when text is sent to the control, VB does not keep it in Unicode; instead it sets the text using methods that convert it to the default system code page“</p>
+<p>I can understand why, but why didn't they add a check for 9x vs NT and call the W functions directly if it is NT and skip that conversion?</p></div>
+<p><strong>Michael S. Kaplan</strong> on 20 Apr 2010 9:32 PM:</p><div style="margin-left: 1em"><p>You are seriously asking why a team that I am not on made a decision over 12 years ago to do themselves the work that I was hired to do for Windows 9 years ago for all developers?</p>
+</div>
+<p><strong>Yuhong Bao</strong> on 20 Apr 2010 11:45 PM:</p><div style="margin-left: 1em"><p>&quot;You are seriously asking why a team that I am not on made a decision over 12 years ago to do themselves the work that I was hired to do for Windows 9 years ago for all developers?&quot;</p>
+<p>Not exactly, I am asking *about* that work.</p></div>
+<p><strong>Michael S. Kaplan</strong> on 21 Apr 2010 12:36 AM:</p><div style="margin-left: 1em"><p>Dude, I wasn't there. </p>
+<p>I have talked at length about MSLU and how it works. It just was not available and they did not do something like it themselves to support calling Unicode functions. So this has already been as covered as it would be, from my point of view.</p>
+</div>
+<p><strong>Yuhong Bao</strong> on 21 Sep 2010 4:30 PM:</p><div style="margin-left: 1em"><p>BTW, I disassembled MSVBVM60.DLL and rtcShell is one function that does do this. It checks for 9x vs NT and calls CreateProcessW or CreateProcessA as appropriate.</p>
+</div>
+<hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2005/08/22/454360.html" title="Why I think the thread locale really stinks">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2005/08/21/454327.html" title="GetNumberFormat: not used by the Microsoft CRT....">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2005-08">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2005-08-21">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2005/08/21/454340.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:41 GMT -->
+</html>

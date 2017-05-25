@@ -1,0 +1,45 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2011/03/21/10143659.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>See Kim. See Kim run. See Kim run setup and find a bug!</title></head><body>
+<h1>See Kim. See Kim run. See Kim run setup and find a bug!</h1>
+<p><em>by Michael S. Kaplan, published on 2011/03/21 07:01 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2011/03/21/10143659.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<p>So, the last few blogs were an interesting series of contrasts.</p>
+<p>On Friday in <a href="http://archives.miloush.net/michkap/archive/2011/03/18/10142935.html" title="It is totally awesome if they yell &quot;L&amp;oslash;p av sted!&quot; in the Norwegian dub of Monty Python and the Holy Grail"><strong>It is totally awesome if they yell "L&oslash;p av sted!" in the Norwegian dub of Monty Python and the Holy Grail</strong></a>, I covered an IE9 localization bug found during the beta. I explained why it was interesting and perhaps even amusing. I also pointed out some of the interesting lessons one can learn about the localization process from it.</p>
+<p>Then on Saturday in <a href="http://archives.miloush.net/michkap/archive/2011/03/19/10142458.html" title="Lack of confidence in a feature can keep me from installng it. Oh yeah, a BSOD can, too."><strong>Lack of confidence in a feature can keep me from installing it. Oh yeah, a BSOD can, too.</strong></a>, I covered&nbsp;a Windows 7 SP1 bug in the most negative possible terms and suggested how completely destructive the bug itself but more the poor description of it might prove to be for the usage of MUI and language support.</p>
+<p>Both are bugs, but obviously they inspired two completely different reactions from me (and from other people).</p>
+<p>Just to be clear on the fact that there is indeed&nbsp;a middle ground, I thought I'd point out a third bug.</p>
+<p>Now this one comes from my Norwegian friend and colleague Kim. I'll have to write some day about a few of the more appropriate conversations he and I have had as many are quite interesting. We'll stay away from the Danish topics, which are akin to the conversations I have with my Slovak friend/colleague Zuzka about Slovenian -- neither is the best fodder for blogs.</p>
+<p>But there are other conversations, like the one about this bug I'm going to talk about!</p>
+<p>Here&nbsp;is the timeline:</p>
+<p><span style="font-size: large;">2010</span></p>
+<p style="padding-left: 30px;"><strong>Kim installs nb-NO Windows 7.</strong></p>
+<p style="padding-left: 60px;">He mentioned to me&nbsp;that he always does this, and has come to feel quite comfortable with the Norwegian localization quality. On a few occasions he has even pointed out how much it has improved over the years.</p>
+<p><span style="font-size: large;">January[ish] 2011</span></p>
+<p style="padding-left: 30px;"><strong>Kim installs nb-NO Internet Explorer 9 Beta.</strong></p>
+<p style="padding-left: 60px;">This is actually how he noticed the bug I mentioned in <a href="http://archives.miloush.net/michkap/archive/2011/03/18/10142935.html" title="It is totally awesome if they yell &quot;L&amp;oslash;p av sted!&quot; in the Norwegian dub of Monty Python and the Holy Grail"><strong>It is totally awesome if they yell "L&oslash;p av sted!" in the Norwegian dub of Monty Python and the Holy Grail</strong></a>, actually. Dog fooding FTW! :-)</p>
+<p><span style="font-size: large;">February[ish] 2011</span></p>
+<p style="padding-left: 30px;"><strong>Kim installs nn-NO Windows 7 LIP.</strong></p>
+<p style="padding-left: 60px;">I have mentioned the Nynosk LIP previously in <a href="http://archives.miloush.net/michkap/archive/2010/03/03/9971878.html" title="Nordic duck duck goose -- Bokm&aring;l, Bokm&aring;l, Bokm&aring;l, Nynorsk!"><strong>Nordic duck duck goose -- Bokm&aring;l, Bokm&aring;l, Bokm&aring;l, Nynorsk!</strong></a>. I kind of goaded Kim to install Nynorsk, after he mentioned to me an interesting fact: that although he has been reading and writing Bokm&aring;l all his life, when he speaks Norwegian it is in many ways more Nynorsk-ian. And that really he is hardly alone here -- most of the country hovers between the two outer markers that these two official dialects represent. and people do understand each other. I convinced him to install it, nearly 11 months after it was released (I actually started in January 2011), that he might find it really interesting, certainly enough to be able to give some thoughts on the experience.</p>
+<p style="padding-left: 60px;">A month later he proved that it was quite worthwhile, in fact!</p>
+<p><span style="font-size: large;">March 2011</span></p>
+<p style="padding-left: 30px;"><strong>Kim tries to install nb-NO Internet Explorer RTW</strong></p>
+<p style="padding-left: 60px;">The result was the following dialog:</p>
+<p style="padding-left: 60px;"><img height="201" width="537" src="http://blogs.msdn.com/cfs-file.ashx/__key/CommunityServer-Blogs-Components-WeblogFiles/00-00-00-33-81/5460.nynorskfail.jpg" /></p>
+<p style="padding-left: 60px;"><em>Translation</em>: </p>
+<p style="padding-left: 90px;">Wrong version of Internet Explorer Setup</p>
+<p style="padding-left: 90px;">This version of IE does not support the current Windows language version. Go to [URL] to download the Internet Explorer version for your Windows language version.</p>
+<p>Clearly, all of the people who poo-poo'ed claims that IE was an integral part of the operating system failed to consider how easy and natural it is to develop the two with assumptions about language support. The notion that the lack of support&nbsp; of a single language in IE would lead to problems understanding the install experience is something that is (in retrospect) an obvious problem with an even more obvious solution.</p>
+<p>Though of course this is harder to contemplate right after you ship!</p>
+<p>The failure is easier to recover from and the workaround here is much easier than the bug in&nbsp;<a href="http://archives.miloush.net/michkap/archive/2011/03/19/10142458.html" title="Lack of confidence in a feature can keep me from installng it. Oh yeah, a BSOD can, too."><strong>Lack of confidence in a feature can keep me from installng it. Oh yeah, a BSOD can, too.</strong></a>&nbsp;because there is no crash and nothing needs to be uninstalled. You just have to change the UI language temporarily from <strong>nn-NO</strong> to <strong>nb-NO</strong> and that's it. </p>
+<p>Much better, all the way around.</p>
+<p>So even though it's not great,it doesn't feel nearly as bad to me...</p>
+<p>In the long run, a change to a slightly more flexible design that does the following would probably be best</p>
+<ul>
+<li>Respect UI language fallbacks (since <strong>nb-NO</strong> is the fallback for <strong>nn-NO</strong>, it should be recognizable;</li>
+<li>If possible, be okay with not knowing what to do with the language in question, which may be harder but perhaps at most a&nbsp;warning dialog would be sufficient here rather than stopping setup.</li>
+</ul>
+<p>This bug is clearly somewhere in between the extremes of the blogs from Friday and Saturday, though probably closer in spirit to the Friday bug....</p>
+<hr/><div style="margin-left: 1em"><em>no comments</em></div><hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2011/05/27 <a href="http://archives.miloush.net/michkap/archive/2011/05/27/10168500.html">If it's overtly over-applied and overarching, it may be an overreach (e.g. in nOrway!)</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2011/03/22/10144474.html" title="Rupee! Rupee! Let down your CHAR!">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2011/03/19/10142458.html" title="Lack of confidence in a feature can keep me from installng it. Oh yeah, a BSOD can, too.">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2011-03">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2011-03-21">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2011/03/21/10143659.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+</html>

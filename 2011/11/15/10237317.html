@@ -1,0 +1,116 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2011/11/15/10237317.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>The evolving Story of Locale Support, part 8: [Finally] taking care of some [more] languages in Pakistan</title></head><body>
+<h1>The evolving Story of Locale Support, part 8: [Finally] taking care of some [more] languages in Pakistan</h1>
+<p><em>by Michael S. Kaplan, published on 2011/11/15 07:01 -05:00, original URI: http://blogs.msdn.com/b/michkap/archive/2011/11/15/10237317.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<p>Previous blogs from this series:</p>
+<ul>
+<li><strong><a title="part 7: That would be a " href="http://archives.miloush.net/michkap/archive/2011/11/11/10236194.html" a="" hawaiian="" for="" raise="" and="" call="">part 7: That would be a "call and a raise" for Hawaiian</a></strong></li>
+<li><strong><a title="part 6 (Behind the Cherokee Phonetic layout in Windows 8)" href="http://archives.miloush.net/michkap/archive/2011/11/09/10235391.html">part 6 (Behind the Cherokee Phonetic layout in Windows 8)</a></strong></li>
+<li><strong><a title="part 5 part 5 (...until the decision was made to not refuse to add it)" href="http://archives.miloush.net/michkap/archive/2011/11/08/10234995.html">part 5 (...until the decision was made to not refuse to add it)</a></strong></li>
+<li><strong><a title="part 4 (working beyond one's bugs, and the case for an MSKLC update)" href="http://archives.miloush.net/michkap/archive/2011/11/04/10233999.html">part 4 (working beyond one's bugs, and the case for an MSKLC update)</a></strong></li>
+<li><strong><a title="part 3 (working beyond one's bugs, the setup)" href="http://archives.miloush.net/michkap/archive/2011/11/03/10233591.html">part 3 (working beyond one's bugs, the setup)</a>&nbsp;</strong></li>
+<li><strong><a title="part 2 (raising the roof on keyboards)" href="http://archives.miloush.net/michkap/archive/2011/11/02/10232468.html">part 2 (raising the roof on keyboards)</a></strong>&nbsp;</li>
+<li><strong><a title="part 1 (Some people don't want to double-d's)" href="http://archives.miloush.net/michkap/archive/2011/11/01/10232070.html">part 1 (Some people don't want to double-d's)</a></strong></li>
+<li><strong><a title="part 0 (The introduction)" href="http://archives.miloush.net/michkap/archive/2011/10/31/10231661.html">part 0 (The introduction)</a></strong></li>
+</ul>
+<p>Back in the middle of 2002, Abdul-Mqajid Bhurgri wrote a white paper&nbsp;for Microsoft, entitled <a href="http://download.microsoft.com/download/1/4/2/142aef9f-1a74-4a24-b1f4-782d48d41a6d/PakLang.pdf">Enabling Pakistani Languages through Unicode</a>.</p>
+<p>It was not so much about Microsoft's own support of Pakistani languages, which if you go back to 2002 was fairly scant -- we supported an <strong>Urdu - Pakistan</strong> locale (added for Windows 2000) but with no specific sort order (meaning it had the sort order from the default table, intended primarily for the Arabic language. Even though we knew there was a different collation. The white paper had a purer intent than that: a love of language, and a desire to see the right thing done with the languages of Pakistan. A great white paper done as the microsoft.com/middleeast site was just starting to think beyond the Middle East and look at languages in other parts of the world that shared the Arabic script.</p>
+<p><em>Abdul-Mqajid's site can be found <a href="http://bhurgri.com/bhurgri/sd_index.php">here</a>.</em></p>
+<p>The 35-page&nbsp;white paper contains the following table of languages and the&nbsp;number of people who speak&nbsp;them as their mother tongue:</p>
+<table border="1" cellspacing="3" cellpadding="3">
+<tbody>
+<tr>
+<td><strong>Language</strong></td>
+<td><strong>Number of Speakers</strong></td>
+</tr>
+<tr>
+<td>Balochi</td>
+<td style="text-align: right;">5,685,000</td>
+</tr>
+<tr>
+<td>Balti</td>
+<td style="text-align: right;">270,000</td>
+</tr>
+<tr>
+<td>Brahui</td>
+<td style="text-align: right;">2,000,000</td>
+</tr>
+<tr>
+<td>Farsi</td>
+<td style="text-align: right;">1,000,000</td>
+</tr>
+<tr>
+<td>Hindko</td>
+<td style="text-align: right;">2,500,000</td>
+</tr>
+<tr>
+<td>Kashmiri</td>
+<td style="text-align: right;">105,000</td>
+</tr>
+<tr>
+<td>Khowar</td>
+<td style="text-align: right;">223,000</td>
+</tr>
+<tr>
+<td>Parkari</td>
+<td style="text-align: right;">250,000</td>
+</tr>
+<tr>
+<td>Pashto</td>
+<td style="text-align: right;">11,100,000</td>
+</tr>
+<tr>
+<td>Punjabi</td>
+<td style="text-align: right;">30 to 45 m.</td>
+</tr>
+<tr>
+<td>Saraiki</td>
+<td style="text-align: right;">15 to 30 m.</td>
+</tr>
+<tr>
+<td>Sindhi</td>
+<td style="text-align: right;">17,000,000</td>
+</tr>
+<tr>
+<td>Urdu</td>
+<td style="text-align: right;">10,700,000</td>
+</tr>
+</tbody>
+</table>
+<p>And some interesting text about written language in the country:</p>
+<p style="padding-left: 60px;" align="left"><span style="font-family: times new roman,times; font-size: medium;">Major spoken languages of Pakistan are: Punjabi, Saraiki, Sindhi, Pashto, Urdu, Balochi, Hindko and Brahui. Of these, only Urdu, Sindhi, and Pashto have a standardized alphabet. There are very few written works available in these other languages. Speakers of these languages, if they ever need to write in their language, use the alphabet of some other major language (usually Urdu or Sindhi) in which they have been formally educated. For Punjabi, mostly Urdu alphabet and writing style is used because most of the Punjabis have received their schooling in Urdu. For Saraiki, Urdu as well as Sindhi alphabet is used because Saraiki is spoken in Punjab as well as Sindh. Balochi also does not have any standardized alphabet. Mostly Urdu, sometimes Farsi, and occasionally Sindhi alphabets are used for it. Situation of the remaining languages is not much different.</span></p>
+<p>The paper explains some of the important distinctions about Arabic script vs. language to answer people who misunderstand that distinction, and&nbsp;perhaps more importantly&nbsp;provides some of the best text I have read explaining the Naskh/Nastaleeq difference, e.g.:</p>
+<p style="padding-left: 60px;" align="left"><span style="font-family: times new roman,times; font-size: medium;">That Nastaleeq and not Naskh should be the writing style used for computers is also based on this misconceived &ldquo;Nastaleeq or Naskh&rdquo; notion &ndash; which in turn is an unfortunate legacy of Urdu word processing packages which supported one style or the other. So far as Unicode is concerned, for example word Pakistan would always comprise of characters Pay, Alef, Kaf, Seen, Tay, Alef and Noon.</span></p>
+<p>The white paper also did some work to contrast the sort orders of Pashto, Sindhi, and Urdu.</p>
+<p>Some time in 2004, the data in this paper, and its&nbsp;information about&nbsp;Urdu, was used as one of the sources for the Urdu collation that was finally added to Vista, many versions after the locale was added to Windows (as well&nbsp;as supporting data for the different sort order for Pashto, which was being added for Afghanistan in Vista).&nbsp;</p>
+<p>It was preferred over the document Michael Everson wrote about the languages of Afghanistan, because that document&nbsp;primarily&nbsp;used the&nbsp;Unicode Collation Algorithm&nbsp;tailoring syntax without word list examples (and we don't use the UCA). The sorts were comparable either way.</p>
+<p>Anyway, fast forward to part 5 of this series you are reading now, which listed the locales being added to Windows 8, which include:</p>
+<ul>
+<li>Punjabi (Arabic) - Pakistan</li>
+<li>Sindhi (Arabic) - Pakistan</li>
+</ul>
+<p>This is pretty exciting, since at one point Sindhi was being considered for Vista (but was ultimately not done).</p>
+<p>I suspect that Abdul-Majid Bhurgri (who I was in contact with back in 2007 talking about Urdu and Sindhi) will be pleased to see Sindhi finally being added to Windows 8!</p>
+<p>Interesting trivia about our support of Pakistan:</p>
+<p>Our GEO location data for Pakistan includes the following data:</p>
+<ul>
+<li><strong>Friendly name</strong>: Pakistan</li>
+<li><strong>Official name</strong>: Islamic Republic of Pakistan</li>
+</ul>
+<p>Neither name is wrong, and context varies but of course locales don't have this notion of two kinds of names. If you look at the the Developer Preview from //BUILD, we're still working out which name to use across these three different Pakistani locales. Don't worry, we'll figure it out (we had the same problem in Vista pre-release with whether to call China P.R.C. or People's Republic of China)....</p>
+<p><em>A part of me wonders whether (with 11,000,000 speakers) we won't wonder about not choosing to&nbsp;add a <strong>ps-PK</strong> (Pashto - Pakistan), too?</em> :-)</p>
+<hr/><p><strong>Stuart</strong> on 15 Nov 2011 8:28 AM:</p><div style="margin-left: 1em"><p>&quot;The sorts were comparable&quot;? That&#39;s awfully meta!</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 15 Nov 2011 10:03 AM:</p><div style="margin-left: 1em"><p>That&#39;s how I roll! :-)</p>
+</div>
+<p><strong>Alex Cohn</strong> on 17 Nov 2011 9:37 AM:</p><div style="margin-left: 1em"><p>I wonder how sort orders for these languages happened to diverge.</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 17 Nov 2011 10:56 AM:</p><div style="margin-left: 1em"><p>Most often there is a phonetic/phonemic distinction, like in Lithuanian....</p>
+</div>
+<p><strong>Fahim Mahmood Mir</strong> on 28 Nov 2011 12:29 AM:</p><div style="margin-left: 1em"><p>Thank God if the Windows 8 have the Urdu Unicode Font or True Type Already Installed then it will Save us from a big headache of using and installing Third Party Software releases to Support Urdu.</p></div>
+<p><strong>Michael S. Kaplan</strong> on 28 Nov 2011 5:41 AM:</p><div style="margin-left: 1em"><p>Check out <strong><a href="http://archives.miloush.net/michkap/archive/2011/11/16/10237715.html">Part 9</a></strong> for the font!</p></div>
+<hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2012/10/26 <a href="http://archives.miloush.net/michkap/archive/2012/10/26/10362603.html">The evolving Story of Locale Support, part 28: We finally fixed that 'Install New Languages' thing!</a></p><p>2012/10/02 <a href="http://archives.miloush.net/michkap/archive/2012/10/02/10354988.html">The evolving Story of Locale Support, part 27: No, the T and the H aren't silent...</a></p><p>2012/08/20 <a href="http://archives.miloush.net/michkap/archive/2012/08/20/10341516.html">The evolving Story of Locale Support, part 26: Hey Windows 8, there's someone on the phone for you.</a></p><p>2012/07/11 <a href="http://archives.miloush.net/michkap/archive/2012/07/11/10327775.html">The evolving Story of Locale Support, part 25: Something old, something new, something repurposed, and something...</a></p><p>2012/06/07 <a href="http://archives.miloush.net/michkap/archive/2012/06/07/10316511.html">The evolving Story of Locale Support, part 24: I Adar you! Hell, I Double Adar you! (Windows 8 ed.)</a></p><p>2012/06/05 <a href="http://archives.miloush.net/michkap/archive/2012/06/05/10315033.html">The evolving Story of Locale Support, part 23: Tamazight? Outta sight!</a></p><p>2012/04/12 <a href="http://archives.miloush.net/michkap/archive/2012/04/12/10292952.html">The evolving Story of Locale Support, part 22: Digit Substitution 2.0</a></p><p>2012/03/08 <a href="http://archives.miloush.net/michkap/archive/2012/03/08/10278921.html">The evolving Story of Locale Support, part 21: The Windows 8 Hijripalooza extraordinaire!</a></p><p>2012/03/02 <a href="http://archives.miloush.net/michkap/archive/2012/03/02/10276258.html">The evolving Story of Locale Support, part 20: Yes, it's Bangla. Not Bengali!</a></p><p>2012/02/21 <a href="http://archives.miloush.net/michkap/archive/2012/02/21/10270502.html">The evolving Story of Locale Support, part 19: In honor of International Mother Language Day...</a></p><p>2012/02/15 <a href="http://archives.miloush.net/michkap/archive/2012/02/15/10268235.html">The evolving Story of Locale Support, part 18: Two scripts that share ten digits can be trouble</a></p><p>2012/02/02 <a href="http://archives.miloush.net/michkap/archive/2012/02/02/10263136.html">The evolving Story of Locale Support, part 17: Today I feel like translating you more than before</a></p><p>2012/01/24 <a href="http://archives.miloush.net/michkap/archive/2012/01/24/10259941.html">The evolving Story of Locale Support, part 16: We can't scale to a Xishuangbanna Dai locale, but…</a></p><p>2012/01/17 <a href="http://archives.miloush.net/michkap/archive/2012/01/17/10256884.html">The evolving Story of Locale Support, part 15: Fixing our listings up in Windows 8!</a></p><p>2011/12/22 <a href="http://archives.miloush.net/michkap/archive/2011/12/22/10250349.html">The evolving Story of Locale Support, part 14: Tifinagh, Tamazight, and Berber? Oh my!</a></p><p>2011/12/21 <a href="http://archives.miloush.net/michkap/archive/2011/12/21/10249983.html">The evolving Story of Locale Support, part 13: Divvying up locales, yet again!</a></p><p>2011/12/09 <a href="http://archives.miloush.net/michkap/archive/2011/12/09/10246051.html">The evolving Story of Locale Support, part 12: Logic dictates that we keep a sense of proportion about the RATIO</a></p><p>2011/11/23 <a href="http://archives.miloush.net/michkap/archive/2011/11/23/10240896.html">The evolving Story of Locale Support, part 11: What language is that keyboard for?</a></p><p>2011/11/22 <a href="http://archives.miloush.net/michkap/archive/2011/11/22/10239572.html">The evolving Story of Locale Support, part 10: Perhaps it is best to think of it as unintelligent design?</a></p><p>2011/11/16 <a href="http://archives.miloush.net/michkap/archive/2011/11/16/10237715.html">The evolving Story of Locale Support, part 9: Nastaleeq vs. Nastaliq? Either way, Windows 8 has got it!</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2011/11/16/10237715.html" title="The evolving Story of Locale Support, part 9: Nastaleeq vs. Nastaliq? Either way, Windows 8 has got it!">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2011/11/14/10236814.html" title="A Hindi default system locale isn&#39;t gonna happen">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2011-11">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2011-11-15">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2011/11/15/10237317.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+</html>

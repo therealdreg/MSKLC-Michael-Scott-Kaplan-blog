@@ -1,0 +1,69 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2007/09/12/4875560.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:37 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>A&P of Sort Keys, part 2 (aka The string that won? Didn't have a mark on him!)</title></head><body>
+<h1>A&P of Sort Keys, part 2 (aka The string that won? Didn't have a mark on him!)</h1>
+<p><em>by Michael S. Kaplan, published on 2007/09/12 03:16 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2007/09/12/4875560.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P>Previous posts in this series:</P>
+<UL>
+<LI>Part 0: <STRONG><A class="" href="http://archives.miloush.net/michkap/archive/2007/09/10/4847780.html" mce_href="http://archives.miloush.net/michkap/archive/2007/09/10/4847780.html">The empty string sorts the same in every language</A></STRONG></LI>
+<LI>Part 1: <STRONG><A class="" href="http://archives.miloush.net/michkap/archive/2007/09/11/4861436.html" mce_href="http://archives.miloush.net/michkap/archive/2007/09/11/4861436.html">The law of the letter -- e.g. Latin &lt; Greek &lt; Cyrillic</A></STRONG></LI></UL>
+<P>Because the nature of comparisons is such that the essentially question one is asking is <STRONG>which comes first?</STRONG>, it is very natural to think of it as a competition, almost a fight.</P>
+<P>Of course the order is deterministic (minus the odd bug or two) so one could claim that to the extent it is a competition, the game is somewhat rigged. :-)</P>
+<P>I could make the claim that the occasional a &lt; b, b &lt; c, c &lt; a scenario is just an attempt to be fair and make everyone a winner, but I am pretty sure that neither Brandon non Jun (both devs on the SQL team) would buy it....</P>
+<P>Anyway, given that it can be thought of as a fight, it is only natural that you might expect the loser of the fight to be a bit bruised, to have some marks on himself.</P>
+<P>Which brings us to our test strings today:</P>
+<BLOCKQUOTE>
+<P><FONT size=4>aaá</FONT> (or <FONT size=4>aaá</FONT>)</P>
+<P><FONT size=4>aáa</FONT> (or <FONT size=4>aáa</FONT>)</P>
+<P><FONT size=4>áaa</FONT> (or <FONT size=4>áaa</FONT>)</P>
+<P><FONT size=4>aaa</FONT></P></BLOCKQUOTE>
+<P>The strings are basically various random combinations of U+0061 (LATIN SMALL LETTER A) and U+0301 (COMBINING ACUTE ACCENT) on the left and the canonically equivalent versions made with U+0061 (LATIN SMALL LETTER A) and U+00e1 (LATIN SMALL LETTER A WITH ACUTE) on the right. The two strings in each row will have identical sortkey values (if they don't it is a bug), and the sort keys look like this&nbsp;(secondary a.k.a. diacritic weights are <STRONG><FONT color=#ff0000>red</FONT></STRONG>):</P>
+<BLOCKQUOTE><FONT face="Consolas,Lucida Console,Courier New,Courier"><B>
+<P><FONT color=#009900>0e 02 0e 02 0e 02</FONT> 01 <FONT color=#ff0000>02 02 0e</FONT> 01 01 01 00<BR><BR><FONT color=#009900>0e 02 0e 02 0e 02</FONT> 01 <FONT color=#ff0000>02 0e</FONT> 01 01 01 00<BR><BR><FONT color=#009900>0e 02 0e 02 0e 02</FONT> 01 <FONT color=#ff0000>0e</FONT> 01 01 01 00<BR><BR><FONT color=#009900>0e 02 0e 02 0e 02</FONT> 01 01 01 01 00</P></B></FONT></BLOCKQUOTE>
+<P mce_keep="true">Okay, so since I did it all with the default table, the primary weights are identical for <STRONG>all four strings</STRONG>. In order to provide the proper ordering of the strings, the secondary weight for the ACUTE is that <STRONG>0e</STRONG> (actually <STRONG>02</STRONG> + <STRONG>0c</STRONG>, the minimal weight is always added in there), and when a letter in the string does not have a diacritic weight, a minimal weight of <STRONG>02</STRONG> has to be put in as&nbsp;a placeholder so that the proper comparison can be made depending on where the acute actually is.</P>
+<P mce_keep="true">When&nbsp;there are no additional weights, the extra padding is not needed -- which saves some space.</P>
+<P mce_keep="true">Any time a binary comparison (e.g. memcmp) of&nbsp;two of the byte arrays is done, it will return the same results as if the full string comparison is happening.</P>
+<P mce_keep="true">And if you have multiple diacritics, the weights are simply added together -- thus when looking at:</P>
+<BLOCKQUOTE>
+<P mce_keep="true"><FONT face=tahoma,arial,helvetica,sans-serif>s&nbsp;&nbsp;&nbsp; </FONT>(LATIN SMALL LETTER S)<BR><BR><FONT face=tahoma,arial,helvetica,sans-serif>ș&nbsp;&nbsp;&nbsp; </FONT>(LATIN SMALL LETTER S + COMBINING COMMA BELOW)<BR><BR><FONT face=tahoma,arial,helvetica,sans-serif>ś&nbsp;&nbsp;&nbsp; </FONT>(LATIN SMALL LETTER S + COMBINING ACUTE ACCENT)<BR><BR><FONT face=tahoma,arial,helvetica,sans-serif>ș́&nbsp;&nbsp;&nbsp; </FONT>(LATIN SMALL LETTER S + COMBINING COMMA BELOW + COMBINING ACUTE ACCENT)<BR><BR><FONT face=tahoma,arial,helvetica,sans-serif>ș́&nbsp;&nbsp;&nbsp; </FONT>(LATIN SMALL LETTER S + COMBINING ACUTE ACCENT + COMBINING COMMA BELOW)</P></BLOCKQUOTE>
+<P mce_keep="true">The weights:</P>
+<BLOCKQUOTE><FONT face="Consolas,Lucida Console,Courier New,Courier"><B>
+<P mce_keep="true"><FONT color=#009900>0e 91</FONT> 01 01 01 01 00<BR><BR><FONT color=#009900>0e 91</FONT> 01 <FONT color=#ff0000>5b</FONT> 01 01 01 00<BR><BR><FONT color=#009900>0e 91</FONT> 01 <FONT color=#ff0000>0e</FONT> 01 01 01 00<BR><BR><FONT color=#009900>0e 91</FONT> 01 <FONT color=#ff0000>67</FONT> 01 01 01 00<BR><BR><FONT color=#009900>0e 91</FONT> 01 <FONT color=#ff0000>67</FONT> 01 01 01 00</P></B></FONT></BLOCKQUOTE>
+<P mce_keep="true">are figured out with easy addition operations:</P>
+<UL>
+<LI>
+<DIV mce_keep="true">the comma below has a weight of <STRONG>59</STRONG> (that plus the minimal <STRONG>02</STRONG> weight makes <STRONG>5b</STRONG>)</DIV></LI>
+<LI>
+<DIV mce_keep="true">the acute has a weight of&nbsp;<STRONG>0c</STRONG> (that plus the minimal <STRONG>02</STRONG> weight makes <STRONG>0e</STRONG>)</DIV></LI>
+<LI>
+<DIV mce_keep="true">the two diacritics combined have a weight of <STRONG>65</STRONG> (<STRONG>0c</STRONG> plus <STRONG>59</STRONG> plus the minimal <STRONG>02</STRONG> weight makes <STRONG>67</STRONG>)</DIV></LI>
+<LI>
+<DIV mce_keep="true">no matter what order the diacritics are in, they have the same weight -- note that in this case only one of the last two strings is valid, due to canonical reordering rules in Unicode. Can you guess which one is valid and why?</DIV></LI></UL>
+<P mce_keep="true">Easy, right?</P>
+<P mce_keep="true">Now, there is the occasional bug like:</P>
+<UL>
+<LI>
+<DIV mce_keep="true">prior to Vista, there were many times that the canonically equivalent strings did not have the same weight values in locales that were not using the default table -- fixed in Vista</DIV></LI>
+<LI>
+<DIV mce_keep="true">as I described in <STRONG><A class="" href="http://archives.miloush.net/michkap/archive/2006/03/07/545097.html" mce_href="http://archives.miloush.net/michkap/archive/2006/03/07/545097.html">Everybody's doing the wraparound</A></STRONG>, you can combine diacritics in ways to make strings that are not the same appear equal, or to have invalid <STRONG>00</STRONG> or <STRONG>01</STRONG> sentinel-like values</DIV></LI></UL>
+<P mce_keep="true">But for normal strings (in normalization form C pre Vista, any form Vista and beyond), the method works quite well.</P>
+<P mce_keep="true">Looking back to <A class="" href="http://blogs.msdn.com/brettsh" mce_href="http://blogs.msdn.com/brettsh">Brett's</A> original question from <A class="" href="http://archives.miloush.net/michkap/archive/2007/09/10/4847780.html" mce_href="http://archives.miloush.net/michkap/archive/2007/09/10/4847780.html"><STRONG>Part 0</STRONG></A>, we are starting to build up some interesting rules related to sort key size:</P>
+<UL>
+<LI>
+<DIV mce_keep="true">As described in <A class="" href="http://archives.miloush.net/michkap/archive/2007/09/10/4847780.html" mce_href="http://archives.miloush.net/michkap/archive/2007/09/10/4847780.html"><STRONG>Part 0</STRONG></A>, every sort key has a fixed overhead of five bytes per sortkey;</DIV></LI>
+<LI>
+<DIV mce_keep="true">According to <A class="" href="http://archives.miloush.net/michkap/archive/2007/09/11/4861436.html" mce_href="http://archives.miloush.net/michkap/archive/2007/09/11/4861436.html"><STRONG>Part 1</STRONG></A>, most of Unicode will give you two bytes of primary weight per character;</DIV></LI>
+<LI>
+<DIV mce_keep="true">As described above, no matter how many diacritics you pile on a character, it will never add more than one byte per character;</DIV></LI>
+<LI>
+<DIV mce_keep="true">As also described above, the need to pad in order to have the diacritic weights line up can actually add one additional byte per character preceding one with a diacritic.</DIV></LI></UL>
+<P mce_keep="true">So far, that last point is probably the first one that seems potentially concerning -- imagine a string 2mb in size with the last character only having a diacritic -- your sort key would be 2mb bigger!</P>
+<P mce_keep="true">Luckily such sort keys with mostly duplicated values can be readily compressed.... :-)</P>
+<P mce_keep="true">So how are we doing? Is it getting interesting yet?</P>
+<P mce_keep="true">If not, then just stay tuned for Part 3, coming up tomorrow!</P>
+<P mce_keep="true">&nbsp;</P>
+<P mce_keep="true"><FONT color=#ff00ff><EM>This post brought to you by</EM> <FONT size=5>2</FONT> <EM>(<A class="" href="http://www.fileformat.info/info/unicode/char/0032/index.htm" mce_href="http://www.fileformat.info/info/unicode/char/0032/index.htm">U+0032</A>, a.k.a. DIGIT TWO)</EM></FONT></P>
+<hr/><div style="margin-left: 1em"><em>no comments</em></div><hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2008/08/21 <a href="http://archives.miloush.net/michkap/archive/2008/08/21/8883467.html">A&P of Sort Keys, part 14: The Hangul is really getting OLD</a></p><p>2007/10/09 <a href="http://archives.miloush.net/michkap/archive/2007/10/09/5375754.html">A&P of Sort Keys, part 13 (About the function that is too lazy to get it right every time)</a></p><p>2007/10/08 <a href="http://archives.miloush.net/michkap/archive/2007/10/08/5270854.html">A&P of Sort Keys, part 12 (aka Han sorts first!)</a></p><p>2007/09/24 <a href="http://archives.miloush.net/michkap/archive/2007/09/24/5085893.html">A&P of Sort Keys, part 11 (aka It's not like ideographic sorts were developed idiopathically)</a></p><p>2007/09/21 <a href="http://archives.miloush.net/michkap/archive/2007/09/21/5027338.html">A&P of Sort Keys, part 10 (aka I've kana wanted to start talking about Japanese)</a></p><p>2007/09/20 <a href="http://archives.miloush.net/michkap/archive/2007/09/20/5008305.html">A&P of Sort Keys, part 9 (aka Not always transitive, but punctual and punctuating)</a></p><p>2007/09/18 <a href="http://archives.miloush.net/michkap/archive/2007/09/18/4971376.html">A&P of Sort Keys, part 8 (aka You can often think of ignoring weights as a form of ignorance)</a></p><p>2007/09/17 <a href="http://archives.miloush.net/michkap/archive/2007/09/17/4950008.html">A&P of Sort Keys, part 7 (aka You're very thin now, but I can still recognize you)</a></p><p>2007/09/16 <a href="http://archives.miloush.net/michkap/archive/2007/09/16/4937196.html">A&P of Sort Keys, part 6 (aka Relax, be calm, and deCOMPRESS if you are feeling out of sorts)</a></p><p>2007/09/15 <a href="http://archives.miloush.net/michkap/archive/2007/09/15/4924008.html">A&P of Sort Keys, part 5 (aka EXPANSIONing your horizons)</a></p><p>2007/09/14 <a href="http://archives.miloush.net/michkap/archive/2007/09/14/4905625.html">A&P of Sort Keys, part 4 (aka It isn't a race but let's make an EXCEPTION and cross the Finnish line)</a></p><p>2007/09/13 <a href="http://archives.miloush.net/michkap/archive/2007/09/13/4889199.html">A&P of Sort Keys, part 3 (aka Should you let a string make it's case? If so, Y?)</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2007/09/12/4875986.html" title="Having your blog and posting to it, too?">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2007/09/11/4873992.html" title="4400 (*not* &#39;The 4400&#39;)">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2007-09">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2007-09-12">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2007/09/12/4875560.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:37 GMT -->
+</html>

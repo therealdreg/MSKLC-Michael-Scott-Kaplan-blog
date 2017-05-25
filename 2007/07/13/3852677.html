@@ -1,0 +1,49 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2007/07/13/3852677.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:38 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>GetLocaleInfo for other languages?</title></head><body>
+<h1>GetLocaleInfo for other languages?</h1>
+<p><em>by Michael S. Kaplan, published on 2007/07/13 16:59 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2007/07/13/3852677.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P>Serdar asked:</P>
+<BLOCKQUOTE><FONT face="Times New Roman,Times"><I>
+<P>Hi,</P>
+<P>Is it possible to call GetLocaleInfo in a different language? What I’m trying to do is as follows:</P>
+<UL>
+<LI>Installed a Vista English machine.</LI>
+<LI>Installed German and Spanish language packs.</LI>
+<LI>UI language is set to English.</LI>
+<LI>Want to learn what “German” (language name) is in Spanish.</LI></UL>
+<P>I believe I can do this by loading kernel32.dll and using FindResourceEx to find the language I want. However, I just wanted to learn whether there is a shorter way.</P>
+<P>Thanks,<BR>Serdar</P></I></FONT></BLOCKQUOTE>
+<P mce_keep="true">A very good question.&nbsp;And&nbsp;although the <A class="" href="http://msdn2.microsoft.com/library/ms648043.aspx" mce_href="http://msdn2.microsoft.com/library/ms648043.aspx">FindResourceEx</A> route will work, it has&nbsp;several challenges:</P>
+<UL>
+<LI>
+<DIV mce_keep="true">The format of string resources (though I have <A class="" href="http://archives.miloush.net/michkap/archive/2006/05/13/596971.html" mce_href="http://archives.miloush.net/michkap/archive/2006/05/13/596971.html"><STRONG>mentioned</STRONG></A> code that <A class="" href="http://blogs.msdn.com/oldnewthing/" mce_href="http://blogs.msdn.com/oldnewthing/">Raymond</A> has <A class="" href="http://blogs.msdn.com/oldnewthing/archive/2004/01/30/65013.aspx" mce_href="http://blogs.msdn.com/oldnewthing/archive/2004/01/30/65013.aspx">provided</A> to make that easier)</DIV></LI>
+<LI>
+<DIV mce_keep="true">The strings are in a special internal format that uses $ delimiters around items with no documentation on the meaning or format</DIV></LI></UL>
+<P mce_keep="true">A much cooler way was suggested by Erik Fortune (the MUI development manager):</P>
+<BLOCKQUOTE>
+<P mce_keep="true"><EM>If GetLocaleInfo follows the UI language, you should(*) be able to set the thread language to “es-ES” and call GetLocaleInfo.<BR><BR>-- Erik<BR><BR><FONT size=1>(*) I haven’t actually tried it and can think of a number of ways it might break, but it’s probably your best bet.</FONT></EM></P></BLOCKQUOTE>
+<P mce_keep="true">It actually does work (though Erik's response&nbsp;may seem to be&nbsp;a&nbsp;blatant contradiction to the <A class="" href="http://archives.miloush.net/michkap/archive/2005/11/12/491519.html" mce_href="http://archives.miloush.net/michkap/archive/2005/11/12/491519.html">first tester's axiom</A>, though in truth the scenario was tested by others so the fact that he had not tried it was just a good reason for a disclaimer!).</P>
+<P mce_keep="true">All of the following <A class="" href="http://msdn2.microsoft.com/library/bb507201.aspx" mce_href="http://msdn2.microsoft.com/library/bb507201.aspx">LCType</A> values for <A class="" href="http://msdn2.microsoft.com/library/ms776270.aspx" mce_href="http://msdn2.microsoft.com/library/ms776270.aspx">GetLocaleInfo</A>/<A class="" href="http://msdn2.microsoft.com/library/ms776365.aspx" mce_href="http://msdn2.microsoft.com/library/ms776365.aspx">GetLocaleInfoEx</A>&nbsp;can be expected to return localized results that could be impacted by changing a thread's UI language:</P>
+<UL>
+<LI>
+<DIV mce_keep="true">LOCALE_SCOUNTRY</DIV></LI>
+<LI>
+<DIV mce_keep="true">LOCALE_SLANGDISPLAYNAME</DIV></LI>
+<LI>
+<DIV mce_keep="true">LOCALE_SLANGUAGE</DIV></LI>
+<LI>
+<DIV mce_keep="true">LOCALE_SSORTNAME</DIV></LI></UL>
+<P mce_keep="true">As a fun experiment if you have lots of UI languages installed, you can compare&nbsp;the first three&nbsp;values to the&nbsp;following values for that locale in that language:</P>
+<UL>
+<LI>
+<DIV mce_keep="true">LOCALE_SNATIVECTRYNAME</DIV></LI>
+<LI>
+<DIV mce_keep="true">LOCALE_SNATIVELANGNAME</DIV></LI></UL>
+<P mce_keep="true">Any time the translation is&nbsp;different, you have found either a localization bug or a core bug! :-)</P>
+<P mce_keep="true">&nbsp;</P>
+<P mce_keep="true"><FONT color=#ff00ff><EM>This post brought to you by</EM> <FONT face="Microsoft Himalaya,Code2000,Arial Unicode MS" size=6>྅</FONT>&nbsp; <EM>(<A class="" href="http://www.fileformat.info/info/unicode/char/0f85" mce_href="http://www.fileformat.info/info/unicode/char/0f85">U+0f85</A>, a.k.a. TIBETAN MARK PALUTA)</EM></FONT></P>
+<hr/><div style="margin-left: 1em"><em>no comments</em></div><hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2007/07/14/3869052.html" title="Fractions may be your friends, but they won&#39;t pick you up at the airport!">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2007/07/13/3849288.html" title="What does DAO have that ADO/ADOx/JRO do not?">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2007-07">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2007-07-13">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2007/07/13/3852677.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:38 GMT -->
+</html>

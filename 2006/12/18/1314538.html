@@ -1,0 +1,19 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2006/12/18/1314538.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:38 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>WinForms != WebForms</title></head><body>
+<h1>WinForms != WebForms</h1>
+<p><em>by Michael S. Kaplan, published on 2006/12/18 03:03 -05:00, original URI: http://blogs.msdn.com/b/michkap/archive/2006/12/18/1314538.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P>The question Peter asked was:</P>
+<BLOCKQUOTE><FONT face="Times New Roman,Times" size=2>
+<P><EM>Is there a DateTime Difference on WinForm and WebForm?<BR><BR>I write a simply code to see the difference:</EM><BR><BR><FONT face="Consolas,Lucida Console,courier new,courier"><B>&nbsp;&nbsp;&nbsp;&nbsp;this.label1.Text = DateTime.Now.ToString();<BR>&nbsp;&nbsp;&nbsp;&nbsp;this.label1.Text += " " + System.Globalization.CultureInfo.CurrentCulture.ToString();<BR></B></FONT><BR><EM>The output of WinForm is “28/11/2006 11:03:21 en-GB”, while WebForm is “11/28/2006 11:02:55 AM en-US”.<BR><BR>Even I restart my computer, the difference is still on.<BR><BR>Can you explain this difference, and how to avoid it?</EM>&nbsp;</P></FONT></BLOCKQUOTE>
+<P>Well, the fundamental issue is of course that in general, WinForms are not WebForms. :-)</P>
+<P>In particular, they run under different user accounts, which are of course not guaranteed to be set to the same user default locale in unmanaged code or the same CurrentCulture in manged code.</P>
+<P>In addition, one is run on the server side on a web server, whilc the other is run on the client side in an application.</P>
+<P>In general, people tend to not change the settings in non-interactive accounts even on their own machines&nbsp;and people tend to usually not have much control over a web server's accounts anyway, so it is quite common to see a WebForm return an en-us result even if very non-en-us results might be otherwise expected.</P>
+<P>Given that, I would say that relying on CurrentCulture in such cases (unless a web app sets it explicitly to match accept language or other settings) is probably a mistake....</P>
+<P mce_keep="true">&nbsp;</P>
+<P><FONT color=#ff00ff><EM>This post brought to you by</EM>&nbsp;<FONT size=4>£</FONT> <EM>(<A class="" href="http://www.fileformat.info/info/unicode/char/00a3" mce_href="http://www.fileformat.info/info/unicode/char/00a3">U+00a3</A>, a.k.a. POUND SIGN)</EM></FONT></P>
+<hr/><div style="margin-left: 1em"><em>no comments</em></div><hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2006/12/19/1326431.html" title="Where are the per-user keyboard layouts?">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2006/12/18/1314233.html" title="Don&#39;t get into the zone too soon....">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2006-12">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2006-12-18">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2006/12/18/1314538.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:38 GMT -->
+</html>

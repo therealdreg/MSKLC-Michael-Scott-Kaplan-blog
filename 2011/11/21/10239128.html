@@ -1,0 +1,38 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2011/11/21/10239128.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>One disadvantage to being supplementary...or Japanese?</title></head><body>
+<h1>One disadvantage to being supplementary...or Japanese?</h1>
+<p><em>by Michael S. Kaplan, published on 2011/11/21 07:01 -05:00, original URI: http://blogs.msdn.com/b/michkap/archive/2011/11/21/10239128.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<p>Meanwhile, over on stack<strong>overflow</strong>, there was a <a href="http://stackoverflow.com/questions/8202259/unicode-alphanumeric-character-range/8202313#8202313">recent thread</a>,&nbsp;started by DeadMG:</p>
+<p style="padding-left: 60px;"><em><span style="font-family: times new roman,times;">I'm looking at the <a href="http://msdn.microsoft.com/en-us/library/windows/desktop/ms647483(v=VS.85).aspx" rel="nofollow"><span style="color: #0077cc;" color="#0077cc">IsCharAlphaNumeric</span></a> Windows API function. As it only takes a single TCHAR, it obviously can't make any decisions about surrogate pairs for UTF16 content. Does that mean that there are no alphanumeric characters that are surrogate pairs?</span></em></p>
+<p>Unfortunately, neither the IsChar* functions in USER32.DLL nor the NLS GetStringTypeW function underneath them can handle supplementary characters. There is no Win32 way to get the info.</p>
+<p>You can use managed code, and the CharUnicodeInfo class I first mentioned in <strong><a title="A little bit about the new CharUnicodeInfo class" href="http://archives.miloush.net/michkap/archive/2005/01/28/362305.html">A little bit about the new CharUnicodeInfo class</a></strong>:</p>
+<p style="padding-left: 30px;"><span style="font-family: times new roman,times;">Note that every one of these methods has two overrides -- one that accepts a single System.Char, and the other which takes a <a title="System" href="http://msdn.microsoft.com/library/en-us/cpref/html/frlrfsystemstringclasstopic.asp" target="_blank"><strong><span style="color: #006bad;" color="#006bad">System.String</span></strong></a> and an index value. The latter case is for dealing with supplementary characters, which are made up of a high and low surrogate (also known as a surrogate pair).</span></p>
+<p>Unfortunately, even functions like <a href="http://msdn.microsoft.com/library/dd318119">GetStringTypeW</a>&nbsp;(which takes whole strings and could in theory return info about surrogate pairs), don't handle them.</p>
+<p>Back in 2005 I wrote a speclet (what people in Windows today would call a "one pager"), that did two things:</p>
+<ul>
+<li>Add a new CT_CTYPE4 character type that was literally base on Unicode general category (rather than the crazy Perl script used to define the current CT_CTYPE* values based on Unicode), and</li>
+<li>Define a special flag to change the current WCHAR (UCS-2) based processing to one that would properly recognize surrogate pairs (UTF-16) to return properties based on supplementary characters when they were there.</li>
+</ul>
+<p>I even had a prototyped version of this change, which wasn't actually accepted for Longhorn/Vista and wasn't picked up for Windows 7.</p>
+<p><em>In fact, it isn't in Windows 8, either....</em></p>
+<p>Win32 simply refuses to see beyond the BMP.</p>
+<p>Raymond Chen asked me&nbsp;a somewhat related question that occurred to him when he was thinking about all of this:</p>
+<p style="padding-left: 60px;"><span style="font-size: small;" size="3"><span style="font-family: Calibri;" face="Calibri">Why does IsCharAlphanumeric check for C3_KATAKANA|C3_HIRAGANA and explicitly exclude them? In other words is it</span></span></p>
+<p style="padding-left: 60px;"><span style="font-size: small;" size="3"><span style="font-family: Calibri;" face="Calibri">* Katakana and Hiragana characters are genuinely alphabetic, but IsCharAlphanumeric wants to reject them because &lt;obscure reason&gt;, -or-<br />* </span></span><span style="font-size: small;" size="3"><span style="font-family: Calibri;" face="Calibri">Katakana and Hiragana characters are not genuinely alphabetic, but for &lt;obscure reason&gt;, they are reported as C1_ALPHA, so IsCharAlphanumeric needs to filter them out.</span></span></p>
+<p style="padding-left: 60px;"><span style="font-family: Calibri; font-size: small;" size="3" face="Calibri">From looking at </span><a href="http://www.fileformat.info/info/unicode/char/30d8/index.htm"><span style="color: #0000ff; font-family: Calibri; font-size: small;" size="3" color="#0000ff" face="Calibri">http://www.fileformat.info/info/unicode/char/30d8/index.htm</span></a><span style="font-size: small;" size="3"><span style="font-family: Calibri;" face="Calibri"> it appears that Katakana and Hiragana (or at least character 30d8) are considered Letters by Unicode. I.e., we are in case 1 above. So what are the &lt;obscure reasons&gt; that IsCharAlphanumeric wants to reject them?</span></span></p>
+<p>This weird "Kana isn't alphabetic" approach is something I previously talked about in <strong><a title="IsCharSomethingOrOther?" href="http://archives.miloush.net/michkap/archive/2007/06/19/3396819.html">IsCharSomethingOrOther?</a></strong> and <strong><a title="Is Kana 'alphabetic' ? Depends on who you ask...." href="http://archives.miloush.net/michkap/archive/2005/09/12/463991.html">Is Kana 'alphabetic' ? Depends on who you ask....</a></strong></p>
+<p>Summary; there is no good reason; just some random person who was burned taking Japanese lessons nearly two decades ago and decided to take it out on everyone else....</p>
+<p>Maybe he flunked out of the class or something.</p>
+<p>Luckily,&nbsp;<a href="http://msdn.microsoft.com/library/dd318119">GetStringTypeW</a>&nbsp;gives the right answer here, for Japanese at least. Though not so much for supplementary characters (including the 200-odd Extension B ideographs in JIS X 0213.</p>
+<p>Looking ahead to Windows 8 and modern, the CharUnicodeInfo class should be available in the sandbox, which covers the future, at least.</p>
+<p>But for native code, we really don't give a solution.</p>
+<p>CT_CTYPE4 FTW? :-)</p>
+<hr/><p><strong>Brendan Elliott</strong> on 25 Nov 2011 9:41 AM:</p><div style="margin-left: 1em"><p>Yeah, it makes no sense linguistically for Hiragana &amp; Katakana be exclused by IsCharAlphanumeric...</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 25 Nov 2011 2:26 PM:</p><div style="margin-left: 1em"><p>I don&#39;t suppose your team would be interested in picking up my speclet, Brendan? :-)</p>
+</div>
+<hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2011/11/22/10239572.html" title="The evolving Story of Locale Support, part 10: Perhaps it is best to think of it as unintelligent design?">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2011/11/18/10238393.html" title="Every character process has a story, too. And some are better than others....">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2011-11">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2011-11-21">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2011/11/21/10239128.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+</html>

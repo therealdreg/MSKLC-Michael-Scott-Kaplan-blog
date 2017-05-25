@@ -1,0 +1,54 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2007/12/12/6731510.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:36 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>ISNUMERIC ISSTUPID (and ISGONNAGETITSASSKICKED if it isn't careful)</title></head><body>
+<h1>ISNUMERIC ISSTUPID (and ISGONNAGETITSASSKICKED if it isn't careful)</h1>
+<p><em>by Michael S. Kaplan, published on 2007/12/12 10:16 -05:00, original URI: http://blogs.msdn.com/b/michkap/archive/2007/12/12/6731510.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P><EM><FONT color=#ff0000>I had a regular<FONT size=1><SUP>1</SUP></FONT> reader the other day tell me that I needed to stop writing about SQL Server so much. Since this person is on the SQL Server team, there is probably some subtext here that I am missing. But I think this is the last one I have on tap for the moment<FONT size=1><SUP>2</SUP></FONT>. :-)</FONT></EM></P>
+<P>In relationships, there is a truism that&nbsp;it is not in a person's best interest to be markedly happier than the least happiest person in the relationship.</P>
+<P>You may&nbsp;find in the long run that the delta between the two&nbsp;happiness levels is a material force that is expended&nbsp;as energy used to help equalize the two, usually by bringing down the happier of the two....</P>
+<P>Now T-SQL functions in SQL Server lack self awareness, but they do have a trait best thought of as intelligence.</P>
+<P>Which is to say, it is beyond them to be sentient, but it is not beyond them to be stupid.</P>
+<P>The other day I had someone send me email asking if I had seen the <A class="" href="https://connect.microsoft.com/SQLServer/feedback/ViewFeedback.aspx?FeedbackID=177308" mce_href="https://connect.microsoft.com/SQLServer/feedback/ViewFeedback.aspx?FeedbackID=177308">article</A> from the Connect site entitled <A class="" title=https://connect.microsoft.com/SQLServer/feedback/ViewFeedback.aspx?FeedbackID=177308&amp;wa=wsignin1.0>Enhancement to ISNUMERIC</A> with the following description:</P>
+<BLOCKQUOTE>
+<P><EM><FONT face="times new roman,times">ISNUMERIC validates against a wide range of numeric formats so a return value of 1 (True) does not guarantee that CONVERT(type,string) will work for every numeric type. For example:<BR><BR>ISNUMERIC(',100,00.25') returns 1 but CONVERT(type,',100,00.25') and fails when type is INT or FLOAT but succeeds when type is MONEY. <BR><BR>Elsewhere in the feedback on this site, and on the internet, similar problems have been reported - eg with strings such as '10.20D-30' for which ISNUMERIC returns 1 and CONVERT works when type is FLOAT but fails when type is INT.<BR><BR>This behaviour has been observed on SQL Server 2000, MSDE and SQL Server 2005 Express.</FONT></EM></P></BLOCKQUOTE>
+<P>A very good point, really.</P>
+<P>I'll reword it a bit, though....</P>
+<P>As currently implemented, <A class="" href="http://msdn2.microsoft.com/library/ms186272.aspx" mce_href="http://msdn2.microsoft.com/library/ms186272.aspx">ISNUMERIC</A> really ISSTUPID.</P>
+<P>Now this is different than <A class="" href="http://msdn2.microsoft.com/library/ehs9h2x9.aspx" mce_href="http://msdn2.microsoft.com/library/ehs9h2x9.aspx">VBScript's IsNumeric</A> function and <A class="" href="http://msdn2.microsoft.com/library/6cd3f6w1.aspx" mce_href="http://msdn2.microsoft.com/library/6cd3f6w1.aspx">Visual Basic's IsNumeric</A> function.</P>
+<P>They are&nbsp;not rocket scientists either&nbsp;-- in kind of the same way.</P>
+<P>In each case, the function shares validation with every single possible numeric or somewhat numeric datatype, and if any one or more of them are valid, the function will return TRUE (or 1 in the <A class="" href="http://msdn2.microsoft.com/library/ms186272.aspx" mce_href="http://msdn2.microsoft.com/library/ms186272.aspx">ISNUMERIC</A> case).</P>
+<P>So if they all behave the same way, why&nbsp;would I call&nbsp;the T-SQL function <STRONG>stupid</STRONG> while not doing the same with the VB/VBS functions?</P>
+<P>Because in the case of VB/VBS functions, there is the fact that all of the actual conversions one might subsequently use to convert the data to a number often tend to be just as stupid as their IsNumeric counterparts, and thus the stupidity of the like methods are all equal.</P>
+<P>It's like if you hang out with Einstein, you probably aren't Homer Simpson (though if you are hanging out with the gang at Moe's, being Homer Simpson might be just fine!).</P>
+<P>It is just common sense -- if one is going to be stupid, make sure those who depend on you are just as stupid and neither one of you will be unhappy with the other!</P>
+<P>So in the long run, a function that does nothing other than saying "this could be shoved into some kind(s) of numbers but which or how many is not something I will tell you", if it were sentient, would be the kind of function that would get its ass kicked&nbsp;by a lot of data that passed by. </P>
+<P>But since it is not sentient, we'll just call <A class="" href="http://msdn2.microsoft.com/library/ms186272.aspx" mce_href="http://msdn2.microsoft.com/library/ms186272.aspx">ISNUMERIC</A>&nbsp;stupid....</P>
+<P>Now I have to say the proposed solution is not one that has any chance of exciting me. :-(</P>
+<BLOCKQUOTE>
+<P><SPAN><FONT face="times new roman,times">Add an optional type parameter to ISNUMERIC so a developer can easily test for a specific format number prior to applying the CAST or CONVERT function to it. This not only avoids developers having to write their own equivalent function, but also alerts them to these problems with the current implementation where all possible numeric formats are acceptable.<BR><BR>Hence:<BR><BR>&nbsp;&nbsp;&nbsp; ISUMERIC(',100,00.20',INT) would return 0 and<BR>&nbsp;&nbsp;&nbsp; ISUMERIC(',100,00.20',MONEY) would return 1 and<BR><BR>If the optional type parameter was omitted the current behaviour would remain to ensure back-ward compatability.<BR><BR>Until this is implemented, it would be good if some explanatory examples and notes could be added to the documentation to alert developers to these situations.</FONT></SPAN></P></BLOCKQUOTE>
+<P>In my&nbsp;opinion, this is not&nbsp;really stellar (I mean the suggested fix, not the documentation) -- if you knew the type or types you wanted to test and were willing to try them serially, then you can pretty much do it yourself with CAST or CONVERT calls and look at the error levels. Nothing special needed and this is mere syntactic sugar.</P>
+<P>Why not a function that either returns a flag value with the most restrictive numeric type that can be supported&nbsp;or alternately&nbsp;a bitmask of those flags containing all the types that the expression could fit into? </P>
+<P>Now one of those ideas might&nbsp;be a cool enhancement to consider.</P>
+<P>In the sentience test, if you ask a function "is this numeric?" and it tells you "yes, for&nbsp;INT and up" or "yes, but only for MONEY and SMALLMONEY" or "yes, for everything but UINT" then it is unlikely to be considered stupid. It also seems quite eager to help like a little puppy dog or something.</P>
+<P>And it is unlikely to get its ass kicked by all of the&nbsp;data passing by.... :-)</P>
+<P mce_keep="true">&nbsp;</P>
+<P><FONT size=1>1 - And when I say regular, I mean irregular. But in a nice way....<BR>2 - You're welcome.</FONT></P>
+<P mce_keep="true">&nbsp;</P>
+<P><FONT color=#ff00ff><EM>This post brought to you by</EM><FONT size=5> ₡ </FONT><EM>(<A class="" href="http://www.fileformat.info/info/unicode/char/20a1" mce_href="http://www.fileformat.info/info/unicode/char/20a1">U+20a1</A>, aka COLON SIGN)</EM></FONT></P>
+<hr/><p><a id="6748548" href="#6748548">#</a> <strong>ReallyEvilCanine</strong> on 12 Dec 2007 11:32 AM:</p><div style="margin-left: 1em"><p>The first eight words (plus the footnote) had me hoping my question would finally be answered. Meh. Does ISSNUMERIC recognise the daiji 壱 弐 and 参 (&quot;formal numbers&quot; for 1, 2 and 3)? If so, are other national number sets and exceptions recognised?</p></div>
+<p><a id="6748666" href="#6748666">#</a> <strong>Michael S. Kaplan</strong> on 12 Dec 2007 11:50 AM:</p><div style="margin-left: 1em"><P>No, none of them are, at least not in SQL Server or COM or .NET....</P></div>
+<p><a id="6751154" href="#6751154">#</a> <strong>Dean Harding</strong> on 12 Dec 2007 4:07 PM:</p><div style="margin-left: 1em"><p>&quot;usually by bringing down the happier of the two....&quot;</p>
+<p>Feeling cynical? ;)</p>
+</div>
+<p><a id="6751172" href="#6751172">#</a> <strong>Michael S. Kaplan</strong> on 12 Dec 2007 4:08 PM:</p><div style="margin-left: 1em"><p>Always!</p>
+</div>
+<p><a id="6751346" href="#6751346">#</a> <strong>Ruben</strong> on 12 Dec 2007 4:27 PM:</p><div style="margin-left: 1em"><p>Unfortunately, there is no way to catch errors when trying to convert numbers when you're using CAST/CONVERT as part of a DML statement such as SELECT. Granted, you've got an ugly database when you really need to do such a thing, but still, the world ain't perfect. For example: select all records where the field presumed to be a number isn't. You need a functioning ISNUMERIC for that. :-(</p></div>
+<p><a id="6751639" href="#6751639">#</a> <strong>John Cowan</strong> on 12 Dec 2007 4:53 PM:</p><div style="margin-left: 1em"><p>Would it be too much to ask why the bleeding H a money value is even allowed to have a leading comma, or is that just one of those financial mysteries that allows Hollywood films to gross zillions of dollars and yet show no net profits?</p></div>
+<p><a id="6754871" href="#6754871">#</a> <strong>Michael S. Kaplan</strong> on 12 Dec 2007 11:03 PM:</p><div style="margin-left: 1em"><p>Good question John -- I'm not sure. Probably some backcompat thing they are stuck with now?</p>
+</div>
+<p><a id="6754874" href="#6754874">#</a> <strong>Michael S. Kaplan</strong> on 12 Dec 2007 11:04 PM:</p><div style="margin-left: 1em"><p>Hey Ruben -- you could always wrap it with an sproc and call that from the SELECT....</p>
+</div>
+<hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2007/12/12/6742301.html" title="SiaO as The Red Carpet (aka Characters just want to be seen)">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2007/12/11/6730684.html" title="In SQL Server, there is the rest of Unicode (aka the SiaO Incompleteness Theorem)">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2007-12">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2007-12-12">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2007/12/12/6731510.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:36 GMT -->
+</html>

@@ -1,0 +1,46 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2007/09/01/4696229.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:37 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>There is no function to return the culturally sensitive length of time before the duration functionality will be finished</title></head><body>
+<h1>There is no function to return the culturally sensitive length of time before the duration functionality will be finished</h1>
+<p><em>by Michael S. Kaplan, published on 2007/09/01 21:06 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2007/09/01/4696229.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P><EM>(I will&nbsp;explain the title at the end of this post if you aren't sure yet what it means!)&nbsp;</EM></P>
+<P>In Vista, a new function was added to display duration -- <A class="" href="http://msdn2.microsoft.com/library/ms776372.aspx" mce_href="http://msdn2.microsoft.com/library/ms776372.aspx">GetDurationFormat</A> (and of course the name-based version, <A class="" href="http://msdn2.microsoft.com/library/ms776364.aspx" mce_href="http://msdn2.microsoft.com/library/ms776364.aspx">GetDurationFormatEx</A>, for all of the people who have noticed that <STRONG><A class="" href="http://archives.miloush.net/michkap/archive/2007/07/23/4021529.html" mce_href="http://archives.miloush.net/michkap/archive/2007/07/23/4021529.html">LCIDs kind of suck</A></STRONG>).</P>
+<P>Both functions have some interesting characteristics. For example, both of them <STRONG>only support Unicode</STRONG>. Neither has an "ANSI" version. Like I have been saying, this is the future ad in my opinion it is about time. :-)</P>
+<P>Another interesting fact is that they support not only the hour/minute/second values one would expect but they also can move up into days and down into fractional seconds (in fact as far down as being accurate to within 100 nanoseconds!).</P>
+<P>The preceding two points are cool as hell and I am really glad that they are true.</P>
+<P>There is also a third fact, one that is slightly less impressive....</P>
+<P>And that fact? </P>
+<P>Well, it turns out that only a few of the locales actually include a format string&nbsp;option that includes DAYS or FRACTIONAL SECONDS:</P><FONT face="Consolas,Lucida Console,Courier New,Courier">
+<UL>
+<LI>zh-CN&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; -- d'd 'h'h 'm'm 's's'.fff</LI>
+<LI>en-US&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; -- d'd 'h'h 'm'm 's's'.fff</LI>
+<LI>bo-CN&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; -- d'H'mm'ss'.fff</LI>
+<LI>ne-NP&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; -- d'd 'h'h 'm'm 's's'.fff</LI>
+<LI>mn-Mong-CN -- d'H'mm'ss'.fff</LI>
+<LI>fil-PH&nbsp;&nbsp;&nbsp;&nbsp; -- d'd 'h'h 'm'm 's's'.fff</LI>
+<LI>si-LK&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; -- d'd 'h'h 'm'm 's's'.fff</LI>
+<LI>kl-GL&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; -- HH:mm:ss:fff<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; H:mm:ss:fff</LI>
+<LI>iu-Cans-CA -- h:mm:ss:ff</LI>
+<LI>ug-CN&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; -- d'H'mm'ss'.fff</LI>
+<LI>es-US&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; -- d'd 'h'h 'm'm 's's'.fff</LI>
+<LI>am-ET&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; -- dd HH:mm:ss.fff</LI>
+<LI>ii-CN&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; -- d'H'mm'ss'.fff</LI>
+<LI>ha-Latn-NG -- d'd 'h'h 'm'm 's's'.fff</LI>
+<LI>yo-NG&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; -- d'd 'h'h 'm'm 's's'.fff</LI>
+<LI>ig-NG&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; -- d'd 'h'h 'm'm 's's'.fff</LI>
+<LI>rw-RW&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; -- d'd 'h'h 'm'm 's's'.fff</LI></UL></FONT>
+<P mce_keep="true">And then there is one that looks potentially broken with invalid tags that I guess are just going to be treated as literals:</P><FONT face="Consolas,Lucida Console,Courier New,Courier">
+<UL>
+<LI>as-IN&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; -- h tt m tt s tt<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; hh tt mm tt ss tt<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;H tt m tt S tt<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; HH tt mm tt SS tt</LI></UL></FONT>
+<P>Maybe that is expected -- any Assamese folks wish&nbsp;to comment on this? :-)&nbsp;</P>
+<P>You can retrieve the data by calling either <A class="" href="http://msdn2.microsoft.com/library/ms776270.aspx" mce_href="http://msdn2.microsoft.com/library/ms776270.aspx">GetLocaleInfo</A> or <A class="" href="http://msdn2.microsoft.com/library/ms776365.aspx" mce_href="http://msdn2.microsoft.com/library/ms776365.aspx">GetLocaleInfoEx</A> with the <A class="" href="http://msdn2.microsoft.com/library/bb507201.aspx#LOCALE_SDURATION" mce_href="http://msdn2.microsoft.com/library/bb507201.aspx#LOCALE_SDURATION">LOCALE_SDURATION</A> lctype value, at which point you will notice an additional problem -- you can't actually find any of the above strings -- the first string in a list of them per locale is the only one ever used or returned, and with the exception one of the maybe odd-looking Assamese strings, none of them is the first string in the list,&nbsp;so you can't ever get at this data....</P>
+<P>Obviously a bug to fix (perhaps a new enumeration function to get them all back since several locales include more than one, or else some new lctype that will return all of the available formats in some delimited format....</P>
+<P>But for now, if something is not lasting very long or is lasting for a very long time, or if you need better precision, you are kind of on your own finding the culturally appropriate format string to use.</P>
+<P>Please feel free to use what is given above until an unless something better comes along, though be warned that since this data has never been exposed anywhere, it has likely never been seen in use anywhere and thus not subject ti the kind of scrutiny that quality data often requires. :-)</P>
+<P>For the title, I don't know the planned ship date of the next version of Windows or even the next service pack, but I am sure of one thing -- it would not be convenient to count that time in hours, minutes, and seconds. So clearly the current support in&nbsp;<A class="" href="http://msdn2.microsoft.com/library/ms776372.aspx" mce_href="http://msdn2.microsoft.com/library/ms776372.aspx">GetDurationFormat</A>/<A class="" href="http://msdn2.microsoft.com/library/ms776364.aspx" mce_href="http://msdn2.microsoft.com/library/ms776364.aspx">GetDurationFormatEx</A>&nbsp;will not be able to give you a nicely formatted string estimating the time for a fix. You'll have to supply your own....</P>
+<P mce_keep="true">&nbsp;</P>
+<P><FONT color=#ff00ff><EM>This post brought to you by</EM> </FONT></P>
+<hr/><div style="margin-left: 1em"><em>no comments</em></div><hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2007/09/02/4701403.html" title="When the NLS keyboard&#39;s notions about LCIDs aren&#39;t the same as in NLS, part #1">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2007/09/01/4693025.html" title="We&#39;re confusing internationalization and localization, AGAIN">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2007-09">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2007-09-01">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2007/09/01/4696229.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:37 GMT -->
+</html>

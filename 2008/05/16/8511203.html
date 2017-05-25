@@ -1,0 +1,32 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2008/05/16/8511203.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:36 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>My Spidey senses blame the rogue text editor</title></head><body>
+<h1>My Spidey senses blame the rogue text editor</h1>
+<p><em>by Michael S. Kaplan, published on 2008/05/16 10:01 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2008/05/16/8511203.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P>Via the Contact link, someone with the handle of BP asked me:</P>
+<BLOCKQUOTE>
+<P><FONT face="times new roman,times"><EM>How come MSKLC source files break if you edit them in a text editor although they are plain text files? At least deadkeys would be much easier to edit that way...<BR><BR>Regards,<BR>/BP</EM></FONT></P></BLOCKQUOTE>
+<P>My first reaction was to say that the claim wasn't true and that I have given&nbsp;instructions on how to&nbsp;work outside of MSKLC.EXE&nbsp;for&nbsp;specific features&nbsp;in posts like the following:</P>
+<UL>
+<LI><A class="" href="http://archives.miloush.net/michkap/archive/2006/09/26/771554.html" mce_href="http://archives.miloush.net/michkap/archive/2006/09/26/771554.html"><STRONG>In case you have a yen to extend your keyboard (or at least want a yen?)</STRONG></A></LI>
+<LI><A class="" href="http://archives.miloush.net/michkap/archive/2006/10/07/799605.html" mce_href="http://archives.miloush.net/michkap/archive/2006/10/07/799605.html"><STRONG>Pimping your Brazilian keyboard</STRONG></A></LI>
+<LI><A class="" href="http://archives.miloush.net/michkap/archive/2007/04/11/2086928.html" mce_href="http://archives.miloush.net/michkap/archive/2007/04/11/2086928.html"><STRONG>WinNT keyboard file source?</STRONG></A></LI></UL>
+<P>some of which directly advocate and describe the process of modifying .KLC files.</P>
+<P>So of course it works! :-)</P>
+<P>But the parser of these files is <STRONG>very</STRONG> unforgiving.</P>
+<P>Well, it is forgiving in the sense that it will not crash if it has trouble with parsing the file. But it will fail the building operation if anything was modified in such a way as to make the parsing work not as well.</P>
+<P>Believe it or not, this is almost identical to the format that was first used to build keyboards in Windows (NT-based versions)&nbsp;over a decade ago. And it was just as finicky then (and there was no tool to build the files either; they were all hand-generated, usually in Notepad!).</P>
+<P>You can even look at the files in Notepad if you are curious. They are text files, Unicode text files in UTF-16 LE encoding&nbsp;scheme with a BOM.</P>
+<P>Now BP never said what text editor was being used, but this might be the source of his problems, actually. Because the file is opened with a simple call to <A class="" href="http://msdn.microsoft.com/library/f2ke0fzy.aspx" mce_href="http://msdn.microsoft.com/library/f2ke0fzy.aspx">the StreamReader(string) overload</A> where no Encoding parameter is there. Guessing is done based on whether the BOM is there, and little else (the tool will open but not save non-Unicode files too, but there is no code in the tool that handles this case so it definitely all in the StreamReader).</P>
+<P>(I don't know if this is documented or not, but it has been working for every version of MSKLC so far without requiring <A class="" href="http://msdn.microsoft.com/library/9y86s1a9.aspx" mce_href="http://msdn.microsoft.com/library/9y86s1a9.aspx">the StreamReader(string, bool) overload</A> to be called, so I assume the one with just the file name calls this other one setting that parameter to <STRONG>true</STRONG>. YMMV though I tend to doubt it...).</P>
+<P>So, the primary guess of my psychic powers is that the "text editor" is not saving the file out with a BOM, with a secondary guess that a change that breaks the format is happening....</P>
+<P><FONT color=#ff00ff><EM>This blog brought to you by</EM><FONT size=6> ⌨ </FONT><EM>(<A class="" href="http://www.fileformat.info/info/unicode/char/2328" mce_href="http://www.fileformat.info/info/unicode/char/2328">U+2328</A>, aka KEYBOARD)</EM></FONT></P>
+<hr/><p><strong>Michael Madsen</strong> on 16 May 2008 12:44 PM:</p><div style="margin-left: 1em"><p>Just for reference, using Reflector shows that StreamReader(string) does indeed call StreamReader(string, true), which in turn calls StreamReader(string, Encoding.UTF8, true, 0x400) (.NET 2.0, .NET 1.1 does the same, but without the detour through StreamReader(string, bool)).</p>
+<p>StreamReader will use UTF-8 as a fallback if there's no BOM, due to the second parameter in the &quot;final&quot; call.</p></div>
+<p><strong>Wyatt</strong> on 16 May 2008 2:26 PM:</p><div style="margin-left: 1em"><p>You mean UTF-16, not UTF-6, right? &nbsp;Or is there a 6 bit encoding that I'm not aware of?</p></div>
+<p><strong>Michael S. Kaplan</strong> on 16 May 2008 3:43 PM:</p><div style="margin-left: 1em"><p>Yes, I meant UTF-16. :-)</p>
+</div>
+<hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2008/05/19 <a href="http://archives.miloush.net/michkap/archive/2008/05/19/8518545.html">Everyone seems averse to the BOM these days; Should we blame TSA? :-)</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2008/05/17/8516386.html" title="Do your utmost to be conventional (and then pimp, q.d. or p.r.n.)">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2008/05/16/8510550.html" title="The risk of &quot;Hebrew Smatter&quot;">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2008-05">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2008-05-16">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2008/05/16/8511203.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:36 GMT -->
+</html>

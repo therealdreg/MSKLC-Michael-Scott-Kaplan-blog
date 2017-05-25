@@ -1,0 +1,95 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2008/10/05/8977109.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:35 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Can I get your [font]signature on this, please?</title></head><body>
+<h1>Can I get your [font]signature on this, please?</h1>
+<p><em>by Michael S. Kaplan, published on 2008/10/05 12:31 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2008/10/05/8977109.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<p>Now regular readers know I have talked about the <a href="http://msdn.microsoft.com/library/ms776424.aspx" mce_href="http://msdn.microsoft.com/library/ms776424.aspx">FONTSIGNATURE structure</a> and the <a href="http://msdn.microsoft.com/library/ms776437.aspx" mce_href="http://msdn.microsoft.com/library/ms776437.aspx">LOCALESIGNATURE structure</a> in the past, starting way back in 2005 in blogs like <b><a href="http://archives.miloush.net/michkap/archive/2005/10/22/483573.html" mce_href="http://archives.miloush.net/michkap/archive/2005/10/22/483573.html">Parameter confusion #2a</a></b> and <b><a href="http://archives.miloush.net/michkap/archive/2005/12/19/505576.html" mce_href="http://archives.miloush.net/michkap/archive/2005/12/19/505576.html">It isn't a FONTSIGNATURE, darn it!</a></b>, both of which refer to the confusion between the two structures and some of the consequences thereof.</p>
+<p>At the same time many offhand observations were made, though without too much follow-up.<br></p>
+<p>Time to dig in a little deeper!</p>
+<p>To start, the <a href="http://msdn.microsoft.com/library/ms776424.aspx" mce_href="http://msdn.microsoft.com/library/ms776424.aspx">FONTSIGNATURE structure</a> looks like this:</p>
+<blockquote>
+<p><font face="Consolas,Lucida Console,Courier New,Courier,Fixed"><b>typedef struct tagFONTSIGNATURE<br>{<br>&nbsp;&nbsp;&nbsp; DWORD fsUsb[4];<br>&nbsp;&nbsp;&nbsp; DWORD fsCsb[2];<br>} FONTSIGNATURE, *PFONTSIGNATURE,FAR *LPFONTSIGNATURE;</b></font><br></p></blockquote>
+<p>And you can compare this to some bits of the <a href="http://www.microsoft.com/typography/otspec/os2.htm" mce_href="http://www.microsoft.com/typography/otspec/os2.htm">OS/2 &amp; Windows Metrics table</a> in a TrueType font, which contains (among other things) a <a href="http://www.microsoft.com/typography/otspec/os2.htm#ur" mce_href="http://www.microsoft.com/typography/otspec/os2.htm#ur">UnicodeRange</a> and a <a href="http://www.microsoft.com/typography/otspec/os2.htm#cpr" mce_href="http://www.microsoft.com/typography/otspec/os2.htm#cpr">CodePageRange</a>:<br></p>
+<blockquote>
+<p>... <br></p></blockquote>
+<blockquote>
+<table width="460" bgcolor="#f0f0f0">
+<tbody>
+<tr>
+<td class="TAB" valign="top">ULONG</td>
+<td class="TAB" valign="top">ulUnicodeRange1</td>
+<td class="TAB" valign="top">Bits 0-31</td></tr>
+<tr>
+<td class="TAB" valign="top">ULONG</td>
+<td class="TAB" valign="top">ulUnicodeRange2</td>
+<td class="TAB" valign="top">Bits 32-63</td></tr>
+<tr>
+<td class="TAB" valign="top">ULONG</td>
+<td class="TAB" valign="top">ulUnicodeRange3</td>
+<td class="TAB" valign="top">Bits 64-95</td></tr>
+<tr>
+<td class="TAB" valign="top">ULONG</td>
+<td class="TAB" valign="top">ulUnicodeRange4</td>
+<td class="TAB" valign="top">Bits 96-127</td></tr></tbody></table>
+<p>... <br></p></blockquote>
+<blockquote>
+<table width="460" bgcolor="#f0f0f0">
+<tbody>
+<tr>
+<td class="TAB" valign="top">ULONG</td>
+<td class="TAB" valign="top">ulCodePageRange1</td>
+<td class="TAB" valign="top">Bits 0-31</td></tr>
+<tr>
+<td class="TAB" valign="top">ULONG</td>
+<td class="TAB" valign="top">ulCodePageRange2</td>
+<td class="TAB" valign="top">Bits 32-63</td></tr></tbody></table>
+<p>... <br></p></blockquote>
+<p>Now first of all, though both contain the same amount of information, the layout clearly isn't the same, exactly.<br></p>
+<p>There are also a few differences in the bits, as I pointed out in <b><a href="http://archives.miloush.net/michkap/archive/2006/12/24/1359264.html" mce_href="http://archives.miloush.net/michkap/archive/2006/12/24/1359264.html">Running a bit short on space?</a></b>.</p>
+<p>The fact that the layout isn't identical helps put differences between the <a href="http://msdn.microsoft.com/library/ms776424.aspx" mce_href="http://msdn.microsoft.com/library/ms776424.aspx">FONTSIGNATURE structure</a> and the <a href="http://msdn.microsoft.com/library/ms776437.aspx" mce_href="http://msdn.microsoft.com/library/ms776437.aspx">LOCALESIGNATURE structure</a> in an interesting light. The <a href="http://msdn.microsoft.com/library/ms776437.aspx" mce_href="http://msdn.microsoft.com/library/ms776437.aspx">LOCALESIGNATURE structure</a> looks like this:<br></p>
+<blockquote>
+<p><font face="Tahoma"><font face="Consolas,Lucida Console,Courier New,Courier,Fixed"><b>typedef struct tagLOCALESIGNATURE<br>{<br>&nbsp;&nbsp;&nbsp; DWORD lsUsb[4];<br>&nbsp;&nbsp;&nbsp; DWORD lsCsbDefault[2];<br>&nbsp;&nbsp;&nbsp; DWORD lsCsbSupported[2];<br>} LOCALESIGNATURE, *PLOCALESIGNATURE,FAR *LPLOCALESIGNATURE;</b></font></font></p></blockquote>
+<p>I mean, if I were building one structure that was a subset of another, I'd have probably ordered them differently -- I would have put lsUsb followed by lsCsbSupported, since those are the two members that match fsUsb and fsCsb.</p>
+<p>But remembering that the data is coming from the Typography team, where these two members are not even next to each other at all, it makes the connection between the two structures perhaps a bit less structural and a bit more conceptual.</p>
+<p>But that is a side issue.</p>
+<p>The fact that the actual bits have fallen out of sync between <a href="http://www.microsoft.com/typography/otspec/os2.htm#ur" mce_href="http://www.microsoft.com/typography/otspec/os2.htm#ur">the list in the OpenType spec</a> and <a href="http://msdn.microsoft.com/library/ms776439.aspx" mce_href="http://msdn.microsoft.com/library/ms776439.aspx">the Unicode Subset Bitfields</a> in the PSDK is also kind of a side issue. I wish the latter would be removed and replaced with a pointer to the former, though leaving in the note about bits 123, 124, and 125:</p>
+<table border="1">
+<tbody>
+<tr valign="top">
+<td width="13%">123</td>
+<td width="67%"><b>Windows 2000 or later:</b> Layout progress, horizontal from right to left</td></tr>
+<tr valign="top">
+<td width="13%">124</td>
+<td width="67%"><b>Windows 2000 or later:</b> Layout progress, vertical before horizontal</td></tr>
+<tr valign="top">
+<td width="13%">125</td>
+<td width="67%"><b>Windows 2000 or later:</b> Layout progress, vertical bottom to to</td></tr></tbody></table>
+<p>Those details can be fixed up in the documentation, at some point....<br></p>
+<p>More important is of course the rich source of limitations and bugs I first hinted at a long time ago in <b><a href="http://archives.miloush.net/michkap/archive/2005/12/19/505576.html" mce_href="http://archives.miloush.net/michkap/archive/2005/12/19/505576.html">It isn't a FONTSIGNATURE, darn it!</a></b> and then later talked about much more explicitly in the recent <b><a href="http://archives.miloush.net/michkap/archive/2008/10/01/8971160.html" mce_href="http://archives.miloush.net/michkap/archive/2008/10/01/8971160.html">What do you get when you put a Hebrew on top of a Russian? (aka What lies beneath can bite you on the ass)</a></b>.</p>
+<p><i>Which proves that this is feature with much farther reaching consequences that fonts, as keyboards get sucked into the mix as well!</i> <br></p>
+<p>While one could hypothesize the creation of some very sophisticated locale-specific automatic font fallback methods involving the comparison of the data in fonts on the machine and the data in the locale, the reality of both limitations in the data when it is correct and incidents where the data is not make the reality fall short here. Even though products have done so and many third parties (like MVP Mihai <a href="http://archives.miloush.net/michkap/archive/2005/12/19/505576.html#505731" mce_href="http://archives.miloush.net/michkap/archive/2005/12/19/505576.html#505731">mentioned</a>) have used the support as well:</p>
+<blockquote>
+<p><font face="times new roman,times">I have a small application using the FONTSIGNATURE and doing automatic font fallback and font selection. <br>Nothing special, you will say. <br>Only that it was written in 1997 on Windows 95 (and still running ok on XP). <br><br>Now I am thinking about filing a suit against MS :-) </font><br></p></blockquote>
+<p>Now I wouldn't necessarily advocate a lawsuit (given the real limitations that have always existed here even ignoring random bugs over the years), but now that (according to the OpenType spec's list) there are no more bits, and given how difficult it would be to add more bits across both the typography and NLS sides of the data, the serious question about whether to keep using this method does not have an easy answer for people in Mihai's situation.</p>
+<p>Now to make the situation a bit worse, if you take the code from <b><a href="http://archives.miloush.net/michkap/archive/2006/08/28/728336.html" mce_href="http://archives.miloush.net/michkap/archive/2006/08/28/728336.html">What the hell is wrong with TranslateCharsetInfo, anyway?</a></b> and use it to look at locales like <b>es-ES</b>, you sometimes see some quite overeager <a href="http://msdn.microsoft.com/library/ms776437.aspx" mce_href="http://msdn.microsoft.com/library/ms776437.aspx">LOCALESIGNATURE structure</a> data in there, even just looking at plain old XP:</p>
+<blockquote>
+<blockquote>
+<p><b><font face="consolas,lucida console,courier new,courier,fixed">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;msLocale:fontSignature&gt;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;msLocale:unicodeRanges&gt;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;msLocale:range type="0" /&gt;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;msLocale:range type="1" /&gt;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;msLocale:range type="2" /&gt;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;msLocale:range type="3" /&gt;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;msLocale:range type="5" /&gt;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;msLocale:range type="31" /&gt;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;msLocale:range type="35" /&gt;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;msLocale:range type="43" /&gt;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;msLocale:range type="44" /&gt;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;msLocale:range type="45" /&gt;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;/msLocale:unicodeRanges&gt;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;msLocale:defaultCodePages&gt;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;msLocale:ansiCodePage&gt;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;msLocale:codePage type="1252" /&gt;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;/msLocale:ansiCodePage&gt;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;msLocale:ansiOemCodePage /&gt;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;msLocale:oemCodePage&gt;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;msLocale:codePage type="850" /&gt;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;/msLocale:oemCodePage&gt;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;/msLocale:defaultCodePages&gt;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;msLocale:codePages&gt;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;msLocale:ansiCodePage&gt;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;msLocale:codePage type="1252" /&gt;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;msLocale:codePage type="1250" /&gt;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;msLocale:codePage type="1254" /&gt;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;/msLocale:ansiCodePage&gt;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;msLocale:ansiOemCodePage /&gt;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;msLocale:oemCodePage&gt;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;msLocale:codePage type="865" /&gt;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;msLocale:codePage type="863" /&gt;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;msLocale:codePage type="861" /&gt;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;msLocale:codePage type="860" /&gt;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;msLocale:codePage type="857" /&gt;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;msLocale:codePage type="852" /&gt;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;msLocale:codePage type="850" /&gt;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;msLocale:codePage type="437" /&gt;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;/msLocale:oemCodePage&gt;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;/msLocale:codePages&gt;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;/msLocale:fontSignature&gt;</font></b> <br></p></blockquote></blockquote>
+<p>Now all you have to do is look up some of those code pages listed there to see how little they have to do with Spanish (plus how many of them cannot represent Spanish on their own). And this is of course just one example, recently pointed out to me that has been around for a lot of the last decade.</p>
+<p><i>I have my own theories as to why/how this happened, but they are not very relevant here!</i><br></p>
+<p>It is taking the easy way out to blame it one the typography folks, since all they are doing is providing data to the NLS team that is in large part based on information that the NLS team provided to them. </p>
+<p>I think the fact that this data is not more widely used is the main reason that complaints haven't been seen very much. I think there is a natural law of sorts about this:<br></p>
+<blockquote>
+<p><font size="5">People complain when the stuff they use is broken.</font></p></blockquote>
+<p>This might help people triage the importance of fixing the problem, even.</p>
+<p>Certainly it suggests that Mihai's lawsuit might be in trouble (unless he extends it to non-performance over the course of the last decade!). :-)</p>
+<p mce_keep="true">&nbsp;</p>
+<p><font color="#ff00ff"><i>This blog brought to you by all of the roadmapped characters in Unicode which have no room in the existing bits of the FONTSIGNATURE</i></font> <br></p>
+<hr/><p><a id="8979530" href="#8979530">#</a> <strong>Mihai</strong> on 6 Oct 2008 7:22 PM:</p><div style="margin-left: 1em"><p>Really, that was just a joke :-)</p>
+<p>So, here is a public and official promise: no lawsuit whatsoever!</p>
+<p>Ok?</p>
+<p>But I would still like to see things fixed ;-)</p></div>
+<hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2008/10/06/8977235.html" title="Voting &amp; Registration, aka I am hoping EVERYONE who can BREATHE is Alive!">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2008/10/05/8976879.html" title="My personal commitments">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2008-10">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2008-10-05">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2008/10/05/8977109.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:35 GMT -->
+</html>

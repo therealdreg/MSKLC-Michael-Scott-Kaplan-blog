@@ -1,0 +1,68 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2010/12/15/10105168.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>I think MaxLength needs protection to assure safer text</title></head><body>
+<h1>I think MaxLength needs protection to assure safer text</h1>
+<p><em>by Michael S. Kaplan, published on 2010/12/15 07:01 -05:00, original URI: http://blogs.msdn.com/b/michkap/archive/2010/12/15/10105168.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<p>The presented scenario is simple (even more simple as I will present it here than it was originally!):</p>
+<ol>
+<li>A WinForms TextBox sits on a Form, empty. It has a MaxLength set to <strong>20</strong>.</li>
+<li>The user types into the TextBox, or maybe pastes text into it.</li>
+<li>No matter what you type or paste into the TextBox, you are limited to 20, though it will sympathetically beep at text beyond the 20 (YMMV here; I changed my sound scheme to give me that effect!).</li>
+<li>The small packet of text is then sent somewhere else, to start an exciting adventure.</li>
+</ol>
+<p>Now this is an easy scenario, and anyone can write this up, in their spare time. I just wrote it up myself in&nbsp;multiple programming languages&nbsp;using WinForms, because I was bored and had never tried it before. And with text in multiple actual languages because I am wired that way and have more keyboard layouts than possibly anyone in the entire freaking universe.</p>
+<p>I even named the form <strong>Magic Carpet Ride</strong>, to help ameliorate the boredom.</p>
+<p>This did not work, for what it's worth.</p>
+<p>so instead,&nbsp;I&nbsp;entered the following <strong>20</strong> characters into my <strong>Magic Carpet Ride</strong> form:</p>
+<p><span style="font-size: xx-large;">0123401234012340123𠀀</span></p>
+<p>Uh oh.</p>
+<p>That last character is U+20000, the first Extension B ideograph of Unicode (aka U+d840 U+dc00, to its close friends who he is not ashamed to be disrobed, as it were, in front of)....</p>
+<p><img src="http://trigeminal.fmsinc.com/images/MagicCarpetRide.jpg" border="0" /></p>
+<p>And now we have a ball game.</p>
+<p>Because when <a href="http://msdn.microsoft.com/library/system.windows.controls.textbox.maxlength.aspx">TextBox.MaxLength</a> talks about </p>
+<p style="padding-left: 60px;"><em><span style="font-size: large;">Gets or sets the maximum number of characters that can be manually entered into the text box.</span></em></p>
+<p>what it really means is</p>
+<p style="padding-left: 60px;"><em><span style="font-size: large;">Gets or sets the maximum number of&nbsp;UTF-16 LE code units&nbsp;that can be manually entered into the text box and will mercilessly truncate the living crap out of any string that tries to play cutesy games with the linguistic character notion that only someone as obsessed as that Kaplan fellow will find offensive (geez he needs to get out more!).</span></em></p>
+<p>I'll try and see about getting the document updated....</p>
+<p>Regular readers who remember my <a href="http://archives.miloush.net/michkap/archive/2009/06/10/9723321.html" title="UCS-2 to UTF-16 series"><strong>UCS-2 to UTF-16 series</strong></a> will note my unhappiness with the simplistic notion of <a href="http://msdn.microsoft.com/library/system.windows.controls.textbox.maxlength.aspx">TextBox.MaxLength</a>&nbsp;and how it should handle at a minimum this case where its draconian behavior creates an illegal sequence, one that other parts of the .Net Framework may&nbsp;throw a</p>
+<p style="padding-left: 60px;"><span style="font-family: consolas,lucida console,courier new,courier,fixed;"><strong><span style="color: #ff0000;">System.Text.EncoderFallbackException: Unable to translate Unicode character \uD850 at index 0 to specified code page.</span></strong></span></p>
+<p>exception if you pass this string elsewhere in the .Net Framework&nbsp;(as my colleague Dan Thompson was doing).</p>
+<p>Now okay, perhaps the full <a href="http://archives.miloush.net/michkap/archive/2009/06/10/9723321.html" title="UCS-2 to UTF-16 series"><strong>UCS-2 to UTF-16 series</strong></a>&nbsp;is out of the reach of many.</p>
+<p>But isn't it reasonable to expect that <a href="http://msdn.microsoft.com/library/system.windows.controls.textbox.text.aspx">TextBox.Text</a> will not produce a <a href="http://msdn.microsoft.com/library/system.string.aspx">System.String</a> that won't cause another piece of the .Net Framework to throw?</p>
+<p>I mean, it isn't like there is a chance in the form of some event on the control that tells you of the upcoming truncation where you can easily add the smarter validation -- validation that the control itself does not mind doing.</p>
+<p>I would go so far as to say that this punk control is breaking a safety contract that could even lead to security problems if you can class causing unexpected exceptions to terminate an application as a crude sort of denial of service.</p>
+<p>Why should any WinForms process or method or algorithm or technique produce&nbsp;invalid results?</p>
+<hr/><p><strong>Aaron</strong> on 15 Dec 2010 11:44 AM:</p><div style="margin-left: 1em"><p>The problem seems to extend beyond just WinForms. &nbsp;I just made a simple WPF application with a TextBox with MaxLength=&quot;20&quot;. &nbsp;When I pasted &quot;0123𠀀&quot; into the text box, it displayed &quot;0123𠀀&quot;, but when I pasted &quot;0123401234012340123𠀀&quot;, it displayed &quot;0123401234012340123��&quot;, just like the WinForms app you demonstrated. &nbsp;It seems no .NET GUI is safe.</p>
+<p>(I tried posting this comment from Opera, but I don&#39;t think it worked.)</p>
+</div>
+<p><strong>Cheong</strong> on 15 Dec 2010 5:50 PM:</p><div style="margin-left: 1em"><p>I also find that in IE8, Firefox and possibly other browsers on Windows platform, webpage with textbox that specifies maxlength attribute inherited(?) this behaviour. The final character shows fine if not exceeded the limit, but breaks if &quot;on&quot; the limit. (This is amazing because controls on browser pages is not real windows control, just something that emulates the controls&#39; behaviour. I thought there would be good chance that IE would have worked around this.)</p>
+<p>Fortunately most web application runtimes(.NET, ASP, JSP, PHP, etc.) code is prepared to deal with something like this (who needs textbox to send broken string when you can post it directly?), or this may open new vector of vulnerabilities.</p>
+</div>
+<p><strong>Doug Ewell</strong> on 16 Dec 2010 6:41 AM:</p><div style="margin-left: 1em"><p>The whole notion that characters = UTF-16 code units has been broken since the mid-1990s. Usually this is explained away by saying that nobody except character geeks ever needs to worry about non-BMP characters, and that is just about as hollow an excuse as they come. It&#39;s like saying it&#39;s OK for MaxLength to fail if the string consists of all A&#39;s.</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 16 Dec 2010 9:37 AM:</p><div style="margin-left: 1em"><p>Doug -- if you take the full linguistic character notion of the series then even UTF-32 code points is insufficient, but the minimum bar in UTf-16 should be code points, at least.</p>
+<p>Aaron, Cheong -- yes, the problem exists elsewhere. And it is probably a separate bug to be fixed in each place it pops up. :-(</p>
+</div>
+<p><strong>Mike</strong> on 16 Dec 2010 1:49 PM:</p><div style="margin-left: 1em"><p>&quot;And it is probably a separate bug to be fixed in each place it pops up&quot;</p>
+<p>Yep, the WinForms TextBox uses the Win32 EDIT control. Its EM_LIMITTEXT has the same issue.</p>
+<p>And I wonder what SQL Server does if you put this string in a nvarchar(20) column. Too lazy to check :)</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 16 Dec 2010 1:51 PM:</p><div style="margin-left: 1em"><p>Depends on which of the thousand odd ways to insert you use, they will be just as bad in SQL Server.</p>
+</div>
+<p><strong>Doug Ewell</strong> on 17 Dec 2010 7:55 AM:</p><div style="margin-left: 1em"><p>&gt; full linguistic character notion</p>
+<p>Cutting off the low surrogate and leaving the high surrogate is much, much worse than cutting off combining diacritics and leaving the base character, from the TextBox standpoint. At least you still end up with a valid character string.</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 17 Dec 2010 8:06 AM:</p><div style="margin-left: 1em"><p>I think I made it clear I thought that was worse. :-)</p>
+</div>
+<p><strong>Random832</strong> on 17 Dec 2010 3:22 PM:</p><div style="margin-left: 1em"><p>Who decided that cutting off your string and beeping at you was good UI, anyway? Surely it&#39;d be better to just not let the user submit the form until they delete enough stuff to fit [and provide interactive feedback about the limit, a la twitter]</p>
+<p>Well, I&#39;m only half-serious - i&#39;m sure this was easier with the limitations programmers had to work with in 1983 - but surely no new programs should be using this &quot;feature&quot;.</p>
+</div>
+<p><strong>Yuhong Bao</strong> on 20 Dec 2010 4:22 PM:</p><div style="margin-left: 1em"><p>I remember this:</p>
+<p><a rel="nofollow" target="_new" href="http://stackoverflow.com/questions/1049947/should-utf-16-be-considered-harmful/3465483">stackoverflow.com/.../3465483</a></p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 20 Dec 2010 4:38 PM:</p><div style="margin-left: 1em"><p>I find that article to be rather naive, alarmist, and biased, myself.</p>
+</div>
+<hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2012/04/27 <a href="http://archives.miloush.net/michkap/archive/2012/04/27/10298345.html">Should considering UTF-16 be harmful be considered harmful?</a></p><p>2010/12/18 <a href="http://archives.miloush.net/michkap/archive/2010/12/18/10106789.html">Short-sighted text processing #1: Uniscribe filters nothing</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2010/12/16/10105779.html" title="You can&#39;t ignore crap and hope it won&#39;t cause problems...">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2010/12/14/10104459.html" title="Falling back shouldn&#39;t mean falling over (though perhaps it does, a bit)">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2010-12">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2010-12-15">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2010/12/15/10105168.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+</html>

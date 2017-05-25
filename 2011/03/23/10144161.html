@@ -1,0 +1,86 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2011/03/23/10144161.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>When your Clipboard isn't their Clipboard. Or my Clipboard...</title></head><body>
+<h1>When your Clipboard isn't their Clipboard. Or my Clipboard...</h1>
+<p><em>by Michael S. Kaplan, published on 2011/03/23 07:01 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2011/03/23/10144161.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<p>And in a bizarre turn of events it was a question that had very little to do with internationalization that caught my eye:</p>
+<p style="PADDING-LEFT: 60px; FONT-FAMILY: "><span style="font-family: times new roman,times;">Hi, </span></p>
+<p style="PADDING-LEFT: 60px; FONT-FAMILY: "><span style="font-family: times new roman,times;">I saw there are two Clipboard in System.Windows and System.Windows.Forms respectively. Can someone help me to understand what&rsquo;s the difference between these two and what&rsquo;s the guidelines for when to use each?</span></p>
+<p style="PADDING-LEFT: 60px; FONT-FAMILY: "><span style="font-family: times new roman,times;">Also, why we have two class that has nearly the same functionality, which is very confusing, at least for me.</span></p>
+<p style="PADDING-LEFT: 60px; FONT-FAMILY: "><span style="font-family: times new roman,times;">Thanks,</span></p>
+<p>Too true!</p>
+<p>They actually come from two different places (<a href="http://msdn.microsoft.com/library/system.windows.forms.clipboard.aspx">System.Windows.Forms.Clipboard</a>&nbsp;is in WinForms housed in System.Windows.Forms.dll, and <a href="http://msdn.microsoft.com/library/system.windows.clipboard.aspx">System.Windows.Clipboard</a>&nbsp;is in Windows Presentation Foundation (WPF) housed in PresentationCore.dll).</p>
+<p>Admittedly&nbsp;they are pretty similar (both are wrapping the same native functionality that has been in Windows for the last fifteen versions, so how different could they really be?).</p>
+<p>But they are not entirely compatible since they are different types (in particular their <strong>DataObject</strong> and <strong>IDataObject</strong> definitions in particular make drag-and-drop in shared components that span the two technologies a lot more complicated than they&nbsp;ought to&nbsp;be.</p>
+<p>As my friend Paul pointed out in the thread, the WPF version was added for a simple reason -- so that a WPF application wouldn't have to load WinForms just to copy and paste.</p>
+<p>Of course this points to a design problem that could have been avoided in the original .Net release, and one that could have been fixed in the version introduced in 3.5 when WPF was added: <strong>the clipboard functionality is not properly factored!</strong></p>
+<p>Now as you all know, the clipboard works throughout Windows -- and when I say this I mean that a technology completely unlike either of the above two technologies -- the console -- can also use the clipboard. It even has its own managed wrapper (<a href="http://msdn.microsoft.com/library/system.console.aspx">System.Console</a>), though if you want to use the clipboard you have to pull in either WinForms or WPF.</p>
+<p>And that is dumb.</p>
+<p>Or go native.</p>
+<p>But the WinForms/Console split was understood when .Net 1.0 shipped, and the WPF/WinForms/Console splits were understood when .Net 3.5 shipped.</p>
+<p>At any point they could have put the code at a lower level, one all could share. And if one or more were already written they could have gutted the written ones and called the lower level shared one.</p>
+<p>It would have been easy.</p>
+<p>And after all, they've already done it. </p>
+<p>Twice!</p>
+<p>Though when the suggestions along the above lines are made, they point out all the excuses why not to do the work, such as:</p>
+<ol>
+<li>the clipboard can only be opened by one process at a time;</li>
+<li>the Win32 clipboard API is very painful to use;</li>
+<li>lower level components were designed to be OS-agnostic;</li>
+<li>the clipboard only lets you store one item;</li>
+<li>it shouldn't be up to .Net to make the Windows API usable.</li>
+</ol>
+<p>and so on.</p>
+<p>I'm not impressed.</p>
+<p><em>Even ignoring the whole </em><a href="http://msdn.microsoft.com/library/microsoft.win32.aspx"><em>Microsoft.Win32</em></a><em>&nbsp;namespace that would be perfect for a Clipboard class!</em></p>
+<p>For #4 and #5 and pretty much all of them, .Net could have made their own brand new thing instead of wrapping the old one if they feel it is so limited. They could drive the change, and be the change! They ship with Windows so anything they add would be around for all of Windows too, in no worse of a way that the Windows "only latest version" provides, and probably better since they can go downlevel.</p>
+<p>In other words, DEVDIV is much better than Windows to jump in here and do it right, if they are convinced Windows is doing it wrong....</p>
+<p>Oh wait, never mind. As I pointed out in <a href="http://archives.miloush.net/michkap/archive/2011/03/14/10140462.html" title="Microsoft is better as one big company"><strong>Microsoft is better as one big company</strong></a>, architecting new features like that is not what DEVDIV does. So of course they want the thing they wrap to do the heavy lifting.</p>
+<p>It's like they shot their wad when they designed the memory allocator to get rid of ref-counting and a few other things. :-)</p>
+<p><em>The above was me teasing them a bit, so don't read too much into it. Though it's fun when other people prove the points I make without even realizing they are doing so!</em></p>
+<p>So never mind on pointing out they are the perhaps the best people to do it and get Windows toeventually pick it up like they do with Office. They don't want to think outside that box. And I can respect that.</p>
+<p>To be perfectly honest trying to add new features to the clipboard is hard -- Office tried to do it a few versions ago, and have at this point almost completely removed the feature they added since the number of people with "this is great!" feedback were overwhelmingly outnumbered by the people with "this blows goats!" feedback. Even now pieces of it are still there (it's hard to remove low level functionality once it's surfaced to top level UI), but in Office 14 it is mostly history.</p>
+<p>So with Office having struck out here I wouldn't suggest DEVDiV try to hit that one out of the park when they are bat.</p>
+<p>But perhaps fixing what is broken in their own implementation:</p>
+<ul>
+<li>refactor it to somewhere it can be shared by all technologies, and</li>
+<li>have the old implementations call the new one created by the refactoring</li>
+</ul>
+<p>would fit the mission that .Net has to do quality wrapping of functionality people use all the time. It would ease the maintenance burden and make it easier for developers to use.</p>
+<p><em>As an aside, there are other features that got stuck in WinForms that should have been in </em><a href="http://msdn.microsoft.com/library/microsoft.win32.aspx"><em>Microsoft.Win32</em></a><em> -- like </em><a href="http://msdn.microsoft.com/library/system.windows.forms.inputlanguage.aspx"><em>InputLanguage</em></a><em>, for example.</em></p>
+<p><em>It's like WinForms had a bunch of extra devs who did core work that had to be done, and </em></p>
+<ul>
+<li><em>the architects who should have been putting them in the right namespaces and </em></li>
+<li><em>the managers who should have been moving the headcount around based on the way the big hunks of code were being repositioned</em></li>
+</ul>
+<p><em>were all napping when such classes were stuck in the wrong place, and in the case of </em><a href="http://msdn.microsoft.com/library/system.windows.forms.inputlanguage.aspx"><em>InputLanguage</em></a><em>&nbsp;with incomplete functionality based on the abilities of what it's wrapping.</em></p>
+<p>But I digress.... :-)</p>
+<p>I really believe .Net did some stuff wrong here and really should take steps to fix things. I know I'm not the only one to do clipboard stuff in Win32 p/invoke just to avoid some of the weirdnesses the managed implementations add to the mix. And that can't be what they intended. </p>
+<p>They are not the group that you generally expect poor factoring or shoddy design from. At all. They really ought to fix this!</p>
+<p>In my mind I blame this all on the fact that Katy and Kim aren't at Microsoft anymore, and Joe isn't in that group anymore. Which is silly since none of them were working on these things anyway so its not like having then around would change anything. Well, I mean other the fact that all of them would listen to me rant about it, and be amused.</p>
+<p>Though I am having lunch with Kim later today. Maybe I can guilt her into paying for lunch for not speaking up about this bug while she was here? Just kidding!</p>
+<p>The moral of the whole story in this blog? I should clearly stick to internationalization, where I have strong opinions.... :-)</p>
+<hr/><p><strong>Richard</strong> on 23 Mar 2011 1:05 PM:</p><div style="margin-left: 1em"><p>There&#39;s a whole lot of refactoring that needs to be done, and probably won&#39;t be done for the sake of backwards-compatibility. </p>
+<p>For example, the IWin32Window interface is defined twice - once in WinForms and once in WPF. Even though the interfaces are identical, they&#39;re two completely different interfaces to .NET; a class which implements one can&#39;t be passed to a method which expects the other.</p>
+<p>Drawing is another nightmare - WinForms and WebForms use System.Drawing, whereas WPF does its own thing. I understand that WPF is based on newer technology behind the scenes, but do we really need two versions of every shared class?!</p>
+<p>At some point, I think they need to ditch backwards compatibility and start again. If they don&#39;t, I fear the BCL could collapse under the weight of outdated and obsolete technology.</p></div>
+<p><strong>Cheong</strong> on 23 Mar 2011 7:01 PM:</p><div style="margin-left: 1em"><p>Oh... I thought that they have to seperate the namespace because lots of controls in WPF are not &quot;real&quot; window objects, so the handling would be a bit different (You&#39;ll need to do some collision testing behind the scene, etc.). </p>
+<p>Actually I have no problem that they have to maintain seperate set of classes/function calls for WinForm/WPF, especially when they may have to support scenerios that they may have to make it works as Windows application and Browser application.</p></div>
+<p><strong>Michael S. Kaplan</strong> on 23 Mar 2011 7:19 PM:</p><div style="margin-left: 1em"><p>That isn&#39;t why they did this.</p>
+<p>But are you saying you are okay with having to pull the other of those libraries in for a CONSOLE app?</p></div>
+<p><strong>Cheong</strong> on 23 Mar 2011 10:22 PM:</p><div style="margin-left: 1em"><p>No. I&#39;m talking about the nature of WPF.</p>
+<p>WPF applications doesn&#39;t necessary be Windows application, they can also be applications that runs in web browsers. Therefore I think it&#39;s reasonable that they leave the provision that the clipboard related function may behave differently for WPF web cases (At least in that case the documentation will be different, and becomes unnecessarily complicated for normal WinForm users). I&#39;d think that probably for similar reason only one of the common dialog function is implemented under the Microsoft.Win32.CommonDialog class (The OpenFileDialog and SaveFileDialog classes are subclass of FileDialog, so I count only once. And it should be able to work for both Windows application and web containers).</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 24 Mar 2011 5:40 AM:</p><div style="margin-left: 1em"><p>So you don&#39;t think a more reasonable design is a single shared bit of code that wraps the core clipboard functionality (pretty much written since the WPF as and WinForms clipboard code and OM is largely the same), and then if WinForms or WPF or PowerShell or the managed MMC snapin on anything needs extra help it can be built atop it?</p>
+<p>The current design largely duplicates the same code in two places and provides no help in the others. This is a poorly factored solution.</p>
+<p>Yet the fix is straightforward enough -- gut the two existing frameworks, put the code in the CLR somewhere, and have everyone (including the two existing implementations, for back compat) call the shared code. This can allow code with different needs to build those needs into its own extensions and not burden others with them....</p>
+</div>
+<p><strong>Random832</strong> on 24 Mar 2011 6:12 AM:</p><div style="margin-left: 1em"><p>3.lower level components were designed to be OS-agnostic;</p>
+<p>Why is a clipboard considered an OS-specific concept when a console is not?</p>
+<p>5.it shouldn&#39;t be up to .Net to make the Windows API usable.</p>
+<p>It is, however, absolutely up to .Net to make the .Net API usable. If that requires making something heavier and demoting win32 from &quot;the thing they wrap&quot; to &#39;back-end&#39;, then they should do that. By supporting a clipboard at all, .Net took responsibility for making the .Net clipboard usable.</p>
+</div>
+<hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2011/03/28 <a href="http://archives.miloush.net/michkap/archive/2011/03/28/10146277.html">Address formats are hard, let's go shopping!, revisited (aka To me, 'good enough' just isn't good enough)</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2011/03/24/10145161.html" title="Knowing the layout doesn&#39;t mean knowing how to lay it out....">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2011/03/22/10144474.html" title="Rupee! Rupee! Let down your CHAR!">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2011-03">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2011-03-23">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2011/03/23/10144161.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+</html>

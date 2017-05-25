@@ -1,0 +1,48 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2007/08/16/4421520.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:37 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>It doesn't really support UTF-8</title></head><body>
+<h1>It doesn't really support UTF-8</h1>
+<p><em>by Michael S. Kaplan, published on 2007/08/16 17:29 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2007/08/16/4421520.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P>Aaron asks (via the contact link):</P>
+<BLOCKQUOTE>
+<P><FONT face="times new roman,times"><EM>Michael,<BR><BR>Issue that I hope you can help with. Looks like the default on MACOSX is to do samba information using UTF-8-MAC, which is apparently decomposed normal form, rather than the normal UTF-8. <BR><BR>NetServerGetInfo doesn't seem to understand this, so assumes the character's are standard UTF-8, and thus the default "comment" from a Macintosh NetBios is wrong - it's supposed to be "Aaron's computer" (where the apostrophe is a smart quote), but instead, it's "AaronÕs Computer" (0xC3 0x95)<BR><BR>Is there any builtin windows functions (not .NET) to convert between UTF-8 that windows uses and UTF-8 that Macs use? <BR><BR>Thanks,<BR>Aaron</EM></FONT></P></BLOCKQUOTE>
+<P>FYI to everyone, the diagnosis above is wrong. I'll get to that in a minute....&nbsp;</P>
+<P>Now, the normalization functionality makes it easy to move between Unicode normalization forms D and C, though the Windows function that does this (<A class="" href="http://msdn2.microsoft.com/library/ms776395.aspx" mce_href="http://msdn2.microsoft.com/library/ms776395.aspx">NormalizeString</A>)&nbsp;requires UTF-16.</P>
+<P>So you would have to convert the string to UTF-16 first via <A class="" href="http://msdn2.microsoft.com/library/ms776413.aspx" mce_href="http://msdn2.microsoft.com/library/ms776413.aspx">MultiByteToWideChar</A>, use normalization, then convert it back to UTF-8 via <A class="" href="http://msdn2.microsoft.com/library/ms776420.aspx" mce_href="http://msdn2.microsoft.com/library/ms776420.aspx">WideCharToMultiByte</A>&nbsp;when you are done.</P>
+<P>LUCKILY for Aaron, he does not have to do any of that, because the truth is that <A class="" href="http://msdn2.microsoft.com/library/aa370624.aspx" mce_href="http://msdn2.microsoft.com/library/aa370624.aspx">NetServerGetInfo</A> does not use UTF-8, decomposed or otherwise. And the string in question is not decomposed anyway -- this is just as case of taking a UTF-8 string and pretending it is a string in the default system code page!</P>
+<P>This will work great for ASCII, but anything beyond it will likely be wrong.</P>
+<P>However, Aaron's problem is easily solved via a call to <A class="" href="http://msdn2.microsoft.com/library/ms776413.aspx" mce_href="http://msdn2.microsoft.com/library/ms776413.aspx">MultiByteToWideChar</A>&nbsp;ti convert the UTF-8 data to UTF-16, followed by a <A class="" href="http://msdn2.microsoft.com/library/aa370624.aspx" mce_href="http://msdn2.microsoft.com/library/aa370624.aspx">NetServerGetInfoW</A> call rather than a <A class="" href="http://msdn2.microsoft.com/library/aa370624.aspx" mce_href="http://msdn2.microsoft.com/library/aa370624.aspx">NetServerGetInfoA</A>&nbsp;one, and everything will work! :-)&nbsp;</P>
+<P mce_keep="true">&nbsp;</P>
+<P><FONT color=#ff00ff><EM>This post brought to you by</EM> <FONT size=5>Õ</FONT> <EM>(<A class="" href="http://www.fileformat.info/info/unicode/char/00d5" mce_href="http://www.fileformat.info/info/unicode/char/00d5">U+00d5</A>, a.k.a. LATIN CAPITAL LETTER O WITH TILDE)</EM></FONT></P>
+<hr/><p><strong>Aaron</strong> on 16 Aug 2007 7:36 PM:</p><div style="margin-left: 1em"><p>Thanks for the quick response - i'll give that a shot. What's interesting here is that the Shell doesn't do this - Macintosh comments tend to show up as squares (or the &#213;) in the explorer UI, depending on where you look - but not the smart quote, as expected.</p></div>
+<p><strong>Michael S. Kaplan</strong> on 16 Aug 2007 7:59 PM:</p><div style="margin-left: 1em"><p>That actually sounds like a Shell bug! :-)</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 16 Aug 2007 8:25 PM:</p><div style="margin-left: 1em"><p>Well, actually it probably is something underneath the Shell that is making the mistake....</p>
+</div>
+<p><strong>Dean Harding</strong> on 16 Aug 2007 9:06 PM:</p><div style="margin-left: 1em"><p>Actually, I think problem here is that the right-single-quote in the MacRoman codepage is 0xD5[1] but in Windows codepage 1252, 0xD5 is &#213;.</p>
+<p>Now, NetServerGetInfo is a Unicode-only function, but from what I understand, the NetBIOS network protocol is byte-oriented and so the data is *always* converted using the default codepage anyway[2]</p>
+<p>So it looks like there's really nothing that can be done. You can possibly fix the problem in your own app by somehow &quot;detecting&quot; that the server is a Mac and doing an internal MacRoman-&gt;Win1252 conversion, but it'll always look wrong in Windows Explorer for example. But I think the &quot;real&quot; solution is to just stick with pure ASCII and live with the limitation :-(</p>
+<p>[1] See: <a rel="nofollow" target="_new" href="http://www.alanwood.net/demos/charsetdiffs.html">http://www.alanwood.net/demos/charsetdiffs.html</a></p>
+<p>[2] Larry Osterman somewhat describes the problem here: <a rel="nofollow" target="_new" href="http://blogs.msdn.com/larryosterman/archive/2007/07/11/how-do-i-compare-two-different-netbios-names.aspx">http://blogs.msdn.com/larryosterman/archive/2007/07/11/how-do-i-compare-two-different-netbios-names.aspx</a></p></div>
+<p><strong>Aaron</strong> on 17 Aug 2007 10:40 AM:</p><div style="margin-left: 1em"><p>Thanks Dean - your explanation helps make a lot more sense. I'd agree with living with pure ASCII as a solution, but it's the default for Mac's to put the 0xD5 into the comment field. So all Macintosh's will always exhibit this behavior, which is quite frustrating.</p>
+<p>Netbios name seems to be correct, as Apple isn't using ASCII only there, so we are fortunate at that level. The issue is only in the comment field.</p>
+<p>Is there any MultiByteToWideChar or other built-in API support to convert from MacRoman to CP_ACP (or CP_UTF8)?</p></div>
+<p><strong>Michael S. Kaplan</strong> on 17 Aug 2007 10:59 AM:</p><div style="margin-left: 1em"><p>Agree++ that it needs to be handled, and Windows should do better interpretting here.</p>
+<p>NLS makes available code page 10000 for Mac Roman, so we *could* convert this sucker. Someone just has to do the work....</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 17 Aug 2007 11:01 AM:</p><div style="margin-left: 1em"><p>Aaron -- you need to think UTF-16 on Windows, not UTF-8. :-)</p>
+<p>Yes, there is easy conversion from cp10000 to UTF-16.</p>
+</div>
+<p><strong>Mihai</strong> on 17 Aug 2007 1:08 PM:</p><div style="margin-left: 1em"><p>&quot;So you would have to convert the string to UTF-16 first via MultiByteToWideChar, use normalization, then convert it back to UTF-8 via WideCharToMultiByte when you are done.&quot;</p>
+<p>This does not work for the same reason why case conversion on Windows file system cannot be handled by normal Windows API. You cannot reproduce the file system behavior &quot;outside&quot; the file system.</p>
+<p>- The tables used by Windows to do normalization are different from the tables used by Mac OS X to do normalization.</p>
+<p>- It also seems like Mac OS X does not use the standard normalization anyway (&quot;HFS Plus uses a variant of Normal Form D&quot;: <a rel="nofollow" target="_new" href="http://developer.apple.com/qa/qa2001/qa1173.html">http://developer.apple.com/qa/qa2001/qa1173.html</a>).</p>
+<p>- And the normalization tables changed between the various Mac OS X versions</p></div>
+<p><strong>Michael S. Kaplan</strong> on 17 Aug 2007 1:19 PM:</p><div style="margin-left: 1em"><p>We're talking about the comment field, not the name. I think cp10000 to Unicode to display it should work just fine!</p>
+</div>
+<p><strong>Mihai</strong> on 18 Aug 2007 12:35 AM:</p><div style="margin-left: 1em"><p>&quot;We're talking about the comment field, not the name&quot;</p>
+<p>Oups, sorry, my bad :-(</p></div>
+<hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2007/08/17/4424342.html" title="Alive and well, but more grown up">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2007/08/16/4421328.html" title="The problem with characters stuffing the ballot box">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2007-08">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2007-08-16">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2007/08/16/4421520.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:37 GMT -->
+</html>

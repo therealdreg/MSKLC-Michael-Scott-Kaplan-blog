@@ -1,0 +1,25 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2006/08/16/702104.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:39 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Something .NET does more intuitively than Windows</title></head><body>
+<h1>Something .NET does more intuitively than Windows</h1>
+<p><em>by Michael S. Kaplan, published on 2006/08/16 03:01 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2006/08/16/702104.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<FONT face=Tahoma>
+<P>Back when I wrote <STRONG><A href="http://archives.miloush.net/michkap/archive/2006/05/24/605599.html">Invariant vs. Ordinal, the third</A></STRONG>, two of the interesting points I made were that, in most cases:</P>
+<UL>
+<LI>equality results will be better off using <A href="http://msdn.microsoft.com/library/en-us/intl/nls_CompareStringOrdinal.asp">CompareStringOrdinal</A>; 
+<LI>sorting results will be better off using <A href="http://msdn.microsoft.com/library/en-us/winui/winui/windowsuserinterface/resources/strings/stringreference/stringfunctions/comparestring.asp">CompareString</A>.</LI></UL>
+<P>Now obviously this is a much simpler set of rules (that actually cover the majority of the default cases) in a much easier to grok way than all&nbsp;fifteen pages&nbsp;of the rules captured in <STRONG><A href="http://archives.miloush.net/michkap/archive/2005/06/02/424128.html">The New String Recommendations</A></STRONG>.</P>
+<P>There is something else that is interesting about these two rules, which you can see by looking at the way .NET's System.String works:</P>
+<UL>
+<LI><A href="http://msdn2.microsoft.com/en-us/library/1hkt4325.aspx">System.String.Equals(string, string)</A>, <A href="http://msdn2.microsoft.com/en-us/library/system.string.op_equality.aspx">string==string</A>, and <A href="http://msdn2.microsoft.com/en-us/library/system.string.op_inequality.aspx">string != string</A>&nbsp;default to binary (ordinal) comparisons 
+<LI><A href="http://msdn2.microsoft.com/en-us/library/84787k22.aspx">System.String.Compare(string, string)</A> defaults to linguistic comparisons using CurrentCulture</LI></UL>
+<P>In other words, if&nbsp;for most purposes you forget about the entirety of the&nbsp;<A href="http://msdn.microsoft.com/netframework/default.aspx?pull=/library/en-us/dndotnet/html/StringsinNET20.asp">New Recommendations for Using Strings in Microsoft .NET 2.0</A>&nbsp;and simply use the default Equals and Compare methods off of System.String, then most of the worries surrounding string comparisons&nbsp;that are really caused by the fact that strings are overloaded to handle both values that would be used in identifiers and values that would be used in sorting go away completely. </P>
+<P>Now obviously there are exceptions to the rule here, and those exceptions can behandled with the plethora of methods that are available. But as rules go, this makes for a much simpler default.</P>
+<P>And it is already built in to the BCL, and has been since the very beginning!</P>
+<P>All you have to do is <STRONG>stay the hell away</STRONG> from the most common misuse of string.Compare(string, string) == 0, since that is really supposed to be using string.Equals....</P>
+<P>&nbsp;</P>
+<P><FONT color=#ff1493><EM>This post brought to you by</EM> <STRONG><FONT face=DaunPenh size=8>ឡ</FONT></STRONG> <EM>(<A href="http://www.fileformat.info/info/unicode/char/17a1">U+17a1</A>, a.k.a. KHMER LETTER LA)</EM></FONT></P></FONT>
+<hr/><div style="margin-left: 1em"><em>no comments</em></div><hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2007/05/31 <a href="http://archives.miloush.net/michkap/archive/2007/05/31/3019659.html">Something .NET does less intuitively than they ought</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2006/08/16/702877.html" title="Walking off the end of the eighth bit">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2006/08/15/701011.html" title="Customizing date formats in ASP.Net">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2006-08">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2006-08-16">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2006/08/16/702104.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:39 GMT -->
+</html>

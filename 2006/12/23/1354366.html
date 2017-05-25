@@ -1,0 +1,50 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2006/12/23/1354366.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:38 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Do not adjust your browser, a.k.a. sometimes two wrongs DO make a right, a.k.a. dumb quotes</title></head><body>
+<h1>Do not adjust your browser, a.k.a. sometimes two wrongs DO make a right, a.k.a. dumb quotes</h1>
+<p><em>by Michael S. Kaplan, published on 2006/12/23 18:03 -05:00, original URI: http://blogs.msdn.com/b/michkap/archive/2006/12/23/1354366.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P><EM>(The first part of the title is meant to be an allusion to The Outer Limits and the narration of the Control Voice, which is what I thought of when the inspiration for this post presented itself!)</EM></P>
+<P>The other day I was looking at a web site and it contained a bunch of text like the following:</P>
+<BLOCKQUOTE>
+<P>as far as Iâ€™m concerned, weâ€™d give </P></BLOCKQUOTE>
+<P>and so on.</P>
+<P>Now people who have been dealing with international issues for a while (and maybe people who have read <STRONG><A class="" href="http://archives.miloush.net/michkap/archive/2006/06/04/616892.html" mce_href="http://archives.miloush.net/michkap/archive/2006/06/04/616892.html">this post</A></STRONG> or maybe <STRONG><A class="" href="http://archives.miloush.net/michkap/archive/2005/03/21/399589.html" mce_href="http://archives.miloush.net/michkap/archive/2005/03/21/399589.html">this one</A></STRONG>) might think they know what is going on here -- we are looking at text that is UTF-8 being looked at as it were in <A class="" href="http://www.microsoft.com/globaldev/reference/sbcs/1252.mspx" mce_href="http://www.microsoft.com/globaldev/reference/sbcs/1252.mspx">Windows code page 1252</A>.</P>
+<P>Good guess. But no. In fact when I right clicked on the page to look at the encoding, I got the same results as you see in this blog:</P>
+<P><IMG src="http://trigeminal.fmsinc.com/images/encodingchoice.png">&nbsp;</P>
+<P>So it wasn't UTF-8 encoded text being displayed as&nbsp;code page&nbsp;1252. It already thought it was UTF-8, which means the underlying encoding had to be wrong.</P>
+<P>Clearly, adjusting the browser was not going to improve the experience. Which is what made me think of the Control Voice....</P>
+<P>Now by taking the encoding investigative techniques I talked about in <A class="" href="http://archives.miloush.net/michkap/archive/2006/06/14/631016.html" mce_href="http://archives.miloush.net/michkap/archive/2006/06/14/631016.html"><STRONG>Behind 'How to break Windows Notepad'</STRONG></A>&nbsp;and <A class="" href="http://archives.miloush.net/michkap/archive/2006/05/27/608351.html" mce_href="http://archives.miloush.net/michkap/archive/2006/05/27/608351.html"><STRONG>this</STRONG></A> post, first we'll put the text in Notepad:</P>
+<P><IMG src="http://trigeminal.fmsinc.com/images/encodingchoice2.png"></P>
+<P>then save it, close Notepad, and open the file in Notepad again. You will see:</P>
+<P><IMG src="http://trigeminal.fmsinc.com/images/encodingchoice3.png">&nbsp;</P>
+<P>So clearly there is a UTF-8 problem in the heritage here (by the way the above steps will only work for you if your default system code page is 1252). The only thing that makes this problem harder is that there is no easy way to fix broken content since the only fix is to interpret the text in a way that is technically wrong in order to correct the wrong that screwed it up in the first place (proving that if carefully planned, <STRONG>two wrongs can indeed make a right</STRONG>)....</P>
+<P>What would we call that feature -- targeted code page mangling? How'd that look on a right click menu?</P>
+<P>I guess we could also blame the problem on Microsoft Word (since the web page appeared to be a copy of an email written in Outlook via Word mail)&nbsp;and its conversion of <FONT face=tahoma,arial,helvetica,sans-serif size=3><STRONG>'</STRONG></FONT>&nbsp;(<A class="" href="http://www.fileformat.info/info/unicode/char/0027" mce_href="http://www.fileformat.info/info/unicode/char/0027">U+0027</A>, a.k.a. APOSTROPHE) into&nbsp;<FONT face=tahoma,arial,helvetica,sans-serif size=3><STRONG>‘</STRONG></FONT> (<A class="" href="http://www.fileformat.info/info/unicode/char/2018" mce_href="http://www.fileformat.info/info/unicode/char/2018">U+2018</A>, a.k.a.&nbsp;LEFT SINGLE QUOTATION MARK)&nbsp;and <STRONG><FONT size=3>’</FONT></STRONG> (<A class="" href="http://www.fileformat.info/info/unicode/char/2019" mce_href="http://www.fileformat.info/info/unicode/char/2019">U+2019</A>, a.k.a.&nbsp;RIGHT SINGLE QUOTATION MARK) via that exciting "smart quotes" feature that in some cases is affected by this encoding problem that we could easily name "<STRONG>dumb quotes</STRONG>". :-)</P>
+<P mce_keep="true">&nbsp;</P>
+<P><FONT color=#ff00ff><EM>This post brought to you by</EM>&nbsp;&nbsp;<FONT face=tahoma,arial,helvetica,sans-serif size=3><STRONG>‘</STRONG></FONT> <EM>(</EM></FONT><EM><FONT color=#ff00ff><A class="" href="http://www.fileformat.info/info/unicode/char/2018" mce_href="http://www.fileformat.info/info/unicode/char/2018">U+2018</A></FONT></EM><EM><FONT color=#ff00ff>, a.k.a.&nbsp;LEFT SINGLE QUOTATION MARK)</FONT></EM></P>
+<hr/><p><a id="1357016" href="#1357016">#</a> <strong>Tom Gewecke</strong> on 24 Dec 2006 9:16 AM:</p><div style="margin-left: 1em"><p>A very interesting case. &nbsp;I've never seen it on a web page, but a couple times where people tried to change the encodings of their ID 3 tags on songs to get non-Latin text to display right in iTunes, etc. &nbsp;It happens when someone opens UTF-8 or Big-5 for example in Latin-1, then resaves as UTF-8. &nbsp;The fix is usually to copy the final UTF-8, save it as Latin-1, reopen in the original encoding (UTF-8 or Big-5 in this case) and then use the text. &nbsp;Not a lot of fun if you don't know what they started with.</p></div>
+<p><a id="1934221" href="#1934221">#</a> <strong>Thorsten Glaser</strong> on 22 Mar 2007 10:04 PM:</p><div style="margin-left: 1em"><p>You could use iconv(1) to fix that,</p>
+<p>by telling it to convert from latin1</p>
+<p>into utf-8 on the already-but-broken</p>
+<p>utf-8 text. While I did a systemati-</p>
+<p>cal conversion of some files (code &amp;</p>
+<p>data) in MirBSD to UTF-8, I acciden-</p>
+<p>tally did that mistake because some,</p>
+<p>usually append-only logs, were a mix</p>
+<p>of latin1 and utf-8 data. But fixing</p>
+<p>these places was easy with an editor</p>
+<p>that can pipe blocks of the text in-</p>
+<p>to an external programme, such as my</p>
+<p>favourite jupp (wordstar-like key UI</p>
+<p>and works with cygwin and Interix).</p>
+<p>For reference:</p>
+<p>jupp -&gt; <a rel="nofollow" target="_new" href="http://mirbsd.de/jupp">http://mirbsd.de/jupp</a> (GPL'd</p>
+<p>though, sadly)</p>
+<p>iconv -&gt; <a rel="nofollow" target="_new" href="http://www.mirbsd.org/man1/iconv.htm">http://www.mirbsd.org/man1/iconv.htm</a></p>
+<p>PS: This input field is too small in</p>
+<p> &nbsp; &nbsp;lynx, good that it can spawn an,</p>
+<p> &nbsp; &nbsp;of course jupp, external editor.</p></div>
+<hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2013/04/03 <a href="http://archives.miloush.net/michkap/archive/2013/04/03/10407114.html">“The ‘Smart Quotes’ are leaking all over the Internet!”</a></p><p>2011/07/08 <a href="http://archives.miloush.net/michkap/archive/2011/07/08/10184413.html">Not dumb, but dumb quotes! (aka Sorry Mr. Boehner, this one may be our fault)</a></p><p>2010/04/01 <a href="http://archives.miloush.net/michkap/archive/2010/04/01/9988607.html">Is the text in XKCD broken?</a></p><p>2008/04/23 <a href="http://archives.miloush.net/michkap/archive/2008/04/23/8417318.html">That brings new meaning to having "a ç-section" (Ãç§), doesn't it?</a></p><p>2008/03/12 <a href="http://archives.miloush.net/michkap/archive/2008/03/12/8163426.html">If they aren't in Unicode, what could they be in? And you can [smart-]quote me on that!</a></p><p>2008/01/30 <a href="http://archives.miloush.net/michkap/archive/2008/01/30/7323699.html">A more usable Dutch keyboard that works properly?</a></p><p>2007/10/17 <a href="http://archives.miloush.net/michkap/archive/2007/10/17/5499362.html">CSI: Unicode?</a></p><p>2007/08/11 <a href="http://archives.miloush.net/michkap/archive/2007/08/11/4342275.html">Should old aquaintance *not* be forgot, code pages may screw up their names anyhow</a></p><p>2007/02/20 <a href="http://archives.miloush.net/michkap/archive/2007/02/20/1724946.html">Dumb quotes... or maybe they are just smart-ass quotes</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2006/12/24/1355642.html" title="Despite a report to the contrary, >1000 seems to work">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2006/12/23/1351269.html" title="Vista turns on everything">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2006-12">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2006-12-23">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2006/12/23/1354366.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:38 GMT -->
+</html>

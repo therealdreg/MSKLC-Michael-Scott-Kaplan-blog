@@ -1,0 +1,30 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2010/02/12/9962835.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:35 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Evil Date Parsing lives! Viva Evil Date Parsing!, explained</title></head><body>
+<h1>Evil Date Parsing lives! Viva Evil Date Parsing!, explained</h1>
+<p><em>by Michael S. Kaplan, published on 2010/02/12 12:16 -05:00, original URI: http://blogs.msdn.com/b/michkap/archive/2010/02/12/9962835.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P>So it was yesterday in <A href="http://archives.miloush.net/michkap/archive/2010/02/11/9962007.html" mce_href="http://archives.miloush.net/michkap/archive/2010/02/11/9962007.html"><STRONG>Evil Date Parsing lives! Viva Evil Date Parsing!</STRONG></A> that I pointed out the reported problem with the following code:</P>
+<BLOCKQUOTE><FONT face="Consolas,Lucida Console,Courier New,Courier,Fixed"><B>
+<P>CultureInfo ci = new CultureInfo("ar-sa");<BR>ci.DateTimeFormat.Calendar = ci.OptionalCalendars[1];<BR>Thread.CurrentThread.CurrentCulture = ci;<BR>String value = DateTime.UtcNow.ToString("u");<BR>DateTime dt = DateTime.Parse(value, ci, DateTimeStyles.AdjustToUniversal | DateTimeStyles.AssumeUniversal);</P></B></FONT></BLOCKQUOTE>
+<P>Basically, that DateTime.Parse call was hitting an error.</P>
+<P>No one really guessed what was going on, and apparently no one debugged the five lines of code to look for clues, either.</P>
+<P>So I guess I'll explain it a bit now.</P>
+<P>First I will provide&nbsp;a hint, in the form of an older blog of mine, <A href="http://archives.miloush.net/michkap/archive/2006/04/14/576627.html" mce_href="http://archives.miloush.net/michkap/archive/2006/04/14/576627.html"><STRONG>Long term planning is not always done</STRONG></A>.</P>
+<P>Now the calendar here is the System.Globalization.UmAlQuraCalendar.</P>
+<P>If you look at the value of that <STRONG>value</STRONG> string, it is:</P>
+<P>الجمعة, صفر 1431 08:10:08</P>
+<P>which may give an additional hint.</P>
+<P>Now the problem becomes clear, if you take the meaning of the two flags being passed to the <A href="http://msdn.microsoft.com/en-us/library/ey1cdcx8.aspx" mce_href="http://msdn.microsoft.com/en-us/library/ey1cdcx8.aspx">Parse</A> method:</P>
+<UL>
+<LI>AdjustToUniversal: Parses s and, if necessary, converts it to UTC. If s includes a time zone offset, or if s contains no time zone information but styles includes the DateTimeStyles.AssumeLocal flag, the method parses the string, calls ToUniversalTime to convert the returned DateTime value to UTC, and sets the Kind property to DateTimeKind.Utc. If s indicates that it represents UTC, or if s does not contain time zone information but styles includes the DateTimeStyles.AssumeUniversal flag, the method parses the string, performs no time zone conversion on the returned DateTime value, and sets the Kind property to DateTimeKind.Utc. In all other cases, the flag has no effect.</LI>
+<LI>AssumeUniversal: Specifies that if s lacks any time zone information, it is assumed to represent UTC. Unless the DateTimeStyles.AdjustToUniversal flag is present, the method converts the returned DateTime value from UTC to local time and sets its Kind property to DateTimeKind.Local.</LI></UL>
+<P>It is obviously fair to say that the date is the original "Hijri" style date in the 14th century, and trying to instruct the parser that it is a UTC date will cause it to fail since it is WAY out of range.</P>
+<P>Now perhaps you could argue that there is a bug in the initial ToString("u") call in creating a string that it is the universal format but still using the other calendar's date and year. In fact I might tend to argue that at a minimum that is where the documentation problem exists, and maybe also the actual behavior problem....</P>
+<hr/><p><strong>Random832</strong> on 12 Feb 2010 5:08 PM:</p><div style="margin-left: 1em"><p>I did the test but didn't have time to post. I got completely different results (on .NET4Beta2/Win7, if it matters):</p>
+<p>First difference of note: the UmAlQuraCalendar was OptionalCalendars[0]; [1] was the HijriCalendar. Second difference: ToString(&quot;u&quot;) returned 2010-etc-etc-etcZ - both actually in the universal sortable format (which what you pasted here was not) and with the Gregorian Year. Third, the HijriCalendar took that string, and read it as some date way in the future. Which brings us to my diagnosis of the exception: the blog post you linked</p>
+<p>[I wrote another comment, but I lost it due to clicking the back button or something, and don't _think_ I posted it - if by some chance you see two comments from me on this post, delete one.]</p></div>
+<p><strong>Larry H.</strong> on 12 Feb 2010 7:53 PM:</p><div style="margin-left: 1em"><p>Nitpicker's corner: 1431 is in the 15th century, n'est pas?</p></div>
+<hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2011/06/15 <a href="http://archives.miloush.net/michkap/archive/2011/06/15/10174716.html">Does your code avoid the [government sanctioned] Y1.45K bug?</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2010/02/13/9962894.html" title="How Windows 7 broke VB6&#39;s RightToLeft property, and how to get it fixed">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2010/02/11/9962007.html" title="Evil Date Parsing lives! Viva Evil Date Parsing!">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2010-02">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2010-02-12">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2010/02/12/9962835.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:35 GMT -->
+</html>

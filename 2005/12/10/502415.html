@@ -1,0 +1,35 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2005/12/10/502415.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:40 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>CurrentRegion is not based on the GEOID</title></head><body>
+<h1>CurrentRegion is not based on the GEOID</h1>
+<p><em>by Michael S. Kaplan, published on 2005/12/10 15:31 -05:00, original URI: http://blogs.msdn.com/b/michkap/archive/2005/12/10/502415.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P><FONT face=Tahoma>From the mostly excellent movie Notting Hill:</FONT></P>
+<BLOCKQUOTE dir=ltr style="MARGIN-RIGHT: 0px">
+<P><EM><FONT size=2><STRONG>Hugh Grant</STRONG>: Do you say 'No' to everything?</FONT></EM></P>
+<P><EM><FONT size=2><STRONG>Julia Roberts</STRONG>: {thinks for a moment} No.</FONT></EM></P></BLOCKQUOTE>
+<P><FONT face=Tahoma>Kind of fun when you argue against a point by playing into it, huh? :-)</FONT></P>
+<P><FONT face=Tahoma>I was reminded of this the other day.</FONT></P>
+<P><FONT face=Tahoma>You see, some people think I am under the delusion that I am always right. Interestingly, those people are incorrect....</FONT></P>
+<P><FONT face=Tahoma>There was an old newsgroup post I did back in February of 2005, where (when talking about the Win32 settings that inspired the managed settings)&nbsp;I said:</FONT></P>
+<BLOCKQUOTE dir=ltr style="MARGIN-RIGHT: 0px">
+<P><FONT size=2><EM>I agree with you on the confusion. I think the logic was that there were enough subtle differences between the .NET framework analogue to the Win32 locale that a new name seemed like the easiest way to capture the fact that they are indeed two different (if analogous) beasts.... </EM></FONT></P>
+<P><FONT size=2><EM>So, it is like this: </EM></FONT></P>
+<P><FONT size=2><EM>default user locale (standards and formats) <BR>becomes <BR>CurrentCulture </EM></FONT></P>
+<P><FONT size=2><EM>default user UI language <BR>becomes <BR>CurrentUICulture </EM></FONT></P>
+<P><FONT face=Tahoma><EM><FONT face="Times New Roman" size=2>User GEOID (location) <BR>becomes <BR>CurrentRegion</FONT></EM></P></BLOCKQUOTE></FONT>
+<P><FONT face=Tahoma>Now that third point&nbsp;there is definitely 100% wrong. The <A href="http://msdn.microsoft.com/library/en-us/cpref/html/frlrfSystemGlobalizationRegionInfoClassCurrentRegionTopic.asp">CurrentRegion</A> is also based on the default user locale.</FONT></P>
+<P><FONT face=Tahoma>This would be yet another example of the problem I pointed out in </FONT><A id=_ctl0__ctl0__ctl0__ctl0_BlogSearcher__ctl0_SearchPostList__ctl0_EntryItems__ctl0_PostTitle href="http://archives.miloush.net/michkap/archive/2005/02/04/366922.html"><FONT face=Tahoma><STRONG>GEOID -- The LCIDs maligned little brother....</STRONG></FONT></A></P>
+<P><FONT face=Tahoma>We honestly ought to be basing something called <A href="http://msdn.microsoft.com/library/en-us/cpref/html/frlrfSystemGlobalizationRegionInfoClassCurrentRegionTopic.asp">RegionInfo.CurrentRegion</A> on the actual setting in Regional and Language Options that is based on region, rather than the one based on 'standards and formats.' Though there are&nbsp;several reasons why this would not work very well:</FONT></P>
+<UL>
+<LI><FONT face=Tahoma>The list of regions&nbsp;of the data supporting <A href="http://msdn.microsoft.com/library/en-us/cpref/html/frlrfsystemglobalizationregioninfoclasstopic.asp">RegionInfo</A> is the same as the list of locales/cultures (since the original architecture of RegionIno was based on an attempt to split the region-specific pieces of locales)</FONT> 
+<LI><FONT face=Tahoma>The list of regions underlying the GEOID is larger and thus you can have settings in Windows that would not be available in the .NET Framework</FONT> 
+<LI><FONT face=Tahoma>One of the <A href="http://msdn.microsoft.com/library/en-us/cpref/html/frlrfsystemglobalizationregioninfoclassctortopic1.asp">original constructors</A> for <A href="http://msdn.microsoft.com/library/en-us/cpref/html/frlrfsystemglobalizationregioninfoclasstopic.asp">RegionInfo</A> takes an LCID, not a GEOID</FONT> 
+<LI><FONT face=Tahoma>The <A href="http://msdn.microsoft.com/library/en-us/cpref/html/frlrfSystemGlobalizationRegionInfoClassCurrentRegionTopic.asp">CurrentRegion</A> property is documented as getting "<FONT face="Times New Roman">...the RegionInfo that represents the country/region used by the current thread.</FONT>" while the actual GEOID setting is not really thread based (there is some basis for the behavior of culture settings having a thread basis, even though I think <a href="http://archives.miloush.net/michkap/archive/2005/08/22/454360.html"><STRONG>the thread locale really sucks</STRONG></A></FONT> 
+<LI><FONT face=Tahoma>People just plain aren't using GEOIDs where they probably ought to be, and our team is not an exception to this!</FONT></LI></UL>
+<P><FONT face=Tahoma>Anyway, sorry that I was&nbsp;incorrect in that newsgroup posting.&nbsp;It would be easy&nbsp;to chicken out and&nbsp;claim that the reason I was wrong is that the current behavior is wrong, but given the points above it is clearly part of the design. So I will just take my lumps and try to keep doing better....</FONT></P>
+<P><FONT face=Tahoma></FONT>&nbsp;</P>
+<P><FONT face=Tahoma color=#ff1493><EM>This post brought to you by</EM> "<FONT size=6>«</FONT>" <EM>(U+00ab, LEFT-POINTING DOUBLE ANGLE QUOTATION MARK)</EM></FONT></P>
+<hr/><div style="margin-left: 1em"><em>no comments</em></div><hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2010/03/08 <a href="http://archives.miloush.net/michkap/archive/2010/03/08/9973914.html">Where'd *that* name come from anyway?</a></p><p>2010/02/14 <a href="http://archives.miloush.net/michkap/archive/2010/02/14/9963164.html">Whither RegionInfo?</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2005/12/10/502422.html" title="We&#39;re damned if we do, and damned if we don&#39;t">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2005/12/09/502290.html" title="More on the C4819 error">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2005-12">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2005-12-10">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2005/12/10/502415.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:40 GMT -->
+</html>

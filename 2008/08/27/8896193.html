@@ -1,0 +1,32 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2008/08/27/8896193.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:36 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Uniqueness of the Name and Description...</title></head><body>
+<h1>Uniqueness of the Name and Description...</h1>
+<p><em>by Michael S. Kaplan, published on 2008/08/27 03:01 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2008/08/27/8896193.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<p>Jason Timms, in response to <b><a href="http://archives.miloush.net/michkap/archive/2007/01/30/1557184.html" mce_href="http://archives.miloush.net/michkap/archive/2007/01/30/1557184.html">Not the coolest</a></b>, in a <a href="http://archives.miloush.net/michkap/archive/2007/01/30/1557184.html#8887758" mce_href="http://archives.miloush.net/michkap/archive/2007/01/30/1557184.html#8887758">comment</a>, asked:</p>
+<blockquote>
+<p><i><font face="times new roman,times">I do have a question.<br><br>How can I reuse a name / description of a keyboard layout that I have already 
+built? &nbsp;It seems that the name is copied in several places in the registry and 
+won't allow me to reuse it.<br><br>Can I safely delete one of these entries and rebuild it?<br><br>Thanks again.</font></i></p>
+</blockquote>
+<p>Just so we all know what we are talking about, we'll look at the dialog that shows up when you select <b>Project|Properties...</b> off the main window and see this dialog pop up:</p>
+<p><img src="http://trigeminal.fmsinc.com/images/Properties01.png"></p>
+<p>The <b>Name</b> is actually the filename for the DLL, it will be used to create the file that MSKLC builds.</p>
+<p>The <b>Description</b> is the string that will be used as the layout name in the MSKLC-created setup and in the <b>Text Services and Input Languages</b> dialog in Windows.</p>
+<p>Now the check that is done here is looking to see if either the filename exists on the machine or the keyboard layout name exists in the user interface as a selectable or selected layout.</p>
+<p>Which points to the answer for how to build a setup that is based on a name and/or description that MSKLC complains already exists, of course.</p>
+<p><b>Uninstall the layout! :-)</b></p>
+<p>I remember why it was designed this way -- to avoid the confusion of trying to install the layout that was just built and being unable to, and especially avoiding the problem of multiple versions of a lsyout lying aroun and no clear easy sense of which is which. These problems came out as various bugs were reported over the time that the first version of MSKLC was being tested.<br></p>
+<p>Thinking about it now, there is I think a flaw or two to this particular bit of design, flaws that might be worth some thought in a future version:</p>
+<ul>
+<li>The upgrade strategy could be embraced a bit -- allowing the build but informing the author of what was going on, perhaps even upgrading the existing installed layout?</li>
+<li>The separation of what is installed vs. what is built on a machine could be considered -- since they are often two different things, and assuming otherwise can inconvenience an author.</li>
+</ul>
+<p>Just thinking aloud here, but it seems like MSKLC could do better here, maybe?<br></p>
+<p><br></p>
+<p><i><font color="#ff00ff">This post is sponsored by every freaking character in 
+Unicode 5.1</font></i><br></p>
+<hr/><div style="margin-left: 1em"><em>no comments</em></div><hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2008/08/27/8898859.html" title="Keyboard Layouts, everywhere!">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2008/08/26/8895190.html" title="The sheer Shear of it all">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2008-08">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2008-08-27">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2008/08/27/8896193.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:36 GMT -->
+</html>

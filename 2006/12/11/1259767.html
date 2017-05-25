@@ -1,0 +1,48 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2006/12/11/1259767.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:39 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>The Romanian keyboard layout on XP is the brokenest layout of all</title></head><body>
+<h1>The Romanian keyboard layout on XP is the brokenest layout of all</h1>
+<p><em>by Michael S. Kaplan, published on 2006/12/11 10:55 -05:00, original URI: http://blogs.msdn.com/b/michkap/archive/2006/12/11/1259767.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P>Technically, the word <STRONG>broken</STRONG> represents an absolute; this means the terms <STRONG>brokener</STRONG> and <STRONG>brokenest</STRONG>&nbsp;are really not words.</P>
+<P>But they say that it is the exception that proves the rule, and the Romanian keyboard on Windows NT&nbsp;represents the surefire god awful damnedest exception in the history of keyboards!</P>
+<P>First we'll start with the layout as it was in Windows 95, as shown in the first edition of Developing International Software for Windows 95 and Windows&nbsp; NT, in appendix Q <A class="" href="http://www.microsoft.com/globaldev/dis_v1/disv1.asp?DID=dis45d&amp;File=S25B8_bb.asp" mce_href="http://www.microsoft.com/globaldev/dis_v1/disv1.asp?DID=dis45d&amp;File=S25B8_bb.asp">here</A>, specifically the AltGr shift state:</P>
+<P><IMG src="http://trigeminal.fmsinc.com/images/RomanianAltGr.png"></P>
+<P>Now you can how the top row contains a bunch of dead keys, right?</P>
+<P>Well, when this keyboard was ported from Win9x to WinNT, the person doing the porting made a small set of errors. basically not defining any of those dead keys.</P>
+<P>Since this small omission keeps the keyboard from creating 77 different characters, a not entirely insignificant amount of which are needed for the Romanian language, it is fair to say that the keyboard is broken.</P>
+<P><A class="" href="http://www.secarica.ro/" mce_href="http://www.secarica.ro/">Cristi</A> had been trying to tell people about this for a while but was having problems getting the message sent to the core team that owns the keyboard layouts, so it really wasn't until just a few years ago that he bumped into me online and after looking into it I put in the bug entitled "<STRONG>Romanian keyboard is wrong, Wrong, WRONG!</STRONG>", which we finally managed to fix in Vista by restoring those dead keys (and those 77 characters) to their former glory....</P>
+<P>Which of course left us with one additional problem.</P>
+<P>You see, we added two new keyboard layouts for Romanian to Vista, one following the Romanian national standard and the other a commonly used phonetic layout. </P>
+<P>And the two new layouts use the characters with comma below rather than cedilla below (the characters we updated fonts for, mentioned <STRONG><A class="" href="http://archives.miloush.net/michkap/archive/2006/11/19/1104093.html" mce_href="http://archives.miloush.net/michkap/archive/2006/11/19/1104093.html">here</A></STRONG> and <STRONG><A class="" href="http://archives.miloush.net/michkap/archive/2006/12/09/1245128.html" mce_href="http://archives.miloush.net/michkap/archive/2006/12/09/1245128.html">here</A></STRONG>).</P>
+<P><EM>(Another post coming up soon will talk about the larger issues surrounding these letters in national standards and in software!)</EM></P>
+<P>But there was this huge question of whether to update the old layout we fixed to use the new characters or to instead keep the ones that were originally there. </P>
+<P>The particular commitment to never change a layout really speaks more to the intent of the layout (what a person would expect to be typed) rather than the literal characters. So it was a non-trivial question.</P>
+<P>But in the end, the decision was made to have the older keyboard keep typing the older, non-preferred letters, which have at least one real advantage -- they are on the relevant default Windows, OEM,&nbsp;and ISO code pages -- an important consideration in legacy applications.</P>
+<P>Like I mentioned before, the history of these letters, which makes for a fascinating story, is coming up soon and will discuss this issue further. :-)</P>
+<P mce_keep="true">&nbsp;</P>
+<P><FONT color=#ff00ff><EM>This post brought to you by</EM>&nbsp;<FONT size=6>ț</FONT> <EM>(<A class="" href="http://www.fileformat.info/info/unicode/char/021b" mce_href="http://www.fileformat.info/info/unicode/char/021b">U+021b</A>, a.k.a. LATIN SMALL LETTER T WITH COMMA BELOW)</EM></FONT></P>
+<hr/><p><a id="1260247" href="#1260247">#</a> <strong>Mihai</strong> on 11 Dec 2006 12:21 PM:</p><div style="margin-left: 1em"><p>The interesting part though is that the characters created using the dead keys are not used in Romanian. Also not used are the d and l with stroke, and sharp s.</p>
+<p>The only accented characters used are t and s with comma below, </p>
+<p>a and i with circumflex, a with breve (and all those are accessible without dead keys).</p>
+<p>The rest is a nice bonus to work with foreign languages (like the United States- International layout).</p>
+<p>So it is not that broken, after all :-)</p></div>
+<p><a id="1260863" href="#1260863">#</a> <strong>Michael S. Kaplan</strong> on 11 Dec 2006 3:28 PM:</p><div style="margin-left: 1em"><p>Well, broken in the sense that it used to work and now it no longer does? :-)</p>
+</div>
+<p><a id="1262382" href="#1262382">#</a> <strong>Cristian Secară</strong> on 11 Dec 2006 6:22 PM:</p><div style="margin-left: 1em"><p>Generally speaking, the accented characters generated with the help of the dead keys are required by the minority languages used over the Romanian territory, but I agree that not all 77 characters.</p>
+<p>Some points here:</p>
+<p>- the most required language support here is for Hungarian, German (political/cultural) and French (cultural)</p>
+<p>- in my understanding, &quot;cultural&quot; support means writing some general purpose text in a particular language, whereas &quot;political&quot; support means to be able to write at least the names of a person, street and/or place in a particular language</p>
+<p>- the Legacy layout does not provide complete support for French; this issue has been addressed in the Standard layout, assuming the user handles an Unicode encoded document (or at least an ISO-8859-16 encoded document)</p>
+<p>- đ/Đ and ł/Ł characters are provided as part of support for Croatian and respectively Polish languages; it was explicitly requested to keep them also in the standardized layout (don't ask me how many users will actually use them ...)</p>
+<p>- &#223; character is provided as part of support for German language; this character is present also in the standardized layout, in spite of the &quot;legacy&quot; nature of it usage (I assume entirely this decision, which is the result of many discussions, carried also with the dean of the German university in Bucharest)</p>
+<p>- the presence and position of the dead keys for Romanian keyboard are the same as for Croatian, Hungarian and Slovenian if I remember well ...</p>
+<p>Cristi</p></div>
+<p><strong>Groan</strong> on 30 Dec 2009 11:22 AM:</p><div style="margin-left: 1em"><P>Is there any way to get the new style keyboard layout in Windows XP ? (The qwertY one that also has the proper şţ characters, not the ones I typed here)</P>
+<P>Or is this Vista only?</P></div>
+<p><strong>Michael S. Kaplan</strong> on 30 Dec 2009 6:24 PM:</p><div style="margin-left: 1em"><p>If you are on &gt;= Vista you can use MSKLC to create a layout based on one of the new ones, then use the setup it creates on XP.</p>
+<p>Or you can build your own layout with them using MSKLC on XP (if you have no access to a later version of Windows).</p>
+</div>
+<hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2011/08/15 <a href="http://archives.miloush.net/michkap/archive/2011/08/15/10195601.html">If you change the behavior of typing sequences you should never type, is it a bug?</a></p><p>2008/09/29 <a href="http://archives.miloush.net/michkap/archive/2008/09/29/8968429.html">The difference between Six Sigma and Sigma Diaresis is one must never fail; the other seems to do so by default</a></p><p>2007/11/27 <a href="http://archives.miloush.net/michkap/archive/2007/11/27/6544551.html">How many versions does a bug have to exist before backporting the fix can't be successfully argued?</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2006/12/11/1262690.html" title="IsComplexEnoughForYou?">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2006/12/10/1252776.html" title="Don&#39;t want to convert all at once? Well, maybe you could just nibble?">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2006-12">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2006-12-11">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2006/12/11/1259767.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:39 GMT -->
+</html>

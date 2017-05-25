@@ -1,0 +1,38 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2007/11/22/6463359.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:37 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>If it does [best] fit, it may be off a bit! (aka Parlez-ゔ japonais?)</title></head><body>
+<h1>If it does [best] fit, it may be off a bit! (aka Parlez-ゔ japonais?)</h1>
+<p><em>by Michael S. Kaplan, published on 2007/11/22 10:01 -05:00, original URI: http://blogs.msdn.com/b/michkap/archive/2007/11/22/6463359.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P>So just yesterday, Kelvin Houghton had an excellent question:</P>
+<BLOCKQUOTE>
+<P><FONT face="times new roman,times">Hello All.<BR><BR>I have a strange issue I would like your help on please.&nbsp; In a C# app if I have the line<BR><BR>&nbsp;&nbsp;&nbsp; Console.WriteLine("\u3094"); <BR><BR>I would expect to see the output of character ゔ&nbsp;But it instead outputs u30F4 which would look like this character rヴ<BR><BR>My question is why does u30F4 get displayed when I told it to display u3094?<BR><BR>Thanks<BR>Kelvin</FONT></P></BLOCKQUOTE>
+<P>Like I said, an excellent question!</P>
+<P>Globalization ace Garrett McGowan had the answer pretty quickly:</P>
+<BLOCKQUOTE>
+<P><EM>This is because there’s no equivalent character in the Japanese Windows code page (cp932). It’s returning the closest equivalent, the katakana form of the symbol.</EM></P></BLOCKQUOTE>
+<P>A fact that you confirm by looking at the "best fit" tables from Microsoft that are publicly available&nbsp;and hosted on the Unicode site <A class="" href="http://www.unicode.org/Public/MAPPINGS/VENDORS/MICSFT/WindowsBestFit/bestfit932.txt" mce_href="http://www.unicode.org/Public/MAPPINGS/VENDORS/MICSFT/WindowsBestFit/bestfit932.txt">here</A>, with an excerpt below:</P>
+<BLOCKQUOTE>
+<P><FONT face="courier new,courier" size=3><STRONG>0x3091&nbsp; 0x82ef&nbsp;&nbsp;&nbsp; ;ゑ Hiragana We<BR>0x3092&nbsp; 0x82f0&nbsp;&nbsp;&nbsp; ;を Hiragana Wo<BR>0x3093&nbsp; 0x82f1&nbsp;&nbsp;&nbsp; ;ん Hiragana N<BR><FONT color=#ff0000>0x3094&nbsp; 0x8394&nbsp;&nbsp;&nbsp; ;ヴ Hiragana Vu (add best-fit 2/1/96)<BR></FONT>0x309b&nbsp; 0x814a&nbsp;&nbsp;&nbsp; ;゛ Katakana-Hiragana Voiced Sound Mark<BR>0x309c&nbsp; 0x814b&nbsp;&nbsp;&nbsp; ;゜ Katakana-Hiragana Semi-Voiced Sound Mark<BR>0x309d&nbsp; 0x8154&nbsp;&nbsp;&nbsp; ;ゝ Hiragana Iteration Mark<BR>0x309e&nbsp; 0x8155&nbsp;&nbsp;&nbsp; ;ゞ Hiragana Voiced Iteration Mark<BR>0x30a1&nbsp; 0x8340&nbsp;&nbsp;&nbsp; ;ァ Katakana Small A<BR>0x30a2&nbsp; 0x8341&nbsp;&nbsp;&nbsp; ;ア Katakana A</STRONG></FONT></P></BLOCKQUOTE>
+<P>As a bonus, everyone can reflect on the power of comments <STRONG>that no one probably realized</STRONG> were there? :-)</P>
+<P>IPE expert Paul Chavez made&nbsp;an interesting point about the missing-ness of this character in shift-JIS:</P>
+<BLOCKQUOTE>
+<BLOCKQUOTE>
+<P><FONT face="times new roman,times"><EM>Makes sense as</EM></FONT> ヴ <EM><FONT face="times new roman,times">is only used for purely phonetic writing of “foreign sounds”&nbsp; Although Hiragana is phonetic also, it is not used when writing “foreign sounds”.</FONT></EM><BR><BR><FONT face="times new roman,times"><EM>I know as my family name is spelled</EM></FONT> チャヴェズ.</P></BLOCKQUOTE></BLOCKQUOTE>
+<P>And as a closing bit, there is a nice little note in the <A class="" href="http://everything2.com/index.pl?node_id=45901" mce_href="http://everything2.com/index.pl?node_id=45901">hiragana</A> entry on everything2.com:</P>
+<BLOCKQUOTE>
+<P><FONT size=3>It should be mentioned that there are several obsolete kana that are rarely used today, in both hiragana and katakana. In hiragana:</FONT></P>
+<P><FONT size=3>ゑ - the "we" hiragana<BR>ゐ - the "wi" hiragana<BR>ゔ - the "vu" hiragana</FONT></P>
+<P><FONT size=3>All of these kana are considered obsolete, and exist only for use in transcribing older documents. In cases where the "vu" hiragana is used, the still in use katakana "vu" is placed instead, and when formed into another syllable, a smaller kana vowel is paired with it.</FONT></P></BLOCKQUOTE>
+<P>When all of this info had been passed about, Kelvin did have one more question to ask:</P>
+<BLOCKQUOTE>
+<P><FONT face="times new roman,times">Just another question this raises.&nbsp; If you use charmap.exe or wordpad.exe it does display the characters correctly – how are they able to do that?&nbsp; Trying to fully understand as we have&nbsp;######<FONT size=1><SUP>1</SUP></FONT> who is trying to localize a file name that uses u3094 and that is what displays incorrectly.</FONT></P></BLOCKQUOTE>
+<P mce_keep="true">Now that does boil down to the basic Unicode vs. not issue -- and in particular the Console.WriteLine behavior is explained in <A class="" href="http://archives.miloush.net/michkap/archive/2007/04/24/2255195.html" mce_href="http://archives.miloush.net/michkap/archive/2007/04/24/2255195.html"><STRONG>Sometimes, the shortcuts give better AND faster results</STRONG></A>. A .NET limitation that can be worked around (when necessary) with WriteConsoleW, and an ISV limitation that can be worked around (when necessary) by converting to Unicode!</P>
+<P mce_keep="true">&nbsp;</P>
+<P mce_keep="true"><FONT size=1>1 - Third party independent software vendor removed just for the hell of it, since this is mostly a .NET issue anyway, not an iSV bug.</FONT></P>
+<P mce_keep="true">&nbsp;</P>
+<P mce_keep="true"><FONT color=#ff00ff><EM>This post brought to you by</EM><FONT size=5> ゔ </FONT><EM>(<A class="" href="http://www.fileformat.info/info/unicode/char/3094" mce_href="http://www.fileformat.info/info/unicode/char/3094">U+3094</A>, a.k.a. HIRAGANA LETTER VU)</EM></FONT></P>
+<hr/><p><strong>khiara</strong> on 16 Feb 2009 7:04 PM:</p><div style="margin-left: 1em"><p>allright it doesnt give u much information!!!</p></div>
+<hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2012/02/20 <a href="http://archives.miloush.net/michkap/archive/2012/02/20/10269748.html">Where short file names can fail</a></p><p>2008/05/08 <a href="http://archives.miloush.net/michkap/archive/2008/05/08/8466991.html">In hindsight, they may have BEST FIT these files where the sun never shines</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2007/11/23/6473202.html" title="SIAO: where Shift happens (and sometimes shiksas are involved?)">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2007/11/22/6462768.html" title="How bad does it need to be in order to be not good enough, anyway?">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2007-11">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2007-11-22">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2007/11/22/6463359.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:37 GMT -->
+</html>

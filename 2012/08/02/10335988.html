@@ -1,0 +1,33 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2012/08/02/10335988.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:31 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Ya gotta have options, man!</title></head><body>
+<h1>Ya gotta have options, man!</h1>
+<p><em>by Michael S. Kaplan, published on 2012/08/02 07:01 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2012/08/02/10335988.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<p>Sean asked me the following contact request which I decided to make a blog:</p>
+<p style="padding-left: 60px;"><span style="font-family: times new roman,times; font-size: medium;">MSKLC allows entry of unicode characters but complains if they aren't in the locale codepage. &nbsp;But there doesn't seem to be a way to set the codepage -- ugh. &nbsp;How do i tell - the keyboard/windows/whatever - to just work in Unicode and forget all this 1258 nonsense??? &nbsp;heh... sorry for my 4am desperate ramblings...</span></p>
+<p>The message did indeed arrive at 4:26am. ;-)</p>
+<p>The answer can be found under <strong>View|Options...</strong> and the <strong>Options</strong> dialog it launches:</p>
+<p><a href="http://msdnshared.blob.core.windows.net/media/MSDNBlogsFS/prod.evol.blogs.msdn.com/CommunityServer.Blogs.Components.WeblogFiles/00/00/00/33/81/7823.CodePageWarnings.jpg"><img title="The MSKLC Options dialog" border="0" alt="The MSKLC Options dialog" src="http://msdnshared.blob.core.windows.net/media/MSDNBlogsFS/prod.evol.blogs.msdn.com/CommunityServer.Blogs.Components.WeblogFiles/00/00/00/33/81/7823.CodePageWarnings.jpg" /></a></p>
+<p>That CheckBox over near the bottom right, the one that says <strong>In<span style="text-decoration: underline;">c</span>lude Validation Warnings Related to Codepages</strong> one.</p>
+<p>The help file topic explains how it works:</p>
+<ul>
+<li><span style="font-size: medium;"><strong>Include Validation Warnings Related to Code Pages</strong></span><span style="font-size: small;"> - When running through the Validation process, there can be warnings related to code points currently on the keyboard layout that are not representable on the default system code page of the associated language. This indicates there may be a compatibility issue for non-Unicode applications.</span></li>
+</ul>
+<p>I'll tell you a secret.</p>
+<p>Every single option on that dialog came from feedback from either the alpha pre-release&nbsp;or the beta pre-release, when someone gave me a keyboard layout with weird or strange behavior.</p>
+<p>Like Sean's report, but earlier. :-)</p>
+<p>At first I always warned, but then someone built a Hindi (Unicode only) keyboard.</p>
+<p>So rather than a page of warnings covering nearly every key, I made it silently skip that validation for Unicode only locales.</p>
+<p>Then someone else tried to build an Urdu keyboard -- code page 1256 but with many letters not on the codepage -- and she wanted a way to turn off those warnings entirely since those particular ones weren't useful in her case, ever though they could be important in other situations.</p>
+<p>That's when I added that CheckBox.</p>
+<p>Later, when someone building 15 different Arabic script keyboards who was sick of having to uncheck that CheckBox over and over.</p>
+<p>Suddenly, the <strong><span style="text-decoration: underline;">R</span>emember Settings After Shutdown</strong> setting was born.</p>
+<p>And so on....</p>
+<p>Anyway, that should help Sean out.</p>
+<p>Another time I'll tell you the exact reason why I was so sensitive about tons of spurious warnings....</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<hr/><div style="margin-left: 1em"><em>no comments</em></div><hr/><p><em>go to <a id="newer" href="../03/10335906.html" title="It&#39;s 2012! NT 3.1 just called, they want their [circa 1993] methodology back!">newer</a> or <a id="older" href="../01/10335466.html" title="When my decisions come back to haunt me (and/or others!)">older</a> post, or back to <a href="../../../index-2.html">index</a> or <a href="../../../index-2.html#2012-08">month</a> or <a href="../../../index-2.html#2012-08-02">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2012/08/02/10335988.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:31 GMT -->
+</html>

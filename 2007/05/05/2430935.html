@@ -1,0 +1,44 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2007/05/05/2430935.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:38 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>All right, mistakes were made #2 (What the %#$* is wrong with German Phonebook sorting?)</title></head><body>
+<h1>All right, mistakes were made #2 (What the %#$* is wrong with German Phonebook sorting?)</h1>
+<p><em>by Michael S. Kaplan, published on 2007/05/05 15:31 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2007/05/05/2430935.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P>(Apologies once again for the Dogma/Carlin allusion in the title)</P>
+<P>I'll start by posting the moral of the story first: <STRONG>Always comment your code so that others know what you were thinking!</STRONG></P>
+<P>Continuing on from the prior post -- <A href="http://archives.miloush.net/michkap/archive/2007/05/05/2430272.html" mce_href="http://archives.miloush.net/michkap/archive/2007/05/05/2430272.html"><STRONG>All right, mistakes were made #1 (a.k.a. Expanding the EXPANSION table)</STRONG></A>, and of course alluding to <A href="http://archives.miloush.net/michkap/archive/2005/04/10/406880.html" mce_href="http://archives.miloush.net/michkap/archive/2005/04/10/406880.html"><STRONG>What the %#$* is wrong with German sorting?</STRONG></A> which itself alludes to the South Park movie....</P>
+<P>I had just talked about how wrong I was (don't let the prior talk about other people confuse anyone -- I blame myself for the regression here</P>
+<P>Back in the beginning of April, Sven&nbsp;Harazim asked in the microsoft.public.win32.programmer.international newsgroup in a post entitled <EM>CompareString / String.Compare works different on XP - Vista with German "Umlauts" öäüÖÄÜ</EM>:</P>
+<BLOCKQUOTE><FONT face="times new roman,times">
+<P><EM>Hello!<BR><BR>From Windows9x up do XP the following code returns 1 (strings are<BR>different)<BR><BR>Win32<BR>CompareString(LOCALE_USER_DEFAULT, 0, 'HÜBNER',<BR>Length('HÜBNER'),'HUEBNER', Length('HUEBNER'))<BR><BR>.NET<BR>String.Compare("HÜBNER", "HUEBNER")<BR><BR>Under Vista it returns CSTR_EQUAL<BR><BR>Why?<BR><BR>What's different to Vista.<BR><BR>Sven Harazim</EM></P></FONT></BLOCKQUOTE>
+<P>Now the German phonebook sort has it's own special rules that make it different from all of the other sorts, in a way that I honestly never knew about until <STRONG>Björn Rettig</STRONG> explained to me why his name was being spelled&nbsp;<STRONG>Bjoern Rettig</STRONG> in the address book that was at the time keeping itself limited to ASCII (and first talked about here in <A href="http://archives.miloush.net/michkap/archive/2005/03/10/391564.html" mce_href="http://archives.miloush.net/michkap/archive/2005/03/10/391564.html"><STRONG>Dere are qvestions? In zat &lt;b&gt;case&lt;/b&gt;...</STRONG></A>). Basically, it sets up the following six equivalences:</P>
+<BLOCKQUOTE>
+<P><FONT size=5>Ä ≈ AE</FONT></P>
+<P><FONT size=5>ä ≈ ae</FONT></P>
+<P><FONT size=5>Ö&nbsp;≈ OE</FONT></P>
+<P><FONT size=5>ö ≈ oe</FONT></P>
+<P><FONT size=5>Ü&nbsp;≈ UE</FONT></P>
+<P><FONT size=5>ü ≈ ue</FONT></P></BLOCKQUOTE>
+<P>You may see where I am going with this now.</P>
+<P>All of those cases where individual locales were overriding pointers to the EXPANSION table, and all that thinking about how in the future we might want to support adding EXPANSION entries in specific locales, it never occurred to any of us (and those who did it originally never remembered!) that one could simply add a pointer in a specific locale's EXCEPTION table just as easily a different locale might remove one....</P>
+<P>Now for the first four entries of the list above for the German phonebook sort, there were already EXPANSION entries for Æ/æ/Œ/œ to become AE/ae/OE/oe, so it was easy to point Ä/ä/Ö/ö to the same entries in the phonebook sort's EXCEPTION table.</P>
+<P>The last two entries were slightly harder since there is no <STRONG>UE LIGATURE</STRONG> in Unicode....</P>
+<P>The solution? The one that was used on every prior version of Windows and every version of the .NET Framework?</P>
+<P>Simple -- add the two EXPANSION table entries to turn Ü/ü into UE/ue, but <STRONG>then don't point to them in the default table</STRONG>. Only point to them in the EXCEPTION table for the German phonebook sort.</P>
+<P>Oh, wait a minute -- those pointers were being generated at build time now, and thus they were being added to the DEFAULT table. And causing <STRONG>Ü</STRONG> to look like <STRONG>UE</STRONG> and <STRONG>ü</STRONG> to look like <STRONG>ue</STRONG>, worldwide. And hitting that problem that Sven reported.</P>
+<P>Turns out that&nbsp;two of those cases that were "missed" were actually not missed at all -- they were left out intentionally, but everyone forgot that they were or why, there were no comments and no spec and no document to remind people about the clever little solution that we had just unintentionally undone. :-(</P>
+<P>Oops.</P>
+<P>We are all really sorry about that.</P>
+<P>Though the story will have a happy ending -- in the form of a fix for both Longhorn Server and Vista SP1. And special thanks to Sven Harazim (with additional thanks to others who participated in the newsgroup thread)&nbsp;who helped us notice and subsequently work to fix the problem!).</P>
+<P>I learned a lot through the whole exercise, as did others in development, program management, and testing. And I learned as much from my mistakes here as I did from the mistakes of others (though I admit my own mistakes are more embarrassing to me personally!).</P>
+<P>Though now at least comments were added to make sure that this particular "feature" is never lost again! :-)</P>
+<P mce_keep="true">&nbsp;</P>
+<P><FONT color=#ff00ff><EM>This post brought to you by</EM> Œ<EM>(<A href="http://www.fileformat.info/info/unicode/char/0152" mce_href="http://www.fileformat.info/info/unicode/char/0152">U+0152</A>, a.k.a. LATIN&nbsp;CAPITAL LIGATURE OE)</EM></FONT></P>
+<hr/><p><a id="6853647" href="#6853647">#</a> <strong>Rolf Frei</strong> on 24 Dec 2007 10:23 AM:</p><div style="margin-left: 1em"><p>I have installes SP1 RC1 onmy vista and it looks as this is still not fixed in SP1. </p>
+<p>CompareString(LOCALE_USER_DEFAULT, 0, 'H&#220;BNER',</p>
+<p> &nbsp; &nbsp;Length('H&#220;BNER'),'HUEBNER', Length('HUEBNER'))</p>
+<p>still returns CSTR_EQUAL, which is wrong.</p></div>
+<p><a id="6854009" href="#6854009">#</a> <strong>Michael S. Kaplan</strong> on 24 Dec 2007 11:45 AM:</p><div style="margin-left: 1em"><P>Look at the link in the second comment here -- it is a trackback to the post that explains what is going on here..... or alternately just click <A class="" href="http://archives.miloush.net/michkap/archive/2007/09/08/4831056.html"><STRONG>here</STRONG></A>....</P></div>
+<hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2008/02/19 <a href="http://archives.miloush.net/michkap/archive/2008/02/19/7785815.html">Insanity defined: In the real world -0 == 0, in Vista -0 < 0, and in Windows Server 2008 -0 ≮ 0</a></p><p>2007/09/15 <a href="http://archives.miloush.net/michkap/archive/2007/09/15/4924008.html">A&P of Sort Keys, part 5 (aka EXPANSIONing your horizons)</a></p><p>2007/09/08 <a href="http://archives.miloush.net/michkap/archive/2007/09/08/4831056.html">2001, a Correctness Odyssey (aka What's the matter with Ü?)</a></p><p>2007/05/17 <a href="http://archives.miloush.net/michkap/archive/2007/05/17/2692362.html">If a bunch of specific Unicode characters can no longer live in the same apartment together, can they really claim that they needed their space?</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2007/05/06/2448753.html" title="One product&#39;s feature is another product&#39;s bug -- just ask &#39;em!">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2007/05/05/2430272.html" title="All right, mistakes were made #1 (a.k.a. Expanding the EXPANSION table)">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2007-05">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2007-05-05">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2007/05/05/2430935.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:38 GMT -->
+</html>

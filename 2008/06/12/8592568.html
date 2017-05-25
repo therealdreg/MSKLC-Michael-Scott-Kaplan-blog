@@ -1,0 +1,138 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2008/06/12/8592568.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:36 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Truly a font of absolute last resort</title></head><body>
+<h1>Truly a font of absolute last resort</h1>
+<p><em>by Michael S. Kaplan, published on 2008/06/12 10:01 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2008/06/12/8592568.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P>At long last, after considerable back and forth and hemming and hawing, Apple has made their <STRONG>Last Resort font</STRONG> available, and you can get it <A class="" href="http://www.unicode.org/policies/lastresortfont_eula.html" mce_href="http://www.unicode.org/policies/lastresortfont_eula.html">here</A>.</P>
+<P>Of course Mac OS X has had this for some time, but now it is available for everyone else....</P>
+<P>You can tell that Windows did not have this font in mind in its antiquated font installation UI:</P>
+<P><IMG src="http://trigeminal.fmsinc.com/images/last02.png"></P>
+<P>See that line of "A" characters --- well, that is kind of what <STRONG>The Quick Brown Fox Jumped Over The Lazy Dog</STRONG> looks like if shown only with this font.</P>
+<P>It looks even funnier in the font viewer:</P>
+<P><IMG height=683 src="http://trigeminal.fmsinc.com/images/last01.png" width=817></P>
+<P>where you can see it in all kinds of different sizes.</P>
+<P>I wonder whether Windows would ever really try to optimize this experience if the font was not being included on the platform. </P>
+<P>I mean sure it looks silly, but putting in code to handle a font one doesn't include? Hmmm, that would be weird.</P>
+<P>The text&nbsp;above the EULA on the Unicode site is a little odd in some respects, e.g.</P>
+<BLOCKQUOTE>
+<P><FONT face="times new roman,times">Overall, there are a number of advantages to using the Last Resort font for unrepresentable characters.</FONT></P>
+<OL>
+<LI><FONT face="times new roman,times">Operating systems are freed from the overhead of providing a full Unicode font. </FONT>
+<LI><FONT face="times new roman,times">Users see something more meaningful than a black box for unrepresentable characters. </FONT>
+<LI><FONT face="times new roman,times">Users familiar with the scripts being represented with the Last Resort font will readily identify what needs to be installed to represent the text. </FONT>
+<LI><FONT face="times new roman,times">Users unfamiliar with the missing scripts are shown easily-identified symbols rather than lengthy strings of unidentifiable characters. </FONT></LI></OL></BLOCKQUOTE>
+<P>Of those four points, #1 makes no sense -- the "overhead" of covering Unicode is still there; if the earlier screen shots prove anything they prove the font is useless to convey information beyond script identity. And #4 makes no sense to me in the context of #2 -- what is the difference between "a black box for unrepresentable characters" and "lengthy strings of unidentifiable characters" exactly, in this context?</P>
+<P>For Windows, the font is kind of useless unless it is put in a place that lets it act as a fallback; its not like it would be common to explicitly pick the font to look at unidentified characters to get the range, as a common operation....</P>
+<P>And then there is the mildly scary information on the info in the font and where it comes from:</P>
+<BLOCKQUOTE>
+<P><FONT face="times new roman,times">The Last Resort font includes glyphs for scripts proposed for future encoding in Unicode and ISO/IEC 10646. There is no guarantee that all of these scripts will ever be encoded in future versions of the standard; the script names are taken from the </FONT><A href="http://www.unicode.org/roadmaps/"><FONT face="times new roman,times">UTC/WG2 Roadmap</FONT></A><FONT face="times new roman,times"> dated 2001-06-14.</FONT></P></BLOCKQUOTE>
+<P>Especially since the roadmap has had subtle and in some cases not-so-subtle changes since 2001, from new ranges to changed sizes of existing ranges. I have to wonder whether </P>
+<UL>
+<LI>The information is inaccurate, or</LI>
+<LI>MAC OS X is also seven years behind in its last resort support, or</LI>
+<LI>Apple decided to dump their old font on people while keeping the up-to-date one on their platform</LI></UL>
+<P>Assuming Apple provided the information for the page describing the font, all three of these choices do not show Apple in the best possible light, though there are obviously different levels and degrees of sin involved here. :-)</P>
+<P>Over on The Unicode List, the font was discussed a bit. </P>
+<P>Like when Jukka K. Korpela commented:</P>
+<BLOCKQUOTE>
+<P><FONT face="times new roman,times"><EM>I think the idea could be explained a little more, since there is now some ambiguity and uncertainty. The idea as I understand it is to provide a glyph for every Unicode code position, using a generic symbol (a symbol suggesting the general nature of the code position, such as "Latin letter" or "noncharacter") together with additional information in "fine print". This means that it should only be used as a "backup" font.<BR><BR>Even if this will be clarified, I'm still puzzled by the technicalities. The LastResort font does not seem to behave like a normal font. For example, in MS Word's font list, it appears as a sequence of A's in boxes, which is understandable (in a way) but confusing. If I try to change the font of a piece of text to LastResort, it won't change. In WordPad, it changes. If I copy the text to Word, it stays in LastResort. Is this due to some special treatment of fonts in MS Word? If I have text in Latin, Greek, and Cyrillic letters in WordPad and I change the font to LastResort, the Latin letters turn to the LastResort Glyph but the other letters are unaffected.<BR><BR>I'm afraid some guidance on the intended use and typical problems in it is needed to make LastResort really useful.</EM></FONT></P></BLOCKQUOTE>
+<P mce_keep="true">Adam Twardoch replied to part of that comment:</P>
+<BLOCKQUOTE>
+<P mce_keep="true"><FONT face="times new roman,times"><EM>&gt; Is this due to some special treatment of fonts in MS Word? <BR>No, this is because the font is buggy.</EM></FONT></P></BLOCKQUOTE>
+<P mce_keep="true">And Jeroen Ruigrok van der Werven responded to Adam:</P>
+<BLOCKQUOTE>
+<P mce_keep="true">&gt;No, this is because the font is buggy.<BR>You're the second person I hear about that actually.</P></BLOCKQUOTE>
+<P mce_keep="true">While Andrew West had a slightly different opinion:</P>
+<BLOCKQUOTE>
+<P mce_keep="true">&gt; You're the second person I hear about that actually.<BR>I don't think that the font is buggy, but 387,471 groups in the Format 12 CMAP subtable is possibly a little suboptimal.</P></BLOCKQUOTE>
+<P mce_keep="true">Now it may or may not be buggy, but I suspect the behavior of not being able to switch to the font has more to do with Word's behavior in allowing font choice. Also combined with the subrange support as you can see in the TTF Extension utility:</P>
+<P mce_keep="true"><IMG src="http://trigeminal.fmsinc.com/images/last03.png"></P>
+<P mce_keep="true">It looks like that hasn't been updated much either, suggesting that there are some real differences between what the font thinks it supports and what the OS will interpret it as supporting. </P>
+<P mce_keep="true">You could flip a coin to decide whose fault that is. :-)</P>
+<P mce_keep="true">Andreas Prilop looked at the same matter from a different point of view, once again blaming the font:</P>
+<BLOCKQUOTE>
+<P mce_keep="true"><FONT face="times new roman,times"><EM>The font is clearly broken. You can see this easily in Internet Explorer. You can define the "last resort font" only for the Latin script, but not for any other script. This means that the 'OS/2' table in the font is wrong. It claims that the font covers only Latin letters.<BR><BR>Someone needs to fix the 'OS/2' table in that font.</EM></FONT></P></BLOCKQUOTE>
+<P mce_keep="true">But given the info in ttfext I think this might be an MLang issue, with it being unwilling to claim that a font pointing multiple CMAP entries to the same glyph counts a the CMAP entry being supported. This is not exactly like the MLang bugs I mentioned in <A class="" href="http://archives.miloush.net/michkap/archive/2008/05/17/8517829.html" mce_href="http://archives.miloush.net/michkap/archive/2008/05/17/8517829.html"><STRONG>The undocumented limits are the ones that can trip you</STRONG></A>; it is more an incompatible architecture decision that someone would explicitly have to decide to either call it a bug and alter or consider things to by design.</P>
+<P mce_keep="true">Don Osborn mirrored some of my own thoughts and concerns about expectations:</P>
+<BLOCKQUOTE>
+<P mce_keep="true"><FONT face="times new roman,times"><EM>This is interesting, but at first I thought "last resort" meant that this was a font that covered a selection of characters that are under-represented among the most widely available and commonly used fonts (however that would be determined!). <BR><BR>If I understand correctly, what it actually seems to be is a way of having something more informative than an empty box or question mark when a character in a text is not included on any font installed on the user's computer. It somehow determines the appropriate character block in which the missing character is encoded and returns the symbol for that block. <BR><BR>If that is correct, it might help to introduce the concept at the top in this way. It also means that the first advantage - "Operating systems are freed from the overhead of providing a full Unicode font" - is not entirely accurate. You would still need to find and load an appropriate font for the missing characters (for the script[s] involved or even a full Unicode font if it comes to that), but the LRF lets you know what character block(s) needs to be covered.</EM></FONT></P></BLOCKQUOTE>
+<P mce_keep="true">I myself would settle for good instructions on how to integrate the font into the experience for various operating systems (there are special issues beyond the ones already mentioned on windows that I could perhaps cover another day.</P>
+<P mce_keep="true">Ed Trager mentioned an alternative that is available:</P>
+<BLOCKQUOTE>
+<P mce_keep="true"><FONT face="times new roman,times"><EM>Hi, Everyone,<BR><BR>This might be a good time to note that SIL provides a Unicode "fallback" font under the Open Font License which displays the Unicode value in hexadecimal:<BR><BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </EM></FONT><A href="http://scripts.sil.org/UnicodeBMPFallbackFont"><FONT face="times new roman,times"><EM>http://scripts.sil.org/UnicodeBMPFallbackFont</EM></FONT></A><BR><BR><FONT face="times new roman,times"><EM>The SIL fallback font can be quite useful for debugging purposes.</EM></FONT></P></BLOCKQUOTE>
+<P mce_keep="true">and Simon Montagu added:</P>
+<BLOCKQUOTE>
+<P mce_keep="true"><FONT face="times new roman,times"><EM>This also might be a good time to note that the next version of Firefox, due to be released some time this month, falls back to displaying the Unicode value in hexadecimal for codepoints not covered by any available font.</EM></FONT></P></BLOCKQUOTE>
+<P mce_keep="true">to which Jukka responded:</P>
+<BLOCKQUOTE>
+<P mce_keep="true"><EM><FONT face="times new roman,times">This presumably implies that if the Last Resort (or LastResort?) font has been installed, a glyph from it is displayed instead. And this is better for people with no idea of Unicode, as well as to some who have some idea. It might be worse for people who know Unicode: they will see just the generic glyph (which they might or might not recognize in its intended meaning, by intuition or by having learned it), not information about the specific code point.<BR><BR>To get the best of both worlds, the user should actually see the generic glyph with the code number embedded into it (or available on mouseover, but that goes beyond font issues). There's actually "fine print" in the glyphs, and I expected it to contain such information, and I was disappointed at seeing that it, too, is just generic. But of course the font would become much bigger if it had a different glyph for every code position.</FONT></EM></P></BLOCKQUOTE>
+<P mce_keep="true">This did not make&nbsp; much sense to me -- couldn't this work be done algorithmically, producing the actual image on the fly based on the character? or would performance be that horrendous with such an approach? Any font experts want to weigh in on feasibility?</P>
+<P mce_keep="true">Wayne suggested:</P>
+<BLOCKQUOTE>
+<P mce_keep="true"><FONT face="times new roman,times"><EM>I've found a bunch of problems with this font; the code that generates them seems to make a mess of certain groups.&nbsp; cf. U+0735 SYRIAC ZQAPHA DOTTED has an example of the overlaying seen elsewhere, as well as incorrect boundaries in the rendering.<BR><BR>It's a useful fallback, though, if the rendering bug is found.</EM></FONT></P></BLOCKQUOTE>
+<P mce_keep="true">but this may actually be Uniscribe trying to do special things with complex script text, which brings up the perennial arguments of people who hate the Uniscribe shaping engine/typography split, as ll as those who want a way to set in a font that <STRONG>I AM NOT COMPLEX</STRONG> so that Uniscribe knows to stay out of matters.</P>
+<P mce_keep="true">Marion Gunn provided an amusing final comment on the font itself:</P>
+<BLOCKQUOTE>
+<P mce_keep="true"><EM><FONT face="times new roman,times">For my own part, I have yet to get it to work on my old (10.4.11) office Apple (or even to appear as a listed font on the usual fonts list inside pre-existing MSWord docs). Is that down to my fault/stupidity (entirely possible), or to some other reason? Appreciative of any intelligent replies sent to me&nbsp; privately or via list</FONT></EM></P></BLOCKQUOTE>
+<P mce_keep="true">Amusing why? Well, as Apple employee John H. Jenkins explains:</P>
+<BLOCKQUOTE>
+<P mce_keep="true"><EM><FONT face="times new roman,times">Um, Mac OS X already comes with the Last Resort font.&nbsp; Why would you&nbsp;want to install it?&nbsp; (I would assume that the system sees that it&nbsp;conflicts with the installed LR font and ignores it.)</FONT></EM></P></BLOCKQUOTE>
+<P mce_keep="true">Now the silliest bit of silliness is the proposal <A class="" href="http://blogs.msdn.com/controlpanel/blogs/www.dkuug.dk/jtc1/sc2/wg2/docs/n3412.pdf" target=_blank mce_href="http://blogs.msdn.com/controlpanel/blogs/www.dkuug.dk/jtc1/sc2/wg2/docs/n3412.pdf">N3412</A> that suggests encoding the glyphs used by this font. </P>
+<P mce_keep="true">To this proposal, Adam Twardoch replied:</P>
+<BLOCKQUOTE>
+<P mce_keep="true"><EM><FONT face="times new roman,times">I think the idea to add the glyphs used in the Last Resort font as new Unicode characters is absurd (I still don't understand if this was an April Fool's joke or not).<BR><BR>Those stub glyphs that are used as replacement glyphs for Unicode codepoints, or one could view them as representative glyphs for entire Unicode blocks. Why would glyphs used solely to solve an intermediate technical problem that is only a meta-problem of the Unicode encoding standard, the Alans Smithee of Unicode characters if you will, get an identity on their own?<BR><BR>Of course, if a new "Last Resort" block is added, then it will also need a Last Resort glyph for that block. Will that glyph also be added as a new Unicode character? If so, will it be placed inside of the Last Resort block itself? (That would be rather self-referential, wouldn't it? Even without it, it is.)<BR><BR>I cannot imagine any single occasion why a human user would want to explicitly key in a Last Resort character to exchange some encoded information.<BR><BR>You don't seriously wanna do it, do you?</FONT></EM></P></BLOCKQUOTE>
+<P mce_keep="true">to which Doug Ewell responded:</P>
+<BLOCKQUOTE>
+<P mce_keep="true"><FONT face="times new roman,times"><EM>Some of the most respected people ever to be involved in Unicode support the emoji proposal, so I pretty much believe everything now.</EM></FONT></P></BLOCKQUOTE>
+<P mce_keep="true">Though thankfully, most people have seemed pretty uniformly against this notion's justifications in the proposal on the Unicode List so I won't say much more&nbsp;about it for now. But the link may be a source of amusement for you, the reader.... :-)</P>
+<P mce_keep="true">&nbsp;</P>
+<P mce_keep="true"><EM><FONT color=#ff00ff>This blog sponsored by&nbsp;every&nbsp;bleeding character in Unicode!</FONT></EM></P>
+<hr/><p><strong>Andrew West</strong> on 12 Jun 2008 11:41 AM:</p><div style="margin-left: 1em"><p>The font version is &quot;6.0d1e3 (Unicode 5.0.0)&quot;, and as far as I can tell the font does seem to reflect Unicode 5.0 fairly accurately. It seems to have separate glyphs for each block in Unicode 5.0, all characters in blocks that are new to Unicode 5.1 are mapped to one of the font's &quot;undefined&quot; glyphs (depending upon which plane they are in), and there do not appear to be any reserved characters that are mapped to anything other than one or other of the font's &quot;undefined&quot; glyphs.</p>
+<p>I have been looking at this font in some detail over the past couple of days, and although there are some interesting rendering behaviour issues associated with it, so far I have not found any major bug in the font tables (though if you look at the copyright field of the Name table you may notice that the copyright sign is replaced by U+FFA9, presumably due to bad conversion of Mac encoding to Unicode). But I am ashamed to admit that the huge size of the CMAP table (387,471 entries mapping 388,232 characters in the Format 12 subtable) did uncover a rather horrendous bug in BabelMap (fixed in the version I released this morning), which I think justifies my statement on the unicore list recently that &quot;if more applications were to calculate Unicode coverage of fonts by parsing the CMAP table themselves then more applications would be crashing than there are now&quot;</p></div>
+<p><strong>Si</strong> on 12 Jun 2008 12:49 PM:</p><div style="margin-left: 1em"><p>I thought the Unicode list comment that Firefox would start displaying codepoints in hex rather than missing glyphs interesting. I have a feeling that will make for some extremely broken layouts on multilingual web pages on some systems.</p></div>
+<p><strong>Mihai</strong> on 12 Jun 2008 4:25 PM:</p><div style="margin-left: 1em"><p>A good example where the user being able to change the font fallback list would be nice :-)</p></div>
+<p><strong>G&#252;nther</strong> on 13 Jun 2008 5:43 AM:</p><div style="margin-left: 1em"><p>Displaying boxes with the unicode code point in hex for missing glyphs is pretty common. My browser (Galeon using the Mozilla engine on Debian GNU/Linux) does it, as do all other programs I use, and it does not destroy the layout on for example <a rel="nofollow" target="_new" href="http://www.wikipedia.org/">http://www.wikipedia.org/</a>. In fact, just now I notice that those boxes come in different sizes, presumably because the layout code knows some of the properties of the glyphs from unicode tables or something.</p></div>
+<p><strong>Si</strong> on 13 Jun 2008 2:57 PM:</p><div style="margin-left: 1em"><p>&quot;Displaying boxes with the unicode code point in hex&quot;</p>
+<p>Okay I must have misready the firefox mail - though they were talking codepoints, not codepoints in boxes (SIL style). </p>
+<p>Cheers, Si </p></div>
+<p><strong>Henrik Holmegaard, technical writer, mag.scient.soc.</strong> on 12 Sep 2008 5:56 AM:</p><div style="margin-left: 1em"><p>If there can be no 'Unicode font' since the character set supports more characters (+ 100000) than the CMAP supports (65536) then it follows that some sort of solution to suggest to the everyday enduser how to render incoming character specifications that are out of gamut for the current configuration of the SFNT-housed fonts in the folders watched by the operating system is needed. A rendering has to be assigned, and information about what rendering to assign is important, but one would wish that the industrial design of that information were improved.</p>
+<p>How the fallback font for identifying character specifications is implemented is a minor matter when 500 million in the EU can neither identify their native character spaces nor their native character names in the Apple Character Palette and the Microsoft Character Map. It is a bug in the metadata model of ISO-IEC 10646 that English transliteration and English translation is required for long identifiers. The Character Palette addresses the issue of English transliteration, but not the issue of English translation. </p>
+<p>The Last Resort Font, the command Show Character Selected in Application in the Character Palette, the Favourites dialog in the Character Palette ... these are like little journeys in a land that lies far, far, far away from Communication 596 issued by the European Commision on 22 November 2005 to introduce a policy on multilingual literacy and learning. Interestingly, when I search by typing Æ in the Microsoft Character Map in Windows XP, I get 'Character not found' which I assume means that Æ is not in the standard character set? At least the Apple Character Map is not as daft.</p>
+<p>Best wishes,</p>
+<p>Henrik Holmegaard</p></div>
+<p><strong>Michael S. Kaplan</strong> on 15 Sep 2008 3:30 AM:</p><div style="margin-left: 1em"><p>????</p>
+<p>On windows, the goal is to cover as much as possible and automatically set the font if the one chosen does not have the characters. No fallback font is needed....</p>
+<p>As for daft, the search is by code point, not character. :-)</p>
+</div>
+<p><strong>Henrik Holmegaard, technical writer</strong> on 18 Sep 2008 4:08 AM:</p><div style="margin-left: 1em"><p>By the bye, technical information on the fallback functionality in SFNT Spline Font file format imaging is published in Wikipedia, see below. The limit on the code points in the obligatory CMAP Character Map is published in the TrueType Specification version 1.0 of 1990, the softcopy being Microsoft Word for Macintosh version 4. </p>
+<p>Hopefully, Microsoft will publish the previous post at some point.</p>
+<p>With best wishes,</p>
+<p>Henrik Holmegaard</p>
+<p>Reference:</p>
+<p><a href="http://en.wikipedia.org/wiki/LastResort#Apple.27s_LastResort_font" rel="nofollow" target="_new">http://en.wikipedia.org/wiki/LastResort#Apple.27s_LastResort_font</a></p></div>
+<p><strong>Michael S. Kaplan</strong> on 18 Sep 2008 4:31 AM:</p><div style="margin-left: 1em"><p>I suspect that one day I might understand what the hell you are talking about -- though I doubt it will be happening any time soon (not enough English in your English!).</p>
+<p>Again, please understand that the megafont is NOT Microsoft's preferred architectural approach here. So what you want is at odds with recommended best practices on the platform.</p>
+<p>As for the &quot;daft&quot; comment before -- the Windows character map searches by code point, not character. Were you using it incorrectly?</p>
+</div>
+<p><strong>Henrik Holmegaard, technical writer</strong> on 18 Sep 2008 5:09 AM:</p><div style="margin-left: 1em"><p>&gt; the Windows character map searches by code point, not character. Were you using it incorrectly?</p>
+<p>No, I was not using the Character Map incorrectly. Follow these steps to learn why one would not want to use the Microsoft Windows Character Map to teach the character spaces of the official writing systems of the European Union in a primary school class or a secondary school class. Note that dansk is an official writing system of the European Union.</p>
+<p>Begin by launching Tegnoversigt and checking Avanceret visning. As the implementation is such that searching is limited to the obligatory CMAP Character Map of the currently selected SFNT Spline Font, select an SFNT Spline Font in whose obligatory CMAP Character Map you feel confident that the character space you wish to work with is imageable. Then follow these steps:</p>
+<p>Tegnsæt: Unicode</p>
+<p>Grupper efter: Alle</p>
+<p>Søg efter: latin small letter a [result is U+0061: Latin Small Letter A]</p>
+<p>Søg efter: Latin Small Letter a [result is as above]</p>
+<p>Søg efter: Latin Small Letter A [result is as above]</p>
+<p>Søg efter: LATIN SMALL LETTER A [result is as above]</p>
+<p>Søg efter: latin small letter æ [result is: Ingen tilgængelige tegn]</p>
+<p>Søg efter: Latin Small Letter æ [result is as above]</p>
+<p>Søg efter: Latin Small Letter Æ [result is as above]</p>
+<p>Søg efter: LATIN SMALL LETTER Æ [result is as above]</p>
+<p>Ingen tilgængelige tegn is plural and the English is No available characters. </p>
+<p>In other words, outside the United Kingdom and the Republic of Ireland there is no EU teacher in no EU school who can use the Microsoft Character Map to teach the foundations of the intelligent composition model that separates processing of character specifications from processing of glyph shapings. This has been elevated into the Cultural Diversity Focus Group of the CEN standards track and is about to be elevated into the Ministries of Education further to Communication 596 issued by the European Commission on 22 November 2005, with Microsoft Corporation on copy as a matter of course.</p>
+<p>With best wishes,</p>
+<p>Henrik Holmegaard</p>
+<p>technical writer</p><p>&nbsp;</p><blockquote><p><i>Maybe others understand all of this, I have no idea what you are talking about. As such, and as this is completely off-topic for this post anyway, I'm cutting you off now. </i></p><p><i>Sorry...</i> </p><p><i>Michael</i> <br></p></blockquote></div>
+<hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2008/06/13/8593946.html" title="the front of my mind (by which I mean the back of my mind) is on the middle of my mind">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2008/06/12/8592551.html" title="The SID, and the name, and the SID">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2008-06">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2008-06-12">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2008/06/12/8592568.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:36 GMT -->
+</html>

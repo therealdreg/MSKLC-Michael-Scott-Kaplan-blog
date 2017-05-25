@@ -1,0 +1,33 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2010/05/13/9993808.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:35 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Minimalism isn't laziness, really; it's trying to do the job right without side effects!</title></head><body>
+<h1>Minimalism isn't laziness, really; it's trying to do the job right without side effects!</h1>
+<p><em>by Michael S. Kaplan, published on 2010/05/13 13:01 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2010/05/13/9993808.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P>The other day the question came in from a tester around these parts:</P>
+<BLOCKQUOTE>
+<P><FONT face="times new roman,times">We use the SetWindowsHookEx function to send keys to our IDE for testing purpose.<BR>&nbsp;<BR>::SetWindowsHookEx(WH_JOURNALPLAYBACK, (HOOKPROC)PlayBack, GetModuleHandle(NULL), 0L);<BR>&nbsp;<BR>However, on Win7 this returns the access denial error. I tried changing it to:<BR>&nbsp;<BR>::SetWindowsHookEx(WH_JOURNALPLAYBACK, (HOOKPROC)PlayBack, NULL, ::GetCurrentThreadId());<BR>&nbsp;<BR>Which get passed the access denial error but now it is returning the “This hook procedure can only be set globally” error.<BR>&nbsp;<BR>Do you know of a way that can work around this problem?<BR>&nbsp;<BR>Thanks!</FONT></P></BLOCKQUOTE>
+<P>Serious case of deja vu, let me tell you!</P>
+<P>Does it look familiar to anyone?</P>
+<P>No?</P>
+<P>Ok, here are the hints: the old blogs that talk about another small incident involving the same issue:</P>
+<UL>
+<LI><A href="http://archives.miloush.net/michkap/archive/2006/06/10/625285.html" mce_href="http://archives.miloush.net/michkap/archive/2006/06/10/625285.html"><STRONG>Is the SendKeys juice worth the squeeze?</STRONG></A></LI>
+<LI><A href="http://archives.miloush.net/michkap/archive/2007/09/10/4850360.html" mce_href="http://archives.miloush.net/michkap/archive/2007/09/10/4850360.html"><STRONG>The SendKeys *blog post* juice was definitely not worth the squeeze</STRONG></A></LI></UL>
+<P>Thankfully, the pointer to SendInput he got&nbsp;will resolve the issue of the tests that were failing.</P>
+<P>I guess this means their product wasn't being run on Vista (which is when this problem started).</P>
+<P>But I was thinking more about from a test perspective how much better the "new code" is even when the "old code" isn't failing.</P>
+<P>I mean, since it is so much less invasive!</P>
+<P>I've often been very happy with how large organizations will have shared libraries to do a lot of the basic work like mimicking the user's use of a keyboard, since having everyone solve those problems over and over again isn't a productive use of time -- since the job of the majority of the testers is not to test the input method itself but instead to test something else.</P>
+<P>Isn't that a general principle in test -- to be minimally invasive in order to minimize the risk of the test itself having side effects that might taint the results to which stuff is input?</P>
+<P>This applies to the VB &lt;= 6.0 case as well, though not as much as to the case of actual tests of software products (presumably features are going to tested so if there are side effects of the way a featur works this hopefully comes out before the feature ships).</P>
+<P>But there is another principle that I think would apply here - isn't it the job of tests to do the best possible job to simulate what the user is doing?</P>
+<P>The kind of lesson you learn from being at the wrong level in the opposite direction, which can lead to other problems that also fail to adequately do the work. This is what leads to problems like Raymond mentions in&nbsp;<A href="http://blogs.msdn.com/oldnewthing/archive/2005/05/30/423202.aspx" mce_href="http://blogs.msdn.com/oldnewthing/archive/2005/05/30/423202.aspx">You can't simulate keyboard input with PostMessage</A>, for example.</P>
+<P>I want to assume there is a principle like this, but I don't know since I'm not a tester. </P>
+<P>These principles aren't borne out of laziness (even though the results may be the same in the end); they are borne out of a desire to do the job right (a successful test relying on WM_CHAR/PostMessage should not make one confident they have tested the feature since they can easily miss bugs that&nbsp;others could find in minutes by using a technique that better simulates user input -- like typing something!) and a desire for no blocking side effects (journal playback hooks have security requirements that <A href="http://archives.miloush.net/michkap/archive/2010/03/20/9978451.html" mce_href="http://archives.miloush.net/michkap/archive/2010/03/20/9978451.html"><STRONG>non-elevated</STRONG></A> users don't have)....</P>
+<P>Now the VB6 case doesn't follow the same rules about needing to mimic the input stream exactly (since they do not promise to do so, really), but the risk involved with pulling out grenade launchers to&nbsp;deter jaywalkers is something most developers can get their heads around. :-)</P>
+<P>It just makes sense to do the least you possibly can to achieve the goal -- this minimizes the risk that the code trying to something will adversely affect what it is trying to do!</P>
+<P>I mean, unless one is paid by the hour and must prove one is busy even if one is not usefully productive. In that case, one is I suppose free to do everything incorrectly in a bloated and hard to maintain way, in order to better support the later maintenance so very likely to be needed....</P>
+<hr/><div style="margin-left: 1em"><em>no comments</em></div><hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2010/05/14/10004255.html" title="I&#39;m going to throw a hypothetical on the stoop and see if the cat licks it up">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2010/05/13/10012219.html" title="Blame Canada! Or Blame Kananda! Or Blame ಕನ್ನಡ! Or ಬ್ಲಾಮ್ ಕನ್ನಡ!">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2010-05">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2010-05-13">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2010/05/13/9993808.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:35 GMT -->
+</html>

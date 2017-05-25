@@ -1,0 +1,32 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2011/10/11/10223101.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>If it isn't working, try being a tad more literal about it....</title></head><body>
+<h1>If it isn't working, try being a tad more literal about it....</h1>
+<p><em>by Michael S. Kaplan, published on 2011/10/11 07:01 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2011/10/11/10223101.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<p>Yesterday, someone was having problems with Locale Builder.</p>
+<p>And with the locales themselves, in some cases.</p>
+<p>The problem goes something like this:</p>
+<p>Short date format #1, that has period delimiters, works just fine -- see the <strong>Preview</strong>?</p>
+<p><a href="http://msdnshared.blob.core.windows.net/media/MSDNBlogsFS/prod.evol.blogs.msdn.com/CommunityServer.Blogs.Components.WeblogFiles/00/00/00/33/81/5100.LocaleBuilder01.jpg"><img style="max-width: 550px;" border="0" alt="" src="http://msdnshared.blob.core.windows.net/media/MSDNBlogsFS/prod.evol.blogs.msdn.com/CommunityServer.Blogs.Components.WeblogFiles/00/00/00/33/81/5100.LocaleBuilder01.jpg" /></a></p>
+<p>And short date format #2, which has dashes as the delimiter, also looks good. See the <strong>Preview</strong>?</p>
+<p><a href="http://msdnshared.blob.core.windows.net/media/MSDNBlogsFS/prod.evol.blogs.msdn.com/CommunityServer.Blogs.Components.WeblogFiles/00/00/00/33/81/6521.LocaleBuilder02.jpg"><img style="max-width: 550px;" border="0" alt="" src="http://msdnshared.blob.core.windows.net/media/MSDNBlogsFS/prod.evol.blogs.msdn.com/CommunityServer.Blogs.Components.WeblogFiles/00/00/00/33/81/6521.LocaleBuilder02.jpg" /></a></p>
+<p>But if you look at the two added formats at the bottom of the list, things get more confusing:</p>
+<p><a href="http://msdnshared.blob.core.windows.net/media/MSDNBlogsFS/prod.evol.blogs.msdn.com/CommunityServer.Blogs.Components.WeblogFiles/00/00/00/33/81/7853.LocaleBuilder03.jpg"><img style="max-width: 550px;" border="0" alt="" src="http://msdnshared.blob.core.windows.net/media/MSDNBlogsFS/prod.evol.blogs.msdn.com/CommunityServer.Blogs.Components.WeblogFiles/00/00/00/33/81/7853.LocaleBuilder03.jpg" /></a>&nbsp;&nbsp;&nbsp; <a href="http://msdnshared.blob.core.windows.net/media/MSDNBlogsFS/prod.evol.blogs.msdn.com/CommunityServer.Blogs.Components.WeblogFiles/00/00/00/33/81/7462.LocaleBuilder04.jpg"><img style="max-width: 550px;" border="0" alt="" src="http://msdnshared.blob.core.windows.net/media/MSDNBlogsFS/prod.evol.blogs.msdn.com/CommunityServer.Blogs.Components.WeblogFiles/00/00/00/33/81/7462.LocaleBuilder04.jpg" /></a></p>
+<p>What the hell is going on here, exactly?</p>
+<p>Well, it comes down to the fact that (since Vista RTM) derived <a href="http://msdn.microsoft.com/library/dd373837.aspx">LOCALE_SDATE</a>&nbsp;happens to be U+002e (FULL STOP).</p>
+<p>Now its just so happens that / (aka U+002f aka SOLIDUS) is a special charactr to NLS.</p>
+<p>It is the <strong>placeholder in which to insert the LOCALE_SDATE value</strong>.</p>
+<p>Crap.</p>
+<p>How can you get the SOLIDUS to not be misunderstood as the placeholder?</p>
+<p>Ah, that part is easy -- just create a format that specifies the character as a literal, thus:</p>
+<p><a href="http://msdnshared.blob.core.windows.net/media/MSDNBlogsFS/prod.evol.blogs.msdn.com/CommunityServer.Blogs.Components.WeblogFiles/00/00/00/33/81/7801.LocaleBuilder05.jpg"><img style="max-width: 550px;" border="0" alt="" src="http://msdnshared.blob.core.windows.net/media/MSDNBlogsFS/prod.evol.blogs.msdn.com/CommunityServer.Blogs.Components.WeblogFiles/00/00/00/33/81/7801.LocaleBuilder05.jpg" /></a>&nbsp;&nbsp;&nbsp; <a href="http://msdnshared.blob.core.windows.net/media/MSDNBlogsFS/prod.evol.blogs.msdn.com/CommunityServer.Blogs.Components.WeblogFiles/00/00/00/33/81/5265.LocaleBuilder06.jpg"><img style="max-width: 550px;" border="0" alt="" src="http://msdnshared.blob.core.windows.net/media/MSDNBlogsFS/prod.evol.blogs.msdn.com/CommunityServer.Blogs.Components.WeblogFiles/00/00/00/33/81/5265.LocaleBuilder06.jpg" /></a></p>
+<p>In other words, adding</p>
+<p><span style="font-size: large;">dd'/'MM'/'yyyy</span></p>
+<p>when you want</p>
+<p><span style="font-size: large;">dd/MM/yyyy</span></p>
+<p>and so on....</p>
+<p>&nbsp;Now remember that with <a href="http://msdn.microsoft.com/library/dd373837.aspx">LOCALE_SDATE</a>&nbsp;being dervied, it is always going to be safer to specify the format with litearals....</p>
+<hr/><div style="margin-left: 1em"><em>no comments</em></div><hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2011/10/12/10223697.html" title="On [not] being what&#39;s next [yet!]">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2011/10/10/10222651.html" title="You don&#39;t have to hang out with Mary-Kate/Ashley to feel exposed by an Olson connection!">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2011-10">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2011-10-11">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2011/10/11/10223101.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+</html>

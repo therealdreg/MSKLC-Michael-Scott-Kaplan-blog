@@ -1,0 +1,51 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2011/09/13/10209739.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>"It was an honest mistake -- I'm not running NT4; I'm just in Hong Kong!"</title></head><body>
+<h1>"It was an honest mistake -- I'm not running NT4; I'm just in Hong Kong!"</h1>
+<p><em>by Michael S. Kaplan, published on 2011/09/13 07:01 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2011/09/13/10209739.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<p><span style="color: #ff0000;"><em>This blog you are reading right now is not about Windows 8.</em></span></p>
+<p><span style="color: #ff0000;"><em>It is also not about //build/.</em></span></p>
+<p><span style="color: #ff0000;"><em>Though it is about a bug that&nbsp;could repro there too, under some circumstances....</em></span></p>
+<p>Some of you long-time readers may recall back in early 2006 when I wrote about <strong><a title="Getting all of the localized names of a font" href="http://archives.miloush.net/michkap/archive/2006/02/13/530814.html">Getting all of the localized names of a font</a></strong>, or&nbsp;almost a year later, when I wrote about <strong><a title="Getting all of the localized names of a font[.NET]" href="http://archives.miloush.net/michkap/archive/2007/01/22/1505420.html">Getting all of the localized names of a font[.NET]</a></strong>.</p>
+<p>Basically these blogs cover the support that Windows and .Net have for the various language specific entries in East Asian TrueType and OpenType fonts, contained in <a href="http://www.microsoft.com/typography/otspec/name.htm">name</a> (the Naming Table).</p>
+<p>You know, the "feature" I mentioned in <strong><a title="East Asian Font Names...." href="http://archives.miloush.net/michkap/archive/2005/02/26/380867.html">East Asian Font Names....</a></strong>&nbsp;so long ago,</p>
+<p>Now in theory none of this should matter.</p>
+<p>Since (as I mentioned in <strong><a title="East Asian Font Names...." href="http://archives.miloush.net/michkap/archive/2005/02/26/380867.html">East Asian Font Names....</a></strong>) both the English and localized names are registered in Windows, in Win2000 and later.</p>
+<p>In fact, any time I am running&nbsp;on&nbsp;<strong>English</strong>, the&nbsp;<strong>Chinese - Taiwan</strong> OS, or the <strong>Chinese - Taiwan</strong> MUI Language Pack, either <strong>PMingLiU</strong> or&nbsp;<strong>新細明體</strong> can be used, and either will work.</p>
+<p>However, do you remember in&nbsp;<strong><a title="East Asian Font Names...." href="http://archives.miloush.net/michkap/archive/2005/02/26/380867.html">East Asian Font Names....</a></strong>&nbsp;when I said</p>
+<p style="padding-left: 30px;"><span style="font-family: times new roman,times;"><em>For prior versions of Windows, the only practical solution is to try one font, then if that attempt fails to try the other. Thus, the list. :-)</em></span></p>
+<p>?</p>
+<p>Well, it turns out that advice is still needed, sometimes.</p>
+<p>It is still needed when you are using the <strong>Chinese - Hong Kong</strong> OS.</p>
+<p>Or the MUI Language Pack.</p>
+<p>In both of those cases, only one of the two font names will work.</p>
+<p>At this point, you might be thinking "<strong>big deal, Michael!</strong>" since it would kind of make a weird kind of sense if (for example) when you ran on <strong>Turkish</strong> or <strong>Tajik</strong> or <strong>Tamil</strong> that for some reason only the English name worked.</p>
+<p>I mean, it would hardly be great, taking us back to NT4.</p>
+<p>But we lived through it once; we could live through it again.</p>
+<p>Unfortunately, that isn't what's going on.</p>
+<p>As it turns out, when running on&nbsp;<strong>Chinese - Hong Kong</strong> (OS or MUI Language Pack), <em>the English name doesn't work -- only the localized name does!</em></p>
+<p>Clearly, this is a bug.</p>
+<p>Maybe it's in Fontsetup.inf, whose tortuous logic only gets more complicated for Hong Kong.</p>
+<p>Maybe it's in the code behind <a href="http://msdn.microsoft.com/library/dd183327.aspx">AddFontResourceEx</a>, that registers the names when the WindowStation starts.</p>
+<p>Or maybe it's somewhere else entirely.</p>
+<p>Now this whole area of code has one special feature.</p>
+<p>It's fragile and no one wants to touch it because they don't want to break anything.</p>
+<p>Though I hope someone takes a look.</p>
+<p>I don't want to run NT4!</p>
+<hr/><p><strong>cheong00</strong> on 13 Sep 2011 7:13 PM:</p><div style="margin-left: 1em"><p>Perheps that&#39;s why I couldn&#39;t use WEFT to convert this font to .EOT file a few years ago?</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 13 Sep 2011 10:38 PM:</p><div style="margin-left: 1em"><p>You have Hong Kong settings? How did failure manifest itself?</p>
+</div>
+<p><strong>cheong00</strong> on 13 Sep 2011 11:24 PM:</p><div style="margin-left: 1em"><p>I remember that when try to fetch font from PMingLiU, I simply can&#39;t select the font.</p>
+<p>The application (WEFT 3 I think) have menu item that enable user to auto-search fonts available, but it can&#39;t find the font there. When I use manual selection to choose the font, it simply terminate unexpectedly.</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 14 Sep 2011 12:26 AM:</p><div style="margin-left: 1em"><p>That doesn&#39;t seem related -- perhaps that is more of a &quot;I don&#39;t understand TTCs&quot; type bug?</p>
+<p>It is only related to this blog if it is specific to Hong Kong but doesn&#39;t repro for Taiwan, etc....</p>
+</div>
+<p><strong>cheong00</strong> on 14 Sep 2011 12:41 AM:</p><div style="margin-left: 1em"><p>I don&#39;t know... I was using that a few years ago, changed a few companies during the period, and no longer required to work with that now.</p>
+<p>I&#39;d think it&#39;d probably related to the &quot;auto detection of available font list&quot; part, though.</p>
+</div>
+<hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2011/09/14/10210525.html" title="If you don&#39;t like the way it looks, try something plainer...">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2011/09/12/10209252.html" title="Some filler, and a health update....">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2011-09">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2011-09-13">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2011/09/13/10209739.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+</html>

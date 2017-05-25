@@ -1,0 +1,68 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2011/04/23/10157359.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Solution: The Dead Keys Conundrum: An Encyclopedia Brown Mystery</title></head><body>
+<h1>Solution: The Dead Keys Conundrum: An Encyclopedia Brown Mystery</h1>
+<p><em>by Michael S. Kaplan, published on 2011/04/23 07:01 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2011/04/23/10157359.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<p>Yesterday I wrote <a href="http://archives.miloush.net/michkap/archive/2011/04/22/10157095.html" title="The Dead Keys Conundrum: An Encyclopedia Brown Mystery"><strong>The Dead Keys Conundrum: An Encyclopedia Brown Mystery</strong></a>&nbsp;about how I figured out a way to solve several longstanding problems with keyboard layouts that had been considered by design limitations years before I was working on keyboards.</p>
+<p>In the blog, in the style of <strong>Encyclopedia Brown</strong> the teenage detective,&nbsp;I provided all of the clues that led me the solution in the hopes that one the 1000 or so page views would represent a reader who (upon knowing there was a solution and knowing the clues to the solution were there) would provide the solution.</p>
+<p>Just like how we all knew that Encyclopedia Brown's cases always had a solution and thus if we could figure out the clues then we too could solve the mystery.</p>
+<p>No one rose to the bait and provided even a guess, so perhaps my goals were unrealistic. But in any case, I will now explain the solution....</p>
+<p>From the third problem listed in <a href="http://archives.miloush.net/michkap/archive/2005/02/24/379466.html" title="The keyboard does not do what I tell it to!"><strong><span style="color: #0066dd;">The keyboard does not do what I tell it to!</span></strong></a>:</p>
+<p style="padding-left: 120px;">One more -- similar to the last one but with a happier ending</p>
+<blockquote dir="ltr" style="padding-left: 120px;">
+<p style="padding-left: 30px;"><em><span style="font-size: x-small;">This has been bugging me for months. I&nbsp;am not sure when it started, but any time I try to put an apostrophe&nbsp;into a document, nothing happens. Then if I hit the key again I get two of them.</span></em></p>
+<p style="padding-left: 30px;"><em><span style="font-size: x-small;">I have to hit the backspace key to get what I wanted. So it takes three keystrokes to get me what should have taken one. Is this some sort of virus? Help!</span></em></p>
+</blockquote>
+<p style="padding-left: 120px;">Ah, no virus this time. However, it turns out that this person had installed the "United States - International" keyboard layout. This layout has the apostrophe as a dead key for an acute accent. And as I have said before, <a href="http://archives.miloush.net/michkap/archive/2004/12/17/323257.html" id="CategoryEntryList"><strong><span style="color: #006bad;">dead keys are not intuitive</span></strong></a>. In his case either the apostrophe and a space or uninstalling the layout were both okay options. He chose the latter since he did not need the international layout....</p>
+<p>The dead key&nbsp;table of the APOSTROPHE on the US International keyboard is:</p>
+<p><img height="519" width="548" src="http://blogs.msdn.com/cfs-file.ashx/__key/CommunityServer-Blogs-Components-WeblogFiles/00-00-00-33-81/2605.deadkey01.jpg" /></p>
+<p>so when you hit APOSTROPHE nothing happens but it waits to see if you type in one of the character in that BASE column; if you do then the character in the second column appears. If you do not, then you get the two characters that didn't go together at once -- next to each other. Thus for the <strong>United States - International</strong> keyboard, you get two apostrophes.</p>
+<p>If you wanted to fix this problem of the two characters appearing, all you have to do is remember the principle: <strong>this only happens if the keystrokes are undefined</strong>. Thus all you have to do is add an entry here to convert it (in this case by perhaps adding U+0027 as both Base and Composite characters -- so typing two apostrophes in this case gives you one apostrophe.</p>
+<p>Now perhaps in this case it is just a workaround, but in other common cases where the user might expect a combo to work, you can make it work right -- it's a fix.</p>
+<p>Another example might be in order.</p>
+<p>Let's take a keyboard that provides the GRAVE ACCENT as a dead key for A/E/I/O/U.</p>
+<p>The beginning of the dead key table is obvious, but then perhaps you don't want GRAVE ACCENT + LETTER Q to show up a `Q, and so on.</p>
+<p>You can then set up the table like the following:</p>
+<p><img height="519" width="548" src="http://blogs.msdn.com/cfs-file.ashx/__key/CommunityServer-Blogs-Components-WeblogFiles/00-00-00-33-81/1588.deadkey05.jpg" />&nbsp;&nbsp;&nbsp; <img src="http://blogs.msdn.com/cfs-file.ashx/__key/CommunityServer-Blogs-Components-WeblogFiles/00-00-00-33-81/7802.deadkey02.jpg" /></p>
+<p>to have the last character you typed be the only character that shows up (as if you were filtering out the illegal combination by removing the bogus diacritic.</p>
+<p>Or you could go in a different direction, such&nbsp;as converting the bogus combinations into a space:</p>
+<p><img height="519" width="548" src="http://blogs.msdn.com/cfs-file.ashx/__key/CommunityServer-Blogs-Components-WeblogFiles/00-00-00-33-81/2318.deadkey03.jpg" /></p>
+<p>Or you could be really outrageous, and make it a backspace:</p>
+<p><img height="519" width="548" src="http://blogs.msdn.com/cfs-file.ashx/__key/CommunityServer-Blogs-Components-WeblogFiles/00-00-00-33-81/6443.deadkey04.jpg" /></p>
+<p>The only option you don't have is to throw away the keystroke itself (the backspace is a very aggressive approach since it removes the previous letter -- a nice user hostile interface. :-)</p>
+<p>Anyway, you get the point -- if you don't like two characters popping up on bogus combinations, then <strong>all you have to do is define the behavior for the bogus combinations</strong>.</p>
+<p>&nbsp;Kind of makes sense when you think about it -- and an entirely natural thought progression (the way to guard against "undefined behavior" is to define it).</p>
+<p>Now in the end this piece of it is a parlor trick. I mean, even the ugly behavior isn't entirely strange if you ignore the case where you don't know it was a dead key. I mean, the two characters you typed are right there -- so maybe the old behavior isn't so bad!</p>
+<p>So let's move into an area that is slightly more interesting, shall we?</p>
+<p>Let's say you live in Finland and you are a huge advocate of the Finnish standard keyboard they created. The one that not only lets you type names from any EU language but also lets you type in other languages like Vietnamese (reportedly due to the immigrant population in country).</p>
+<p>Now if you wanted to type a letter like </p>
+<p><span style="font-size: x-large;">ậ</span></p>
+<p><em>aka U+1ead (LATIN SMALL LETTER A WITH CIRCUMFLEX AND DOT BELOW)</em></p>
+<p>Perhaps you would want to&nbsp;be able to type it like</p>
+<p>CIRCUMFLEX + DOT BELOW + LATIN SMALL LETTER A</p>
+<p>because you live in Finland and have been using dead keys for as long as you have been typing.</p>
+<p>Well now that you have read <a href="http://archives.miloush.net/michkap/archive/2011/04/16/10154700.html" title="Chain Chain Chain, Chain of Dead Keys"><strong><span style="color: #0066dd;">Chain Chain Chain, Chain of Dead Keys</span></strong></a>, you know how to chain together the two dead keys to get to the one character.</p>
+<p>But then we hit the problem -- you need there to be a <strong>CIRCUMFLEX + DOT BELOW</strong> character to stick in the table. And there isn't one in Unicode.</p>
+<p>Perhaps you jumped into the idea of just using as PUA character. I mean, you convince yourself that you'll be adding the 150+ valid combinations and since you are defining all of those valid sequences no one will ever see the PUA characters standing in as pseudo characters for <strong>HORN + GRAVE</strong> and <strong>CIRCUMFLEX + TILDE </strong>and so on.</p>
+<p>After defining the many dead keys, even solving the problem of <a href="http://archives.miloush.net/michkap/archive/2005/07/09/437063.html"><strong><span style="font-family: Tahoma; color: #006bad;">Getting intermediate forms</span></strong></a>&nbsp;problem of canonically reordered sequences with above and below diacritics entered in the wrong order by automatically mapping them both to the right character, you then remember that any time you type an undefined sequence, the UTF-16 code points that you defined in the table get inserted.</p>
+<p>And these pseudo characters&nbsp;you added as PRIVATE USE AREA characters might get inserted too.</p>
+<p><em>I am definitely not a fan of putting random PUA into the world -- especially to define things that the user did not define themselves.</em></p>
+<p>But didn't we just solve the problem of dealing with how combination not defined in the dead key table are represented? Yes, we did!</p>
+<p>For the cost of adding every single character in every shift state of the keyboard to the dead key table of every single dead key, you can create a humongous keyboard layout that guards against PUA leakage completely!</p>
+<p>In fact that only time the user has a hint something is going on is if they are watching <a href="http://msdn.microsoft.com/library/ms646277.aspx">WM_DEADCHAR message</a>. But since you define the name of the key (remember how I told you to always define it!), you can make sure that a really inquisitive mind trying to understand the WM_DEADCHAR results will get their explanation from <a href="http://msdn.microsoft.com/library/ms646300.aspx">GetKeyNameText</a>.</p>
+<p>Now of course this still doesn't resolve the Vietnamese/Finnish problem completely, given the <a href="http://archives.miloush.net/michkap/archive/2006/05/14/597198.html"><strong><span style="color: #006bad;">Harder intermediate forms of characters</span></strong></a>&nbsp;that are still going to be out there, that require more than one code point since no entirely precomposed character exists. but thankfully these cases are very rare (and not supported by the bulk of the various Vietnamese code pages, either).</p>
+<p>In any case, in the less extreme cases you can now use chained dead keys when you need to in order to get the result you want....</p>
+<p>Thanks Encyclopedia Brown, for solving another mystery!</p>
+<hr/><p><strong>Van</strong> on 23 Apr 2011 4:37 PM:</p><div style="margin-left: 1em"><p>You say the only option you don&#39;t have is to throw away the keystroke itself, but would it not work to define all of your garbage sequences to NULL? I may be wrong - it wouldn&#39;t be the first time - but defining all your composites as U+0000 should leave no mark in the text stream, right?</p></div>
+<p><strong>Michael S. Kaplan</strong> on 23 Apr 2011 9:06 PM:</p><div style="margin-left: 1em"><p>We don&#39;t really document whether or not that might ever insert a NULL in the stream, which would be very bad. So I&#39;m not sure whether it would work or not.</p>
+<p>Though if it does it does add an even better answer for many cases....</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 24 Apr 2011 7:16 PM:</p><div style="margin-left: 1em"><p>Hey Van --</p>
+<p>I checked with some people and it looks like it might be okay, perhaps even VERY okay. I will write up my findings in a day or three.....</p>
+</div>
+<p><strong>Van</strong> on 25 Apr 2011 2:16 PM:</p><div style="margin-left: 1em"><p>Thanks for the update, Michael. I had absolutely no doubt whatsoever that &quot;we don&#39;t really document the behaviour&quot; was going to be the end point for you; You&#39;ve given us too much experience with delving into the bowels of an issue to believe you would - or could - do any less.</p>
+</div>
+<hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2011/11/09 <a href="http://archives.miloush.net/michkap/archive/2011/11/09/10235391.html">The evolving Story of Locale Support, part 6: Behind the Cherokee Phonetic layout in Windows 8</a></p><p>2011/04/28 <a href="http://archives.miloush.net/michkap/archive/2011/04/28/10159111.html">The Sally Kimball Addition To The Dead Keys Conundrum: An Encyclopedia Brown Mystery</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2011/04/25/10157660.html" title="From Bunnarchy with Santa and Jessica Rabbit to Anime Unleashed">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2011/04/22/10157095.html" title="The Dead Keys Conundrum: An Encyclopedia Brown Mystery">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2011-04">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2011-04-23">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2011/04/23/10157359.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+</html>

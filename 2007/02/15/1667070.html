@@ -1,0 +1,58 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2007/02/15/1667070.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:38 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>On distinctions that are primarily with [and without] difference</title></head><body>
+<h1>On distinctions that are primarily with [and without] difference</h1>
+<p><em>by Michael S. Kaplan, published on 2007/02/15 06:01 -05:00, original URI: http://blogs.msdn.com/b/michkap/archive/2007/02/15/1667070.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P>If you read here regularly, you might remember when I posted <STRONG><A class="" href="http://archives.miloush.net/michkap/archive/2006/11/01/916477.html" mce_href="http://archives.miloush.net/michkap/archive/2006/11/01/916477.html">If you add enough characters to a sort, intuitive distinction can suffer</A></STRONG> late last year.</P>
+<P>A few people have (since that time) reported as a bug the behavior in Vista that&nbsp;I was describing in that post.</P>
+<P>Not so much for Korean, which has pretty much always had this behavior (not to metion that pure Hangul usage is much more common than Hanja, and certainly more common than "K2" Hanja!).</P>
+<P>And not so much for Japanese (which did not have as many characters to add so the problem was not really so acute).</P>
+<P>But Chinese, well that's another story.</P>
+<P>To review the change for Chinese:</P>
+<LI>Pinyin (pronunciation) sort - Each unique Pinyin pronunciation (sound plus tone value)&nbsp;has its own primary weight; the stroke count and order are used as a secondary weight to break ties, covering over 62,000 ideographs; 
+<LI>Stroke count sort for&nbsp;Simplified&nbsp;Chinese&nbsp;- each unique stroke&nbsp;count and order&nbsp;is given a primary weight, with the underlying code point value being used to break ties and provided with secondary weight, for a total of over 70,000 ideographs. 
+<LI>Bopomofo (pronunciation) sort - Each unique Bopomofo pronunciation plus total stroke value is given its own primary weight, with code point order used to provide secondary distinctions and break ties. This led to over 48,000 ideographs being covered. 
+<LI>Stroke count order for&nbsp;Traditional Chinese&nbsp;- Since only 46 unique total stroke counts existed in the data and no information about stroke order was provided, half of the primary weight was based on the stroke count and the other half (plus sometimes the diacritic weight) are used to help break ties. The total number of ideographs covered is over 54,000.</LI>
+<P>Now for lack of a&nbsp;better&nbsp;term I'll call&nbsp;all four of these orders&nbsp;"the Korean style sort" since this is the way that sorting has worked for Korean in Windows (with the Hangul pronunciation giving the primary weight and other factos affecting the secondary weight).</P>
+<P>To give an example of a typical report, say you have the following five filenames (the stroke counts of each character in string given after the string, in <STRONG><FONT color=#009900>green</FONT></STRONG>):</P>
+<UL>
+<LI><FONT size=4>杜成義&nbsp;&nbsp;&nbsp;&nbsp; </FONT><FONT color=#009900 size=2><STRONG>(7, 6, 13)</STRONG></FONT></LI>
+<LI><FONT size=4>杜德偉&nbsp;&nbsp;&nbsp;&nbsp; </FONT><FONT color=#009900 size=2><STRONG>(7, 15, 11)</STRONG></FONT></LI>
+<LI><FONT size=4>李玟&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </FONT><FONT color=#009900 size=2><STRONG>( 7, 8)</STRONG></FONT></LI>
+<LI><FONT size=4>李翊君&nbsp;&nbsp;&nbsp;&nbsp; </FONT><FONT color=#009900 size=2><STRONG>(7, 11, 7)</STRONG></FONT></LI>
+<LI><FONT size=4>李聖傑&nbsp;&nbsp;&nbsp;&nbsp; </FONT><FONT color=#009900 size=2><STRONG>(7, 13, 12)</STRONG></FONT></LI></UL>
+<P>Now since in a PRC stroke count sort (LCID 0x00020804) in Vista considers the stroke count and order to be the primary weight and the code point to be the secondary weight the order ends up being the the following:</P>
+<UL>
+<LI><FONT size=4>杜成義&nbsp;&nbsp;&nbsp;&nbsp; <FONT color=#009900 size=2><STRONG>(7, 6, 13)</STRONG></FONT></FONT></LI>
+<LI><FONT size=4>李玟&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <FONT color=#009900 size=2><STRONG>( 7, 8)</STRONG></FONT></FONT></LI>
+<LI><FONT size=4>李翊君&nbsp;&nbsp;&nbsp;&nbsp; <FONT color=#009900 size=2><STRONG>(7, 11, 7)</STRONG></FONT></FONT></LI>
+<LI><FONT size=4>李聖傑&nbsp;&nbsp;&nbsp;&nbsp; <FONT color=#009900 size=2><STRONG>(7, 13, 12)</STRONG></FONT></FONT></LI>
+<LI><FONT size=4>杜德偉&nbsp;&nbsp;&nbsp;&nbsp; <FONT color=#009900 size=2><STRONG>(7, 15, 11)</STRONG></FONT></FONT></LI></UL>
+<P>rather than the XP order, which is:</P>
+<UL>
+<LI><FONT size=4>李玟&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <FONT color=#009900 size=2><STRONG>(7, 8)</STRONG></FONT></FONT></LI>
+<LI><FONT size=4>李翊君&nbsp;&nbsp;&nbsp;&nbsp; <FONT color=#009900 size=2><STRONG>(7, 11, 7)</STRONG></FONT></FONT></LI>
+<LI><FONT size=4>李聖傑&nbsp;&nbsp;&nbsp;&nbsp; <FONT color=#009900 size=2><STRONG>(7, 13, 12)</STRONG></FONT></FONT></LI>
+<LI><FONT size=4>杜成義&nbsp;&nbsp;&nbsp;&nbsp; <FONT color=#009900 size=2><STRONG>(7, 6, 13)</STRONG></FONT></FONT></LI>
+<LI><FONT size=4>杜德偉&nbsp;&nbsp;&nbsp;&nbsp; <FONT color=#009900 size=2><STRONG>(7, 15, 11)</STRONG></FONT></FONT></LI></UL>
+<P>Since the&nbsp;Vista order can cause identical letters to&nbsp;not sort together, this can clearly look&nbsp;like a bug. Even though the nature of the&nbsp;sort is reasonable (and no one actually complained about the plan or even about the sorts for several years that it was available in the beta). </P>
+<P>Collation has a lot more to do with user's intuitive expectations than any kind of reasonable argument one might make about the logic behind a sort!</P>
+<P>So&nbsp;it turns out that there are&nbsp;some folks&nbsp;out there who actually don't like the "Korean style sort" here and actually&nbsp;prefer having&nbsp;every ideograph given a unique primary weight which would let identical ideographs sort together rather than potentially separate when compared against many other ideographs with identical stroke counts. </P>
+<P>Trying to come up with a solution&nbsp;leads to some unique challenges given the original goals of the implementation:</P>
+<UL>
+<LI>Providing linguistically appropriate weights for all of the new ideographs</LI>
+<LI>Giving default weights to all of Unicode 5.0</LI>
+<LI>Making the sort key size as small as feasible</LI></UL>
+<P>So if now (that we have shipped) is the time for thought experiments&nbsp;to see if&nbsp;the eventual plan in some future version could&nbsp;be to get out of the "Korean style sort" kind of plan, then deciding which one or more of these goals to change or shift becomes an interesting one, since rolling back any one of them can be considered a legitimate regression of functionality that exists.</P>
+<P>The first&nbsp;goal is a really hard one to give up given how long people were wanting the weights there, and how glad people were to see them put in. Though perhaps in practice some things could be done (it is unlikely that all 70,000+ ideographs are actually used in China so perhaps some effort to be somewhat bigger than the old table while still smaller than every ideograph would make sense if the right subset could be found).</P>
+<P>On the other hand, maybe that second point is the one to&nbsp;rethink, on a per sort basis&nbsp;-- I mean, how crucial is to to give the right weights to (e.g.)&nbsp;Ethiopic when the locale being used is Chinese? Perhaps that is the idea to question here, no matter how long it has been the way things work.</P>
+<P>The easiest answer is of course in that third point -- a longer sort key would give all the&nbsp;room needed to make the distinction. It is in fact how support for Extension A and Old Hangul sorting was added in XP. But it feels to&nbsp;me&nbsp;like a cop-out of sorts. It's like as if the answer to every technical problem is just throw more resources at it, and since that could lead to bigger indexes and such which could have a hugely negative impact on people, it could actually be expensive for customers in some big database situations.</P>
+<P>Then there are&nbsp;a whole host of other creative ideas like new special flags, creatively combining some of these ideas,&nbsp;and so on.</P>
+<P>To be honest none of this will go anywhere without prototyping them all and giving the results to folks so they can see what they would be getting into. Because like it or not there is almost certainly some important&nbsp;East Asian&nbsp;study of the&nbsp;Amharic language whose computer systems will explode due to the oversized sort keys. All of which is a geekily poetic way to point out that you can't swing a cat in these parts without hitting someone's implementations, and that we'll be damned whether we do something or not, in someone's eyes.</P>
+<P>And of course all of this is really overthinking the problem at the moment,&nbsp;since perhaps in the end the best choice&nbsp;will be&nbsp;to leave things as they are. It will really be years before we really know if the few reports that have come in actually do represent an issue to be addressed or not. Luckily there is time to deal with this iterative process.... :-)</P>
+<P mce_keep="true">&nbsp;</P>
+<P><FONT color=#ff00ff><EM>This post is brought to you by</EM>&nbsp;<FONT size=5>〇</FONT><FONT size=2> <EM>and</EM> <FONT size=5>ㅇ</FONT> <EM>(<A class="" href="http://www.fileformat.info/info/unicode/char/3007" mce_href="http://www.fileformat.info/info/unicode/char/3007">U+3007</A> and <A class="" href="http://www.fileformat.info/info/unicode/char/3147" mce_href="http://www.fileformat.info/info/unicode/char/3147">U+3147</A>, a.k.a. IDEOGRAPHIC NUMBER ZERO and HANGUL LETTER IEUNG)</EM></FONT></FONT></P>
+<hr/><div style="margin-left: 1em"><em>no comments</em></div><hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2007/09/24 <a href="http://archives.miloush.net/michkap/archive/2007/09/24/5085893.html">A&P of Sort Keys, part 11 (aka It's not like ideographic sorts were developed idiopathically)</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2007/02/15/1680843.html" title="I don&#39;t think it&#39;s Sovereignty Day in Montenegro?">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2007/02/14/1675303.html" title="Nothing seems to be parsing the crap out of *this* number">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2007-02">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2007-02-15">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2007/02/15/1667070.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:38 GMT -->
+</html>

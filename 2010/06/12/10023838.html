@@ -1,0 +1,52 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2010/06/12/10023838.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:35 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>The "Taking the THE out of the string" thing, aka The importance of ignoring the unimportant</title></head><body>
+<h1>The "Taking the THE out of the string" thing, aka The importance of ignoring the unimportant</h1>
+<p><em>by Michael S. Kaplan, published on 2010/06/12 07:01 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2010/06/12/10023838.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<p>The question was:</p>
+<p style="padding-left: 60px;"><span style="font-family: times new roman,times;"><em>We have a scenario where we would like to identify/remove &lsquo;The&rsquo; and other articles at the beginning of an Artist name (for example) property value. I figured I&rsquo;d ping to see if any such &ldquo;article list&rdquo; exists already somewhere in windows for different languages, or if anyone knows of other components that already do this. It looks like Windows Media Player does something similar, since the sort order of Artists appears to ignore the preceding &lsquo;the&rsquo; (something Windows Explorer does not do).</em></span></p>
+<p>Now that is a question I have heard before, now and again.</p>
+<p>It is something that is not built into the platform, by and large</p>
+<p>You will see it here and there, like in Zune or Media Player. The typical way that it is handled in these kinds of applications is to:</p>
+<ol>
+<li>Write a function to adjust the string in way that removes such values (a process that is unfortunately often called <strong>normalizing</strong>, to my dismay!);</li>
+<li>Use something like LCMapStringW to retrieve sort keys based on this <span style="color: #c0c0c0;"><span style="text-decoration: line-through;">normaliz</span></span>adjusted string;</li>
+<li>Do all sorting with this sort key.</li>
+</ol>
+<p>Though some would instead modify the string in step 1 to put articles at the end, thus <strong>The Winds of War</strong> becomes <strong>Winds of War, The</strong>. I don't like this way as much myself but others do....</p>
+<p>Now even within the English language there are many different operations one could consider doing as a part of this <span style="color: #c0c0c0;"><span style="text-decoration: line-through;">normaliz</span></span>adjusting - like sorting the <strong>number 3</strong> in the same place as the <strong>word three</strong> and other such things.</p>
+<p>It will in fact seem eerily familiar to people who are aware of features Exchange exposes i its <a href="http://msdn.microsoft.com/library/microsoft.exchange.webservices.data.completename_properties.aspx">Microsoft.Exchange.WebServices.Data.CompleteName</a> class and in particular its <a href="http://msdn.microsoft.com/library/microsoft.exchange.webservices.data.completename.yomigivenname.aspx">YomiGivenName</a> and <a href="http://msdn.microsoft.com/library/microsoft.exchange.webservices.data.completename.yomisurname.aspx">YomiSurname</a> properties (which were designed to allow storage of a string containing the Japanese pronunciation of part of a name in order to allow for the easy indexing/sorting of the underlying data).</p>
+<p>Now whether one would choose to store the name separately (note that my earlier suggestion did <strong>not</strong> do this) largely depends on several factors:</p>
+<ul>
+<li>Is this string completely derivable from the original string?</li>
+<li>Is this string instead one provided by the user in some way?</li>
+<li>Is the string one that the user might reasonably want to modify?</li>
+</ul>
+<p>Obviously the trimming of articles is much more for the first of these points while the Japanese pronunciation (possibly suggested by the IME) is much more for the second and third.</p>
+<p>In a way the whole <strong>Yomi*</strong> naming of these properties in Exchange&nbsp;is unfortunate since as a feature it could be useful in many other contexts:</p>
+<ul>
+<li>Korean Hanja via Hangul pronunciation (could also be suggested by the IME);</li>
+<li>Chinese via Cantonese pronunciation (could be suggested by IME if we had one, but at least the user could type it in);</li>
+<li>Chinese via Bopomofo pronuciation (could also be suggested by the IME).</li>
+</ul>
+<p>and so on. I don't know if speakers of these other languages would find using a property with a Yomi prefix offensive or not. Anyone know for sure here?</p>
+<p>In most cases the documentation doesn't even hint at the meaning, though KB articles are a bit freer on this point, e.g. KB 298057 (<a href="http://support.microsoft.com/kb/298057">OL2002: 'Given Yomi' Appears As a 'Sort items by' Option for Contacts</a>):</p>
+<p style="padding-left: 30px;"><span style="font-family: times new roman,times;">Yomi is currently generated only for the Japanese locale. With Unicode support in Outlook 2002, users can put in Japanese names in any locale. Outlook generates the Yomi, and attaches it with the contact. It is not seen until a Japanese contact form is used. </span></p>
+<p>Obviously they decided not to even expose it for other languages, unfortunately.</p>
+<p>Would it have been that hard to just call it a <strong>Pronunciation</strong> property and make it something optional to let anyone use? This would have made a lot more sense for everyone....</p>
+<p>Well, except for the original question about sorting in a way that ignores articles - I'm not sure everyone would think of that as a "pronunciation", after all!</p>
+<p>Back when I was on the NLS team, back when that team owned the managed chunk in .Net that does globalization support to,&nbsp;I once recommended a Pronunciation&nbsp;property be added to <a href="http://msdn.microsoft.com/library/system.string.aspx">System.String</a>, to be used any time one was sorting a string and the property was filled in (this was after a long conversation about the subject from one of the people in the Japanese subsidiary). But&nbsp;I couldn't interest anyone in making&nbsp;<a href="http://msdn.microsoft.com/library/system.string.aspx">System.String</a> "heavier"&nbsp;with a property so specific in both target market and usage.</p>
+<p>So as a feature this has largely been relegated to a small number of applications, like Outlook and Exchange.</p>
+<p>Just like the "ignore articles" feature only shows up occasionally in a few applications, now that I think of it.</p>
+<p>Now I don't know if the "Ignore articles" feature in Media Player or Zune ignores articles and such in other languages - does anyone know if they do?</p>
+<p>Although I agree it that as a feature it doesn't belong in low-level components like System.String or NLS, It really seems like a rather potentially compelling feature for ELS (Extended Linguistic Services, which I have mentioned <a href="http://archives.miloush.net/michkap/archive/2008/11/07/9051741.html">previously</a>), given its&nbsp;(in many cases language-specific) pieces....</p>
+<hr/><p><strong>oldnewthing</strong> on 12 Jun 2010 8:11 AM:</p><div style="margin-left: 1em"><p>The English language has a lot of &quot;normalization&quot; rules. In addition to ignoring lead articles and spelling out numbers, you also spell out abbreviations (&quot;St.&quot; sorts as &quot;Saint&quot;), insert the letter &quot;a&quot; into surnames (&quot;McDonald&quot; sorts as &quot;MacDonald&quot;), ignore lead punctuation, and sometimes have to apply special-case rules, such as sorting &quot;The Former Yugoslav Republic of Macedonia&quot; under T! We&#39;re experiencing an odd effect now: Since computers do such a bad job at implementing these traditional rules, people have gotten accustomed to the bad version and think the traditionally correct version is wrong!</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 12 Jun 2010 8:48 AM:</p><div style="margin-left: 1em"><p>All of that feels like a compelling ELS feature to me!</p>
+</div>
+<p><strong>Alan Braggins</strong> on 12 Jun 2010 9:15 AM:</p><div style="margin-left: 1em"><p>There was a time when Amazon (or at least Amazon UK) ignored &quot;The&quot; in searches. Even if it was in quotes.</p>
+<p>You can imagine how well that worked for <a href="http://en.wikipedia.org/wiki/The_The" title="The The">The The</a>.</p></div>
+<hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2010/06/13/10023980.html" title="Intended Implicatures Redux, aka On Unintended Genuinosity Negation">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2010/06/11/10022741.html" title="Call it Reversible Error, aka Yes it has no weight; it was supposed to have no weight!">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2010-06">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2010-06-12">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2010/06/12/10023838.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:35 GMT -->
+</html>

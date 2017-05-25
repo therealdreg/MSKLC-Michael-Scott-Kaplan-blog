@@ -1,0 +1,94 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2011/09/21/10214081.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>There's no "I" in IDN, part 10: Who needs IDN support? How much? When? (Part 2)</title></head><body>
+<h1>There's no "I" in IDN, part 10: Who needs IDN support? How much? When? (Part 2)</h1>
+<p><em>by Michael S. Kaplan, published on 2011/09/21 07:01 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2011/09/21/10214081.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<p style="padding-left: 30px;">Previous parts in this series:</p>
+<ul>
+<li><strong><a title="There's no &quot;I&quot; in IDN, part 1: If you're not Unicode, you're just wrong!" href="http://archives.miloush.net/michkap/archive/2011/02/14/10128621.html">part 1: If you're not Unicode, you're just wrong!</a></strong></li>
+<li><strong><a title="There's no &quot;I&quot; in IDN, part 2: Try not to use the wrong functions!" href="http://archives.miloush.net/michkap/archive/2011/04/02/10149149.html">part 2: Try not to use the wrong functions!</a></strong></li>
+<li><strong><a title="There's no &quot;I&quot; in IDN, part 3: There's no &quot;I&quot; in DIY, either!" href="http://archives.miloush.net/michkap/archive/2011/05/25/10168228.html">part 3: There's no "I" in DIY, either!</a></strong></li>
+<li><strong><a title="There's no &quot;I&quot; in IDN, part 4: the 'path' to Hell is paved with IDN bugs" href="http://archives.miloush.net/michkap/archive/2011/06/17/10173790.html">part 4: the 'path' to Hell is paved with IDN bugs</a></strong></li>
+<li><strong><a title="There's no &quot;I&quot; in IDN, part 5: Stephen Colbert's job is not in any jeopardy" href="http://archives.miloush.net/michkap/archive/2011/06/29/10181212.html">part 5: Stephen Colbert's job is not in any jeopardy</a></strong></li>
+<li><strong><a title="There's no &quot;I&quot; in IDN, part 6: It isn't like there's an &quot;I&quot; in EAI, either!" href="http://archives.miloush.net/michkap/archive/2011/07/14/10186414.html">part 6: It isn't like there's an "I" in EAI, either!</a></strong></li>
+<li><strong><a title="There's no &quot;I&quot; in IDN, part 7: IDN comes to AdWords" href="http://archives.miloush.net/michkap/archive/2011/07/28/10190701.html">part 7: IDN comes to AdWords</a>&nbsp;</strong></li>
+<li><strong><a title="There's no &quot;I&quot; in IDN, part 8: Punycode don't do the PUA" href="http://archives.miloush.net/michkap/archive/2011/08/12/10195062.html">part 8: Punycode don't do the PUA</a></strong></li>
+<li><strong><span style="color: #888888;"><a title="part 9: Who needs IDN support? How much? When? (Part 2)" href="http://archives.miloush.net/michkap/archive/2011/09/16/10212216.html">part 9: Who needs IDN support? How much? When? (Part 1)</a></span></strong></li>
+</ul>
+<p>Let me see, was i in the last part talking about:</p>
+<p style="padding-left: 60px;"><strong>ISSUE 3: Can machine names support the full range of Unicode too?</strong></p>
+<p style="padding-left: 90px;">This issue is the reason I put IDN in quotes -- because the only real connection it has to IDN is how many different services/applications on each machine -- like IIS or Terminal Services or Remote Desktop or SQL Server or whoever -- that uses the machine name by default.</p>
+<p style="padding-left: 90px;">In some cases, those services and applications have a way to create other names, and in some cases they don't.</p>
+<p style="padding-left: 90px;">But the fact that the default is so often the machine makes it compelling in the former cases and required in the latter.</p>
+<p style="padding-left: 90px;">For this issue, the support is incomplete.</p>
+<p style="padding-left: 90px;">This incompleteness is something I'll cover in the next part of the series.....</p>
+<p>&nbsp;This ISSUE #3 is a really good way to see there are four kinds of actual definitions of <strong>TRUTH</strong> for Windows/Microsoft technology:</p>
+<ul>
+<li><strong>The actual read-world truth</strong>, which is enforced by the real world;</li>
+<li><strong>The developer experience of how things work</strong>, which is enforced by the collective developer community;</li>
+<li><strong>The MSDN/TechNet documentation</strong>, which is created doc doc writers informed&nbsp;be specs, that periodically are updated by bug reports;</li>
+<li><strong>The Windows/Office Protocol Documents</strong>, which were overseen by principal and partner architects in an&nbsp;grander view of product details.</li>
+</ul>
+<p>Now in the ideal world, all four&nbsp;amount to the same thing; in practice this seldom the case.</p>
+<p>Now the general problem is that there are two computer names to deal with: the NetBIOS name, and the DNS name.</p>
+<p>NetBIOS, as is described in Wikipedia:</p>
+<p style="padding-left: 60px;">In 1986, Novell released Advanced Novell NetWare 2.0 featuring the company's own NetBIOS emulator. Its services were encapsulated within NetWare's IPX/SPX protocol using the NetBIOS over IPX/SPX (NBX) protocol.</p>
+<p style="padding-left: 60px;">In 1987, a method of encapsulating NetBIOS in TCP and UDP packets, NetBIOS over TCP/IP (NBT), was published. It was described in RFC 1001 ("Protocol Standard for a NetBIOS Service on a TCP/UDP Transport: Concepts and Methods") and RFC 1002 ("Protocol Standard for a NetBIOS Service on a TCP/UDP Transport: Detailed Specifications"). The NBT protocol was developed in order to "allow an implementation [of NetBIOS applications] to be built on virtually any type of system where the TCP/IP protocol suite is available," and to "allow NetBIOS interoperation in the Internet."</p>
+<p>&nbsp;Now those two RFC have e some contradiction in the NetBIOS naming rules, as described here and in the <a href="http://msdn.microsoft.com/en-us/library/dd891412(v=PROT.10).aspx">[MS-NBTE]</a> protocol doc:</p>
+<p style="padding-left: 60px;"><a href="http://go.microsoft.com/fwlink/?LinkId=90260">[RFC1001]</a> and <a href="http://go.microsoft.com/fwlink/?LinkId=90261">[RFC1002]</a> are confusing with respect to the definition of the name syntax. <a href="http://go.microsoft.com/fwlink/?LinkId=90260">[RFC1001]</a> section 5.2 states: "The name space is flat and uses sixteen alphanumeric characters. Names may not start with an asterisk (*)."</p>
+<p style="padding-left: 60px;"><a href="http://go.microsoft.com/fwlink/?LinkId=90261">[RFC1002]</a> section 4.1 states: "The following is the uncompressed representation of the <a href="http://msdn.microsoft.com/en-us/library/33b94545-9ae1-4cc8-9ce5-4be893b7bec3(v=PROT.10)#netbios_name">NetBIOS name</a> "FRED", which is the 4 ASCII characters, F, R, E, D, followed by 12 space characters (0x20)."</p>
+<p style="padding-left: 60px;">It should be clear from the previous statement, because an asterisk and space characters are not letters or numbers, that the term "alphanumeric characters" is confusing at best.</p>
+<p style="padding-left: 60px;">This document clarifies the ambiguity by specifying that the name space is defined as sixteen 8-bit binary bytes, with no restrictions, except that the name SHOULD NOT<a id="endNote2"></a><a href="http://msdn.microsoft.com/en-us/library/6dbf0972-bb15-4f29-afeb-baaae98416ed(v=PROT.10)#id2">&lt;2&gt;</a><a id="endNote3"></a><a href="http://msdn.microsoft.com/en-us/library/6dbf0972-bb15-4f29-afeb-baaae98416ed(v=PROT.10)#id3">&lt;3&gt;</a> start with an asterisk (*).</p>
+<p style="padding-left: 60px;">Neither <a href="http://go.microsoft.com/fwlink/?LinkId=90260">[RFC1001]</a> nor <a href="http://go.microsoft.com/fwlink/?LinkId=90261">[RFC1002]</a> discusses whether names are case-sensitive. This document clarifies this ambiguity by specifying that because the name space is defined as sixteen 8-bit binary bytes, a comparison MUST be done for equality against the entire 16 bytes. As a result, NetBIOS names are inherently case-sensitive.</p>
+<p style="padding-left: 60px;">It is important to understand that the choice of name used by a higher-layer protocol or application is up to that protocol or application and not NetBIOS. A NetBIOS over TCP implementation MUST NOT enforce the use of the convention discussed in section <a href="http://msdn.microsoft.com/en-us/library/dd871426(v=prot.10).aspx">1.8</a>.</p>
+<p>Now that I think of it, Larry Osterman's <a href="http://blogs.msdn.com/b/larryosterman/archive/2007/07/11/how-do-i-compare-two-different-netbios-names.aspx">How do I compare two different NetBIOS names?</a>&nbsp;blog is helpful here for developer truths</p>
+<p>As the <a href="http://msdn.microsoft.com/en-us/library/ms724931(v=VS.85).aspx">SetComputerNameEx</a>&nbsp;docs point out how by convention the&nbsp;NetBIOS and DNS&nbsp;names are linked and problems with breaking he link:</p>
+<table>
+<tbody>
+<tr><th>Value</th><th>Meaning</th></tr>
+<tr>
+<td><a id="computernamephysicaldnsdomain"></a><dl><dt><strong>ComputerNamePhysicalDnsDomain</strong></dt></dl></td>
+<td>
+<p>Sets the primary DNS suffix of the computer.</p>
+</td>
+</tr>
+<tr>
+<td><a id="computernamephysicaldnshostname"></a><dl><dt><strong>ComputerNamePhysicalDnsHostname</strong></dt></dl></td>
+<td>
+<p>Sets the NetBIOS and the Computer Name (the first label of the full DNS name) to the name specified in <em>lpBuffer</em>. If the name exceeds MAX_COMPUTERNAME_LENGTH characters, the NetBIOS name is truncated to MAX_COMPUTERNAME_LENGTH characters, not including the terminating null character.</p>
+</td>
+</tr>
+<tr>
+<td><a id="computernamephysicalnetbios"></a><dl><dt><strong>ComputerNamePhysicalNetBIOS</strong></dt></dl></td>
+<td>
+<p>Sets the NetBIOS name to the name specified in <em>lpBuffer</em>. The name cannot exceed MAX_COMPUTERNAME_LENGTH characters, not including the terminating null character.</p>
+<p>Warning: Using this option to set the NetBIOS name breaks the convention of interdependent NetBIOS and DNS names. Applications that use the <a href="http://msdn.microsoft.com/en-us/library/ms724244(v=VS.85).aspx"><strong xmlns="http://www.w3.org/1999/xhtml">DnsHostnameToComputerName</strong></a> function to derive the NetBIOS name from the first label of the DNS name will fail if this convention is broken.</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p>And then there is the crucial bit, from the <a href="http://msdn.microsoft.com/en-us/library/dd891412(v=PROT.10).aspx">[MS-NBTE]</a> protocol doc:</p>
+<p style="padding-left: 60px;">5. If the NetBIOS name from the LMHOSTS file is less than 16 bytes in length, pad the name with spaces, and uppercasing all characters within the ASCII range which results in ComputerName.</p>
+<p>Note that the letters A-Z are changed by an UPPERCASING operation, which means that if the casing rules specified here are used any population of the naming table then the biggest concerns developers have told me about the OEMCP dependencies that affect casing are not true (since A-Z are the same on every OEMCP). Though this point is not entirely clear and unless someone reviewed actual code I'd frankly be suspicious anyway.</p>
+<p>Especially given that the original NetBIOS spec required case sensitivity and even old NetBEUI specs have the same rules (after uppercasing).</p>
+<p>Also note the UI to allow computer name change includes the ES_OEMCOVERT flag (see Raymond Chen's <a href="http://blogs.msdn.com/b/oldnewthing/archive/2005/07/19/440404.aspx">What is the deal with the ES_OEMCONVERT flag?</a>&nbsp;blog on how crazy *that* flag&nbsp;is, because even in current UI the owners don't&nbsp; want to remove the ES_OEMCONVERT as they are worried on the unclear impact on the OEMCP on NetBIOS that one feels comfortable changing.</p>
+<p>So even the end the fact that DNS names are tied to the NetBIOS names which may not be the impacted as much as anyone thinks when one sticks with the Unicode version of <a href="http://msdn.microsoft.com/en-us/library/ms724244(v=VS.85).aspx">DnsHostnameToComputerName function</a> (DnsHostnameToComputerNameW) and the ES_OEMCOVERT usage.</p>
+<p>And thus the machine name namespace is sharply limited until:</p>
+<ul>
+<li>Real test work to&nbsp;ignore the warning to keep the DNS and NetBIOS name linked, combined with</li>
+<li>Strongly push to fix bugs in the components like the network stack and Active Directory to minimize the risk of people who want to do this split with special attention on removal of <a href="http://msdn.microsoft.com/en-us/library/ms724244(v=VS.85).aspx">DnsHostnameToComputerName </a>dependencies in IPV6 scenarios since NetBIOS is not available than anyway, making the dependency artificial and</li>
+<li>A strong push to allow&nbsp;alternatives to the "default to the computer name" scenarios until/unless these other problems are resolved.</li>
+</ul>
+<p>The only happy ending to all of this is that this is that there are ways to limit the impact of the computer&nbsp; name issues hemorrhaging into other areas....</p>
+<p>Oh, and the fact that functions like the <a href="http://msdn.microsoft.com/en-us/library/ms682032(VS.85).aspx">DnsValidateName function</a>&nbsp;have text like this:</p>
+<p style="padding-left: 60px;" class="note"><strong>Note</strong>&nbsp;&nbsp;If <strong>DnsValidateName</strong> returns <strong>DNS_ERROR_NON_RFC_NAME</strong>, the error should be handled as a warning that not all DNS servers will accept the name. When this error is received, note that the DNS Server does accept the submitted name, if appropriately configured (default configuration accepts the name as submitted when <strong>DNS_ERROR_NON_RFC_NAME</strong> is returned), but other DNS server software may not. Windows DNS servers do handle <strong>NON_RFC_NAMES</strong>.</p>
+<p>So maybe one day we'll be better here...</p>
+<hr/><p><strong>Yuhong Bao</strong> on 21 Sep 2011 11:46 PM:</p><div style="margin-left: 1em"><p>&quot;in an &nbsp;gg view &quot;</p>
+<p>What does that mean?</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 22 Sep 2011 12:01 AM:</p><div style="margin-left: 1em"><p>great global? :-)</p>
+</div>
+<hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2013/10/17 <a href="http://archives.miloush.net/michkap/archive/2013/10/17/10453790.html">There's no "I" in IDN, part 19: There's no "I" in IPv6, either!</a></p><p>2013/10/08 <a href="http://archives.miloush.net/michkap/archive/2013/10/08/10454553.html">There's no "I" in IDN, part 18: There isn't even an "I" in John C. Klensin's name!</a></p><p>2013/09/13 <a href="http://archives.miloush.net/michkap/archive/2013/09/13/10448110.html">There's no "I" in IDN, part 17: EAI made it to China, and everybody knows it!</a></p><p>2013/04/19 <a href="http://archives.miloush.net/michkap/archive/2013/04/19/10412471.html">There's no "I" in IDN, part 16: It's a good thing they decided to call it EAI!</a></p><p>2012/10/12 <a href="http://archives.miloush.net/michkap/archive/2012/10/12/10359120.html">There's no "I" in IDN, part 15: Still no 'I' in EAI.... but we could use an US sometime soon!</a></p><p>2012/08/08 <a href="http://archives.miloush.net/michkap/archive/2012/08/08/10337799.html">There's no "I" in IDN, part 14: It turns out there's no "I" in IE, either</a></p><p>2012/05/18 <a href="http://archives.miloush.net/michkap/archive/2012/05/18/10305223.html">There's no "I" in IDN, part 13: Desktop and Managed and Metro; oh my!</a></p><p>2012/02/27 <a href="http://archives.miloush.net/michkap/archive/2012/02/27/10273315.html">There's no "I" in IDN, part 12: Emoji + IDN == U+1F4A9 (PILE OF POO)</a></p><p>2011/10/25 <a href="http://archives.miloush.net/michkap/archive/2011/10/25/10229790.html">There's no "I" in IDN, part 11: There's no place like ::1, not even 127.0.0.1!</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2011/09/22/10215125.html" title="Consoling oneself with TrueType">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2011/09/20/10214076.html" title="&quot;Guh-guh-guh- that&#39;s not al folks!&quot;, by any means it would seem!">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2011-09">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2011-09-21">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2011/09/21/10214081.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+</html>

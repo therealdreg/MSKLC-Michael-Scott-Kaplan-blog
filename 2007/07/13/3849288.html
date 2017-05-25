@@ -1,0 +1,281 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2007/07/13/3849288.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:38 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>What does DAO have that ADO/ADOx/JRO do not?</title></head><body>
+<h1>What does DAO have that ADO/ADOx/JRO do not?</h1>
+<p><em>by Michael S. Kaplan, published on 2007/07/13 11:11 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2007/07/13/3849288.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P><EM><STRONG><FONT color=#ff0000>BLOG OWNER'S NOTE: All&nbsp;comments to this post are now moderated&nbsp;to keep the volume down. You can post&nbsp;to another blog if you have further comments....</FONT></STRONG></EM></P>
+<P><EM>If you don't care about Jet or DAO or Access then this is a post you can skip!</EM>&nbsp;</P>
+<P>This post is a reposting of an <A class="" href="http://www.trigeminal.com/usenet/usenet025.asp" mce_href="http://www.trigeminal.com/usenet/usenet025.asp">article</A> written over seven years ago, and is still entirely true.</P>
+<P>A few versions ago, the Access team started formally backing away from de-emphasizing DAO and once again was adding it to default references in new databases.</P>
+<P>As a culmination of this slow change,&nbsp;the updated version of DAO that is specifically used by Access 2007 and ACE&nbsp;is now once again under active development.</P>
+<P>Proof positive that rumors of&nbsp;DAO's (and Jet's)&nbsp;death were greatly exaggerated? :-)</P>
+<HR>
+
+<P>Microsoft has clearly positioned ADO as the replacement to DAO.... many Microsoft representatives have gone to far as to state that DAO is DOA (Dead On Arrival, a term used in the US to describe people who are dead when an ambulance arrives hoping to take them to be saved). HOWEVER a lot of core functionality is supported in DAO that ADO/ADOx/JRO do not support, and might never actually support since Microsoft seems to be pushing customers in other directions. While Jet itself will not "die" it is clear that it is no longer a strategic platform, so there simply does not seem to be enough interest to make things work more effectively in Jet. </P>
+<P>Here, for the full record, is a list of all of the capabilities DAO has that ADO does not: 
+<UL>
+<LI><B>Running transactions that use multiple databases</B> (works in DAO since transactions are at the Workspace level, fails in ADO since transactions are at the Connection level -- and Connections only support one database) 
+<LI><B>Opening a table in a mode that keeps others from opening it read-write mode</B> (works in DAO through use of the dbDenyWrite constant, fails in ADO at the table level since its closest analogue adModeShareDenyWrite only can be set at the Connection level). 
+<LI><B>Opening a table in a mode that keeps others from opening it at all</B> (works in DAO through use of the dbDenyRead constant, fails in ADO at the table level since its closest analogue adModeShareDenyRead only can be set at the Connection level). 
+<LI><B>Creating users and groups in a way that allows you to recreate them in case an MDW file is lost</B> (works in DAO using CreateUser/CreateGroup which allow you to specify PIDs, fails in ADO which does not allow you to specify PIDs). 
+<LI><B>Securing Access project objects such as forms, reports, or macros</B> (works in DAO through the Permissions property on Document objects, fails in ADOx because it does not properly map the expected constants for permissions to execute, read changes, and write changes to these object types). 
+<LI><B>Ability to create a linked ODBC table that is updateable</B> (works in DAO through its call to the <A class="" href="http://msdn2.microsoft.com/library/ms711022.aspx" mce_href="http://msdn2.microsoft.com/library/ms711022.aspx">SQLStatistics</A> function, fails in ADO which makes no such call). 
+<LI><B>Ability to create "Prevent Deletes" replicas</B> (works in DAO by passing the value of &amp;H4 to the CreateReplica call, fails in JRO, which has no such analogue). 
+<LI><B>Method for determining folder information from Exchange/Outlook folders and columns</B> (works in DAO through the Attributes of the TableDef/Field objects, fails in ADO since this information is not passed on). 
+<LI><B>Capability to set and change Jet options without making registry changes</B> (works in DAO through DBEngine.GetOption and DBEngine.SetOption, fails in ADO, which has no such analogue). 
+<LI><B>Allowing the creation/change/deletion of any and all properties through the JPM -- also known as the Jet Property Manager</B> (works in DAO through CreateProperty/Properties.Append, fails in ADO/ADOx/JRO for almost all properties since there is no hookup of the JPM to ADO). 
+<LI><B>Forcing the locking mode of a database when working from within Access</B> (works in DAO through the DAO.LockTypeEnum constants while using CurrentDb, fails through the ADO.LockTypeEnum constants while using CurrentProject.Connection). 
+<LI><B>Retrieving implicit permissions on an object</B> (works in DAO through the AllPermissions properties, fails in ADO which has no AllPermissions property and requires you to separately enumerate the user and all of their groups). 
+<LI><B>Allowing a separate Jet session to run using a special object in the object model</B> (works in DAO through the PrivDBEngine object, fails in ADO due to no analogous object).&nbsp;&nbsp;</LI></UL>
+<P mce_keep="true">&nbsp;</P>
+<P mce_keep="true"><FONT color=#ff00ff><EM>This post sponsored by</EM> <FONT size=5>Ｄ</FONT> <EM>(<A class="" href="http://www.fileformat.info/info/unicode/char/ff24" mce_href="http://www.fileformat.info/info/unicode/char/ff24">U+ff24</A>, a.k.a.FULLWIDTH LATIN CAPITAL LETTER D)</EM></FONT></P>
+<hr/><p><a id="3896366" href="#3896366">#</a> <strong>Robert</strong> on 16 Jul 2007 11:06 AM:</p><div style="margin-left: 1em"><p>I noticed on my two month old Vista Machine, that I only have one referrence for DAO - the rock solid 3.6, &nbsp;but for ADO I have:</p>
+<p>2.0</p>
+<p>2.1</p>
+<p>2.5</p>
+<p>2.6</p>
+<p>2.7</p>
+<p>6.0</p>
+<p>Oy.</p></div>
+<p><a id="4894669" href="#4894669">#</a> <strong>Jamie Collins</strong> on 13 Sep 2007 10:30 AM:</p><div style="margin-left: 1em"><p>• &quot;Running transactions that use multiple databases&quot;</p>
+<p>I admit without grudge that this sounds like a nice feature (though I'd consider .NET transaction services before porting my apps back to Jet &lt;g&gt;). Do you get the impression ADO was create to solve other problems...?</p>
+<p>--</p>
+<p>• &quot;Opening a table in a mode that keeps others from opening it read-write mode&quot;</p>
+<p>Believe me, using ADO+Jet to create a table lock isn't too hard to achieve (indeed, *avoiding* a table lock often is &lt;g&gt;!)</p>
+<p>--</p>
+<p>• &quot;Creating users and groups in a way that allows you to recreate them in case an MDW file is lost …works in DAO using CreateUser/CreateGroup which allow you to specify PIDs&quot;</p>
+<p>Again, ADO has a *different* way of achieving the same end result i.e. by using SQL code rather than working with an object model in COM code. Works in ADO when you use SQL DCL e.g. </p>
+<p>CurrentProject.Connection.Execute &quot;CREATE GROUP Billing Gu294JxP1m, Shipping Kl27c5sI9h;&quot; CurrentProject.Connection.Execute &quot;CREATE USER Tim pwd H3sJaZ9k2m;&quot; </p>
+<p>where the alphanumeric strings are the PIDs. For further details see:</p>
+<p>Advanced Microsoft Jet SQL for Access 2000</p>
+<p><a rel="nofollow" target="_new" href="http://msdn2.microsoft.com/en-us/library/aa139977">http://msdn2.microsoft.com/en-us/library/aa139977</a>(office.10).aspx</p>
+<p>--</p>
+<p>• &quot;Securing Access project objects such as forms, reports, or macros.&quot;</p>
+<p>Generally, Jet's OLE DB providers only works with Jet database objects _by design_; DAO does not expose certain Jet objects _by omission_ such as CHECK constraints, Jet 4.0-specific data types, or default parameter values (&quot;CREATE PROCEDURE MyProc (my_param CHAR(11) = '{{DEFAULT}}') AS ...&quot;). However, in this particular case, security for forms, reports, and macros are exposed to ADO via SQL DCL e.g. </p>
+<p>CurrentProject.Connection.Execute &quot;GRANT DELETE ON OBJECT MyReport TO PUBLIC;&quot;</p>
+<p>Again, see Advanced Microsoft Jet SQL for Access 2000 (link above).</p>
+<p>--</p>
+<p>• &quot;Ability to create a linked ODBC table that is updateable&quot;</p>
+<p>I have no comment because I have no need to do this.</p>
+<p>--</p>
+<p>• &quot;Ability to create &quot;Prevent Deletes&quot; replicas&quot;</p>
+<p>This is no longer relevant because replication has been removed from Jet (as of Access 2007). </p>
+<p>--</p>
+<p>• &quot;Method for determining folder information from Exchange/Outlook folders and columns&quot;</p>
+<p>You expect a data access technology to do this &lt;g&gt;?! n</p>
+<p>--</p>
+<p>•&quot; Method for determining folder information from Exchange/Outlook folders and columns&quot;</p>
+<p>Not sure what you are getting at here. You can certainly use ADO to get a list of Exchange folders and query on folder properties e.g. </p>
+<p>SELECT &quot;DAV:displayname&quot;, &quot;DAV:contentclass&quot;, &quot;DAV:href&quot;</p>
+<p> &nbsp; &nbsp;FROM SCOPE('shallow traversal of</p>
+<p> &nbsp; &nbsp; &nbsp; &nbsp;&quot;<a rel="nofollow" target="_new" href="http://gomezawin2000.gomezamobile.local/public"">http://gomezawin2000.gomezamobile.local/public&quot;</a>')</p>
+<p> &nbsp; &nbsp;WHERE &quot;DAV:ishidden&quot; = False</p>
+<p> &nbsp; &nbsp;AND &quot;DAV:isfolder&quot; = True</p>
+<p>See:</p>
+<p>Accessing the Web Storage System Using ADO and ExOLEDB</p>
+<p><a rel="nofollow" target="_new" href="http://www.informit.com/articles/article.aspx?p=167787&amp;seqNum=10">http://www.informit.com/articles/article.aspx?p=167787&amp;seqNum=10</a></p>
+<p>--</p>
+<p>• &quot;Capability to set and change Jet options without making registry changes ...works in DAO through ... DBEngine.SetOption&quot;</p>
+<p>First, you can set many, many Jet options without making registry changes. Second, the options specific to DBEngine.SetOption can indeed be set using ADO with the Jet OLE DB providers. See:</p>
+<p>ADO Provider Properties and Settings</p>
+<p><a rel="nofollow" target="_new" href="http://msdn.microsoft.com/library/default.asp?url=/library/en-us/dnacc2k/html/adoproperties.asp">http://msdn.microsoft.com/library/default.asp?url=/library/en-us/dnacc2k/html/adoproperties.asp</a></p>
+<p>Table 5. Provider-specific ADO Connection Object Session properties</p>
+<p>Jet OLEDB:Recycle Long-Valued Pages (read/write), Jet OLEDB:Page Timeout (read/write), Jet OLEDB:Shared Async Delay (read/write), etc.</p>
+<p>Third, there are OLE DB provider settings unavailable to DAO e.g. Jet OLEDB:Database Locking Mode to set to Row-level Locking; see: </p>
+<p>PRB: Jet 4.0 Row-Level Locking Is Not Available with DAO 3.60</p>
+<p><a rel="nofollow" target="_new" href="http://support.microsoft.com/kb/306435/en-us">http://support.microsoft.com/kb/306435/en-us</a></p>
+<p>--</p>
+<p>• &quot;Allowing the creation/change/deletion of any and all properties through the JPM -- also known as the Jet Property Manager&quot;</p>
+<p>I've never heard of the &quot;Jet Property Manager&quot; and it seems I'm not the only one: 2 hits on Microsoft.com and four distinct English language hits on Google (not counting this page!)</p>
+<p>--</p>
+<p>• &quot;Forcing the locking mode of a database when working from within Access (works in DAO through the DAO.LockTypeEnum constants while using CurrentDb, fails through the ADO.LockTypeEnum constants while using CurrentProject.Connection)&quot;</p>
+<p>Agreed, I don't think this is possible (though personally I can't see the need). AFAIK only ADO recordsets have a LockType property and CurrentProject.Connection returns an ADO Connection object. </p>
+<p>--</p>
+<p>• &quot;Retrieving implicit permissions on an object ...works in DAO through the AllPermissions properties&quot;</p>
+<p>Once again, SQL DCL provides keywords ALL PRIVILEGES and PUBLIC respectively.</p>
+<p>--</p>
+<p>• &quot;Allowing a separate Jet session to run using a special object in the object model&quot;</p>
+<p>ADO allows a separate Jet session to run e.g. by creating a new ADO Connection object.</p>
+<p>--</p>
+<p>Now, how about a list of what does ADO have that DAO does not? Well, sorry, I don't have the time but asynchronously fetching a hierarchical recordset then disconnecting it and saving it to disk as XML springs to mind :)</p>
+<p>Gosh, I've just had an amazing idea: what if we could use both ADO *and* DAO...?</p>
+<p>Jamie.</p>
+<p>--</p></div>
+<p><a id="6973009" href="#6973009">#</a> <strong>Firouz Tehrani</strong> on 3 Jan 2008 6:28 PM:</p><div style="margin-left: 1em"><p>You might add to your list the fact that accessing rows randomly in an indexed table using the recordset.seek method does not work in ADO. &nbsp;This can become a significant perfromance problem in large tables because every alternative to .seek requires using a query. &nbsp;If your database is designed well, .seek works instantaneously.</p>
+<p>Jamie Collins might write back and point out that .seek does not work with linked tables under DAO. &nbsp;This is really not a problem if you know how to use a workspace(s) to access tables in another database. &nbsp;You can still explicitly link to the same tables if you need to allow your users to create and run their own queries.</p></div>
+<p><a id="7363468" href="#7363468">#</a> <strong>Tony</strong> on 31 Jan 2008 8:31 PM:</p><div style="margin-left: 1em"><p>Quote - &quot;However, in this particular case, security for forms, reports, and macros are exposed to ADO via SQL DCL e.g. </p>
+<p>CurrentProject.Connection.Execute &quot;GRANT DELETE ON OBJECT MyReport TO PUBLIC;&quot; &quot;</p>
+<p>Except it doesn't work on Forms. &nbsp;Everyone says it works, but it doesn't. &nbsp;Go try it.</p>
+<p>...and it's back to fiddling with containers in DAO, urgh.</p></div>
+<p><a id="7383917" href="#7383917">#</a> <strong>Michael S. Kaplan</strong> on 2 Feb 2008 1:51 AM:</p><div style="margin-left: 1em"><p>Yep, that's what I said. :-)</p>
+</div>
+<p><a id="7431212" href="#7431212">#</a> <strong>Jamie Collins</strong> on 4 Feb 2008 4:02 AM:</p><div style="margin-left: 1em"><p>&gt;&gt; CurrentProject.Connection.Execute &quot;GRANT DELETE ON OBJECT MyReport TO PUBLIC;&quot; &quot;</p>
+<p>Except it doesn't work on Forms. &nbsp;Everyone says it works, but it doesn't. &nbsp;Go try it. &lt;&lt;</p>
+<p>No thanks, though it sounds like a bug with Jet, not ADO ;-)</p>
+<p>Jamie.</p>
+<p>--</p></div>
+<p><a id="7431277" href="#7431277">#</a> <strong>Michael S. Kaplan</strong> on 4 Feb 2008 4:07 AM:</p><div style="margin-left: 1em"><p>Actually, it is a bug with the way Jet maps the syntax to Access containers -- but one can hardly claim a functionality works well if it is broken, no matter who one wishes to blame (especially when good old DAO continues to work just fine here)....</p>
+</div>
+<p><a id="7431291" href="#7431291">#</a> <strong>Jamie Collins</strong> on 4 Feb 2008 4:07 AM:</p><div style="margin-left: 1em"><p>&gt;&gt; Jamie Collins might write back and point out that .seek does not work with linked tables under DAO. &lt;&lt;</p>
+<p>Jamie Collins actually writes back to tell you that I don't use .seek in ADO (or linked tables at all, for that matter). Rather, I use either .Filter or a database round trip depending on circumstances. I think expecting to port your DAO code to ADO code &quot;as is&quot; &nbsp;is not a good approach; rather I think you should look at the advantages ADO can (or cannot) offer, rather than try to find things that DAO can do that ADO cannot (FWIW I'm convinced that the list of things ADO can do that DAO cannot is the longer one).</p>
+<p>Jamie.</p>
+<p>--</p></div>
+<p><a id="7431831" href="#7431831">#</a> <strong>Jamie Collins</strong> on 4 Feb 2008 4:29 AM:</p><div style="margin-left: 1em"><p>&gt;&gt; Actually, it is a bug with the way Jet maps the syntax to Access containers -- but one can hardly claim a functionality works well if it is broken, no matter who one wishes to blame (especially when good old DAO continues to work just fine here).... &lt;&lt; </p>
+<p>My point is that many things in work just fine with Jet in ADO even if there is a slightly (or otherwise) different way of achieving the same thing or something very similar (or perhaps even better).</p>
+<p>ADO has headline features that improve upon DAO e.g. (pulls one out of the air) asynchronous fetching of recordsets. This is to be expected because ADO capitalized on the success of DAO, improved upon some of its weaknesses and introduced some new functionality. </p>
+<p>If you expected ADO and the Jet OLE DB providers to re-implement 100% of ADO+Jet functionality then I think your expectations were set unreasonably high. The nitpicking nature of your article (takes one to know one &lt;g&gt;) indicates that MS did a pretty good job on the major functionality that most people care about.</p>
+<p>The aim of my comments was to refute you claim that your article &quot;is still entirely true&quot; and I think I did a pretty good job ;-)</p>
+<p>I don't think you can have taken a good look at ACE because it is a *big* disappointment: as regards headline features they have added muli-value fields (a.k.a. First Normal Form violation for newbies) and removed user level security and replication. DAO for ACE still doesn't have support for the new features of Jet 4.0 (e.g. CHECK constraints, compressible data types, row level locking, etc) and ADO is still requires to plug these gaps in DAO. </p>
+<p>I'll promote the use of *both* ADO and DAO, even though I have a strong personal preference for ADO (because of the simplicity of its object model and richer feature set) until they have 'fixed' DAO. I invite you to join me :) </p>
+<p>Jamie.</p>
+<p>--</p></div>
+<p><a id="7432091" href="#7432091">#</a> <strong>Michael S. Kaplan</strong> on 4 Feb 2008 4:44 AM:</p><div style="margin-left: 1em"><p>Given the performance benefits of Seek are unknown to you, I won't argue that point -- readers here like Tony already know you are mistaken on those points. :-)</p>
+<p>I'm not an ACE fan until/unless they update their collations. Beyond that, the fact that the combination of ADO, ADOX, JRO, and the Jet OLE DB provider combined could not get things like document/container/security support right make me glad that DAO is still around.</p>
+<p>The number of times I have needed asynchronous fetches? Not so much. But core JPM support? That is one of the most essential features I have used on a regular basis so if they couldn't get that right (or rather chose not to) then I can't feel like it is much of an upgrade, from my point of view.</p>
+<p>User defined functions from within queries? That fails via ADO too, last time I checked. Again, core support for something that has no sprocs like Access/Jet, and it don't work from ADO.</p>
+<p>The list could keep going, but you get my point -- plenty of core stuff people needed that never got done and no one seems to be doing even in the new version, makes ADO much less interesting from the standpoint of Access development....</p>
+</div>
+<p><a id="7432392" href="#7432392">#</a> <strong>Jamie Collins</strong> on 4 Feb 2008 4:59 AM:</p><div style="margin-left: 1em"><p>I think we're done here, although in parting I would say it still seems to me there are some great reasons to use *both* ADO and DAO selectively and your comments seem to reinforce this point. One thing that puzzles me though: </p>
+<p>&gt;&gt; But core JPM support? &lt;&lt;</p>
+<p>Why are people not discussing JPM (whatever it is) in the newsgroups? Why are there so few hits on google and MSDN for JPM? If there is a relevance I'm not seeing it.</p>
+<p>Jamie.</p>
+<p>--</p></div>
+<p><a id="7434825" href="#7434825">#</a> <strong>Michael S. Kaplan</strong> on 4 Feb 2008 6:56 AM:</p><div style="margin-left: 1em"><P>They probably do not call it that? The ability add add custom properties via the Jet Property Manager is a very powerful one, but via ADO/Jolt et.al. none of them are available except known ones....</P></div>
+<p><a id="7439545" href="#7439545">#</a> <strong>Jamie Collins</strong> on 4 Feb 2008 10:30 AM:</p><div style="margin-left: 1em"><p>Erm, didn't you just tell me what its called &lt;g&gt; ?! I have tried searching for &quot;JMP&quot; and &quot;Jet Property Manager&quot; and can turn up only a few web pages. I therefore conclude it is something of limited appeal (your &quot;except known ones&quot; comment suggests it could even be an undocumented/unsupported feature), therefore underlining my point that the things that DAO can do that ADO cannot are of limited interest to the general Access punter. Contrast with CHECK constraints, one of the more obscure and underappreciated features of Jet 4.0 (and not &quot;available&quot; to DAO), which I can turn up at least 400 hits in the Access newsgroups searching by the exact string &quot;CHECK constraints&quot;.</p>
+<p>Jamie.</p>
+<p>--</p></div>
+<p><a id="7439952" href="#7439952">#</a> <strong>Michael S. Kaplan</strong> on 4 Feb 2008 10:49 AM:</p><div style="margin-left: 1em"><p>I'm not going to argue about it; the ability to create custom properties without writing code to maintain them is a feature that not even C#, VB, or C++ really have.</p>
+<p>It is not known as the JPM or Jet Property Manager to most people externally. But surely one can see the potential use? It is pretty core to several built-in features and used by lots of people in the world.</p>
+<p>And only exposed via DAO.</p>
+<p>Funny you did not pick up on UDF support there -- is that an implicit acknowledgment that it *is* a missing feature since you aren't attacking it as an item for the list? :-)</p>
+</div>
+<p><a id="7487441" href="#7487441">#</a> <strong>Jamie Collins</strong> on 6 Feb 2008 4:25 AM:</p><div style="margin-left: 1em"><p>&gt;&gt; It is not known as the JPM or Jet Property Manager to most people externally.&lt;&lt;</p>
+<p>Don't keep me in suspense: what *is* it known as to most people externally, then? Don't you think it would be a good idea to use this commonly known name in your article?</p>
+<p>&gt;&gt; the ability to create custom properties without writing code to maintain them... surely one can see the potential use? &lt;&lt;</p>
+<p>Potentially but &nbsp;it really depends whether this is supported functionality and preferably with effective documentation from Microsoft on how to use it. Also, whether it is well exposed e.g. in the Access interface, via the OLE DB providers &lt;g&gt;, etc. Take, again, my example of CHECK constraints: announced as an official &quot;new feature&quot; of Jet 4.0 with a couple of MSDN articles including example usage (one with a syntax error, both inappropriate usage IMO). However, they are not available to DAO, are not exposed in any way in the Access user interface, let alone a CHECK constraint builder tool or wizard, no mention in the Access Help and, worst of all, there is no 'spec' form Microsoft telling us how they should work e.g. are they supposed to be checked on a SQL statements basis as per the ANSI/ISO SQL-92 spec? The result has been poor take up and no Access MVP championing, leading to ignorance and even mistrust in the Access community. And that's for a *supported* feature...</p>
+<p>&gt;&gt; Funny you did not pick up on UDF support there -- is that an implicit acknowledgment that it *is* a missing feature since you aren't attacking it as an item for the list? :-) &lt;&lt;</p>
+<p>Gosh, where to start? :)</p>
+<p>First, if you think that no reply maps directly to an implicit agreement then welcome to the wacky world of discussion :) One of the *many* reasons for posting no reply is my desire not to appear to be argumentative by being tempted into going off topic. I note you haven't come back to me on my 'attacks' on the aforementioned list, so by your way of thinking can I assume that you are implicitly saying all my counter-arguments are valid? ;-)</p>
+<p>Second, the reason why I did not 'attack' your UDF issue is because I don't see it on the list &lt;g&gt;! I would be *extremely* happy for you to revisit your list and revise it in the light of comments you have received, rather than post it 'as is' along with the claim (spurious, IMO) that it &quot;is still entirely true&quot; (never was, IMO). Did your recall if you asked for peer review from an ADO advocate when you originally compiled it? (If you are not familiar with the term &quot;confirmation bias&quot;, I respectfully request you look it up.) If you are looking for a reviewer for a forthcoming revision then I would be very happy to help, noting that I've acknowledged some of your claims as being valid even if they are rather obscure features of DAO/Jet.</p>
+<p>Third, I didn't want to give feedback on your claim &quot;User defined functions from within queries... fails via ADO&quot; without testing first. (Did you test? hmm, thought not...) Plus I didn't have Access installed on my machine; I use Jet a lot but not Access, hence do not use UDFs in Queries because they 'break' then when used in Jet-no-Access. In other words, I'm more comfortable with giving feedback on ADO than UDFs. But I'm willing to give it a shot...</p>
+<p>Fourth, think Jet ANSI Query Modes: DAO supports only ANSI-89 Query Mode and ADO, via the jet OLE DB providers, supports only ANSI-92 Query Mode. The Access user interface, on the other hand, supports both. From Access XP onwards it has been possible to put the Access user interface into ANSI-92 Query Mode so that the SQL View of a Query object supports ANSI-92 Query Mode Jet SQL. If your claim was correct, it would follow that UDFs were not supported in the Access user interface when it is in ANSI-92 Query Mode, something which is obviously incorrect.</p>
+<p>Fifth, I installed Access 2007, tested your claim and, guess what, you are just plain wrong :) </p>
+<p>Jamie.</p>
+<p>--</p></div>
+<p><a id="7606456" href="#7606456">#</a> <strong>Jamie Collins</strong> on 11 Feb 2008 4:41 AM:</p><div style="margin-left: 1em"><p>Speaking of being argumentative... Let's say we revised your list to our mutual satisfaction then did the same for my list of things that ADO can do that DAO cannot. </p>
+<p>It would comprise the ADO specific: </p>
+<p>• Architectural:</p>
+<p>- flatter and more flexible object model, </p>
+<p>- disconnected recordsets, </p>
+<p>- fabricated recordsets, </p>
+<p>- hierarchical recordsets, </p>
+<p>- etc; </p>
+<p>• New objects:</p>
+<p>- Stream, </p>
+<p>- Command, </p>
+<p>- Catalog, </p>
+<p>- etc; </p>
+<p>• New Properties: </p>
+<p>- AbsolutePage, PageCount and PageSize to allow paging; </p>
+<p>- NumericScale and Precision to allow the DECIMAL/NUMERIC types to be used programmatically, </p>
+<p>- etc; </p>
+<p>• New Methods: </p>
+<p>- GetString to generate output without iteration, </p>
+<p>- OpenSchema to allow access to the INFORMATION SCHEMA, </p>
+<p>- BeginTrans to allow nested transactions, </p>
+<p>- etc; </p>
+<p>• New collections: </p>
+<p>- Errors to allow more than one error to be inspected, </p>
+<p>- etc; </p>
+<p>• the introduction of events (i.e. DAO has none): </p>
+<p>FetchProgress, FetchComplete, etc to allow asynchronous processing; </p>
+<p>- etc; </p>
+<p>•General improvements: </p>
+<p>- richer library of supported data types </p>
+<p>- etc; </p>
+<p>• and many many more,</p>
+<p>Plus the Jet-specific i.e. the Jet functionality that isn't accessible via DAO and/or the Access interface: </p>
+<p>- CHECK constraints, </p>
+<p>- compressible data types, </p>
+<p>- row level locking, </p>
+<p>- etc.</p>
+<p>At the end of this process you'd be able to observe that my list would be much 'longer' than yours and that the things on my list would generally be much 'bigger' :)</p>
+<p>I'd hope everyone else would conclude that we'd have, for all practical purposes, compiled lists for &quot;Use DAO if you want these things&quot; and &quot;Use ADO if you want these things&quot; respectively, the implication being that for everything else one should feel free to use either ADO or DAO (or both!) as one's lifestyle choice dictates ;-)</p>
+<p>Jamie.</p>
+<p>--</p></div>
+<p><a id="7609522" href="#7609522">#</a> <strong>Michael S. Kaplan</strong> on 11 Feb 2008 7:33 AM:</p><div style="margin-left: 1em"><p>Jamie,</p>
+<p>Blogs are generally slices in time so as a rule they are not edited in major ways. So it is unlikely I would edit this one to change the list of things that are there.</p>
+<p>Please note the core purpose -- that the supposed REPLACEMENT for DAO was in fact unable to support many features that DAO supported. That is still true and the fact that new features exist in ADO is not really the point (though note that several items you list a being ADO-specific like the Errors collection and BeginTrans are actually also DAO features and have been since DAO 3.0 and 2.0).</p>
+<p>Any new technology can add features; some of those features may even make sense. This is irrelevant to the point that it fails to make DAO useless, despite adding a much bigger working set that pure Jet/DAO ever had -- something that many people care about since working set can impact performance and other core issues.</p>
+<p>I'll probably turn comments off for this post soon, since having huge comments that kind of miss the point of the original post are really offtopic and it is better to not allow comments than to delete them....</p>
+<p>As a PS, my original point about UDFs is actually not wrong, I was just imprecise in my language, even with the current support that does work -- there is a &quot;hack&quot; within DAO that will let UDFs work within the same Jet session in a process, and since there is no session level ADO support, the only way to make it work is to share connections. Admittedly for most people this is fine since multiple connections within a session are comparatively rare, but there are several places where the functionality is crucial (like in the Access wizards, for example) so I prefer not to pretend that there is parity when in fact there are subtle differences that keep parity from existing....</p>
+</div>
+<p><a id="7612500" href="#7612500">#</a> <strong>Jamie Collins</strong> on 11 Feb 2008 9:48 AM:</p><div style="margin-left: 1em"><p>I take your point about a blog entry but what about &quot;a reposting of an article written over seven years&quot; when qualified with the claim &quot;is still entirely true&quot;? :)</p>
+<p>PS Still waiting for you to post the generally accepted ('external') name of the 'JPM' thing you alluded to in the *original* article. In lieu of a reply and after comments have been disabled I will have to assume that JPM is indeed its name and conclude that the rest of the Access/Jet world is exceedingly underwhelmed by its very existence, rather than share your &quot;core functionality&quot; viewpoint.</p>
+<p>Jamie.</p>
+<p>--</p></div>
+<p><a id="7612673" href="#7612673">#</a> <strong>Michael S. Kaplan</strong> on 11 Feb 2008 9:58 AM:</p><div style="margin-left: 1em"><p>The CreateProperty method in DAO and the objects it is on, those are the interfaces to the JPM (specific known properties are directly exposed and created as needed but there is no way to create properties via ADO or access ones that have been created -- in fact there is no way to get to the Jet objects in question in most cases.</p>
+<p>The original article still is true, and the only reason I did not do the point by point refutation of even your original comment was that you included things like &quot;I don't use this&quot; and &quot;this no longer works in access 2007&quot; even though it works any time you work from MDBs which you have to for any prior version to work -- one of the most important features for most Access developers -- meaning that your point by point was not coming from the point of view of an Access developer....</p>
+</div>
+<p><a id="7635372" href="#7635372">#</a> <strong>Jamie Collins</strong> on 12 Feb 2008 3:23 AM:</p><div style="margin-left: 1em"><p>&gt;&gt; The original article still is true &lt;&lt;</p>
+<p>No. Let's take your &quot;ADO...does not allow you to specify PIDs&quot; point.</p>
+<p>I can use an ADO connection (but not a DAO one, incidentally) to execute SQL DCL specifying the PIDs e.g. to use an *Access* example:</p>
+<p>Access.CurrentProject.Connection.Execute &quot;CREATE USER Tim pwd H3sJaZ9k2m;&quot;</p>
+<p>Therefore, &quot;ADO...does not allow you to specify PIDs&quot; wasn't &quot;entirely true&quot; when you originally wrote your article and was completely irrelevant in July 2007 when you reposted it because with effect from Access 2007/ACE the Access team, in a stroke of 'genius', removed user level security from the product. </p>
+<p>Jamie.</p>
+<p>--</p></div>
+<p><a id="7638813" href="#7638813">#</a> <strong>Michael S. Kaplan</strong> on 12 Feb 2008 5:57 AM:</p><div style="margin-left: 1em"><p>Are you really going to keep going round and round on this one? Show me how it works via the oibject model, which DOES work in DAO. Not everyone wants to have to cinstruct SQL when they are trying to write code....</p>
+<p>How about taking a step back and telling me about the plans to give either ADO or ADOX or JRO parity in the OM with what came before them? I'm glad you love ADO and think it is great, but I personally prefer those who respect their elders a bit more, especially when they were designed with the thought of replacing them, making them un-needed.</p>
+<p>You don't have to answer, it is obviously too late at this point. But is changing the whole model and not inclouding all the features and not giving parity all to be slower really something to be that proud of, rather than something to just move on from after recognizing that if nothing else ADOX and JRO fid not accomplish what they were designed to do?</p>
+</div>
+<p><a id="7669233" href="#7669233">#</a> <strong>Jamie Collins</strong> on 13 Feb 2008 4:49 AM:</p><div style="margin-left: 1em"><P>&gt;&gt; Are you really going to keep going round and round on this one? &lt;&lt;</P>
+<P>Hopefully there's no need because -- at last! -- we seem to be getting somewhere...</P>
+<P>&gt;&gt; Show me how it works via the object model, which DOES work in DAO. Not everyone wants to have to construct SQL when they are trying to write code &lt;&lt;</P>
+<P>And not everyone wants to traverse an object model when a single SQL DDL statement (SQL *is* code &lt;g&gt;) will do. Have you forgotten that your original point was not about the ability or otherwise to use an OM? Rather, it was, "Creating users and groups in a way that allows you to recreate them in case an MDW file is lost." You said this couldn't be done with ADO, which was a misstatement. An article containing misstatements cannot be "entirely true". QED.</P>
+<P>&gt;&gt; I'm glad you love ADO and think it is great, but I personally prefer those who respect their elders a bit more, especially when they were designed with the thought of replacing them, making them un-needed.&lt;&lt;</P>
+<P>I suspected there was a subtext to your article :) Hold on to your hat: I think you've been misinformed. &nbsp;It seems ADO was not intended to replace DAO... </P>
+<P>BTW the way you seem to be saying that 'ADO does not respect it elders'. I though you of all people would be familiar with the term 'anthropomorphism' :) </P>
+<P>&gt;&gt; How about taking a step back and telling me about the plans to give either ADO or ADOX or JRO parity in the OM with what came before them? &lt;&lt;</P>
+<P>I cannot, simply because as a member of the general public MS do not divulge their private plans to me :) I can, however, point you to Microsoft articles aimed at the general public that inform us, "DAO and ADO were designed to solve two different problems. As such, they expose two different object models and different methods of manipulating the underlying data engines." [KB 225048]</P>
+<P>Was VSTO supposed to replace VBA? Was ADO.NET supposed to replace ADO? Was MSDE supposed to replace Jet? And are these more modern technologies to be considered "failures" because they didn't? No, no, no and no :)</P>
+<P>&gt;&gt; ADO or ADOX or JRO &lt;&lt;</P>
+<P>Minor point "ADO" is the collective term i.e. ADOX and JRO are a subset of ADO. I think you meant "ADODB" in that sentence.</P>
+<P>&gt;&gt; is changing the whole model and not including all the features and not giving parity all to be slower really something to be that proud of, rather than something to just move on from after recognizing that if nothing else ADOX and JRO did not accomplish what they were designed to do? &lt;&lt;</P>
+<P>Again, we the public don't have the information to be able to make an assessment. Take, yet again, CHECK constraints. I can demonstrate that in Jet 4.0, CHECK constraints get checked on a row-by-row, table-by-table basis. The ISO/ANSI SQL-92 standard (which MS refers to as "ANSI-92", for some reason) requires that they get checked after each SQL statement. So is the Jet behaviour a 'bug'? MS say that Jet 4.0 "conforms closely to the ANSI-92 [sic] Level 1 specification, but is not ANSI-92 [sic] Level 1 compliant" (from the Access 2003 Help; AFAIK the article has been removed from the Access 2007 Help -- why?!), therefore we can only use SQL-92 as a guide, though it seems clear that the SQL Server team would have based their spec on the SQL-92 spec i.e. why reinvent the wheel? I can tell you that a table-level constraint loses some of its utility if it gets checked at the row level, so it feels like either a bug or a serious design flaw. But how would I know because MS haven't told us what Jet CHECK constraints were *designed* to do, beyond being table-level i.e. enhancing Validation Rules, which come in column- and row-level flavours only. I could go on about erroneous and missing documentation for Jet all day (literally)...</P>
+<P>The same applies to ADO: we have not been told what Jet functionality it was supposed to encompass, whether (in lieu of a bug report) omissions were by accident or design. All we know is it does what it does. If you want to do something that it doesn't do then you've got to use something else. That's the stark reality. If you like DAO, a fine product (now they've fixed the object teardown memory leak bug -- ouch!), then use it. If you like creating CHECK constraints, creating compressible data types, choosing row-level locking, et al then you've got to use something else :)</P>
+<P>Jamie.</P>
+<P>--</P></div>
+<p><a id="7669936" href="#7669936">#</a> <strong>Michael S. Kaplan</strong> on 13 Feb 2008 5:27 AM:</p><div style="margin-left: 1em"><P><STRONG>I think I warned you about the big comments, right? :-)</STRONG></P>
+<P>One correction -- I was ON the Access team between Access 97 Beta 2 and Access 2000 ship and I can state authoritatively that the intent *was* to replace DAO with ADO. The work done with ADOX and JRO were primarily to deal with all of the things not comparably possible in ADO alone to achieve that goal (which is why ADOX support is much fuller with Jet than any other OLE DB provider -- no one else was asking fir the functionality). Not to mention the meaning of JRO (Jet and Replication Objects) kind of speaks for itself.</P>
+<P>The fact that this effort includes bugs and limitations that were never fixed also kind of speaks for itself, as do the "after the fact" pronouncements that ADO was never intended to replace DAO for the cases where it was used. No matter what the general intent, there was a specific effort to <STRONG>also</STRONG> replace DAO that ultimately failed due to lack of effort or interest or resources or desire or rigor (one can take one's pick as to the underlying reason).</P>
+<P>Anyway, <FONT color=#ff0000><STRONG>I will be moderating all comments now in the post and not approving any more along this line. </STRONG></FONT></P>
+<P>Move along now, we're done.... :-)</P></div>
+<p><a id="7670372" href="#7670372">#</a> <strong>Michael S. Kaplan</strong> on 13 Feb 2008 5:50 AM:</p><div style="margin-left: 1em"><P>Also, to round off the <A class="" href="http://archives.miloush.net/michkap/archive/2004/11/28/271121.html"><STRONG>my dear boy</STRONG></A> aspects here -- in the years following Access 2000 most of the features talked about here as refutation to the article were not documented anywhere and in fact people were told certain things did not work. </P>
+<P>I think it is great when Microsoft can improve their documentation, but they only get the points for the improvement, not for being right in the first place since people were kind of misled for many years beforehand.</P>
+<P>(Being one of those people, I can tell you the only reason I am not mad is that most of them didn't know either!)</P>
+<P>Anyway, back to internationalization/language issues, and I promise to never repost old content again given the fact that those who think Oceania has always been at war with Eastasia seem to be the most likely to comment. Lesson learned, <A class="" href="http://archives.miloush.net/michkap/archive/2004/11/28/271121.html">my dear boy</A>. :-)</P></div>
+<p><strong>Michael S. Kaplan</strong> on 14 Feb 2008 10:42 AM:</p><div style="margin-left: 1em"></div>
+<p><a id="8732556" href="#8732556">#</a> <strong>Bruce W. Moore</strong> on 14 Jul 2008 11:37 PM:</p><div style="margin-left: 1em"><P>I think this is a wonderful and fairly good natured (as these things go) discussion of many of the pros and cons of using both DAO and ADO. &nbsp;It brings to light many advanced features of both that I was not fully aware of, and points out various deficiencies too.</P>
+<P>I have been using Access to write custom programs for my customers since the Access 97 days. &nbsp;I have had many occasions to look up advice on both Tony's and Allen's sites.</P>
+<P>I appreciate your willingness to leave the diatribe relatively intact, as IMHO most of you folks have made excellent points. &nbsp;I found the description of some of the more advanced features to be enlightening, and will be sure to have a bookmark to this page for future reference.</P>
+<P>Thank you,</P>
+<P>Bruce W. Moore</P></div>
+<p><strong>DatabaseMX</strong> on 5 Sep 2009 3:38 AM:</p><div style="margin-left: 1em"><p>Quote from Jamie Collins</p>
+<p>&quot;I use Jet a lot but not Access,&quot;</p>
+<p>I'm not sure I need to know any more than that. &nbsp;</p>
+<p>From a general credibility standpoint, I've never heard of Jamie Collins (although I'm a big fan of the late Albert Collins) until I stumbled across this thread tonight; however, I've known of Michael Kaplan since Access 1.0 and the CompuServe days, where I used the alias Dalton Kincade, which may ring a bell to Michael (?).</p>
+<p>It's a very well documented fact that DAO is superior to ADO when you are interfacing with an Access MDB, whereas ADO is generally better suited when dealing with non-Access databases. </p>
+<p>That fact that Jamie is not reeeeealy actually familiar with Access (and the incredible power is has) makes most of his comments touting ADO ... akin to the same argument wherein VB (as in the Visual Basic platform) people or SQL Server types ... put down Access as a serious development platform, which is always funny ... simply because they are clueless to what can *actually* be done with Access!</p>
+<p>Among many, many other things ... if it was not for Michael exposing the 'undocumented' Decompile command line option, tens of thousands of Access MDB's would be unusable and remain corrupted forever. &nbsp;</p>
+<p>Besides the endless number of times Decompile has saved my butt, I wouldn't even begin to guess how many other people Worldwide have been able to recover Access mdb's using the Decompile operation. &nbsp;I have a standard Decompile procedure post that I use probably once per week on Experts-Exchange.com ... that has literally saved the butts of people who have encountered corrupted MDB's ... which Decompile has instantly fixed!</p>
+<p>Soooo ... I cannot begin to thank Michael enough for his major contributions to the Access community over the years.</p>
+<p>Long Live DAO !!!</p>
+<p>mx</p></div>
+<p><strong>Pervez</strong> on 8 Aug 2012 11:29 PM:</p><div style="margin-left: 1em"><p>What is the Difference between MDB and DAO</p>
+</div>
+<p><strong>jean</strong> on 22 Jul 2013 1:00 PM:</p><div style="margin-left: 1em"><p>And what about table type providing speed?</p>
+</div>
+<hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2008/09/07 <a href="http://archives.miloush.net/michkap/archive/2008/09/07/8931188.html">Working hard to make one's work less important</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2007/07/13/3852677.html" title="GetLocaleInfo for other languages?">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2007/07/13/3849288.html" title="What does DAO have that ADO/ADOx/JRO do not?">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2007-07">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2007-07-13">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2007/07/13/3849288.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:38 GMT -->
+</html>

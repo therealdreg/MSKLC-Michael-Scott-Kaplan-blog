@@ -1,0 +1,49 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2010/06/27/10028282.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:35 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Bugs hidden in plain sight, and commented that way too ANSWERS</title></head><body>
+<h1>Bugs hidden in plain sight, and commented that way too ANSWERS</h1>
+<p><em>by Michael S. Kaplan, published on 2010/06/27 07:01 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2010/06/27/10028282.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<p>In the spirit of <a href="http://archives.miloush.net/michkap/archive/2010/06/27/10028278.html"><strong>BUG SPOTTING answers</strong></a>, today's blog will talk about the problems in <a href="http://archives.miloush.net/michkap/archive/2010/06/18/10024976.html"><strong>Bugs hidden in plain sight, and commented that way too</strong></a>. :-)</p>
+<p>There are several problems here, in fact.</p>
+<p>Here is the email and comment inside a code snippet for your perusal if you don't want to click to look:</p>
+<blockquote>
+<p><span><span style="font-family: times new roman, times;"><em><span style="color: #3366ff;">The current console output behavior for&nbsp;&lt;redacted&gt; and&nbsp;&lt;redacted&gt; was painfully established through years of international testing.<br />That&rsquo;s not to say there are no issues &ndash; just that we need to be cautious about making changes.</span><br /></em></span><br /></span><span style="font-family: consolas, lucida console, courier new, courier, fixed;"><b><span><span style="color: #339966;">// if redirected to a pipe or a file, don't use WriteConsole;<br />// it drops redirected output on the floor<br />// if going to a file, we should not use console codepage, we<br />// should use ANSI codepage OR write unicode &amp; a unicode<br />// filemarker at beginning of file.<br />// Since we don't know if this is the first thing in the file,<br />// let's go the ANSI route.</span><br />WideCharToMultiByte(GetACP())<br />WriteFile(hStdOut)</span></b></span></p>
+</blockquote>
+<p>The reminder here is that this is from code that actually has shipped before&nbsp;in Windows.</p>
+<p>Yes that part needs to be fixed too. :-)</p>
+<p>Now it is hard to know what kind of "international testing" was done here, though one thing is for certain: the tester either never strayed outside of ASCII, never tested with chcp (which would try to change the console's code page and have limited success given the conversion this code will do), never tried both in the console/redirection given the unusual differences the code would cause, or perhaps didn't do anything once it was working for ASCII and the "redirection does nothing" bug was reported and the fix was verified.</p>
+<p>But let's give then credit and assume, like I did in <a href="http://archives.miloush.net/michkap/archive/2008/03/18/8306597.html" title="Conventional wisdom is retarded, aka What the @#%&amp;amp;* is _O_U16TEXT?"><strong>Conventional wisdom is retarded, aka What the @#%&amp;* is _O_U16TEXT?</strong></a> and <a href="http://archives.miloush.net/michkap/archive/2010/02/15/9963784.html" title="The real problem(s) with all of these console &quot;fallback&quot; discussions"><strong>The real problem(s) with all of these console "fallback" discussions</strong></a> and <a href="http://archives.miloush.net/michkap/archive/2010/04/07/9989346.html" title="Anyone who says the console can't do Unicode isn't as smart as they think they are"><strong>Anyone who says the console can't do Unicode isn't as smart as they think they are</strong></a> and <a href="http://archives.miloush.net/michkap/archive/2010/05/07/10008232.html" title="Cunningly conquering communicated console caveats. Comprende, mon Capit&amp;aacute;n?"><strong>Cunningly conquering communicated console caveats. Comprende, mon Capit&aacute;n?</strong></a>, that the console vs.&nbsp;redirection case was being detected and this block is inside code that detects that we are talking about redirection.</p>
+<p>After all, once I didn't know how to do it right, either...</p>
+<p>That makes the first two lines of the comment piece correct!</p>
+<p>The next three lines don't give their justification; that change just makes it harder for test because now they have two different code paths to test. But a code comment does not a spec make so the lack of info may be okay here.</p>
+<p>That last part is the problem.</p>
+<p>That is, if whack has gone back to meaning something bad again.</p>
+<p>Because I mean this bit:</p>
+<p style="padding-left: 60px;"><strong><span style="font-family: Consolas; color: #339966;">// Since we don't know if this is the first thing in the file,<br />// let's go the ANSI route.</span></strong></p>
+<p>It is just plain wrong.</p>
+<p><strong>First of all</strong>, what's all this about not knowing if this is the first thing in the file? We can know that exactly!</p>
+<p>A simple call to <a href="http://msdn.microsoft.com/library/aa364957.aspx">GetFileSizeEx</a>&nbsp;will tell you that, immediately! Just pass in that stdout pointer that you have already determined is a redirected file, and then you will know by the size of the file if they redirected with a <strong>&gt;</strong> or a <strong>&gt;&gt;</strong>.</p>
+<p><strong>Second of all</strong>, you can find out the encoding, too. A quick call to&nbsp;<a href="http://msdn.microsoft.com/library/aa364962.aspx">GetFinalPathNameByHandle</a>&nbsp;to get the path and you can look at the contents and see what is in there and make the appropriate decision (if you&nbsp;need it to be pre-Vista you cab use code <a href="http://msdn.microsoft.com/library/aa366789.aspx">like this</a>).</p>
+<p>What's so hard about that?</p>
+<p>Remember that the file is guaranteed to be opened to you or else all of your write operations would fail. So you are the one person with access (that's how you were able to get the size in the aforementioned <strong>First of all</strong>.</p>
+<p>And <strong>third of all</strong>, and this also goes to algorithm flaws too, what makes a person think that if choosing between</p>
+<ul>
+<li>appending Unicode data to a non-Unicode file, or</li>
+<li>appending non-Unicode data to a Unicode file</li>
+</ul>
+<p>that either one of those options does not completely suck?!?</p>
+<p>Either way a bunch of your file will be unreadable.</p>
+<p>So if you assume both of those options suck, and you are trying to ship a quality tool, then you have two choices. Either</p>
+<ul>
+<li>use the above&nbsp;method I mentioned in <strong>Second of all</strong> to get the actual answer of what the encoding is, or</li>
+<li>make a smart decision based on te assumption that if they used <strong>&gt;&gt;</strong> they are appending to a file that either you wrote in an earlier incarnation or that an equally smart developer's tool wrote. Either way you would have written Unicode if you didn't want to fail to support the languages that Windows does!</li>
+</ul>
+<p>In the end, the comment, and the subsequent code that implements it, is dead wrong and should be fixed to not make such misstatements since people reading such a comment and thinking they learned something new about Wndows are&nbsp;probably the reason why this code was wrong in the first place. Inacurate information perpetuates!</p>
+<p>With all of these console blogs, jncluding this one, I have&nbsp;shown you the way&nbsp;so that if you want&nbsp;to produce a tool that will do its best to fully support all languages, that you can. That can really be worth the effort, after a decade of beng just plain wrong and broken (which pretty much everything has been up until now)....</p>
+<hr/><p><strong>Yuhong Bao</strong> on 9 Jul 2010 5:04 PM:</p><div style="margin-left: 1em"><p>&quot;A quick call to GetFinalPathNameByHandle to get the path and you can look at the contents and see what is in there and make the appropriate decision (if you need it to be pre-Vista you cab use code like this).&quot;</p>
+<p>You can use SetFilePointerEx directly on the handle if it points to a file as determined by GetFileType.</p>
+</div>
+<hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2010/10/07 <a href="http://archives.miloush.net/michkap/archive/2010/10/07/10072032.html">Myth busting in the console</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2010/06/28/10031437.html" title="My name is கப்லன், மைக்கேல் எஸ். கப்லன் (or maybe கப்லான், depending on your accent).">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2010/06/26/10028278.html" title="BUG SPOTTING answers">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2010-06">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2010-06-27">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2010/06/27/10028282.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:35 GMT -->
+</html>

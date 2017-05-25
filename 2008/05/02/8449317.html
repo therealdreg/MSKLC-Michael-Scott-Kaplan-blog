@@ -1,0 +1,32 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2008/05/02/8449317.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:36 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>More things that don't work for locales in the CRT</title></head><body>
+<h1>More things that don't work for locales in the CRT</h1>
+<p><em>by Michael S. Kaplan, published on 2008/05/02 10:01 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2008/05/02/8449317.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P>They say that you could put just the word <STRONG>Playboy</STRONG> or <STRONG>Hugh Hefner</STRONG> or a picture of the Playboy Bunny on an envelope and if the postage is right then it will make its way to the mansion.</P>
+<P><EM>It is funny to imagine that kind of fuzzy matching at work, and not just because of how many people there might be wearing fuzzy slippers.</EM> :-)</P>
+<P>But there is a case where a function created by Microsoft tries to do the same sort of fuzzy thing!</P>
+<P>I should explain.</P>
+<P>On the surface, the Visual C++ Run-Time Library was way ahead of its time.</P>
+<P>After all, it was taking a string parameter in <A class="" href="http://msdn.microsoft.com/library/x99tb11d.aspx" mce_href="http://msdn.microsoft.com/library/x99tb11d.aspx">_wsetlocale</A> back when LCIDs were the big thing on Win32 (of course we all know now that <A class="" href="http://archives.miloush.net/michkap/archive/2007/07/23/4021529.html" mce_href="http://archives.miloush.net/michkap/archive/2007/07/23/4021529.html"><STRONG>LCIDs suck</STRONG></A>!).</P>
+<P>Seems like they are all set, right?</P>
+<P>Well, in practice it is not such so great as the above might try to imply.</P>
+<P>First of all there is the <A class="" href="http://msdn.microsoft.com/library/hzz3tw78.aspx" mce_href="http://msdn.microsoft.com/library/hzz3tw78.aspx">Language and Country/Region Strings</A> documentation which explains the syntax it expects:</P>
+<BLOCKQUOTE>
+<P><FONT face="courier new,courier"><STRONG>locale&nbsp; "lang[_country_region[.code_page]]"<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; | ".code_page"<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; | ""<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; | NULL</STRONG></FONT></P></BLOCKQUOTE>
+<P>And the language strings are the ones described <A class="" href="http://msdn.microsoft.com/library/39cwe7zf.aspx" mce_href="http://msdn.microsoft.com/library/39cwe7zf.aspx">here</A>, the country/region strings are the ones described <A class="" href="http://msdn.microsoft.com/library/cdax410z.aspx" mce_href="http://msdn.microsoft.com/library/cdax410z.aspx">here</A>, and the code page piece is described <A class="" href="http://msdn.microsoft.com/library/2x8et5ee.aspx" mce_href="http://msdn.microsoft.com/library/2x8et5ee.aspx">here</A>. If you look at this format and these topics, you'll see very little relationship between the locale names now used by Windows and the .NET Framework and the names that this function will accept.</P>
+<P>The many examples shown in the <A class="" href="http://msdn.microsoft.com/library/x99tb11d.aspx" mce_href="http://msdn.microsoft.com/library/x99tb11d.aspx">_wsetlocale</A> topic's remarks section only help to prove how&nbsp;complex and different&nbsp;all of this is -- which makes it kind of funny that it won't support what is now a great example of Microsoft trying to follow international standards!</P>
+<P>Then there is the fact that <A class="" href="http://archives.miloush.net/michkap/archive/2007/04/29/2328012.html" mce_href="http://archives.miloush.net/michkap/archive/2007/04/29/2328012.html"><STRONG>_wsetlocale doesn't support Unicode-only locales</STRONG></A>, of course.</P>
+<P>Perhaps if we sent folks down for a relaxing weekend in the grotto they would come back refreshed and ready to implement <A class="" href="ftp://ftp.rfc-editor.org/in-notes/rfc4646.txt" mce_href="ftp://ftp.rfc-editor.org/in-notes/rfc4646.txt">RFC 4646</A> and <A class="" href="ftp://ftp.rfc-editor.org/in-notes/rfc4647.txt" mce_href="ftp://ftp.rfc-editor.org/in-notes/rfc4647.txt">RFC 4647</A>? :-)</P>
+<P>As a bonus, we'd then see support of custom locales anytime the OS supported them (in &gt;= Vista), something that won't happen until then even though the name could be used as is....</P>
+<P mce_keep="true">&nbsp;</P>
+<P><FONT color=#ff1493><EM>This post brought to you by</EM> <FONT size=6>છ</FONT> </FONT><EM><FONT color=#ff1493>(</FONT><A class="" href="http://www.fileformat.info/info/unicode/char/0a9b" mce_href="http://www.fileformat.info/info/unicode/char/0a9b">U+0a9b</A><FONT color=#ff1493>, a.k.a. GUJARATI LETTER CHA)</FONT></EM></P>
+<hr/><p><strong>John Cowan</strong> on 2 May 2008 2:01 PM:</p><div style="margin-left: 1em"><p>Just remember the word for what comes out of a grotto: &nbsp;grotesque. &nbsp;(Really.)</p></div>
+<p><strong>Wyatt</strong> on 2 May 2008 2:53 PM:</p><div style="margin-left: 1em"><p>Uh, U+09ab is ফ BENGALI LETTER PHA. &nbsp;GUJARATI LETTER CHA is U+0a9b.</p></div>
+<p><strong>Michael S. Kaplan</strong> on 2 May 2008 3:04 PM:</p><div style="margin-left: 1em"><p>Yikes, you are right. Good catch! :-)</p>
+<p>Thanks!</p>
+</div>
+<hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2008/05/03/8451692.html" title="Please Look before you Leap a second">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2008/05/02/8449105.html" title="That non-character can be the BOM at the right kind of party">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2008-05">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2008-05-02">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2008/05/02/8449317.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:36 GMT -->
+</html>

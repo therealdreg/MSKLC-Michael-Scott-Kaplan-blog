@@ -1,0 +1,144 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2008/02/11/7588649.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:36 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Behold the Table Driven Text Service, Part 8 (Configuration 'junk in the trunk', part 2)</title></head><body>
+<h1>Behold the Table Driven Text Service, Part 8 (Configuration 'junk in the trunk', part 2)</h1>
+<p><em>by Michael S. Kaplan, published on 2008/02/11 10:16 -05:00, original URI: http://blogs.msdn.com/b/michkap/archive/2008/02/11/7588649.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P>Prior posts in the series:</P>
+<UL>
+<LI><A class="" href="http://archives.miloush.net/michkap/archive/2008/01/21/7178421.html" mce_href="http://archives.miloush.net/michkap/archive/2008/01/21/7178421.html"><STRONG>0 (You have to start somewhere)</STRONG></A> 
+<LI><A class="" href="http://archives.miloush.net/michkap/archive/2008/01/22/7179223.html" mce_href="http://archives.miloush.net/michkap/archive/2008/01/22/7179223.html"><STRONG>1 (Starting with a dictionary simple in every way)</STRONG></A> 
+<LI><A class="" href="http://archives.miloush.net/michkap/archive/2008/01/23/7179692.html" mce_href="http://archives.miloush.net/michkap/archive/2008/01/23/7179692.html"><STRONG>2 (Three ways to convert!)</STRONG></A> 
+<LI><A class="" href="http://archives.miloush.net/michkap/archive/2008/01/24/7180212.html" mce_href="http://archives.miloush.net/michkap/archive/2008/01/24/7180212.html"><STRONG>3 (Where do keystrokes come in?)</STRONG></A> 
+<LI><A class="" href="http://archives.miloush.net/michkap/archive/2008/01/25/7227422.html" mce_href="http://archives.miloush.net/michkap/archive/2008/01/25/7227422.html"><STRONG>4 (Specifying when to modify, if not how)</STRONG></A> 
+<LI><A class="" href="http://archives.miloush.net/michkap/archive/2008/01/28/7287476.html" mce_href="http://archives.miloush.net/michkap/archive/2008/01/28/7287476.html"><STRONG>5 (All about the language, baby!)</STRONG></A> 
+<LI><A class="" href="http://archives.miloush.net/michkap/archive/2008/01/29/7297793.html" mce_href="http://archives.miloush.net/michkap/archive/2008/01/29/7297793.html"><STRONG>6 (it is sufficient to be iconic, aka DaYi, DaYi Aynu!)</STRONG></A></LI>
+<LI><A class="" href="http://archives.miloush.net/michkap/archive/2008/01/30/7321697.html" mce_href="http://archives.miloush.net/michkap/archive/2008/01/30/7321697.html"><STRONG>7 (Configuration 'junk in the trunk', part 1)</STRONG></A></LI></UL>
+<P>After last time, I had it impressed on me that the majoritry of the people who read this series over time will not care so much about the order of blogs as the actual information, so that posts wih settings in them before every single window is fully defined is not necessarily a bad thing.</P>
+<P>So today we're going to do some more settings! :-)</P>
+<P><STRONG>Configuration section for text candidate list window</STRONG></P>
+<P>This is group for text candidate list window however should be inside “[Configuration]” section.</P>
+<UL>
+<LI>Keystroke sort</LI></UL>
+<BLOCKQUOTE>
+<BLOCKQUOTE>
+<P>Text candidate list item should sort by keystroke order.<BR><BR>Form of keystroke sort is:<BR><FONT face="courier new,courier">KeystrokeSort = integer value<BR>Where:&nbsp;&nbsp;&nbsp;&nbsp; 0&nbsp;&nbsp;&nbsp;&nbsp; - turn off keystroke sort (default)<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Not 0 – turn on keystroke sort</FONT></P></BLOCKQUOTE></BLOCKQUOTE>
+<UL>
+<LI>Text sort</LI></UL>
+<BLOCKQUOTE>
+<P>Text candidate list item should sort by text string order.<BR><BR>Form of text sort is:<BR><FONT face="courier new,courier">TextSort = integer value<BR>Where:&nbsp;&nbsp;&nbsp;&nbsp; 0&nbsp;&nbsp;&nbsp;&nbsp; - turn off text sort (default)<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Not 0 – turn on text sort</FONT></P></BLOCKQUOTE>
+<UL>
+<LI>Hide text candidate list window</LI></UL>
+<BLOCKQUOTE>
+<P>Form of hide text candidate list window is:<BR><BR><FONT face="courier new,courier">CandidateList.Text.HideWindow = integer value<BR>Where:&nbsp;&nbsp;&nbsp;&nbsp; 0&nbsp;&nbsp;&nbsp;&nbsp; - show text candidate window (default)<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Not 0 – hide text candidate window</FONT></P></BLOCKQUOTE>
+<UL>
+<LI>Conversion only one item</LI></UL>
+<BLOCKQUOTE>
+<P>When convert some keystroke and result of text candidate list item is only one item or if phrase file is available however doesn’t find match phrase list with converted key, then converted key should finalized.<BR><BR>Form of conversion only one item is:<BR><BR><FONT face="courier new,courier">Composition.ConversionOnlyOneItem = integer value<BR>Where:&nbsp;&nbsp;&nbsp;&nbsp; 0&nbsp;&nbsp;&nbsp;&nbsp; - turn off conversion only one item (default)<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Not 0 – turn on conversion only one item</FONT></P></BLOCKQUOTE>
+<BLOCKQUOTE>
+<P>For example, Chinese Traditional Array, keystroke “AAES” has only one text string as "虣", and phrase file doesn’t have it character. In this keystroke, character "虣" is finalized when press Conversion key.</P></BLOCKQUOTE>
+<UL>
+<LI>&nbsp;Conversion only one item on convert</LI></UL>
+<BLOCKQUOTE>
+<P>When convert some keystroke and result of text candidate list item is only one item or if phrase file is available however doesn’t find match phrase list with converted key, then converted key should finalized.<BR><BR>Form of conversion only one item on convert is:<BR><BR><FONT face="courier new,courier">Composition.ConversionOnlyOneItemOnConvert = integer value<BR>Where:&nbsp;&nbsp;&nbsp;&nbsp; 0&nbsp;&nbsp;&nbsp;&nbsp; - turn off conversion only one item on convert (default)<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Not 0 – turn on conversion only one item on convert</FONT></P></BLOCKQUOTE>
+<BLOCKQUOTE>
+<P>For example, Chinese Traditional DaYi, keystroke “,,,” has only one text string as “劦”, and phrase file doesn’t have it character. In this keystroke, character “劦” is finalized when press Conversion key.</P></BLOCKQUOTE>
+<BLOCKQUOTE>
+<BLOCKQUOTE>
+<P>You might be wondering at this point: What is different with ConversionOnlyOneItem and ConversionOnlyOneItemOnConvert?</P>
+<P>Imagine you have two different profiles (one with each setting). Both profiles defined below strings which particular keystroke should be one candidate converted string.</P>
+<BLOCKQUOTE>
+<P>[Text]<BR>"KB" = "㎅"<BR>"MB" = "㎆"<BR>"GB" = "㎇"<BR>"Hz" = "㎐"<BR>"kHz" = "㎑"<BR>"MHz" = "㎒"<BR>"GHz" = "㎓"<BR>"THz" = "㎔"</P></BLOCKQUOTE>
+<P>In “ConversionOnlyOneItem” profile, when we type “kb”, then converted string “㎅” is finalized immediately.</P>
+<P>On the other hand, in “ConversionOnlyOneItemOnConvert” profile, when we type “kb”, then converted string “㎅” is not yet finalized until we press Convert key.</P></BLOCKQUOTE></BLOCKQUOTE>
+<P><STRONG>Configuration section for phrase candidate list window</STRONG></P>
+<P>This is group for phrase list window however should be inside “[Configuration]” section.</P>
+<UL>
+<LI>Phrase sort</LI></UL>
+<BLOCKQUOTE>
+<P>Phrase candidate list item should sort by phrase string order.<BR><BR>Form of phrase sort is:<BR><BR><FONT face="courier new,courier">PhraseSort = integer value<BR>Where:&nbsp;&nbsp;&nbsp;&nbsp; 0&nbsp;&nbsp;&nbsp;&nbsp; - turn off phrase sort (default)<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Not 0 – turn on phrase sort</FONT></P></BLOCKQUOTE>
+<UL>
+<LI>Make phrase from text</LI></UL>
+<BLOCKQUOTE>
+<P>If profile doesn’t have phrase file, however would like to shows some phrase which browse from text dictionary, then turn this switch on.<BR><BR>Form of make phrase from text is:<BR><BR><FONT face="courier new,courier">MakePhraseFromText = integer value</FONT></P></BLOCKQUOTE>
+<BLOCKQUOTE>
+<P>For example, Chinese Simplified QuanPin, keystroke “ZHONG” shows some texts and select one item which “中”, then Table Driven TIP makes phrase list as start “中” character into text dictionary which phrase list corrected below:</P></BLOCKQUOTE>
+<BLOCKQUOTE>
+<BLOCKQUOTE>
+<P>"zhongbiao"="中标"<BR>"zhongbu"="中部"<BR>"zhongceng"="中层"<BR>"zhongdang"="中档"<BR>"zhongdeng"="中等"<BR>"zhongdengche"="中等城市"<BR>"zhongdengjia"="中等教育"</P></BLOCKQUOTE></BLOCKQUOTE>
+<UL>
+<LI>Hide phrase candidate list window</LI></UL>
+<BLOCKQUOTE>
+<P>Form of hide phrase candidate list window is:<BR><BR><FONT face="courier new,courier">CandidateList.Phrase.HideWindow = integer value<BR>Where:&nbsp;&nbsp;&nbsp;&nbsp; 0&nbsp;&nbsp;&nbsp;&nbsp; - show phrase candidate window (default)<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Not 0 – hide phrase candidate window</FONT></P></BLOCKQUOTE>
+<UL>
+<LI>Title of phrase candidate list window</LI></UL>
+<BLOCKQUOTE>
+<P>Show title on phrase candidate window with specified string.<BR><BR>Form of title of phrase candidate list window is:<BR><BR><FONT face="courier new,courier">CandidateList.Phrase.Title = String value</FONT></P></BLOCKQUOTE>
+<BLOCKQUOTE>
+<P>For example, Chinese Traditional DaYi has “Shift + Numeric” string in title bar when keystroke “A”+”Space”+”Space”.</P></BLOCKQUOTE>
+<UL>
+<LI>Modifier of phrase candidate list window</LI></UL>
+<BLOCKQUOTE>
+<P>For select an item in phrase candidate list by keyboard, could be specified some modifier value.<BR><BR>Form of modifier of phrase candidate list window is:<BR><BR><FONT face="courier new,courier">CandidateList.Phrase.Modifier = Modifier value<BR>Where:&nbsp;&nbsp;&nbsp;&nbsp; Modifier value is TF_MOD_xxx value, as previously discussed <A class="" href="http://archives.miloush.net/michkap/archive/2008/01/25/7227422.html" mce_href="http://archives.miloush.net/michkap/archive/2008/01/25/7227422.html"><STRONG>here</STRONG></A>.</FONT></P></BLOCKQUOTE>
+<BLOCKQUOTE>
+<P>For example, Chinese Tradition DaYi has TF_MOD_SHIFT which phrase candidate item should finalized by Shift + Numeric key.</P></BLOCKQUOTE>
+<P><STRONG>Preserved key section</STRONG></P>
+<BLOCKQUOTE>
+<P>Preserved key section should begin as “[PreservedKey]” section name.</P>
+<P>Table Driven TIP could specify below three preserved keys:</P>
+<UL>
+<LI>IME mode</LI>
+<LI>Full / Half character width as called Double/Single byte</LI>
+<LI>Punctuation switch</LI></UL>
+<P>Each preserved key has similar item which is:</P>
+<UL>
+<LI>GUID value (required if support preserved key)<BR><EM>Each Table Driven TIP’s language profile and each preserved key need to specify unique GUID value if target language profile need to use proper preserved key.</EM></LI>
+<LI>Preserved key (required if support preserved key)<BR><EM>Define preserved key as Key code value.</EM></LI>
+<LI>Description (optional)<BR><EM>Define description of this preserved key.</EM></LI>
+<LI>Initial state (optional)<BR><EM>Define initial status of this preserved key.</EM></LI></UL>
+<P>In [PreservedKey] section, Table Driven TIP could&nbsp;see the below definitions specified:</P>
+<BLOCKQUOTE>
+<P><STRONG>Preserved key section for IME mode<BR></STRONG><FONT face="courier new,courier">GuidImeMode = GUID value<BR>KeyDefineImeMode = Key code value<BR>DescriptionImeMode = String value<BR>ImeMode = integer value</FONT></P>
+<P><STRONG>Preserved key section for Double/Single byte<BR></STRONG><FONT face="courier new,courier">GuidDoubleSingleByte = GUID value<BR>KeyDefineDoubleSingleByte = Key code value<BR>DescriptionDoubleSingleByte = String value<BR>DoubleSingleByte = integer value</FONT></P>
+<P><STRONG>Preserved key section for Punctuation<BR></STRONG><FONT face="courier new,courier">GuidPunctuation = GUID value<BR>KeyDefinePunctuation = Key code value<BR>DescriptionPunctuation = String value<BR>Punctuation = integer value</FONT></P></BLOCKQUOTE></BLOCKQUOTE>
+<P mce_keep="true"><STRONG>Language bar section</STRONG></P>
+<BLOCKQUOTE>
+<P mce_keep="true">Language bar section should begin as “[LanguageBar]” section name.</P>
+<P mce_keep="true">Table Driven TIP can specify the below three language bars:</P>
+<UL>
+<LI>
+<DIV mce_keep="true">IME mode</DIV></LI>
+<LI>
+<DIV mce_keep="true">Full / Half character width as called Double/Single byte</DIV></LI>
+<LI>
+<DIV mce_keep="true">Punctuation switch</DIV></LI></UL>
+<P mce_keep="true">Each language bar has similar items, which are:</P>
+<UL>
+<LI>
+<DIV mce_keep="true">Description (required if language bar item is supported)</DIV></LI>
+<LI>
+<DIV mce_keep="true">Tooltip description (required if language bar item is supported)</DIV></LI>
+<LI>
+<DIV mce_keep="true">Enable / Disable language bar item (optional)</DIV></LI>
+<LI>
+<DIV mce_keep="true">Button ON icon file (optional)</DIV></LI>
+<LI>
+<DIV mce_keep="true">Button ON icon index (optional)</DIV></LI>
+<LI>
+<DIV mce_keep="true">Button OFF icon file (optional)</DIV></LI>
+<LI>
+<DIV mce_keep="true">Button OFF icon index (optional)</DIV></LI></UL>
+<P mce_keep="true">The icon file/index entries are the same as were prevuously discussed <A class="" href="http://archives.miloush.net/michkap/archive/2008/01/29/7297793.html" mce_href="http://archives.miloush.net/michkap/archive/2008/01/29/7297793.html"><STRONG>here</STRONG></A>.</P>
+<P mce_keep="true">In [LanguageBar] section, Table Driven TIP could specifiy the&nbsp;following definitions:</P>
+<P mce_keep="true"><STRONG>Language bar section for IME mode<BR></STRONG><FONT face="courier new,courier">DescriptionImeMode = String value<BR>TooltipImeMode = String value<BR>EnableImeMode = integer value<BR>ImeModeOnIcon = Path and file name value<BR>ImeModeOnIconIndex = integer value or predefined value<BR>ImeModeOffIcon = Path and file name value<BR>ImeModeOffIconIndex = integer value or predefined value</FONT></P>
+<P mce_keep="true"><STRONG>Language bar section for Double/Single byte<BR></STRONG><FONT face="courier new,courier">DescriptionDoubleSingleByte = String value<BR>TooltipDoubleSingleByte = String value<BR>EnableDoubleSingleByte = integer value<BR>DoubleSingleByteOnIcon = Path and file name value<BR>DoubleSingleByteOnIconIndex = integer value or predefined value<BR>DoubleSingleByteOffIcon = Path and file name value<BR>DoubleSingleByteOffIconIndex = integer value or predefined value</FONT></P>
+<P mce_keep="true"><STRONG>Language bar section for Punctuation<BR></STRONG><FONT face="courier new,courier">DescriptionPunctuation = String value<BR>TooltipPunctuation = String value<BR>EnablePunctuation = integer value<BR>PunctuationOnIcon = Path and file name value<BR>PunctuationOnIconIndex = integer value or predefined value<BR>PunctuationOffIcon = Path and file name value<BR>PunctuationOffIconIndex = integer value or predefined value</FONT></P></BLOCKQUOTE>
+<P mce_keep="true"><STRONG>Shortcut section</STRONG></P>
+<BLOCKQUOTE>
+<P mce_keep="true">Table Driven TIP could define shortcut keys for text candidate list.</P>
+<P mce_keep="true">In [Candidate.Shortcut.Original] section, form is below and integer value is mentioned as item number in candidate list.</P>
+<P mce_keep="true"><FONT face="courier new,courier">“Key” = integer value</FONT></P></BLOCKQUOTE>
+<P mce_keep="true">Next part, I'll finish up the&nbsp;definitions&nbsp;by defining the actual content sections of the file, and jump into some more examples. Stay tuned!</P>
+<hr/><div style="margin-left: 1em"><em>no comments</em></div><hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2008/10/21 <a href="http://archives.miloush.net/michkap/archive/2008/10/21/9009276.html">Behond the Table Driven Text Service, Part 14 (Don't expect too much from numbers)</a></p><p>2008/07/25 <a href="http://archives.miloush.net/michkap/archive/2008/07/25/8771255.html">Behold the Table Driven Text Service, Part 13 (Sinhalification proclamation!)</a></p><p>2008/06/30 <a href="http://archives.miloush.net/michkap/archive/2008/06/30/8669123.html">Behold the Table Driven Text Service, Part 12 (The knights who say நீ, redux, #2)</a></p><p>2008/06/21 <a href="http://archives.miloush.net/michkap/archive/2008/06/21/8632391.html">Back to Sri Lanka (conceptually)</a></p><p>2008/02/25 <a href="http://archives.miloush.net/michkap/archive/2008/02/25/7884260.html">Behold the Table Driven Text Service, Part 11 (The knights who say நீ, redux, #1)</a></p><p>2008/02/15 <a href="http://archives.miloush.net/michkap/archive/2008/02/15/7713553.html">Behold the Table Driven Text Service, Part 10 ("Even Jove nods," Atlas shrugged, "so we'll convert their old files, now.")</a></p><p>2008/02/12 <a href="http://archives.miloush.net/michkap/archive/2008/02/12/7632387.html">Behold the Table Driven Text Service, Part 9 (Will you be content if I tell you how some content can be defined?)</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2008/02/11/7611812.html" title="Who assigns the VK_OEM_* values in keyboards?">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2008/02/10/7579576.html" title="Microsoft still does not use the UCA; the converse is also true">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2008-02">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2008-02-11">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2008/02/11/7588649.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:36 GMT -->
+</html>

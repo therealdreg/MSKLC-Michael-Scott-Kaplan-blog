@@ -1,0 +1,29 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2007/01/25/1527214.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:38 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Is it Unicode or ANSI?</title></head><body>
+<h1>Is it Unicode or ANSI?</h1>
+<p><em>by Michael S. Kaplan, published on 2007/01/25 06:01 -05:00, original URI: http://blogs.msdn.com/b/michkap/archive/2007/01/25/1527214.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P>Legolas (no relation to the elf of the same name!) asked:</P>
+<BLOCKQUOTE>
+<P><EM><FONT face="times new roman,times" size=2>Hi, I'd like to suggest something that may be in line with your recent 'convert to unicode' posts, although it's very specific, perhaps too specific. Anyway: for a print monitor, the function you pass in the MONITOR2 structure as pfnStartDocPort, gets a &nbsp; DOC_INFO_1 or &nbsp; DOC_INFO_2 structure passed as a LPBYTE. the level parameter tells me wether it's 1 or 2, but what I currently can't find: how do I know if I'll get the A or the W version? I can see nothing to indicate my preference, and if I read the docs right users of printers can pass whatever they want. I'm guessing windows is converting to the one I need, but how does it know what I need?</FONT></EM></P></BLOCKQUOTE>
+<P>The answer&nbsp;-- it is ONLY ever Unicode. </P>
+<P><STRONG>CLUE #1</STRONG>: You can tell by the prototype in the documentation for <A class="" href="http://msdn2.microsoft.com/en-us/library/aa506784.aspx" mce_href="http://msdn2.microsoft.com/en-us/library/aa506784.aspx">StartDocPort</A>&nbsp;and in winsplp.h:</P>
+<BLOCKQUOTE><FONT size=2 fsce="Consolas,Lucida Console,Courier New,Courier"><B>
+<P>&nbsp;BOOL&nbsp; (WINAPI *pfnStartDocPort)<BR>&nbsp;&nbsp;&nbsp; (<BR>&nbsp;&nbsp;&nbsp; HANDLE&nbsp; hPort,<BR>&nbsp;&nbsp;&nbsp; <FONT color=#ff0000>LPWSTR&nbsp; pPrinterName</FONT>,<BR>&nbsp;&nbsp;&nbsp; DWORD&nbsp; JobId,<BR>&nbsp;&nbsp;&nbsp; DWORD&nbsp; Level,<BR>&nbsp;&nbsp;&nbsp; LPBYTE&nbsp; pDocInfo<BR>&nbsp;&nbsp;&nbsp; );</P></B></FONT></BLOCKQUOTE>
+<P mce_keep="true">See that 2nd parameter? It's an LPWSTR.SO this function can only be getting Unicode. </P>
+<P mce_keep="true"><STRONG>CLUE #</STRONG>2: The DOC_INFO_1 and DOC_INFO_2 structures choose their Unicodality based on the function called that gets them.</P>
+<P mce_keep="true">Since NT-based platforms only support DOC_INFO_1 (according to the docs) combined with the fact that the function is only in newer versions (which feeds into the fact that ANSI is not being added so much anymore)&nbsp;kinda conspires to requiring it all to be Unicode.</P>
+<P mce_keep="true">So, to indirectly answer the bigger question that Legolas posed -- to find out if a function takes Unicode or ANSI in otherwise ambiguous cases, one probably just has to do some spelunking around in the SDK and the DDK and the header files. :-)</P>
+<P mce_keep="true">&nbsp;</P>
+<P mce_keep="true"><FONT color=#ff00ff><EM>This post brought to you by</EM>&nbsp;<FONT size=6>ឈ</FONT> <EM>(<A class="" href="http://www.fileformat.info/info/unicode/char/1788" mce_href="http://www.fileformat.info/info/unicode/char/1788">U+1788</A>, a.k.a. KHMER LETTER CHO)</EM></FONT></P>
+<hr/><p><a id="1531336" href="#1531336">#</a> <strong>swautier</strong> on 25 Jan 2007 2:56 PM:</p><div style="margin-left: 1em"><p>Word of the day: Unicodality</p>
+<p>Unicodality: Property of an application or piece of code to support Unicode and/or ANSI [...]</p>
+</div>
+<p><a id="1537224" href="#1537224">#</a> <strong>Michael S. Kaplan</strong> on 26 Jan 2007 11:00 AM:</p><div style="margin-left: 1em"><p>Nah, you're thinking of UNICODEANSITY! :-)</p>
+</div>
+<p><a id="1542613" href="#1542613">#</a> <strong>Legolas</strong> on 27 Jan 2007 7:03 AM:</p><div style="margin-left: 1em"><p>Hey, thanks for replying to this so quickly. I had found that I got unicode strings through testing, but I was worried I missed something and some customer machine would suddenly give me Ansi instead. (And I did miss something, that second parameters type ;-)</p>
+<p>I'll update my code with explicit DOC_INFO_1W and (a link to this post) on Monday!</p></div>
+<hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2007/01/26/1534613.html" title="If I were Australian I might say that Steve Jobs and the Klingon emporer were mates?">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2007/01/25/1526224.html" title="Internet Explorer 7.0&#39;s language settings? This may be the last straw....">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2007-01">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2007-01-25">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2007/01/25/1527214.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:38 GMT -->
+</html>

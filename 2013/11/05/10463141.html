@@ -1,0 +1,79 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2013/11/05/10463141.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:02 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Everyone: Repeat after me... We need both cases of Cherokee *in* the Unicode BMP!</title></head><body>
+<h1>Everyone: Repeat after me... We need both cases of Cherokee *in* the Unicode BMP!</h1>
+<p><em>by Michael S. Kaplan, published on 2013/11/05 06:10 -05:00, original URI: http://blogs.msdn.com/b/michkap/archive/2013/11/05/10463141.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<p>For the most part, I am retired from my former Unicode duties, or at least 75-80% of them.
+
+<p>I mean I still go to the one meeting in Redmond, and (usually) speak at the IUC (when I haven't broken my hip or whatever).
+
+<p>But there are times when I wish I was still more involved.
+
+<p>Like now.
+
+<p>It seems there is a proposal being discussed at the UTC this week to add upper case letters for Cherokee (proposal <a href="http://www.unicode.org/L2/L2013/13190-n4487-cherokee.pdf">here</a>) <font color=red>(warning: that link is to a 1mb PDF)</font>.
+
+<p>Basically, they want to add the uppercase forms.
+
+<p>But that is a nightmare, from my point of view.
+
+<p>My concern is that the new upper cased form is (in the proposal, at least) in the SMP, rather than the BMP, which is where the current letters are).
+
+<p>This is a mild nuisance for collation, since it will only work for the Cherokee user locale, and it will take an extra half day for the owning team to add po the table.
+
+<p>But it is a much bigger nuisance for me (as owner of the two Cherokee keyboards that we would have to update.
+
+<p>Well, the Cherokee Nation keyboard would be pretty easy, now that I think about it.
+
+<p>On the other hand, the Cherokee Phonetic keyboard layout, already the most complicated keyboard layout we ship, would now be more than six times as complicated, rather than the twice as complicated of all characters in the BMP.
+
+<p>Actually, that's a lie. It is completely impossible if any.of them are in the SMP. The Cherokee Phonetic Keyboard layout would be impossible. <b>Impossible!</b> 
+
+<p>I freely admit it is a side effect of the way that even the most complicated dead key keyboard layouts work. The end of a dead key chain must be a single UTF-16 code point...
+
+<p>And given the choice between twice as complicated and impossible, the winner should be obvious.
+
+<p>There really is very little prior usage to go by, unless you count when they disunified Coptic from Greek, or added the third Georgian case; but both of those situations were kept in the BMP, even though the Georgian was put in.a new spot, kind of like they did for Korean now that I think about it.
+
+<p>Perhaps we will have a leg to stand on, and some precedents! 😏😏😏
+
+<p>Sigh. Maybe I need to jump into the conversation here. Or at least get the people who <b>are</b> involved with Unicode on the case.
+
+<p>Think that this blog is a great passive/aggressive way to go? 😏😏😏
+<hr/><p><strong>Steven R. Loomis</strong> on 5 Nov 2013 6:21 AM:</p><div style="margin-left: 1em"><p>&quot;on the case&quot; …nice…</p>
+<p>At least you didn&#39;t write it in *drum roll* all caps…</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 5 Nov 2013 7:14 AM:</p><div style="margin-left: 1em"><p>Sometimes you get carried by the words...</p>
+</div>
+<p><strong>Anubhav Chattoraj</strong> on 5 Nov 2013 9:12 AM:</p><div style="margin-left: 1em"><p>Microsoft needs to move away from the &quot;one-to-one correspondence between keys and inputtable symbols (except when there are dead keys)&quot; keyboard model. The day Windows treats every keyboard layout as an IME, I will be a happy man.</p>
+<p>(On Linux, IBus sure seems to be moving in that direction.)</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 5 Nov 2013 10:23 AM:</p><div style="margin-left: 1em"><p>And they did it! ;-)</p>
+</div>
+<p><strong>Piotr Dobrogost</strong> on 5 Nov 2013 10:43 AM:</p><div style="margin-left: 1em"><p>Inadequate MS implementation driving changes in the world wide standard? I hope not.</p>
+</div>
+<p><strong>Charlie</strong> on 5 Nov 2013 11:03 AM:</p><div style="margin-left: 1em"><p>And who did what? :-(</p>
+</div>
+<p><strong>Joshua</strong> on 5 Nov 2013 11:55 AM:</p><div style="margin-left: 1em"><p>Just one more piece of evidence why UTF-16 was a terrible thing to build Windows on. As soon as UCS-2 was found to be not full coverage and wchar_t couldn&#39;t be relied on to hold all codes, everything should have been retooled. Yes I know UTF-8 hadn&#39;t been invented yet, but UTF-1 had been invented and published.</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 5 Nov 2013 12:25 PM:</p><div style="margin-left: 1em"><p>I guess sometimes the tail wags the dog! ;-)</p>
+</div>
+<p><strong>Doug Ewell</strong> on 5 Nov 2013 3:30 PM:</p><div style="margin-left: 1em"><p>&quot;The end of a dead key chain must be a single UTF-16 code point...&quot;</p>
+<p>Wait, I thought you just said that was a limitation of MSKLC, not Windows, and that there was hope it would soon be removed from MSKLC.</p>
+</div>
+<p><strong>tex texin</strong> on 5 Nov 2013 11:22 PM:</p><div style="margin-left: 1em"><p>Methinks you should fix the MSKLC to not care about BMP vs. SMP... This is 2013... ;-)</p>
+</div>
+<p><strong>Azarien</strong> on 6 Nov 2013 6:25 AM:</p><div style="margin-left: 1em"><p>I have the impression that Unicode (or is it ISO) puts too much pressure on &quot;prove the existing usage&quot; of proposed characters, forgetting that it&#39;s not 1991 anymore, and people often cannot use a character *because* it&#39;s not in Unicode.</p>
+</div>
+<p><strong>Anon</strong> on 6 Nov 2013 7:32 AM:</p><div style="margin-left: 1em"><p>@Azarien</p>
+<p>Personally, I hate needing to use a non-ASCII character from Unicode because it seems like less than 0.1% of the world can see any given glyph.</p>
+<p>As an example, in Chrome, all of the non-alphanumerics on this blog are not visible, regardless of encoding or font selection; In IE, none of the non-alphanumerics are visible unless &#39;Auto-select&#39; is toggled in the Encoding settings (even then, there&#39;s no evidence that the visible characters have any relationship to what was originally entered); on Android, they&#39;re all Android-head-emoji.</p>
+<p>The corollary to &quot;If it isn&#39;t there, people won&#39;t use it&quot; is &quot;If no one can see it properly, there&#39;s no reason to bother looking for it.&quot;</p>
+</div>
+<p><strong>Doug Ewell</strong> on 6 Nov 2013 11:12 AM:</p><div style="margin-left: 1em"><p>@Azarien: There does need to be an &quot;existing use&quot; requirement, so that everyone who&#39;s ever invented a notational system, or (like me) an alphabet, doesn&#39;t insist that it be formally encoded. The committees have already come a long way in this regard—in 1988, the criterion was publication in contemporary books and newspapers; today we have Phaistos, and new symbols invented to fill gaps in sets.</p>
+<p>Proof of existing use doesn&#39;t seem to be part of the Cherokee issue anyway. According to the proposal, it wasn&#39;t completely understood when the original letters were encoded that uppercase forms even existed.</p>
+</div>
+<hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2015/01/26 <a href="../../../2015/01/26/8770668856267196274.html">There's nothing small about Cherokee -- yet....</a></p></div><p><em>go to <a id="newer" href="../06/10460573.html" title="World-Readiness and Accessibility are the same thing, as frustrating as that can be (and is!)...♿♿♿">newer</a> or <a id="older" href="../04/10462249.html" title="Bing Translator vs. Google Translator gives some surprises...">older</a> post, or back to <a href="../../../index-2.html">index</a> or <a href="../../../index-2.html#2013-11">month</a> or <a href="../../../index-2.html#2013-11-05">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2013/11/05/10463141.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:02 GMT -->
+</html>

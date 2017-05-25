@@ -1,0 +1,209 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2012/06/06/10315337.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:33 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Not everyone completely and totally loves pseudo-localization</title></head><body>
+<h1>Not everyone completely and totally loves pseudo-localization</h1>
+<p><em>by Michael S. Kaplan, published on 2012/06/06 07:01 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2012/06/06/10315337.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<p>I've talked about pseudo-localization a few times before.</p>
+<p>Often when I have screenshots of Windows they&nbsp;contain either pseudo-localized of pseudo-enhanced text.</p>
+<p>I thought I'd take a moment to explain how pseudo works.</p>
+<p>And why so many people run with it on their selfhost machines.</p>
+<p>And most importantly, why there are a few senior developers and testers who are serious selfhosters but who don't run it unless they absolutely have to....</p>
+<p><em>Technically, you can put me in that category; while I often selfhost pseudo-mirrored, I avoid regular pseudo (unless it's pseudo-enhanced!)....</em></p>
+<p>The main principle behind pseudo-localization is to localize absolutely everything that <strong><em>can</em></strong> be localized via an automated method.</p>
+<p>In this way,&nbsp;anyone can easily notice when text <strong><em>can't</em></strong> be localized due to it not being properly exposed to localization.</p>
+<p>And also, if there were supposed to be restrictions on how text was localized to avoid breaking code -- <em>for example with font face names</em> -- that saw the restrictions not properly set, that could be detected as well.</p>
+<p>Good engineering, through and through.</p>
+<p>So why would some senior developers and testers prefer to not run on pseudo-localized builds?</p>
+<p>Well....</p>
+<p>Let's look at how the character substitution works.</p>
+<p>There are several different tables like this one below that show how to map A-Z and a-z to different lookalike (<em>and look similar enough to be read!</em>)&nbsp;characters:</p>
+<p>&nbsp;</p>
+<table border="1" cellspacing="3" cellpadding="3">
+<tbody>
+<tr>
+<td><strong>Letter</strong></td>
+<td><strong>Lowercase</strong></td>
+<td><strong>Uppercase</strong></td>
+</tr>
+<tr>
+<td>a/A</td>
+<td>&ordf;&agrave;&aacute;&acirc;&atilde;&auml;&aring;āăąǻά&alpha;ад</td>
+<td>&Agrave;&Aacute;&Acirc;&Atilde;&Auml;&Aring;ĀĂĄǺΆ&Alpha;∆&Delta;&Lambda;АД</td>
+</tr>
+<tr>
+<td>b/B</td>
+<td>&thorn;вьБъ</td>
+<td>&THORN;&Beta;&szlig;&beta;БВЪЬ</td>
+</tr>
+<tr>
+<td>c/C</td>
+<td>&cent;&ccedil;ćĉċčс&sigmaf;</td>
+<td>&Ccedil;ĆĈĊČС&euro;</td>
+</tr>
+<tr>
+<td>d/D</td>
+<td>&eth;ďđ&delta;</td>
+<td>&ETH;ĎĐ</td>
+</tr>
+<tr>
+<td>e/E</td>
+<td>&egrave;&eacute;&ecirc;&euml;ēĕėęěέ&epsilon;еёє℮зэ</td>
+<td>&Egrave;&Eacute;&Ecirc;&Euml;ĒĔĖĘĚΈ&Epsilon;&Sigma;Е&sum;ЁЄЗЄЭ</td>
+</tr>
+<tr>
+<td>f/F</td>
+<td>&fnof;</td>
+<td>₣</td>
+</tr>
+<tr>
+<td>g/G</td>
+<td>ĝğġģ</td>
+<td>ĜĞĠĢ</td>
+</tr>
+<tr>
+<td>h/H</td>
+<td>ĥħнћђ</td>
+<td>ĤĦΉ&Eta;Н</td>
+</tr>
+<tr>
+<td>i/I</td>
+<td>&igrave;&iacute;&icirc;&iuml;ĩīĭįί&iota;ϊіїΐ</td>
+<td>&Igrave;&Iacute;&Icirc;ĨĪĬĮİΊΪІЇ</td>
+</tr>
+<tr>
+<td>j/J</td>
+<td>ĵј</td>
+<td>ĴЈ</td>
+</tr>
+<tr>
+<td>k/K</td>
+<td>ķĸ&kappa;кќ</td>
+<td>Ķ&Kappa;ЌК</td>
+</tr>
+<tr>
+<td>l/L</td>
+<td>ĺļľŀłℓ</td>
+<td>&pound;ĹĻĽĿŁ₤</td>
+</tr>
+<tr>
+<td>m/M</td>
+<td>mм</td>
+<td>&Mu;Мм</td>
+</tr>
+<tr>
+<td>n/N</td>
+<td>ийлⁿп&pi;ή&eta;ńņňŉŋ&ntilde;</td>
+<td>&Ntilde;ŃŅŇŊ&Nu;ИЙЛП&prod;</td>
+</tr>
+<tr>
+<td>o/O</td>
+<td>&ograve;&oacute;&ocirc;&otilde;&ouml;&oslash;ōŏő&omicron;&sigma;όоǿ&theta;б</td>
+<td>&Ograve;&Oacute;&Ocirc;&Otilde;&Ouml;&Oslash;ŌŎŐǾΌ&Theta;&Omicron;&Phi;&Omega;ОФΩΏ</td>
+</tr>
+<tr>
+<td>p/P</td>
+<td>&thorn;&phi;&rho;р</td>
+<td>&THORN;&Rho;Р</td>
+</tr>
+<tr>
+<td>q/Q</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+</tr>
+<tr>
+<td>r/R</td>
+<td>ŕŗřяѓґгř</td>
+<td>ŔŖŘЯ&Gamma;ЃҐГ</td>
+</tr>
+<tr>
+<td>s/S</td>
+<td>&sect;śŝşѕ&scaron;</td>
+<td>ŚŜŞЅ&Scaron;</td>
+</tr>
+<tr>
+<td>t/T</td>
+<td>ţťŧ&tau;т</td>
+<td>ŢŤŦ&Tau;Т</td>
+</tr>
+<tr>
+<td>u/U</td>
+<td>&micro;&ugrave;&uacute;&ucirc;&uuml;ũūŭůűųΰ&upsilon;ϋύц&mu;џ</td>
+<td>&Ugrave;&Uacute;&Ucirc;&Uuml;ŨŪŬŮŰŲЏЦ</td>
+</tr>
+<tr>
+<td>v/V</td>
+<td>&nu;</td>
+<td>&nbsp;</td>
+</tr>
+<tr>
+<td>w/W</td>
+<td>ŵ&omega;ώшщẁẃẅ</td>
+<td>ŴШЩẀẂẄ</td>
+</tr>
+<tr>
+<td>x/X</td>
+<td>&times;хж</td>
+<td>&Chi;&chi;ХЖ</td>
+</tr>
+<tr>
+<td>y/Y</td>
+<td>&yacute;&yuml;ŷ&gamma;Уўỳу</td>
+<td>&yen;&Yacute;ŶΎ&Upsilon;ΫỲЎ</td>
+</tr>
+<tr>
+<td>z/Z</td>
+<td>źżž</td>
+<td>ŹŻ&Zeta;Ž</td>
+</tr>
+</tbody>
+</table>
+<p>&nbsp;Now most of these mappings are fine and dandy.</p>
+<p>Seriously.</p>
+<p>But in some cases, the mapping will change the <a href="http://www.unicode.org/reports/tr44/#General_Category_Values">Unicode General_Category</a> or other key ways that platforms, applications, components, or algorithms use to interact with text.</p>
+<p>Perhaps it will changed how it is ordered or collated.</p>
+<p>Or how it breaks on words or lines.</p>
+<p>Or whether text is to be ignored.</p>
+<p>Or not ignored!</p>
+<p>If you are a developer or tester and you want to focus your time and effort on valid bugs and <strong>not</strong> on noise due to bugs in pseudo, then having mappings like</p>
+<p><span style="font-size: x-large;"><strong>y --&gt; &yen;</strong></span></p>
+<p>or</p>
+<p><span style="font-size: x-large;">A --&gt; ∆</span></p>
+<p>or</p>
+<p><span style="font-size: x-large;">C --&gt; &euro;</span></p>
+<p>or</p>
+<p><span style="font-size: x-large;">L --&gt; ₤</span></p>
+<p>or</p>
+<p><span style="font-size: x-large;">E --&gt; &sum;</span></p>
+<p>or</p>
+<p><span style="font-size: x-large;">O --&gt; Ω</span></p>
+<p>or</p>
+<p><span style="font-size: x-large;">L --&gt; &pound;</span></p>
+<p>or</p>
+<p><span style="font-size: x-large;">&nbsp;a --&gt; &ordf;</span></p>
+<p>or</p>
+<p><span style="font-size: x-large;">c --&gt; &cent;</span></p>
+<p>or any of the others can ber challenging....</p>
+<p>Because it can be a challenge to be happy when the code you write or the code you test has to deal with that sort of thing....</p>
+<p>so I don't blame people who&nbsp;would rather selfhost on pseudo-mirrored builds.</p>
+<p>Or true localized builds.</p>
+<p>Some of those mappings&nbsp;can be&nbsp;a bit too clever to be smart, if you know what I mean!</p>
+<hr/><p><strong>John Cowan</strong> on 6 Jun 2012 10:16 AM:</p><div style="margin-left: 1em"><p>Yes, that&#39;s obviously bogus. &nbsp;Letters should be mapped to other letters, and in the correct case, too.</p>
+</div>
+<p><strong>Joshua</strong> on 6 Jun 2012 11:12 AM:</p><div style="margin-left: 1em"><p>We have our own pseudo that does &quot;String&quot; -&gt; &quot;{String}&quot;. Unfortunately it has its own defect of not detecting somebody doing string building before the localization call.</p>
+</div>
+<p><strong>Simon</strong> on 6 Jun 2012 12:05 PM:</p><div style="margin-left: 1em"><p>Why are there so many substitutions to different characters with identical glyphs (at least in Verdana)? &nbsp;The Greek and Cyrillic characters seem to be the biggest offenders here. &nbsp;Did things get too hard to read with all of the glyphs altered?</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 6 Jun 2012 5:04 PM:</p><div style="margin-left: 1em"><p>Nah, but then we seldom use Verdana in Windows UI (I&#39;m tempted to say never, but I&#39;ve been burnefd by such broad statements in the past!); Segoe UI is much more common....</p>
+</div>
+<p><strong>Simon</strong> on 7 Jun 2012 8:31 AM:</p><div style="margin-left: 1em"><p>I picked on Verdana because that&#39;s what the table was rendered in. &nbsp;Even in Segoe UI, I don&#39;t see a difference between &quot;MAIN SCOPE&quot; and &quot;ΜАІΝ ЅСΟРΕ&quot;. &nbsp;Admittedly, that&#39;s a contrived example and you&#39;d have to be pretty unlucky to get those particular substitutions. &nbsp;If the objective is to visually identify unlocalized strings, why allow homoglyphs at all?</p>
+</div>
+<p><strong>kinokijuf</strong> on 8 Jun 2012 10:50 AM:</p><div style="margin-left: 1em"><p>I there a pseudo MUI pack available for Windows?</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 8 Jun 2012 3:08 PM:</p><div style="margin-left: 1em"><p>Not at the moment, but discussion is ongoing....</p>
+</div>
+<p><strong>Alex Cohn</strong> on 4 Feb 2013 1:33 AM:</p><div style="margin-left: 1em"><p>It&#39;s such a pity that the Google Translator Toolkit does not support φ§єцđø as one of the target languages. Except from that, it&#39;s a nice online engine, and it understands quite a few document formats and a zillion of languages.</p>
+</div>
+<hr/><p><em>go to <a id="newer" href="../07/10316511.html" title="The evolving Story of Locale Support, part 24: I Adar you! Hell, I Double Adar you! (Windows 8 ed.)">newer</a> or <a id="older" href="../05/10315033.html" title="The evolving Story of Locale Support, part 23: Tamazight? Outta sight!">older</a> post, or back to <a href="../../../index-2.html">index</a> or <a href="../../../index-2.html#2012-06">month</a> or <a href="../../../index-2.html#2012-06-06">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2012/06/06/10315337.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:33 GMT -->
+</html>

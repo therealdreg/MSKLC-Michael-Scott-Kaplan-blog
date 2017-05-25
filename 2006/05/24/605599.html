@@ -1,0 +1,31 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2006/05/24/605599.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:39 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Invariant vs. Ordinal, the third</title></head><body>
+<h1>Invariant vs. Ordinal, the third</h1>
+<p><em>by Michael S. Kaplan, published on 2006/05/24 06:01 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2006/05/24/605599.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P><FONT face=Tahoma>Mike Sheldon is one of the smartest guys I know.</FONT></P>
+<P><FONT face=Tahoma>You may have seen him on Channel 9 talking about <A href="http://channel9.msdn.com/ShowPost.aspx?PostID=183919">Windows Shell Architecture</A> with fellow architect Chris Guzak.</FONT></P>
+<P><FONT face=Tahoma>And at least two people&nbsp;divined that he was the 'Mike' I credited in <A HREF="http://archives.miloush.net/michkap/archive/2005/02/12/371650.html"><STRONG>this post</STRONG></A> for his help with sublassing, Shell team style.</FONT></P>
+<P><FONT face=Tahoma>He has done a lot of other cool stuff too, but one of the very interesting jobs he has as an Architect on Shell team is in balancing the need for correct functionality with the need for backward compatible behavior.</FONT></P>
+<P><FONT face=Tahoma>He has been one of the people to work on when and how best to integrate some of the feedback that has come up before in this blog (though I have to admit that those blog posts were inspired by conversations at least as often as it actually inspired them!).</FONT></P>
+<P><FONT face=Tahoma>Yesterday, he sent some mail asking about how to handle a particular string comparison situation. Working through the scenario, in the end it boiled down to choosing between two different options:</FONT></P>
+<UL>
+<LI><FONT face=Tahoma><A HREF="http://archives.miloush.net/michkap/archive/2005/12/22/506595.html"><STRONG>CompareStringOrdinal</STRONG></A> with the bIgnoreCase flag set to TRUE, or</FONT></LI>
+<LI><FONT face=Tahoma>CompareString with <A HREF="http://archives.miloush.net/michkap/archive/2006/01/24/516661.html"><STRONG>LOCALE_INVARIANT</STRONG></A> and the NORM_IGNORECASE flag</FONT></LI></UL>
+<P><FONT face=Tahoma>Some&nbsp;will recognize this as the situation that has come up here before in posts such as <A HREF="http://archives.miloush.net/michkap/archive/2004/12/29/344136.html"><STRONG>Comparison confusion: INVARIANT vs. ORDINAL</STRONG></A> and <A HREF="http://archives.miloush.net/michkap/archive/2005/04/13/407823.html"><STRONG>Invariant and Ordinal Redux</STRONG></A>.</FONT></P>
+<P><FONT face=Tahoma>Of course a lot has been learned since then, including the different nature of testing for <A HREF="http://archives.miloush.net/michkap/archive/2005/11/22/495033.html"><STRONG>equality versus ordering</STRONG></A>. And it made sense to really cover the differences between these two very different methods to decide the best one to use.</FONT></P>
+<P><FONT face=Tahoma>Here are the basic differences, summarized:</FONT></P>
+<UL>
+<LI><FONT face=Tahoma>CompareStringOrdinal is much faster;</FONT></LI>
+<LI><FONT face=Tahoma>Some strings will <A HREF="http://archives.miloush.net/michkap/archive/2005/01/18/355210.html">have no weight</A> according to CompareString, but everything has weight according to CompareStringOrdinal;</FONT></LI>
+<LI><FONT face=Tahoma>CompareString with NORM_IGNORECASE will treat as equal many code points that&nbsp;would not necessarily be intuitive to treat that way such as "ʏ", "Y", and "y", as discussed <A HREF="http://archives.miloush.net/michkap/archive/2005/05/05/414845.html">here</A>;</FONT></LI>
+<LI><FONT face=Tahoma>In most cases, equality results will be more intuitive using with CompareStringOrdinal while sorting results will be more intuitve with CompareString.</FONT></LI></UL>
+<P><FONT face=Tahoma>Of course this does lead to the mildly ironic situation where&nbsp; you do not call the function named CompareString<STRONG>Ordinal</STRONG> when you want to figure out the order of things. But I have talked about the name weirdness before so I won't bore anyone by talking about it again. :-)</FONT></P>
+<P><FONT face=Tahoma>Now armed with this knowedge, Mike is able to make sure the Shell is doing the right thing in many of its own&nbsp;string comparison needs!</FONT></P>
+<P><FONT face=Tahoma></FONT>&nbsp;</P>
+<P><FONT face=Tahoma><FONT color=#ff1493><EM>This post brought to you by </EM>"ʏ"<EM> (<A href="http://www.fileformat.info/info/unicode/char/028f/index.htm">U+028f</A>, a.k.a. LATIN LETTER SMALL CAPITAL Y)</EM></FONT></FONT></P>
+<hr/><p><strong>Michael S. Kaplan</strong> on 24 May 2006 10:16 AM:</p><div style="margin-left: 1em"></div>
+<hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2007/10/12 <a href="http://archives.miloush.net/michkap/archive/2007/10/12/5396685.html">That function is always faster! (well, except for that one case when it can actually be slower...)</a></p><p>2007/05/31 <a href="http://archives.miloush.net/michkap/archive/2007/05/31/3019659.html">Something .NET does less intuitively than they ought</a></p><p>2006/08/16 <a href="http://archives.miloush.net/michkap/archive/2006/08/16/702104.html">Something .NET does more intuitively than Windows</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2006/05/24/605603.html" title="Is it punctuation, symbol, or diacritic?">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2006/05/24/605569.html" title="Did somebody say time zones were intuitive?">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2006-05">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2006-05-24">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2006/05/24/605599.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:39 GMT -->
+</html>

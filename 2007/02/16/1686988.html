@@ -1,0 +1,28 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2007/02/16/1686988.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:38 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>The rumor was that SQL Server passwords are case insensitive?</title></head><body>
+<h1>The rumor was that SQL Server passwords are case insensitive?</h1>
+<p><em>by Michael S. Kaplan, published on 2007/02/16 03:01 -05:00, original URI: http://blogs.msdn.com/b/michkap/archive/2007/02/16/1686988.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P>Trevor's question:</P>
+<BLOCKQUOTE>
+<P><FONT face="times new roman,times"><EM>I heard a rumor that passwords in SQL Server are case insensitive. Is that true? If it is, isn't that a bug?</EM></FONT></P></BLOCKQUOTE>
+<P mce_keep="true">When I read Trevor's question I was reminded of that telephone game where you get to see how much the message changes as it goes from person to person.</P>
+<P mce_keep="true">Or in this case, from blog to blog?</P>
+<P mce_keep="true">The basic problem is that if you are running SQL Server:</P>
+<UL>
+<LI>
+<DIV mce_keep="true">on a case-insensitive server</DIV></LI>
+<LI>
+<DIV mce_keep="true">running with SQL or mixed authentication</DIV></LI></UL>
+<P mce_keep="true">that the server will (in addition to hashing the case-sensitive password value you assign) hash an all uppercase version of whatever you set. No exactly same as being case insensitive, but technically close.</P>
+<P mce_keep="true">You can read about if you go to blog posts like <A class="" href="http://secretgeek.net/sql2k_2k5.asp" mce_href="http://secretgeek.net/sql2k_2k5.asp">this one</A>.</P>
+<P mce_keep="true">Note that they addressed this issue in SQL Server 2005 and no longer do this. </P>
+<P mce_keep="true">And also note that if you paid attention to posts of mine like <STRONG><A class="" href="http://archives.miloush.net/michkap/archive/2005/05/11/416293.html" mce_href="http://archives.miloush.net/michkap/archive/2005/05/11/416293.html">this one</A></STRONG>, then you'd never hit the problem (since your server wouldn't be case insensitive).</P>
+<P mce_keep="true">And finally note that if you used only used NT integrated logons (which are more secure anyway) then SQL Server also wouldn't be doing this.</P>
+<P mce_keep="true">Summary: if you were doing the right thing, you'd never even notice&nbsp;a problem.... :-)</P>
+<P mce_keep="true">&nbsp;</P>
+<P mce_keep="true"><FONT color=#ff00ff><EM>This post brought to you by</EM>&nbsp;<FONT size=5>ਊ</FONT> <EM>(<A class="" href="http://www.fileformat.info/info/unicode/char/0a0a" mce_href="http://www.fileformat.info/info/unicode/char/0a0a">U+0a0a</A>, a.k.a. GURMUKHI LETTER UU)</EM></FONT></P>
+<hr/><div style="margin-left: 1em"><em>no comments</em></div><hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2007/02/17/1698307.html" title="Giving a character a new identity (by giving it some secondary weight)">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2007/02/15/1685889.html" title="The Vista MUI SKU story">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2007-02">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2007-02-16">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2007/02/16/1686988.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:38 GMT -->
+</html>

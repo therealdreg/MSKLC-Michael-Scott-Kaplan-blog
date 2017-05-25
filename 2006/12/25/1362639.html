@@ -1,0 +1,39 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2006/12/25/1362639.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:38 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Anyone out there switching modes in JIS?</title></head><body>
+<h1>Anyone out there switching modes in JIS?</h1>
+<p><em>by Michael S. Kaplan, published on 2006/12/25 13:59 -05:00, original URI: http://blogs.msdn.com/b/michkap/archive/2006/12/25/1362639.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P>The report was that a specific sequence of bytes was failing conversion via code page 50220 to Unicode when using <A class="" href="http://msdn2.microsoft.com/en-us/library/ms886760.aspx" mce_href="http://msdn2.microsoft.com/en-us/library/ms886760.aspx">MultiByteToWideChar</A> but succeeding when using <A class="" href="http://msdn.microsoft.com/workshop/misc/mlang/mlang.asp" mce_href="http://msdn.microsoft.com/workshop/misc/mlang/mlang.asp">MLang</A>. The bug only repros on XP (in Server 2003) the conversion was working in both technologies.</P>
+<P>Now as I pointed out in <A class="" href="http://archives.miloush.net/michkap/archive/2005/07/26/443375.html" mce_href="http://archives.miloush.net/michkap/archive/2005/07/26/443375.html"><STRONG>All code page architectures are created equal</STRONG></A>, some really are more equal than others. So let's take a look at this "MLang being more equal than Win32 on XP" case, shall we?</P>
+<P>An excerpt of the byte sequence that shows the problem is:</P>
+<P><FONT face="consolas,lucida console,courier new,courier"><STRONG>1B 24 42 2D 21 2D 22 2D 23 2D 24 2D 25 2D 26 2D 27 2D 28 2D 29 2D 2A 1B 28 4A 1B 24 42 2D 2B 2D 2C</STRONG></FONT></P>
+<P>Breaking it down a bit:</P>
+<P><FONT face="consolas,lucida console,courier new,courier"><STRONG><FONT color=#ff00ff>1B 24 42</FONT> 2D 21 2D 22 2D 23 2D 24 2D 25 2D 26 2D 27 2D 28 2D 29 2D 2A <FONT color=#00ff00>1B 28 4A</FONT> <FONT color=#ff0000>1B 24 42</FONT> 2D 2B 2D 2C</STRONG></FONT></P>
+<P mce_keep="true">Now you will notice that the sequence in pink and the later one in red are the same. Yung-Shin did an analysis of what was going on:</P>
+<BLOCKQUOTE>
+<P mce_keep="true"><EM><FONT face="times new roman,times">The 3-byte escape sequence in&nbsp;pink switches the mode to JIS X 0208-1983 mode, and two additional 3-byte sequence (1b, 28, 4a and 1b, 24, 42) switches the mode to JIS-Roman and back to JIS mode X 0208-1983 again.&nbsp; This is actually unnecessary because it’s already in JIS mode already.&nbsp; However, in XP, these bogus escape sequence causes it to exit the loop and returns from the MB2WC call.&nbsp; In a word, if bogus escape sequence like this, the bogus sequence will truncate from the bogus escape sequence.&nbsp; If there are no bogus escape sequence (i.e. removing the red bytes), XP will convert the string just fine.<BR><BR>This bug is fixed in Server from <A class="" href="http://blogs.msdn.com/shawnste" mce_href="http://blogs.msdn.com/shawnste">Shawn</A> by continuing the loop so its mode is switched correctly.</FONT></EM></P></BLOCKQUOTE>
+<P mce_keep="true">Now I write blog posts in tools that have no problem inserting HTML like </P>
+<P mce_keep="true"><FONT face="consolas,lucida console,courier new,courier">&lt;font face=Tahoma&gt;Hello <STRONG><FONT color=#ff0000>&lt;/font&gt;&lt;font face=Tahoma&gt;</FONT></STRONG>Dolly!&lt;/font&gt;</FONT></P>
+<P mce_keep="true">(note the completely bogus bit converting out of and right back into the exact same font in red)</P>
+<P mce_keep="true">So I can believe there might indeed be editing tools that might do the same thing with encodings that use escape sequences to switch in and out of different modes.</P>
+<P mce_keep="true">The file itself that containing the errant sequences may well have just been set up to test the specific case, so it may or may not be proof of a real need to do something better here in XP.</P>
+<P mce_keep="true">But I was wondering if anyone out there had run into this specific bug before, and whether it was blocking them (because writing code to prefilter the bytes would actually be quite a pain to do for obvious reasons).</P>
+<P mce_keep="true">So, is there anyone using ISO 2022 code pages running into this problem?</P>
+<P mce_keep="true">&nbsp;</P>
+<P mce_keep="true"><FONT color=#ff00ff><EM>This post brought to you by <A class="" href="http://www.fileformat.info/info/unicode/char/000e" mce_href="http://www.fileformat.info/info/unicode/char/000e">U+000e</A> and <A class="" href="http://www.fileformat.info/info/unicode/char/000f" mce_href="http://www.fileformat.info/info/unicode/char/000f">U+000f</A> (a.k.a. C0 control characters representing SHIFT IN and SHIFT OUT)</EM></FONT></P>
+<hr/><p><a id="1367331" href="#1367331">#</a> <strong>NikWeber</strong> on 26 Dec 2006 10:16 PM:</p><div style="margin-left: 1em"><p>Yes. I've run into massive problems.</p>
+<p>When converting from unicode to ISO2022 </p>
+<p>MLANG will issue a final shift sequence back to JIS roman.</p>
+<p>WIN32 (MultiByteToWideChar) will not.</p>
+<p>Also there are discrepancies in the conversion tables between MLANG and WIN32. </p>
+<p>U+2172 (small roman numeral three) has differing encodings; in fact they use different shift sequences.</p>
+<p>There are more discrepancies that cause severe issues when SEARCHING ISO2022 text for expressions.</p>
+<p>Beacuse it depends what API the program used to serialize the data.</p>
+<p>Dominik</p>
+</div>
+<p><a id="1368352" href="#1368352">#</a> <strong>Michael S. Kaplan</strong> on 27 Dec 2006 1:22 AM:</p><div style="margin-left: 1em"><p>Well, of course that is a whole different set of issues, rather than the specific one here that is about one MultiByteToWieChar problem that is much more serious than just differing tables or implementations (it is a bug leading to input truncation with specific admittedly bogus input)....</p>
+</div>
+<hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2006/12/26/1364585.html" title="On holiday? Outlook might try to tell you where....">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2006/12/25/1360675.html" title="Maybe your computer doesn&#39;t like you?">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2006-12">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2006-12-25">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2006/12/25/1362639.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:38 GMT -->
+</html>

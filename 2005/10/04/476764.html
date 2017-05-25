@@ -1,0 +1,40 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2005/10/04/476764.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:41 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>When MSLU functions fail...</title></head><body>
+<h1>When MSLU functions fail...</h1>
+<p><em>by Michael S. Kaplan, published on 2005/10/04 03:31 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2005/10/04/476764.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P><FONT face=Tahoma>Last week, over in the microsoft.public.platformsdk.mslayerforunicode newsgroup, Dan Mitchell asked:</FONT></P>
+<BLOCKQUOTE dir=ltr style="MARGIN-RIGHT: 0px">
+<P><EM><FONT size=2>We have a unicode app (working just fine with unicows) that needs to check the version of one of our DLLs. The DLL is non-unicode, and works fine if we load it and call our functions on it. (though none of those functions pass strings as parameters).</FONT></EM></P>
+<P><EM><FONT size=2>The problem is that if we call GetFileVersionInfoSize() on that DLL, we get an error back and GetLastError() returns 120 ("the function is not supported").</FONT></EM></P>
+<P><EM><FONT size=2>It works fine on WinXP etc, so it seems to be just something about unicode. (and it didn't do this before we switched our main app to unicode).</FONT></EM></P>
+<P><EM><FONT size=2>Is there anything we can do about this? If I try guessing that 64k should be enough as a safe fake return from GetFileVersionInfoSize(), the call to GetFileVersionInfo() fails the same way (getlasterror=120), and I don't think I can usefully spoof the call to that.</FONT></EM></P>
+<P><EM><FONT size=2>thanks,</FONT></EM></P>
+<P><EM><FONT size=2>-- dan</FONT></EM></P></BLOCKQUOTE>
+<P><FONT face=Tahoma>Of course, last week was pretty busy with the MVP Summit and all, so I did not see the message right away. Luckily, David Lowndes was checking the group in the evenings. He ran through some of the basic troubleshooting steps that I would have done, such as:</FONT></P>
+<UL>
+<LI><FONT face=Tahoma>Pointing out that it really ought to work <EM>(helps morale!)</EM></FONT> 
+<LI><FONT face=Tahoma>Asking if the call work with other DLLs, or even the EXE that it is being called from <EM>(it wasn't)</EM></FONT> 
+<LI><FONT face=Tahoma>Finding out if the 'A' version of the function works <EM>(it was)</EM></FONT> 
+<LI><FONT face=Tahoma>Asking what version of the DLL was being used <EM>(it was 1.1.3790, the latest one)</EM></FONT></LI></UL>
+<P><FONT face=Tahoma>Now that is the point where I finally had a chance to check out the group. Now the above questions are pretty typical ones to ask and I probably would have done the same had I been around, luckily David saved me the trouble. :-)</FONT></P>
+<P><FONT face=Tahoma>So I realized based on the problem description and the answers what might be going on. It was one of two possibilities, with the second one being the most likely:</FONT></P>
+<BLOCKQUOTE dir=ltr style="MARGIN-RIGHT: 0px">
+<P><FONT face=Tahoma><FONT face="Times New Roman" size=2><EM>The error 120 (ERROR_CALL_NOT_IMPLEMENTED) is what the MSLU loader returns when it is unable to do the LoadLibrary/GetProcAddress on the function.</EM></FONT></FONT></P>
+<P><FONT face=Tahoma><FONT face="Times New Roman" size=2><EM>Of course the reason for that is that it is the same thing that a Win9x OS will return if you call its "W" stub.</EM></FONT></FONT></P>
+<P><FONT face=Tahoma><FONT face="Times New Roman" size=2><EM>The most likely cause is improper linking to unicows.dll -- the best way to check is to do a dumpbin on the imports of the file calling unicows, and see if GetFileVersionInfoSize is there -- if it is, then that means that the unicows.dll one is not being called....</EM></FONT></FONT></P>
+<P><FONT face=Tahoma><FONT face="Times New Roman" size=2><EM>See </EM></FONT><a href="http://archives.miloush.net/michkap/archive/2005/01/24/359555.html"><FONT face="Times New Roman" size=2><EM>http://blogs.msdn.com/michkap/archive/2005/01/24/359555.aspx</EM></FONT></A><FONT face="Times New Roman" size=2><EM> for more info on the MSLU Loader....</EM></FONT></P></BLOCKQUOTE></FONT>
+<P><FONT face=Tahoma>And a few days later (yesterday, in fact!) Dan answered back:</FONT></P>
+<BLOCKQUOTE dir=ltr style="MARGIN-RIGHT: 0px">
+<P><EM><FONT size=2>That's the problem alright. I have no idea what's wrong with it, though -- the last time I hit this problem it was openssl that was pulling advapi32.lib in, which was solvable by rebuilding openssl.</FONT></EM></P>
+<P><EM><FONT size=2>I have no idea what's pulling version.lib in this time; it doesn't seem to be any of our libraries, and I don't think it's openssl. I guess it's just a matter of poking around until I find where it's coming from.</FONT></EM></P></BLOCKQUOTE>
+<P><FONT face=Tahoma>It is an interesting problem when some other library is pulling in the .LIB files in a way that overrides your own attempts to order the .LIBs for MSLU's behavior. Sometimes the key is even to include a .LIB file more than once, though that is a solution that is really best avoided if possible since it makes things&nbsp;a lot more complicated. In many cases, careful reordering can do the trick. I'll cover one of the more awful examples of this issue another time....</FONT></P>
+<P><FONT face=Tahoma>Special thanks to David who allowed me to swoop in and look like a genius. :-)</FONT></P>
+<P><FONT face=Tahoma></FONT>&nbsp;</P>
+<P><FONT face=Tahoma color=#ff1493><EM>This post brought to you by</EM> "Ю" <EM>(<A href="http://www.fileformat.info/info/unicode/char/042e/index.htm">U+042e</A>, a.k.a. CYRILLIC CAPITAL LETTER YU)</EM></FONT></P>
+<hr/><p><strong>Yuhong Bao</strong> on 1 Aug 2010 11:47 PM:</p><div style="margin-left: 1em"><p>The linker has an /VERBOSE option that can help here.</p>
+</div>
+<hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2007/01/04 <a href="http://archives.miloush.net/michkap/archive/2007/01/04/1409380.html">Converting a project to Unicode: Part 8 (Fitting MSLU into the mix)</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2005/10/04/477199.html" title="How to avoid stepping in it">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2005/10/04/476748.html" title="Thinking about the MVP Summit">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2005-10">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2005-10-04">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2005/10/04/476764.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:41 GMT -->
+</html>

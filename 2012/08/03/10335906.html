@@ -1,0 +1,55 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2012/08/03/10335906.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:31 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>It's 2012! NT 3.1 just called, they want their [circa 1993] methodology back!</title></head><body>
+<h1>It's 2012! NT 3.1 just called, they want their [circa 1993] methodology back!</h1>
+<p><em>by Michael S. Kaplan, published on 2012/08/03 07:01 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2012/08/03/10335906.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<p>Some questions confuse me even when I know the language in which they are asked fluently.</p>
+<p>In my experience, the most common cause is when the person asking the question is trying to connect two things together that lack a direct, useful connection.</p>
+<p>In such cases, understanding what the true question involves <span style="color: #999999; text-decoration: line-through;">kicking the living crap out of</span>disproving the "wrong" question, and help the right one emerge.</p>
+<p>Take for example the following question sent the other day:</p>
+<p style="padding-left: 30px;"><span style="font-family: times new roman,times; font-size: medium;"><em>Is there a table that shows what the delta is between [the list of supported input languages] and [the list of system locales]?&nbsp; Hindi is one of the examples, and I am interested in a comprehensive list.</em></span></p>
+<p>Hmmm.</p>
+<p>Okay, we'll start by defining the two terms:</p>
+<p><strong>[the list of supported input languages]</strong> - Mostly you can go to <strong>HKLM\SYSTEM\CurrentControlSet\Control\Keyboard Layouts\</strong> and enumerate the subkey under it. This will give you&nbsp; list of the keyboards.</p>
+<p><em>IMEs are not included, but all of the existing IMEs fall in two categories:</em></p>
+<ul>
+<li><em>TextTableService TIPs for Yi, Amharic, and Tigrinya -- all three of which are Unicode only, and</em></li>
+<li><em>TextTableService TIPs for Traditional Chinese and IMEs for Traditional Chinese, Simplified Chinese, Korean, and Japanese -- every one of which supports between several thousand and many tens of thousands of characters not on their nominal default system code page.</em></li>
+</ul>
+<p><em>Thus, all of them are either <strong>Unicode-only</strong> or <strong>Unicode-only enough</strong> for current purposes that they may as well all be treated that way.</em></p>
+<p>For the keyboards under that registry key, every subkey contains a KLID; if converted to&nbsp; hexadecimal number, then LOWORD(&lt;KLID&gt;) is usually but not always a LANGID.</p>
+<p>You can pass those LANGID values to <a href="http://msdn.microsoft.com/library/windows/desktop/dd318101">GetLocaleInfo</a>(LOWORD(&lt;klid&gt;), <a href="http://msdn.microsoft.com/library/windows/desktop/dd373761">LOCALE_IDEFAULTANSICODEPAGE</a>, ..) and if you get back&nbsp;a <strong>1</strong> then you have a Unicode-only locale.</p>
+<p>Note that if LOWORD(&lt;klid&gt;) is 0x0c00, then it's either one of those locale-less keyboards we added in Windows 8 (most but not all of which are Unicode-only) or a custom keyboard created by MSKLC based on&nbsp;a custom locale (which does not have a known code page).</p>
+<p>Of the rest of the keyboards that <strong>do</strong> have ACP values, many of them contain characters outside of the corresponding default system code page.</p>
+<p>Now while a LOCALE_IHASLETERSOUTSIDETHECP&nbsp;would potentially quite useful, <strong>we don't have that</strong>. And it may not match the keyboard anyway.</p>
+<p>Not to mention that there is no&nbsp;intrinsic queryable property or attrbute of a KLID that can be used to easily identify what a keyboard supports.</p>
+<p><strong>SUMMARY</strong>: for almost every keyboard, you cannot find out whether the keyboard corresponds to a code page.</p>
+<p>Any code page.</p>
+<p>Popping the stack from this disaster for a moment, let's o back to the original question.</p>
+<p>Now&nbsp;<strong>[the list of system locales]</strong> is a bit less messy to get.</p>
+<p>Just <a href="http://msdn.microsoft.com/library/windows/desktop/dd317829">EnumSystemLocalesEx</a> will let you get that list, and if needed you can use <a href="http://msdn.microsoft.com/library/windows/desktop/dd318103">GetLocaleInfoEx</a>(&lt;enumerated name, <a href="http://msdn.microsoft.com/library/windows/desktop/dd373761">LOCALE_IDEFAULTANSICODEPAGE</a>,...) not returning&nbsp;1 but returning any other number to mean it's&nbsp;a valid potential system locale.</p>
+<p>Easy, and even supports custom locales!</p>
+<p>Of course they all have some overlap.</p>
+<p>In the end, they only needed the second part anyway for what they had in mind - the real question was about working with characters off the default system codepage; keyboards were the easiest way to repro the problem and thus the repro overcomplicated things.</p>
+<p>But now that you wade through&nbsp;either list, and even try to match them up where they overlap, a reasonable person can come to just one conclusion.</p>
+<p><span style="font-size: large;">It&nbsp;isn't 1993 anymore.</span></p>
+<p><span style="font-size: large;">If you depend on code pages then...</span></p>
+<ul>
+<li><span style="font-size: large;">...you fail for a bunch of the locales;</span></li>
+<li><span style="font-size: large;">...you fail for a bunch of the keyboards;</span></li>
+<li><span style="font-size: xx-large;">...you [if you don't use Unicode]&nbsp;you fail for a bunch of the&nbsp;customers....</span></li>
+</ul>
+<hr/><p><strong>Joshua</strong> on 20 Aug 2012 9:09 AM:</p><div style="margin-left: 1em"><p>Fix the console or I don&#39;t care.</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 20 Aug 2012 6:46 PM:</p><div style="margin-left: 1em"><p>We did -- it&#39;s called the PowerShell ISE! :-)</p>
+</div>
+<p><strong>Joshua</strong> on 21 Aug 2012 3:44 PM:</p><div style="margin-left: 1em"><p>That&#39;s just swapping one set of bugs for another (Unicode display works, but keyboard-interactive console programs don&#39;t).</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 21 Aug 2012 9:54 PM:</p><div style="margin-left: 1em"><p>Old style interactive keyboards are not enabled PowerShell scripts that know how to interact....</p>
+</div>
+<p><strong>Joshua</strong> on 22 Aug 2012 9:43 AM:</p><div style="margin-left: 1em"><p>I am not going to retool hundreds of programs to have two completely independent input paths. I might as well link against cygwin&#39;s LIBC instead and use their UTF-8 terminal.</p>
+</div>
+<hr/><p><em>go to <a id="newer" href="../06/10337049.html" title="Facebook thinks my self-esteem is for sale. WTF?">newer</a> or <a id="older" href="../02/10335988.html" title="Ya gotta have options, man!">older</a> post, or back to <a href="../../../index-2.html">index</a> or <a href="../../../index-2.html#2012-08">month</a> or <a href="../../../index-2.html#2012-08-03">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2012/08/03/10335906.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:31 GMT -->
+</html>

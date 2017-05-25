@@ -1,0 +1,245 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2011/05/03/10160402.140446.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Leave it to Microsoft to take the most confusing thing and make it worse!</title></head><body>
+<h1>Leave it to Microsoft to take the most confusing thing and make it worse!</h1>
+<p><em>by Michael S. Kaplan, published on 2011/05/03 16:04 +02:00, original URI: http://blogs.msdn.com/b/michkap/archive/2011/05/03/10160402.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostMail -->
+<p>The other day when Tom asked me a question (discussed previously in <strong><a href="http://archives.miloush.net/michkap/archive/2011/04/29/10159418.html" title="Sometimes the things that used to be different aren't anymore">Sometimes the things that used to be different aren't anymore</a></strong>), he didn't just ask me that one question....</p>
+ <p>His second question was about something else, though. So putting it in that same blog might have been kind of awkward.</p>
+ <p>A new blog seemed like a much more reasonable idea. :-)</p>
+ <p>Tom's&nbsp;following question?</p>
+ <p style="padding-left: 60px;"><span style="font-family: times new roman,times; font-size: medium;">Do all those cultures with LOCALE_ SMONGROUPING set to &ldquo;3&rdquo; really actually want it set to &ldquo;3;0&rdquo;, but there was just a mistake in understanding how to encode the preference?&nbsp; (Similar question could probably apply to LOCALE_SGROUPING.)</span></p>
+ <p>Hmmmm. More locale stuff.</p>
+ <p>Let's start with the definitions again. Documentation is our friend, isn't it? I mean, it didn't work out so well last time, but maybe that was a fluke. Take 2:</p>
+ <ul>
+ <li><a href="http://msdn.microsoft.com/library/dd373845.aspx">LOCALE_SGROUPING</a>: Sizes for each group of digits to the left of the decimal. The maximum number of characters allowed for this string is ten, including a terminating null character. An explicit size is needed for each group, and sizes are separated by semicolons. If the last value is 0, the preceding value is repeated. For example, to group thousands, specify 3;0. Indic locales group the first thousand and then group by hundreds. For example, 12,34,56,789 is represented by 3;2;0. Further examples:<br />
+ <table cellpadding="5" cellspacing="5" border="1">
+ <tbody>
+ <tr>
+ <th>Specification</th><th style="text-align: right;">Resulting string</th>
+ </tr>
+ <tr>
+ <td>3;0</td>
+ <td style="text-align: right;">3,000,000,000,000</td>
+ </tr>
+ <tr>
+ <td>3;2;0</td>
+ <td style="text-align: right;">30,00,00,00,00,000</td>
+ </tr>
+ <tr>
+ <td>3</td>
+ <td style="text-align: right;">3000000000,000</td>
+ </tr>
+ <tr>
+ <td>3;2</td>
+ <td style="text-align: right;">30000000,00,000</td>
+ </tr>
+ </tbody>
+ </table>
+ </li>
+ <li><a href="http://msdn.microsoft.com/library/dd373857.aspx">LOCALE_SMONGROUPING</a>: Sizes for each group of monetary digits to the left of the decimal. The maximum number of characters allowed for this string is ten, including a terminating null character. An explicit size is needed for each group, and sizes are separated by semicolons. If the last value is 0, the preceding value is repeated. For example, to group thousands, specify 3;0. Indic languages group the first thousand and then group by hundreds. For example 12,34,56,789 is represented by 3;2;0.</li>
+ </ul>
+ <p>Now it is would have been nice if <a href="http://msdn.microsoft.com/library/dd373857.aspx">LOCALE_SMONGROUPING</a>&nbsp;could have&nbsp;samples like&nbsp;<a href="http://msdn.microsoft.com/library/dd373845.aspx">LOCALE_SGROUPING</a>&nbsp;did. But basically it is all kind of inferred -- one is for numbers in general, and the other is for currency values.</p>
+ <p>Tom's question is interesting when you consider how easy it can be for someone to misunderstand the format and give the wrong value. One could easily imagine the format being wrong for a given locale if such a mistake is made....</p>
+ <p>Perhap more instructive is a look at the ones where these two values are different:</p>
+ <table cellpadding="3" cellspacing="3" border="1">
+ <tbody>
+ <tr>
+ <td>Locale</td>
+ <td>Name</td>
+ <td><span style="font-size: small;"><a href="http://msdn.microsoft.com/library/dd373845.aspx">LOCALE_SGROUPING</a></span></td>
+ <td><span style="font-size: small;"><a href="http://msdn.microsoft.com/library/dd373857.aspx">LOCALE_SMONGROUPING</a></span></td>
+ </tr>
+ <tr>
+ <td><span style="font-size: small;">en-BZ</span></td>
+ <td>English (Belize)</td>
+ <td><span style="font-size: small;">3;0</span></td>
+ <td><span style="font-size: small;">3</span></td>
+ </tr>
+ <tr>
+ <td><span style="font-size: small;">en-TT</span></td>
+ <td>English (Trinidad and Tobago)</td>
+ <td><span style="font-size: small;">3;0</span></td>
+ <td><span style="font-size: small;">3</span></td>
+ </tr>
+ <tr>
+ <td><span style="font-size: small;">es-SV</span></td>
+ <td>Spanish (El Salvador)</td>
+ <td><span style="font-size: small;">3;0</span></td>
+ <td><span style="font-size: small;">3</span></td>
+ </tr>
+ <tr>
+ <td><span style="font-size: small;">es-HN</span></td>
+ <td>Spanish (Honduras)</td>
+ <td><span style="font-size: small;">3;0</span></td>
+ <td><span style="font-size: small;">3</span></td>
+ </tr>
+ <tr>
+ <td><span style="font-size: small;">es-NI</span></td>
+ <td>Spanish (Nicaragua)</td>
+ <td><span style="font-size: small;">3;0</span></td>
+ <td><span style="font-size: small;">3</span></td>
+ </tr>
+ <tr>
+ <td><span style="font-size: small;">es-PR</span></td>
+ <td>Spanish (Puerto Rico)</td>
+ <td><span style="font-size: small;">3;0</span></td>
+ <td><span style="font-size: small;">3</span></td>
+ </tr>
+ <tr>
+ <td><span style="font-size: small;">is-Latn-CA</span></td>
+ <td>Inuktitut (Latin, Canada)</td>
+ <td><span style="font-size: small;">3</span></td>
+ <td><span style="font-size: small;">3;0</span></td>
+ </tr>
+ <tr>
+ <td><span style="font-size: small;">moh-CA</span></td>
+ <td>Mohawk (Mohawk)</td>
+ <td><span style="font-size: small;">3</span></td>
+ <td><span style="font-size: small;">3;0</span></td>
+ </tr>
+ <tr>
+ <td><span style="font-size: small;">ii-CN</span></td>
+ <td>Yi (PRC)</td>
+ <td><span style="font-size: small;">3</span></td>
+ <td><span style="font-size: small;">3;0</span></td>
+ </tr>
+ <tr>
+ <td><span style="font-size: small;">ne-NP</span></td>
+ <td>Nepali (Nepal)</td>
+ <td><span style="font-size: small;">3;2;0</span></td>
+ <td><span style="font-size: small;">3;0</span></td>
+ </tr>
+ <tr>
+ <td><span style="font-size: small;">si-LK</span></td>
+ <td>Sinhala (Sri Lanka)</td>
+ <td><span style="font-size: small;">3;2;0</span></td>
+ <td><span style="font-size: small;">3;0</span></td>
+ </tr>
+ <tr>
+ <td><span style="font-size: small;">km-KH</span></td>
+ <td>Khmer (Cambodia)</td>
+ <td><span style="font-size: small;">3</span></td>
+ <td><span style="font-size: small;">3;0</span></td>
+ </tr>
+ <tr>
+ <td><span style="font-size: small;">es-US</span></td>
+ <td>Spanish (United States)</td>
+ <td><span style="font-size: small;">3</span></td>
+ <td><span style="font-size: small;">3;0</span></td>
+ </tr>
+ </tbody>
+ </table>
+ <p>All the other locales have the values of these two properties identical.</p>
+ <p>Now I'll admit to being a little suspicious, of pretty much all of them. But in particular the notion where money is treated differently than other numbers. Though that could be due to my living for so long in a place where they are both the same.</p>
+ <p>Like much that is in locale daat, it is entirely intuitive in you own locale and proof that some people out there are crazy in every other locale!</p>
+ <p>I haven't been to every locale in the world long enough to check then all out, but I know that some of them are formatted exactly as Windows suggests.And I doubt that is due to Windows being wrong but everyone using Windows. </p>
+ <p>At least not every time. :-)</p>
+ <p>In .Net, the attempt to make for something slightly more intuitive can be seen in <a href="http://msdn.microsoft.com/library/system.globalization.numberformatinfo.numbergroupsizes.aspx">NumberFormatInfo.NumberGroupSizes</a>&nbsp;and <a href="http://msdn.microsoft.com/library/system.globalization.numberformatinfo.currencygroupsizes.aspx">NumberFormatInfo.CurrencyGroupSizes</a>. That didn't turn out so well though.</p>
+ <p>You see, it&nbsp;has to do with not how they are documented, but how they are implemented (and then documented without the appropriate irony).</p>
+ <p>First let me take the same table as above and give you the .Net version of it (note that rather than a semicolon delimited string, the property is a one dimensional awway):</p>
+ <table cellpadding="3" cellspacing="3" border="1">
+ <tbody>
+ <tr>
+ <td>Culture</td>
+ <td>Name</td>
+ <td><span style="font-size: small;"><a href="http://msdn.microsoft.com/library/system.globalization.numberformatinfo.numbergroupsizes.aspx">NumberGroupSizes</a></span></td>
+ <td><span style="font-size: small;"><a href="http://msdn.microsoft.com/library/system.globalization.numberformatinfo.currencygroupsizes.aspx">CurrencyGroupSizes</a></span></td>
+ </tr>
+ <tr>
+ <td><span style="font-size: small;">en-BZ</span></td>
+ <td>English (Belize)</td>
+ <td><span style="font-size: small;"><span style="font-size: small;"><span style="font-size: small;"><span style="font-size: small;">{3}</span></span></span></span></td>
+ <td><span style="font-size: small;">{3,0}</span></td>
+ </tr>
+ <tr>
+ <td><span style="font-size: small;">en-TT</span></td>
+ <td>English (Trinidad and Tobago)</td>
+ <td><span style="font-size: small;"><span style="font-size: small;"><span style="font-size: small;"><span style="font-size: small;">{3}</span></span></span></span></td>
+ <td><span style="font-size: small;"><span style="font-size: small;">{3,0}</span></span></td>
+ </tr>
+ <tr>
+ <td><span style="font-size: small;">es-SV</span></td>
+ <td>Spanish (El Salvador)</td>
+ <td><span style="font-size: small;"><span style="font-size: small;"><span style="font-size: small;">{3}</span></span></span></td>
+ <td><span style="font-size: small;"><span style="font-size: small;">{3,0}</span></span></td>
+ </tr>
+ <tr>
+ <td><span style="font-size: small;">es-HN</span></td>
+ <td>Spanish (Honduras)</td>
+ <td><span style="font-size: small;"><span style="font-size: small;"><span style="font-size: small;">{3}</span></span></span></td>
+ <td><span style="font-size: small;"><span style="font-size: small;">{3,0}</span></span></td>
+ </tr>
+ <tr>
+ <td><span style="font-size: small;">es-NI</span></td>
+ <td>Spanish (Nicaragua)</td>
+ <td><span style="font-size: small;"><span style="font-size: small;"><span style="font-size: small;">{3}</span></span></span></td>
+ <td><span style="font-size: small;"><span style="font-size: small;">{3,0}</span></span></td>
+ </tr>
+ <tr>
+ <td><span style="font-size: small;">es-PR</span></td>
+ <td>Spanish (Puerto Rico)</td>
+ <td><span style="font-size: small;"><span style="font-size: small;"><span style="font-size: small;">{3}</span></span></span></td>
+ <td><span style="font-size: small;"><span style="font-size: small;">{3,0}</span></span></td>
+ </tr>
+ <tr>
+ <td><span style="font-size: small;">is-Latn-CA</span></td>
+ <td>Inuktitut (Latin, Canada)</td>
+ <td><span style="font-size: small;"><span style="font-size: small;"><span style="font-size: small;">{3,0}</span></span></span></td>
+ <td><span style="font-size: small;">{3}</span></td>
+ </tr>
+ <tr>
+ <td><span style="font-size: small;">moh-CA</span></td>
+ <td>Mohawk (Mohawk)</td>
+ <td><span style="font-size: small;"><span style="font-size: small;"><span style="font-size: small;">{3,0}</span></span></span></td>
+ <td><span style="font-size: small;"><span style="font-size: small;">{3}</span></span></td>
+ </tr>
+ <tr>
+ <td><span style="font-size: small;">ii-CN</span></td>
+ <td>Yi (PRC)</td>
+ <td><span style="font-size: small;"><span style="font-size: small;"><span style="font-size: small;">{3,0}</span></span></span></td>
+ <td><span style="font-size: small;"><span style="font-size: small;">{3}</span></span></td>
+ </tr>
+ <tr>
+ <td><span style="font-size: small;">ne-NP</span></td>
+ <td>Nepali (Nepal)</td>
+ <td><span style="font-size: small;"><span style="font-size: small;"><span style="font-size: small;">{3,2}</span></span></span></td>
+ <td><span style="font-size: small;"><span style="font-size: small;">{3}</span></span></td>
+ </tr>
+ <tr>
+ <td><span style="font-size: small;">si-LK</span></td>
+ <td>Sinhala (Sri Lanka)</td>
+ <td><span style="font-size: small;"><span style="font-size: small;"><span style="font-size: small;">{3,2}</span></span></span></td>
+ <td><span style="font-size: small;"><span style="font-size: small;">{3}</span></span></td>
+ </tr>
+ <tr>
+ <td><span style="font-size: small;">km-KH</span></td>
+ <td>Khmer (Cambodia)</td>
+ <td><span style="font-size: small;"><span style="font-size: small;"><span style="font-size: small;">{3,0}</span></span></span></td>
+ <td><span style="font-size: small;"><span style="font-size: small;">{3}</span></span></td>
+ </tr>
+ <tr>
+ <td><span style="font-size: small;">es-US</span></td>
+ <td>Spanish (United States)</td>
+ <td><span style="font-size: small;"><span style="font-size: small;"><span style="font-size: small;">{3,0}</span></span></span></td>
+ <td><span style="font-size: small;"><span style="font-size: small;">{3}</span></span></td>
+ </tr>
+ </tbody>
+ </table>
+ <p>I assume you can see the difference?</p>
+ <p>Yes, that is right. While Win32 says:</p>
+ <p style="padding-left: 30px;"><span style="font-size: large;">If the last value is 0, the preceding value is repeated.</span></p>
+ <p>While .Net says:</p>
+ <p style="padding-left: 30px;"><span style="font-size: large;">&nbsp;If the last element of the array is not 0, the remaining digits are grouped based on the last element of the array. If the last element is 0, the remaining digits are not grouped.</span></p>
+ <p>Yes, that's right -- the semantics were pretty much reversed.</p>
+ <p>And to make matters weirder, <strong>Microsoft Locale Builder</strong>:</p>
+ <p><img src="http://msdnshared.blob.core.windows.net/media/MSDNBlogsFS/prod.evol.blogs.msdn.com/CommunityServer.Blogs.Components.WeblogFiles/00/00/00/33/81/3146.es_2D00_us.jpg" /></p>
+ <p>uses the .Net rules, yet it uses the native code (semicolon-delimited) format!</p>
+ <p>So, since both products have the same source now (both in the Microsoft locale data and in custom locales/cultures, the code in one of them has to reverse the information when building the string. </p>
+ <p><em>Not that it really matters, but they did technically choose the slower way to store it all -- want to make a wild guess which way that might be? :-)</em></p>
+ <p>To get back to Tom's question: I believe most of the values are correct, because over the years small corrections have been made based on bug reports. But the values are confusing enough that it is easy to imagine that any time the person providing the data doesn't look at&nbsp;a sample displaying how the value formats values the results will be wrong, until someone finally reports a bug. </p>
+ <p>This reversal, and this design,&nbsp;really makes very little sense to me, for what it's worth. I mean except for sentiment in the title: <strong>Leave it to Microsoft to take the most confusing thing and make it worse!</strong></p>
+ <p>I might have to start insisting that Tom provide a beer -- one per question. The rules will vary for others but generally speaking I can't process one of his more interesting edge case questions without wanting a drink. :-)</p>
+<hr/><div style="margin-left: 1em"><em>comments not archived</em></div><hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2011/05/04 <a href="http://archives.miloush.net/michkap/archive/2011/05/04/10160919.html">Regarding the overthinking and underimplementing of names</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2011/05/03/10160402.html" title="Leave it to Microsoft to take the most confusing thing and make it worse!">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2011/05/02/10160009.html" title="On why this will be the last Dell I ever buy or have bought for me">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2011-05">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2011-05-03">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2011/05/03/10160402.140446.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+</html>

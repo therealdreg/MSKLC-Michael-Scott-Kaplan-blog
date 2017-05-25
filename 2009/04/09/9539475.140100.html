@@ -1,0 +1,33 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2009/04/09/9539475.140100.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:35 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Two wrongs don't make a right, but two lefts can take a good whack at it</title></head><body>
+<h1>Two wrongs don't make a right, but two lefts can take a good whack at it</h1>
+<p><em>by Michael S. Kaplan, published on 2009/04/09 14:01 +00:00, original URI: http://blogs.msdn.com/michkap/archive/2009/04/09/9539475.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostGoogleFeed -->
+<p>When you were growing up, you might have had adults try to indoctrinate you with pithy biscuits of nothingness like</p>
+<p><b>Two wrongs don't make a right.</b></p>
+<p>Maybe it was just be, but nonsense like that used to just annoy me.</p>
+<p>Thankfully comedians would add to it, with items like</p>
+<p><b>Two wrongs don't make a right, but three rights make a left.</b></p>
+<p>This would not annoy me, because anytime you make fun of something that annoys me, I am entertained. </p>
+<p>Now blogs from over three years ago like <b><a href="http://archives.miloush.net/michkap/archive/2006/01/19/514656.html">Just when you think you know a function...</a></b> have a different lesson. You know, by showing how you could take two <a href="http://www.fileformat.info/info/unicode/char/200f">U+200f</a> 
+(RIGHT-TO-LEFT MARKER) code points and by prepending your MessageBox text with them, you could make it mirror the MessageBox.</p>
+<p>I could have gone for the cute pithy sappy crap and claimed that this proves that</p>
+<p><b>Sometimes two rights make a right.</b></p>
+<p>but I did not because it just doesn't seem all that clever. Maybe I could have said, along the same logical lines of <b>three rights make a left</b> that</p>
+<p><b>Two rights will reverse everything.</b></p>
+<p>since mirroring a dialog does reverse the layout. Now that <i>is</i> clever. It even makes some linguistic sense.<br></p>
+<p>I had a very good reason for not saying it though.</p>
+<p>I didn't think of it at the time.</p>
+<p>Anyway, there is another fun trick like that, one that regular reader Mihai mentioned in a <a href="http://archives.miloush.net/michkap/archive/2006/01/19/514656.html#514944">comment</a> to that <b><a href="http://archives.miloush.net/michkap/archive/2006/01/19/514656.html">Just when you think you know a function...</a></b> blog:</p>
+<blockquote>
+<p><font face="times new roman,times"><i>I cannot say this is really "common knowledge". I was unable to find it documented anywhere. The only thing related is adding 2 RLM in the FileDescription of the version info, which causes the full application to be mirrored. This is documented in Developing International Software, 2nd Ed."</i></font><br></p>
+</blockquote>
+<p>Now Mihai actually had it wrong -- they actually want to LRM characters -- <a href="http://www.fileformat.info/info/unicode/char/200e">U+200e</a> 
+(LEFT-TO-RIGHT MARKER) -- in the FileDescription string of the version info of the binary.</p><p>But luckily the book got it right. :-)</p><p>Now I could get all clever and note that</p><p><b>While two wrongs don't make a right, two lefts often can.</b></p><p>In fact I just did. :-)</p><p>I actually like the one in the title better, technically. And from a linguistic standpoint the fact that for most people it would require three lefts to make a right causes this whole area to be pragmatically interesting in a very language-geeky way.<br></p><p><i>But the interesting question here is why did they do it this way!</i></p><p>I mean, doesn't it look like a bug, some kind of typo in the code from years ago that we can't change now but maybe we ought to do something since it seems wrong?</p><p>Two RLMs to make a MessageBox RTL, that makes sense.</p><p>But two LRMs to make a window RTL, that just seems wrong.</p><p>Luckily my colleague, co-worker, and teammate Mohamed is an ace in the Window Manager code and he knew why they did it this way, so when I asked him about the feature, he immediately volunteered:</p><blockquote><p><font face="times new roman,times">It is just kind of a signature that we need to call SetProcessDefaultLayout( LAYOUT_RTL ). <br><br>We did not want to insert RLMs in front of Latin text, that is all. So we needed something that will not make any layout or shaping effect on Latin text. At the end it is a hack to make ease the localization work.</font><br></p></blockquote><p>Now this is a good explanation. </p><p>The kind that takes what appears "silly" at first glance and makes some sense of it.</p><p>HOWEVER.... :-) <br></p><p>Anyone want to try to spot the flaw in the logic, though? </p><p>From this maybe comes the way to showcase an actual longstanding bug, and perhaps the way it should have been done, instead.</p><p>I know that most of my regulars aren't even looking since I didn't really tel anyone I was back blogging, but are there any takers? :-) </p><p><br></p><i><font color="#ff00ff">The Unicode characters were released from
+their original contracts when SiaO went an hiatus; only time will tell
+if the Characters Union (AFL-CIO) is willing to negotiate new contracts
+for the characters it represents...</font></i>
+<hr/><div style="margin-left: 1em"><em>comments not archived</em></div><hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2010/09/20 <a href="http://archives.miloush.net/michkap/archive/2010/09/20/10064640.html">If you are Persian, you may not always want to follow your Parent</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2009/04/09/9539475.html" title="Two wrongs don&#39;t make a right, but two lefts can take a good whack at it">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2009/04/08/9537610.html" title="On intentional gaps in calendar lists">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2009-04">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2009-04-09">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2009/04/09/9539475.140100.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:35 GMT -->
+</html>

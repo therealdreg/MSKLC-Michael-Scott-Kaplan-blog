@@ -1,0 +1,23 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2006/01/02/508576.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:40 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Working with the OEMCP and the ACP</title></head><body>
+<h1>Working with the OEMCP and the ACP</h1>
+<p><em>by Michael S. Kaplan, published on 2006/01/02 13:31 -05:00, original URI: http://blogs.msdn.com/b/michkap/archive/2006/01/02/508576.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P><FONT face=Tahoma>Lelikas asked:</FONT></P><FONT face=Tahoma><FONT size=2>
+<BLOCKQUOTE dir=ltr style="MARGIN-RIGHT: 0px">
+<BLOCKQUOTE dir=ltr style="MARGIN-RIGHT: 0px">
+<P><FONT face="Times New Roman"><EM>Michael hi!</EM></FONT></P>
+<P><FONT face="Times New Roman"><EM>Please tell me (if it possible) how can i switch in (win 2003 server standart rus) console font from 866 to 1251. The problem consists that messages from utilities (eg netdiag) deduce the text in English is remarkable. But names of the interface named in Russian, deduce in the coding 1251 (instead 866). And it is not read. How I can switch code page of the console from 866 to 1251? </EM></FONT></P>
+<P><FONT face="Times New Roman"><EM>Pleaase....</EM></FONT></P></BLOCKQUOTE></BLOCKQUOTE></FONT></FONT>
+<P><FONT face=Tahoma>The fundamental difference between the OEM and ANSI code pages is not easiy thwarted, unfortunately.</FONT></P>
+<P><FONT face=Tahoma>It may only be a display issue, trying to read logs in Notepad (which does not use the OEMCP) in which case you can use edit.com or a tool that is designed to work with different codepages (which Notepad is not).</FONT></P>
+<P><FONT face=Tahoma>And there are of course tools like chcp.com can sometimes help, as can running the console as Unicode (cmd /u). There are even Win32 API functions like <A href="http://msdn.microsoft.com/library/en-us/dllproc/base/setconsolecp.asp">SetConsoleCP</A>, <A href="http://msdn.microsoft.com/library/en-us/dllproc/base/setconsoleoutputcp.asp">SetConsoleOutputCP</A>, <A href="http://msdn.microsoft.com/library/en-us/fileio/fs/setfileapistoansi.asp">SetFileApisToANSI</A>, and others. But note that this does not affect the fact that some of these utilities know that they run in the console and thus are always using the OEMCP, no matter what you convert with. It might be best to work within that framework than to try to make the old tools do more than they may have been designed to do....</FONT></P>
+<P><FONT face=Tahoma></FONT>&nbsp;</P>
+<P><FONT face=Tahoma color=#ff1493><EM>This post brought to you by</EM> "<FONT size=6>Д</FONT>" <EM>(<A href="http://www.fileformat.info/info/unicode/char/0414">U+0414</A>, CYRILLIC CAPITAL LETTER DE)</EM></FONT></P>
+<hr/><p><a id="508744" href="#508744">#</a> <strong>Peter Ibbotson</strong> on 3 Jan 2006 8:04 AM:</p><div style="margin-left: 1em">Generally you can make most of these problems go away by using a full screen text mode cmd prompt which then means that chcp works &quot;right&quot;<br>I'm pretty sure that chcp reprogrammes the VGA card character set to give the right results.</div>
+<p><a id="565988" href="#565988">#</a> <strong>Antonis Gonos</strong> on 31 Mar 2006 12:04 PM:</p><div style="margin-left: 1em">Chcp &nbsp;[codepage] <br>works for console windows.<br>You should use a Lucide fond instead of raster fonts to display the console windo and then you can see all characters!<br></div>
+<p><a id="565998" href="#565998">#</a> <strong>Michael S. Kaplan</strong> on 31 Mar 2006 12:09 PM:</p><div style="margin-left: 1em">Yes, Antonis -- but remember the limitations (such as the ones at <a rel="nofollow" target="_new" href="http://archives.miloush.net/michkap/archive/2006/03/06/544251.html">http://blogs.msdn.com/michkap/archive/2006/03/06/544251.aspx</a>). :-)</div>
+<hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2006/01/03/508579.html" title="&#39;Acceptable&#39; Japanese sort order?">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2006/01/02/508514.html" title="Paste me in from last year">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2006-01">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2006-01-02">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2006/01/02/508576.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:40 GMT -->
+</html>

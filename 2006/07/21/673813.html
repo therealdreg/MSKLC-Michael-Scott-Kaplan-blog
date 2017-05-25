@@ -1,0 +1,53 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2006/07/21/673813.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:39 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>We do seem to be short on time...</title></head><body>
+<h1>We do seem to be short on time...</h1>
+<p><em>by Michael S. Kaplan, published on 2006/07/21 09:42 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2006/07/21/673813.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P><FONT face=Tahoma>Walter asks: </FONT></P>
+<BLOCKQUOTE dir=ltr style="MARGIN-RIGHT: 0px">
+<BLOCKQUOTE dir=ltr style="MARGIN-RIGHT: 0px">
+<P><FONT face=Garamond size=2>Hi,</FONT></P>
+<P><FONT face=Garamond size=2>It seems the time format in Control Panel Regional and Language Options is only mapped to .NET DateTime.ToString(“T”), i.e. the DateTimeFormatInfo.LongTimePattern. </FONT></P>
+<P><FONT face=Garamond size=2>When using Thread.CurrentThread.CurrentCulture.DateTimeFormat, the LongTimePattern will be changed according to the Control Panel, while the ShortTimePattern is not changed.</FONT></P>
+<P><FONT face=Garamond size=2>But I noticed that the Taskbar’s clock in the notification area (systray) will be changed according to the Control Panel, while keeping the Short Time format. Is there any way to do this conversion in code?</FONT></P>
+<P><FONT face=Garamond size=2>BTW, the Short Date and Long Date in Regional and Language Options map to .NET DateTimeFormatInfo’s ShortDatePattern and LongDatePattern perfectly.</FONT></P>
+<P><FONT face=Garamond size=2>Thanks.</FONT></P>
+<P><FONT face=Garamond size=2>Regards,<BR>Walter</FONT></P></BLOCKQUOTE></BLOCKQUOTE>
+<P><FONT face=Tahoma>Technically it is not the systray, but I won't quibble; I have <A href="http://blogs.msdn.com/oldnewthing/">Raymond Chen</A> to <A href="http://blogs.msdn.com/oldnewthing/archive/2003/09/10/54831.aspx">quibble</A> for me. :-)</FONT></P>
+<P><FONT face=Tahoma>Some may immediately think of when Ivan Petrov was asking about <STRONG><A href="http://archives.miloush.net/michkap/archive/2005/12/18/505141.html">Customizing the SHORT time format</A></STRONG> at the end of last year. </FONT></P>
+<P><FONT face=Tahoma>But this question is a little different, since Walter is noticing that there is an obviously unmanaged component that seems to be following the current locale yet also seems to clearly be a short time. Whassup with that?</FONT></P>
+<P><FONT face=Tahoma>Well, the secret is in the <A href="http://msdn.microsoft.com/library/en-us/intl/nls_6at0.asp">GetTimeFormat function</A>, to which you can pass any of the following dwFlags values:</FONT></P>
+<P><FONT face=Tahoma>
+<TABLE border=1>
+<TBODY>
+<TR vAlign=top>
+<TH align=left width="36%">Value</TH>
+<TH align=left width="64%">Meaning</TH></TR>
+<TR vAlign=top>
+<TD width="36%">LOCALE_NOUSEROVERRIDE</TD>
+<TD width="64%">Format the string using the system default time format for the specified locale. If this flag is not set, the function formats the string using any user overrides to the default time format for the locale. This flag can only be set if <I>lpFormat</I> is set to a null pointer.</TD></TR>
+<TR vAlign=top>
+<TD width="36%">LOCALE_USE_CP_ACP</TD>
+<TD width="64%">Use the operating system ANSI code page instead of the locale code page for string translation. See <A href="http://msdn.microsoft.com/library/en-us/intl/unicode_81rn.asp">Code Page Identifiers</A> for a list of code pages. </TD></TR>
+<TR vAlign=top>
+<TD width="36%">TIME_NOMINUTESORSECONDS</TD>
+<TD width="64%">Do not use minutes or seconds.</TD></TR>
+<TR vAlign=top>
+<TD width="36%"><STRONG><EM>TIME_NOSECONDS</EM></STRONG></TD>
+<TD width="64%"><STRONG><EM>Do not use seconds.</EM></STRONG></TD></TR>
+<TR vAlign=top>
+<TD width="36%">TIME_NOTIMEMARKER</TD>
+<TD width="64%">Donot use a time marker.</TD></TR>
+<TR vAlign=top>
+<TD width="36%">TIME_FORCE24HOURFORMAT</TD>
+<TD width="64%">Always use a 24-hour time format.</TD></TR></TBODY></TABLE></FONT></P>
+<P><FONT face=Tahoma>If you&nbsp;use that TIME_NOSECONDS&nbsp;flag I marked in bold, you will essentially get a formatted short time, even though there is no short time pattern available via GetLocaleInfo. </FONT></P>
+<P><FONT face=Tahoma>As the <A href="http://msdn.microsoft.com/library/en-us/intl/nls_6at0.asp">GetTimeFormat</A>&nbsp;documentation states, the separator will be removed when the seconds are. :-)</FONT></P>
+<P><FONT face=Tahoma>You can also use TIME_NOTIMEMARKER if you'd like here, though in the case of the&nbsp;time value&nbsp;that Walter was thinking about, the AM/PM&nbsp;time marker will usually be there unless the locale uses a 24-hour clock.</FONT></P>
+<P><FONT face=Tahoma>So it is not so hard to make your own short times that match the current locale....</FONT></P>
+<P><FONT face=Tahoma></FONT>&nbsp;</P>
+<P><FONT face=Tahoma color=#ff1493><EM>This post brought to you by</EM> <FONT size=6>:</FONT> <EM>(<A href="http://www.fileformat.info/info/unicode/char/003a">U+003a</A>, a.ka. COLON)</EM></FONT></P>
+<hr/><div style="margin-left: 1em"><em>no comments</em></div><hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2010/01/27 <a href="http://archives.miloush.net/michkap/archive/2010/01/27/9953946.html">We do seem to be short on time... (Windows 7 edition)</a></p><p>2008/10/19 <a href="http://archives.miloush.net/michkap/archive/2008/10/19/9006393.html">I see LONG TIME and SHORT TIME; where are SHORTER TIME and SHORTEST TIME?</a></p><p>2007/11/02 <a href="http://archives.miloush.net/michkap/archive/2007/11/02/5808539.html">Predictably (in retrospect), aka Where Wild^H^H^Hindows-Only Things Are, aka SHORT [on ]TIME for a LONG TIME</a></p><p>2006/10/15 <a href="http://archives.miloush.net/michkap/archive/2006/10/15/829978.html">Compatibility is inconsistent; consistency is not compatible...</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2006/07/22/674270.html" title="We&#39;re off on the road to Korea! We certainly do get around...">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2006/07/21/673569.html" title="The complexities of keyboard layout switching">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2006-07">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2006-07-21">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2006/07/21/673813.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:39 GMT -->
+</html>

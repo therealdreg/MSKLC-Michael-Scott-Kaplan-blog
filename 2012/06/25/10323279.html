@@ -1,0 +1,68 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2012/06/25/10323279.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:33 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Progress meters on Access queries?</title></head><body>
+<h1>Progress meters on Access queries?</h1>
+<p><em>by Michael S. Kaplan, published on 2012/06/25 07:01 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2012/06/25/10323279.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<p>The other day, <strong>Question Boy</strong> asked me via email:</p>
+<p style="padding-left: 60px;"><em><span style="font-family: times new roman,times; font-size: medium;">Mr. Kaplan, I normally would never contact you directly in this unsolicited manner, and I completely understand if you do not have the time or inclination to assist me since this is outside of the standard forum premise, but I have been trying to get some help on a specific issue relating to creating a progress meter for MS Access. I basically had resigned myself to believe it was not possible when Doug Steele mentioned that he thought he remembered you might have a technique to do so. If you are interested in helping out, please take a look at the <a href="http://answers.microsoft.com/en-us/office/forum/office_2007-access/query-progress-meter/b7788079-561c-48f4-95c2-39a51162fb13#last" target="_blank">thread</a> or reply to this e-mail and I will post back any solution you provide so others may benefit as well. I thank you most sincerely for your time and apologize once more for disturbing your in this manner. Sincerely, QuestionBoy</span></em></p>
+<p>Let me start by saying that I probably don't have a good answer. But with that said....</p>
+<p>This one takes me back.</p>
+<p>The year was 1998.</p>
+<p>I was going through a phase in my life where I was mostly writing C and C++ code.</p>
+<p>But I still knew Visual Basic (VB 6.0 at the time) was pretty powerful, and I would get annoyed by people who would talk down to it.</p>
+<p>I had just put the <a href="http://trigeminal.com/replication/synch.asp">TSI Synchronizer</a> out there, mainly because I was naive enough to think Jet Red replication was not going to be left for dead a few years later (they decided to invest in Data Access Pages and ADPs instead; I wonder how that worked out? &lt;grin&gt;).</p>
+<p>Anyway, I had just hooked up the event support for replica creation&nbsp;in the TSI Synchronizer, and I was bored so I added some hidden methods in there:</p>
+<ul>
+<li>CompactDatabase</li>
+<li>RepairDatabase</li>
+<li>ExecuteDdlSql</li>
+</ul>
+<p>&nbsp;to go along with the non-hidden <strong>MakeReplica</strong> method.</p>
+<p>They each have Begin, Progress, End, and Fail events.</p>
+<p>Perfect for setting up one's own progress meters, or allowing graceful cancels, or whatever.</p>
+<p>I got permission to do this from someone the Access team (as with the rest of the TSI Synchronizer, though they did ask what exactly these other methods had to do with replication. I admitted that they had nothing to do with replication, and agreed to mark them hidden.</p>
+<p>I think 12 people noticed them over the years.</p>
+<p>The CompactDatabase and RepairDatabase methods made their way into other tools, leaving just ExecuteDdlSql as the odd man out.</p>
+<p>It is very badly named since it can be used by any query that returns no rows, which does apply to some DML queries and doesn't apply to all DDL queries.</p>
+<p>It's just that I didn't have time to build other data objects, and my brief experiments with reusing DAO and ADO objects convinced me that was never gonna happen.</p>
+<p>If you look at Question Boy's ask, this won't help him since we wants something that directly integrates with an Access form's behavior -- this solution is much more for a heavy duty <strong>DoCmd.RunSQL</strong> call.</p>
+<p>Breaking into what is going on internally what Access is doing with it's Jet session is a much bigger deal, it involves code somewhat like&nbsp;the <a href="http://trigeminal.com/lang/1033/utility.asp?ItemID=4#4">TSI ImpExp Spec Tool (2000/2002)</a> and the way it can redirect what Access is looking at, combined with the TSI Synchronizer's events.</p>
+<p>I've done it myself (once), for a client that Microsoft referred me to and gave me permission to give them the source files (which have a lot of internal Jet/Access knowledge in them). It was&nbsp;a fairly lucrative consulting job at the time, probably the biggest Access contract I'd had in a while. They were under NDAs too about the internal stuff, but it worked out well.</p>
+<p>Anyway, the utilities&nbsp;were able to handle anything other than Jet 3.5 and Jet 4.0 (which is all I had permission to do this for, so even though it would be easy to create a new version for the new Jet replacement that Access uses, it could also get me in a lot of trouble....</p>
+<p>So, if you find yourself wanting to have this type of functionality and were peeved that Access could do it but you couldn't and you are using Jet 3.5 or Jet 4.0, then take a look. :-)</p>
+<p>I know it won't help Question Boy's specific issue (one probably better managed by</p>
+<ul>
+<li>quicker small resultset queries, or</li>
+<li>disconnected forms where you do&nbsp;all&nbsp;the work&nbsp;so you can build your&nbsp;own status bar, or&nbsp;</li>
+<li>upgrading to smarter clients who will notice the built-in status bar</li>
+</ul>
+<p>though each of those can be quite complicated....</p>
+<hr/><p><strong>Doug Steele</strong> on 25 Jun 2012 7:47 AM:</p><div style="margin-left: 1em"><p>Quite a shock seeing my name associated with this question! However, I checked the thread in question, and I see I&#39;m not actually the one who sicced him on you!</p>
+</div>
+<p><strong>Joshua</strong> on 25 Jun 2012 10:04 AM:</p><div style="margin-left: 1em"><p>I&#39;ve had this come up over and over again for SQL batches. Seems to be a generally unsolved problem and progress bars are not worth 10x performance cost.</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 25 Jun 2012 1:42 PM:</p><div style="margin-left: 1em"><p>No worries Doug, it was a fun trip down memory lane! :-)</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 25 Jun 2012 1:42 PM:</p><div style="margin-left: 1em"><p>Well Joshua, my ExecuteDdlSql method is quite fast, FWIW. :-)</p>
+</div>
+<p><strong>Albert D. Kallal</strong> on 26 Jun 2012 2:06 PM:</p><div style="margin-left: 1em"><p>A marvelous story. And I appreciate you sharing this with us. Now that the Access team owns that JET code then perhaps a few well placed beers and pizza&#39;s to the right person on the Access team would result in this ability being exposed!</p>
+<p>On the other hand – perhaps we send the beer and pizza to you? I sure you would love a few days back in your old war trenches in those Access Halls at Redmond!</p>
+<p>Makes we wonder if some interesting un-documented call backs exist for JET that we don&#39;t know about either.</p>
+<p>I am going to have to do some digging on this one!</p>
+<p>Once again, great story – thanks for sharing. A</p>
+<p>Albert D. Kallal (Access MVP)</p>
+<p>Edmonton, Alberta Canada</p>
+<p>Pleasenospam_kallal@msn.com</p>
+</div>
+<p><strong>Question Boy</strong> on 26 Jun 2012 6:14 PM:</p><div style="margin-left: 1em"><p>Sorry Doug, I miss spoke as it was in fact Marshall that mentioned Michael&#39;s name.</p>
+<p>Thank you once again for the answer!</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 26 Jun 2012 8:13 PM:</p><div style="margin-left: 1em"><p>For them, this would in fact be easy -- they are in on that loop and raising the events would be easy, and interesting.</p>
+<p>Maybe I should mention it to them (probably too late for v.Next, but maybe some day).</p>
+</div>
+<p><strong>aaron kempf</strong> on 12 Nov 2012 11:50 AM:</p><div style="margin-left: 1em"><p>you&#39;re crazy.. ADP / DAP are two of the best products to ever come out of Microsoft. I built solutions that leveraged Office Web Components, and these reporting solutions are sooooo incredibly popular, they are STILL IN USE at Microsoft, Expedia and Safeco. &nbsp;DAP was fantastic. ADP was even better. </p>
+</div>
+<hr/><p><em>go to <a id="newer" href="../26/10323811.html" title="Let&#39;s not jump in too quickly with the money....">newer</a> or <a id="older" href="../22/10322847.html" title="HOW TO: [fearlessly] illegally discriminate against the handicapped (aka It Is The Worst Of Times...)">older</a> post, or back to <a href="../../../index-2.html">index</a> or <a href="../../../index-2.html#2012-06">month</a> or <a href="../../../index-2.html#2012-06-25">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2012/06/25/10323279.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:33 GMT -->
+</html>

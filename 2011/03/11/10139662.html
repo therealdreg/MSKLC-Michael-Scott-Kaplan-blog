@@ -1,0 +1,42 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2011/03/11/10139662.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>A resource segue, #2 (architecting the wheels off the wagon, a bit)</title></head><body>
+<h1>A resource segue, #2 (architecting the wheels off the wagon, a bit)</h1>
+<p><em>by Michael S. Kaplan, published on 2011/03/11 07:01 -05:00, original URI: http://blogs.msdn.com/b/michkap/archive/2011/03/11/10139662.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<p>Yesterday in <a href="http://archives.miloush.net/michkap/archive/2011/03/10/10139120.html" title="A resource segue, #1"><strong>A resource segue, #1</strong></a>,&nbsp;I talked about the "stealth" nature of MUI from the point of view of callers. </p>
+<p>This time I'm going to explore more than just the view from Visual Studio of the resources....</p>
+<p>Let's look at some of the consequences of the design....</p>
+<p>One of the interesting resources that ends up in the 'split off' *.MUI if the version resource.</p>
+<p>So here is the Shell view of NOTEPAD.EXE's resources, under English and the two Norwegians:</p>
+<p><img src="http://blogs.msdn.com/cfs-file.ashx/__key/CommunityServer-Blogs-Components-WeblogFiles/00-00-00-33-81/2677.mui05.jpg" />&nbsp;&nbsp;&nbsp;&nbsp; <img src="http://blogs.msdn.com/cfs-file.ashx/__key/CommunityServer-Blogs-Components-WeblogFiles/00-00-00-33-81/8865.mui03.jpg" />&nbsp;&nbsp;&nbsp; <img src="http://blogs.msdn.com/cfs-file.ashx/__key/CommunityServer-Blogs-Components-WeblogFiles/00-00-00-33-81/2110.mui04.jpg" /></p>
+<p>Of course the different translations of the property names are not interesting for our purposes -- they come from Windows itself, not from the resource file.</p>
+<p>But the strings themselves, like the copyright string and the product name?</p>
+<p>Those come from the localizer, making changes (or not) for that particular file.</p>
+<p><em>To prove this to yourself, simple copy one of these files from the WINDOWS directory to the desktop and look at the file again -- it will lose its "localization" characteristics and look like the English file again.</em></p>
+<p>The general principle would I suppose be that MUI causes Explorer to tell targeted almost truths asbout the identity of a file, whose oublic face might be subsumed by the underlying resource DLL. You can code around it if you want to, but the original developer is in cahoots with thisds idea, more often than not.</p>
+<p>Fascinating little tap dance, huh? :-)</p>
+<p>Though of course this leads to a fascinating consequence, one that seriously impacts every single localizable file in Windows.</p>
+<p>Can you spot it?</p>
+<p>You see, in a service pack, lots of files are updated.</p>
+<p>And in order for customers, or product support, or whoever to see if a file is updated, they have to be able to check the version number.</p>
+<p>And that means service packs have to update both files, even if you did not change any of the resources -- or else the default view in Explorer will appear to be lying about the majority of files in a service pack.</p>
+<p><em>Again, if you don't believe this, feel free to&nbsp;copy .MUI&nbsp;files out of the language specific directories, rename them to look at them in Explorer or follow the more complicated VS-based instructions from <a href="http://archives.miloush.net/michkap/archive/2007/10/05/5284413.html" title="Cracking the binary (aka How to open .MUI files?)"><strong>Cracking the binary (aka How to open .MUI files?)</strong></a>. You'll see they appear to have updated a lot more files than they made actual substantive changes in.</em></p>
+<p>This is a huge price to pay though, just to be able to translate a few strings.</p>
+<p>Perhaps too huge?</p>
+<p>Personally I'd go in and make changes to the way the Shell shows the version number -- perhaps to show both versions, maybe? I think that would probably be cheaper, all things considered.</p>
+<p>Now note that this is really a Microsoft-specific problem; the problem everyone else has is the fact that the dates do not appear to update when the binary is updated but they appropriately avoided resource changes in the update. The bug that Microsoft apparently avoids with the extra file updates....</p>
+<p>And there's more. Well, a little more at least. </p>
+<p>I'll talk about the rest tomorrow, in #3 of this short series....</p>
+<hr/><p><strong>carlos</strong> on 11 Mar 2011 9:54 AM:</p><div style="margin-left: 1em"><p>According to the GetFileVersionInfo docs, the VS_FIXEDFILEINFO comes from the main binary and is merged with the strings from any MUI files. &nbsp;If the Shell displayed the version from VS_FIXEDFILEINFO and version strings were deprecated there would never be any confusion nor need to update the MUI files. &nbsp;If the version string contains essential information missing form the version number, you&#39;re doing it wrong.</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 11 Mar 2011 10:34 AM:</p><div style="margin-left: 1em"><p>But tracking the two things (updated resources, updated core binary) separately would be useful for a whole host of reasons. And you can verify that both were updated by viewing them when they are moved and thus not able to be &quot;combined&quot; (I don&#39;t trust the &quot;combined&quot; view for thayt very reason)....</p>
+</div>
+<p><strong>carlos</strong> on 11 Mar 2011 11:44 AM:</p><div style="margin-left: 1em"><p>You&#39;re right, that would be useful.</p>
+<p>The Windows XP version property page displays the binary version at the top and the string version in the list of string properties. &nbsp;Unfortunately, XP doesn&#39;t handle the mui merging for version info so this never shows the mui version.</p>
+<p>The Windows 7 property page only displays the string mui version.</p>
+<p>If you could run the Windows XP file properties dialog on Windows 7 we&#39;d both be happy.</p>
+</div>
+<hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2011/03/12 <a href="http://archives.miloush.net/michkap/archive/2011/03/12/10140165.html">A resource segue, #3 (how'd they manage to screw this one up?)</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2011/03/12/10140165.html" title="A resource segue, #3 (how&#39;d they manage to screw this one up?)">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2011/03/10/10139120.html" title="A resource segue, #1">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2011-03">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2011-03-11">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2011/03/11/10139662.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+</html>

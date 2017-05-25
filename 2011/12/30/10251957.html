@@ -1,0 +1,68 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2011/12/30/10251957.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>We call 'em ShortestDayNames for a reason; they're as short as they're EVER gonna be!</title></head><body>
+<h1>We call 'em ShortestDayNames for a reason; they're as short as they're EVER gonna be!</h1>
+<p><em>by Michael S. Kaplan, published on 2011/12/30 07:01 -05:00, original URI: http://blogs.msdn.com/b/michkap/archive/2011/12/30/10251957.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<p>Once upon a time, Windows had two kinds of day names.</p>
+<p>There were the <strong>actual</strong> day names, which could be queried via the <a href="http://msdn.microsoft.com/library/windows/desktop/dd373839.aspx">LOCALE_DAYNAME* constants</a>, and eventually the <a href="http://msdn.microsoft.com/library/system.globalization.datetimeformatinfo.daynames.aspx">DateTimeFormatInfo.DayNames Property</a>.</p>
+<p>And there were the <strong>abbreviated</strong> day names, which could be queried via the <a href="http://msdn.microsoft.com/library/windows/desktop/dd373831.aspx">LOCALE_SABBREVDAYNAME* constants</a>, and eventually the <a href="http://msdn.microsoft.com/library/system.globalization.datetimeformatinfo.abbreviateddaynames.aspx">DateTimeFormatInfo.AbbreviatedDayNames Property</a>.</p>
+<p>The second group was in theory more suited to calendars and such, where space could be quite constrained.</p>
+<p>Now when I say <strong>abbreviated</strong> day names, I should have put it differently.</p>
+<p>And called them <strong>"abbreviated"</strong> day names, instead.</p>
+<p>Or perhaps &lt;air quotes&gt;abbreviated&lt;air quotes&gt;, if you know what I mean!</p>
+<p>Because for many locales, the informants giving us data just shrugged and responded simply:</p>
+<p style="padding-left: 30px;"><strong><span style="font-size: x-large;">We don't abbreviate these!</span></strong></p>
+<p>Not such a great story for mythical calendars, mind you, but their principal argument drowned out the theoretical scenario quite handily.</p>
+<p>After all, we weren't in the localizable calendar business back then!</p>
+<p>We did have a <a href="http://msdn.microsoft.com/library/windows/desktop/bb760917.aspx">MonthCal common control</a>. And a <a href="http://msdn.microsoft.com/library/windows/desktop/bb761727.aspx">DTPicker common control</a>. But their built-in calendar "grid" pieces&nbsp;were not localized (and incidentally only supported Gregorian)&nbsp;-- a long drawn out point of contention, as I mentioned in <strong><a title="WinForms DateTimePicker and MonthCalendar do not support culture settings" href="http://archives.miloush.net/michkap/archive/2005/03/28/402839.html">WinForms DateTimePicker and MonthCalendar do not support culture settings</a></strong>.</p>
+<p>It made abbreviated names pretty freaking theoretical!</p>
+<p>Until Vista, that is.</p>
+<p>That is when we saw the updates described in my blog&nbsp;<strong><a title="New in Windows Vista: updates to clock and calendar" href="http://archives.miloush.net/michkap/archive/2005/12/21/506427.html">New in Windows Vista: updates to clock and calendar</a></strong>.</p>
+<p>Underneath those changes, we realized that the <a href="http://msdn.microsoft.com/library/windows/desktop/dd373831.aspx">LOCALE_SABBREVDAYNAME* constants</a>&nbsp;simply would not do. And there was no algorithmically way to reliably create them</p>
+<p>Thus were born the <a href="http://msdn.microsoft.com/library/windows/desktop/dd373890.aspx">LOCALE_SSHORTESTDAYNAME* Constants</a>, and of&nbsp;course the <a href="http://msdn.microsoft.com/library/system.globalization.datetimeformatinfo.shortestdaynames.aspx">DateTimeFormatInfo.ShortestDayNames Property</a>.</p>
+<p>But before finally settling on those names, it is important to point out the original name.</p>
+<p>From an evidentiary standpoint, the defense lawyer might object by claiming this would be circumstantial but A.D.A. Ben Stone would say "goes to state of mind".</p>
+<p>The judge would agree.</p>
+<p><em>Way too much Law &amp; Order in <strong>my</strong> past, obviously -- but the idea of Ben Stone trying my Law&nbsp;&amp; Order: World-Readiness Unit is&nbsp;too seductive to ignore!</em></p>
+<p><em>We called them:</em></p>
+<p style="padding-left: 30px;"><span style="font-size: xx-large;"><strong>LOCALE_SONELETTERDAYNAME*</strong></span></p>
+<p>initially, and</p>
+<p style="padding-left: 30px;"><strong><span style="font-size: xx-large;">LOCALE_STWOLETTERDAYNAME*</span></strong></p>
+<p>when data started coing in that was often two letters and people started complaining on technical and suability grounds about the name. We even ntertained</p>
+<p style="padding-left: 30px;"><span style="font-size: xx-large;"><strong>LOCALE_SUPERSHORTDAYNAME*</strong></span></p>
+<p>at one point!</p>
+<p>And when the request for data went out to all of our subsidiary program mangers, we&nbsp;gave&nbsp;the name prominent placement so our intent would be obvious.</p>
+<p>But sometimes they would simply copy and paste the full day names, saying</p>
+<p style="padding-left: 30px;"><span style="font-size: x-large;"><strong>We don't abbreviate these!</strong></span></p>
+<p>And our answer was unambiguous and unchanging, in the manner of "tough love":</p>
+<p style="padding-left: 30px;"><strong><span style="font-family: times new roman,times; font-size: medium;">Look, we've wanted the MonthCal to be localizable/localized for years now, and we are doing that. But in order for it to succeed, we need very very short day names. <br /><br />You are welcome to ignore the directive, but in that case we are going to truncate the names for you. </span></strong></p>
+<p style="padding-left: 30px;"><strong><span style="font-family: times new roman,times; font-size: medium;">Consider this data request to be your chance to decide how things will be truncated!</span></strong></p>
+<p>For some locales they realized how dangerous that would be. Like Hebrew, with day names of like יום ראשון and יום שני and so on, where truncation would make them look the same, they realized the risk of trying to call our bluff!</p>
+<p>Some of them continued to push back, insisting that the needed two letters or maybe even three in select cases, e.g. for Hungarian:</p>
+<p style="padding-left: 30px;"><strong><span style="font-size: medium;" size="4">H K Sze Cs P Szo V</span></strong></p>
+<p>and we shrugged and said fine, though on occasion they may find themselves truncated. But we knew that if they were calendars that even the truncations would be okay in such cases, since no user would ever expect calendars to re-order their day names!</p>
+<p>When you get down to it, in a calendar grid, no English speaking user will find a top row of:</p>
+<p style="padding-left: 30px;"><span style="font-size: medium;"><strong>S&nbsp;M&nbsp;T W T F S&nbsp;</strong>/ <strong>M&nbsp;T W T F S S</strong></span></p>
+<p>vs.</p>
+<p style="padding-left: 30px;"><strong><span style="font-size: medium;">Su Mo Tu We Th Fr Sa&nbsp; /&nbsp; Mo Tu We Th Fr Sa Su</span></strong></p>
+<p>to be completely incomprehensible, unless they don't know what a calendar even is!</p>
+<p>A lot of this has been previously discussed, in blogs like <strong><a title="{recycled joke here} It could have been called LOCALE_SSINGLESERVINGDAYNAME*" href="http://archives.miloush.net/michkap/archive/2011/01/27/10120308.html">{recycled joke here} It could have been called LOCALE_SSINGLESERVINGDAYNAME*</a></strong>, but the focus was on how we were trying to "tame" the language experts and informants, all of whom we needed to provide data. And also how we lost a little bit of the mission and the scenario ourselves until we realized some of the requests we were getting just were not reasonable....</p>
+<p>However, since that time in the days of Longhorn&nbsp;when&nbsp;we&nbsp;wrote the code or Vista&nbsp;when&nbsp;we shipped it,&nbsp;people have been using and enjoying the <a href="http://msdn.microsoft.com/library/windows/desktop/dd373890.aspx">LOCALE_SSHORTESTDAYNAME* Constants</a>, and of course the <a href="http://msdn.microsoft.com/library/system.globalization.datetimeformatinfo.shortestdaynames.aspx">DateTimeFormatInfo.ShortestDayNames Property</a>, and&nbsp;a new phenomenon has cropped up many times.</p>
+<p>Someone will insist on the need to have these <a href="http://msdn.microsoft.com/library/windows/desktop/dd373890.aspx">LOCALE_SSHORTESTDAYNAME*</a>/<a href="http://msdn.microsoft.com/library/system.globalization.datetimeformatinfo.shortestdaynames.aspx">ShortestDayNames</a>&nbsp;values to never be more than two characters, or occasionally even one character (even though almost none of them are one character by now!).</p>
+<p>We have to adopt a "talk to the hand" attitude here -- and tell them that the <a href="http://msdn.microsoft.com/library/windows/desktop/dd373890.aspx">LOCALE_SSHORTESTDAYNAME*</a>/<a href="http://msdn.microsoft.com/library/system.globalization.datetimeformatinfo.shortestdaynames.aspx">ShortestDayNames</a> are <strong>as short as they can reasonably across every language</strong>.</p>
+<p>And that they are just going to make sure that they design their feature with that reality in mind.</p>
+<p>We don't call them the AlmostButNotQuiteShortestDayNames for a very very good reason -- because they are not!</p>
+<p>Luckily, we point out just as we did with the informants/experts, though on occasion they may find themselves truncated,&nbsp;we know that if they were calendars that even the truncations would be okay in such cases, since no user would ever expect calendars to re-order their day names!</p>
+<p>&nbsp;</p>
+<p><em>There are some [as of yet unconfirmed] reports of a few ShortestDayNames that are actually&nbsp;incorrect -- if there are such then those <strong>would</strong> be definitely considered bugs. But <strong>that</strong> issue&nbsp;would be completely&nbsp;unrelated....</em></p>
+<hr/><p><strong>Aaron.E</strong> on 30 Dec 2011 8:29 AM:</p><div style="margin-left: 1em"><p>I&#39;ve always preferred the McCoy/Carmichael era myself. &nbsp;</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 30 Dec 2011 8:35 AM:</p><div style="margin-left: 1em"><p>Well, beyond my crush on Jill H. that I would never act on (which McCoy did), I always felt like more of a Ben Stone myself, anyway. :-)</p></div>
+<p><strong>Simon Buchan</strong> on 30 Dec 2011 6:07 PM:</p><div style="margin-left: 1em"><p>So OS API naming conventions are against &quot;intended use&quot; naming, like LOCALE_SCALANDERCOLUMNNAME, for example?</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 30 Dec 2011 6:15 PM:</p><div style="margin-left: 1em"><p>Well, we aren&#39;t exactly oozing with consistency when it comes to Win32 API guidelines....</p>
+</div>
+<hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2012/02/08 <a href="http://archives.miloush.net/michkap/archive/2012/02/08/10265404.html">The awkward insert of shortest day names...</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2012/01/02/10252287.html" title="Sometimes a Cigar is just a Cigar. And a Bing is just a Bing...">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2011/12/29/10251662.html" title="What do Samoa and Seattle have in common? The sun won&#39;t shine on either on Dec 30th!">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2011-12">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2011-12-30">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2011/12/30/10251957.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+</html>

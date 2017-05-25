@@ -1,0 +1,23 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2010/09/01/10056685.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:35 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Those chars aren't the UTF-8 you're looking for. Move along...</title></head><body>
+<h1>Those chars aren't the UTF-8 you're looking for. Move along...</h1>
+<p><em>by Michael S. Kaplan, published on 2010/09/01, original URI: http://blogs.msdn.com/b/michkap/archive/2010/09/01/10056685.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNewMonth -->
+<p>The question:</p>
+<p style="padding-left: 60px;"><span style="font-family: times new roman,times;">Hello, </span></p>
+<p style="padding-left: 60px;"><span style="font-family: times new roman,times;">Can anyone please explain why I loose my non English character in a string when trying to convert an STD::string to Unicode when using CP_UTF8 code page and not when I use Ansi code CP_ACP or CP_THREAD_ACP, it works, I always thought std::string is&nbsp; utf_8 encoded!</span></p>
+<p style="padding-left: 60px;"><br /><span style="font-family: times new roman,times;">Thanks in advance,<br />Yassine</span></p>
+<p style="padding-left: 60px;"><strong><span style="font-family: courier new,courier;">Std::string str(&ldquo;t&eacute;st&rdquo;);<br />int size = MultiByteToWideChar(CP_UTF8,NULL ,str.c_str(),-1,NULL,0);<br />&nbsp;&nbsp;&nbsp; if( size == 0 )<br />&nbsp;&nbsp;&nbsp; {<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; printf("Failed to get the multi byte size [%d]\n",GetLastError());<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; return false;<br />&nbsp;&nbsp;&nbsp; }<br />&nbsp;&nbsp;&nbsp;&nbsp; printf("Multibytetowidechar returned the size of: %d \n",size);<br />&nbsp;&nbsp;&nbsp; *wstr = new WCHAR[size];<br />&nbsp;&nbsp;&nbsp; if( MultiByteToWideChar(CP_UTF8,NULL ,str.c_str(),-1,*wstr,size) == 0 )<br />&nbsp;&nbsp;&nbsp; {<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; printf("Failed to convert multi byte to wide char [%d]\n",GetLastError());<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; delete[] *wstr;<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; *wstr = NULL;<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; return false;<br />&nbsp;&nbsp;&nbsp; }</span> </strong></p>
+<p>The answer is kind of in there, just a little bit.</p>
+<p>Can you find it? :-)</p>
+<p>It is right here:</p>
+<p style="padding-left: 30px;"><span style="font-size: medium;">I always thought std::string is&nbsp; utf_8 encoded!</span></p>
+<p>Because it isn't. </p>
+<p>If you want to store Unicode text, let's look to the <a href="http://msdn.microsoft.com/en-us/library/syxtdd4f.aspx">basic_string docs</a>:</p>
+<p style="padding-left: 30px;"><span style="font-family: times new roman,times;">CharType<br /><br />The data type of a single character to be stored in the string. The Standard C++ Library provides two specializations of this template class, with the type definitions string, for elements of type char, and wstring, for elements of type wchar_t.</span></p>
+<p>Now the fact that you can store any encoding such as UTF-8 in a regular char/CHAR does not mean that higher level code like STL won't "helpfully" make assumptions about what *it* thinks he encoding is. As a hint, it's not either "left as is, do what you want" or UTF-8....</p>
+<p>Now if you ask me, UTF-8 could potentially be a useful thing to implement as another specialization, for people who want to work extensively with UTF-8 directly. But that is a separate issue....</p>
+<hr/><div style="margin-left: 1em"><em>comments not archived</em></div><hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2010/09/02/10057075.html" title="On Bengali sorting (where an old part of my personal life mirrors an even older bug in Windows)">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2010/08/31/10056140.html" title="And how exactly do you justify those frigging kashidas?">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2010-09">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2010-09-01">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2010/09/01/10056685.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:35 GMT -->
+</html>

@@ -1,0 +1,54 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2011/06/17/10173790.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>There's no "I" in IDN, part 4: the 'path' to Hell is paved with IDN bugs</title></head><body>
+<h1>There's no "I" in IDN, part 4: the 'path' to Hell is paved with IDN bugs</h1>
+<p><em>by Michael S. Kaplan, published on 2011/06/17 07:01 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2011/06/17/10173790.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<p>Prior blogs in this series:</p>
+<ul>
+<li><strong><a title="There's no &quot;I&quot; in IDN, part 1: If you're not Unicode, you're just wrong!" href="http://archives.miloush.net/michkap/archive/2011/02/14/10128621.html">part 1: If you're not Unicode, you're just wrong!</a></strong></li>
+<li><strong><a title="There's no &quot;I&quot; in IDN, part 2: Try not to use the wrong functions!" href="http://archives.miloush.net/michkap/archive/2011/04/02/10149149.html">part 2: Try not to use the wrong functions!</a></strong></li>
+<li><strong><a title="There's no &quot;I&quot; in IDN, part 3: There's no &quot;I&quot; in DIY, either!" href="http://archives.miloush.net/michkap/archive/2011/05/25/10168228.html">part 3: There's no "I" in DIY, either!</a></strong></li>
+</ul>
+<p>As you work though the&nbsp;IDN story in your own company, you will likely find an interesting mix in the support story, just as I have.</p>
+<p>Perhaps one of those most interesting areas has been in the tiny (one might say "puny" to invoke a groaner of a pun!) detail work.</p>
+<p>Like path detection.</p>
+<p>There are algorithms in RichEdit that&nbsp;colleague <a href="http://blogs.msdn.com/b/murrays/">Murray Sargent</a>&nbsp;tells me are quite sophisticated. You get to it in theRichEdit with things like <a href="http://msdn.microsoft.com/library/bb788022.aspx">EM_GETAUTOURLDETECT</a>&nbsp;and <a href="http://msdn.microsoft.com/library/bb787991.aspx">EM_AUTOURLDETECT</a>&nbsp;and such. He has even mentiomed the AutoURL stuff in his blog before (like <a href="http://blogs.msdn.com/b/murrays/archive/2006/10/14/richedit-versions.aspx">here</a>).</p>
+<p>Or in places like WordPad you just type a URL or a path, or load a file with one, and you can see the effect of turning the behavior on via these programmatic means -- it wil detect the path and mark it as if it was a clickable URL/path in a browser.</p>
+<p>If you move over to Word it's even more sophisticated, with a config option in the UI:</p>
+<p><img src="http://msdnshared.blob.core.windows.net/media/MSDNBlogsFS/prod.evol.blogs.msdn.com/CommunityServer.Blogs.Components.WeblogFiles/00/00/00/33/81/3364.url01.jpg" /></p>
+<p>The good old "Replace&nbsp;<strong><span style="text-decoration: underline;">I</span>nternet and network path with hyperlinks</strong>" feature!</p>
+<p>Very cool.</p>
+<p>Until you include IDN in the mix, at least.</p>
+<p>Let's take four URLs that could easily be created if you have set up a machine to test out IDN (server names/namespaces changed to protect something or other), and try to put them in Word 2010:</p>
+<p><img src="http://msdnshared.blob.core.windows.net/media/MSDNBlogsFS/prod.evol.blogs.msdn.com/CommunityServer.Blogs.Components.WeblogFiles/00/00/00/33/81/8446.url03.jpg" /></p>
+<p>which was unable to properly detect one of the URLs out of the four.</p>
+<p>Can you guess why it failed?</p>
+<p>Or you could try it&nbsp;the same four URLs in&nbsp;WordPad on Windows 7:</p>
+<p><img src="http://msdnshared.blob.core.windows.net/media/MSDNBlogsFS/prod.evol.blogs.msdn.com/CommunityServer.Blogs.Components.WeblogFiles/00/00/00/33/81/8883.url02.jpg" /></p>
+<p>Wow, 0/4. Not too sophieticated!</p>
+<p>I'll point Murray to this post, and within a few hours he'll tell me that the latest version of RichEdit (essentially the one on his machine) supports all four URLs.</p>
+<p>Of course not everything on Murray's machine gets checked in without a bug report so I'll work on that too. :-)</p>
+<p>Let's try pasting those same four URLs here to see what this Blog Editor does wih them:</p>
+<p><a href="http://xn--ad5haabaihp8gwhnrccccc/">http://नांदरी</a>.日本国.test.corp.testcompany.com <br /><a href="http://idn-iis1/">http://idn-iis1</a>.日本国.test.corp.testcompany.com&nbsp; <br /><a href="http://idn-iis1/">http://idn-iis1</a>.日本国.test.corp.testcompany.com/интернет_страница <br />http://テストサイト.test.corp.testcompany.com</p>
+<p>Wow, that's disappointing.</p>
+<p>It looks like there are a bunch of URL detection functions that don't do so well with IDN.</p>
+<p>I wonder if UNC paths fare any better?</p>
+<p>I'm just kidding, I don't wonder. because I tried it.</p>
+<p><a href="file:////idn-iis1/">\\idn-iis1</a>.日本国.test.corp.testcompany.com\сетевой</p>
+<p>The other two (WordPad and word 2010) behaved about like the third URL did, for reasons that might be obvious if you think about how tha Autodetect code works (or doesn't, in this case).</p>
+<p>Now this kind of stuff is obviously not core feature work, it's a nice little "extra", but really it isn't so nice when it screws up.</p>
+<p>As it does with IDn on the absolue latest version of evedry product/app/control I had immediate access to.</p>
+<p>Sounds like there are some bugs for people to look at, huh? :-)</p>
+<p>In the end, the <span style="color: #888888; text-decoration: line-through;">road</span>path to Hell is paved with IDN bugs!</p>
+<hr/><p><strong>Yuri Khan</strong> on 17 Jun 2011 10:33 AM:</p><div style="margin-left: 1em"><p>IDN already *is* one of those good intentions paving the road to hell.</p>
+</div>
+<p><strong>Quppa</strong> on 17 Jun 2011 7:00 PM:</p><div style="margin-left: 1em"><p>I&#39;m pleased to report that Windows Live Messenger 2011 (v15) picks up those 4 URLs correctly :)</p>
+<p>It&#39;s one of the first things I noticed when upgrading from version 14 (aside: was there ever an explanation for the jump in version numbers for Wave 3 onwards?). It does have some unpleasant side effects, however: if I write &#39;（テスト：<a rel="nofollow" target="_new" href="http://www.quppa.net/keiki">http://www.quppa.net/keiki</a>）&#39;, it will pick up the final closing bracket (U+FF09, I think) as being part of the URL.</p>
+</div>
+<p><strong>Quppa</strong> on 17 Jun 2011 7:09 PM:</p><div style="margin-left: 1em"><p>And relatedly, validating IRIs with regular expressions is not trivial: <a rel="nofollow" target="_new" href="http://stackoverflow.com/questions/161738/what-is-the-best-regular-expression-to-check-if-a-string-is-a-valid-url/190405#190405">stackoverflow.com/.../190405</a></p>
+</div>
+<p><strong>Ian Macfarlane</strong> on 20 Jun 2011 2:30 AM:</p><div style="margin-left: 1em"><p>Even search engines are struggling with IDNs - I did a bit of research a while back which showed issues with Google, Bing and Yahoo! see <a href="http://goo.gl/cgOLM" rel="nofollow" target="_new">http://goo.gl/cgOLM</a> (first article) and <a href="http://goo.gl/pr66K" rel="nofollow" target="_new">http://goo.gl/pr66K</a> (follow-up piece half a year later which showed that there were still serious IDN-handling bugs).</p></div>
+<hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2013/10/17 <a href="http://archives.miloush.net/michkap/archive/2013/10/17/10453790.html">There's no "I" in IDN, part 19: There's no "I" in IPv6, either!</a></p><p>2013/10/08 <a href="http://archives.miloush.net/michkap/archive/2013/10/08/10454553.html">There's no "I" in IDN, part 18: There isn't even an "I" in John C. Klensin's name!</a></p><p>2013/09/13 <a href="http://archives.miloush.net/michkap/archive/2013/09/13/10448110.html">There's no "I" in IDN, part 17: EAI made it to China, and everybody knows it!</a></p><p>2013/04/19 <a href="http://archives.miloush.net/michkap/archive/2013/04/19/10412471.html">There's no "I" in IDN, part 16: It's a good thing they decided to call it EAI!</a></p><p>2012/10/12 <a href="http://archives.miloush.net/michkap/archive/2012/10/12/10359120.html">There's no "I" in IDN, part 15: Still no 'I' in EAI.... but we could use an US sometime soon!</a></p><p>2012/08/08 <a href="http://archives.miloush.net/michkap/archive/2012/08/08/10337799.html">There's no "I" in IDN, part 14: It turns out there's no "I" in IE, either</a></p><p>2012/05/18 <a href="http://archives.miloush.net/michkap/archive/2012/05/18/10305223.html">There's no "I" in IDN, part 13: Desktop and Managed and Metro; oh my!</a></p><p>2012/02/27 <a href="http://archives.miloush.net/michkap/archive/2012/02/27/10273315.html">There's no "I" in IDN, part 12: Emoji + IDN == U+1F4A9 (PILE OF POO)</a></p><p>2011/10/25 <a href="http://archives.miloush.net/michkap/archive/2011/10/25/10229790.html">There's no "I" in IDN, part 11: There's no place like ::1, not even 127.0.0.1!</a></p><p>2011/09/21 <a href="http://archives.miloush.net/michkap/archive/2011/09/21/10214081.html">There's no "I" in IDN, part 10: Who needs IDN support? How much? When? (Part 2)</a></p><p>2011/09/16 <a href="http://archives.miloush.net/michkap/archive/2011/09/16/10212216.html">There's no "I" in IDN, part 9: Who needs IDN support? How much? When? (Part 1)</a></p><p>2011/08/12 <a href="http://archives.miloush.net/michkap/archive/2011/08/12/10195062.html">There's no "I" in IDN part 8: Punycode don't do the PUA</a></p><p>2011/07/28 <a href="http://archives.miloush.net/michkap/archive/2011/07/28/10190701.html">There's no "I" in IDN, part 7: IDN comes to AdWords</a></p><p>2011/07/14 <a href="http://archives.miloush.net/michkap/archive/2011/07/14/10186414.html">There's no "I" in IDN, part 6: It isn't like there's an "I" in EAI, either!</a></p><p>2011/06/29 <a href="http://archives.miloush.net/michkap/archive/2011/06/29/10181212.html">There's no "I" in IDN, part 5: Stephen Colbert's job is not in any jeopardy</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2011/06/20/10176769.html" title="There&#39;s a ™ joke in here somewhere, I just don&#39;t know what is (aka And if a &#39;t&#39; turned out to be &#39;m&#39;…)">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2011/06/16/10175121.html" title="&quot;...and I know it actually happened, because the person it actually happened to was me.&quot;">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2011-06">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2011-06-17">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2011/06/17/10173790.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+</html>

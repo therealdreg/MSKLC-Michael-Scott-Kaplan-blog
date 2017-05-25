@@ -1,0 +1,83 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2006/12/13/1274163.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:39 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Converting doubles to Unicode strings</title></head><body>
+<h1>Converting doubles to Unicode strings</h1>
+<p><em>by Michael S. Kaplan, published on 2006/12/13 06:45 -05:00, original URI: http://blogs.msdn.com/b/michkap/archive/2006/12/13/1274163.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P>The question Andy asked: </P>
+<BLOCKQUOTE><FONT size=2>
+<P><FONT face="times new roman,times"><EM>Are there no wide-character methods of converting a double to a string? I see methods to convert wide strings to doubles (e.g. _wtof) but not the reverse.</EM></FONT></P></BLOCKQUOTE>
+<P>He is 100% correct -- there is no CRT function (safe or otherwise) that does this. So there is conversion in one direction in <A class="" href="http://msdn2.microsoft.com/en-gb/library/hc25t012(VS.80).aspx" mce_href="http://msdn2.microsoft.com/en-gb/library/hc25t012(VS.80).aspx">_wtof/_wtof_l</A> but not the other.</P>
+<P>Of course this does not tell the whole story, since obviously functions like <A class="" href="http://msdn2.microsoft.com/en-us/library/ybk95axf(VS.80).aspx" mce_href="http://msdn2.microsoft.com/en-us/library/ybk95axf(VS.80).aspx">swprintf</A>/<A class="" href="http://msdn2.microsoft.com/en-us/library/ybk95axf(VS.80).aspx" mce_href="http://msdn2.microsoft.com/en-us/library/ybk95axf(VS.80).aspx">_swprintf_l</A> and their more secure cousins (<A class="" href="http://msdn2.microsoft.com/en-us/library/ce3zzk1k(VS.80).aspx" mce_href="http://msdn2.microsoft.com/en-us/library/ce3zzk1k(VS.80).aspx">swprintf_s</A>/<A class="" href="http://msdn2.microsoft.com/en-us/library/ce3zzk1k(VS.80).aspx" mce_href="http://msdn2.microsoft.com/en-us/library/ce3zzk1k(VS.80).aspx">_swprintf_s_l</A>) can obviously take an <STRONG>e</STRONG> or <STRONG>E</STRONG> <A class="" href="http://msdn2.microsoft.com/en-us/library/hf4y5e3w(VS.80).aspx" mce_href="http://msdn2.microsoft.com/en-us/library/hf4y5e3w(VS.80).aspx">field type character</A> and a double as a parameter, but&nbsp;as pointed out by&nbsp;Phil Lucido:</P>
+<BLOCKQUOTE>
+<P><FONT face="times new roman,times"><EM>All forms of printf, way down deep, call _cfltcvt_l (or some variant) for FP conversion.&nbsp; That always outputs to a char buffer, not wchar_t.&nbsp; For the wide printfs, that buffer is then run, eventually, through MultiByteToWideChar.</EM></FONT></P></BLOCKQUOTE>
+<P>It is interesting that there is not a specific set of functions to do it directly (and if the CRT was ever going to support using other numbers beyond the ASCII digits it would probably be a much bigger problem, but for now this is the best you can do.</P>
+<P>Now the managed side has a better story here with the explicit interface implementation on <A class="" href="http://msdn2.microsoft.com/en-us/library/system.string.system.iconvertible.todouble.aspx" mce_href="http://msdn2.microsoft.com/en-us/library/system.string.system.iconvertible.todouble.aspx">System.IConvertible.ToDouble</A> on <A class="" href="http://msdn2.microsoft.com/en-us/library/system.string.aspx" mce_href="http://msdn2.microsoft.com/en-us/library/system.string.aspx">System.String</A>, not to mention all of the <A class="" href="http://msdn2.microsoft.com/en-us/library/system.double.tostring.aspx" mce_href="http://msdn2.microsoft.com/en-us/library/system.double.tostring.aspx">Double.ToString overloads</A> that exist. But I guess it is easy to point out that .NET has only methods that produce Unicode strings here, and that if you want to produce non-Unicode strings you have to convert them. So I guess we have symmetry here. :-)</P>
+<P mce_keep="true">&nbsp;</P>
+<P><FONT color=#ff00ff><EM>This post brought to you by</EM> <STRONG><FONT size=4>E</FONT></STRONG> <EM>(<A class="" href="http://www.fileformat.info/info/unicode/char/0045" mce_href="http://www.fileformat.info/info/unicode/char/0045">U+0045</A>, a.k.a. LATIN CAPITAL LETTER E)</EM></FONT></P></FONT>
+<hr/><p><strong>Mike Dimmick</strong> on 13 Dec 2006 8:34 AM:</p><div style="margin-left: 1em"><p>You don't mention _ecvt, _fcvt or _gcvt (and their secure variants) which at least avoid the overhead of parsing the format string. However, none of these have Unicode versions either.</p>
+</div>
+<p><strong>Adam</strong> on 13 Dec 2006 8:54 AM:</p><div style="margin-left: 1em"><p>&quot;All forms of printf, way down deep, call _cfltcvt_l (or some variant) for FP conversion. &nbsp;That always outputs to a char buffer, not wchar_t. &nbsp;For the wide printfs, that buffer is then run, eventually, through MultiByteToWideChar.&quot;</p>
+<p>First, YUCK! :-)</p>
+<p>Second, that's an implementation detail. There should be no reason why that couldn't be changed and wide variants of _cfltcvt_l added to the system, and called directly from swprintf()</p>
+<p>sprintf()/snprintf()/swprintf() are the standard functions to use for converting numbers to strings in C. That's how it's done. See also the C FAQ, question 13.1:</p>
+<p><a rel="nofollow" target="_new" href="http://c-faq.com/lib/itoa.html">http://c-faq.com/lib/itoa.html</a></p></div>
+<p><strong>Michael S. Kaplan</strong> on 13 Dec 2006 9:05 AM:</p><div style="margin-left: 1em"><P>Yes, an implementation detail -- the key point that no version of Microsoft's VC runtime implements it? :-)</P></div>
+<p><strong>Lars Viklund</strong> on 13 Dec 2006 9:09 AM:</p><div style="margin-left: 1em"><p>If you're using C++ and want a safe way to convert from double to a wide string, you can always use std::wstringstream. It resides in the &lt;sstream&gt; header.</p>
+<p>std::wstringstream wss;</p>
+<p>wss &lt;&lt; 42.0;</p>
+<p>std::wstring ws = wss.str();</p>
+<p>Or if you have the Boost libraries installed, you can use Boost.Lexical_cast to do your conversion.</p>
+<p>std::wstring ws = boost::lexical_cast&lt;std::wstring&gt;(42.0);</p></div>
+<p><strong>Adam</strong> on 13 Dec 2006 9:24 AM:</p><div style="margin-left: 1em"><p>Sorry if I was unclear:</p>
+<p>There should be no reason why MS could not release updates to the various VC runtimes that *do* implement wide variants of _cfltcvt_l, and include versions of sprintf()/snprintf()/swprintf() that call them.</p></div>
+<p><strong>Michael S. Kaplan</strong> on 13 Dec 2006 9:25 AM:</p><div style="margin-left: 1em"><p>Certainly. And if you are using COM then VarBstrFromR8 can handle things nicely. Whether one has Boost or the std library or COM is a separate question, and each can be a good answer depending on what one is already dependent on (and whether one is using C or C++, of course!).</p>
+<p>Heck, there is that whole swprintf ideas. There are lots of ways to do it. The key here is that there is nothing built into the CRT library of functions that MS provides....</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 13 Dec 2006 9:26 AM:</p><div style="margin-left: 1em"><p>Hi Adam -- I agree. They are not blocked from doing this.</p>
+<p>But they don't do it at the moment. :-)</p>
+</div>
+<p><strong>Adam</strong> on 13 Dec 2006 2:44 PM:</p><div style="margin-left: 1em"><p>OK, we're agreed on that.</p>
+<p>But how can you claim &quot;that there is nothing built into the CRT library of functions that MS provides&quot; that is meant for &quot;converting a double to a string&quot;?</p>
+<p>Just because the current MS implementation of swprintf() happens to suck, that does not mean that it doesn't exist, or isn't a recommended way to do the conversion in /all/ C implementations.</p>
+<p>*shrug*</p></div>
+<p><strong>Martin v. L&#246;wis</strong> on 13 Dec 2006 5:00 PM:</p><div style="margin-left: 1em"><p>What is the problem with %E calling an ASCII function inside? Conversion of a floating point number will produce output that is *always* in the range U+0020..U+0080, so there is really no semantic difference here. Also, conversion of that to Unicode will be quite efficient, as ASCII can be converted efficiently to Unicode (it's just a byte-for-byte widening).</p>
+<p>So I fail to see a problem. The initial statement &quot;there is no of converting doubles to wchar_t&quot; is simply false: there is such a method, and it works perfectly well.</p></div>
+<p><strong>Michael S. Kaplan</strong> on 13 Dec 2006 5:27 PM:</p><div style="margin-left: 1em"><p>Hi Martin, </p>
+<p>One could claim (by that logic) that all of the functions that convert different data types to strings are not needed since there is a method to do it.</p>
+<p>But that is a somewhat specious argument, and many people find the functions to be useful. Having some of them not be there is definitely something missing in one case but not the other.</p>
+</div>
+<p><strong>Martin v. L&#246;wis</strong> on 14 Dec 2006 1:34 AM:</p><div style="margin-left: 1em"><p>Michael,</p>
+<p>First, the logic &quot;we don't need a function because we can do it&quot; doesn't apply. The point is that it is really straight-forward to write</p>
+<p> &nbsp;wchar_t buf[_CVTBUFSIZE];</p>
+<p> &nbsp;swprintf(buf, &quot;%.3f&quot;, value);</p>
+<p>There can't really be a better way to do it; indeed, Double.ToString(String) works the same way. You don't have to implement the conversion yourself - there is a ready-to-use method, in the library, at your disposal.</p>
+<p>More importantly, there isn't other good procedure for char (byte) strings, either, so it's not that just Unicode strings &quot;suffer&quot;. There is _ecvt, but that has many flaws. There is _ecvt_s, which is better (although the example sucks, as it does malloc). However, it isn't standard C, so I wouldn't consider using it (as there is a standard way to do it just as well).</p></div>
+<p><strong>Michael S. Kaplan</strong> on 14 Dec 2006 2:42 AM:</p><div style="margin-left: 1em"><p>um, huh?</p>
+<p>I am talking about how there is _wtoi and _itow, _wtoi64 and _i64tow, and so on. Yet there is only ONE direction for floats.</p>
+<p>swprintf is a workaround for this lack, but there is a missing type of function in a clearly intentional matrix of functionality that is provided.</p>
+<p>If swprintf was enough, then there would be no reason for _itow. Clearly someone sees benefit to having different functions (and I see even more benefit in an _ftow where parameters guiding how to affect the rounding could provide more granularity than swprintf currently provides,</p>
+</div>
+<p><strong>Adam</strong> on 14 Dec 2006 4:33 AM:</p><div style="margin-left: 1em"><p>_itow() (and friends) ??? Where did that come from? I never even knew they existed!</p>
+<p>If you were talking about them before, why not *mention* them before?</p>
+<p>I thought you were saying that that whole *class* of functionality was missing from the CRT.</p>
+<p>OK, that all makes a bit more sense now.</p></div>
+<p><strong>Martin v. L&#246;wis</strong> on 14 Dec 2006 6:23 PM:</p><div style="margin-left: 1em"><p>As Adam, I didn't know you were talking about itow, as you weren't mentioning it. I still don't find the reasoning convincing:</p>
+<p>- it's not that just Unicode is suffering; there isn't an ftoa function either, although there is atof.</p>
+<p>- there is a rationale for having ito[aw] over sprintf, which is that itoa supports alternative radices (more than just 8, 10, and 16) - although it is debatable whether the ability to format in base 11 deserves support in the standard library.</p>
+<p>- I fail to see a similar rationale for fto[aw]. You are giving .NET's ToDouble function as a rationale, but I fail to see how it provides features that sprintf doesn't provide (except for extended format codes, like &quot;G&quot;, which could be added to sprintf if there is a need). You are giving rounding as an example, but it is unclear to me what you mean by that: if you want to support different rounding modes, wouldn't it better to support the C99 mechanisms (e.g. fesetround) to developers to write portable code?</p></div>
+<p><strong>Sergei</strong> on 15 Dec 2006 2:58 PM:</p><div style="margin-left: 1em"><p>There is another drawback in sprintf/swprintf as opposed to the C++ Standard Library. sprintf/swprintf don't respect thousands separator.</p>
+<p>This code:</p>
+<p>	wostringstream ss;</p>
+<p>	ss.imbue(locale(&quot;Russian&quot;));</p>
+<p>	ss.precision(3);</p>
+<p>	ss&lt;&lt;fixed&lt;&lt;12345.;</p>
+<p>produces &quot;12&#160;345,000&quot; (note the space).</p>
+<p>But this code:</p>
+<p>	_wsetlocale(LC_ALL,L&quot;Russian&quot;);</p>
+<p>	wchar_t s[_CVTBUFSIZE];</p>
+<p>	swprintf(s,L&quot;%.3f&quot;,12345.);</p>
+<p>produces &quot;12345,000&quot; (no space).</p></div>
+<hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2006/12/13/1275292.html" title="Sometimes what a person really wants is a LACK of size">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2006/12/12/1271250.html" title="Virtual Aimee Mann appearances">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2006-12">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2006-12-13">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2006/12/13/1274163.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:39 GMT -->
+</html>

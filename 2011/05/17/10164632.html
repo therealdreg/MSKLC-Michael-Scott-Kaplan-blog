@@ -1,0 +1,85 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2011/05/17/10164632.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>You can choose to *not* impose a "Non-English Tax" on your feature. Or you can be a jerk. Whichever....</title></head><body>
+<h1>You can choose to *not* impose a "Non-English Tax" on your feature. Or you can be a jerk. Whichever....</h1>
+<p><em>by Michael S. Kaplan, published on 2011/05/17 07:01 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2011/05/17/10164632.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<p>This entire blog you are reading today to going to be tinged with irony.</p>
+<p>You see, I am writing it in English.</p>
+<p>Because English is the language I know best, even as I try to learn other languages.</p>
+<p>If things like proper grammar and spelling and such count against English knowledge, then some might argue I don't even know English!</p>
+<p>But anyway, it all relates to a comment somebody had the other day in one of those perpetual threads on the topic of whether to localize exception text:</p>
+<p style="padding-left: 60px;"><em><span style="font-family: times new roman,times; font-size: medium;">Exception text shouldn&rsquo;t be localized, nor should it be user-friendly.</span></em><br /><br /><em><span style="font-family: times new roman,times; font-size: medium;">The text of exceptions should always be in one language (most likely English, but generally the spoken language the main development team uses). This allows developers who use your API to search the internet for that text. It doesn&rsquo;t help if a French developer hits the exception and gets his own translated message.</span></em><br /><br /><em><span style="font-family: times new roman,times; font-size: medium;">The exception text should be descriptive enough to help developers figure out the issue, but not too descriptive to give away details of your system. Exception text should never be displayed to the user (unless you are writing an API framework and your user is the developer who uses it).</span></em></p>
+<p>This comment highlights the two assumptions I hate most about the Redmond-based development at Microsoft, especially lately&nbsp;in managed code with their de facto jargon-adding exception names:</p>
+<ol>
+<li>The assumption that a readable and understandable exception message is a bad thing, and</li>
+<li>The assumption that the "search the Internet" scenario is a valid reason to only ever use English for exceptions</li>
+</ol>
+<p>People who espouse this <strong>complete and utter crap </strong>fail to understand that these assumptions help to not only perpetuate each other (e.g. the reason they reason they most commonly search the Internet is they can't even understand the English even if they are a native speaker!), but they are just not good development practice. Just like an iPhone application that pinched people in the hand would not make it easier to use an iPhone.</p>
+<p><span style="font-size: large;"><strong>Note to developers: if they are searching the Internet for your exception text, it is probably because THEY DIDN'T UNDERSTAND IT, irregardless of the language it is in.</strong></span></p>
+<p>Now the world is full of developers, and lots of them were not born speaking English. Many of them learn English (some more successfully than others, especially with the&nbsp;bizarre dialect&nbsp;of English being used here!), but the number of people who struggle to learn English so they can learn another language -- like C# -- can&nbsp;find their job made a&nbsp;lot easier with a good localization effort so the info can be in French or Japanese or whatever.</p>
+<p>And the world of people who started in English or learned to speak it are not going to lose the ability to get information in English -- and they are not qualified to judge those who have not yet, or cannot. So they should just frigging relax and support the effort to get more people involved.</p>
+<p>These English speaking developers who create things in English only that most people can't understand even if they are fluent English speakers should momentarily consider how bad they are at communicating to their audience&nbsp;- and how easy a small change in attitude would help others, while not hurting anyone else.</p>
+<p>Speaking English is great - in some countries it is a required first step to prosperity. But the reason for that is the number of places that do the same thing these developers are doing. </p>
+<p>In the end, there is no harm to making anything more widely available and useful to people.</p>
+<p>But at the same time, there is no shame&nbsp;in allowing people who don't speak English to understand and benefit from your efforts, and frankly there is more than a mere scosh of shame in requiring it of them, you know?</p>
+<p>So perhaps if you are a developer who uses the .Net Framework that made so many issues in computer programming easier to deal with? You just might choose to <strong>not</strong> impose an English tax on your work....</p>
+<p>Or you might be a jerk.</p>
+<p>Whichever.</p>
+<p>The biggest irony of ths blog is of course that this blog, and this Blog, are all in English, and thus due to my own limitations, I impose an English text on my readers. But you can do better than me!</p>
+<hr/><p><strong>Raymond Chen - MSFT</strong> on 17 May 2011 7:42 AM:</p><div style="margin-left: 1em"><p>Besides, the exception class name is not translated (WorkflowTerminatedException) and that&#39;s a much easier thing to perform an Internet search on (fewer false positives).</p>
+</div>
+<p><strong>Daniel</strong> on 17 May 2011 7:54 AM:</p><div style="margin-left: 1em"><p>This is how old unix vendor fix this: &nbsp;each error message have a unique ID, which is not localized. </p>
+</div>
+<p><strong>Lorenzo</strong> on 17 May 2011 8:42 AM:</p><div style="margin-left: 1em"><p>I&#39;m not totally with you on this one.</p>
+<p>for one, users are sometimes on the whim of lazy developers that just throw their API exceptions on the user face. </p>
+<p>If i&#39;m the user and I cannot debug the problem, I&#39;ll run to the most appropriate stack overflow site and query with the exception text on hints for going over it.</p>
+<p>as an example, a vb6 application crashed on me yesterday with a quite cryptic italian message. not knowing what was wrong and being the only having that error, I tried to search for it. no results. </p>
+<p>so I tried to guess what its original text was, after some effort I got a hint of being a text to integer conversion that was not getting correctly handled.</p>
+<p>long story short, forcing the number format to English fixed the exception. but having a api message throw at the user internationalized and without any hint of the process was the reason of a very bad experience.</p>
+<p>sure, the best way is not to throw random exception at the user.</p>
+<p>but we have to live in the real world with lazy developers and such. if the api they&#39;re using contains internationalized messages, we the user are stuck in reporting them or searching autonomously for solutions. </p>
+</div>
+<p><strong>Peter Schreiner</strong> on 17 May 2011 8:55 AM:</p><div style="margin-left: 1em"><p>I tend to agree that error messages intended for __developers__ should always be in English because that really makes it easier to find help on the internet. That is the single most important reason why we choose to use the English language version of Visual Studio.</p>
+<p>Your argument that developers search for the text because they do not understand it is not completely wrong, though; but it’s not about understanding the literal meaning of the message but finding out why the error (usually) happens, what to do about it etc. – you cannot expect to convey all this information within the error message itself.</p>
+<p>On the other hand having a really unique identifier for the error like Raymond Chen suggested would make searching for the error message obsolete – but this is usually not the case and searching for these infamous 80000023FB numbers does not help very often either.</p>
+</div>
+<p><strong>Yuri Khan</strong> on 17 May 2011 9:07 AM:</p><div style="margin-left: 1em"><p>I am not a native English speaker and I agree: exceptions and error messages should not be localized, precisely so as to be googlable. The exception [sic] to this is if each error message includes a googlable guru meditation code.</p>
+</div>
+<p><strong>Nicole Calinoiu</strong> on 17 May 2011 9:13 AM:</p><div style="margin-left: 1em"><p>Shades of <a rel="nofollow" target="_new" href="http://social.msdn.microsoft.com/forums/en-US/vstscode/thread/d9aa2bc0-78c3-412a-877c-19d81ec43e8a/">social.msdn.microsoft.com/.../d9aa2bc0-78c3-412a-877c-19d81ec43e8a</a>...</p>
+<p>The underlying assumption that developers are the primary consumers of exception messages strikes me as highly ridiculous (even if one&#39;s product is an API and/or SDK). &nbsp;The single most important consumer of an exception messages is probably a user (be he admin or end user) who is attempting to troubleshoot a post-deployment problem based on information shown in a log or message box. &nbsp;He isn&#39;t using a debugger. &nbsp;Even in the case of an exception raised from managed code, he probably doesn&#39;t have the exception class name because the developer logging the exception used Exception.Message instead of Exception.ToString() (either due to ignorance or a deliberate exclusion of the stack trace). &nbsp;Are there really folks who would argue that he doesn&#39;t need an exception message that he has some hope of understanding? &nbsp;If so, is their intent to attempt to drive up support revenues?</p>
+</div>
+<p><strong>Joshua</strong> on 17 May 2011 12:00 PM:</p><div style="margin-left: 1em"><p>The _reason_ for wanting exception text to always be in english is so developers can parse the exception to find exact cause.</p>
+<p>Really, the only way to find out why you got IO exception in most cases is to either do reflection on non-public members (HResult) or parse the text. This becomes vitally important when there&#39;s a specific exception you&#39;re after for handling. In my case it was file exists (so I could generate a new file name).</p>
+</div>
+<p><strong>Richard</strong> on 17 May 2011 12:08 PM:</p><div style="margin-left: 1em"><p>&quot;irregardless&quot;</p>
+<p>I hope that Bushism was written ironically! :o)</p>
+</div>
+<p><strong>Skip</strong> on 17 May 2011 2:02 PM:</p><div style="margin-left: 1em"><p>I have to somewhat disagree with you here - I recently shipped a beta of a product I&#39;d been working on for awhile written in c#. &nbsp; And all over the place I had sanity checks that did things like catch (Exception e) { Trace.WriteLine( e.Message ); Trace.WriteLine( e.StackTrace ); } blocks, with a trace listener that logged traces to a file. &nbsp; And of course there were a few issues that cropped up, this being a beta. &nbsp; But the user base was international, covered a dozen different countries and at least half a dozen languages, so when I&#39;d get these logs emailed to me, the exception message text would be localized, so I&#39;d have to go track down first what the exceptions were.</p>
+</div>
+<p><strong>Aldo.NET</strong> on 17 May 2011 2:29 PM:</p><div style="margin-left: 1em"><p>couldn&#39;t agree more on this one. And it is actually quite easy to add a unique number/code as part of your message and that could be used for searching online </p>
+</div>
+<p><strong>John Cowan</strong> on 17 May 2011 4:36 PM:</p><div style="margin-left: 1em"><p>Arrgh, trying again to post after the engine discarded my comment without a word.</p>
+<p>I can&#39;t agree with you here. &nbsp;I google error messages not to understand them, but to find out what to do about them. &nbsp;It wouldn&#39;t be reasonable to expect an error message to contain a recipe for fixing the problem as well.</p>
+<p>But I share your disdain for the notion that error messages should be obscure to protect proprietary software. &nbsp;It&#39;s true that the operating system Multics (the conceptual ancestor of Unix) had one Latin error message, but it was for a &quot;can&#39;t happen&quot; situation eventually triggered by a hardware failure. &nbsp;When a disk controller only half-wrote a block, the B-tree representing virtual memory was trashed and seemed to have more than one root. &nbsp;So the recovery routine printed &quot;HODIE NATUS EST RADICI FRATER&quot; (&quot;Today is born unto the root a brother&quot;, a parody of a Latin Christmas hymn) and crashed.</p>
+<p>It is *not* true, as an urban legend once had it, that *all* Multics error messages were in Latin so that customers could not diagnose their own problems and would have to call in Honeywell at a high, high price.</p>
+</div>
+<p><strong>Zooba</strong> on 17 May 2011 4:37 PM:</p><div style="margin-left: 1em"><p>I think enough people struggle to properly handle i18n for their users to have them worry about i18n for developers as well. This only really affects library developers, who (IMHO) shouldn&#39;t be doing any i18n (unless that&#39;s the purpose of the library).</p>
+<p>Besides, what language do you use for a &quot;resource not found&quot; exception message?</p>
+</div>
+<p><strong>Cheong</strong> on 18 May 2011 1:43 AM:</p><div style="margin-left: 1em"><p>&gt; Note to developers: if they are searching the Internet for your exception text, it is probably because THEY DIDN&#39;T UNDERSTAND IT, irregardless of the language it is in.</p>
+<p>In my experience, the Chinese interpretation of error message containing words that I don&#39;t know can be found by including parts of error message in Enblish plus one of two related words in Chinese. It works most of time because lots of the forums (even forums orients towards Chinese users) almost always includes the whole error message in English.</p>
+<p>On the other hand, search for Chinese based .NET error message usually returns &lt;10 result (except those really common ones).</p>
+<p>So yes, I&#39;d agree keep developer oriented error message in English makes sense, while I&#39;d also agree error messages be shown to customer should be localized.</p>
+</div>
+<p><strong>Cheong</strong> on 18 May 2011 1:48 AM:</p><div style="margin-left: 1em"><p>@John Cowan: Same here, the blogs keep disposing my comments these day so I think it could be serverwide issue.</p>
+<p>I have to fire up fiddler, reload the page with posting action, capture the response to extract the comments, then try posting again.</p>
+</div>
+<p><strong>Mmx</strong> on 18 May 2011 3:47 AM:</p><div style="margin-left: 1em"><p>I totally disagree.</p>
+<p>Localization of exception messages is a complete waste of developer time - heck, it&#39;s a waste of time of the users, since usually technical messages are much more understandable in english than in a badly translated italian.</p>
+<p>In every company I worked, development was done using an english version of Visual Studio or other IDEs, and there were mandatory rules to have comments and symbol names in english. </p>
+<p>So, I really think localizing API messages and even developer tools is a waste of time. As you can guess, I&#39;m italian.</p>
+</div>
+<hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2011/05/18/10165599.html" title="A difference that makes no difference makes a blog">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2011/05/16/10164646.html" title="ALL OF US should be GAY about being able to follow a STRAIGHT path to who we want to be with">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2011-05">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2011-05-17">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2011/05/17/10164632.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+</html>

@@ -1,0 +1,140 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2009/11/07/9919141.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:35 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>The two most important components of letting go and moving on are (1) letting go and (2) moving on</title></head><body>
+<h1>The two most important components of letting go and moving on are (1) letting go and (2) moving on</h1>
+<p><em>by Michael S. Kaplan, published on 2009/11/07 14:31 -05:00, original URI: http://blogs.msdn.com/b/michkap/archive/2009/11/07/9919141.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P>It was Friday afternoon when Santhosh (Santhosh Pillai, aka THE Santhosh, the guy who helped us with the collation story for Malayalam way back when) was asking a question. The question was:</P>
+<BLOCKQUOTE>
+<P><EM><FONT face="times new roman,times">Hi:</FONT></EM></P>
+<P><EM><FONT face="times new roman,times">Is there an updated version of this page </FONT></EM><A href="http://www.microsoft.com/globaldev/keyboards/kbdinmal.htm"><EM><FONT face="times new roman,times">http://www.microsoft.com/globaldev/keyboards/kbdinmal.htm</FONT></EM></A><EM><FONT face="times new roman,times"> available now that Malayalam has Atomic Chillus in Unicode 5.1?</FONT></EM></P>
+<P><EM><FONT face="times new roman,times">Thanks<BR>Santhosh</FONT></EM></P></BLOCKQUOTE>
+<P>Interesting.... though of course the real underlying question should be more about the keyboard layout(s) in Windows -- the website is just a description of the set of layouts that are installed in the operating system.</P>
+<P>Updating the web site (the actual website, I mean - not the old one we're talking about here!) is a separate matter, but that can't ever happen until/unless the thing the site is meant to be described is updated.</P>
+<P>Now back in the old days, there was a time that I was one of the people Microsoft sent to Unicode Technical Committee meetings, one of the people who came back from those meetings working on how and when to make updates to Windows, sometimes the person who made the actual updates to the keyboard layouts, and always the person who checked in the final layouts to the product.</P>
+<P>In those days, answering this question would have simply been an act of recollection -- remembering the salient details of</P>
+<UL>
+<LI>the updates in Unicode;</LI>
+<LI>the plan for when to get the updates into fonts, character map, collation, and keyboards;</LI>
+<LI>how the plan went.</LI></UL>
+<P>but now things are different.</P>
+<P>The Malayalam Chillu debate was going on strong while I was still involved with Unicode, though no final decisions had been made. And whether or not a need existed to include atomic characters for these entities was a fairly central question that would have to be solved before anyone discussed what product changes would be needed and when.</P>
+<P>But other people were minding those stores, I was doing other things.</P>
+<P>So to answer Santhosh's question, I did it the old-fashioned way - I looked at the product to see what was there.</P>
+<P>First, I started in Character Map. I knew the fonts would be updated (Peter Constable was the one who explained to me how the Chillus worked way back when this all first started in Unicode years ago), so I wanted to look and see if there were any characters that were in the font but not in the Charmap list of names, like this one:</P>
+<P><IMG style="WIDTH: 490px; HEIGHT: 516px" src="http://trigeminal.fmsinc.com/images/chillu01.jpg" width=490 height=516 mce_src="http://trigeminal.fmsinc.com/images/chillu01.jpg"></P>
+<P>Indeed,&nbsp;there are 17 of them if you include the atomic Chillus, the ones added for Sanskrit, the symbols, the signs, and so on:</P>
+<UL>
+<LI>&nbsp;ഽ U+0d3d MALAYALAM SIGN AVAGRAHA</LI>
+<LI>&nbsp;ൄ U+0d44 MALAYALAM VOWEL SIGN VOCALIC RR</LI>
+<LI>&nbsp; &nbsp;ൢ U+0d62 MALAYALAM VOWEL SIGN VOCALIC L</LI>
+<LI>&nbsp; &nbsp;ൣ U+0d63 MALAYALAM VOWEL SIGN VOCALIC&nbsp;LL</LI>
+<LI>൰ U+0d70 MALAYALAM NUMBER TEN</LI>
+<LI>൱ U+0d71 MALAYALAM NUMBER ONE HUNDRED</LI>
+<LI>൲ U+0d72 MALAYALAM NUMBER ONE THOUSAND</LI>
+<LI>൳ U+0d73 MALAYALAM FRACTION ONE QUARTER</LI>
+<LI>൴ U+0d74 MALAYALAM FRACTION ONE HALF</LI>
+<LI>൵ U+0d75 MALAYALAM FRACTION THREE QUARTERS</LI>
+<LI>൹ U+0d79 MALAYALAM DATE MARK</LI>
+<LI>ൺ U+0d7a MALAYALAM LETTER CHILLU NN&nbsp;</LI>
+<LI>ൻ U+0d7b MALAYALAM LETTER CHILLU N</LI>
+<LI>ർ U+0d7c MALAYALAM LETTER CHILLU&nbsp;RR</LI>
+<LI>ൽ U+0d7d MALAYALAM LETTER CHILLU L</LI>
+<LI>ൾ U+0d7e MALAYALAM LETTER CHILLU&nbsp;LL</LI>
+<LI>ൿ U+0d7f MALAYALAM LETTER CHILLU K</LI></UL>
+<P>Then I handed each one to LCMapString one at a time. None of them had weight in Vista but all of them have an assigned weight in Windows 7 (some as numbers, some as symbols, some as letters -- kine of what you might expect by looking at the list).</P>
+<P>Okay, good so far -- just no updated character list in Character Map. Unfortunate, but hardly tragic, as the sadness over not seeing the name in the lower left hand corner of that dialog is quickly mitigated by the character's presence in the font itself! :-)</P>
+<P>The keyboard story was less fortunate.</P>
+<P>I loaded up the one and only keyboard layout in MSKLC:</P>
+<P><IMG style="WIDTH: 346px; HEIGHT: 537px" src="http://trigeminal.fmsinc.com/images/chillu02.jpg" width=346 height=537 mce_src="http://trigeminal.fmsinc.com/images/chillu02.jpg"></P>
+<P>took a quick look at the keyboard, and then saved it out as a KLC file looking at code points in case I missed anything.</P>
+<P>They aren't there.</P>
+<P>Oops.</P>
+<P>My first reaction was that somebody must have messed up, been asleep at the switch, etc.</P>
+<P>But then I realized that was how everyone felt whenever they came to me because of something they perceived as an omission or bug. Knowing more of the underlying infrastructure does not make me any more psychic than the people who used to&nbsp;come to me -- I cannot read the minds or intents of the owners.</P>
+<P>Maybe the update was not so easy to do. The Character Map thing is an obvious omission, but that is just a small bug on someone to get it updated.</P>
+<P>The keyboard layout is the complicated one, of course. The layout is based on the INSCRIPT standards coming out of India, and although adding the letters would not have been unreasonable, there are two sides to that story and there may well have been reasons not to add them, too.</P>
+<P>Collation beyond the "some weight" question is an interesting one; ideally it would be handled with equivalences&nbsp;the way we did Romanian with the comma below/cedilla below.</P>
+<P>Grabbing the table from the <A href="http://www.unicode.org/versions/Unicode5.1.0/#Malayalam_Chillu_Characters" mce_href="http://www.unicode.org/versions/Unicode5.1.0/#Malayalam_Chillu_Characters">Unicode 5.1 update</A>:</P>
+<H3>Table 1. Atomic Encoding of <I>Chillus</I> </H3>
+<P>
+<TABLE border=1 cellSpacing=0 cellPadding=2>
+<TBODY>
+<TR>
+<TD><BR>&nbsp; </TD>
+<TD><B>Visual </B></TD>
+<TD><B>Representation in 5.0 and Prior</B></TD>
+<TD><B>Preferred 5.1 Representation</B></TD></TR>
+<TR>
+<TD>1</TD>
+<TD><IMG style="VERTICAL-ALIGN: -10px" alt=CHILLU_NN.png src="http://www.unicode.org/versions/Unicode5.1.0/images/mlym_nn.png" width=37 height=29></TD>
+<TD>NNA, VIRAMA, ZWJ<BR>(0D23, 0D4D, 200D)</TD>
+<TD>0D7A MALAYALAM LETTER CHILLU NN </TD></TR>
+<TR>
+<TD>2</TD>
+<TD><IMG style="VERTICAL-ALIGN: -10px" alt=CHILLU_N.png src="http://www.unicode.org/versions/Unicode5.1.0/images/mlym_n.png" width=26 height=29> </TD>
+<TD>NA, VIRAMA, ZWJ<BR>(0D28, 0D4D, 200D)</TD>
+<TD>0D7B MALAYALAM LETTER CHILLU N</TD></TR>
+<TR>
+<TD>3</TD>
+<TD><IMG style="VERTICAL-ALIGN: -10px" alt=CHILLU_RR.png src="http://www.unicode.org/versions/Unicode5.1.0/images/mlym_rr.png" width=17 height=29> </TD>
+<TD>RA, VIRAMA, ZWJ<BR>(0D30, 0D4D, 200D)</TD>
+<TD>0D7C MALAYALAM LETTER CHILLU RR </TD></TR>
+<TR>
+<TD>4</TD>
+<TD><IMG style="VERTICAL-ALIGN: -10px" alt=CHILLU_L.png src="http://www.unicode.org/versions/Unicode5.1.0/images/mlym_l.png" width=29 height=30> </TD>
+<TD>LA, VIRAMA, ZWJ<BR>(0D32, 0D4D, 200D)</TD>
+<TD>0D7D MALAYALAM LETTER CHILLU L </TD></TR>
+<TR>
+<TD>5</TD>
+<TD><IMG style="VERTICAL-ALIGN: -10px" alt=CHILLU_LL.png src="http://www.unicode.org/versions/Unicode5.1.0/images/mlym_ll.png" width=25 height=29> </TD>
+<TD>LLA, VIRAMA, ZWJ<BR>(0D33, 0D4D, 200D)</TD>
+<TD>0D7E MALAYALAM LETTER CHILLU LL </TD></TR>
+<TR>
+<TD>6</TD>
+<TD><IMG style="VERTICAL-ALIGN: -10px" alt=k src="http://www.unicode.org/versions/Unicode5.1.0/images/mlym_k.png" width=25 height=29></TD>
+<TD><I>undefined</I></TD>
+<TD>0D7F MALAYALAM LETTER CHILLU K</TD></TR></TBODY></TABLE></P>
+<P>Ok, looking at the weights of the first five entries in that table:</P>
+<TABLE border=1>
+<TBODY>
+<TR>
+<TD>old way</TD>
+<TD>weight</TD>
+<TD>new way</TD>
+<TD>weight</TD></TR>
+<TR>
+<TD>U+0d23 U+0d4d U+200d</TD>
+<TD>3a 77 01 01 01 01 00</TD>
+<TD>U+0d7a</TD>
+<TD>3a 72 01 01 01 01 00</TD></TR>
+<TR>
+<TD>U+0d28 U+0d4d U+200d</TD>
+<TD>3a 8b 01 01 01 01 00</TD>
+<TD>U+0d7b</TD>
+<TD>3a 86 01 01 01 01 00</TD></TR>
+<TR>
+<TD>U+0d30 U+0d4d U+200d</TD>
+<TD>3a a7 01 01 01 01 00</TD>
+<TD>U+0d7c</TD>
+<TD>3a a6 01 01 01 01 00</TD></TR>
+<TR>
+<TD>U+0d32 U+0d4d U+200d</TD>
+<TD>3a af 01 01 01 01 00</TD>
+<TD>U+0d7d</TD>
+<TD>3a aa 01 01 01 01 00</TD></TR>
+<TR>
+<TD>U+0d33 U+0d4d U+200d</TD>
+<TD>3a b3 01 01 01 01 00</TD>
+<TD>U+0d7e</TD>
+<TD>3a ae 01 01 01 01 00</TD></TR></TBODY></TABLE>
+<P>They don't match. I'd have to see what else is in the Malayalam table to know if it is only the equivalence that wasn't done (there might be actual ordering issues also) but I can't tell for sure (I have my hands full trying to learn Tamil and Bengali!). Offhand the weights never look to far from each other, so perhaps it was just a conscious decision to not support the equivalance....</P>
+<P>I honestly don't know the answer to any of the questions I posed above, but I can probably ask a question or two of some people next week (post re-org I'm not 100% sure owns all this stuff now, so it could take me some time to track down who to ask!).</P>
+<P>But either way there are at a mimimum a few bugs that I found in all this; I'll talk to some testers I know down the hall about those ones even sooner.</P>
+<P>As I said in the title, the two most important components of letting go and moving on are (1) letting go and (2) moving on. But I'm likely to get curious now and again about how things are going....</P>
+<hr/><p><a id="9927882" href="#9927882">#</a> <strong>PavanajaU B</strong> on 24 Nov 2009 4:05 AM:</p><div style="margin-left: 1em"><p>Which version of Unicode is used/supported by Windows 7?</p>
+<p>Rgds,</p>
+<p>Pavanaja</p></div>
+<hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2009/11/27/9929280.html" title="When is a question about prognosis a soup question?">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2009/10/26/9912727.html" title="Maybe we&#39;re wrong, but we&#39;d likely never admit it">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2009-11">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2009-11-07">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2009/11/07/9919141.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:35 GMT -->
+</html>

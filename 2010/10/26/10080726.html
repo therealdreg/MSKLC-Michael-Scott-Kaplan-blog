@@ -1,0 +1,48 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2010/10/26/10080726.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Note to the NLS API: It ain't ever gonna by 13 o'clock, either.</title></head><body>
+<h1>Note to the NLS API: It ain't ever gonna by 13 o'clock, either.</h1>
+<p><em>by Michael S. Kaplan, published on 2010/10/26 07:01 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2010/10/26/10080726.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<p>The other day, in a comment to <a href="http://archives.miloush.net/michkap/archive/2010/10/22/10079237.html" title="I Triple Adar you!"><strong>I Triple Adar you!</strong></a>, regular reader Mihai said:</p>
+<p style="padding-left: 30px;"><em>Trivia: did you know that GetLocaleInfo/GetLocaleInfoEx never returns anything for LOCALE_SMONTHNAME13? (and in general any LOCALE_S*MONTHNAME13)</em></p>
+<p>This is very true, and in its own way not actually trivial!</p>
+<p>The logic of this is kind of weird.</p>
+<p>One might say it is Microsoft-style logic, kind of.</p>
+<p>It's a design issue I first ran across in a significant way when the <a href="http://msdn.microsoft.com/library/system.globalization.cultureandregioninfobuilder.aspx">CultureAndRegionInfoBuilder class</a> was being designed.</p>
+<p>It starts with the <a href="http://msdn.microsoft.com/library/dd318103.aspx">GetLocaleInfoEx Function</a>. Like it's older cousin, it has lots of constants for grabbing months, from the <a href="http://msdn.microsoft.com/library/dd373831.aspx">LOCALE_SABBREVMONTHNAME*</a> constants to the <a href="http://msdn.microsoft.com/library/dd373856.aspx">LOCALE_SMONTHNAME*</a> constants.</p>
+<p>There are 13 there for each set, the last one from each is:</p>
+<table cellpadding="5" cellspacing="5" border="1">
+<tbody>
+<tr>
+<td>LOCALE_SMONTHNAME13</td>
+<td>Native name for a 13th month, if it exists. The maximum number of characters allowed for this string is 80, including a terminating null character.</td>
+</tr>
+<tr>
+<td>
+<p>LOCALE_SABBREVMONTHNAME13</p>
+</td>
+<td>Native abbreviated name for a 13th month, if it exists. The maximum number of characters allowed for this string is 80, including a terminating null character.</td>
+</tr>
+</tbody>
+</table>
+<p>&nbsp;But there is a problem here. The problem is that the <a href="http://msdn.microsoft.com/library/dd318103.aspx">GetLocaleInfoEx Function</a>&nbsp;only ever is returning information about the Gregorian calendar.</p>
+<p>So that text above, that goes on about "for a 13th month, if it exists" for these two items.</p>
+<p>Well, it is true. 100% of the time that the Gregorian calendar has a 13th month, this field will contain the info.</p>
+<p><strong>Because it can't ever happen.</strong></p>
+<p>Similarly, the <a href="http://msdn.microsoft.com/library/system.globalization.cultureandregioninfobuilder.aspx">CultureAndRegionInfoBuilder</a>'s&nbsp;DateTimeFormat is a <a href="http://msdn.microsoft.com/library/system.globalization.cultureandregioninfobuilder.gregoriandatetimeformat.aspx">GregorianDateTimeFormat</a>. Because the locale model itself can' ever handle more than the Gregorian calendar. The other calendars are stored separately, in a place that doesn't support localization (as I first pointed out in <a href="http://archives.miloush.net/michkap/archive/2005/01/14/353347.html" title="Calendars on Win32 -- Not all there yet"><strong>Calendars on Win32 -- Not all there yet</strong></a> nearly six years ago. It is just a real lameness and limitation of the model.</p>
+<p>So sure, the <a href="http://msdn.microsoft.com/library/dd318075.aspx"><strong>GetCalendarInfoEx Function</strong></a> can find occasional use for a <a href="http://msdn.microsoft.com/library/dd317734.aspx">CAL_ABBREVMONTHNAME13 or CAL_MONTHNAME13</a>, because sometimes it will be needed. </p>
+<p>But <a href="http://msdn.microsoft.com/library/dd373831.aspx">LOCALE_SABBREVMONTHNAME13</a>&nbsp;and <a href="http://msdn.microsoft.com/library/dd373856.aspx">LOCALE_SMONTHNAME13</a> are like those folks I met in Los Angeles last Saturday who say they are actors but never go on auditions or casting calls, so they never actually get a chance to work as actors.</p>
+<p><a href="http://msdn.microsoft.com/library/dd373831.aspx">LOCALE_SABBREVMONTHNAME13</a>&nbsp;and <a href="http://msdn.microsoft.com/library/dd373856.aspx">LOCALE_SMONTHNAME13</a> are pretty much doomed to that same fate, never finding any work in their claimed profession. Waiting for hacks, and living an empty [string] life....</p>
+<p>Awfully optimistic of the documentation though, huh? :-)</p>
+<hr/><p><strong>Mihai</strong> on 26 Oct 2010 11:52 AM:</p><div style="margin-left: 1em"><p>&gt; The problem is that the GetLocaleInfoEx Function only ever is returning information about the Gregorian calendar.</p>
+<p>That actually s*ks big time, design or not.</p>
+<p>Because the APIs can take the user locale as parameter, and since that can be customized to use an alternate calendar, I would expect results about the stuff that I am asking (and for some Arabic locales the default calendar is non-Gregorian, so there is no need for customization).</p>
+<p>And the code does not fully implements the design, because comparing the results for default set to Japanese vs. Japanese with Japanese calendar I get different results (for LOCALE_SSHORTDATE, LOCALE_SLONGDATE, LOCALE_SYEARMONTH, LOCALE_ICALENDARTYPE, LOCALE_ICENTURY, LOCALE_IDAYLZERO, LOCALE_IMONLZERO).</p>
+<p>And &quot;gg y&#39;年&#39;M&#39;月&#39;d&#39;日&#39;&quot; is definitely not a Gregorian pattern :-)</p>
+<p>Anyway, the workaround works indeed (should take the result from LOCALE_ICALENDARTYPE and use GetCalendarInfo/GetCalendarInfoEx)</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 26 Oct 2010 2:58 PM:</p><div style="margin-left: 1em"><p>I agree -- the design should be improved here; I just doubt it will ever happen. :-(</p></div>
+<hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2011/12/13 <a href="http://archives.miloush.net/michkap/archive/2011/12/13/10247214.html">These aren't the MONTHS you're looking for (aka You'll never get to the 13th month *that* way)</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2010/10/27/10081365.html" title="Yes, if we do not speak Māori, our treasured language will be lost.">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2010/10/25/10080210.html" title="The hair affair (or lack thereof)">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2010-10">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2010-10-26">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2010/10/26/10080726.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+</html>

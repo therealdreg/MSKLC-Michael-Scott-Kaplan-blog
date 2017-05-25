@@ -1,0 +1,98 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2006/10/07/799605.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:39 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Pimping your Brazilian keyboard</title></head><body>
+<h1>Pimping your Brazilian keyboard</h1>
+<p><em>by Michael S. Kaplan, published on 2006/10/07 03:09 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2006/10/07/799605.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<font face="Tahoma" size="3"> <p><em>Can we actually talk about pimping our Brazilian keyboards with Carnival not happening for so many months? :-)</em>&nbsp;</p> <p>The other day when I helped Olivier with his question (well a part of it, at least) and Emerson's earlier identical question&nbsp;in <a href="http://archives.miloush.net/michkap/archive/2006/09/26/771554.html"><strong>In case you have a yen to extend your keyboard (or at least want a yen?)</strong></a>, in response to one of&nbsp;Emerson's additional questions about other&nbsp;VK values he could use, I <a href="http://archives.miloush.net/michkap/archive/2006/09/26/771554.html#778995">suggested</a> VK_ABNT_C1 and VK_ABNT_C2, which are defined in kbd.h instead of winuser.h like all of the other virtual key codes. </p> <p>A bunch of people asked me offline why, and a few of them even tried using the Brazilian keyboards in MSKLC which did not work for them (at least not for these two keys). </p> <p>And then to top it all off, someone just asked Dr. International:</p> <blockquote><font face="Times New Roman" size="2"> <p>Hi <br>I'm using MS Keyboard Layout Creator, and figure out that MSKLC has no support for extra brasilian key. <br>The "portuguese ABNT2" keyboard has a key ("/" "?") between shift and VK_OEM_2 witch can not be used on new layouts. <br>There's a version of MSKLC witch can assign a letter to this Key? Will you support this in next versions? <br>Thanks</p></font></blockquote> <p>I decided maybe I should help people pimp that MSKLC-created Brazilian keyboard the same way I helped folks pimp the Japanese one. :-)</p> <p>Now just like with the Japanese layout, the appropriate scan codes are not queried, which is why neither of the Brazilian keyboards </p> <p><img src="http://trigeminal.fmsinc.com/images/kbdbr_base.png">&nbsp;<img src="http://trigeminal.fmsinc.com/images/kbdbr_shift.png"></p> <p>even when selected in MSKLC:</p> <p><img height="534" src="http://trigeminal.fmsinc.com/images/msklc_kbdlist.png" width="346"></p> <p>handle this key properly. </p> <p><em>(ABNT is ASSOCIAÇÃO BRASILEIRA DE NORMAS TÉCNICAS, which is the national standards setting body in Brazil)</em></p> <p><em>For what its worth you can note that the two layouts are actually identical under Windows and point to the&nbsp;same layout DLL,&nbsp;which is why </em><a href="http://support.microsoft.com/kb/q243357/"><em>this KB article</em></a><em> exists (in real life, one is a subset of the other, which is why the </em><a href="http://www.microsoft.com/globaldev/reference/keyboards.mspx"><em>GlobalDev keyboard layout site</em></a><em> does not list them both)</em></p> <p>Now, if you move over to kbd.h, you can see the VK definitions we will use:</p> <p>#define VK_ABNT_C1 0xC1<br>#define VK_ABNT_C2 0xC2</p> <p>and if you do not have an ABNT or ABNT2 keyboard to test them with, you can search down a bit in the header file to find that the two scan codes are pretty consistently&nbsp;0x73 and 0x7e. </p> <p>So the two entries you have to add to the .KLC file (just before the VK_DECIMAL definition, also included below), are:</p> <blockquote> <p><font face="Consolas,Courier New,Lucida Console,Courier" size="2">73&nbsp; ABNT_C1&nbsp;&nbsp;&nbsp;&nbsp; 0 &nbsp; /&nbsp;&nbsp; ?<br>7e&nbsp; ABNT_C2&nbsp;&nbsp;&nbsp;&nbsp; 0&nbsp; &nbsp;.&nbsp;&nbsp; .<br>53&nbsp; DECIMAL&nbsp;&nbsp;&nbsp;&nbsp; 0&nbsp;&nbsp; ,&nbsp;&nbsp; ,</font></p></blockquote> <p>Once they are added, MSKLC will respect them if they are there so you can make other modifications if you need to (just like with that extra key on the Japanese keyboard!).</p> <p>They still will not show up in the MSKLC main dialog:</p> <p><img src="http://trigeminal.fmsinc.com/images/msklc_kbdbr_base.png">&nbsp;<img src="http://trigeminal.fmsinc.com/images/msklc_kbdbr_shift.png"></p> <p>but that is just something you can ignore (if you want to change the definition of them you have to do it manually in the .KLC file; note that not even the <a href="http://www.microsoft.com/globaldev/reference/keyboards.mspx">GlobalDev site</a> displays the location of both of the keys....</p> <p>So, will this blog entry make you happy? Wealthy? More likely to get lucky if you make it down to Carnival next year?</p> <p>No, probably not. Sorry!</p> <p>But it will help you to pimp your Brazilian Portuguese ABNT/ABNT2 keyboards in MSKLC, something that <a href="http://keyboards.jargon-file.org/">this site</a> didn't know how to do and so did not try! :-)</p> <p>&nbsp;</p> <p><font color="#ff0080"><em>This post brought to you by</em> <font size="6">య</font> <em>(<a href="http://www.fileformat.info/info/unicode/char/0c2f">U+0c2f</a>, a.k.a. TELUGU LETTER YA)</em></font></p></font>
+<hr/><p><strong>Emerson</strong> on 12 Oct 2006 12:39 AM:</p><div style="margin-left: 1em"><p>Hello, Michael.</p>
+<p>Actually I could not get my keyboard the way I want... I did not miss the YEN SIGN that much, but I cannot say the same for the VERTICAL LINE. I had to place it on DIGIT ZERO on SHIFT STATE as a temporary solution.</p>
+<p>Here's what happens when I try to use VK_ABNT_C1 and C2 (I gave up trying to find other &quot;free&quot; VKs...)</p>
+<p>If I try to use ABNT_C2 for scancode 7d, I get a message box with the following:</p>
+<p>Error 2020 (..\.\tmpKBDNAME.txt, line 76):</p>
+<p>VK_ABNT_C2 (c2) found at scancode 7d and 7e.</p>
+<p>And if I try using ABNT_C1 for the same scancode, I get:</p>
+<p>(Box title: Microsoft .NET Framework)</p>
+<p>An unhandled exception has occurred in your application. If you click Continue, the application will ignore this error ad attempt to continue. If you click Quit, the application will be shut down immediately.</p>
+<p>Value cannot be null.</p>
+<p>Parameter name: format.</p>
+<p>There's a button labeled &quot;Details&quot;. They are:</p>
+<p>See the end of this message for details on invoking </p>
+<p>just-in-time (JIT) debugging instead of this dialog box.</p>
+<p>************** Exception Text **************</p>
+<p>System.ArgumentNullException: Value cannot be null.</p>
+<p>Parameter name: format</p>
+<p> &nbsp; at System.String.Format(IFormatProvider provider, String format, Object[] args)</p>
+<p> &nbsp; at Microsoft.Globalization.Tools.KeyboardLayoutCreator.Keyboard.BuildKeyboard()</p>
+<p> &nbsp; at Microsoft.Globalization.Tools.KeyboardLayoutCreator.Keyboard.mnuProjectPackage_Click(Object sender, EventArgs e)</p>
+<p> &nbsp; at System.Windows.Forms.MenuItem.OnClick(EventArgs e)</p>
+<p> &nbsp; at System.Windows.Forms.MenuItemData.Execute()</p>
+<p> &nbsp; at System.Windows.Forms.Command.Invoke()</p>
+<p> &nbsp; at System.Windows.Forms.Control.WmCommand(Message&amp; m)</p>
+<p> &nbsp; at System.Windows.Forms.Control.WndProc(Message&amp; m)</p>
+<p> &nbsp; at System.Windows.Forms.ScrollableControl.WndProc(Message&amp; m)</p>
+<p> &nbsp; at System.Windows.Forms.ContainerControl.WndProc(Message&amp; m)</p>
+<p> &nbsp; at System.Windows.Forms.Form.WndProc(Message&amp; m)</p>
+<p> &nbsp; at Microsoft.Globalization.Tools.KeyboardLayoutCreator.Keyboard.WndProc(Message&amp; m)</p>
+<p> &nbsp; at System.Windows.Forms.ControlNativeWindow.OnMessage(Message&amp; m)</p>
+<p> &nbsp; at System.Windows.Forms.ControlNativeWindow.WndProc(Message&amp; m)</p>
+<p> &nbsp; at System.Windows.Forms.NativeWindow.Callback(IntPtr hWnd, Int32 msg, IntPtr wparam, IntPtr lparam)</p>
+<p>************** Loaded Assemblies **************</p>
+<p>mscorlib</p>
+<p> &nbsp; &nbsp;Assembly Version: 1.0.5000.0</p>
+<p> &nbsp; &nbsp;Win32 Version: 1.1.4322.2032</p>
+<p> &nbsp; &nbsp;CodeBase: file:///c:/windows/microsoft.net/framework/v1.1.4322/mscorlib.dll</p>
+<p>----------------------------------------</p>
+<p>msklc</p>
+<p> &nbsp; &nbsp;Assembly Version: 1.3.4073.0</p>
+<p> &nbsp; &nbsp;Win32 Version: 1.3.4073.0</p>
+<p> &nbsp; &nbsp;CodeBase: file:///C:/Arquivos%20de%20programas/Microsoft%20Keyboard%20Layout%20Creator/msklc.exe</p>
+<p>----------------------------------------</p>
+<p>System.Windows.Forms</p>
+<p> &nbsp; &nbsp;Assembly Version: 1.0.5000.0</p>
+<p> &nbsp; &nbsp;Win32 Version: 1.1.4322.2032</p>
+<p> &nbsp; &nbsp;CodeBase: file:///c:/windows/assembly/gac/system.windows.forms/1.0.5000.0__b77a5c561934e089/system.windows.forms.dll</p>
+<p>----------------------------------------</p>
+<p>System</p>
+<p> &nbsp; &nbsp;Assembly Version: 1.0.5000.0</p>
+<p> &nbsp; &nbsp;Win32 Version: 1.1.4322.2032</p>
+<p> &nbsp; &nbsp;CodeBase: file:///c:/windows/assembly/gac/system/1.0.5000.0__b77a5c561934e089/system.dll</p>
+<p>----------------------------------------</p>
+<p>System.Drawing</p>
+<p> &nbsp; &nbsp;Assembly Version: 1.0.5000.0</p>
+<p> &nbsp; &nbsp;Win32 Version: 1.1.4322.2032</p>
+<p> &nbsp; &nbsp;CodeBase: file:///c:/windows/assembly/gac/system.drawing/1.0.5000.0__b03f5f7f11d50a3a/system.drawing.dll</p>
+<p>----------------------------------------</p>
+<p>************** JIT Debugging **************</p>
+<p>To enable just in time (JIT) debugging, the config file for this</p>
+<p>application or machine (machine.config) must have the</p>
+<p>jitDebugging value set in the system.windows.forms section.</p>
+<p>The application must also be compiled with debugging</p>
+<p>enabled.</p>
+<p>For example:</p>
+<p>&lt;configuration&gt;</p>
+<p> &nbsp; &nbsp;&lt;system.windows.forms jitDebugging=&quot;true&quot; /&gt;</p>
+<p>&lt;/configuration&gt;</p>
+<p>When JIT debugging is enabled, any unhandled exception</p>
+<p>will be sent to the JIT debugger registered on the machine</p>
+<p>rather than being handled by this dialog.</p>
+<p>When I try to use ABNT_C2, MSKLC does not build DLL and setup package. When I try to use ABNT_C1, the program generates the DLL, but not the setup package.</p></div>
+<p><strong>Michael S. Kaplan</strong> on 12 Oct 2006 1:02 AM:</p><div style="margin-left: 1em"><p>Well, did you try my other suggestion -- building the dll from kbdutool.exe from the command line? Once you have added these additional character entries? That works just fine for me, so if it doesn't work for you I'd need to see what entries you used....</p>
+<p>In other words, build the package without them, then build the DLL separately and stick it in the package.</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 12 Oct 2006 1:32 AM:</p><div style="margin-left: 1em"><P>By the way, the actual error you are seeing is because the entry you put in was not correct. If you let me know what you added I can help you fix the problem that cause the exception....<BR><BR>UPDATE: the problem appers to be that you are putting in duplicate entries, which you cannot do, for either VK or scan code values. You must never do that....</P></div>
+<p><strong>Emerson</strong> on 12 Oct 2006 3:39 PM:</p><div style="margin-left: 1em"><p>My entries are 73 and 7d:</p>
+<p>39	SPACE		0	0020	0020	0020	-1	-1		// SPACE, SPACE, SPACE, &lt;none&gt;, &lt;none&gt;</p>
+<p>73	OEM_8		0	005c	005f	-1	-1	-1		// REVERSE SOLIDUS, LOW LINE, &lt;none&gt;, &lt;none&gt;, &lt;none&gt;</p>
+<p>7d	ABNT_C1	0	00a5	007c	-1	-1	-1		// YEN SIGN, VERTICAL LINE, &lt;none&gt;, &lt;none&gt;, &lt;none&gt;</p>
+<p>53	DECIMAL	0	002c	002e	-1	-1	-1		// COMMA, FULL STOP, , , </p>
+<p>or</p>
+<p>39	SPACE		0	0020	0020	0020	-1	-1		// SPACE, SPACE, SPACE, &lt;none&gt;, &lt;none&gt;</p>
+<p>73	OEM_8		0	005c	005f	-1	-1	-1		// REVERSE SOLIDUS, LOW LINE, &lt;none&gt;, &lt;none&gt;, &lt;none&gt;</p>
+<p>7d	ABNT_C2	0	00a5	007c	-1	-1	-1		// YEN SIGN, VERTICAL LINE, &lt;none&gt;, &lt;none&gt;, &lt;none&gt;</p>
+<p>53	DECIMAL	0	002c	002e	-1	-1	-1		// COMMA, FULL STOP, , , </p>
+<p>I'll try building from the command line.</p></div>
+<p><strong>Emerson</strong> on 12 Oct 2006 4:16 PM:</p><div style="margin-left: 1em"><p>It worked wonderfully (building the DLL separately)! Thanks a lot!!!</p></div>
+<hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2008/10/27 <a href="http://archives.miloush.net/michkap/archive/2008/10/27/9018025.html">Not only going BACK, but changing how to do it</a></p><p>2008/06/27 <a href="http://archives.miloush.net/michkap/archive/2008/06/27/8660309.html">Adding keys to your layout when you don't know what they are (aka Life with a 108-key keyboard layout)</a></p><p>2008/05/16 <a href="http://archives.miloush.net/michkap/archive/2008/05/16/8511203.html">My Spidey senses blame the rogue text editor</a></p><p>2007/07/04 <a href="http://archives.miloush.net/michkap/archive/2007/07/04/3690200.html">Pimping the numeric keypad</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2006/10/07/801030.html" title="GetStringTypeW almost understands the Bidirectional Algorithm">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2006/10/06/798751.html" title="If you hate the CAPS LOCK key, please read this!">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2006-10">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2006-10-07">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2006/10/07/799605.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:39 GMT -->
+</html>

@@ -1,0 +1,61 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2009/06/29/9800913.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:35 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>UCS-2 to UTF-16, Part 11: Turning it up to Eleven!</title></head><body>
+<h1>UCS-2 to UTF-16, Part 11: Turning it up to Eleven!</h1>
+<p><em>by Michael S. Kaplan, published on 2009/06/29 10:01 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2009/06/29/9800913.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<p>Previous blogs in this series of blogs on this Blog:</p>
+
+<ul>
+<li><b><a href="http://archives.miloush.net/michkap/archive/2008/08/30/8907667.html" mce_href="http://archives.miloush.net/michkap/archive/2008/08/30/8907667.html">Part 0: 
+The intro, sans content</a></b> 
+</li>
+
+<li><b><a href="http://archives.miloush.net/michkap/archive/2008/09/08/8931641.html" mce_href="http://archives.miloush.net/michkap/archive/2008/09/08/8931641.html">Part 1: 
+Getting the obvious out of the way</a></b> 
+</li>
+
+<li><b><a href="http://archives.miloush.net/michkap/archive/2008/09/15/8952073.html" mce_href="http://archives.miloush.net/michkap/archive/2008/09/15/8952073.html">Part 2: 
+A&amp;P of a 'linguistic character'</a></b> 
+</li>
+
+<li><b><a href="http://archives.miloush.net/michkap/archive/2008/09/18/8956650.html" mce_href="http://archives.miloush.net/michkap/archive/2008/09/18/8956650.html">Part 3: 
+It starts with cursor movement (where MS simultaneously gets better and 
+worse)</a></b> 
+</li>
+
+<li><b><a href="http://archives.miloush.net/michkap/archive/2008/10/06/8977552.html" mce_href="http://archives.miloush.net/michkap/archive/2008/10/06/8977552.html">Part 4: 
+Talking about the ask&nbsp;</a></b> 
+</li>
+
+<li><b><a href="http://archives.miloush.net/michkap/archive/2008/10/15/9000371.html" mce_href="http://archives.miloush.net/michkap/archive/2008/10/15/9000371.html">Part 5: 
+What's on the Next Level?</a></b> 
+</li>
+
+<li><b><a href="http://archives.miloush.net/michkap/archive/2008/11/24/9134826.html" mce_href="http://archives.miloush.net/michkap/archive/2008/11/24/9134826.html">Part 6: 
+An exercise left for whoever needs some exercise</a></b> 
+</li>
+
+<li><b><a href="http://archives.miloush.net/michkap/archive/2008/12/04/9173687.html" mce_href="http://archives.miloush.net/michkap/archive/2008/12/04/9173687.html">Part 7: 
+If it makes the SQL Server columns too small then it made the Oracle columns 
+either too smallER or too smallEST</a></b></li>
+
+<li><b><a href="http://archives.miloush.net/michkap/archive/2008/12/09/9187379.html" mce_href="http://archives.miloush.net/michkap/archive/2008/12/09/9187379.html">Part 8: It's the end of the string as we know it (and I feel ellipses)&nbsp;</a></b></li>
+<li><b><a href="http://archives.miloush.net/michkap/archive/2008/12/16/9223301.html" mce_href="http://archives.miloush.net/michkap/archive/2008/12/16/9223301.html">Part 9: The torrents of breaking CharNext/CharPrev</a></b></li><li><b><a href="http://archives.miloush.net/michkap/archive/2009/06/10/9723321.html" mce_href="http://archives.miloush.net/michkap/archive/2009/06/10/9723321.html">Part 10: Variation[ Selector] on a theme...</a></b><br></li>
+</ul>
+
+<p>Back when I was in school oh those many years ago, I remember learning all kinds of rules about writing essays and position papers and really anything meant to convince people of a point of view.</p><p>You know, all that "Step 1: Tell em what you're gonna tell 'em, Step 2: Tell 'em, Step 3: Tell 'em what you told 'em" and so on. Basically narrowing the world to the specific point you want to make, making the point, and then expanding that point to make its connection to the world clear. You get the point.</p><p>More recently, as I look at academic papers and books from people with advanced degrees, it is clear that they do something slightly different a lot of the time.</p><p>Rather than ending on a strong note that reinforces prior themes, they end with the things that are not yet explored, the things not fully done yet.</p><p>I originally looked at this as a sign of weakness -- why end with your weakest or least impressively thought out arguments, with the items that are not there yet?</p><p>But over time I have reconsidered this view; there is a certain strength in making it clear that there is more out there. Making it obvious that grownup problems can't always be wrapped up and delivered with a bow on them.</p><p>And that is where this last part of the whole <b>UCS-2 to UTF-16</b> series will try to go.</p><p>Over many successive parts I have discussed or dare I say it proven that the people who think that <b>UCS-2 to UTF-16</b> is a shorthand are 100% correct, and the people who think it os just about surrogate pairs are dead wrong.</p><p><b>UCS-2 to UTF-16</b> is about moving from Unicode code units to what the user will think of as a CHARACTER.</p><p>And about how to plan out software behavior in a way that let's ordinary users who wouldn't know Unicode from UNICEF see the behavior they expect based on what they know of their actual language, rather than their understanding of the limitations in computers over the last several decades.</p><p>But as I went through the series, I probably spent as much time pointing out failures in software to support this notion as I did successes. In software all over the place.</p><p>When you get down to it, we are still quite a long way away from this ideal tht the average user would find most empowering; we still rely on people to conform to the limitations of our machines rather than causing those machines to conform to the understandings of the users.</p><p>So in a way I have already been talking about the places that Microsoft and all of the other software companies are weak and unfinished and not fully implemented or sometimes even understood!</p><p>So here, in <b>Part 11</b> of the series, I will take this catalog of misunderstandings/bugs/failures and <b>turn it up to eleven</b> (to use the Spinal Tap expression) and go even further....</p><p>Beyond characters there are if course words, and phrases, and clauses, and sentences, and paragraphs, and pages.</p><p>And as I pointed out in blogs like <b><a href="http://archives.miloush.net/michkap/archive/2008/08/25/8893033.html" mce_href="http://archives.miloush.net/michkap/archive/2008/08/25/8893033.html">The Bidi Algorithm's own SEP Field</a></b> it is clear that once you get into issues more complicated than characters, we tend toward sucking just as badly.</p><p>Or maybe worse -- in the case of characters it is failure to live up to Unicode's definition; in the case of more complex operations like bidirectional text a 100% conformant implementation will fall way short of typical native user expectations in even many of the most simple cases. We claim we are conformant, they say it requires higher level protocols to support reality, and thus we prove ourselves to be unable to reach the lofty goals of higher protocols. </p><p>We're too busy stuck in muck because we're following the standard and the standard considers it to be too much to handle.</p><p>How do we get past this and break the stalemate, exactly?</p><p mce_keep="true">Unicode doesn't seem to be interested -- they regulaarly fiddle with UAx #9 to fix bizarre corner cases while never even attempting to tackle the easy cases like the ones I've ben railing about all this time. The ones even a child can understand like</p>
+<blockquote>
+<p dir="ltr" mce_keep="true"><font size="4">C:\NAME ‎(BIG)‎\שם ‏(גדול)‏\NAME 
+‎(BIG)‎\שם ‏(גדול)‏</font></p></blockquote>
+<p mce_keep="true">and such.</p><p mce_keep="true">As I mentioned in a prior blog:</p><blockquote><p mce_keep="true">No one wants to do too much beyond Unicode even though plain 
+Unicode alone (without making use of higher level protocols to place control 
+characters) is insufficient for handling these cases....</p><p mce_keep="true">Note that is also also one of the reasons RTL IDN is so 
+complicated and looks so broken most of the time.</p><p mce_keep="true">It all amounts to&nbsp;<b>A place where everyone blows, 
+equally.</b></p></blockquote>
+
+<p mce_keep="true">So maybe Microsoft and the companies that claim to care about the end-to-end user experience should just choose to rise above this, to <b>be</b> high level protocols.<br></p><p mce_keep="true">Because claiming that we are done with our core support and can now add more advanced features, when we can't even handle characters and sentences is a little bit obnoxious of us, to say the least (especially if we aren't even trying to get better!).</p><p mce_keep="true">Now that this series is officially done, I'll maybe try in some future blogs and give some of my thoughts about what it might mean to be a higher level protocol....<br></p>
+<hr/><p><a id="9808999" href="#9808999">#</a> <strong>ΤΖΩΤΖΙΟΥ</strong> on 29 Jun 2009 6:24 PM:</p><div style="margin-left: 1em"><p>…and of course you meant: Spın̈al Tap. Tsk, tsk. Gotcha :)</p></div>
+<hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2010/11/24 <a href="http://archives.miloush.net/michkap/archive/2010/11/24/10095816.html">UTF-8 on a platform whose support is overwhelmingly, almost oppressively, UTF-16</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2009/07/02/9813365.html" title="Confessions of an iBot riding fool....">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2009/06/25/9803395.html" title="Where do you want to go today^H^H^Hmorrow with MUI?">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2009-06">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2009-06-29">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2009/06/29/9800913.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:35 GMT -->
+</html>

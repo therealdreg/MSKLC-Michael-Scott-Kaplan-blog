@@ -1,0 +1,56 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2012/07/30/10334641.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:31 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>2nd amendment issues don't apply; I'm not ARMed!</title></head><body>
+<h1>2nd amendment issues don't apply; I'm not ARMed!</h1>
+<p><em>by Michael S. Kaplan, published on 2012/07/30 07:01 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2012/07/30/10334641.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<p>The question I got this weekend has been preying on me for a bit, it is from a fan of MSKLC who loved the Windows 8 Surface demo:</p>
+<p style="padding-left: 60px;"><em><span style="font-family: times new roman,times; font-size: medium;">I have been following posts in the MSDN forums, such as:</span></em></p>
+<p style="padding-left: 60px;"><em><span style="font-family: times new roman,times; font-size: medium;">&nbsp;&nbsp;&nbsp;&nbsp; * <a href="http://social.msdn.microsoft.com/Forums/en-US/wdk/thread/9c5b1aee-aa6b-4131-97df-cc7afa67d2d6">Not able to build driver when target platform is ARM</a></span></em><br /><em><span style="font-family: times new roman,times; font-size: medium;">&nbsp;&nbsp;&nbsp;&nbsp; * <a href="http://social.msdn.microsoft.com/Forums/en-US/wdk/thread/6bce5bd2-ed0d-48ae-bee7-7219b8d4c7be">Setupapi.lib is missing for ARM</a></span></em></p>
+<p style="padding-left: 60px;"><em><span style="font-family: times new roman,times; font-size: medium;">and several others with responses from&nbsp;a Microsoft employee that suggest that the rules for ARM applications and drivers are that they&nbsp;can't be created by everyone. </span></em></p>
+<p style="padding-left: 60px;"><em><span style="font-family: times new roman,times; font-size: medium;">I know that MSKLC kind of creates drivers. Does&nbsp;MSKLC have the same problems with ARM? </span></em></p>
+<p style="padding-left: 60px;"><em><span style="font-family: times new roman,times; font-size: medium;">If it does, could you talk that Microsoft employee about making an exception?</span></em></p>
+<p>Well, I consider Doron to be&nbsp;a colleague and even&nbsp;a friend, but neither of us are in a position of power here. Even senior management is clear about the rules on this one....</p>
+<p>If course I have actually talked in the past about how I'd like to see an MSKLC update in blogs like <strong><a title="The evolving Story of Locale Support, part 4 (working beyond one's bugs, and the case for an MSKLC update)" href="../../../2011/11/04/10233999.html">this one</a></strong> and <strong><a title="What I'd do with my 'Microsoft 20% time'" href="../../../2011/12/23/10250600.html">this one</a></strong>.</p>
+<p>That first one even suggested what a theoretical 1.5 version might contain, the three bug fixes..</p>
+<p>There was one other work item i wanted to do, one originally suggested in someone else's spec.</p>
+<p>You see, the optimized keyboard layouts for Windows 8 aren't going to be exposed for third parties. But one of those specs pointed out that custom keyboard layouts via MSKLC would be supported.</p>
+<p>So I started asking people whether a new MSKLC could be built to support Windows On Arm (WoA)&nbsp;and the ARM platform -- WinRT.</p>
+<p>I even created a rough version of KBDUTOOL.EXE that removed IA64 support and added ARM support -- it was trivial to do, really. It seemed like a sign that this was meant to be!</p>
+<p>It turned out to be a STOP sign, though.</p>
+<p>Because keyboards still have two basic requirements on Windows, one that MSKLC creates a setup for:</p>
+<ul>
+<li>Add&nbsp;a registry key with several values under HKLM, and</li>
+<li>Add&nbsp;a DLL file to the system32 directory</li>
+</ul>
+<p>and unfortunately, those two things cannot be done on WoA apps, unless one is one of the small number of IHVs building device drivers for ARM devices that are being created for drivers specific devices might require, and/or one of the even smaller number of OEMs creating such devices.</p>
+<p>None of this fits in well with the MSKLC-based model of "anyone can build a keyboard" if only that small number of people could use the tool....</p>
+<p>And since that version of can't be released,&nbsp;even those specific OEMs and IHVs would never be able to create a new keyboard via MSKLC -- they'd have to use the WDK.</p>
+<p>Even in the highly unlikely event that one of them actually had a business case that required a new keyboard layout.</p>
+<p>Essentially, only the non-ARM-based tablets could use MSKLC-generated layouts -- unless you worked in Windows development or one of those specific IHV/OEM companies.</p>
+<p>I'll have to get back to you on whether the update can still happen, for the original reasons. For now I only know it can't be ARMed.</p>
+<p>And I'll have to ask about the testing one of those x86 Surface tablets! :-)</p>
+<hr/><p><strong>Joshua</strong> on 30 Jul 2012 8:48 AM:</p><div style="margin-left: 1em"><p>You mean WoA apps cannot run with admin rights? If so, that&#39;s far more lame than not having custom keyboards.</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 30 Jul 2012 10:41 AM:</p><div style="margin-left: 1em"><p>I don&#39;t know the full answer to that (I only know about the keyboard issue), but if so then it&#39;s only the model that iPads and iPhones use and they don&#39;t seem to be going out of style....</p>
+</div>
+<p><strong>Mike Dimmick</strong> on 30 Jul 2012 11:00 AM:</p><div style="margin-left: 1em"><p>@Joshua: No, it&#39;s worse than that. Win32 is banned. You can only use WinRT APIs on Windows RT devices (WoA). The only major applications that will be allowed to use Win32 APIs, i.e. run on the desktop, are the Office apps, and they will ship with the device.</p>
+<p>Unsurprisingly the Mozilla Foundation and Google have already kicked off about this to the EU competition authorities.</p>
+<p>I&#39;m not sure if Office is running in the desktop because the WinRT APIs are insufficient for creating Office, or just because there&#39;s a dependency there - Microsoft have learned their lesson from the aborted Longhorn project, where the dependencies got so out of control that everything had to be reset and three years of work basically thrown away. Certainly the Office team wants to keep as much of the legacy code around as possible; the Mac team only recently migrated from Mac OS X&#39;s Carbon environment (a mildly-modified upgrade of the classic Mac OS APIs) to the newer Cocoa.</p>
+<p>In fairness I can kind of see Microsoft&#39;s point. They don&#39;t want all kinds of badly-behaved applications ported from x86, and want to make everything downloadable from the store a trustworthy application (enforced by the policy-based permissions sets in AppX, with readily-understandable permissions).</p>
+</div>
+<p><strong>Joshua</strong> on 30 Jul 2012 12:13 PM:</p><div style="margin-left: 1em"><p>@Mike Dimmick: And people wonder why I haven&#39;t bought a smartphone yet. Maybe for once MS can change the model and get a real chance at being a leader at a new market, but I&#39;ll bet they haven&#39;t got the guts.</p>
+</div>
+<p><strong>cheong00</strong> on 30 Jul 2012 8:24 PM:</p><div style="margin-left: 1em"><p>Emmm... Apple is known for their closed development environment and noone is surprised by that.</p>
+<p>For Windows and Linux (Android) it&#39;s quite another...</p>
+</div>
+<p><strong>Simon Buchan</strong> on 31 Jul 2012 12:01 AM:</p><div style="margin-left: 1em"><p>@cheong: Apple was not known for their closed environments *before* iOS, though - there were plenty of Classic Mac bedroom programmers out there, selling direct to customers.</p>
+<p>But I&#39;m guessing MS isn&#39;t really going for a walled garden, when they have the functional super-set x86 Surfaces available.... I&#39;m guessing the only reason ARM Office is on Win32 is because it&#39;s easier to port the Win32 subset of WinAPI that Office touches to ARM: mostly ripping out unused dependencies, then a recompile; than to try to port Office to WinRT (which probably has stuff from &lt;windows.h&gt; touched in 60~90% of it&#39;s functions).</p>
+<p>I *expect* OfficeRT will eventually be a thing, maybe in Win9 timeframe, then (since they own all the apps using it) MS can completely drop Win32 and Desktop completely from their ARM devices, or whatever.</p>
+<p>Back on topic, though: is there a chance, in Win8 SP1 or Win9 or whatever, to add data-driven or user-mode keyboard support? It does seem slightly weird to need to have custom code in the kernel to map one or more scancodes to one or more codepoints....</p>
+</div>
+<p><strong>Jeroen Frijters</strong> on 4 Aug 2012 2:51 AM:</p><div style="margin-left: 1em"><p>My guess is that Microsoft wants to keep the option open to remove the legacy Win32 stuff from Windows RT (to create a smaller footprint version of the OS for tablets). The Windows 8 based version probably will contain most of the Win32 stuff (and I&#39;m looking forward to getting a Surface RT and I bet it won&#39;t take long before it&#39;ll run Win32 apps).</p>
+</div>
+<hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2013/04/17 <a href="../../../2013/04/17/10411861.html">One of these days you'll want to stand back, as I am working to ARM myself with another Surface RT!</a></p><p>2013/02/25 <a href="../../../2013/02/25/10396490.html">Developing for a jailbroken Surface RT -- dare I disturb the universe?</a></p></div><p><em>go to <a id="newer" href="../31/10335040.html" title="Well we have over 75% of them covered, at least....">newer</a> or <a id="older" href="../25/10333206.html" title="On not getting a doctor&#39;s note....">older</a> post, or back to <a href="../../../index-2.html">index</a> or <a href="../../../index-2.html#2012-07">month</a> or <a href="../../../index-2.html#2012-07-30">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2012/07/30/10334641.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:31 GMT -->
+</html>

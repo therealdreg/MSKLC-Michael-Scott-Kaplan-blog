@@ -1,0 +1,74 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2005/03/12/394716.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:42 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Stability of the Unicode Character Database</title></head><body>
+<h1>Stability of the Unicode Character Database</h1>
+<p><em>by Michael S. Kaplan, published on 2005/03/12 20:33 -05:00, original URI: http://blogs.msdn.com/b/michkap/archive/2005/03/12/394716.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P>The following was overheard on the Unicode List:</P>
+<P>Erik van der Poel asked:</P>
+<BLOCKQUOTE dir=ltr>
+<P><FONT size=2><EM>Has anyone done a UCD stability survey? The kind of info that I would like to have is, for example, the percentage of characters that have a change in their General Category Value from one version to the next, starting from the beginning (Unicode 1.1.5). </EM></FONT></P></BLOCKQUOTE>
+<P>Andrew C. West stepped up with some figures:</P>
+<BLOCKQUOTE dir=ltr>
+<P><FONT size=2><EM>According to my calculations, the number of characters which changed their General Category from one version of Unicode to the next is :</EM></FONT></P>
+<P><FONT face="Courier New" size=2>1.1.5 -&gt; 2.0.14 = 474 (1.384%)<BR>2.0.14 -&gt; 2.1.2 = 1 (0.0025%)<BR>2.1.2 -&gt; 2.1.5 = 16 (0.0410%)<BR>2.1.5 -&gt; 2.1.8 = 18 (0.0462%)<BR>2.1.8 -&gt; 2.1.9 = 3 (0.0077%)<BR>2.1.9 -&gt; 3.0.0 = 85 (0.2182%)<BR>3.0.0 -&gt; 3.0.1 = 0 (0%)<BR>3.0.1 -&gt; 3.1.0 = 3 (0.0061%)<BR>3.1.0 -&gt; 3.2.0 = 7 (0.0074%)<BR>3.2.0 -&gt; 4.0.0 = 16 (0.0168%)<BR>4.0.0 -&gt; 4.0.1 = 1 (0.0010%)<BR>4.0.1 -&gt; 4.1.0 = 12 (0.0124%)</FONT></P>
+<P><FONT size=2><EM>I don't know what this tells you about the stability of the UCD data though.</EM></FONT></P></BLOCKQUOTE>
+<P dir=ltr>Now the above table was a lot of infomation, but it is hard to know how to judge the meaning of these changes. Luckily, Ken Whistler noticed this problem and gave the list some context:</P>
+<BLOCKQUOTE dir=ltr>
+<P dir=ltr><FONT size=2>The raw number of characters changing is less reflective of stability than considering how many *decisions* to change a property (of one or more characters) were taken.<BR><BR>I intersperse some notes to Andrew West's calculated numbers below, to help put this in context.</FONT></P>
+<P dir=ltr><FONT size=2>&gt; &gt; 1.1.5 -&gt; 2.0.14 = 474 (1.384%)</FONT></P>
+<P dir=ltr><FONT size=2>Many, many, changes, since 1.1.5 was developed in house, without general public review, and since 2.0.14 (the data version corresponding to Unicode 2.0) was the first public release of the data files.</FONT></P>
+<P dir=ltr><FONT size=2>&gt; &gt; 2.0.14 -&gt; 2.1.2 = 1 (0.0025%)</FONT></P>
+<P dir=ltr><FONT size=2>1 decision</FONT></P>
+<P dir=ltr><FONT size=2>&gt; &gt; 2.1.2 -&gt; 2.1.5 = 16 (0.0410%)</FONT></P>
+<P dir=ltr><FONT size=2>2 decisions: addition of Pi/Pf subcategories, and 1 fix for 8 Tibetan characters</FONT></P>
+<P dir=ltr><FONT size=2>&gt; &gt; 2.1.5 -&gt; 2.1.8 = 18 (0.0462%)</FONT></P>
+<P dir=ltr><FONT size=2>1 decision: changes to converge identifier definitions</FONT></P>
+<P dir=ltr><FONT size=2>&gt; &gt; 2.1.8 -&gt; 2.1.9 = 3 (0.0077%)</FONT></P>
+<P dir=ltr><FONT size=2>2 decisions: fix for Greek numeral signs; fix for halfwidth forms light vertical</FONT></P>
+<P dir=ltr><FONT size=2>&gt; &gt; 2.1.9 -&gt; 3.0.0 = 85 (0.2182%)</FONT></P>
+<P dir=ltr><FONT size=2>I'd have to dig further for this, but these were likely mostly changes involved in nailing down normalization for Unicode 3.0.</FONT></P>
+<P dir=ltr><FONT size=2>&gt; &gt; 3.0.0 -&gt; 3.0.1 = 0 (0%)<BR>&gt; &gt; 3.0.1 -&gt; 3.1.0 = 3 (0.0061%)</FONT></P>
+<P dir=ltr><FONT size=2>1 decision: 3 Runic golden numbers</FONT></P>
+<P dir=ltr><FONT size=2>&gt; &gt; 3.1.0 -&gt; 3.2.0 = 7 (0.0074%)</FONT></P>
+<P dir=ltr><FONT size=2>5 decisions: 2 fixes for Khmer signs, 1 for Tamil aytham, 1 for Arabic end of ayah (architectural), 1 for the 3 Mongolian free variation selectors</FONT></P>
+<P dir=ltr><FONT size=2>&gt; &gt; 3.2.0 -&gt; 4.0.0 = 16 (0.0168%)</FONT></P>
+<P dir=ltr><FONT size=2>2 decisions: 1 fix for 12 modifier letters, 1 fix for decimal digit alignment</FONT></P>
+<P dir=ltr><FONT size=2>&gt; &gt; 4.0.0 -&gt; 4.0.1 = 1 (0.0010%)</FONT></P>
+<P dir=ltr><FONT size=2>1 decision: fix for ZWSP</FONT></P>
+<P dir=ltr><FONT size=2>&gt; &gt; 4.0.1 -&gt; 4.1.0 = 12 (0.0124%)</FONT></P>
+<P dir=ltr><FONT size=2>3 decisions: 1 fix for Ethiopic digits, 1 for 2 Katakana middle dots, 1 for Yi syllable wu</FONT></P></BLOCKQUOTE>
+<P dir=ltr>Ken then went on to summarize the issues behind these numbers:</P>
+<BLOCKQUOTE dir=ltr>
+<P dir=ltr><FONT size=2><EM>The significant point of instability in General Category assignments was in establishing Unicode 2.0 data files (now more than 8 years in the past).</EM></FONT></P>
+<P dir=ltr><FONT size=2><EM>There was a significant hiccup for Unicode 3.0, at the point when it became clear that normalization stability was going to be a major issue, and when the data was culled for consistency under canonical and compatibility equivalence.</EM></FONT></P>
+<P dir=ltr><FONT size=2><EM>Since that time, the UTC has been very conservative, indeed, in approving any General Category change for an existing character. The types of changes have been limited to:</EM></FONT></P>
+<OL>
+<LI>
+<DIV><FONT size=2><EM>Clarification regarding obscure characters for which insufficient information was available earlier.</EM></FONT></DIV>
+<LI>
+<DIV><FONT size=2><EM>Establishment of further data consistency constraints&nbsp;(this impacted some numeric categories, and also&nbsp;explains the change for the Katakana middle dot)</EM></FONT></DIV>
+<LI>
+<DIV><FONT size=2><EM>Implementation issues with a few format characters (ZWSP, Arabic end of ayah, Mongolian free variation selectors)</EM></FONT></DIV></LI></OL>
+<P><FONT size=2><EM>Since the publication of Unicode 3.0 in 2000, the only significantly common-use characters that had any General Category change were:</EM></FONT></P>
+<UL>
+<LI><FONT size=2><EM>U+0B83 TAMIL SIGN VISARGA (=aytham, Tamil data)</EM></FONT> 
+<LI><FONT size=2><EM>U+200B ZERO WIDTH SPACE&nbsp; (mostly relevant to Thai data)</EM></FONT> 
+<LI><FONT size=2><EM>U+30FB KATAKANA MIDDLE DOT&nbsp; (Japanese)</EM></FONT></LI></UL>
+<P><FONT size=2><EM>Of those 3, only U+30FB would exist in any commonly interchanged character set other than Unicode, and&nbsp;*that* change was merely to change a punctuation subclass (gc=Pc --&gt; gc=Po) -- and was additionally a *reversion* to the General Category assignment that U+30FB had in 2.1.5 and earlier.</EM></FONT></P></BLOCKQUOTE>
+<P>Excellent --&nbsp;the most amazing part is that he does so much of that from memory!</P>
+<P>So what does that mean for us in the world of the .NET Framework and the new class in Whidbey that captures (among other items) the Unicode general category, as described in <A id=CategoryEntryList href="http://archives.miloush.net/michkap/archive/2005/01/28/362305.html">A little bit about the new CharUnicodeInfo class</A>?</P>
+<P>Well, it means two thing, primarily:</P>
+<OL>
+<LI>These values will not change very often. 
+<LI>There are times that some will change. Not many, and there is always a carefully thought out reason, but it can happen. And the class is not called "CharMicrosoftSpinOnUnicode" which means that by and large the class needs to follow the standard. Any code that you write using the CharUnicodeInfo class must take this into account....</LI></OL>
+<P>As Microsoft gets better and better about standards, it will become more and more important for code to recognize that this sort of thing is possible.</P>
+<P>Another day I will talk about the Windows side of this story, which is not nearly as cut and dried, or as tidy. But it <EM>is</EM> an interesting story.... :-)</P>
+<P>&nbsp;</P>
+<P><FONT color=#ff0000><EM>This post brought to you by</EM> "þ" <EM>(</EM></FONT><A href="http://www.fileformat.info/info/unicode/char/00fe/index.htm"><EM><FONT color=#ff0000>U+00fe</FONT></EM></A><EM><FONT color=#ff0000>, a.k.a. LATIN SMALL LETTER THORN)</FONT></EM></P>
+<hr/><p><strong>TAMIL DATASHEETS</strong> on 18 Apr 2009 3:15 PM:</p><div style="margin-left: 1em"><p>தமிழ் தரவுத்தாள் தளம்</p>
+<p>Tamil Electronics Datasheets</p>
+<p>www.tamildata.co.cc</p></div>
+<hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2006/08/10 <a href="http://archives.miloush.net/michkap/archive/2006/08/10/694191.html">Roman numerals are Latin script!</a></p><p>2005/09/09 <a href="http://archives.miloush.net/michkap/archive/2005/09/09/462934.html">Update on the CharUnicodeInfo class</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2005/03/13/394822.html" title="IStemmer&#39;ed the tide (or, Language-specific processing #2)">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2005/03/12/394420.html" title="Performance gains at the cost of your own components">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2005-03">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2005-03-12">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2005/03/12/394716.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:42 GMT -->
+</html>

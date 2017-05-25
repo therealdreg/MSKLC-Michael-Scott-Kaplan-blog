@@ -1,0 +1,38 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2010/02/14/9963164.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:35 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Whither RegionInfo?</title></head><body>
+<h1>Whither RegionInfo?</h1>
+<p><em>by Michael S. Kaplan, published on 2010/02/14 07:01 -05:00, original URI: http://blogs.msdn.com/b/michkap/archive/2010/02/14/9963164.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P>I think it was just yesterday that Jacques asked:</P>
+<BLOCKQUOTE>
+<P><FONT face="times new roman,times"><EM>Can somebody explain to me the rationale behind why RegionInfo doesn't support the full set of ISO-3166-2/3 codes? Is there more to it than "because nobody spec-ed, implemented, tested, and documented it"?</EM></FONT></P></BLOCKQUOTE>
+<P>Well there is certainly more to it than just that.</P>
+<P>Though not in a terribly impressive way!</P>
+<P>In looking at locales in Windows way back before .NET was even announced (as NGWS -- Next Generation Web Services), the theoretical question of how would all of the stuff in NLS be designed if it were a bit more object oriented, knowing everything that the previous years had taught.</P>
+<P>One of the problems was the nebulous nature of <STRONG>locale</STRONG> as anything more than a "collection of stuff separated by language, region, and script."</P>
+<P>Before I say anymore I'll just point t where I talked about this a couple of years ago, in <A href="http://archives.miloush.net/michkap/archive/2007/12/22/6833199.html" mce_href="http://archives.miloush.net/michkap/archive/2007/12/22/6833199.html"><STRONG>CultureInfo subsetting attempts that suck</STRONG></A>.</P>
+<P>In the blog I explain that two different attempts to subset locales in the managed world, i.e.</P>
+<UL>
+<LI>neutral cultures</LI>
+<LI>regions</LI></UL>
+<P>both were kind of failures, each in their own way.</P>
+<P>The current RegionInfo was formed by looking at everything in a locale and isolating the stuff with no language-specific dependencies. </P>
+<P>And the unfortunate thing about that approach is that of the 200+ items in a locale,&nbsp;less than&nbsp;a dozen of them that ONLY relate to <STRONG>region</STRONG> with no language dependencies, and less than a dozen of them that ONLY relate to <STRONG>language</STRONG> with no region dependencies. And maybe&nbsp;another less than a dozen&nbsp;are specific to just the script.</P>
+<P>The other 85-90% of the stuff still sits in the mix between these concepts and still requires a big bucket whether you call it LOCALE or CULTURE.</P>
+<P>Now these three sub-buckets were handled in three very different ways:</P>
+<UL>
+<LI>Regions were imperfectly put into the RegionInfo bucket;</LI>
+<LI>Languages were imperfectly put into the neutral CultureInfo bucket;</LI>
+<LI>Scripts were imperfectly put into the TextInfo bucket.</LI></UL>
+<P>None of them map well to what ISO 3166 does.</P>
+<P><EM>I won't even get into the GEOID which has other flaws, as I mentioned in </EM><A href="http://archives.miloush.net/michkap/archive/2005/12/10/502415.html" mce_href="http://archives.miloush.net/michkap/archive/2005/12/10/502415.html"><STRONG><EM>CurrentRegion is not based on the GEOID</EM></STRONG></A><EM> and </EM><A href="http://archives.miloush.net/michkap/archive/2005/02/04/366922.html" mce_href="http://archives.miloush.net/michkap/archive/2005/02/04/366922.html"><STRONG><EM>GEOID -- The LCIDs maligned little brother....</EM></STRONG></A><EM> though you can read those blogs for more info on why this is not such an answer either.</EM></P>
+<P>But would the kind of RegionInfo that Jacques refers to, one that takes a big stab at everything in ISO-3166, be a better choice for something to have?</P>
+<P>Well, maybe.</P>
+<P>Though RegionInfo would need to look very different and geared at collecting a much smaller subset than it currently does, to keep the data collection from being a nightmare (leave alone for a second the size explosion of carrying all that data around!).</P>
+<P>Now I am long out of the team that owned this stuff back when there even was a team that was actively looking at what th stuff should look like, but if it were something I still had a say in then to be honest after mishandling the bucketization three times in one implementation, I would not be as eager to jump back into the mix to try to change it yet again. Any change here would need to be much more carefully considered -- and especially considered more from the point of view of <STRONG>how people need to use the buckets</STRONG> then <STRONG>how to improve the categorization the data with which the buckets would be filled</STRONG>.</P>
+<hr/><p><strong>moothong</strong> on 14 Feb 2010 8:32 AM:</p><div style="margin-left: 1em"><p>You must try to learn. And switch between accounts of what happened in Carolina.</p>
+</div>
+<hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2010/02/15/9963784.html" title="The real problem(s) with all of these console &quot;fallback&quot; discussions">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2010/02/13/9962894.html" title="How Windows 7 broke VB6&#39;s RightToLeft property, and how to get it fixed">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2010-02">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2010-02-14">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2010/02/14/9963164.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:35 GMT -->
+</html>

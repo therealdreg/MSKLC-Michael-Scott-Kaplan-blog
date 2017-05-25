@@ -1,0 +1,19 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2006/08/27/727607.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:39 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>It has not always been so invariant</title></head><body>
+<h1>It has not always been so invariant</h1>
+<p><em>by Michael S. Kaplan, published on 2006/08/27 20:51 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2006/08/27/727607.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<FONT face=Tahoma>
+<P>The other day, Bill asked the following question: </P>
+<BLOCKQUOTE dir=ltr style="MARGIN-RIGHT: 0px"><FONT size=2><FONT face="Times New Roman">
+<P>Anyway, I have the following code:<BR><BR><FONT face="Consolas,Courier New"><STRONG><FONT color=#006400>&nbsp;&nbsp;&nbsp;&nbsp;SYSTEMTIME st;<BR>&nbsp;&nbsp;&nbsp;&nbsp;memset(&amp;st, 0, sizeof(SYSTEMTIME));<BR>&nbsp;&nbsp;&nbsp; st.wYear = 2005;<BR>&nbsp;&nbsp;&nbsp; st.wMonth = 9;<BR>&nbsp;&nbsp;&nbsp; st.wDay = 12;<BR>&nbsp;&nbsp;&nbsp; st.wHour = 12;<BR>&nbsp;&nbsp;&nbsp; st.wMinute = 30;<BR>&nbsp;&nbsp;&nbsp; DATE date;<BR>&nbsp;&nbsp;&nbsp; SystemTimeToVariantTime(&amp;st, &amp;date);<BR><BR>&nbsp;&nbsp;&nbsp; VARIANT myVar;<BR>&nbsp;&nbsp;&nbsp; VariantInit(&amp;myVar);<BR>&nbsp;&nbsp;&nbsp;&nbsp;myVar.vt = VT_DATE;<BR>&nbsp;&nbsp;&nbsp;&nbsp;myVar.date = date;<BR>&nbsp;&nbsp;&nbsp; VARIANT myStr;<BR>&nbsp;&nbsp;&nbsp; VariantInit(&amp;myStr);<BR><BR>&nbsp;&nbsp;&nbsp; HRESULT hr = ::VariantChangeTypeEx(&amp;myStr, &amp;myVar, LOCALE_INVARIANT, 0, VT_BSTR);<BR>&nbsp;&nbsp;&nbsp; printf("%S\n",myStr.bstrVal);</FONT><BR><BR></STRONG></FONT>on Win2K, this will print:<BR><BR><STRONG>&nbsp;&nbsp;&nbsp; 123000<BR></STRONG><BR>on WinXP, this will print:<BR><BR><STRONG>&nbsp;&nbsp;&nbsp; 09/12/2005 12:30:00<BR></STRONG><BR>So my customer asks: "Is this a known issue?&nbsp; Is there a work around that can be suggested?"</P></FONT></FONT></BLOCKQUOTE>
+<P>Some of you have read <STRONG><A href="http://archives.miloush.net/michkap/archive/2004/12/29/344136.html">this post</A></STRONG> (which gives the exact date that the change to support the invariant locale was added to the Windows source tree), then you know the answer already.</P>
+<P>In a nutshell,&nbsp;the invariant locale didn't exist until after Windows 2000 shipped.</P>
+<P>So&nbsp;the behavior that is seen here is what you get when an unsupported LCID is passed (we have previously established that <STRONG><A href="http://archives.miloush.net/michkap/archive/2006/08/12/696161.html">no one checks return values</A></STRONG>!).</P>
+<P>For workrounds, picking any specific LCID here will do the trick. As long as you use a particular one consistently then the results will have consistency....</P>
+<P>&nbsp;</P>
+<P><FONT color=#ff1493><EM>This post brought to you by</EM> <FONT size=6><STRONG>ዙ</STRONG></FONT> <EM>(<A href="http://www.fileformat.info/info/unicode/char/12d9">U+12d9</A>, a.k.a. ETHIOPIC SYLLABLE ZU)</EM></FONT></P></FONT>
+<hr/><div style="margin-left: 1em"><em>no comments</em></div><hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2006/08/28/728336.html" title="What the hell is wrong with TranslateCharsetInfo, anyway?">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2006/08/27/726378.html" title="About the Fonts folder in Windows, Part 3 (aka What changes in Vista?)">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2006-08">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2006-08-27">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2006/08/27/727607.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:39 GMT -->
+</html>

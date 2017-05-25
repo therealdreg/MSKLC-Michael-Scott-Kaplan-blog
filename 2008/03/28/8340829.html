@@ -1,0 +1,46 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2008/03/28/8340829.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:36 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>The difference between USE X and SPECIFY CUSTOM X can be measured by the # of functions that support each</title></head><body>
+<h1>The difference between USE X and SPECIFY CUSTOM X can be measured by the # of functions that support each</h1>
+<p><em>by Michael S. Kaplan, published on 2008/03/28 03:01 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2008/03/28/8340829.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P><EM><FONT color=#ff0000 size=1>Content of </FONT></EM><A class="" href="http://blogs.msdn.com/michkap" mce_href="http://blogs.msdn.com/michkap"><EM><FONT size=1>Michael Kaplan's personal blog</FONT></EM></A><EM><FONT color=#ff0000 size=1> not approved by Microsoft (see </FONT></EM><A class="" href="http://archives.miloush.net/michkap/archive/2008/02/28/7934999.html" mce_href="http://archives.miloush.net/michkap/archive/2008/02/28/7934999.html"><EM><FONT size=1>disclaimer</FONT></EM></A><EM><FONT color=#ff0000 size=1>)!</FONT></EM>&nbsp;</P>
+<P>Over in the Suggestion Box, Marvin asked:</P>
+<BLOCKQUOTE>
+<P><EM><FONT face="times new roman,times">Puzzled by MSDN docs. IMLangConvertCharset is recommended for speed but there is no way to tell it what default (fallback) characters to use. Most maddeningly its Initialize function accepts a dwProperty param that can be MLCONVCHARF_USEDEFCHAR.<BR><BR>IMultiLanguage2::ConvertStringFromUnicodeEx has this ability but it is supposed to be slower. ConvertStringToUnicodeEx on the other hand has relevant parameters but says they are ignored.<BR><BR>What should a developer do (other that using 3rd party library)?<BR><BR>Background: I need MLang rather than MBtoWC/WCtoMB C API because I need continuable conversion, i.e. being able to to give parts of the input (possibly broken in the middle of a char) to the conversion routine. It appears that the only MS technology capable of doing it is MLang. </FONT></EM></P></BLOCKQUOTE>
+<P>The <A class="" href="http://msdn2.microsoft.com/library/aa741058.aspx" mce_href="http://msdn2.microsoft.com/library/aa741058.aspx">IMLangConvertCharset interface</A> does indeed claim to be pretty damn fast, but you have to keep in mind something that has been true since the earliest days of <A class="" href="http://msdn2.microsoft.com/library/ms776420.aspx" mce_href="http://msdn2.microsoft.com/library/ms776420.aspx">WideCharToMultiByte</A>:</P>
+<BLOCKQUOTE>
+<BLOCKQUOTE>
+<P>The <B>WideCharToMultiByte</B> function operates most efficiently when both <I>lpDefaultChar</I> and <I>lpUsedDefaultChar</I> are set to null pointers. The following table shows the behavior of the function for the four possible combinations of these parameters.</P>
+<P>
+<TABLE class="" border=1>
+<TBODY>
+<TR vAlign=top>
+<TH class="" align=left width="23%"><I>lpDefaultChar</I></TH>
+<TH class="" align=left width="32%"><I>lpUsedDefaultChar</I></TH>
+<TH class="" align=left width="45%">Result</TH></TR>
+<TR vAlign=top>
+<TD class="" width="23%">NULL</TD>
+<TD class="" width="32%">NULL</TD>
+<TD class="" width="45%">No default checking. These parameter settings are the most efficient ones for use with this function.</TD></TR>
+<TR vAlign=top>
+<TD class="" width="23%">non-NULL</TD>
+<TD class="" width="32%">NULL</TD>
+<TD class="" width="45%">Uses the specified default character, but does not set <I>lpUsedDefaultChar</I>.</TD></TR>
+<TR vAlign=top>
+<TD class="" width="23%">NULL</TD>
+<TD class="" width="32%">non-NULL</TD>
+<TD class="" width="45%">Uses the system default character and sets <I>lpUsedDefaultChar</I> if necessary.</TD></TR>
+<TR vAlign=top>
+<TD class="" width="23%">non-NULL</TD>
+<TD class="" width="32%">non-NULL</TD>
+<TD class="" width="45%">Uses the specified default character and sets <I>lpUsedDefaultChar</I> if necessary.</TD></TR></TBODY></TABLE></P></BLOCKQUOTE></BLOCKQUOTE>
+<P mce_keep="true">The fact that the fastest interface does not expose these ways to slow down the operation even though the MLang equivalent of WC_DEFAULTCHAR exists -- the operation of replacement by the default character and the option of specifying a custom one are two very different methods that aren't going to be available in every method or even in every code page.</P>
+<P mce_keep="true">But many other of the conversion methods within MLang will support specifying a custom default character and continuable conversions in buffers or streams (as you noticed). Some of them even work!</P>
+<P mce_keep="true">I don't think the particular&nbsp;lack on a particular interface is a reason to decide there is nothing provided by Microsoft, though. :-)</P>
+<P mce_keep="true">As a general rule, the desire for ultra-fast does not mix terribly well with the desire for lots of options, and this case is definitely not an exception to the rule.</P>
+<P mce_keep="true">&nbsp;</P>
+<P mce_keep="true"><FONT color=#ff00ff><EM>This blog brought to you by</EM><FONT size=5> ヲ </FONT><EM>(<A class="" href="http://www.fileformat.info/info/unicode/char/30f2" mce_href="http://www.fileformat.info/info/unicode/char/30f2">U+30f2</A>, aka KATAKANA LETTER WO)</EM></FONT></P>
+<hr/><div style="margin-left: 1em"><em>no comments</em></div><hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2008/03/29/8342675.html" title="Somehow I just get a Visual of the Logical Song (as sung by Supertramp)">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2008/03/28/8340751.html" title="Word custom dictionaries: 2003 to 2007, Exclude to Exclusions, ANSI to Unicode, sucks to ROCKS!">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2008-03">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2008-03-28">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2008/03/28/8340829.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:36 GMT -->
+</html>

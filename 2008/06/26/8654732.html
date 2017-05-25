@@ -1,0 +1,43 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2008/06/26/8654732.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:36 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Using one Unicode input method at a time (Using the Unicode IME on XP)</title></head><body>
+<h1>Using one Unicode input method at a time (Using the Unicode IME on XP)</h1>
+<p><em>by Michael S. Kaplan, published on 2008/06/26 10:01 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2008/06/26/8654732.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P>So back in the beginning of 2008, Harold Fuchs (in response to my <A class="" href="http://archives.miloush.net/michkap/archive/2005/05/18/419117.html" mce_href="http://archives.miloush.net/michkap/archive/2005/05/18/419117.html"><STRONG>Typing in random Unicode code points</STRONG></A> blog from almost 2.5 years prior, asked over in the Suggestion Box:</P>
+<BLOCKQUOTE>
+<P><EM><FONT face="times new roman,times">The method you described in May 2005 ("Typing in random Unicode code points") for entering Unicode characters by installing the Chinese language and IME simply doesn't work on my Win XP Pro + SP2 system. <BR><BR>The idea is that you select Chinese and then, with Numlock turned on, type the decimal character code on the numeric keypad while holding down the Alt key. I've tried it in IE7, Outlook Express 6 and Wordpad. No joy. For example, the decimal code 10003 (hex 2713) should produce a tick (check mark in American English). It doesn't. It merely produces a double exclamation mark, the same as if Chinese were not even installed, let alone selected.<BR><BR>Please, what have I done wrong?</FONT></EM></P></BLOCKQUOTE>
+<P>It took me a minute to try and follow this, then I realized the problem.</P>
+<P>My earlier blog started with some simple introductory test:</P>
+<BLOCKQUOTE>
+<P><FONT face="times new roman,times">People ask all the time how they can type in random Unicode data.<BR><BR>Some people point out the vast array of supported </FONT><A href="http://www.microsoft.com/globaldev/reference/keyboards.aspx"><FONT face="times new roman,times">Keyboard Layouts on Windows</FONT></A><FONT face="times new roman,times">.<BR><BR>Others point out how you can create your own keyboards with </FONT><A href="http://www.microsoft.com/globaldev/tools/msklc.mspx"><FONT face="times new roman,times">MSKLC</FONT></A><FONT face="times new roman,times">.<BR><BR>Still others talk about fancy things you can do with the numeric keypad.<BR><BR>And then still others like to go on about typing a code point value in Word, highlighting it, and then hitting &lt;Alt+X&gt;.<BR><BR>Personally, I like to just install the Unicode IME, first added for Traditional Chinese in Windows 2000 and available in every version of Windows since then.</FONT></P></BLOCKQUOTE>
+<P>I then went on to explain how to install and use the Unicode IME.</P>
+<P><EM>Of course note that the "every version of Windows since then" claim has since the time and date of that blog stopped being true when they stopped including it, which begin in Vista (as I explained <A class="" href="http://archives.miloush.net/michkap/archive/2006/07/20/671835.html" mce_href="http://archives.miloush.net/michkap/archive/2006/07/20/671835.html"><STRONG>here</STRONG></A> when I first gave a possible alternative!).</EM></P>
+<P>Now my post a couple of months later (<A class="" href="http://archives.miloush.net/michkap/archive/2005/07/18/439946.html" mce_href="http://archives.miloush.net/michkap/archive/2005/07/18/439946.html"><STRONG>Typing in random Unicode code points redux</STRONG></A>) links to <A href="http://www.fileformat.info/tip/microsoft/enter_unicode.htm"><FONT face=Tahoma>How to enter Unicode characters into Microsoft Windows</FONT></A><FONT face=Tahoma>&nbsp;which gives lots of ways to get the input done, also.</FONT></P>
+<P>But for XP SP2, the text in the original article is valid.</P>
+<P>The problem is that Harold was taking more than one of the five different methods I listed that can all be used to enter Unicode code points, and combining them. So when it didn't work, the entire article that happened to enumerate five completely different methods was considered incorrect. :-(</P>
+<P>Taking a closer look:</P>
+<BLOCKQUOTE>
+<P><EM>The idea is that you select Chinese and then, with Numlock turned on, </EM></P></BLOCKQUOTE>
+<P>No, this part is not needed and therefore not really right. :-(</P>
+<BLOCKQUOTE>
+<P><EM>type the decimal character code on the numeric keypad </EM></P></BLOCKQUOTE>
+<P>No, you use hexadecimal code unit, not decimal.</P>
+<BLOCKQUOTE>
+<P><EM>while holding down the Alt key.</EM></P></BLOCKQUOTE>
+<P>No, this will make it not use the Unicode IME at all.&nbsp;This will&nbsp;use the numpad method (hinted at in the introductory part of that blog).</P>
+<BLOCKQUOTE>
+<P><EM>I've tried it in IE7, Outlook Express 6 and Wordpad. No joy. </EM></P></BLOCKQUOTE>
+<P>Kind of expected under the circumstances. :-(</P>
+<BLOCKQUOTE>
+<P><EM>For example, the decimal code 10003 (hex 2713) should produce a tick (check mark in American English). </EM></P></BLOCKQUOTE>
+<P>Actually, unless you add special information to the registry, the numpad method only uses decimal and only takes four decimal digits. So <A class="" href="http://www.fileformat.info/info/unicode/char/2713" mce_href="http://www.fileformat.info/info/unicode/char/2713">U+2713</A> (CHECK MARK) would not be produced in this case.</P>
+<BLOCKQUOTE>
+<P><EM>It doesn't. It merely produces a double exclamation mark, the same as if Chinese were not even installed, let alone selected.</EM></P></BLOCKQUOTE>
+<P>I am not sure how <A class="" href="http://www.fileformat.info/info/unicode/char/203c" mce_href="http://www.fileformat.info/info/unicode/char/203c">U+203c</A> (DOUBLE EXCLAMATION MARK) came out of here, but the Unicode IME wasn't being used (and it never uses decimal values here).</P>
+<P>So, the solution is definitely to keep the different methods separate and just use one of them -- for XP my preference is still to use the Unicode IME, which if you think about it is the only method I gave more than hints at in terms of instructions for use. :-)</P>
+<P mce_keep="true">&nbsp;</P>
+<P><FONT color=#ff00ff><EM>This blog brought to you by</EM><FONT size=5> ✓ </FONT><EM>and</EM><FONT size=5> ‼ </FONT><EM>(<A class="" href="http://www.fileformat.info/info/unicode/char/2713" mce_href="http://www.fileformat.info/info/unicode/char/2713">U+2713</A> and <A class="" href="http://www.fileformat.info/info/unicode/char/203c" mce_href="http://www.fileformat.info/info/unicode/char/203c">U+203c</A>, aka CHECK MARK and DOUBLE EXCLAMATION POINT)</EM></FONT></P>
+<hr/><div style="margin-left: 1em"><em>no comments</em></div><hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2008/06/26/8655007.html" title="I am not engaged, everyone!">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2008/06/25/8652525.html" title="Seeing the tears, my heart went out to her as I asked her &quot;Why the Long S?&quot;">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2008-06">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2008-06-26">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2008/06/26/8654732.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:36 GMT -->
+</html>

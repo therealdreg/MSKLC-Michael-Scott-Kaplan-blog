@@ -1,0 +1,24 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2010/08/03/10028245.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:35 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Thank Bob someone else cares about backcompat and consistency!</title></head><body>
+<h1>Thank Bob someone else cares about backcompat and consistency!</h1>
+<p><em>by Michael S. Kaplan, published on 2010/08/03 07:01 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2010/08/03/10028245.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<p>So the question in email was [for me, at least] wholly depressing:</p>
+<p style="padding-left: 60px;"><em><span style="font-family: times new roman,times;">Hi,</span></em></p>
+<p style="padding-left: 60px;"><em><span style="font-family: times new roman,times;">What I would like to understand more is why Silverlight CLR Covert.ToDouble(string) would <br />1.&nbsp;Default to convert the string using the current culture of machine and not IE<br />2.&nbsp;Instead of using Invariant Culture use Current Culture.</span></em></p>
+<p style="padding-left: 60px;"><em><span style="font-family: times new roman,times;">In my scenario we wrote double to string conversion in Silverlight client and that started failing on the client machine where regional setting are set to &ldquo;Norvey&rdquo; and IE set to &ldquo;English US&rdquo;.</span></em></p>
+<p style="padding-left: 60px;"><em><span style="font-family: times new roman,times;">Many Thanks</span></em></p>
+<p>Why did I find this to be so depressing?</p>
+<p>Where do I start?</p>
+<p>Well&nbsp;there is the fact that it&nbsp;kinda makes sense as&nbsp;a default since strings will often come from users and expecting users to not follow their own stated preferences would be a little bit crazy.</p>
+<p>And there is the fact that every version of .Net that has ever shipped Convert.ToDouble(string) overload has used the CurrentCulture by default - so a change in expectations would be a nightmare of behavior documentation with a myraid of clones doing stuff differently in ways no sane user will be able to fully grasp.</p>
+<p>And of course there is the fact that since the user has to support both scenarios, ar least one of which uses or should use the current default, that the developer can just suck it up and write the code correctly, even if they feel the wrong choice was made for the default.</p>
+<p>Many object about how different "The Silverlight Scenario" is and how it might make sense to do things differently, but I call <strong>NO WAY</strong>on that one -- if you want behavior to be different because everything being done is different then you DO NOT GIVE EVERYTHING THE EXACT SAME NAME TO EASE DEVELOPMENT since different behavior will negate that rapid dev pretty fast.</p>
+<p>Now if people want to have the philosophical argument about should they have chosen the default differently then that's okay. But probably that is better for a fireside chat since the conversations will not be able to impact existing stuff anyway, so not everyone will be interested.</p>
+<p>All I can say is that I am glad that it isn't just me arguing against willy-nilly architectural changes spec'ed out on the back of a cocktail napkin favoring new scenarios and willing to change behavior out from under the old ones.</p>
+<p>Because lots of people pointed out those same issues.</p>
+<p>So there are people looking after the design here. :-)</p>
+<hr/><div style="margin-left: 1em"><em>no comments</em></div><hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2010/08/04/10045672.html" title="My aren&#39;t we looking quite Bosnianesque?">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2010/08/02/10033748.html" title="How to encourage XP to keep QWERTY for the logon screen?">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2010-08">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2010-08-03">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2010/08/03/10028245.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:35 GMT -->
+</html>

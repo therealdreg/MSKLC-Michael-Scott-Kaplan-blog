@@ -1,0 +1,22 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2010/09/26/10067840.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>If case conversion were harder, people would do it less</title></head><body>
+<h1>If case conversion were harder, people would do it less</h1>
+<p><em>by Michael S. Kaplan, published on 2010/09/26 07:01 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2010/09/26/10067840.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<p>It was just last night that I got the following mail:</p>
+<p style="padding-left: 30px;"><span style="font-family: times new roman,times;">Hi. I have seen your blogs regarding invariant culture, collation, etc and they are very, very useful. Thanks!<br /><br />Also, if you don&rsquo;t mind, I do have a question :-). Do you know why the results below are different.<br /><br />Thread.CurrentThread.CurrentCulture = new CultureInfo("tr-TR");<br />string upper = "FILE";<br />string tolowerCultureSenstive = upper.ToLower();<br />string tolowerInvariant = upper.ToLowerInvariant();<br /><br />The results will be:<br />tolowerCultureSenstive&nbsp;--&gt; fıle<br />tolowerInvariant&nbsp;--&gt; file<br /><br />My guess is that the tr-TR is not in the default collation table?</span></p>
+<p>Well, there is a little confusion here since the methods involved refer to casing yet the question is about collation. </p>
+<p>And as I have mentioned before, <a href="http://archives.miloush.net/michkap/archive/2006/01/11/511557.html" title="Collation != Case (a.k.a. Collation &amp;lt;&amp;gt; Case)"><strong>Collation != Case (a.k.a. Collation &lt;&gt; Case)</strong></a>.</p>
+<p>Though for both casing and collation, Turkic languages&nbsp;see the specific alternate behavior with the letter "I" as I described in <a href="http://archives.miloush.net/michkap/archive/2004/12/03/274288.html" title="The [Upper]Case of the Turkish İ (or: Casing, the 2nd)"><strong>The [Upper]Case of the Turkish İ (or: Casing, the 2nd)</strong></a>.</p>
+<p>Now any time one is dealing with files and the like,&nbsp;one needs to use the invariant style methods because it is important to avoid differences based on configuration. Changing the answer for Turkish to questions like "does the file" exist would never be a good idea but in particular is doing the wrong thing for a few other reasons:</p>
+<ul>
+<li>in Windows, UPPER-casing is used for files and such;</li>
+<li>the non-linguistic tables are used to avoid the locale-specific results;</li>
+<li>Windows essentially does an "ordinal, ignore case by uppercasing" comparison, never doing a case conversion.</li>
+</ul>
+<p>If one is trying to mimic in managed code checks done in native code, then doing the same types of checks/comparisons is the best way to avoid bugs and problems down the road....</p>
+<p>Personally, I wish case conversion wasn't so easy. If it were harder to do then perhaps it would happen less since in most cases it is the wrong thing to do! :-)</p>
+<hr/><div style="margin-left: 1em"><em>no comments</em></div><hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2010/09/27/10068079.html" title="Megasupport of multiple ways to display text is the new &quot;megafont&quot;">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2010/09/25/10067692.html" title="Is there any Esperanto in that?">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2010-09">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2010-09-26">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2010/09/26/10067840.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+</html>

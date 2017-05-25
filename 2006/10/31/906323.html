@@ -1,0 +1,30 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2006/10/31/906323.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:39 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>"àèìòù" < "äëïöü" but "àèìòù " > "äëïöü"</title></head><body>
+<h1>"àèìòù" < "äëïöü" but "àèìòù " > "äëïöü"</h1>
+<p><em>by Michael S. Kaplan, published on 2006/10/31 04:37 -05:00, original URI: http://blogs.msdn.com/b/michkap/archive/2006/10/31/906323.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P>You may remember my post <STRONG><A class="" href="http://archives.miloush.net/michkap/archive/2006/03/25/560416.html" mce_href="http://archives.miloush.net/michkap/archive/2006/03/25/560416.html">I need my SPACE, symbolically speaking</A></STRONG> from this past March. </P>
+<P>There are some interesting consequences of this behavior, which I thought I would talk about a bit further since they have been the subject of several recent bug reports....</P>
+<P>Let's take a simple string like </P>
+<P><FONT size=4>àèìòù (U+00e0 U+00e8 U+00ec U+00f2 U+00f9)</FONT></P>
+<P>and compare it with</P>
+<P><FONT size=4>äëïöü&nbsp;(U+00e4 U+00eb U+00ef U+00f6 U+00fc)</FONT></P>
+<P>Just&nbsp;pass them both to CompareStringW using 0x0409 for the LCID, and you will find that "àèìòù" &lt; "äëïöü". But if you add a space to the first string, then you will see that "àèìòù "&nbsp;&gt; "äëïöü". </P>
+<P>Huh? How'd that happen?</P>
+<P>Well, let's look at the sort keys of each of the three strings we are looking at here:</P>
+<P><FONT face="Consolas,courier new,Lucida Console,courier" size=3><STRONG>"àèìòù"<BR>0e 02 0e 21 0e 32 0e 7c 0e 9f 01 0f 0f 0f 0f 0f 01 01 01 00<BR><BR>"äëïöü"<BR>0e 02 0e 21 0e 32 0e 7c 0e 9f 01 13 13 13 13 13 01 01 01 00<BR><BR>"àèìòù "<BR>0e 02 0e 21 0e 32 0e 7c 0e 9f 07 02 01 0f 0f 0f 0f 0f 01 01 01 00</STRONG></FONT></P>
+<P mce_keep="true">Aha, things maybe are a little clearer now. The letters have consistent weights, as do the diacritics. And so the first string comparison sees equal primary weights but a difference in the secondary weights. And that second comparison sees a difference in the primary weights, so suddenly the order is reversed. Oops!</P>
+<P mce_keep="true">Now this will happen with any symbol (or for that matter anything with a primary weight, but for some reason the SPACE and similar characters have results that seem less intuitive!), though simply passing NORM_IGNORESYMBOLS will cause the space or other symbol to be ignored.</P>
+<P mce_keep="true">Now this is the first example. I will give some of the others in a later post. And maybe some thoughts about how the issue of intuitive results could perhaps be looked into, and why the solution is less obvious than it may seem at first....</P>
+<P mce_keep="true">Have I scared anyone yet? If so, then Happy Halloween! :-)</P>
+<P mce_keep="true">&nbsp;</P>
+<P mce_keep="true"><FONT color=#ff00ff><EM>This post brought to you by</EM> " " <EM>(<A class="" href="http://www.fileformat.info/info/unicode/char/0020" mce_href="http://www.fileformat.info/info/unicode/char/0020">U+0020</A>, a.k.a. SPACE)</EM></FONT></P>
+<hr/><p><strong>llllllllllllllllllllllllllllllllllllllllllllllllllll</strong> on 16 Jun 2011 9:13 PM:</p><div style="margin-left: 1em"><p>lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll</p></div>
+<p><strong>Name</strong> on 16 Jun 2011 9:14 PM:</p><div style="margin-left: 1em"><p>did you mean alt?</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 16 Jun 2011 10:15 PM:</p><div style="margin-left: 1em"><p>I do not understand the question....</p>
+</div>
+<hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2006/11/01 <a href="http://archives.miloush.net/michkap/archive/2006/11/01/916477.html">If you add enough characters to a sort, intuitive distinction can suffer</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2006/11/01/916477.html" title="If you add enough characters to a sort, intuitive distinction can suffer">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2006/10/31/904805.html" title="Mapudungun is not a map to a dungeon">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2006-10">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2006-10-31">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2006/10/31/906323.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:39 GMT -->
+</html>

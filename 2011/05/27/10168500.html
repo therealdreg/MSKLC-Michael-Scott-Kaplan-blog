@@ -1,0 +1,78 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2011/05/27/10168500.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>If it's overtly over-applied and overarching, it may be an overreach (e.g. in nOrway!)</title></head><body>
+<h1>If it's overtly over-applied and overarching, it may be an overreach (e.g. in nOrway!)</h1>
+<p><em>by Michael S. Kaplan, published on 2011/05/27 07:01 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2011/05/27/10168500.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<p>I will admit there are occasionally times when I consider all the differences between me and the members of my family that I wonder whether I was somehow switched at the hospital or something like that.</p>
+<p>Idle thoughts that I quickly discard given how traumatic it would be to take one who had been believed to be a parent and changing the identification.</p>
+<p>Given that, it is slightly unfortunate that the parent/child metaphor is used in Windows locales and .NET Framework cultures.</p>
+<p>Especially in light of an issue that came up not too long ago....</p>
+<p>Isabella's question was,&nbsp;to my line of thinking, profoundly reasonable:</p>
+<p style="padding-left: 60px;"><span style="font-family: times new roman,times;">I noticed one undocumented behavior change while debugging. The symptom is the parent culture of &ldquo;nb-no&rdquo; changes across 2 .Net versions.<br /><br /></span><span style="font-family: times new roman,times;">Any idea about this? Is it by design or a bug?</span></p>
+<p style="padding-left: 120px;"><strong><span style="font-family: courier new,courier;">CultureInfo culture = CultureInfo.GetCultureInfo("nb-no");</span></strong><br /><strong><span style="font-family: courier new,courier;">Console.WriteLine("Parent name: {0}, LCID:{1:X}", culture.Parent.Name, culture.Parent.LCID);</span></strong></p>
+<p style="padding-left: 90px;"><span style="font-family: times new roman,times;"><b>Target Framework: 3.0 / 3.5: </b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Parent name: no, LCID:14</span><br /><span style="font-family: times new roman,times;"><b>Target Framework: 4.0 :&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</b>Parent name: nb, LCID:7C14</span></p>
+<p style="padding-left: 60px;"><span style="font-family: times new roman,times;">Thanks,</span><br /><span style="font-family: times new roman,times;">Isabella</span></p>
+<p>All of this is a side effect of a big change that happened in the Windows 7/.NET Framework 4.0 timeframe.</p>
+<p>Perhaps <strong>undocumented</strong> was not the most accurate term for Isabella to use here; either <strong>under-documented</strong> or <strong>poorly documented</strong> would have been better, in this case.</p>
+<p>The <em>documentation</em>, such as it is, can be found in the white paper entitled <a href="http://msdn.microsoft.com/netframework/dd890508.aspx" title="Microsoft .NET Framework 4: What is New in Globalization">Microsoft .NET Framework 4: What is New in Globalization</a>:</p>
+<p style="padding-left: 30px;"><strong><span style="font-family: times new roman,times; font-size: medium;">Renovating Globalization Information</span></strong><br /><br /><span style="font-family: times new roman,times; font-size: medium;">In the real world, the globalization information is constantly changing because of cultural developments in the local markets, because of new standards which update the culture sensitive information frequently, or because Microsoft finds more accurate information about different markets or expands into more markets. Microsoft .NET Framework 4 supports a minimum of 354 cultures compared to a minimum of 203 cultures in the previous release. Many of those cultures are neutrals that were added to complete the parent chain to the root neutral culture.</span></p>
+<p>This "insertion of neutrals" is the&nbsp;"justification" for the change here, though as justifications go I have a few qualms here.</p>
+<p><em>But then I have other qualms with this white paper, as I discussed previously in my evisceration of the breaking change in the KeyboardLayoutId in </em><strong><a href="http://archives.miloush.net/michkap/archive/2011/03/16/10141835.html" title="Reporting one casualty in the operation; luckily it was the stupidest member of the unit">Reporting one casualty in the operation; luckily it was the stupidest member of the unit</a></strong><em>.</em>&nbsp;:-)</p>
+<p>Anyway, let me explain my new qualms, and I will let my Norwegian friend Kim (of <strong><a href="http://archives.miloush.net/michkap/archive/2011/03/21/10143659.html" title="See Kim. See Kim run. See Kim run setup and find a bug!">See Kim. See Kim run. See Kim run setup and find a bug!</a></strong>&nbsp;fame) tell me if I am right or wrong. His review is a great help to me, since more and more often&nbsp;I see Kim my as my own personal ambassador to Norway. This is in no small part due to the fact that plans for the SIAO embassy to Norway in Stj&oslash;rdalshalsen (a town in Nord-Tr&oslash;ndelag county) have been put on hiatus while I try to figure out how to pronounce Stj&oslash;rdalshalsen, and to put some distance between me and the original plans to locate the embassy in the nearby village of Hell, a less than brilliant marketing plan to deal with people who would from time to time tell me to <strong>Go To Hell, Michael!</strong> The whole&nbsp;affair can be attributed to the the influence and impact of attractive Norwegian women who befriend me and say things that sound clever while we are both drinking. Thankfully I was not told to <strong>Go To Hell</strong> in that context....</p>
+<p><img height="175" width="263" src="http://msdnshared.blob.core.windows.net/media/MSDNBlogsFS/prod.evol.blogs.msdn.com/CommunityServer.Blogs.Components.WeblogFiles/00/00/00/33/81/1462.Hell.jpg" /></p>
+<p>Anyway, that was quite a digression! Back to the topic....</p>
+<p>If you look at the white paper, it gives a great example of the very good reason for the additional neutrals that were added, namely the cross-script child to parent relationships:</p>
+<p style="padding-left: 150px;">For example, three Inuktitut neutrals were added to the already existing cultures Inuktitut (Syllabics, Canada) and Inuktitut (Latin, Canada) as shown in the following table. </p>
+<div style="padding-left: 150px;">
+<table cellpadding="2" cellspacing="2" border="1" style="width: 612px;">
+<tbody>
+<tr>
+<td valign="bottom"><strong>Culture Display Name</strong></td>
+<td valign="bottom"><strong>Culture Name</strong></td>
+<td valign="bottom"><strong>LCID</strong></td>
+</tr>
+<tr>
+<td valign="bottom">Inuktitut</td>
+<td valign="bottom">iu</td>
+<td valign="bottom">0x005d</td>
+</tr>
+<tr>
+<td valign="bottom">Inuktitut (Syllabics)</td>
+<td valign="bottom">iu-Cans</td>
+<td valign="bottom">0x785D</td>
+</tr>
+<tr>
+<td valign="bottom">Inuktitut (Syllabics, Canada)</td>
+<td valign="bottom">iu-Cans-CA</td>
+<td valign="bottom">0x045D</td>
+</tr>
+<tr>
+<td valign="bottom">Inuktitut (Latin)</td>
+<td valign="bottom">iu-Latn</td>
+<td valign="bottom">0x7C5D</td>
+</tr>
+<tr>
+<td valign="bottom">Inuktitut (Latin, Canada)</td>
+<td valign="bottom">iu-Latn-CA</td>
+<td valign="bottom">0x085D</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p style="padding-left: 150px;"><em>Table &ndash; Example of many new neutrals</em></p>
+<p>Now in resource fallback (the main scenario of the chain) the older chain was really something of a liability since it was crossing the script boundary a little too freely, in this case and many others.</p>
+<p>But in the case of&nbsp;Bokm&aring;l vs. Nynorsk, we aren't talking about script differences country differences or language differences. We are talking about two theoretical extremes of a dialect-based difference that spans the country of Norway and only Norway, and in actuality the old fallback behavior isn't really bad in any linguistic or market-based sense -- a neutral Nynorsk doesn't&nbsp;really&nbsp;seem to&nbsp;serve much of a real purpose....</p>
+<p>In fact, it really looks like a bit of technical over-reaching (an overarching change being over-applied).</p>
+<p>Clearly intentional, and therefore by design, I guess.</p>
+<p>Though given how traumatic it is to find out that whoever your thought your parent was turns out to not be, perhaps these edge cases should not have been shifted so quickly.</p>
+<p>Perhaps not such a good application of the design?</p>
+<hr/><p><strong>Doug Ewell</strong> on 27 May 2011 8:24 AM:</p><div style="margin-left: 1em"><p>Geez, if I&#39;d known Hell looked like that, I wouldn&#39;t have been so worried about last Saturday.</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 27 May 2011 9:06 AM:</p><div style="margin-left: 1em"><p>You were worried about it? :-)</p>
+</div>
+<p><strong>Van</strong> on 7 Jun 2011 3:07 PM:</p><div style="margin-left: 1em"><p>@Doug. Unfortunately, this is Hell in the summertime. It gets a lot worse in winter.</p>
+</div>
+<hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2011/05/28/10168547.html" title="MUI and MFC live together in perfect harmony...">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2011/05/26/10167955.html" title="To True Boldly Go Where No Font...(yada yada yada)">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2011-05">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2011-05-27">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2011/05/27/10168500.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+</html>

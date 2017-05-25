@@ -1,0 +1,54 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2006/01/31/520694.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:40 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>New in Vista: What's your name? Who's your daddy?</title></head><body>
+<h1>New in Vista: What's your name? Who's your daddy?</h1>
+<p><em>by Michael S. Kaplan, published on 2006/01/31 11:01 -05:00, original URI: http://blogs.msdn.com/b/michkap/archive/2006/01/31/520694.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<font face=Tahoma>
+<p>It is probable bordering on certainty that the Zombies were not singing about cultures in the .NET Framework in their song <strong>Time of the Season</strong>. Even in some kind of prophetic sense.</p>
+<p>And while I'm sure there are parents out there who may not be keen on the resource model that the .NET Framework uses (i.e. if resources do not exist for a particular language, check what its parents have!), the resource fallback model has some important customization abilities over simple string parsing of RFC-1766 or RFE-3066 names.</p>
+<p>But this post is not about any of that. This post is about Windows.</p>
+<p>I mean, it is easy to claim in the .NET Framework that CultureInfo names are where it is at, and that LCIDs are just there for backwards compatibility.</p>
+<p>But meanwhile back in Windows, the NLS API and all of its functions pivot on LCID.</p>
+<p>Well, they used to, I mean.</p>
+<p>Because Windows Vista supports new functions that take locale names rather than LCIDs!</p>
+<p>For now, I'll just list a bunch of the ones that are on the MSDN site online:</p>
+<ul>
+<li><a href="http://msdn.microsoft.com/library/en-us/intl/nls_EnumCalendarInfoExEx.asp"><b>EnumCalendarInfoExEx</b></a></li>
+<li><a href="http://msdn.microsoft.com/library/en-us/intl/nls_EnumDateFormatsExEx.asp"><b>EnumDateFormatsExEx</b></a></li>
+<li><a href="http://msdn.microsoft.com/library/en-us/intl/nls_EnumSystemLocalesEx.asp"><b>EnumSystemLocalesEx</b></a></li>
+<li><a href="http://msdn.microsoft.com/library/en-us/intl/nls_EnumTimeFormatsEx.asp"><b>EnumTimeFormatsEx</b></a></li>
+<li><a href="http://msdn.microsoft.com/library/en-us/intl/nls_FindNLSStringEx.asp"><b>FindNLSStringEx</b></a></li>
+<li><a href="http://msdn.microsoft.com/library/en-us/intl/nls_GetCalendarInfoEx.asp"><b>GetCalendarInfoEx</b></a></li>
+<li><a href="http://msdn.microsoft.com/library/en-us/intl/nls_GetCurrencyFormatEx.asp"><b>GetCurrencyFormatEx</b></a></li>
+<li><a href="http://msdn.microsoft.com/library/en-us/intl/nls_GetDateFormatEx.asp"><b>GetDateFormatEx</b></a></li>
+<li><a href="http://msdn.microsoft.com/library/en-us/intl/nls_GetDurationFormatEx.asp"><b>GetDurationFormatEx</b></a></li>
+<li><a href="http://msdn.microsoft.com/library/en-us/intl/nls_GetLocaleInfoEx.asp"><b>GetLocaleInfoEx</b></a></li>
+<li><a href="http://msdn.microsoft.com/library/en-us/intl/nls_GetNLSVersionEx.asp"><b>GetNLSVersionEx</b></a></li>
+<li><a href="http://msdn.microsoft.com/library/en-us/intl/nls_GetNumberFormatEx.asp"><b>GetNumberFormatEx</b></a></li>
+<li><a href="http://msdn.microsoft.com/library/en-us/intl/nls_GetTimeFormatEx.asp"><b>GetTimeFormatEx</b></a></li>
+<li><a href="http://msdn.microsoft.com/library/en-us/intl/nls_LCMapStringEx.asp"><b>LCMapStringEx</b></a></li></ul>
+<p>And more!</p>
+<p>And of course there is the easy moving between names and LCIDs with <a href="http://msdn.microsoft.com/library/en-us/intl/nls_LCIDToLocaleName.asp"><b>LCIDToLocaleName</b></a>&nbsp;and <a href="http://msdn.microsoft.com/library/en-us/intl/nls_LocaleNameToLCID.asp"><b>LocaleNameToLCID</b></a>.</p>
+<p>Future posts will talk about various details of many of these new functions and the special things that some of them can do that go above and beyond their LCID-based versions.</p>
+<p>And just so you don't think the post title was entirely gratuitous:</p>
+<ul>
+<li>There is an LCTYPE added for LOCALE_SNAME that will return the name of the locale, and</li>
+<li>There is&nbsp;also an LCTYPE added for LOCALE_SPARENT that will return the parent name of a locale (its value is 0x0000006d and it is coming soon to a winnls.h near you!).</li></ul>
+<p>So now any developer running Vista can ask of a locale those immortal questions&nbsp;first asked by&nbsp;The Zombies -- <strong>What's your name?</strong> <strong>Who's your daddy?</strong></p>
+<p>And parents throughout the world&nbsp;will shudder&nbsp;at the precedent since those often neutral names that are the parents can be used for resource fallback, along with the new MUI functions for UI language that I will talk about another day..... :-)</p>
+<p>&nbsp;</p>
+<p><font color=#ff1493><em>This post brought to you by</em> "<font size=6>𝅘𝅥</font>" <em>(<a href="http://www.fileformat.info/info/unicode/char/1d15f">U+1d15f</a>, a.k.a. MUSICAL SYMBOL QUARTER NOTE)</em></font></p></font>
+<hr/><p><a id="520919" href="#520919">#</a> <strong>ChipH</strong> on 31 Jan 2006 2:23 PM:</p><div style="margin-left: 1em">Well, now we know what comes after the "Ex" version of an API.  It's the "ExEx" version!<br/><br/>EnumCalendarInfoExEx()<br/><br/>(I'm not complaining, but I think a lot of people saw this coming)</div>
+<p><a id="521266" href="#521266">#</a> <strong>Michael Dunn_</strong> on 31 Jan 2006 6:59 PM:</p><div style="margin-left: 1em">In another 10 years, after two more revs of the OS, are we going to have FoobarExExExEx APIs? ;)</div>
+<p><a id="521333" href="#521333">#</a> <strong>Michael S. Kaplan</strong> on 31 Jan 2006 8:09 PM:</p><div style="margin-left: 1em">I hope not, Mike!</div>
+<p><a id="521505" href="#521505">#</a> <strong>mdolenga</strong> on 31 Jan 2006 10:48 PM:</p><div style="margin-left: 1em">Ssssshh, don't tell anyone some of the alternative names we threw around before deciding. :)</div>
+<p><a id="521628" href="#521628">#</a> <strong>Nathan</strong> on 1 Feb 2006 1:16 AM:</p><div style="margin-left: 1em">That ExEx thing is horrible, come on you guys can do better than that.</div>
+<p><a id="526264" href="#526264">#</a> <strong>PatriotB</strong> on 6 Feb 2006 10:13 PM:</p><div style="margin-left: 1em">Seriously, can you guys PLEASE not use ExEx? &nbsp;It's hard to read, unprofessional, and not scalable at all.<br /><br />Plus, it is inconsistent with other APIs. &nbsp;For example, IE 7 is introducing a function CreateURLMonikerEx2 (<a rel="nofollow" target="_new" href="http://msdn.microsoft.com/workshop/networking/moniker/reference/functions/createurlmonikerex2.asp?frame=true">http://msdn.microsoft.com/workshop/networking/moniker/reference/functions/createurlmonikerex2.asp?frame=true</a>). &nbsp;Can you please use Ex2 (EnumCalendarInfoEx2) instead? &nbsp;Please say it isn't too late to make this change. &nbsp;Make it now, before Vista is released, otherwise it will be too late and it will be around forever.</div>
+<p><a id="526273" href="#526273">#</a> <strong>Michael S. Kaplan</strong> on 6 Feb 2006 10:24 PM:</p><div style="margin-left: 1em">Hi PatriotB,<br /><br />I'm sorry to say, but what IE7 here is not really a guideline for the Win32 API (nor is MLang for that matter). But punishing anyone who has started working to use the new functions is not really a good answer either....</div>
+<p><a id="526967" href="#526967">#</a> <strong>PatriotB</strong> on 7 Feb 2006 4:30 PM:</p><div style="margin-left: 1em">:( &nbsp;Just thought I'd offer my two cents on how to make the Windows API set the best it can be.<br /><br />Plus, anyone using the new functions should be under the understanding that they are &quot;preliminary and subject to change.&quot; &nbsp;You could even define the ExEx version as a macro for these users.</div>
+<p><a id="527240" href="#527240">#</a> <strong>Michael S. Kaplan</strong> on 7 Feb 2006 10:08 PM:</p><div style="margin-left: 1em">Looking at other Win32 API functions, I do not see a strong precedent of the number suffix mechanism (which seems more common in COM-based implementations). There is a wide range of possibilities (including the huge number of weird things that GDI does for the text extent functions), though....<br /><br />I am having trouble seeing what precisely is so bad about the ExEx for tha few functions that already had Ex versions, though. Could you explainI am not sure I see it as particuloar hard to read or as particularly unprofessional.<br /><br />I mean beyond the reminder of my ex, that is. :-)<br /><br />Seriously, could you give me a little more of your thinking on this?</div>
+<p><a id="543266" href="#543266">#</a> <strong>laura</strong> on 3 Mar 2006 5:45 PM:</p><div style="margin-left: 1em">the best school ever</div>
+<hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2008/11/14 <a href="http://archives.miloush.net/michkap/archive/2008/11/14/9068578.html">When features collide (aka Your LCID sucks, but sometimes the bug sucks more)</a></p><p>2007/03/19 <a href="http://archives.miloush.net/michkap/archive/2007/03/19/1912171.html">A way better model for features, part 2</a></p><p>2006/10/15 <a href="http://archives.miloush.net/michkap/archive/2006/10/15/827944.html">Not everything you might want out of a GetDateFormatEx, but think of it as a fixer-upper</a></p><p>2006/07/16 <a href="http://archives.miloush.net/michkap/archive/2006/07/16/667622.html">Nobody likes change</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2006/02/01/521864.html" title="It speaks my language (well, almost!)">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2006/01/31/520280.html" title="And while I&#39;m on the subject, there is the rest of the world">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2006-01">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2006-01-31">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2006/01/31/520694.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:40 GMT -->
+</html>

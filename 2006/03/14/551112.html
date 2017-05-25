@@ -1,0 +1,45 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2006/03/14/551112.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:40 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Wait til you see my 'O' [pattern]</title></head><body>
+<h1>Wait til you see my 'O' [pattern]</h1>
+<p><em>by Michael S. Kaplan, published on 2006/03/14 08:35 -05:00, original URI: http://blogs.msdn.com/b/michkap/archive/2006/03/14/551112.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P><FONT face=Tahoma size=2><EM>(no, this post is not about a rap or hip hop song, or its lyrics, though I admit the title may have been inspired by one!)</EM></FONT></P>
+<P><FONT face=Tahoma>Internationalization guru Bill Hall asked of some folks here:</FONT></P>
+<BLOCKQUOTE dir=ltr style="MARGIN-RIGHT: 0px">
+<P><FONT size=2>I have a small question to ask.&nbsp; Some time ago when you were helping me with some issues in my monographs on .NET I18n, you once sent me a response saying that it was rather strange that I would run through the standard number formats using the single ascii character formatters a-z and A-Z, trying each one to see if a corresponding format or number expression would emerge.&nbsp; As it happened in that instance, I discovered that the ‘P’ and ‘p’ formats for percentage were not documented anywhere in .NET 1.1.<BR><BR></FONT><FONT size=2>Well, I’m doing a series for multilingual about what is new for .NET 2.0 and I tried the same experiment, this time for DateTime.&nbsp; Guess what?&nbsp; The ‘o’ and ‘O’ formats are missing in the .NET 2.0 documentation!&nbsp; The pattern is yyyy'-'MM'-'dd'T'HH':'mm':'ss.fffffffK for both, and it is clearly an ISO 8601 form but I cannot find any reference to it.<BR><BR></FONT><FONT size=2>It would be nice to know what .NET calls it.&nbsp; ISO calls it a ‘complete’ format – a bit vague.&nbsp; I’d like to provide the official .NET name in my article and I wonder if you could help.<BR><BR></FONT><FONT size=2>Many thanks.</FONT></P></BLOCKQUOTE>
+<P><FONT face=Tahoma>Well, I agree with Bill here -- it is hard to argue with results, and clearly he is managing to stay at least a few steps in front of the documentation by using such tricks. It keeps us honest. :-)</FONT></P>
+<P><FONT face=Tahoma>So, there are the existing, documented formats you can find in the <A href="http://msdn2.microsoft.com/en-us/library/dah0ktz1(VS.80).aspx">DateTimeFormatInfo.GetAllDateTimePatterns(char)</A> overload -- this lists some of them, but there are many more, some that can be found in other help topics. Here is the full list as of 2.0 for date formats, all of the ones that can be used with that method:</FONT></P>
+<UL>
+<LI><FONT face=Tahoma><FONT face="Courier New"><STRONG>'d'</STRONG> --</FONT> A&nbsp;list of all short&nbsp;date patterns</FONT> 
+<LI><FONT face=Tahoma><FONT face="Courier New"><STRONG>'D'</STRONG> --</FONT> A list of all long date patterns</FONT> 
+<LI><FONT face=Tahoma><FONT face="Courier New"><STRONG>'f'</STRONG> --</FONT> A list with all long date and short time formats, combined</FONT> 
+<LI><FONT face=Tahoma><FONT face="Courier New"><STRONG>'F'</STRONG> --</FONT> A list with all long date and&nbsp;long time formats, combined</FONT> 
+<LI><FONT face=Tahoma><FONT face="Courier New"><STRONG>'g'</STRONG> --</FONT> A list with all short date and short time formats, combined</FONT> 
+<LI><FONT face="Courier New"><STRONG>'G'</STRONG> --</FONT><FONT face=Tahoma> A list with all&nbsp;short date and&nbsp;long time formats, combined</FONT> 
+<LI><FONT face="Courier New"><STRONG>'m'</STRONG> --</FONT><FONT face=Tahoma> The month/day pattern</FONT> 
+<LI><FONT face="Courier New"><STRONG>'M'</STRONG> --</FONT><FONT face=Tahoma> <EM>same as 'm'</EM></FONT> 
+<LI><FONT color=#008000><FONT face="Courier New"><STRONG>'o'</STRONG> --</FONT><FONT face=Tahoma> The 'RoundTrip'&nbsp; format that Bill found, "yyyy'-'MM'-'dd'T'HH':'mm':'ss.fffffffK"</FONT></FONT> 
+<LI><FONT color=#008000><FONT face="Courier New"><STRONG>'O'</STRONG> --</FONT><FONT face=Tahoma> <EM>same as 'o'</EM></FONT></FONT><FONT face="Courier New"> 
+<LI><FONT color=#008000><FONT face="Courier New"><STRONG>'r' --</STRONG></FONT><FONT face=Tahoma><STRONG> </STRONG>The RFC 1123 pattern, "ddd, dd MMM yyyy HH':'mm':'ss 'GMT'"</FONT></FONT></FONT><FONT face="Courier New"> 
+<LI><FONT color=#008000><FONT face="Courier New"><STRONG>'R' --</STRONG></FONT><FONT face=Tahoma><STRONG> </STRONG><EM>same as 'r'</EM></FONT></FONT> 
+<LI><FONT color=#008000><STRONG>'s'</STRONG> --</FONT></FONT><FONT face=Tahoma color=#008000> The sortable date time pattern (allows sorting by date value), "yyyy'-'MM'-'dd'T'HH':'mm':'ss"</FONT> 
+<LI><FONT face="Courier New"><STRONG>'t'</STRONG> --</FONT><FONT face=Tahoma> A list of all short time patterns</FONT> 
+<LI><FONT face="Courier New"><STRONG>'T'</STRONG> --</FONT><FONT face=Tahoma> A list of all long time patterns</FONT> 
+<LI><FONT color=#008000><FONT face="Courier New"><STRONG>'u'</STRONG> --</FONT><FONT face=Tahoma> The 'Universal' sortable date time pattern, "yyyy'-'MM'-'dd HH':'mm':'ss'Z'"</FONT></FONT> 
+<LI><FONT face="Courier New"><STRONG>'U'</STRONG> --</FONT><FONT face=Tahoma> <EM>same as 'F' -- and no, that is not a typo!</EM></FONT> 
+<LI><FONT face="Courier New"><STRONG>'y'</STRONG> --</FONT><FONT face=Tahoma> A list of all Year/Month formats</FONT> 
+<LI><FONT face="Courier New"><STRONG>'Y'</STRONG> --</FONT><FONT face=Tahoma> <EM>same as 'y'</EM></FONT></LI></UL>
+<P><FONT face=Tahoma>(The items in green are independent of culture, while the ones in black are not.</FONT></P>
+<P><FONT face=Tahoma>As the above list indicates, </FONT><FONT face=Tahoma>I do not know of an official name for this 'o'/'O' format: no one I talked to does (through reflection, you can see the name of the format is DateTimeFormat.RoundtripFormat, but that is not the actual name, it is just an internal thing).</FONT></P>
+<P><FONT face=Tahoma>Enjoy!</FONT></P>
+<P><FONT face=Tahoma></FONT>&nbsp;</P>
+<P><FONT face=Tahoma color=#ff1493><EM>This post brought to you by</EM> "O" <EM>(<A href="http://www.fileformat.info/info/unicode/char/004f">U+004f</A>, a.k.a. LATIN CAPITAL LETTER O)</EM></FONT></P>
+<hr/><p><strong>Adam</strong> on 14 Mar 2006 9:58 AM:</p><div style="margin-left: 1em"># 's' -- The sortable date time pattern (allows sorting by date value), &quot;yyyy'-'MM'-'dd'T'HH':'mm':'ss&quot;<br><br>Hmmmm....does that follow RFC 2550 (<a rel="nofollow" target="_new" href="http://www.ietf.org/rfc/rfc2550.txt">http://www.ietf.org/rfc/rfc2550.txt</a>) for dates after 10,000AD?<br><br>:)<br></div>
+<p><strong>Michael S. Kaplan</strong> on 14 Mar 2006 3:32 PM:</p><div style="margin-left: 1em">Well, when the Y10K isue hits, we'll be too busy fixing the old COBOL applications to worry about *that* issue. :-)</div>
+<p><strong>Mattias</strong> on 14 Mar 2006 4:56 PM:</p><div style="margin-left: 1em">From the subject I thought the post was about the movie Office Space. &quot;If things go right I might be showing her my O-face. You know: Oh. Oh.&quot; &nbsp;:-) <a rel="nofollow" target="_new" href="http://www.imdb.com/title/tt0151804/quotes">http://www.imdb.com/title/tt0151804/quotes</a></div>
+<p><strong>Michael S. Kaplan</strong> on 14 Mar 2006 7:36 PM:</p><div style="margin-left: 1em">Heh heh -- yes, Mattias, that reference works too....<br><br>:-)</div>
+<p><strong>Dean Harding</strong> on 15 Mar 2006 9:20 PM:</p><div style="margin-left: 1em">The DateTime structure only supports dates between 1st Jan in the year 1 and 31st Dec in the year 9999, so there's a lot more to worry about than just how it formats dates in Y10k!!</div>
+<hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2011/06/08 <a href="http://archives.miloush.net/michkap/archive/2011/06/08/10172429.html">Wait til you see my Õ (Ō), Latvian edition</a></p><p>2007/07/12 <a href="http://archives.miloush.net/michkap/archive/2007/07/12/3829450.html">Wait til you see my 'O'[EMCP based technology]</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2006/03/15/551773.html" title="Casing and IgnoreCase are still not the same thing....">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2006/03/14/551068.html" title="GDI Font Linking in GDI+">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2006-03">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2006-03-14">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2006/03/14/551112.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:40 GMT -->
+</html>

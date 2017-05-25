@@ -1,0 +1,39 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2005/09/09/462920.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:41 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Figuring out when digit substitution is applied</title></head><body>
+<h1>Figuring out when digit substitution is applied</h1>
+<p><em>by Michael S. Kaplan, published on 2005/09/09 10:38 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2005/09/09/462920.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P><FONT face=Tahoma>A developer at Microsoft recently asked me the following:</FONT></P>
+<BLOCKQUOTE dir=ltr style="MARGIN-RIGHT: 0px">
+<P><SPAN style="FONT-SIZE: 10pt; FONT-FAMILY: Arial"><EM><FONT face="Times New Roman">In control panel -&gt; Regional options, the short date sample some times show national digit shapes. Is there any way, I can find out using an api which digit shape is used in the short date example of regional options?<?xml:namespace prefix = o ns = "urn:schemas-microsoft-com:office:office" /><o:p></o:p></FONT></EM></SPAN></P></BLOCKQUOTE>
+<P><FONT face=Tahoma>The most important place to look is at <A href="http://msdn.microsoft.com/library/en-us/intl/nls_34rz.asp">GetLocaleInfo</A>&nbsp;and specifically the <A href="http://msdn.microsoft.com/library/en-us/intl/nls_8rse.asp">LCTYPE</A> values LOCALE_IDIGITSUBSTITUTION and LOCALE_SNATIVEDIGITS:</FONT></P><FONT face=Tahoma>
+<DL>
+<DL>
+<DT><FONT face="Times New Roman" size=2>LOCALE_IDIGITSUBSTITUTION </FONT>
+<DD><FONT face="Times New Roman"><FONT size=2><B>Windows 2000/XP:</B> Determines the shape of the digits. For example, Arabic, Thai, and Indic digits have classical shapes different from western digits. The specifier can be one of these values. </FONT></FONT>
+<BLOCKQUOTE dir=ltr style="MARGIN-RIGHT: 0px">
+<BLOCKQUOTE>
+<TABLE class=data>
+<TBODY>
+<TR vAlign=top>
+<TH class=data align=left width="12%"><FONT face="Times New Roman" size=2>Value</FONT></TH>
+<TH class=data align=left width="88%"><FONT face="Times New Roman" size=2>Meaning</FONT></TH></TR>
+<TR vAlign=top>
+<TD class=data width="12%"><FONT face="Times New Roman" size=2>0</FONT></TD>
+<TD class=data width="88%"><FONT face="Times New Roman" size=2>Context - the shape depends on the previous text in the same output.</FONT></TD></TR>
+<TR vAlign=top>
+<TD class=data width="12%"><FONT face="Times New Roman" size=2>1</FONT></TD>
+<TD class=data width="88%"><FONT face="Times New Roman" size=2>None/Arabic - gives full Unicode compatibility.</FONT></TD></TR>
+<TR vAlign=top>
+<TD class=data width="12%"><FONT face="Times New Roman" size=2>2</FONT></TD>
+<TD class=data width="88%"><FONT face="Times New Roman" size=2>Native - national shapes determined by LOCALE_SNATIVEDIGITS.</FONT></TD></TR></TBODY></TABLE></BLOCKQUOTE></BLOCKQUOTE></DD></FONT><FONT face=Tahoma>
+<DT><FONT face="Times New Roman" size=2>LOCALE_SNATIVEDIGITS </FONT>
+<DD><FONT face="Times New Roman" size=2>Native equivalents to ASCII zero through 9. </FONT></DD></DL></DL></FONT>
+<P><FONT face=Tahoma>Regional and Language Options uses GetDateFormat to get the formatted string and it is Uniscribe that&nbsp;takes the string when it is rendered and decides what to substitute, as appropriate.</FONT></P>
+<P><FONT face=Tahoma>You see, it is <A href="http://msdn.microsoft.com/library/en-us/intl/uniscrib_35k5.asp">Uniscribe</A>&nbsp;and more specifically the <A href="http://msdn.microsoft.com/library/en-us/intl/uniscrib_8azy.asp"><B><FONT face="Courier New">ScriptApplyDigitSubstitution</FONT></B></A>&nbsp;and <A href="http://msdn.microsoft.com/library/en-us/intl/uniscrib_1cq6.asp"><FONT face="Courier New">ScriptRecordDigitSubstitution</FONT></A>&nbsp;functions (plus the supporting <A href="http://msdn.microsoft.com/library/en-us/intl/uniscrib_962a.asp"><FONT face="Courier New">SCRIPT_DIGITSUBSTITUTE</FONT></A>&nbsp;structure). Since Uniscribe has shipped in&nbsp;the box for every version of Windows since Windows 2000, the information about when and how to substitute digits is indeed valuable, and the Uniscribe implementation proves it. You can use these functions to do all of the "heavy lifting" for figuring out how to handle digits in a wide variety of situations....</FONT></P>
+<P><FONT face=Tahoma></FONT>&nbsp;</P>
+<P><FONT face=Tahoma color=#ff0000><EM>This post brought to you by</EM> "<FONT size=6>๙</FONT>" <EM>(<A href="http://www.fileformat.info/info/unicode/char/0e59/index.htm">U+0e59</A>, a.k.a. THAI DIGIT NINE)</EM></FONT></P>
+<hr/><div style="margin-left: 1em"><em>no comments</em></div><hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2010/11/12 <a href="http://archives.miloush.net/michkap/archive/2010/11/12/10088056.html">Suddenly, in a bit more time than a blink of an eye, "standards support" becomes "less i18n support"</a></p><p>2008/10/02 <a href="http://archives.miloush.net/michkap/archive/2008/10/02/8971896.html">When swimming in a sea of CONTEXT, applications can drown (and there is no lifeguard)</a></p><p>2007/02/14 <a href="http://archives.miloush.net/michkap/archive/2007/02/14/1675303.html">Nothing seems to be parsing the crap out of *this* number</a></p><p>2006/06/18 <a href="http://archives.miloush.net/michkap/archive/2006/06/18/636180.html">The Phantom of the Digits</a></p><p>2006/04/26 <a href="http://archives.miloush.net/michkap/archive/2006/04/26/583390.html">How to NOT Parse Unicode Digits, or How to: Parse Unicode Digits... NOT!</a></p><p>2006/02/22 <a href="http://archives.miloush.net/michkap/archive/2006/02/22/536877.html">And the digits just keep on coming</a></p><p>2006/01/18 <a href="http://archives.miloush.net/michkap/archive/2006/01/18/514171.html">Digits -- there is no substitute</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2005/09/09/462934.html" title="Update on the CharUnicodeInfo class">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2005/09/09/462880.html" title="Safe &#39;DrawText&#39; function">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2005-09">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2005-09-09">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2005/09/09/462920.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:41 GMT -->
+</html>

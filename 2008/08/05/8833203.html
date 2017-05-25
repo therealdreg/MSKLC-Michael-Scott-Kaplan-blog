@@ -1,0 +1,49 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2008/08/05/8833203.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:36 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>On describing poorly (and on not listening)</title></head><body>
+<h1>On describing poorly (and on not listening)</h1>
+<p><em>by Michael S. Kaplan, published on 2008/08/05 03:01 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2008/08/05/8833203.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<p>You may recall blogs like <b><a href="http://archives.miloush.net/michkap/archive/2007/09/14/4900107.html" mce_href="http://archives.miloush.net/michkap/archive/2007/09/14/4900107.html">How do I feel about lstrcmpi? I think it blows....</a></b> where I pointed out a case where an entire division full of developers have essentially been doing something wrong for over a decade.</p>
+<p>I have even put out the straw man argument that perhaps if everyone gets it wrong so consistently then perhaps changing the function to meet might be easier than changing the expectations of so many developers.</p>
+<p>Now there are other times that we can run across this kind of problem. <br></p>
+<p>Like the one I ran across today as I was reviewing a ton of code.</p>
+<p>It is the problem I discuss in <b><a href="http://archives.miloush.net/michkap/archive/2007/08/08/4291958.html" mce_href="http://archives.miloush.net/michkap/archive/2007/08/08/4291958.html">The user locale of the system account is not the system locale</a></b>.<br></p>
+<p>There is important (if subtle) message in that blog.</p>
+<p>That message, quite simply put, is</p>
+<blockquote>
+<p><font size="5" color="#000000">The default user locale of the SYSTEM account is not the default system locale.</font><br></p>
+</blockquote>
+<p>This is a point that I am physically unable to make any clearer.</p>
+<p>They aren't the same.</p>
+<p>The former, on the one hand, is changing the default user locale on the first tab in <b>Regional and Language Options</b> (RLO) and settable by applying changes to the system accounts on the bottom of the last tab of RLO. No reboot is needed but programs already running under the system account <i>may</i> need to be cycled to find out about the change. And its value is not returned by <a href="http://msdn.microsoft.com/library/ms776315.aspx" mce_href="http://msdn.microsoft.com/library/ms776315.aspx">GetSystemDefaultLCID</a>.<br></p>
+<p>The latter, on the other hand, is settable by changing the <b>Language for non-Unicode programs</b>.on the last tab of RLO, an the reboot is absolutely required even if you cycle services running under the system account.</p>
+<p>These two settings are not connected functionally and are only connected in people's minds because of their respective older names both having the word SYSTEM in them.</p>
+<p><i>There is a third setting that is also unrelated but bolsters the notion of the separate identity of the SYSTEM account -- the one I describe in <b><a href="http://archives.miloush.net/michkap/archive/2006/05/05/590504.html" mce_href="http://archives.miloush.net/michkap/archive/2006/05/05/590504.html">UI language of the LocalSystem account (which almost never shows UI)</a></b> -- which is not returned by <a href="http://msdn.microsoft.com/library/intl/nls_2ip1.asp" mce_href="http://msdn.microsoft.com/library/intl/nls_2ip1.asp">GetSystemDefaultUILanguage</a> though it sounds like it maybe ought to -- but we'll set that aside for the moment. </i>:-)<br></p>
+<p>Anyway, people keep making this same mistake, which leads to real problems when services are not running with the settings that the expect even if customers are informed about how to apply changes to default/system accounts and they properly follow the steps to do this.</p>
+<p>All I can do is just yell at the top of my lungs here so that future Google searches can pick up on it, using the words:
+</p>
+<blockquote>
+  
+<p><font size="5" color="#ff0000">The default user locale of the SYSTEM account is not the default system locale.</font><br><font size="5" color="#ff0000">The default user locale of the </font><font size="5" color="#ff0000">SYSTEM</font><font size="5" color="#ff0000"> account is not the default system locale.<br></font><font size="5" color="#ff0000">The default user locale of the </font><font size="5" color="#ff0000">SYSTEM</font><font size="5" color="#ff0000"> account is not the default system locale.<br></font><font size="5" color="#ff0000">The default user locale of the </font><font size="5" color="#ff0000">SYSTEM</font><font size="5" color="#ff0000"> account is not the default system locale.</font><br>
+  </p>
+</blockquote>
+<p>
+And just hope that people are listening? :-)<br></p>
+<p>Plus maybe whisper loudly in some ears at work....<br></p>
+<p><br></p>
+<p><font color="#ff00ff"><i></i></font><font color="#ff00ff"><i>This post brought to you by</i><font size="6"> δ 
+</font><i>(<a href="http://www.fileformat.info/info/unicode/char/06cc/i" class="" mce_href="http://www.fileformat.info/info/unicode/char/06cc/i">U+03b4</a>, 
+a.k.a. GREEK SMALL LETTER DELTA)</i></font></p>
+<hr/><p><strong>Heath Stewart</strong> on 5 Aug 2008 5:32 PM:</p><div style="margin-left: 1em"><p>Spamming Google may result in your page not showing up in searches. :)</p>
+<p>(At least at one point long ago they documented that.)</p></div>
+<p><strong>Michael S. Kaplan</strong> on 5 Aug 2008 7:18 PM:</p><div style="margin-left: 1em"><p>That's a fair point. </p>
+<p>I wonder whether they would do the same if it were a less automated decision? :-)</p>
+</div>
+<p><strong>Jan Kučera</strong> on 8 Aug 2008 7:50 PM:</p><div style="margin-left: 1em"><p>I hope everyone will forgive me this comment, but I must add:</p>
+<p>And a voxel is not a little cube!</p>
+<p>You are not the only one facing such problem, Michael. If interested, I think you will find the memo I'm referencing... <a rel="nofollow" target="_new" href="http://alvyray.com/Memos/MemosMicrosoft.htm">http://alvyray.com/Memos/MemosMicrosoft.htm</a></p>
+<p>Good luck!</p></div>
+<hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2008/08/05/8834892.html" title="If you can find an unsigned copy, it&#39;s worth an absolute fortune">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2008/08/04/8823327.html" title="Tap your heels together three times and the problem is solved?">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2008-08">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2008-08-05">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2008/08/05/8833203.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:36 GMT -->
+</html>

@@ -1,0 +1,34 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2007/03/12/1862122.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:38 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>ASCII? no questions; I tell UNICODE lies</title></head><body>
+<h1>ASCII? no questions; I tell UNICODE lies</h1>
+<p><em>by Michael S. Kaplan, published on 2007/03/12 03:01 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2007/03/12/1862122.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P>There have been a few questions coming my way lately about ASCII such as managed one this from Michael Liu:</P>
+<BLOCKQUOTE>
+<P><FONT face="times new roman,times"><EM>Is there a WideCharToMultiByte equivalent in .NET 1.1/2.0 for the ASCII code page? I'd like to perform a best-fit mapping of non-ASCII characters (for a legacy system) but both Encoding.ASCII and Encoding.GetEncoding(20127) simply turn non-ASCII characters into ???????. The following code does what I want, but it uses reflection to access the internal CodePageEncoding type:<BR><BR></EM></FONT><B><FONT face="consolas,lucida console,courier new,courier" size=2>String s = "...";<BR>Type t = Type.GetType("System.Text.CodePageEncoding", true);<BR>Encoding e = (Encoding) Activator.CreateInstance(t, new Object[] { 20127 });<BR>s = Encoding.Default.GetString(e.GetBytes(s));</FONT></B></P></BLOCKQUOTE>
+<P>And this unmanaged one from DavRis:</P>
+<BLOCKQUOTE>
+<P><FONT face="times new roman,times"><EM>MultiByteToWideChar with US-ASCII specified as the codepage ignores the 8th bit of characters in the input.<BR><BR>So the bytes 0xC1 0xC2 0xC3 are turned into 'ABC' in the output. &nbsp;This happens even if I pass the flag 'MB_ERR_INVALID_CHARS'.<BR><BR>This seems very odd to me. &nbsp;I would expect MBtWC to fail on 0xC1 rather than interpret it as if it were 0x41. &nbsp;Is there a way that this makes sense or a good reason for this?</EM></FONT></P></BLOCKQUOTE>
+<P>As code pages go, it is to be honest not one that we have ever gone out of our way to do such a hot job with.</P>
+<P>All of&nbsp;the implementations, from&nbsp;the pre 2.0 managed to the &gt;= 2.0 managed to the unmanaged across various versions of Windows, have always done okay with actual ASCII data but not so well with data that one is trying to truncate down into ASCII (unless you do your own fallback work in .NET &gt;= 2.0, I mean).</P>
+<P>Though if you look at these examples, they are using encodings/code pages in a specific way.</P>
+<P>My personal advice would be to not try and use an encoding as a text validation scheme -- do the conversion using the actual encoding that the text is in, and then if you need to validate it being in a specific subrange then do that separately. Even in Michael Liu's case where he is dealing with legacy data, it clearly isn't really ASCII. It would be a shame to lose data that way -- to have the data converted&nbsp;to Unicode by lying about where it came from. :-(</P>
+<P>I'd also suggest&nbsp;being careful with reflection of internal classes that are subject to change in future versions -- or at the very least if it does go away due to a change in the internal implementation to not complain too loudly....</P>
+<P>And of course never limit yourself to just ASCII, since that cut out proper representation of over 99% of the world's languages!</P>
+<P mce_keep="true"><EM>(</EM><A class="" href="http://blogs.msdn.com/shawnste/" mce_href="http://blogs.msdn.com/shawnste/"><EM>Shawn</EM></A><EM> might have some additional thoughts here; this post might inspire a riff from him!)</EM>&nbsp;</P>
+<P mce_keep="true">&nbsp;</P>
+<P><FONT color=#ff00ff><EM>This post brought to you by</EM>&nbsp;<FONT size=4>Â</FONT> <EM>(<A class="" href="http://www.fileformat.info/info/unicode/char/00c2" mce_href="http://www.fileformat.info/info/unicode/char/00c2">U+00c2</A>, a.k.a. LATIN CAPITAL LETTER A WITH CIRCUMFLEX)</EM></FONT></P>
+<hr/><p><strong>bg</strong> on 12 Mar 2007 9:53 AM:</p><div style="margin-left: 1em"><p>ASCII? no questions; I tell UNICODE lies &gt; oi.... that has to be the worst one yet!</p></div>
+<p><strong>Shawn Steele - MSFT</strong> on 12 Mar 2007 4:47 PM:</p><div style="margin-left: 1em"><p><a rel="nofollow" target="_new" href="http://msdn2.microsoft.com/en-us/library/tt6z1500">http://msdn2.microsoft.com/en-us/library/tt6z1500</a>(VS.80).aspx has a &quot;Fallback Encoding Application Sample&quot; that includes a fallback that uses normalization to get extended best-fit behavior.</p>
+<p>Of course you might wanna see <a rel="nofollow" target="_new" href="http://blogs.msdn.com/shawnste/archive/2006/01/19/515047.aspx">http://blogs.msdn.com/shawnste/archive/2006/01/19/515047.aspx</a> &quot;Best Fit in WideCharToMultiByte and System.Text.Encoding Should be Avoided&quot;</p>
+</div>
+<p><strong>Arun Philip</strong> on 13 Mar 2007 5:55 AM:</p><div style="margin-left: 1em"><p>Ow, that's the cheesiest title I've seen in a long while! </p>
+<p>~ Phylyp </p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 13 Mar 2007 6:26 AM:</p><div style="margin-left: 1em"><p>You and bg both thought so, Phylyp -- yet you have to admit it worked out as being quite accurate! :-)</p>
+</div>
+<p><strong>John Cowan</strong> on 8 May 2008 2:21 PM:</p><div style="margin-left: 1em"><p>Nah, it's &quot;ASCII no questions, EBCDIC no lies.&quot; &nbsp;Much better.</p></div>
+<hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2012/02/20 <a href="http://archives.miloush.net/michkap/archive/2012/02/20/10269748.html">Where short file names can fail</a></p><p>2008/05/08 <a href="http://archives.miloush.net/michkap/archive/2008/05/08/8466991.html">In hindsight, they may have BEST FIT these files where the sun never shines</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2007/03/12/1862502.html" title="Ask &#39;em if their language is Montenegrin; their answer may surprise you">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2007/03/11/1857439.html" title="The weirdness of the DST change on SIAO....">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2007-03">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2007-03-12">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2007/03/12/1862122.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:38 GMT -->
+</html>

@@ -1,0 +1,40 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2008/06/19/8620456.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:36 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Accelerator vs. Shortcut, revisited</title></head><body>
+<h1>Accelerator vs. Shortcut, revisited</h1>
+<p><em>by Michael S. Kaplan, published on 2008/06/19 03:01 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2008/06/19/8620456.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P>In the before time, in the long long ago, when this blog was first finding its voice, I blogged two blogs:</P>
+<UL>
+<LI><A class="" href="http://archives.miloush.net/michkap/archive/2004/12/23/331112.html" mce_href="http://archives.miloush.net/michkap/archive/2004/12/23/331112.html"><STRONG>Accessibility, Internationalization, and Keyboards (#1: Shortcuts)</STRONG></A></LI>
+<LI><A class="" href="http://archives.miloush.net/michkap/archive/2004/12/24/331661.html" mce_href="http://archives.miloush.net/michkap/archive/2004/12/24/331661.html"><STRONG>Accessibility, Internationalization, and Keyboards (#2: Accelerators)</STRONG></A></LI></UL>
+<P>And a recent conversation with some localizers made me think about these two items from the point of view of a localizer.</P>
+<P><EM>In a strangely ironic turn, LocStudio (the Microsoft internal and privished tool, mentioned </EM><A class="" href="http://archives.miloush.net/michkap/archive/2007/10/05/5283962.html" mce_href="http://archives.miloush.net/michkap/archive/2007/10/05/5283962.html"><STRONG>previously</STRONG></A><EM>) reportedly refers to both <STRONG>accelerators</STRONG> and <STRONG>shortcuts</STRONG> as <STRONG>accelerators</STRONG>.</EM></P>
+<P>Anyway, the message I sent out to try and contrast these two items from the standpoint of localization went something like this:</P>
+<BLOCKQUOTE>
+<P><FONT face="times new roman,times">For shortcuts, localizers do need to translate the term for the key (e.g. CTRL vs. STRG), and they will usually put in the letter that appears on the keyboard layout the user of the language is most likely to be using for whatever is under VK_C (if they don't then the user will not know what the text means). The localizer has no way to change the behavior since it is VK-based and code mediated.<BR><BR>For accelerators, localizers still need to translate the term for the key (e.g. CTRL vs. STRG). But for the letter itself, they are fully in control of the accelerator (on menu or dialog) and can change it to anything they like, with the choice usually based on a letter in the word they have chosen in the translation. The localizer has the complete control to change the behavior (assuming the developer did not hardcode the strings!), since it is character based and localizable text mediated.<BR><BR>Localizers therefore have a much more controlling role for accelerators than for shortcuts; in the shortcut case they are forced to just be descriptive, and in rare interesting cases where the VK the code uses does not exist on the keyboard (a problem that has come up <A class="" href="http://archives.miloush.net/michkap/archive/2006/04/02/567003.html" mce_href="http://archives.miloush.net/michkap/archive/2006/04/02/567003.html"><STRONG>in the past</STRONG></A>), the localizer has no real choice since the application is broken when using that keyboard worldwide (and is just more noticeable in their language).</FONT></P></BLOCKQUOTE>
+<P>Thus the fact that the main tool used by MS localizers calls them by the same&nbsp;term even though they play very different roles in the work of those same MS localizers is pretty tragically ironic....</P>
+<P><FONT color=#ff00ff><EM>This blog brought to you by</EM><FONT size=7> ණ </FONT><EM>(<A class="" href="http://www.fileformat.info/info/unicode/char/0dab" mce_href="http://www.fileformat.info/info/unicode/char/0dab">U+0dab</A>, aka SINHALA LETTER MUURDHAJA NAYANNA)</EM></FONT></P>
+<hr/><p><strong>Mihai</strong> on 19 Jun 2008 2:32 PM:</p><div style="margin-left: 1em"><p>The message is so confusing, I don't even understand it.</p>
+<p>What is the difference between &quot;shortcut&quot; and &quot;accelerator&quot; (as used here)?</p>
+<p>Reading your previous posts does not help, because they are kind of the reverse of what I use.</p>
+<p>Why would I call stuff in accelerator table &quot;shortcut&quot; and the stuff outside the accelerator table &quot;accelerator&quot;?</p>
+<p>My lingo:</p>
+<p>1. Menu string: &quot;&amp;Replace\tCtrl+H&quot;</p>
+<p>2. &quot;H&quot;, &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;ID_EDIT_REPLACE, &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; VIRTKEY, CONTROL</p>
+<p> &nbsp; &nbsp;VK_INSERT, &nbsp; &nbsp; &nbsp;ID_EDIT_PASTE, &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;VIRTKEY, SHIFT</p>
+<p>1. &quot;O&quot; in open (used for Alt-O) is a quick-key</p>
+<p> &nbsp;All things with ampersand &amp;x are quick-keys (in menus or dialogs)</p>
+<p> &nbsp;Ctrl+O in the menu string is just &quot;Accelerator description&quot;</p>
+<p>2 &amp; 3 Ctrl+O and Shift-Insert are&quot;accelerators&quot;, because they are stored in an accelerator table. If the stuff in the accelerator table uses VIRTKEY or ASCII is not relevant, that's still and accelerator.</p>
+<p>Localization: changes all of them.</p>
+<p>Very often the accelerator themselves are not changed, mostly because of laziness (and truth be told, it's not easy). But look at the Spanish Windows. &quot;Find&quot; is translated &quot;Buscar&quot; and the accelerator is Ctrl+B.</p>
+<p>That can break &quot;bold&quot; (also Ctrl+B), so that has to change too.</p></div>
+<p><strong>Michael S. Kaplan</strong> on 19 Jun 2008 3:10 PM:</p><div style="margin-left: 1em"><p>But the choice is not always available to localizers to make a change -- I am distinguishing the case where localization can change it from the one where they can't.</p>
+</div>
+<p><strong>Mihai</strong> on 19 Jun 2008 4:42 PM:</p><div style="margin-left: 1em"><p>&quot;I am distinguishing the case where localization can change it from the one where they can't.&quot;</p>
+<p>Ok, I see.</p>
+<p>The name I use for the case when localization cannot change it is &quot;internationalization bug&quot; :-)</p></div>
+<hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2008/06/20/8620949.html" title="Long Live Nancy DAVolio, and DAV!">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2008/06/19/8620349.html" title="How do[es what] the common controls [call ]convert between ANSI and Unicode?">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2008-06">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2008-06-19">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2008/06/19/8620456.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:36 GMT -->
+</html>

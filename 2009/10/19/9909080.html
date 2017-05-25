@@ -1,0 +1,46 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2009/10/19/9909080.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:35 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>The error is in the premise (aka garbage in, undefined out)</title></head><body>
+<h1>The error is in the premise (aka garbage in, undefined out)</h1>
+<p><em>by Michael S. Kaplan, published on 2009/10/19 07:01 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2009/10/19/9909080.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P>Yesterday, Eran asked (via the Contact link):</P>
+<BLOCKQUOTE>
+<P><FONT face="times new roman,times"><EM>Shalom,</EM></FONT></P>
+<P><FONT face="times new roman,times"><EM>I apologize in advance if this is the wrong way to report this issue. I've waisted two hours trying to figure out how to use Connect for this, to no avail. Being an occasional reader, contacting you directly was the only option I could think of.</EM></FONT></P>
+<P><FONT face="times new roman,times"><EM>So, without further ado:<BR>GetKeyboardLayoutList( 0, (HKL*)"garbage" ); works correctly on all 32 bit versions of Windows I've tried (XP, 2003, Vista), and when run from a 64 bit executable it also works on 64 bit versions of Windows (2003, 2008). However, when run from 32 bit executables on 64 bit windows (2003, 2008) it fails with a "Invalid access to memory location" error. If a NULL is passed instead of the garbage, the call succeeds on all bitnesses and OSes.</EM></FONT></P>
+<P><FONT face="times new roman,times"><EM>In the MSDN docs, nothing is said about the second parameter when the first is 0. This is the first time I come across incompatibility between WOW64 and the equivalent 32 version of Windows. And it breaks a feature of our product.</EM></FONT></P>
+<P><FONT face="times new roman,times"><EM>I will highly appreciate any response - be it a direction to the appropriate address, an acknowledgment of the bug, or any other advise.</EM></FONT></P>
+<P><FONT face="times new roman,times"><EM>Thank you for your time,<BR>Eran</EM></FONT></P></BLOCKQUOTE>
+<P>Sometimes, like the title says, the problem is the premise.</P>
+<P>In particular I will yield to Raymond's <A href="http://blogs.msdn.com/oldnewthing/archive/2006/03/20/555511.aspx" mce_href=" http://blogs.msdn.com/oldnewthing/archive/2006/03/20/555511.aspx">Basic ground rules for programming - function parameters and how they are used</A>, which is in my view the definitive way to look at the contract here.</P>
+<P>And while there are nuances when differences exist between 32bit and WOW64, these nuances are caused by the same kind of problem that comes from people who don't use <A href="http://msdn.microsoft.com/library/ms633571.aspx" mce_href="http://msdn.microsoft.com/library/ms633571.aspx">CallWindowProc</A> but instead call window procs directly -- people who then run afoul of the ANSI/Unicode layer requirements.</P>
+<P>So, is it a bug if the WOW64 layer has always behaved this way? Saying NO does mean resigning to a certain kind of backward compatibility break in the whole "run 32-bit apps on a 64-bit OS" scenario, though the defense of passing bad parameters is one that in my view is fairly indefensible just to allow one to avoid initializing a buffer (or more likely to avoid causing one to change one's existing code to initialize a buffer).</P>
+<P>Though of course your mileage may vary....</P>
+<hr/><p><strong>Mihai</strong> on 19 Oct 2009 2:27 PM:</p><div style="margin-left: 1em"><p>Actually, in this case it sounds like a bug.</p>
+<p>The doc says &quot;Return Value ... , if nBuff is zero, the return value is the size, in array elements, of the buffer needed to receive all current input locale identifiers.&quot;</p>
+<p>That is the contract.</p>
+<p>No matter what the value of the second parameter is, it will return the needed size.</p>
+<p>Otherwise the doc should say &quot;if nBuff is zero and lpList is NULL, ...&quot;</p>
+<p><a rel="nofollow" target="_new" href="http://msdn.microsoft.com/en-us/library/ms646297(VS.85).aspx">http://msdn.microsoft.com/en-us/library/ms646297%28VS.85%29.aspx</a></p>
+<p>It also does not break any &quot;Raymond rule.&quot;</p>
+<p>A rule is &quot;All buffers are valid to the size declared or implied&quot;; and in this case the declared size is zero, so the function should not try to touch anything in the buffer.</p></div>
+<p><strong>Michael S. Kaplan</strong> on 19 Oct 2009 5:53 PM:</p><div style="margin-left: 1em"><p>Unless there is some reason why this head check is inconvenient in the case in question... garbage in, garbage out. There is no version where this has worked.</p>
+</div>
+<p><strong>Random832</strong> on 20 Oct 2009 10:09 AM:</p><div style="margin-left: 1em"><P>The linked article also says "Pointers are not NULL unless explicitly permitted otherwise." - if you're supposed to be passing in NULL, then the documentation should mention _that_, and it's still a bug that it doesn't.</P>
+<P>As the documentation stands there is no reason to think a null pointer is a better choice than an uninitialized pointer. After all, if it's dereferencing an uninitialized pointer today, who says it won't dereference a null pointer tomorrow? Which leaves the only option to be _allocating memory twice_.</P></div>
+<p><strong>Michael S. Kaplan</strong> on 20 Oct 2009 10:44 AM:</p><div style="margin-left: 1em"><P>The problem here is not a NULL or non-NULL pointer -- the problem is a bogus pointer.</P>
+<P>Either a valid pointer or NULL would be okay here. GARBAGE is not.</P>
+<P>I do not mind casts, except when they are outright lies, like in this case....</P></div>
+<p><strong>Dave Bacher</strong> on 23 Oct 2009 11:13 AM:</p><div style="margin-left: 1em"><p>If you think about how this works, you can see why Microsoft needs the pointer to be null if the count is zero.</p>
+<p>This is a 30+ year old C convention, Microsoft doesn't need to document it in each individual function call. &nbsp;Either a pointer points towards what it is supposed to, or the pointer is null. &nbsp;Casts are there because there are times where someone who knows what they are doing needs to treat one type as another -- they are not there to make the compiler &quot;shut up.&quot;</p>
+<p>Now, for 16 to 32 and for 32 to 64, Microsoft has a set of wrapper libraries. &nbsp;These either invoke the kernel, or they invoke the newer API. &nbsp;I believe the latter is much more common than the former.</p>
+<p>Microsoft has a tool, it reads a header file, and for each structure it writes a marshaller. &nbsp;For each function, it invokes the marshaller (MarshalTo64 or w/e), then invokes the native function, then invokes the marshaller again (MarshalTo32).</p>
+<p>Because there are millions of functions, Microsoft isn't going to convert each one by hand. &nbsp;They have a tool, it writes all these stubs. &nbsp;The tool, out of necessity, doesn't know anything about which parameters are used in which cases -- it assumes that the pointer is either valid or null.</p>
+<p>It has to, otherwise you'd have to be able to express all the pre and post conditions for every combination of variables using #defines, etc., and the header would expand exponentially.</p>
+<p>This is, however, why newer APIs are being factored to use cursor/iterator against OS-owned memory, or COM.</p></div>
+<p><strong>Michael S. Kaplan</strong> on 23 Oct 2009 1:15 PM:</p><div style="margin-left: 1em"><p>Thanks dbacher, that is what I was hinting at when I mentioned ANSI/Unicode issues. :-)</p>
+</div>
+<hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2009/10/21/9910388.html" title="On not discrimniating, and on overheating an iBot">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2009/09/24/9898852.html" title="Can I show the whole string or can&#39;t I?">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2009-10">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2009-10-19">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2009/10/19/9909080.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:35 GMT -->
+</html>

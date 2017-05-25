@@ -1,0 +1,46 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2006/05/27/608625.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:39 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Changing the user interface language at runtime?</title></head><body>
+<h1>Changing the user interface language at runtime?</h1>
+<p><em>by Michael S. Kaplan, published on 2006/05/27 05:01 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2006/05/27/608625.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P><FONT face=Tahoma>Changing the user interface language really is a rather disruptive operation.</FONT></P>
+<P><FONT face=Tahoma>Prior to the multilanguage version of Windows, you would actually have to install a fresh version of Windows based on the desired language. Even once MUI was made available, a change to this per-session setting&nbsp;required logging out and logging back in again.</FONT></P>
+<P><FONT face=Tahoma>In Office, changes to the user interface language in the multilanguage version required starting a new session of the Office application in question. Which is truly the application equivalent of that same requirement that the OS has -- starting over to get the update.</FONT></P>
+<P><FONT face=Tahoma>Now neither of these cases literally required that firm line from a technical perspective, other than a desire to keep the user experience clean and consistent. And to fully understand the consequences of unclean and inconsistent here, you have to imagine all of the changes like font linking/fallback, mirroring, already loaded string resources, dialog templates, and so on, being mixed in terms of supported languages. The results woul be catastrophic even for Microsoft's own applications, let alone for third parties.</FONT></P>
+<P><FONT face=Tahoma>You can think of that line as a sort of "wall of sanity" that keeps the experiences consistent. :-)</FONT></P>
+<P><FONT face=Tahoma>So now we come to the .NET Framework....</FONT></P>
+<P><FONT face=Tahoma>I swear not a week goes by that the&nbsp;question does not get asked. Here is an&nbsp;example of the question that keeps coming up:</FONT></P>
+<BLOCKQUOTE dir=ltr style="MARGIN-RIGHT: 0px">
+<P><FONT face="Times New Roman"><FONT size=2>I would like to change the language at runtime. I do not found any topic&nbsp;about that in the documentation. Although restarting the program with a&nbsp;new UIculture change to the according resources by putting:<BR><FONT size=1><FONT face="Courier New"><BR>' Sets the UI culture to French (France)<BR>Thread.CurrentThread.CurrentUICulture = New CultureInfo("fr-FR")<BR></FONT><BR></FONT>in the "Public Sub New()" procedure as an example, I do not know how we&nbsp;can&nbsp;reset all the strings at the runtime by selecting a menu option to the&nbsp;desired language.</FONT></FONT></P></BLOCKQUOTE>
+<P><FONT face=Tahoma>If people look at their VB.Net or C# WinForms code, they see a call to InitializeComponent() in their form constructor that literally builds the form from scratch.</FONT></P>
+<P><FONT face=Tahoma>Calling this procdure again is not hard, but it&nbsp;would be&nbsp;pretty unwieldy as a method since it basically recreates every control on the form. At that point, why not just unload and reload the form? You may have a weird experience related to different forms having different languages, but I have to assume you are okay with that or you wouldn't be asking the question, right? :-)</FONT></P>
+<P><FONT face=Tahoma>But assuming you wanted to not reset the whole form,&nbsp;</FONT><FONT face=Tahoma>the real hard question is how much of a subset can you create, given that a localizer may have resized or moved controls. How much of the InitializeComponent() procedure can you recreate, and how can you keep your custom version in sync with the one that the designer keeps in sync for you?</FONT></P>
+<P><FONT face=Tahoma>The distance between the possible and the practical here is substantial; the distance between the possible and the maintainable is orders of magnitude greater still.</FONT></P>
+<P><FONT face=Tahoma>How often would it really and truly be worth it?</FONT></P>
+<P><FONT face=Tahoma>I know that some people will answer that they agree with this post <STRONG>but their situation is an exception that really requires the functionality</STRONG>, so I will actually pony of up some examples of how to make this sort of thing work if you have to do it. Keep your eyes out for an upcoming post on this soon!</FONT></P>
+<P><FONT face=Tahoma></FONT>&nbsp;</P>
+<P><FONT face=Tahoma color=#ff1493><EM>This post brought to you by</EM> "<FONT size=6>჻</FONT>" <EM>(<A href="http://www.fileformat.info/info/unicode/char/10fb">U+10fb</A>, a.k.a. GEORGIAN PARAGRAPH SEPARATOR)</EM></FONT></P>
+<hr/><p><a id="608987" href="#608987">#</a> <strong>Rosyna</strong> on 27 May 2006 8:38 PM:</p><div style="margin-left: 1em">Would this ever be a wise thing to do? If this is for an application they developed, it would seem to be to be far less jarring to the user if the programmer saved the state and then relaunched the application for them. But then the option for this would have to be buried in such a way they they couldn't accidently choose it.<br><br>Do your examples result in a &quot;screen flash&quot; while everything is redrawn?</div>
+<p><a id="609014" href="#609014">#</a> <strong>Michael S. Kaplan</strong> on 27 May 2006 9:33 PM:</p><div style="margin-left: 1em">I completely agree Rosyna -- and think the best design is the one that is built into both Windows and Office, and gently encouraged in .NET.<br><br>The flash may or may not be a problem -- but there are many other problems that would be less momentary (and thus much more serious) than the flash would be....</div>
+<p><a id="636843" href="#636843">#</a> <strong>Rizwan Sharif</strong> on 19 Jun 2006 10:25 AM:</p><div style="margin-left: 1em">Where are examples?</div>
+<p><a id="9572049" href="#9572049">#</a> <strong>Abhimanyu singh(abhivitmca@gmail.com)</strong> on 27 Apr 2009 5:27 PM:</p><div style="margin-left: 1em"><p>I want to use multlingual application in chat application.so that if user choose any language,corrsponding language will be affected..</p>
+<p>for example if user is chatting in English,then if he selects German then all text should be change in German language.</p>
+<p>IS it possible in c#.net..plz help me..</p></div>
+<p><a id="9917499" href="#9917499">#</a> <strong>Sol</strong> on 4 Nov 2009 11:45 AM:</p><div style="margin-left: 1em"><p>I use the Thread.CurrentThread.CurrentUICulture but its value (also before the execution) was 'French' although the computer's language was 'English'</p></div>
+<p><strong>PK</strong> on 31 Mar 2010 11:57 PM:</p><div style="margin-left: 1em"><p>we want to give this support to an existing MFC application, how can we do that... &nbsp;can anybody please help me out?</p></div>
+<p><strong>Craig</strong> on 9 Apr 2013 10:15 AM:</p><div style="margin-left: 1em"><p>I find this worked best for me... </p>
+<p>dim ci as String = &quot;en-US&quot;</p>
+<p>if langSel.text=&quot;English&quot; then ci = &quot;en-US&quot;</p>
+<p>if langSel.text=&quot;Spanish&quot; then ci = &quot;es-ES&quot;</p>
+<p>Dim culture_info As New CultureInfo(ci)</p>
+<p>Thread.CurrentThread.CurrentUICulture = culture_info</p>
+<p>Thread.CurrentThread.CurrentCulture = culture_info</p>
+<p>If Me.components IsNot Nothing Then Me.components.Dispose()</p>
+<p>Me.Controls.Clear()</p>
+<p>Me.InitializeComponent()</p>
+<p>FrmMain_Load(Me, New System.EventArgs)</p>
+</div>
+<hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2006/05/28/608931.html" title="No Georgians or Armenians goed to the blog?">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2006/05/27/608351.html" title="Consistent garbage text can be incorrect encoding identification (or detection)">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2006-05">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2006-05-27">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2006/05/27/608625.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:39 GMT -->
+</html>

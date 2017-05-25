@@ -1,0 +1,66 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2009/09/24/9898852.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:35 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Can I show the whole string or can't I?</title></head><body>
+<h1>Can I show the whole string or can't I?</h1>
+<p><em>by Michael S. Kaplan, published on 2009/09/24 08:31 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2009/09/24/9898852.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P>Jim's question from a few weeks ago was:</P>
+<BLOCKQUOTE>
+<P><EM><FONT face="times new roman,times">I’m being given a Unicode string and I need to determine if it will render cleanly using the system font (not displaying any blocks or “non-supported-glyph” symbols). I’ve tried using ScriptGetCMap() and GetGlyphIndices(), but both of these flag a character like 0x0C60 as not having a glyph – although it’s actually composed of multiple glyphs and it does render properly. </FONT></EM></P>
+<P><EM><FONT face="times new roman,times">Our product allows an administrator to push policy to client machines, which includes a custom message to show in a notification balloon. The administrator can enter the text on a console and might include Japanese characters, for example, and that text gets pushed to a bunch of clients, some of which can’t display those characters. The client software is supposed to display the custom message if possible (no blocks displayed) and fall back to a built-in message if the custom message won’t display correctly.</FONT></EM></P>
+<P><EM><FONT face="times new roman,times">Any pointers to APIs or sample code that will accurately determine if a string can be drawn?</FONT></EM></P></BLOCKQUOTE>
+<P>Sound familiar?</P>
+<P>Well, it should!</P>
+<P>At first glance, it is the same problem discussed in <A href="http://archives.miloush.net/michkap/archive/2008/07/01/8674304.html" mce_href="http://archives.miloush.net/michkap/archive/2008/07/01/8674304.html"><STRONG>Is that character in the font or isn't it?</STRONG></A>, and that is a blog that is chock full of potential solutions!</P>
+<P>Unfortunately, Jim's question adds one element to the problem, one new wrinkle.</P>
+<P>And that is to also try and figure out the problem for any fonts that the system might map to via linking/fallback/substitution, etc.</P>
+<P>And this does not exist.</P>
+<P>To be honest, it isn't actually a problem that is worth trying to solve. As Michael Warning pointed out in that thread:</P>
+<BLOCKQUOTE>
+<P><FONT face="times new roman,times">This unfortunately is a really hard problem.&nbsp; And the answer will be different depending on the text stack you’re using (GDI, GDI+, DWrite).&nbsp; The problem is that each stack has a different set of rules for font fallback – how it automatically changes fonts around when it encounters a character that isn't’t supported in the font you asked for.</FONT></P></BLOCKQUOTE>
+<P>Now Michael is thinking about the macro problem -- the complexity of all of the different models and trying to deal with how improbable it would be to capture all of these differences in code.</P>
+<P>But to be honest the micro problem (looking at any one of these technologies) is still pretty complicated -- the kind of project where one will almost certainly fail, in the end.</P>
+<P>So what can we do?</P>
+<P>Well, the answer I&nbsp;would suggest will have to wait for the next blog.... :-)</P>
+<hr/><p><a id="9899196" href="#9899196">#</a> <strong>Henry Skoglund</strong> on 24 Sep 2009 6:33 PM:</p><div style="margin-left: 1em"><p>(Couldn't resist) Isn't it possible to solve by comparing bitmaps, I mean pixels?</p>
+<p>What he wants is really a function that detects if the rendered output contains one or more &quot;block&quot; characters instead of the real McCoy, right?</p>
+<p>One approach might be then:</p>
+<p>1) Render to an offscreen bitmap one occurrence of the &quot;block&quot; character. (This assumes of course it is possible to always get hold of it in a reproducible manner, maybe there is a Unicode entrance for that.)</p>
+<p>2. Render the client Unicode string to another, similar bitmap. This one will normally be much wider and possible a bit higher.</p>
+<p>3. Now step through bitmap #2 using BitBlts that ANDs bitmap #1 and #2 with each other yielding a third bitmap. If that third bitmap is identical to bitmap #1 we have detected an occurrence of the &quot;block&quot; character by comparing pixels.</p>
+<p>Note that we have to step through all x positions in bitmap #2, say bitmap #1 is 10 pixels wide and bitmap #2 is 1000 pixels wide, then we have to perform 991 BitBlts.</p>
+<p>Finally we'll have to repeat this for all y positions if bitmap #2 is taller than #1, then we have to repeat those 991 Bitblts for all y positions.</p>
+<p>A human eye will of course perform this function in an instant, but maybe lots of BitBlts could solve this problem as well.</p>
+<p>Rgrds Henry</p></div>
+<p><a id="9899433" href="#9899433">#</a> <strong>Michael Madsen</strong> on 25 Sep 2009 7:08 AM:</p><div style="margin-left: 1em"><p>@Henry: This could be a problem when subpixel rendering (ClearType) is used, since I don't believe the character has to start at the same subpixel position - at least not unless you only compare one character at a time.</p>
+<p>Actually, comparing the individual characters should be a bit easier and more reliable, since you would have more information to go on (no need to try multiple different starting positions) - but since you need to work with more individual bitmaps, any potential speed difference might be consumed by the constant changing of the bitmap.</p>
+<p>And, of course, this approach would fail in the event that the character you're trying to draw just happens to look like the &quot;replacement character&quot; character. Since a lot of the Windows fonts will use a square for this, this might be the case if you want to use one of the characters actually representing a square - but that might be acceptable as a false positive.</p></div>
+<p><a id="9899478" href="#9899478">#</a> <strong>Henry Skoglund</strong> on 25 Sep 2009 9:26 AM:</p><div style="margin-left: 1em"><p>@Michael: ClearType I think is only applied when drawing on a screen. But to avoid it anyway, you could use 1-bit color depths (i.e. black and white only) for all the bitmaps. </p>
+<p>I agree about the lack of a universal &quot;fool's gold&quot; character. But if you render the trial (#1 above) bitmap in the exact same font as you render the client string in, then hopefully whoeever designed that particular font chose a unique bit pattern for his/hers &quot;fool's gold&quot;, so false positives could be avoided.</p></div>
+<p><a id="9899628" href="#9899628">#</a> <strong>Mihai</strong> on 25 Sep 2009 2:09 PM:</p><div style="margin-left: 1em"><p>The easiest way to solve a problem is to not solve it at all :-)</p>
+<p>Just ask everybody to have all the international support installed.</p>
+<p>(it is there in Win 7 and Vista, just do it for XP)</p>
+<p>If that is not possible, option two is to:</p>
+<p> - assume everything is on in Vista/Win 7 (the support is there and the fallback works pretty well)</p>
+<p> - for XP scan the string for characters in the possible supported &quot;blocks&quot; (simple script LTR, complex script and RTL, East Asian).</p>
+<p>If you find an Arabic character (for instance) and &quot;complex script and RTL&quot; is not install, complain.</p>
+<p>(<a rel="nofollow" target="_new" href="http://img.microsoft.com/globaldev/Images/xp-kbd-step2.gif">http://img.microsoft.com/globaldev/Images/xp-kbd-step2.gif</a>)</p>
+<p>Yes, you can still wonder about some exotic scripts that Windows .</p>
+<p>But you pretty much eliminated 99% of the problems. Deal with the rest in tech support, or an FAQ. Depending on the locations you are trying to sell, you might discover nobody is affected.</p></div>
+<p><a id="9902798" href="#9902798">#</a> <strong>Random832</strong> on 3 Oct 2009 3:04 PM:</p><div style="margin-left: 1em"><p>@Henry Skoglund: What if it substitutes another font in, and that font has a hardcoded box glyph for that character?</p>
+<p>Unrelated to anything, what is the etymology of the term &quot;stack&quot; as used here, and as used in e.g. &quot;TCP/IP stack&quot;</p></div>
+<p><a id="9902921" href="#9902921">#</a> <strong>hskoglund</strong> on 4 Oct 2009 9:12 AM:</p><div style="margin-left: 1em"><p>@Random832: Well the question was &nbsp;&quot;I’m being given a Unicode string and I need to determine if it will render cleanly using the system font...&quot; </p>
+<p>Any font substition then *hopefully* will only occur at the beginning of the rendering so the &quot;fool's gold&quot; character will not change.</p>
+<p>I'd say the meaning of &quot;stack&quot; here, you could also say &quot;text rendering technology&quot;.</p></div>
+<p><a id="9903386" href="#9903386">#</a> <strong>Random832</strong> on 5 Oct 2009 3:27 PM:</p><div style="margin-left: 1em"><p>I meant the situation from the first comment under Is that character in the font or isn't it? .</p>
+<p>Font A is the main selected font - it has its box glyph that is used for any characters can't be found in a substituted font.</p>
+<p>Font B claims to support one character set and defines a box for some characters in that character set which it does not in fact properly support.</p>
+<p>So for a character that B claims to support but does not _really_ support, you get B's box, whereas for other random unicode code points that nothing supports, you get A's box.</p>
+<p>(the captcha's on this site interact badly with tabbed browsing)</p></div>
+<p><a id="9905136" href="#9905136">#</a> <strong>hskoglund</strong> on 8 Oct 2009 3:48 PM:</p><div style="margin-left: 1em"><p>Right, font switching might occur, but if we can find an event that is fired due to that, my suggestion might still hold.</p>
+<p>The idea then, is to do the block pattern matching multiple times, as soon as the font changes (as well as doing it at the end of the text rendering as I suggested before). I.e. create multiple bitmaps #1 and #2, one pair created whenever the fonts switch, and toss them at the next event. That way the block glyph character that we match to should still be correct.</p>
+<p>But alas, doing a cursory glance at the MSDN docs I find no such event :-(</p>
+<p>(Nice discussion anyway!)</p></div>
+<hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2009/10/19/9909080.html" title="The error is in the premise (aka garbage in, undefined out)">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2009/09/23/9898441.html" title="Search engines still don&#39;t know what it is, or more to the point where it&#39;s @">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2009-09">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2009-09-24">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2009/09/24/9898852.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:35 GMT -->
+</html>

@@ -1,0 +1,30 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2009/08/05/9857486.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:35 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>16 is not to 64 as 8 (either 8) is to 16....</title></head><body>
+<h1>16 is not to 64 as 8 (either 8) is to 16....</h1>
+<p><em>by Michael S. Kaplan, published on 2009/08/05 10:01 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2009/08/05/9857486.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<p>So McDowell asked in a comment:</p><blockquote><blockquote><p><i><font face="times new roman,times">Apologies if this is the wrong place, or this has come up before,
+but does 64bit Windows sound the death knell for OEM code pages on the
+console? I haven't run a 64-bit version of Windows, so I can't check if
+I'm just behind the times.</font></i></p><p><i><font face="times new roman,times">I can see the point of cmd.exe defaulting to a DOS codepage for DOS
+compatibility, but if the operating system no longer supports 16bit
+apps, it might be a good time to change. I live in hope that, even if
+Unicode isn't on the table, it might one day default to the system
+default "ANSI" encoding. (Yep, I'm aware of TT fonts/chcp and
+PowerShell.)</font></i></p><p><i><font face="times new roman,times">Or are there deeper issues of which I am not aware? I've never had
+cause to go near the recovery console and I know the rules change on
+full-screen.</font></i> <br></p></blockquote></blockquote>
+
+<p>Now yes this was very very very offtopic and it would have been better asked the Suggestion Box, but I figured I'd just answer it -- he knows for next time! :-) </p><p>Let's start by looking at the argument itself -- the relationship between 16-bit apps and 32-bit DOS (i.e. OEM) apps. We'll momentarily stipulate that there is such a relationship.<br></p><p>One could perhaps have made the argument when 64-bit first came out, in Server 2003 and 64-bit XP.</p><p>But now that </p><ul><li>Server 2003 64</li><li>XP 64</li><li>Vista 64</li><li> Server 2008 64</li><li> Windows 7 64</li><li>Server 2008 R2 64 </li></ul><p>have shipped with things as they are, it is a bit too late to make such an argument.</p><p>No of course there is a flaw in the stipulation, too. Because the two are not coupled together so closely!</p><p>The use of 8-bit SBCS and MBCS code pages predates Unicode, obviously. But as much of a fan as I may be of Unicode, I do not claim that 64-bit support is connected; each and every documented ANSI and OEM function in the Win32 API is a regular 32-bit function call on 32-bit platforms and 64-bit function call on 64-bit platforms. Pointers to OEM strings are 64-bit pointers, and so on.</p><p>And more to the point, the fact that so many of the OEM code pages date back to the time when there were only 16 bit apps doesn't mean that dropping support for one means dropping support for the other. </p><p>Things don't work that way; they can't!</p><p>Changes to make the OEMCP or a locale equal the ACP are definitely not possible, either -- no one wants to break as many applications as that would do....<br></p>
+<hr/><p><strong>John Cowan</strong> on 6 Aug 2009 12:03 AM:</p><div style="margin-left: 1em"><p>I'm confused. &nbsp;Of course on 64-bit platforms pointers (including pointers to functions) are 64 bits. &nbsp;But I had understood that 64-bit Windows was LLP64 -- that is, ints and longs are both still 32 bits, just as on 32-bit Windows.</p></div>
+<p><strong>Michael S. Kaplan</strong> on 6 Aug 2009 12:34 AM:</p><div style="margin-left: 1em"><p>Yes, ints and longs are still 32 bits. Strings are the same size on both platforms (8 bit or 6 bit units), and pointers are 32bit on one an 64bit on the other....</p>
+<p>But WOW support for 16bit was removed from 64bit platforms.</p></div>
+<p><strong>Doug Ewell</strong> on 10 Aug 2009 1:59 PM:</p><div style="margin-left: 1em"><p>What's this I'm reading about "6-bit support" and "6-bit units"? &nbsp;Is there some version of Windows that supports ECMA-1 or BCDIC?</p><p><i><font color="#ff0000">That was a typo, Doug. Fixed now. :-)</font></i> <br></p></div>
+<p><strong>Random832</strong> on 13 Aug 2009 9:27 AM:</p><div style="margin-left: 1em"><p>The point of the original question seems to be that (apart from some aspects of cmd.exe itself), the only use of the OEMCP is by DOS applications (which are nearly univerally 16-bit), and that windows console applications use (or are supposed to use) unicode console functions</p>
+<p>Does 64-bit windows actually drop support for DOS applications (as opposed to dropping WoW for Win16) as the person asking the question seems to believe?</p></div>
+<p><strong>Michael S. Kaplan</strong> on 13 Aug 2009 3:11 PM:</p><div style="margin-left: 1em"><p>16bit apps are not supported on 64-bit Windows, but non-Unicode apps and especially 32bit apps are; this includes virtually every console app written in the last decade (you cannot build 16bit apps with any modern tool I know of).</p>
+<p>Win16 and 64bit are NOT related!</p></div>
+<hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2009/08/06/9859480.html" title="English is just another language -- so Windows 7 released all 36 at once!">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2009/07/30/9853370.html" title="I know I&#39;ll Never say Never... again, at least">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2009-08">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2009-08-05">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2009/08/05/9857486.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:35 GMT -->
+</html>

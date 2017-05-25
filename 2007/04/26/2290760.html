@@ -1,0 +1,105 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2007/04/26/2290760.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:38 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>'The 44' (*not* 'The 4400')</title></head><body>
+<h1>'The 44' (*not* 'The 4400')</h1>
+<p><em>by Michael S. Kaplan, published on 2007/04/26 18:05 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2007/04/26/2290760.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P><A class="" href="http://en.wikipedia.org/wiki/The_4400" mce_href="http://en.wikipedia.org/wiki/The_4400">The 4400</A> is an interesting television show that this post has nothing to do with.</P>
+<P>This post is about what happens if you run the script from <A class="" href="http://archives.miloush.net/michkap/archive/2007/04/26/2286153.html" mce_href="http://archives.miloush.net/michkap/archive/2007/04/26/2286153.html"><STRONG>No Regex in the Unicode room! (and no sex in the champagne room, either!)</STRONG></A> on a Vista machine.</P>
+<P>Basically, you will still get 44 characters with different results between <A href="http://msdn2.microsoft.com/library/system.char.isletter.aspx" mce_href="http://msdn2.microsoft.com/library/system.char.isletter.aspx">char.IsLetter</A>&nbsp;and the Regex expression:</P>
+<BLOCKQUOTE>
+<P><B><FONT face="consolas,lucida console,courier new,courier" size=1>regex: False&nbsp;function: True&nbsp;char in hex: 130 - UppercaseLetter<BR>regex: False&nbsp;function: True&nbsp;char in hex: 1c5 - TitlecaseLetter<BR>regex: False&nbsp;function: True&nbsp;char in hex: 1c8 - TitlecaseLetter<BR>regex: False&nbsp;function: True&nbsp;char in hex: 1cb - TitlecaseLetter<BR>regex: False&nbsp;function: True&nbsp;char in hex: 1f2 - TitlecaseLetter<BR>regex: False&nbsp;function: True&nbsp;char in hex: 23a - UppercaseLetter<BR>regex: False&nbsp;function: True&nbsp;char in hex: 23e - UppercaseLetter<BR>regex: False&nbsp;function: True&nbsp;char in hex: 3d2 - UppercaseLetter<BR>regex: False&nbsp;function: True&nbsp;char in hex: 3d3 - UppercaseLetter<BR>regex: False&nbsp;function: True&nbsp;char in hex: 3d4 - UppercaseLetter<BR>regex: False&nbsp;function: True&nbsp;char in hex: 3f4 - UppercaseLetter<BR>regex: False&nbsp;function: True&nbsp;char in hex: 1fc3 - LowercaseLetter<BR>regex: False&nbsp;function: True&nbsp;char in hex: 1fcc - TitlecaseLetter<BR>regex: False&nbsp;function: True&nbsp;char in hex: 1ff3 - LowercaseLetter<BR>regex: False&nbsp;function: True&nbsp;char in hex: 1ffc - TitlecaseLetter<BR>regex: False&nbsp;function: True&nbsp;char in hex: 2102 - UppercaseLetter<BR>regex: False&nbsp;function: True&nbsp;char in hex: 2107 - UppercaseLetter<BR>regex: False&nbsp;function: True&nbsp;char in hex: 210b - UppercaseLetter<BR>regex: False&nbsp;function: True&nbsp;char in hex: 210c - UppercaseLetter<BR>regex: False&nbsp;function: True&nbsp;char in hex: 210d - UppercaseLetter<BR>regex: False&nbsp;function: True&nbsp;char in hex: 2110 - UppercaseLetter<BR>regex: False&nbsp;function: True&nbsp;char in hex: 2111 - UppercaseLetter<BR>regex: False&nbsp;function: True&nbsp;char in hex: 2112 - UppercaseLetter<BR>regex: False&nbsp;function: True&nbsp;char in hex: 2115 - UppercaseLetter<BR>regex: False&nbsp;function: True&nbsp;char in hex: 2119 - UppercaseLetter<BR>regex: False&nbsp;function: True&nbsp;char in hex: 211a - UppercaseLetter<BR>regex: False&nbsp;function: True&nbsp;char in hex: 211b - UppercaseLetter<BR>regex: False&nbsp;function: True&nbsp;char in hex: 211c - UppercaseLetter<BR>regex: False&nbsp;function: True&nbsp;char in hex: 211d - UppercaseLetter<BR>regex: False&nbsp;function: True&nbsp;char in hex: 2124 - UppercaseLetter<BR>regex: False&nbsp;function: True&nbsp;char in hex: 2126 - UppercaseLetter<BR>regex: False&nbsp;function: True&nbsp;char in hex: 2128 - UppercaseLetter<BR>regex: False&nbsp;function: True&nbsp;char in hex: 212a - UppercaseLetter<BR>regex: False&nbsp;function: True&nbsp;char in hex: 212b - UppercaseLetter<BR>regex: False&nbsp;function: True&nbsp;char in hex: 212c - UppercaseLetter<BR>regex: False&nbsp;function: True&nbsp;char in hex: 212d - UppercaseLetter<BR>regex: False&nbsp;function: True&nbsp;char in hex: 2130 - UppercaseLetter<BR>regex: False&nbsp;function: True&nbsp;char in hex: 2131 - UppercaseLetter<BR>regex: False&nbsp;function: True&nbsp;char in hex: 2133 - UppercaseLetter<BR>regex: False&nbsp;function: True&nbsp;char in hex: 213e - UppercaseLetter<BR>regex: False&nbsp;function: True&nbsp;char in hex: 213f - UppercaseLetter<BR>regex: False&nbsp;function: True&nbsp;char in hex: 2145 - UppercaseLetter<BR>regex: False&nbsp;function: True&nbsp;char in hex: 2c65 - LowercaseLetter<BR>regex: False&nbsp;function: True&nbsp;char in hex: 2c66 - LowercaseLetter<BR>TOTAL mismatches: 44</FONT></B></P></BLOCKQUOTE>
+<P mce_keep="true">The remaining characters make up an interesting bunch that give insight into the specific flaws of certain Regex operations:</P>
+<UL>
+<LI>
+<DIV mce_keep="true"><A class="" href="http://www.fileformat.info/info/unicode/char/0130" mce_href="http://www.fileformat.info/info/unicode/char/0130">U+0130</A> (LATIN CAPITAL LETTER I WITH DOT ABOVE) -- no lowercase form in the invariant table, only one on Turkish</DIV></LI>
+<LI>
+<DIV mce_keep="true"><A class="" href="http://www.fileformat.info/info/unicode/char/01c5" mce_href="http://www.fileformat.info/info/unicode/char/01c5">U+01c5</A> (LATIN CAPITAL LETTER D WITH SMALL LETTER Z WITH CARON) -- no lowercase form in the invariant table</DIV></LI>
+<LI>
+<DIV mce_keep="true"><A class="" href="http://www.fileformat.info/info/unicode/char/01c8" mce_href="http://www.fileformat.info/info/unicode/char/01c8">U+01c8</A> (LATIN CAPITAL LETTER L WITH SMALL LETTER J) -- no lowercase form in the invariant table</DIV></LI>
+<LI>
+<DIV mce_keep="true"><A class="" href="http://www.fileformat.info/info/unicode/char/01cb" mce_href="http://www.fileformat.info/info/unicode/char/01cb">U+01cb</A> (LATIN CAPITAL LETTER N WITH SMALL LETTER J) -- no lowercase form in the invariant table</DIV></LI>
+<LI>
+<DIV mce_keep="true"><A class="" href="http://www.fileformat.info/info/unicode/char/01f2" mce_href="http://www.fileformat.info/info/unicode/char/01f2">U+01f2</A> (LATIN CAPITAL LETTER D WITH SMALL LETTER Z) -- no lowercase form in the invariant table</DIV></LI>
+<LI>
+<DIV mce_keep="true"><A class="" href="http://www.fileformat.info/info/unicode/char/023a" mce_href="http://www.fileformat.info/info/unicode/char/023a">U+023a</A> (LATIN CAPITAL LETTER A WITH STROKE) -- no idea why this one fails, there is a lowercase form (U+2c65)</DIV></LI>
+<LI>
+<DIV mce_keep="true"><A class="" href="http://www.fileformat.info/info/unicode/char/023e" mce_href="http://www.fileformat.info/info/unicode/char/023e">U+023e</A> (LATIN CAPITAL LETTER T WITH DIAGONAL STROKE) -- no idea why this one fails, there is a lowercase form (U+2c66)</DIV></LI>
+<LI>
+<DIV mce_keep="true"><A class="" href="http://www.fileformat.info/info/unicode/char/03d2" mce_href="http://www.fileformat.info/info/unicode/char/03d2">U+03d2</A> (GREEK UPSILON WITH HOOK SYMBOL) -- this is a symbol; no lowercase form in the invariant table</DIV></LI>
+<LI>
+<DIV mce_keep="true"><A class="" href="http://www.fileformat.info/info/unicode/char/03d3" mce_href="http://www.fileformat.info/info/unicode/char/03d3">U+03d3</A> (GREEK UPSILON WITH ACUTE AND HOOK SYMBOL) -- this is a symbol; no lowercase form in the invariant table</DIV></LI>
+<LI>
+<DIV mce_keep="true"><A class="" href="http://www.fileformat.info/info/unicode/char/03d4" mce_href="http://www.fileformat.info/info/unicode/char/03d4">U+03d4</A> (GREEK UPSILON WITH DIAERESIS AND HOOK SYMBOL) -- this is a symbol; no lowercase form in the invariant table</DIV></LI>
+<LI>
+<DIV mce_keep="true"><A class="" href="http://www.fileformat.info/info/unicode/char/03f4" mce_href="http://www.fileformat.info/info/unicode/char/03f4">U+03f4</A> (GREEK CAPITAL THETA SYMBOL) -- this is a symbol; no lowercase form in the invariant table</DIV></LI>
+<LI>
+<DIV mce_keep="true"><A class="" href="http://www.fileformat.info/info/unicode/char/11f3" mce_href="http://www.fileformat.info/info/unicode/char/11f3">U+1ff3</A> (GREEK SMALL LETTER OMEGA WITH YPOGEGRAMMENI) -- no idea why this one fails, it IS a lowercase form</DIV></LI>
+<LI>
+<DIV mce_keep="true"><A class="" href="http://www.fileformat.info/info/unicode/char/11fc" mce_href="http://www.fileformat.info/info/unicode/char/11fc">U+1ffc</A> (GREEK CAPITAL LETTER OMEGA WITH PROSGEGRAMMENI) -- no idea why this one fails, it has a lowercase form (U+1ff3)</DIV></LI>
+<LI>
+<DIV mce_keep="true"><A class="" href="http://www.fileformat.info/info/unicode/char/2102" mce_href="http://www.fileformat.info/info/unicode/char/2102">U+2102</A> (DOUBLE-STRUCK CAPITAL C) -- this is a symbol; no lowercase form in the invariant table</DIV></LI>
+<LI>
+<DIV mce_keep="true"><A class="" href="http://www.fileformat.info/info/unicode/char/2107" mce_href="http://www.fileformat.info/info/unicode/char/2107">U+2107</A> (EULER CONSTANT) -- this is a symbol; no lowercase form in the invariant table</DIV></LI>
+<LI>
+<DIV mce_keep="true"><A class="" href="http://www.fileformat.info/info/unicode/char/210b" mce_href="http://www.fileformat.info/info/unicode/char/210b">U+210b</A> (SCRIPT CAPITAL H) -- this is a symbol; no lowercase form in the invariant table</DIV></LI>
+<LI>
+<DIV mce_keep="true"><A class="" href="http://www.fileformat.info/info/unicode/char/210c" mce_href="http://www.fileformat.info/info/unicode/char/210c">U+210c</A> (BLACK-LETER CAPITAL H) -- this is a symbol; no lowercase form in the invariant table</DIV></LI>
+<LI>
+<DIV mce_keep="true"><A class="" href="http://www.fileformat.info/info/unicode/char/210d" mce_href="http://www.fileformat.info/info/unicode/char/210d">U+210d</A> (DOUBLE-STRUCK CAPITAL H) -- this is a symbol; no lowercase form in the invariant table</DIV></LI>
+<LI>
+<DIV mce_keep="true"><A class="" href="http://www.fileformat.info/info/unicode/char/2110" mce_href="http://www.fileformat.info/info/unicode/char/2110">U+2110</A> (SCRIPT CAPITAL I) -- this is a symbol; no lowercase form in the invariant table</DIV></LI>
+<LI>
+<DIV mce_keep="true"><A class="" href="http://www.fileformat.info/info/unicode/char/2111" mce_href="http://www.fileformat.info/info/unicode/char/2111">U+2111</A> (BLACK-LETTER CAPITAL I) -- this is a symbol; no lowercase form in the invariant table</DIV></LI>
+<LI>
+<DIV mce_keep="true"><A class="" href="http://www.fileformat.info/info/unicode/char/2112" mce_href="http://www.fileformat.info/info/unicode/char/2112">U+2112</A> (SCRIPT CAPITAL L) -- this is a symbol; no lowercase form in the invariant table</DIV></LI>
+<LI>
+<DIV mce_keep="true"><A class="" href="http://www.fileformat.info/info/unicode/char/2115" mce_href="http://www.fileformat.info/info/unicode/char/2115">U+2115</A> (DOUBLE-STRUCK CAPITAL N) -- this is a symbol; no lowercase form in the invariant table</DIV></LI>
+<LI>
+<DIV mce_keep="true"><A class="" href="http://www.fileformat.info/info/unicode/char/2119" mce_href="http://www.fileformat.info/info/unicode/char/2119">U+2119</A> (DOUBLE-STRUCK CAPITAL P) -- this is a symbol; no lowercase form in the invariant table</DIV></LI>
+<LI>
+<DIV mce_keep="true"><A class="" href="http://www.fileformat.info/info/unicode/char/211a" mce_href="http://www.fileformat.info/info/unicode/char/211a">U+211a</A> (DOUBLE-STRUCK CAPITAL&nbsp;Q) -- this is a symbol; no lowercase form in the invariant table</DIV></LI>
+<LI>
+<DIV mce_keep="true"><A class="" href="http://www.fileformat.info/info/unicode/char/211b" mce_href="http://www.fileformat.info/info/unicode/char/211b">U+211b</A> (SCRIPT CAPITAL R) -- this is a symbol; no lowercase form in the invariant table</DIV></LI>
+<LI>
+<DIV mce_keep="true"><A class="" href="http://www.fileformat.info/info/unicode/char/211c" mce_href="http://www.fileformat.info/info/unicode/char/211c">U+211c</A> (BLACK-LETTER CAPITAL R) -- this is a symbol; no lowercase form in the invariant table</DIV></LI>
+<LI>
+<DIV mce_keep="true"><A class="" href="http://www.fileformat.info/info/unicode/char/211d" mce_href="http://www.fileformat.info/info/unicode/char/211d">U+211d</A> (DOUBLE-STRUCK CAPITAL R) -- this is a symbol; no lowercase form in the invariant table</DIV></LI>
+<LI>
+<DIV mce_keep="true"><A class="" href="http://www.fileformat.info/info/unicode/char/2124" mce_href="http://www.fileformat.info/info/unicode/char/2124">U+2124</A> (DOUBLE-STRUCK CAPITAL Z) -- this is a symbol; no lowercase form in the invariant table</DIV></LI>
+<LI>
+<DIV mce_keep="true"><A class="" href="http://www.fileformat.info/info/unicode/char/2126" mce_href="http://www.fileformat.info/info/unicode/char/2126">U+2126</A> (OHM SIGN) -- this is a symbol; no lowercase form in the invariant table</DIV></LI>
+<LI>
+<DIV mce_keep="true"><A class="" href="http://www.fileformat.info/info/unicode/char/2128" mce_href="http://www.fileformat.info/info/unicode/char/2128">U+2128</A> (BLACK-LETTER CAPITAL Z) -- this is a symbol; no lowercase form in the invariant table</DIV></LI>
+<LI>
+<DIV mce_keep="true"><A class="" href="http://www.fileformat.info/info/unicode/char/212a" mce_href="http://www.fileformat.info/info/unicode/char/212a">U+212a</A> (KELVIN SIGN) -- this is a symbol; no lowercase form in the invariant table</DIV></LI>
+<LI>
+<DIV mce_keep="true"><A class="" href="http://www.fileformat.info/info/unicode/char/212b" mce_href="http://www.fileformat.info/info/unicode/char/212b">U+212b</A> (ANGSTROM SIGN) -- this is a symbol; no lowercase form in the invariant table</DIV></LI>
+<LI>
+<DIV mce_keep="true"><A class="" href="http://www.fileformat.info/info/unicode/char/212c" mce_href="http://www.fileformat.info/info/unicode/char/212c">U+212c</A> (SCRIPT CAPITAL B) -- this is a symbol; no lowercase form in the invariant table</DIV></LI>
+<LI>
+<DIV mce_keep="true"><A class="" href="http://www.fileformat.info/info/unicode/char/212d" mce_href="http://www.fileformat.info/info/unicode/char/212d">U+212d</A> (BLACK-LETTER CAPITAL C) -- this is a symbol; no lowercase form in the invariant table</DIV></LI>
+<LI>
+<DIV mce_keep="true"><A class="" href="http://www.fileformat.info/info/unicode/char/2130" mce_href="http://www.fileformat.info/info/unicode/char/2130">U+2130</A> (SCRIPT CAPITAL E) -- this is a symbol; no lowercase form in the invariant table</DIV></LI>
+<LI>
+<DIV mce_keep="true"><A class="" href="http://www.fileformat.info/info/unicode/char/2131" mce_href="http://www.fileformat.info/info/unicode/char/2131">U+2131</A> (SCRIPT CAPITAL F) -- this is a symbol; no lowercase form in the invariant table</DIV></LI>
+<LI>
+<DIV mce_keep="true"><A class="" href="http://www.fileformat.info/info/unicode/char/2133" mce_href="http://www.fileformat.info/info/unicode/char/2133">U+2133</A> (SCRIPT CAPITAL M) -- this is a symbol; no lowercase form in the invariant table</DIV></LI>
+<LI>
+<DIV mce_keep="true"><A class="" href="http://www.fileformat.info/info/unicode/char/213e" mce_href="http://www.fileformat.info/info/unicode/char/213e">U+213e</A> (DOUBLE-STRUCK CAPITAL GAMMA) -- this is a symbol; no lowercase form in the invariant table</DIV></LI>
+<LI>
+<DIV mce_keep="true"><A class="" href="http://www.fileformat.info/info/unicode/char/213f" mce_href="http://www.fileformat.info/info/unicode/char/213f">U+213f</A> (DOUBLE-STRUCK CAPITAL PI) -- this is a symbol; no lowercase form in the invariant table</DIV></LI>
+<LI>
+<DIV mce_keep="true"><A class="" href="http://www.fileformat.info/info/unicode/char/2145" mce_href="http://www.fileformat.info/info/unicode/char/2145">U+2145</A> (DOUBLE-STRUCK ITALIC CAPITAL D) -- this is a symbol; no lowercase form in the invariant table</DIV></LI>
+<LI>
+<DIV mce_keep="true"><A class="" href="http://www.fileformat.info/info/unicode/char/2c65" mce_href="http://www.fileformat.info/info/unicode/char/2c65">U+2c65</A> (LATIN SMALL LETTER A WITH STROKE) -- no idea why this one fails, it IS a lowercase form</DIV></LI>
+<LI>
+<DIV mce_keep="true"><A class="" href="http://www.fileformat.info/info/unicode/char/2c66" mce_href="http://www.fileformat.info/info/unicode/char/2c66">U+2c66</A> (LATIN SMALL LETTER T WITH DIAGONAL STROKE) -- no idea why this one fails, it IS a lowercase form</DIV></LI></UL>
+<P mce_keep="true">So there you have it -- a combination of ones that shouldn't have failed since they were already lowercase and ones that failed due to that weird optimization to not look at Title Case and Upper Case characters since it attempted to lowercase first.</P>
+<P mce_keep="true">That RegexOptions.IgnoreCase is just a nightmare!</P>
+<P mce_keep="true">Interestingly, the OS casing table combined with a non-invariant culture (which is not possible in the .NET Framework today) would have picked up many of these letter like symbols and other one way mappings. But not all of them....</P>
+<P mce_keep="true">&nbsp;</P>
+<P mce_keep="true"><FONT color=#ff00ff><EM>This post brought to you by</EM> every member of <STRONG>"<EM>The 44"</EM></STRONG></FONT></P>
+<hr/><div style="margin-left: 1em"><em>no comments</em></div><hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2008/07/25 <a href="http://archives.miloush.net/michkap/archive/2008/07/25/8771119.html">Let's save some time and call them all IRregular expression engines</a></p><p>2008/06/25 <a href="http://archives.miloush.net/michkap/archive/2008/06/25/8652525.html">Seeing the tears, my heart went out to her as I asked her "Why the Long S?"</a></p><p>2007/12/05 <a href="http://archives.miloush.net/michkap/archive/2007/12/05/6648893.html">No way to get that script info I was looking for earlier</a></p><p>2007/09/11 <a href="http://archives.miloush.net/michkap/archive/2007/09/11/4873992.html">4400 (*not* 'The 4400')</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2007/04/27/2307814.html" title="Characters, now half off!">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2007/04/26/2286153.html" title="No Regex in the Unicode room! (and no sex in the champagne room, either!)">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2007-04">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2007-04-26">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2007/04/26/2290760.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:38 GMT -->
+</html>

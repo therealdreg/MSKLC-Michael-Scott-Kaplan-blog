@@ -1,0 +1,30 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2007/05/26/2901371.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:38 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>The PUA outside of Unicode</title></head><body>
+<h1>The PUA outside of Unicode</h1>
+<p><em>by Michael S. Kaplan, published on 2007/05/26 11:55 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2007/05/26/2901371.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P>Colleague Aldo Donetti asked me:</P>
+<BLOCKQUOTE>
+<P><EM>Hi Michael, I was investigating a bug and it turns out that this character ‘’(U+E843) is in the Private use range but it is also part of the Chinese 936 codepage.<BR><BR></EM><EM>The issue is whether to consider characters in the private use area as valid characters in Identifiers (e.g. in VB/C#/WebService names/…) – I would not allow them but I’m not too familiar with that range so I’m double checking with you. At present it is not allowed (as weird as it may seem).<BR><BR></EM><EM>Thanks!<BR>Aldo</EM></P></BLOCKQUOTE>
+<P>Now the Private Use&nbsp;Area is a part of Unicode that I have discussed&nbsp;before (ref: <A class="" href="http://archives.miloush.net/michkap/search.aspx?q=PUA&amp;p=1" mce_href="../../../../search.aspx?q=PUA&amp;p=1"><STRONG>previous posts</STRONG></A>). In particular, I have talked about the relationship between the PUA and EUDC (End User Defined Characters) like in <STRONG><A class="" href="http://archives.miloush.net/michkap/archive/2007/05/21/2782610.html" mce_href="http://archives.miloush.net/michkap/archive/2007/05/21/2782610.html">this post</A></STRONG>.</P>
+<P>But an important thing to keep in mind is that the PUA is not just a Unicode thing.</P>
+<P mce_keep="true">In fact, all of the East Asian code pages have areas set aside for private use, and specifically intended for the kind of characters that EUDC is intended. The various ranges&nbsp;used (shown in the registry at HKLM\SYSTEM\CurrentControlSet\Control\Nls\CodePage\EUDCCodeRange) are:</P>
+<UL>
+<LI>
+<DIV mce_keep="true">932 --- 0xF040-0xF9FC</DIV></LI>
+<LI>
+<DIV mce_keep="true">936 --- 0xAAA1-0xAFFE, 0xF8A1-0xFEFE, 0xA140-0xA7A0</DIV></LI>
+<LI>
+<DIV mce_keep="true">949 --- 0xC9A1-0xC9FE, 0xFEA1-0xFEFE</DIV></LI>
+<LI>
+<DIV mce_keep="true">950 --- 0xFA40-0xFEFE, 0x8E40-0xA0FE, 0x8140-0x8DFE, 0xC6A1-0xC8FE</DIV></LI>
+<LI>
+<DIV mce_keep="true">Unicode --- U+E000-U+F8FF</DIV></LI></UL>
+<P mce_keep="true">Looking at U+E843 (which is definitely in the Unicode PUA, covered in the defined range above) and its <A class="" href="http://www.microsoft.com/globaldev/reference/dbcs/936.mspx" mce_href="http://www.microsoft.com/globaldev/reference/dbcs/936.mspx">code page 936</A> mapping to 0xFE7E, it just kind of makes sense that the various ranges map to each other -- where else could they really map to if not to each other?</P>
+<P mce_keep="true">But the behavior that does not allow them identifiers sounds like a very good one, that should not change. Because whether one is in the Unicode PUA or the PUA of a code page, one is not looking at good candidates for identifers....</P>
+<P mce_keep="true">&nbsp;</P>
+<P mce_keep="true"><FONT color=#ff00ff><EM>This post brought to you by</EM>  <EM>(<A class="" href="http://www.fileformat.info/info/unicode/char/e843" mce_href="http://www.fileformat.info/info/unicode/char/e843">U+e843</A>,&nbsp;a code value in the Unicode Private Use Area)</EM></FONT></P>
+<hr/><div style="margin-left: 1em"><em>no comments</em></div><hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2010/01/22 <a href="http://archives.miloush.net/michkap/archive/2010/01/22/9951970.html">From TTE to EUF: Possible?</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2007/05/26/2909957.html" title="On installing fonts">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2007/05/25/2875426.html" title="I&#39;d stop as soon as possible, IIf you&#39;d let me">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2007-05">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2007-05-26">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2007/05/26/2901371.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:38 GMT -->
+</html>

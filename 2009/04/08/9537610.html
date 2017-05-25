@@ -1,0 +1,143 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2009/04/08/9537610.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:35 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>On intentional gaps in calendar lists</title></head><body>
+<h1>On intentional gaps in calendar lists</h1>
+<p><em>by Michael S. Kaplan, published on 2009/04/08 10:16 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2009/04/08/9537610.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<p>Developer colleague Dmitri asked me:</p>
+<blockquote>
+<p>Hi Michael,<font face="times new roman,times"><o:p></o:p></font></p>
+
+<p><font face="times new roman,times">I noticed the MSDN documentation for the calendar IDs claims 
+that<o:p></o:p></font></p>
+
+<p class="note" style="margin-left: 0.5in; vertical-align: top; line-height: 140%;"><font face="times new roman,times"><b><span style="font-size: 8pt; color: black; line-height: 140%; font-family: 'Verdana','sans-serif';">Note</span></b><span style="font-size: 8pt; color: black; line-height: 140%; font-family: 'Verdana','sans-serif';">&nbsp;&nbsp;The 
+gap in numbering between the identifiers CAL_GREGORIAN_XLIT_FRENCH and 
+CAL_UMALQURA is intentional. The designator for CAL_UMALQURA is 23, not 
+13.<o:p></o:p></span></font></p>
+
+<p><font face="times new roman,times">I am wondering if you are aware of the intention by which 
+this gap was created?</font></p>
+</blockquote>
+<p>Let me tell you, it is kind of a funny story. </p>
+<p>That topic on <a href="http://msdn.microsoft.com/library/dd317732.aspx" mce_href="http://msdn.microsoft.com/library/dd317732.aspx">Calendar Identifiers</a> does indeed have this note.</p>
+<p>And the table has a gap that kind of begs for some explanation:</p>
+<blockquote>
+<table border="1"><tbody>
+<tr>
+<th colspan="2">Calendar identifier</th>
+<th>Meaning</th></tr>
+
+<tr>
+<td>1</td>
+
+<td>CAL_GREGORIAN</td>
+
+<td>Gregorian (localized)</td>
+</tr>
+
+<tr>
+<td>2</td>
+
+<td>CAL_GREGORIAN_US</td>
+
+<td>Gregorian (English strings always)</td>
+</tr>
+
+<tr>
+<td>3</td>
+
+<td>CAL_JAPAN</td>
+
+<td>Japanese Emperor Era</td>
+</tr>
+
+<tr>
+<td>4</td>
+
+<td>CAL_TAIWAN</td>
+
+<td>Taiwan calendar</td>
+</tr>
+
+<tr>
+<td>5</td>
+
+<td>CAL_KOREA</td>
+
+<td>Korean Tangun Era</td>
+</tr>
+
+<tr>
+<td>6</td>
+
+<td>CAL_HIJRI</td>
+
+<td>Hijri (Arabic Lunar)</td>
+</tr>
+
+<tr>
+<td>7</td>
+
+<td>CAL_THAI</td>
+
+<td>Thai</td>
+</tr>
+
+<tr>
+<td>8</td>
+
+<td>CAL_HEBREW</td>
+
+<td>Hebrew (Lunar)</td>
+</tr>
+
+<tr>
+<td>9&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <br></td>
+
+<td>CAL_GREGORIAN_ME_FRENCH</td>
+
+<td>Gregorian Middle East French</td>
+</tr>
+
+<tr>
+<td>10</td>
+
+<td>CAL_GREGORIAN_ARABIC</td>
+
+<td>Gregorian Arabic</td>
+</tr>
+
+<tr>
+<td>11</td>
+
+<td>CAL_GREGORIAN_XLIT_ENGLISH&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <br></td>
+
+<td>Gregorian transliterated English</td>
+</tr>
+
+<tr>
+<td>12</td>
+
+<td>CAL_GREGORIAN_XLIT_FRENCH</td>
+
+<td>Gregorian transliterated French</td>
+</tr>
+
+<tr>
+<td>23</td>
+
+<td>CAL_UMALQURA</td>
+
+<td><b>Windows&nbsp;Vista and later: </b>Um Al Qura (Arabic lunar) calendar &nbsp; &nbsp;&nbsp; <br></td>
+</tr>
+</tbody></table>
+
+</blockquote>
+<p>One almost wonders where the hidden calendars are, doesn't one? :-) </p><p>Well, it all comes down to a mistake that was made many years ago.</p><p>Some people might disagree with my characterization of events but I was there and I know I'm right so I'm gonna tell this story my way. If you don't like it then why the hell are you here? :-)<br></p><p>Anyway, it was a mistake.</p><p>In Office.</p><p>They had taken some empty slots in the LCID table and made some assignments.</p><p>Of course Windows had made assignments for some new locales in the same slots.</p><p>Since Office back in the earlier part of the decade was shipping much more regularly than Windows, they had already shipped products with these values, so Windows changed its "not yet shipped" values to match the Office ones for these newer locales.</p><p>And at the same time a more formal process by which Office and other groups would request values was put in place, so that they would never have this kind of problem come up again.</p><p>Now this process had to be put in for calendars, too. </p><p>So when Office added their support for the Saka calendar (ref: <b><a href="http://archives.miloush.net/michkap/archive/2008/01/09/7012965.html" mce_href="http://archives.miloush.net/michkap/archive/2008/01/09/7012965.html">Oh (Saka to me, Saka to me, Saka to me, Saka to me) Whoa Babe (Just a little bit) A little respect (just a little bit)</a></b>) and .NET added support for all those other calendars like the Jalaali (ref: <b><a href="http://archives.miloush.net/michkap/archive/2005/10/20/482896.html" mce_href="http://archives.miloush.net/michkap/archive/2005/10/20/482896.html">Behold the PersianCalendar class</a></b>) and so on, each one was given a CALID value. </p><p>Even if Windows had no formal timeline to support it.</p><p>Even if the technology requesting the calendar would never need it.</p><p>Even if nobody ended up needing to use it. </p><p>Here, in a totally unoffical way, I'll name them all.</p><p>Some you may even know where they are.</p><p>While others you won't since they aren't anywhere.</p><p>Like placeholders, almost: <br></p><ul><li>13 - Julian</li><li>14 - Japanese Lunisolar</li><li>15 - Chinese Lunisolar</li><li>16 - Saka</li><li>17 - Lunar ETO Chinese</li><li>18 - Lunar ETO Korean</li><li>19 - Lunar ETO Rokuyuo</li><li>20 - Korean Lunisolar</li><li>21- Taiwan Lunisoar</li><li>22 - Persian</li></ul>From there, at that time, Um Al Qura was just the next in line.... <br><p>And after that? Who can say for sure? One never knows what the next valoue might be, or even how (or IF) these placeholders will be used. </p><p>For now it is just the items that cause the intentional gap in the list of supported calendars!</p><p><br></p><p><i><font color="#ff00ff">The Unicode characters were released from
+their original contracts when SiaO went an hiatus; only time will tell
+if the Characters Union (AFL-CIO) is willing to negotiate new contracts
+for the characters it represents...</font></i>&nbsp; <br></p>
+<hr/><div style="margin-left: 1em"><em>no comments</em></div><hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2009/04/09/9539475.html" title="Two wrongs don&#39;t make a right, but two lefts can take a good whack at it">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2009/04/08/9537233.html" title="A chess problem begging for a solution...">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2009-04">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2009-04-08">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2009/04/08/9537610.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:35 GMT -->
+</html>

@@ -1,0 +1,64 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2012/03/22/10286210.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Sacrificing the 'A' func to make Romanian better? aka There's Something About Marţi…</title></head><body>
+<h1>Sacrificing the 'A' func to make Romanian better? aka There's Something About Marţi…</h1>
+<p><em>by Michael S. Kaplan, published on 2012/03/22 07:01 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2012/03/22/10286210.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<p>You may have read <strong><a title="The history of messing up Romanian on computers" href="http://archives.miloush.net/michkap/archive/2011/08/24/10199324.html">The history of messing up Romanian on computers</a></strong>, that blog I wrote back on Wednesday, August 24th of last year.</p>
+<p>And now, today's blog is on Thursday, March 22nd of this year.</p>
+<p>Something mildly unusual going on here.</p>
+<p>Almost ironic, one might say.</p>
+<p><em>Though if one were&nbsp; in fact to say it, one should go watch Katie Holmes in <a href="http://www.imdb.com/title/tt0133046/">Teaching Mrs. Tingle</a> again, to help understand why it isn't ironic. And then while one fills up the NetFlix queue,&nbsp;one should check out Cameron Diaz in&nbsp;<a href="http://www.imdb.com/title/tt0129387/">There's Something About Mary</a> if one needs a refresher on the allusion in the aka&nbsp;title of today's blog. Or if&nbsp;one just wants a better movie than Teaching Mrs. Tingle in&nbsp;one's short term cache. While&nbsp;one is&nbsp;there, Ben Kingsley has a relevant scene in <a href="http://www.imdb.com/title/tt0105435/">Sneakers</a> where he said "Marty... Marty... Marty..." where it may have been a complaint about Marţi&hellip; Marţi&hellip; Marţi&hellip; in his unusual accent. And it too is a better movie than Teaching Mrs. Tingle. :-)</em></p>
+<p>Well, I should explain the issue, for of those who are not Romanian, or who are not following the issues of the Romanian language.</p>
+<p>You should&nbsp;look at the Windows locale data and every native language field in it.</p>
+<p>Go ahead and look! I'll wait.</p>
+<p>Check out the LOCALE_SNATIVECOUNTRYNAME (LOCALE_SNATIVECTRYNAME). It's <span style="font-size: large;">Rom&acirc;nia</span>.</p>
+<p>And the LOCALE_SNATIVELANGUAGENAME (LOCALE_SNATIVELANGNAME). It's <span style="font-size: large;">rom&acirc;nă</span>.</p>
+<p>And the LOCALE_SNATIVEDISPLAYNAME. It's <span style="font-size: large;">rom&acirc;nă (Rom&acirc;nia)</span>.</p>
+<p>And the LOCALE_SNATIVECURRNAME. It's <span style="font-size: large;">Leu</span>.</p>
+<p>And the twelve LOCALE_SMONTHNAME[1-12] values. They are <span style="font-size: large;">ianuarie</span>, <span style="font-size: large;">februarie</span>, <span style="font-size: large;">martie</span>, <span style="font-size: large;">aprilie</span>, <span style="font-size: large;">mai</span>, <span style="font-size: large;">iunie</span>, <span style="font-size: large;">iulie</span>, <span style="font-size: large;">august</span>, <span style="font-size: large;">septembrie</span>, <span style="font-size: large;">octombrie</span>, <span style="font-size: large;">noiembrie</span>, <span style="font-size: large;">decembrie</span>.</p>
+<p>And the seven LOCALE_SDAYNAME[1-7] values. They are <span style="font-size: large;">duminică</span>, <span style="font-size: large;">luni</span>, <span style="font-size: large;">marţi</span>, <span style="font-size: large;">miercuri</span>, <span style="font-size: large;">joi</span>, <span style="font-size: large;">vineri</span>, and <span style="font-size: large;">s&acirc;mbătă</span>.</p>
+<p>Wait, sgtop the presses!</p>
+<p>You see that Wednesday (<span style="font-size: large;">miercuri</span>) and Thursday (<span style="font-size: large;">joi</span>) look great</p>
+<p>But Tuesday (<span style="font-size: large;">marţi</span>)? It has one of those nasty cedilla-below T's in it!</p>
+<p>It's been this way in Windows since the earliest days of Win9x and WinNT, and never fixed.</p>
+<p>In it's latest incarnation, it was reported as&nbsp;a <strong>localization</strong> bug back on <strong>Tuesday</strong>, December 20th, 2011.</p>
+<p>Note the Tuesday.</p>
+<p>And&nbsp;people spent months arguing back and forth about this one for months.</p>
+<p>Until <strong>Tuesday</strong>, March 13, 2012.</p>
+<p>Note the Tuesday.</p>
+<p>I stole the bug and assigned it to myself, and pointed out that it was a longstanding&nbsp;locale data issue.</p>
+<p>But it was <strong>on purpose</strong>.</p>
+<p>You might wonder why I would say such a terrible thing.</p>
+<p>Well, the problem is that people have been calling <a href="http://msdn.microsoft.com/library/windows/desktop/dd318101.aspx">GetLocaleInfoA</a>(LOCALE_USER_DEFAULT, <a href="http://msdn.microsoft.com/library/windows/desktop/dd373839.aspx">LOCALE_SDAYNAME2</a>, ...) on Romanian machines for many years now.</p>
+<p>And yes, while you may want&nbsp;<span style="font-size: x-large;">Marți</span>, and you may&nbsp;hate <span style="font-size: x-large;">Marţi</span> <strong>a lot</strong>, you probably hate <span style="font-size: x-large;">Mar?i</span> worse.</p>
+<p>Many a person in the past has, at least. And the request to update the code page was refused because we don't (won't) update code pages.</p>
+<p>We've gone back and forth on this issue for years, the Marţi/Mar?i/Marți issue.</p>
+<p>And once again the question comes up: do we&nbsp;make&nbsp;the 'A' functions less useful in Romania to make for a better Romanian?</p>
+<p>I lack both the time and the money to ask every single Romanian what they think, even were I to ignore the lessons of <strong><a title="On Thokks who don't give a Frigg, under the mistletoe" href="http://archives.miloush.net/michkap/archive/2006/11/04/961822.html">On Thokks who don't give a Frigg, under the mistletoe</a></strong>.</p>
+<p>So I'm just asking Romanians I know. And the ones who read this Blog!</p>
+<p>Because I'm thinking&nbsp;There's Something About Marţi&hellip; and that we should get her sister Marți, instead. Even if her Dorian Grey mirror twin Mar?i shows up to the unfashionable parties they have&nbsp;in ANSI apps...</p>
+<hr/><p><strong>Adrian</strong> on 22 Mar 2012 7:44 AM:</p><div style="margin-left: 1em"><p>Marți (the first choice) is ok. It&#39;s close to the actual rendering from books and in writing. </p>
+</div>
+<p><strong>Jesse</strong> on 22 Mar 2012 7:50 AM:</p><div style="margin-left: 1em"><p>Could you make a compatibility shim for applications that call GetLocaleInfoA under the Romanian language to get the original string back? &nbsp;It&#39;s a hack, but it&#39;s probably the best solution if you want the best of both worlds (proper localization and supporting legacy apps).</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 22 Mar 2012 8:32 AM:</p><div style="margin-left: 1em"><p>The shim thought is a good one; I&#39;ll see if I can put it in a few heads. Though it could be rather complicated to do....</p>
+</div>
+<p><strong>Simon Buchan</strong> on 22 Mar 2012 2:16 PM:</p><div style="margin-left: 1em"><p>So the A functions don&#39;t do best-fit? I can see that might have problems too, but I&#39;d take a somewhat near character over &quot;?&quot; anyday....</p>
+</div>
+<p><strong>Cristian</strong> on 22 Mar 2012 3:49 PM:</p><div style="margin-left: 1em"><p>There is a way to have &quot;Marți&quot; also in ANSI apps, but you don&#39;t like it :) Namely adding support for ISO/IEC 8859-16:2001 as CP28606.</p>
+<p>Please, pretty please add support from this last ISO codepage! Please add Windows to the list of operating systems which support it (MacOS, Linux, ReactOS)</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 22 Mar 2012 10:33 PM:</p><div style="margin-left: 1em"><p>@Simon - they do best fit but no best fit mapping is defined, and we can&#39;t change code pages. :-(</p>
+</div>
+<p><strong>Mișu Moldovan</strong> on 23 Mar 2012 6:46 AM:</p><div style="margin-left: 1em"><p>You don&#39;t have to change code pages, just add the one that&#39;s missing: ISO-8859-16. ReactOS did it already, why can&#39;t Windows do it too?</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 23 Mar 2012 7:09 AM:</p><div style="margin-left: 1em"><p>Because it&#39;s too late? Because rules are rules? Because Unicode solves the problem? Microsoft can&#39;t change stability promises and guarantes to send mixed messages and confuse people....</p></div>
+<p><strong>mpz</strong> on 23 Mar 2012 4:46 PM:</p><div style="margin-left: 1em"><p>I thought the Unicode train has already left the station? The home version of Windows has been Unicode-based for over ten years now (since XP in late 2001), so there really is no excuse for apps that do not support it.</p>
+<p>Just change it to what it really should be and force the apps to update. Sometimes you have to take drastic steps to get things fixed......</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 23 Mar 2012 10:11 PM:</p><div style="margin-left: 1em"><p>It has! :-) I just want to make sure the interested stakeholders have a chance to weigh in....</p>
+</div>
+<hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2012/03/26 <a href="http://archives.miloush.net/michkap/archive/2012/03/26/10286723.html">The Unicode train left the station YEARS ago, in fact! (2012 edition)</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2012/03/23/10286854.html" title="Every character has a story #37: U+2407 (♩ You Can Ring My [SYMBOL FOR] BELL ♩)">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2012/03/21/10285235.html" title="And it all started with a request that was refused....">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2012-03">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2012-03-22">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2012/03/22/10286210.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+</html>

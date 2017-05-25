@@ -1,0 +1,157 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2005/04/23/411106.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:41 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Regular expressions, Unicode style....</title></head><body>
+<h1>Regular expressions, Unicode style....</h1>
+<p><em>by Michael S. Kaplan, published on 2005/04/23 08:00 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2005/04/23/411106.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P><FONT face=Tahoma>A few days ago, <A href="http://www.hanselman.com/blog/" mce_href="http://www.hanselman.com/blog/">Scott Hanselman</A> asked in the Suggestion Box:</FONT></P>
+<BLOCKQUOTE dir=ltr style="MARGIN-RIGHT: 0px">
+<P><FONT face=Tahoma size=2>I'm doing an English/Spanish site with ASP.NET using some client side validation with Regular Expressions. </FONT></P>
+<P><FONT face=Tahoma size=2>I wanted to write a single Regular Expression for most large text fields: </FONT></P>
+<P><FONT face=Tahoma size=2>^[\w\d\s-'.,&amp;amp;#@:?!()$\/]+$ </FONT></P>
+<P><FONT face=Tahoma size=2>Notice that I'm using \w and \d for WORD characters and DIGITS respectively. I was assuming that JavaScript would allow "áÁéÉíÍóÓúÚñÑüÜ" and characters like it when a browser is configured for Spanish, but it seems only to care about A-Za-z. </FONT></P>
+<P><FONT face=Tahoma size=2>I wanted to avoid using A-Za-z as its so English Focused. </FONT></P>
+<P><FONT face=Tahoma size=2>What's the i18n "right thing to do" when using Regular Expressions? </FONT></P>
+<P><FONT face=Tahoma size=2>Ayudame por favor! ;)</FONT></P></BLOCKQUOTE>
+<P><FONT face=Tahoma>Of course he did not wait for me to answer &lt;grin&gt;, instead choosing to post about it on his own blog in a post entitled <A href="http://www.hanselman.com/blog/InternationalizedRegularExpressions.aspx" mce_href="http://www.hanselman.com/blog/InternationalizedRegularExpressions.aspx"><FONT color=#0002ca>Internationalized Regular Expressions</FONT></A>.</FONT></P>
+<P><FONT face=Tahoma>Its funny, I find myself using Regular Expressions more often in Visual Studio's Find/Replace than I do in actual code using the RegEx classes. Not sure what that means, but it is probably bad....</FONT></P>
+<P><FONT face=Tahoma>Anyway, the help for Regular Expressions that you get to if you click the Help button on the Find dialog has the following table in it, that I have used quite a bit:</FONT></P><FONT face=Tahoma>
+<P>The following table lists the syntax for matching by standard Unicode character properties. The two-letter abbreviation is the same as listed in the Unicode character properties database. These may be specified as part of a character set. For example, the expression [:Nd:Nl:No] matches any kind of digit.</P>
+<TABLE class="" cellSpacing=0 border=1>
+<TBODY>
+<TR vAlign=top>
+<TH class="" width="31%">Expression</TH>
+<TH class="" width="19%">Syntax</TH>
+<TH class="" width="50%">Description</TH></TR>
+<TR vAlign=top>
+<TD class="" width="31%">Uppercase letter</TD>
+<TD class="" width="19%">:Lu</TD>
+<TD class="" width="50%">Matches any one capital letter. For example, <CODE class=ce>:Luhe</CODE> matches "The" but not "the".</TD></TR>
+<TR vAlign=top>
+<TD class="" width="31%">Lowercase letter</TD>
+<TD class="" width="19%">:Ll</TD>
+<TD class="" width="50%">Matches any one lower case letter. For example, <CODE class=ce>:Llhe</CODE> matches "the" but not "The".</TD></TR>
+<TR vAlign=top>
+<TD class="" width="31%">Title case letter</TD>
+<TD class="" width="19%">:Lt</TD>
+<TD class="" width="50%">Matches characters that combine an uppercase letter with a lowercase letter, such as Nj and Dz.</TD></TR>
+<TR vAlign=top>
+<TD class="" width="31%">Modifier letter</TD>
+<TD class="" width="19%">:Lm</TD>
+<TD class="" width="50%">Matches letters or punctuation, such as commas, cross accents, and double prime, used to indicate modifications to the preceding letter.</TD></TR>
+<TR vAlign=top>
+<TD class="" width="31%">Other letter</TD>
+<TD class="" width="19%">:Lo</TD>
+<TD class="" width="50%">Matches other letters, such as gothic letter ahsa.</TD></TR>
+<TR vAlign=top>
+<TD class="" width="31%">Decimal digit</TD>
+<TD class="" width="19%">:Nd</TD>
+<TD class="" width="50%">Matches decimal digits such as 0-9 and their full-width equivalents.</TD></TR>
+<TR vAlign=top>
+<TD class="" width="31%">Letter digit</TD>
+<TD class="" width="19%">:Nl</TD>
+<TD class="" width="50%">Matches letter digits such as roman numerals and ideographic number zero.</TD></TR>
+<TR vAlign=top>
+<TD class="" width="31%">Other digit</TD>
+<TD class="" width="19%">:No</TD>
+<TD class="" width="50%">Matches other digits such as old italic number one.</TD></TR>
+<TR vAlign=top>
+<TD class="" width="31%">Open punctuation</TD>
+<TD class="" width="19%">:Ps</TD>
+<TD class="" width="50%">Matches opening punctuation such as open brackets and braces.</TD></TR>
+<TR vAlign=top>
+<TD class="" width="31%">Close punctuation</TD>
+<TD class="" width="19%">:Pe</TD>
+<TD class="" width="50%">Matches closing punctuation such as closing brackets and braces.</TD></TR>
+<TR vAlign=top>
+<TD class="" width="31%">Initial quote punctuation</TD>
+<TD class="" width="19%">:Pi</TD>
+<TD class="" width="50%">Matches initial double quotation marks.</TD></TR>
+<TR vAlign=top>
+<TD class="" width="31%">Final quote punctuation</TD>
+<TD class="" width="19%">:Pf</TD>
+<TD class="" width="50%">Matches single quotation marks and ending double quotation marks. </TD></TR>
+<TR vAlign=top>
+<TD class="" width="31%">Dash punctuation</TD>
+<TD class="" width="19%">:Pd</TD>
+<TD class="" width="50%">Matches the dash mark.</TD></TR>
+<TR vAlign=top>
+<TD class="" width="31%">Connector punctuation</TD>
+<TD class="" width="19%">:Pc</TD>
+<TD class="" width="50%">Matches the underscore or underline mark.</TD></TR>
+<TR vAlign=top>
+<TD class="" width="31%">Other punctuation</TD>
+<TD class="" width="19%">:Po</TD>
+<TD class="" width="50%">Matches commas (,), ?, ", !, @, #, %, &amp;, *, \, colons (:), semi-colons (;), ', and /.</TD></TR>
+<TR vAlign=top>
+<TD class="" width="31%">Space separator</TD>
+<TD class="" width="19%">:Zs</TD>
+<TD class="" width="50%">Matches blanks.</TD></TR>
+<TR vAlign=top>
+<TD class="" width="31%">Line separator</TD>
+<TD class="" width="19%">:Zl</TD>
+<TD class="" width="50%">Matches the Unicode character U+2028.</TD></TR>
+<TR vAlign=top>
+<TD class="" width="31%">Paragraph separator</TD>
+<TD class="" width="19%">:Zp</TD>
+<TD class="" width="50%">Matches the Unicode character U+2029.</TD></TR>
+<TR vAlign=top>
+<TD class="" width="31%">Non-spacing mark</TD>
+<TD class="" width="19%">:Mn</TD>
+<TD class="" width="50%">Matches non-spacing marks.</TD></TR>
+<TR vAlign=top>
+<TD class="" width="31%">Combining mark</TD>
+<TD class="" width="19%">:Mc</TD>
+<TD class="" width="50%">Matches combining marks.</TD></TR>
+<TR vAlign=top>
+<TD class="" width="31%">Enclosing mark</TD>
+<TD class="" width="19%">:Me</TD>
+<TD class="" width="50%">Matches enclosing marks. </TD></TR>
+<TR vAlign=top>
+<TD class="" width="31%">Math symbol</TD>
+<TD class="" width="19%">:Sm</TD>
+<TD class="" width="50%">Matches +, =, ~, |, &lt;, and &gt;.</TD></TR>
+<TR vAlign=top>
+<TD class="" width="31%">Currency symbol</TD>
+<TD class="" width="19%">:Sc</TD>
+<TD class="" width="50%">Matches $ and other currency symbols.</TD></TR>
+<TR vAlign=top>
+<TD class="" width="31%">Modifier symbol</TD>
+<TD class="" width="19%">:Sk</TD>
+<TD class="" width="50%">Matches modifier symbols such as circumflex accent, grave accent, and macron.</TD></TR>
+<TR vAlign=top>
+<TD class="" width="31%">Other symbol</TD>
+<TD class="" width="19%">:So</TD>
+<TD class="" width="50%">Matches other symbols, such as the copyright sign, pilcrow sign, and the degree sign.</TD></TR>
+<TR vAlign=top>
+<TD class="" width="31%">Other control</TD>
+<TD class="" width="19%">:Cc</TD>
+<TD class="" width="50%">Matches end of line.</TD></TR>
+<TR vAlign=top>
+<TD class="" width="31%">Other format</TD>
+<TD class="" width="19%">:Cf</TD>
+<TD class="" width="50%">Formatting control character such as the bidirectional control characters.</TD></TR>
+<TR vAlign=top>
+<TD class="" width="31%">Surrogate</TD>
+<TD class="" width="19%">:Cs</TD>
+<TD class="" width="50%">Matches one half of a surrogate pair.</TD></TR>
+<TR vAlign=top>
+<TD class="" width="31%">Other private-use</TD>
+<TD class="" width="19%">:Co</TD>
+<TD class="" width="50%">Matches any character from the private-use area.</TD></TR>
+<TR vAlign=top>
+<TD class="" width="31%">Other not assigned</TD>
+<TD class="" width="19%">:Cn</TD>
+<TD class="" width="50%">Matches characters that do not map to a Unicode character.</TD></TR></TBODY></TABLE></FONT>
+<P><FONT face=Tahoma>I use these all the time when I am trying to get behavior that respects more of Unicode.</FONT></P>
+<P><FONT face=Tahoma>Not sure if this will help you with what you are looking for, but it is the way I use to get internationally aware regular expressions.... :-)</FONT></P>
+<P><FONT face=Tahoma></FONT>&nbsp;</P>
+<P><FONT color=#ff0000><FONT face=Tahoma><EM>This post brought to you by </EM>"<FONT size=4>ר</FONT>" </FONT></FONT><EM><FONT face=Tahoma color=#ff0000>(</FONT><A href="http://www.fileformat.info/info/unicode/char/05e8/index.htm" mce_href="http://www.fileformat.info/info/unicode/char/05e8/index.htm"><FONT face=Tahoma>U+05e8</FONT></A><FONT color=#ff0000><FONT face=Tahoma>, a.k.a. HEBREW LETTER RESH)<BR><FONT size=1>Because this post is כשר לפסח in anticipation of the festivities that start less than 24 hours from now)</FONT></FONT></FONT></EM></P>
+<hr/><p><a id="411121" href="#411121">#</a> <strong>Jonathan</strong> on 23 Apr 2005 7:35 AM:</p><div style="margin-left: 1em">It's כשר לפסח, not קשר לפסח.<br>כשר = Kosher<br>קשר = knot, connection</div>
+<p><a id="411133" href="#411133">#</a> <strong>Michael S. Kaplan</strong> on 23 Apr 2005 8:55 AM:</p><div style="margin-left: 1em">Interesting... looking at food containers I actually see both spellings. :-(<br><br>Not sure what to do with that -- good think it's not Passover yet I suppose....</div>
+<p><a id="411312" href="#411312">#</a> <strong>Svend Tofte</strong> on 23 Apr 2005 10:10 PM:</p><div style="margin-left: 1em">I think the linked authors problem is that he is using JScript, probably some 5.6 version, which doesn't have the (.NET) features, you list here.<br><br>Also, I've never really exercised the regex part of .NET, so I'm no expert there, but my copy of &quot;Mastering Regular Expressions&quot; tells me that by default &quot;\w&quot; matches things, such as :Ll, :Lu, and a few others. <br><br>I guess they could break backward compatability, when there is no existing code-base, which may (what do I know) have been the problem with the regex part of JScript (or whereever the regex code that JScript uses lives), since suddenly allowing much wider input, may not have flown well with alot of existing websites, relying on \w to mean just [A-Za-z], and no more. <br><br>And thanks for a very cool blog btw. I never dabble much in these waters (internationalization, etc), but when I do, it's always scary.</div>
+<p><a id="411318" href="#411318">#</a> <strong>Michael S. Kaplan</strong> on 23 Apr 2005 10:36 PM:</p><div style="margin-left: 1em">Yep, Scott is indeed looking for a JScript solution, I told him a comment to his post that there may not be an answer there other than hardcoding the desired characters....<br><br>Glad you like the blog! :-)</div>
+<p><a id="411814" href="#411814">#</a> <strong>Travis Illig</strong> on 25 Apr 2005 12:20 PM:</p><div style="margin-left: 1em">JavaScript supports \u0000-\uFFFF style Unicode character expressions, so you could theoretically expand the character classes into the corresponding \uXXXX-\uYYYY style range(s) on the server side to feed to the client.<br><br>I've posted a code sample here:<br><a rel="nofollow" target="_new" href="http://www.paraesthesia.com/blog/comments.php?id=809_0_1_0_C">http://www.paraesthesia.com/blog/comments.php?id=809_0_1_0_C</a><br><br>Obviously something you'd want to cache rather than calculate each time, but it's something to think about.</div>
+<hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2005/04/24/411329.html" title="Is Whidbey&#39;s international support finished?">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2005/04/23/411092.html" title="Do I really support the Kobayashi Maru in interview questions?">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2005-04">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2005-04-23">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2005/04/23/411106.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:41 GMT -->
+</html>

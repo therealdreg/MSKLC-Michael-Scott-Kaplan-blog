@@ -1,0 +1,129 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2008/08/21/8883552.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:36 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Its the End[UpdateResource] of the world we know it</title></head><body>
+<h1>Its the End[UpdateResource] of the world we know it</h1>
+<p><em>by Michael S. Kaplan, published on 2008/08/21 10:01 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2008/08/21/8883552.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<p>It was late last week when Maksim asked a very interesting question via email to one of those large aliases at Microsoft:</p>
+
+<blockquote>
+<p><font face="times new roman,times"><b>SUBJECT: EndUpdateResource failing after adding cirtain number of items with UpdateResource</b><br><br>Hi,<br><br>It appears that there is a bug (or undocumented behavior anyway) with BeginUpdate/Update/EndUpdateResource functions.<br><br>When I am adding more than certain number of resources this way, EndUpdateResource returns with error ERROR_INVALID_DATA. The exact count of items is not always the same and varies depending on the length of resource names and resource types that I have.<br><br>After running several experiments I have discovered that that the problem occurs according to following formula: <br><br>(Cumulative Resource Names Length) + (Resources Count) * 25 + (Cumulative Resource Types Length) + (Resource Types Count) * 13 &gt; 2040<br><br>Can someone please say if there is a bug and if my assumed formula is correct? Or may be there is some other workaround apart from doing EndUpdateResource after adding each resource.<br><br>My source code is below, the dll where I updated resources is a simple dll without any code:<br></font><br><b><font face="consolas,lucida console,courier new,courier,fixed">#include "stdafx.h"<br>#include &lt;string&gt;<br>#include &lt;iostream&gt;<br><br>using namespace std;<br><br>wstring MakeLongName(size_t length) {<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; int randomNumber = rand();<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; TCHAR buffer[65];<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ZeroMemory(buffer, 65);<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; _itot_s(randomNumber, buffer, 65, 10);<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; wstring randomPart = buffer;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; length -= randomPart.length();<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; wstring result;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; result.append(length, 'X');<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; result.append(randomPart);<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; return result;<br>}<br><br>int _tmain(int argc, _TCHAR* argv[]) {<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; CopyFile(L".\\testdll.dll", L".\\testdll1.dll", FALSE);<br><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; HANDLE hLibrary = BeginUpdateResource(L".\\testdll1.dll", TRUE);<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; if(hLibrary==NULL) { <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; cout &lt;&lt; "Failed to BeginUpdateResource. Error: " &lt;&lt; GetLastError() &lt;&lt; endl; <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; return 1; <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }<br><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; for(long i = 0; i &lt; 10; i++) {<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; BYTE data[100];<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ZeroMemory(data, 100);<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; wstring longName = MakeLongName(230);<br><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; if(! UpdateResource(hLibrary, L"Y", longName.c_str(), MAKELANGID(LANG_NEUTRAL, SUBLANG_NEUTRAL), data, 100)) {<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; cout &lt;&lt; "Failed to UpdateResource. Error: " &lt;&lt; GetLastError() &lt;&lt; endl;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; EndUpdateResource(hLibrary, TRUE);<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; return 1;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }<br><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; if(! EndUpdateResource(hLibrary, FALSE) ) {<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; cout &lt;&lt; "Failed to EndUpdateResource. Error: " &lt;&lt; GetLastError() &lt;&lt; endl;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; return 1;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; return 0;<br>}</font></b></p>
+</blockquote>
+
+<p>I had not seen this cone up before, but this is a function I have found interesting since all the way back when we the resource updating functions in MSLU (described <b><a href="http://archives.miloush.net/michkap/archive/2005/02/12/371650.html" mce_href="http://archives.miloush.net/michkap/archive/2005/02/12/371650.html">here</a></b>).<br></p><p> The answer to this particular riddle came from developer <a href="http://msdn.microsoft.com/vs2005/aa718744.aspx" mce_href="http://msdn.microsoft.com/vs2005/aa718744.aspx">Paul</a>:</p>
+
+<blockquote>
+<p><font face="times new roman,times">EndUpdateResource fails if it cannot extend the .rsrc section of your DLL. I’ve seen this happen if the .rsrc section isn’t the last section in the image – and that’s frequently the case (a few experiments show that .reloc usually follows .rsrc using the Microsoft linker). Annoyingly, LINK.EXE always seems to insert a .reloc section, even if you have a resource-only DLL. (The formula you discovered is an approximation for “the .rsrc section cannot be extended”.)<br></font></p>
+</blockquote>
+
+<p>Now as to whether this is a bug of by design....</p>
+
+<p>It really is by design.</p>
+
+<p>Twice.<br></p>
+
+<p>Now I am not going to dig into the format of PE files, since for that you can look at:</p>
+
+<ul>
+<li>Matt Pietrek's <a href="http://www.microsoft.com/msj/archive/S572.aspx" mce_href="http://www.microsoft.com/msj/archive/S572.aspx">Remove Fatty Deposits from Your Applications Using Our 32-Bit Liposuction Tools</a> from October 1996</li>
+
+<li>Matt's <a href="http://www.microsoft.com/msj/0797/hood0797.aspx" mce_href="http://www.microsoft.com/msj/0797/hood0797.aspx">Under The Hood from July 1997</a></li>
+
+<li>Matt's <a href="http://msdn.microsoft.com/magazine/cc301805.aspx" mce_href="http://msdn.microsoft.com/magazine/cc301805.aspx">An In-Depth Look into the Win32 Portable Executable File Format, Part 1</a> from February 2002</li>
+
+<li>Matt's <a href="http://msdn.microsoft.com/magazine/cc301808.aspx" mce_href="http://msdn.microsoft.com/magazine/cc301808.aspx">An In-Depth Look into the Win32 Portable Executable File Format, Part 2</a> from March 2002</li>
+</ul>
+
+<p>to get the lowdown here.</p>
+
+<p>So for the first <b>by design</b> we'll look to the linker. <br></p>
+
+<p>When the Microsoft Linker (LINK.EXE) does its work it makes a lot of sense that it makes the <b>.reloc</b> section last rather than the <b>.rsrc</b> section, because the latter is more or less gunk that is alread compiled by the Microsoft Resource Compiler (RC.EXE) and which it does no t really need to modify -- it just has to align, while the former is the section that it arguably has to do some of it hardest work in to have all of the relocation entries.</p>
+
+<p>Matt also has a less cynical reason he mentions in that second article:<br></p>
+
+<blockquote>
+<p><font face="times new roman,times"><i>Working backwards from the end of the executable, if there is a .debug section 
+in the OBJs, it's placed last in the executable. In the absence of a .debug 
+section, the linker tries to put the .reloc section last because, in most cases, 
+the Win32 loader won't need to read the relocation information. Cutting down the 
+amount of the executable that needs to be read decreases the load time.</i></font><br></p>
+</blockquote>
+
+<p>Then for the second <b>by design</b> we'll look to the <a href="http://msdn.microsoft.com/library/ms648032.aspx" mce_href="http://msdn.microsoft.com/library/ms648032.aspx">EndUpdateResource</a> function and its cousins (<a href="http://msdn.microsoft.com/library/ms648030.aspx" mce_href="http://msdn.microsoft.com/library/ms648030.aspx">BeginUpdateResource</a> and <a href="http://msdn.microsoft.com/library/ms648030.aspx" mce_href="http://msdn.microsoft.com/library/ms648030.aspx">UpdateResource</a>), though really that first function I mentioned is the real bad boy here.</p>
+
+<p>While it does a bunch of work inside the <b>.rsrc</b> section, it doesn't start mucking around a whole bunch with the rest of the PE file. Reordering sections just fall a bit outside of its current beat, if you know what I mean.</p>
+
+<p>Paul had some thoughts about workarounds:</p>
+
+<blockquote>
+<p><font face="times new roman,times">If you have control over how
+“testdll1.dll” is created, you might be able to figure out how to
+manipulate the PE sections so that .rsrc always goes last. In my code,
+I was able to start with a hand-crafted resource-only PE file which had
+only a .rsrc section.</font></p>
+</blockquote>
+
+<p>Matt's first article gives some info on removing the <b>.reloc</b> section:</p>
+
+<blockquote>
+<p><font face="times new roman,times"><i>If you do decide to remove relocations, there are three ways to do it.
+The easiest is to specify the /FIXED switch on the linker command line.
+Alternatively, you can run the REBASE program with the -f option on
+your executable. REBASE comes with the Win32 SDK. The third way to
+remove relocations is the new RemoveRelocations function in the Windows
+NT 4.0 IMAGEHLP.DLL. My sample code below shows how to use
+RemoveRelocations.</i></font> <br></p>
+</blockquote>
+
+<p>Though to be honest this is something I try to avoid, especially with /FIXED, because I have seen multiple sources that suggest this to be a bad idea for two reasons:</p>
+
+<ul>
+<li>If the file has to be relocated then it simply won't load, even if it's a resource-only DLL, unless you load it via <a href="http://msdn.microsoft.com/library/ms684179.aspx" mce_href="http://msdn.microsoft.com/library/ms684179.aspx">LoadLibraryEx</a> with the LOAD_LIBRARY_AS_DATAFILE type flags;</li>
+
+<li>On debug builds, it seems that sometimes the Microsoft Linker still adds a <b>.reloc</b> section, even if you pass /FIXED, something I have not seen documented.<br></li>
+</ul>
+
+<p>Though your mileage may vary.<br></p>
+
+<p>And of course someone could write a tool to simply do the reordering of these two sections in the binary; the principal thing to worry about (and the easiest bit to mess up) is not aligning things properly, but that isn't <i>too</i> hard, so it might be worth just grabbing the source from Matt's PEDUMP (used in the last two articles on the list above) and the code to remove the <b>.reloc</b> section from the second one to use as a start and then working to just write the whole file out with these two sections reordered.</p>
+
+<p>Now if someone were to decide to fix it -- to unmark the <b>by design</b> flag on it -- whose job would it be?</p>
+
+<p>On the whole I'd say the fix should be in the <a href="http://msdn.microsoft.com/library/ms648032.aspx" mce_href="http://msdn.microsoft.com/library/ms648032.aspx">EndUpdateResource</a>  function, for several reasons:</p>
+
+<ul>
+<li>If my conjecture about the linker's operations is true, there is no need to make its work more complicated here;</li>
+
+<li>There are very good reasons to not formally document or tie down the rules of image layout produced by the linker -- something that fixing this issue would do;</li>
+
+<li>The potential performance benefit to putting the <b>.reloc</b> which is often not needed at the end and the <b>.rsrc</b> which is usually needed not at the end just makes sense;</li>
+
+<li>The only people who might care about the section order are the people who call the <a href="http://msdn.microsoft.com/library/ms648032.aspx" mce_href="http://msdn.microsoft.com/library/ms648032.aspx">EndUpdateResource</a>  function, so changing the rules for how everyting is built when only a small number of people would need it would be less than ideal;</li>
+
+<li>The limitation itself is clearly in the <a href="http://msdn.microsoft.com/library/ms648032.aspx" mce_href="http://msdn.microsoft.com/library/ms648032.aspx">EndUpdateResource</a>  function, and there are real benefits to having bugs fuxed where they are instead of architecting around them.</li>
+</ul>
+
+<p>Of course now we get to the really unfortunate aspect of all of this.</p>
+
+<p>In Windows, there are some components with specific owners, and others that are really considered to be very shared, with no specific owner who would be responsible for daoing major updates.<br></p>
+
+<p>Many times that "no owner" status comes in code that has not required changes in a long time.</p>
+
+<p>Code of that sort often finds new owners via the "Chess move" theory of development -- i.e. "you touched it, you own it", but the resource updating functions (<a href="http://msdn.microsoft.com/library/ms648030.aspx" mce_href="http://msdn.microsoft.com/library/ms648030.aspx">BeginUpdateResource</a>, <a href="http://msdn.microsoft.com/library/ms648030.aspx" mce_href="http://msdn.microsoft.com/library/ms648030.aspx">UpdateResource</a>, and <a href="http://msdn.microsoft.com/library/ms648032.aspx" mce_href="http://msdn.microsoft.com/library/ms648032.aspx">EndUpdateResource</a>) have proven quite resilient to this, with people who modify it managing to be able to avoid becoming owners except within the scope of their own changes.</p>
+
+<p>So finding someone to volunteer to own this particular change could prove to be a challenge (especially since one can fall back on the whole <b>by design</b> thing!).</p>
+
+<p>&nbsp;</p>
+
+<p><font color="#ff00ff"><i>This blog brought to you by</i><font size="7"> ㊮ </font><i>(<a href="http://www.fileformat.info/info/unicode/char/32ae" mce_href="http://www.fileformat.info/info/unicode/char/32ae">U+32ae</a>, aka CIRCLED IDEOGRAPH RESOURCE)</i></font> <br></p>
+<hr/><p><a id="8894517" href="#8894517">#</a> <strong>Mihai</strong> on 25 Aug 2008 2:00 PM:</p><div style="margin-left: 1em"><p>A related problems seem to be the (apparently) random failure if adding a manifest to the executable. I guess mt.exe does the same kind of resource update (although it does not seem to call the official API).</p></div>
+<p><a id="8896087" href="#8896087">#</a> <strong>Michael S. Kaplan</strong> on 26 Aug 2008 12:42 AM:</p><div style="margin-left: 1em"><p>I don't know much about how the manifests are embedded -- could they be the same essential bug/limitation?</p>
+</div>
+<p><a id="8916167" href="#8916167">#</a> <strong>KJK::Hyperion</strong> on 1 Sep 2008 5:19 AM:</p><div style="margin-left: 1em"><p>Relocation data is fully position-independent: it doesn't contain relocations (naturally) nor RVAs to itself. It can be easily stripped from the executable and re-appended later</p></div>
+<p><a id="8916196" href="#8916196">#</a> <strong>Michael S. Kaplan</strong> on 1 Sep 2008 5:31 AM:</p><div style="margin-left: 1em"><p>Yes, of course. :-)</p>
+<p>But it is the part of the binary that the linker does the most writing work in -- so it is easier to stick at the end. Others can of course move sections around later, but none would do so gratuitously, so you need someone to decide it is worth their while....</p>
+</div>
+<hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2008/08/22/8887005.html" title="What good is irony if it can&#39;t provide symmetry?">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2008/08/21/8883467.html" title="A&amp;P of Sort Keys, part 14: The Hangul is really getting OLD">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2008-08">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2008-08-21">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2008/08/21/8883552.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:36 GMT -->
+</html>

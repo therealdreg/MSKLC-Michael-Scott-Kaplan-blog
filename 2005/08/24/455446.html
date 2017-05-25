@@ -1,0 +1,62 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2005/08/24/455446.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:41 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>You probably don't want to use Microsoft's code page 20269</title></head><body>
+<h1>You probably don't want to use Microsoft's code page 20269</h1>
+<p><em>by Michael S. Kaplan, published on 2005/08/24 03:01 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2005/08/24/455446.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<DIR>
+<P><FONT face=Tahoma>Yes, there is a problem with code page 20269. And there has been, since birth.</FONT></P>
+<P><FONT face=Tahoma>It is intended to be an implementation of ISO-6937. Unfortunately it cannot really be used&nbsp;for its intended purpose, to provide a form for combining characters for Latin-1. The ISO&nbsp;standard works as follows:</FONT></P>
+<P><FONT face=Tahoma>ISO 6937 has for characters single letters and combinations of a letter with a diacritic. Only those which occur in a list are legal, the "repertoire" of ISO 6937. The diacritic shall preceed the letter, but is no character in itself. A diacritic as a free-standing character is created by coding a space behind the byte that represents the "diacritical mark". In this way some characters are coded with one, others with two bytes. The number of codeable characters is finite, basically the 333 characters defined in the repertoire. </FONT></P>
+<P><FONT face=Tahoma>(The scheme of 6937 was abandoned in favor of the ISO-8859 scheme, which uses precomposed characters.)</FONT></P>
+<P><FONT face=Tahoma>Now both Windows and Unicode do things the other way around (base character followed by combining character). In order to properly handle conversions for ISO 6937, any of the following characters would have to be reversed with the character following it when calling WideCharToMultiByte(20269,...) and the character preceeding it when calling MultiByteToWideChar(20269,...)</FONT></P>
+<TABLE width="42%" border=1>
+<TBODY>
+<TR>
+<TD align=middle><FONT face="Courier New"><B>Unicode</B></FONT></TD>
+<TD align=middle><FONT face="Courier New"><B>cp 20269</B></FONT></TD>
+<TD align=middle><FONT face="Courier New"><B>Character</B></FONT></TD></TR>
+<TR>
+<TD align=middle><FONT face="Courier New" size=2>U+0306</FONT></TD>
+<TD align=middle><FONT face="Courier New" size=2>0xC6</FONT></TD>
+<TD align=middle><FONT face="Courier New" size=2>Combining Breve</FONT></TD></TR>
+<TR>
+<TD align=middle><FONT face="Courier New" size=2>U+0307</FONT></TD>
+<TD align=middle><FONT face="Courier New" size=2>0xC7</FONT></TD>
+<TD align=middle><FONT face="Courier New" size=2>Combining Dot Above</FONT></TD></TR>
+<TR>
+<TD align=middle><FONT face="Courier New" size=2>U+0308</FONT></TD>
+<TD align=middle><FONT face="Courier New" size=2>0xC8</FONT></TD>
+<TD align=middle><FONT face="Courier New" size=2>Combining Diaeresis</FONT></TD></TR>
+<TR>
+<TD align=middle><FONT face="Courier New" size=2>U+030a</FONT></TD>
+<TD align=middle><FONT face="Courier New" size=2>0xCA</FONT></TD>
+<TD align=middle><FONT face="Courier New" size=2>Combining Ring Above</FONT></TD></TR>
+<TR>
+<TD align=middle><FONT face="Courier New" size=2>U+030b</FONT></TD>
+<TD align=middle><FONT face="Courier New" size=2>0xCD</FONT></TD>
+<TD align=middle><FONT face="Courier New" size=2>Combining Double Acute</FONT></TD></TR>
+<TR>
+<TD align=middle><FONT face="Courier New" size=2>U+030c</FONT></TD>
+<TD align=middle><FONT face="Courier New" size=2>0xCF</FONT></TD>
+<TD align=middle><FONT face="Courier New" size=2>Combining Hacek</FONT></TD></TR>
+<TR>
+<TD align=middle><FONT face="Courier New" size=2>U+0327</FONT></TD>
+<TD align=middle><FONT face="Courier New" size=2>0xCB</FONT></TD>
+<TD align=middle><FONT face="Courier New" size=2>Combining Cedilla</FONT></TD></TR>
+<TR>
+<TD align=middle><FONT face="Courier New" size=2>U+0328</FONT></TD>
+<TD align=middle><FONT face="Courier New" size=2>0xCE</FONT></TD>
+<TD align=middle><FONT face="Courier New" size=2>Combining Ogonek</FONT></TD></TR>
+<TR>
+<TD align=middle><FONT face="Courier New" size=2>U+0332</FONT></TD>
+<TD align=middle><FONT face="Courier New" size=2>0xCC</FONT></TD>
+<TD align=middle><FONT face="Courier New" size=2>Combining Low Line</FONT></TD></TR></TBODY></TABLE>
+<P><FONT face=Tahoma>Technically, we should only do this for chars within the legal list of 333 chars, all others should fail to convert properly. But the simple reversal above might be enough....</FONT></P>
+<P><FONT face=Tahoma>Since 20269 is a table based code page, this kind of special handling is not being done and really cannot be done; to fix, a new (algorithmic or 'baby DBCS') code page would have to be defined. And we are not defining new code pages, so this one is going to need to be file under the "do not expect useful results without doing a lot of work yourself" category....</FONT></P>
+<P><FONT face=Tahoma>Not the end of the world or anything, but it seemed worthy of at least a blog entry. :-)</FONT></P>
+<P><FONT face=Tahoma></FONT>&nbsp;</P>
+<P><FONT face=Tahoma color=#ff0000><EM>This post brought to you by</EM> "A" <EM>(<A href="http://www.fileformat.info/info/unicode/char/0041/index.htm">U+0041</A>, a.k.a. LATIN CAPITAL LETTER A)</EM></FONT></P></DIR>
+<hr/><div style="margin-left: 1em"><em>no comments</em></div><hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2008/09/14 <a href="http://archives.miloush.net/michkap/archive/2008/09/14/8950506.html">Johab to be kidding me!</a></p><p>2007/08/30 <a href="http://archives.miloush.net/michkap/archive/2007/08/30/4641553.html">The main criteria in determing whether a code page sucks? Suckage, of course!</a></p><p>2007/07/17 <a href="http://archives.miloush.net/michkap/archive/2007/07/17/3910360.html">Sometimes people use code pages even when the code pages are really lame</a></p><p>2006/04/22 <a href="http://archives.miloush.net/michkap/archive/2006/04/22/580636.html">Dial 911, code page 864 isn't breathing</a></p><p>2005/09/12 <a href="http://archives.miloush.net/michkap/archive/2005/09/12/464327.html">You probably don't want to use Microsoft's code page 21027</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2005/08/24/455962.html" title="It didn&#39;t make my brown eyes blue">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2005/08/23/455359.html" title="What the hell does HTTP_ACCEPT_LANGUAGE mean?">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2005-08">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2005-08-24">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2005/08/24/455446.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:41 GMT -->
+</html>

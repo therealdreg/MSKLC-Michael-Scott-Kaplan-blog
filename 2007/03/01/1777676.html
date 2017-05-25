@@ -1,0 +1,25 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2007/03/01/1777676.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:38 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>That's funny, they look like digits!</title></head><body>
+<h1>That's funny, they look like digits!</h1>
+<p><em>by Michael S. Kaplan, published on 2007/03/01 03:01 -05:00, original URI: http://blogs.msdn.com/b/michkap/archive/2007/03/01/1777676.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P>Boris asked me:</P>
+<BLOCKQUOTE><FONT face="Times New Roman"><I>
+<P>Hi Michael.&nbsp; <BR><BR>I saw the thread&nbsp;about parsing the numbers of other language digits, however I have extra question.&nbsp; The Char.IsDigit does recognizes below data:<BR><BR>char c1 = '\uFF12';<BR>char c2 = '２';&nbsp;<BR><BR>as digits and is returning true for each of them.&nbsp; <BR><BR>Does it mean that the FormatException “Input string was not in a correct format” in Int32.Parse() with this value as argument <BR><BR>i = Int32.Parse(c1.ToString());<BR>i = Int32.Parse(c2.ToString());<BR><BR>is just the limitation of particular NET API Int32.Parse()?<BR><BR>Thanks.<BR></P></I></FONT></BLOCKQUOTE>
+<P mce_keep="true">A very good question!</P>
+<P mce_keep="true">Indeed, as Boris suspected it is related to the issue I talked about <STRONG><A class="" href="http://archives.miloush.net/michkap/archive/2007/02/14/1675303.html" mce_href="http://archives.miloush.net/michkap/archive/2007/02/14/1675303.html">here</A></STRONG>.</P>
+<P mce_keep="true">Though it is a little bit more complicated since clearly ０１２３４５６７８９ looks like a bunch of digits, which makes it a much tougher sell to have it throw when you try to parse something and it throws even though a&nbsp;six year old could probably parse it....</P>
+<P mce_keep="true"><EM>Back when I was consulting, there were&nbsp;a few&nbsp;times for Japanese customers that I would parse these digits since it was quite easy to have someone typing without noticing they were in fullwidth mode on their IME, in which case they'd have these digits show up. Popping up an error is easy but it is hardly very polite when it is so obvious what the intent was!</EM></P>
+<P mce_keep="true">Luckily, any of the following:</P>
+<UL>
+<LI><A class="" href="http://msdn2.microsoft.com/library/system.globalization.charunicodeinfo.getdecimaldigitvalue.aspx" mce_href="http://msdn2.microsoft.com/library/system.globalization.charunicodeinfo.getdecimaldigitvalue.aspx">CharUnicodeInfo.GetDecimalDigitValue</A> 
+<LI><A class="" href="http://msdn2.microsoft.com/library/system.globalization.charunicodeinfo.getdigitvalue.aspx" mce_href="http://msdn2.microsoft.com/library/system.globalization.charunicodeinfo.getdigitvalue.aspx">CharUnicodeInfo.GetDigitValue</A> 
+<LI><A class="" href="http://msdn2.microsoft.com/library/system.globalization.charunicodeinfo.getnumericvalue.aspx" mce_href="http://msdn2.microsoft.com/library/system.globalization.charunicodeinfo.getnumericvalue.aspx">CharUnicodeInfo.GetNumericValue</A> </LI></UL>
+<P mce_keep="true">will all return a number back, so it is easy enough to do the parsing yourself if you want to.</P>
+<P mce_keep="true">Now there are some specific problems with trying to upgrade the .NET Framework to be as smart as that six year old, which I will talk about soon. :-)</P>
+<P mce_keep="true">&nbsp;</P>
+<P mce_keep="true"><FONT color=#ff00ff><EM>This post brought to you by</EM>&nbsp;<FONT size=6>２</FONT> <EM>(<A class="" href="http://www.fileformat.info/info/unicode/char/ff12" mce_href="http://www.fileformat.info/info/unicode/char/ff12">U+ff12</A>, a.k.a. FULLWIDTH DIGIT TWO)</EM></FONT></P>
+<hr/><div style="margin-left: 1em"><em>no comments</em></div><hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2007/11/09 <a href="http://archives.miloush.net/michkap/archive/2007/11/09/6006868.html">If you get a yen for something a bit wider you might be out of luck</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2007/03/01/1779988.html" title="You might also be a tester">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2007/02/28/1772891.html" title="What do they mean when they say &#39;GB18030 Characters&#39; ?">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2007-03">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2007-03-01">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2007/03/01/1777676.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:38 GMT -->
+</html>

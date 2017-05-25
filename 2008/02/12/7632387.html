@@ -1,0 +1,77 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2008/02/12/7632387.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:36 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Behold the Table Driven Text Service, Part 9 (Will you be content if I tell you how some content can be defined?)</title></head><body>
+<h1>Behold the Table Driven Text Service, Part 9 (Will you be content if I tell you how some content can be defined?)</h1>
+<p><em>by Michael S. Kaplan, published on 2008/02/12 10:16 -05:00, original URI: http://blogs.msdn.com/b/michkap/archive/2008/02/12/7632387.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P>Prior posts in the series:</P>
+<UL>
+<LI><A class="" href="http://archives.miloush.net/michkap/archive/2008/01/21/7178421.html" mce_href="http://archives.miloush.net/michkap/archive/2008/01/21/7178421.html"><STRONG>0 (You have to start somewhere)</STRONG></A> 
+<LI><A class="" href="http://archives.miloush.net/michkap/archive/2008/01/22/7179223.html" mce_href="http://archives.miloush.net/michkap/archive/2008/01/22/7179223.html"><STRONG>1 (Starting with a dictionary simple in every way)</STRONG></A> 
+<LI><A class="" href="http://archives.miloush.net/michkap/archive/2008/01/23/7179692.html" mce_href="http://archives.miloush.net/michkap/archive/2008/01/23/7179692.html"><STRONG>2 (Three ways to convert!)</STRONG></A> 
+<LI><A class="" href="http://archives.miloush.net/michkap/archive/2008/01/24/7180212.html" mce_href="http://archives.miloush.net/michkap/archive/2008/01/24/7180212.html"><STRONG>3 (Where do keystrokes come in?)</STRONG></A> 
+<LI><A class="" href="http://archives.miloush.net/michkap/archive/2008/01/25/7227422.html" mce_href="http://archives.miloush.net/michkap/archive/2008/01/25/7227422.html"><STRONG>4 (Specifying when to modify, if not how)</STRONG></A> 
+<LI><A class="" href="http://archives.miloush.net/michkap/archive/2008/01/28/7287476.html" mce_href="http://archives.miloush.net/michkap/archive/2008/01/28/7287476.html"><STRONG>5 (All about the language, baby!)</STRONG></A> 
+<LI><A class="" href="http://archives.miloush.net/michkap/archive/2008/01/29/7297793.html" mce_href="http://archives.miloush.net/michkap/archive/2008/01/29/7297793.html"><STRONG>6 (it is sufficient to be iconic, aka DaYi, DaYi Aynu!)</STRONG></A> 
+<LI><A class="" href="http://archives.miloush.net/michkap/archive/2008/01/30/7321697.html" mce_href="http://archives.miloush.net/michkap/archive/2008/01/30/7321697.html"><STRONG>7 (Configuration 'junk in the trunk', part 1)</STRONG></A></LI>
+<LI><A class="" href="http://archives.miloush.net/michkap/archive/2008/01/30/7588649.html" mce_href="http://archives.miloush.net/michkap/archive/2008/01/30/7588649.html"><STRONG>8 (Configuration 'junk in the trunk', part 2)</STRONG></A></LI></UL>
+<P>It is ironic that after those last two blogs with all of the various configuration settings, thast I m only now getting to the actual settings involving content....</P>
+<P>Of course before you can have the content, first you have to point to where all the content is! That is done in the...</P>
+<P><STRONG>Profile section</STRONG></P>
+<BLOCKQUOTE>
+<P>Profile section should begin as “[Profile]” section name.<BR>In [Profile] section, Table Driven TIP could hany asny or all of the following definitions:</P>
+<P><FONT face="courier new,courier">KeystrokeFile = Path and file name value<BR>RadicalFile = Path and file name value<BR>DictionaryFile = Path and file name value<BR>PhraseFile = Path and file name value<BR>PhraseFromKeystroke = Path and file name value<BR>SymbolFile = Path and file name value<BR>DirectInputFile = Path and file name value</FONT></P></BLOCKQUOTE>
+<P>Now you could have each of these sections within the very same file, the very file that you have been editing all this time.</P>
+<P>Or alternately, you can you have a single file that multiple Table Driven TIPs point to - if in fact your goal is to have multiple TIPs that share different configuration settings. This can obviously be very helpful when there are large sections that might be shared, like in IMEs</P>
+<P>Each entry in the section above that is included has it's own section that ha the actual data in it, which I will now cover below....</P>
+<P><STRONG>Keystroke sections</STRONG></P>
+<BLOCKQUOTE>
+<P>Defines Table Driven TIP’s composition window keystroke data.<BR>In <STRONG>[Keystroke.Composition]</STRONG> section, form is:<BR><FONT face="courier new,courier">Key code value = Function value</FONT></P>
+<P>Define Table Driven TIP’s candidate window keystroke data.<BR>In <STRONG>[Keystroke.Candidate]</STRONG> section, form is:<BR><FONT face="courier new,courier">Key code value = Function value</FONT></P>
+<P>Define Table Driven TIP’s candidate window with wildcard search keystroke data.<BR>In <STRONG>[Keystroke.Candidate.Wildcard]</STRONG> section, form is:<BR><FONT face="courier new,courier">Key code value = Function value</FONT></P></BLOCKQUOTE>
+<BLOCKQUOTE>
+<P>The key code value in&nbsp;any of the&nbsp;three of the above sections&nbsp;is basically the VK value, as you have seen in previous samples in earlier sections like &nbsp;in Part <A class="" href="http://archives.miloush.net/michkap/archive/2008/01/22/7179223.html" mce_href="http://archives.miloush.net/michkap/archive/2008/01/22/7179223.html"><STRONG>1</STRONG></A>.</P>
+<P>"Function value" in&nbsp;any of the&nbsp;three of the above sections is defined as follows:</P>
+<P>
+<TABLE class="" border=1>
+<TBODY>
+<TR>
+<TD class="">Function Definition</TD>
+<TD class="">Description</TD></TR>
+<TR>
+<TD class="">INPUT</TD>
+<TD class="">This keystroke is defined as input to Table Driven TIP composition engine</TD></TR>
+<TR>
+<TD class="">CANCEL_TEXTSTORE_AND_INPUT</TD>
+<TD class="">This keystroke is defined as finalize composition or candidate</TD></TR>
+<TR>
+<TD class="">MOVE_PAGE_DOWN</TD>
+<TD class="">This keystroke is defined as move one page down on candidate list</TD></TR></TBODY></TABLE></P>
+<P class=MsoNormal style="MARGIN-LEFT: 12pt; mso-para-margin-left: 1.0gd"><SPAN lang=EN-US style="FONT-FAMILY: Arial"><?xml:namespace prefix = o /><o:p></o:p></SPAN></P></BLOCKQUOTE>
+<P><STRONG>Radical section</STRONG></P>
+<BLOCKQUOTE>
+<P>Radical is not used for any conversion method. This is just redirect display character in reading window from particular keystroke.<BR>In the&nbsp;<STRONG>[Radical]</STRONG> section, the form is"<BR><FONT face="courier new,courier">"Key" = "Char"</FONT></P></BLOCKQUOTE>
+<P><STRONG>Text section</STRONG></P>
+<BLOCKQUOTE>
+<P>In the&nbsp;<STRONG>[Text]</STRONG> section, the form is:<BR><FONT face="courier new,courier">"Keys" = "Converted string"</FONT></P></BLOCKQUOTE>
+<P><STRONG>Phrase section</STRONG></P>
+<BLOCKQUOTE>
+<P>In the&nbsp;<STRONG>[Phrase]</STRONG> section, the form is:<BR><FONT face="courier new,courier">"String" = "Phrase 1" ,&nbsp;... , "Phrase N"</FONT></P></BLOCKQUOTE>
+<P><STRONG>Phrase from keystroke section</STRONG></P>
+<BLOCKQUOTE>
+<P>In the <STRONG>[PhraseFromKeystroke]</STRONG> section, the form is :<BR><FONT face="courier new,courier">"Keys" = "Phrase 1" ,&nbsp;... , "Phrase N"</FONT></P></BLOCKQUOTE>
+<P><STRONG>Symbol section</STRONG></P>
+<BLOCKQUOTE>
+<P>In the <STRONG>[Symbol]</STRONG> section, the form is:<BR><FONT face="courier new,courier">"Keys" = "Char 1" ,&nbsp;... , "Char N"</FONT></P></BLOCKQUOTE>
+<P><STRONG>Direct input section</STRONG></P>
+<BLOCKQUOTE>
+<P>In the <STRONG>[DirectInput]</STRONG> section, the form is:<BR><FONT face="courier new,courier">"Key" = "Char"</FONT></P></BLOCKQUOTE>
+<P>Now of course you wouldn't always be using every one of these sections (as the earlier samples showed), but they have their uses when you need them. :-)</P>
+<P>Next time I'll look at how to convert from some on the old style IMEs if you have been using them in the past and then after that I'll show some examples of these sections in some of the built-in Table Driven TIP profiles in Vista/Server 2008, after which we'll start building some useful profiles for other languages....</P>
+<P mce_keep="true">&nbsp;</P>
+<P><FONT color=#ff00ff><EM>This post brought to you by</EM><FONT size=5>&nbsp;⑧ <EM><FONT size=2>and</FONT></EM> ⑨ </FONT></FONT><EM><FONT color=#ff00ff>(<A class="" href="http://www.fileformat.info/info/unicode/char/2467" mce_href="http://www.fileformat.info/info/unicode/char/2467"><FONT color=#0000cc>U+2467</FONT></A>&nbsp;and <A class="" href="http://www.fileformat.info/info/unicode/char/2468" mce_href="http://www.fileformat.info/info/unicode/char/2468"><FONT color=#0000cc>U+2468</FONT></A></FONT><FONT color=#ff00ff>, aka CIRCLED DIGIT EIGHT and CIRCLED DIGIT NINE)</FONT></EM></P>
+<hr/><p><strong>alee67</strong> on 21 Dec 2012 11:47 AM:</p><div style="margin-left: 1em"><p>Is there any way that the [Radical] section can also be applied to the keystrokes shown in the candidate window when CandidateList.dontShowNextKeySequence = 0?</p>
+</div>
+<hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2008/10/21 <a href="http://archives.miloush.net/michkap/archive/2008/10/21/9009276.html">Behond the Table Driven Text Service, Part 14 (Don't expect too much from numbers)</a></p><p>2008/07/25 <a href="http://archives.miloush.net/michkap/archive/2008/07/25/8771255.html">Behold the Table Driven Text Service, Part 13 (Sinhalification proclamation!)</a></p><p>2008/06/30 <a href="http://archives.miloush.net/michkap/archive/2008/06/30/8669123.html">Behold the Table Driven Text Service, Part 12 (The knights who say நீ, redux, #2)</a></p><p>2008/06/21 <a href="http://archives.miloush.net/michkap/archive/2008/06/21/8632391.html">Back to Sri Lanka (conceptually)</a></p><p>2008/02/25 <a href="http://archives.miloush.net/michkap/archive/2008/02/25/7884260.html">Behold the Table Driven Text Service, Part 11 (The knights who say நீ, redux, #1)</a></p><p>2008/02/15 <a href="http://archives.miloush.net/michkap/archive/2008/02/15/7713553.html">Behold the Table Driven Text Service, Part 10 ("Even Jove nods," Atlas shrugged, "so we'll convert their old files, now.")</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2008/02/12/7633526.html" title="Making a different keyboard indicate a different font">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2008/02/11/7611812.html" title="Who assigns the VK_OEM_* values in keyboards?">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2008-02">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2008-02-12">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2008/02/12/7632387.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:36 GMT -->
+</html>

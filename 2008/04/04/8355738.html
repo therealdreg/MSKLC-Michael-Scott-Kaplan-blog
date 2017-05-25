@@ -1,0 +1,71 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2008/04/04/8355738.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:36 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Fight the Future? (#2 of ??), aka Spot the Bug(s)!</title></head><body>
+<h1>Fight the Future? (#2 of ??), aka Spot the Bug(s)!</h1>
+<p><em>by Michael S. Kaplan, published on 2008/04/04 10:01 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2008/04/04/8355738.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P><EM><FONT color=#ff0000 size=1>Content of </FONT></EM><A class="" href="http://blogs.msdn.com/michkap" mce_href="http://blogs.msdn.com/michkap"><EM><FONT size=1>Michael Kaplan's personal blog</FONT></EM></A><FONT color=#ff0000 size=1><EM> not approved by Microsoft (see </EM></FONT><A class="" href="http://archives.miloush.net/michkap/archive/2008/02/28/7934999.html" mce_href="http://archives.miloush.net/michkap/archive/2008/02/28/7934999.html"><EM><FONT size=1>disclaimer</FONT></EM></A><FONT color=#ff0000 size=1><EM>)!<BR></EM></FONT><EM><FONT color=#ff0000 size=1>Regular readers should keep in mind that all I said in <A class="" href="http://archives.miloush.net/michkap/archive/2008/03/30/8340299.html" mce_href="http://archives.miloush.net/michkap/archive/2008/03/30/8340299.html"><STRONG>The End?</STRONG></A> still applies; the allusion to the X-Files continues for people who understand such references....</FONT></EM></P>
+<P>So anyhow, the other day developer Ben Karas (he of <A class="" href="http://blogs.msdn.com/benkaras/" mce_href="http://blogs.msdn.com/benkaras/">The Great Flying Tortoise</A>) who I have mentioned <A class="" href="http://archives.miloush.net/michkap/archive/2006/01/17/513418.html" mce_href="http://archives.miloush.net/michkap/archive/2006/01/17/513418.html"><STRONG>before</STRONG></A>, sent a fun "find the bug" code problem to one of those aliases inside Microsoft that gets those kinds of problems.</P>
+<P>It had some interesting issues from my point of view so I thought I would ask the problem again here.</P>
+<P><EM>If you internal to Microsoft and you answer the question anyway than you kind of&nbsp;officially suck -- though several issues were missed when the answers were given so if you were watching that thread but knew about bugs that never came up then you neatly manage to avoid suckage.</EM> :-)</P>
+<P>So here we go. The question -- can you spot the bugs in this snippet?</P>
+<BLOCKQUOTE>
+<P><FONT face="consolas,lucida console,courier new,courier"><STRONG>if( _plv-&gt;_ci.dwExStyle &amp; WS_EX_RTLREADING)<BR>{<BR>&nbsp;&nbsp;&nbsp; if (item.pszText)<BR>&nbsp;&nbsp;&nbsp; {<BR><FONT color=#009933>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; //<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // temp hack for the find.files to see if LtoR/RtoL mixing<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // works. if ok, we'll take this out and make that lv ownerdra<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; //<BR></FONT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; if ((item.pszText[0] != '\xfd') &amp;&amp; (item.pszText[lstrlen(item.pszText)-1] != '\xfd'))<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; textflags |= SHDT_RTLREADING;<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }<BR>&nbsp;&nbsp;&nbsp; }<BR>}</STRONG></FONT></P></BLOCKQUOTE>
+<P mce_keep="true">You can assume the code is compiled with UNICODE/_UNICODE defined, like all code should be.</P>
+<P mce_keep="true">Now you can name any bug you see, but of course when I start blathering&nbsp;Saturday or&nbsp;Monday or whenever, I'll focus on the issues that interest me. :-)</P>
+<P mce_keep="true">I'll moderate all posts until the answers are given....</P>
+<P mce_keep="true">&nbsp;</P>
+<P mce_keep="true"><FONT color=#ff00ff><EM>This blog brought to you by</EM><FONT size=5> ? </FONT><EM>(<A class="" href="http://www.fileformat.info/info/unicode/char/003f" mce_href="http://www.fileformat.info/info/unicode/char/003f">U+003f</A>, aka QUESTION MARK)</EM></FONT></P>
+<hr/><p><a id="8357015" href="#8357015">#</a> <strong>Tim Smith</strong> on 4 Apr 2008 10:17 AM:</p><div style="margin-left: 1em"><p>Lets get one of the basic bugs out of the way...</p>
+<p>What if lstrlen(x) == 0?</p></div>
+<p><a id="8357055" href="#8357055">#</a> <strong>Tim Smith</strong> on 4 Apr 2008 10:33 AM:</p><div style="margin-left: 1em"><p>Ok, I'm going to go out on a limb here since I don't really get into LTR/RTL detection.</p>
+<p>There seems to be one real problem and then a question about completeness.</p>
+<p>1) If the program is in UNCODE, then aren't they using the wrong codes? &nbsp;Isn't FD/FE only for 8-bit latin/hebrew? &nbsp;The proper codes would be 200E and 200F.</p>
+<p>2) Why are we only checking for LRM? &nbsp;I guess since we have already specified RTLREADING, then we are looking for the exception.</p></div>
+<p><a id="8357515" href="#8357515">#</a> <strong>Mihai</strong> on 4 Apr 2008 12:49 PM:</p><div style="margin-left: 1em"><p>I am always split when you post a puzzle.</p>
+<p>On one side I feel like commenting, on the other side I try to refrain and let it for potential interns.</p>
+<p>Why spoil it for them? :-)</p></div>
+<p><a id="8357668" href="#8357668">#</a> <strong>Michael S. Kaplan</strong> on 4 Apr 2008 1:36 PM:</p><div style="margin-left: 1em"><p>Mihai, there is no spoiling here -- I am not showing any comments with answers until after the next post -- so anyone can put in any issues they say without hurting their colleagues (or their interns!).</p>
+</div>
+<p><a id="8357725" href="#8357725">#</a> <strong>John Hensley</strong> on 4 Apr 2008 2:00 PM:</p><div style="margin-left: 1em"><p>When the string pszText is zero length, pszText[lstrlen(pszText)-1] will be addressing memory before the actual first character of the string, instead of what the developer assumed would be the last character in the string.</p></div>
+<p><a id="8357740" href="#8357740">#</a> <strong>Mihai</strong> on 4 Apr 2008 2:02 PM:</p><div style="margin-left: 1em"><p>Ok, then here it is (the one I think you care about):</p>
+<p>0xFD is LTR Mark in cp1256 (Arabic), not in Unicode. The code currently tests for &nbsp;&#253; :-)</p>
+<p>And even using U+200E would not help much, because the LTR does not have to be the first/last character.</p></div>
+<p><a id="8358434" href="#8358434">#</a> <strong>Michael S. Kaplan</strong> on 4 Apr 2008 5:34 PM:</p><div style="margin-left: 1em"><p>Okay, update for everyone -- </p>
+<p>A few responses so far (four to the post and seven to the Contact link), but no one yet has found what Ben referred to as the &quot;main bug&quot; from the non-internationalization side (though I would tend to think of it as having certain internationalization consequences).</p>
+<p>And although some people saw a specific valid problem and pointed it out, no one has suggested what the code ought to be doing. Though I am still hopeful that we will come up with more responses! :-)</p>
+</div>
+<p><a id="8358808" href="#8358808">#</a> <strong>Mihai</strong> on 4 Apr 2008 7:28 PM:</p><div style="margin-left: 1em"><p>Well, I only commented about &quot;the issues that interest me. :-)&quot;</p>
+<p>There are other issues, like for instance:</p>
+<p> &nbsp; &nbsp;item.pszText[lstrlen(item.pszText)-1]</p>
+<p>Guess what happens for an empty string?</p>
+<p> &nbsp; &nbsp;item.pszText[-1]</p>
+<p>Oups!</p></div>
+<p><a id="8363566" href="#8363566">#</a> <strong>John Hensley</strong> on 6 Apr 2008 2:25 PM:</p><div style="margin-left: 1em"><p>The function is attempting to check for a unicode Left-to-right mark at the beginning and end of the item text string and then setting the SHDT_RTLREADING bit in textflags if the Left-to-right mark is not at the beginning or end of the string.</p>
+<p>Bug 1 - &quot;item.pszText[lstrlen(item.pszText)-1] != '\xfd'))&quot; reads memory outside of the string if the string is zero length.</p>
+<p>Bug 2 - SHDT_RTLREADING should not be set if the language does not support reading-order-alignment because WS_EX_RTLREADING will be ignored if the language does not support reading-order-alignment.</p>
+<p>Bug 3 - GetStringTypeEx() should have been used to determine the directional information for the first and last characters in the string. This would eliminate bugs #2.</p>
+<p>Possible bug 4 - Unicode strings can have bi-directional information embedded anywhere within the string not just at the beginning and end.</p>
+<p>... John</p></div>
+<p><a id="8363713" href="#8363713">#</a> <strong>Henry D.</strong> on 6 Apr 2008 3:45 PM:</p><div style="margin-left: 1em"><P>Isn't there a signed/unsigned problem with the two comparisons in the innermost&nbsp;if statement?</P>
+<P>This may not apply if they set the right compiler flags but I think the default configuration in VC++ will have problems.</P></div>
+<p><a id="8364783" href="#8364783">#</a> <strong>Michiel</strong> on 7 Apr 2008 5:00 AM:</p><div style="margin-left: 1em"><p>Just an assumption here, but does this code reuse &#253; for markup? It seems to use &quot;&#253;...&#253;&quot; as an indication that text should _not_ be Right-to-Left, despite the flag. </p>
+<p>Now, that's definitely marked as a hack, and in RTL text I would not expect a string to contain &#253;, let alone at both ends.</p>
+<p>Personally, I'd guess that both if-statements were added for this hack, and the textflags |= SHDT_RTLREADING was originally there. Now, if there is no text set, the SHDT_RTLREADING is no longer set even though it should (but since that's an MS-internal flag, I can't tell what other uses it has)</p></div>
+<p><a id="8364879" href="#8364879">#</a> <strong>Arun Philip</strong> on 7 Apr 2008 5:55 AM:</p><div style="margin-left: 1em"><p>Couple of guesses: </p>
+<p>* lstrlen assumes a null-terminated string </p>
+<p>* Endianness of the data while checking for 0xFD? For the small fraction of Itaniums running in big-endian</p>
+<p>* BIDI text can be entered within the text also by introducing 0xFD and 0xFE, so checking the beginning/end alone will not suffice</p>
+<p>Aside: LtoR/RtoL -&gt; amusing alternative to LTR/RTL, although my mind first sees Tolkien references!</p></div>
+<p><a id="8364958" href="#8364958">#</a> <strong>Mike Dimmick</strong> on 7 Apr 2008 6:28 AM:</p><div style="margin-left: 1em"><p>a) Why are they looking for &#253;?</p>
+<p>b) Why look for it at start and end of string only?</p>
+<p>It looks like it's a special marker character, but I think they have flawed logic: they're expecting RTL text to appear in the buffer in LTR order, i.e. the first character printed (at the right-hand-end) appears at the right-hand-end of the buffer. Wrong. Text in a Unicode buffer always appears in reading order, even if that order happens to be right-to-left.</p>
+<p>Let's, for the purpose of an example, give the latin/arabic numbers a right-to-left reading property. If the buffer was:</p>
+<p>ABC 123 XYZ</p>
+<p>it would be displayed as</p>
+<p>ABC 321 XYZ.</p>
+<p>If the buffer is right-to-left reading in the example, U+00FD always appears at the left.</p>
+<p>In addition, the compiler will interpret \xFD with whatever code page it's interpreting the source file as, so it won't have a fixed meaning. I think there's also a chance it will sign-extend to U+FFFD (REPLACEMENT CHARACTER) rather than appear as U+00FD as the code does not use an L prefix on the character literal.</p></div>
+<hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2008/04/07 <a href="http://archives.miloush.net/michkap/archive/2008/04/07/8364480.html">Fight the Future? (#8 of ??), aka The Bug(s) Spotted, aka Design flaws are worse than bugs</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2008/04/05/8358800.html" title="Fight the Future? (#4 of ??), aka Unicode 5.1 Unleashed!">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2008/04/04/8355413.html" title="Fight the Future? (#1 of ??), aka The inappropriate nature of getting the Feh out of Uighur">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2008-04">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2008-04-04">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2008/04/04/8355738.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:36 GMT -->
+</html>

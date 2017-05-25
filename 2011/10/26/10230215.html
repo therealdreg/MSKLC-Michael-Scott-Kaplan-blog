@@ -1,0 +1,34 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2011/10/26/10230215.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Improving genitive. Or not.... (part 2): Explaining the point of Part 1</title></head><body>
+<h1>Improving genitive. Or not.... (part 2): Explaining the point of Part 1</h1>
+<p><em>by Michael S. Kaplan, published on 2011/10/26 07:01 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2011/10/26/10230215.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<p>Previously, in <strong><a title="Improving genitive. Or not.... (part 1)" href="http://archives.miloush.net/michkap/archive/2011/10/14/10225146.html">Improving genitive. Or not.... (part 1)</a></strong>, I didn't say very much.</p>
+<p>But I suppose in a way I didn't have to, if I wanted you to read between the lines!</p>
+<p>By pointing to example of a specific limitation in the way that the "detect if genitive is required" algorithm works, one can craft a format string that is mis-detected as requiring the genitive form.</p>
+<p>And&nbsp; the supposition I made in that blog was that no prior format ran into this problem in any locale we shipped and thus was previously a non-issue.</p>
+<p>I mean, a custom format could cause it, but such customizations are <strong>really really really really really really really rare</strong>.</p>
+<p>And the fact that no one ever reported it before supports my supports my supposition.</p>
+<p>My further supposition was that once a format existed that runs into the problem, that no one wanted to fix the algorithm to make it better at detecting the need for genitive months.</p>
+<p>I think this second supposition is in some measure more provably true since the algorithm is largely unchanged from the original one written back&nbsp;in 1993.</p>
+<p><em>The first supposition might be incorrect if people had been complaining but we never heard about it, right?</em> :-)</p>
+<p>I guess I'm making the argument that the algorithm should be improved. The current test is (essentially - I'm not going to post source but for people in access who want to follow along it is in base\Win32\winnls\nlslib\datetime.c) that if:</p>
+<ul>
+<li>the locale defines genitive month names, and</li>
+<li>the format has a month or an abbreviated month, and</li>
+<li>a numeric day is "near" that month or abbreviated month&nbsp;</li>
+</ul>
+<p>Then it decides your genitive.</p>
+<p>Okay, so Latvian trips them up&nbsp;here with its format.</p>
+<p>They have a period, which is an obvious way to say "new sentence" to a small Latvian child, though this algorithm that is old enough to buy liquor in some jurisdictions can't tell the difference when the two items near each other span a sentence boundary.</p>
+<p>Of course that character that is sometimes also a date separator, too, so it easy to criticize but much harder to fix!</p>
+<p>Ultimately&nbsp;no one ever considered whether to tweak the algorithm to better catch this case.</p>
+<p>It seems like it would be a worthy bug to fix at some point, right? :-)</p>
+<hr/><p><strong>Raymond</strong> on 26 Oct 2011 7:34 AM:</p><div style="margin-left: 1em"><p>That&#39;s not a sentence-ending period you got there. It&#39;s an ordinal marker, and I would expect the genitive to follow it. This is not based on any knowledge of Latvian, but rather of German: &quot;24. januar&quot; = &quot;the 24th *of* January.&quot;</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 26 Oct 2011 7:36 AM:</p><div style="margin-left: 1em"><p>Yes, for German. But it&#39;s reportedly different in the Latvian case (thus the &quot;won&#39;t fix&quot; bug of old)....</p>
+</div>
+<hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2012/01/05 <a href="http://archives.miloush.net/michkap/archive/2012/01/05/10253370.html">Improving genitive. Or not.... (part 5): You can't make it sexier by giving it a Latin twist...</a></p><p>2011/10/28 <a href="http://archives.miloush.net/michkap/archive/2011/10/28/10231034.html">Improving genitive. Or not.... (part 4): On [not] finding the smoking gun</a></p><p>2011/10/27 <a href="http://archives.miloush.net/michkap/archive/2011/10/27/10230587.html">Improving genitive. Or not.... (part 3): The hazards of "off label" usage</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2011/10/27/10230587.html" title="Improving genitive. Or not.... (part 3): The hazards of &quot;off label&quot; usage">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2011/10/25/10229790.html" title="There&#39;s no &quot;I&quot; in IDN, part 11: There&#39;s no place like ::1, not even 127.0.0.1!">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2011-10">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2011-10-26">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2011/10/26/10230215.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+</html>

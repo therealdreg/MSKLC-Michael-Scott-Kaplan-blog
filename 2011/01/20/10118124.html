@@ -1,0 +1,81 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2011/01/20/10118124.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>What version of Unicode do passwords support?</title></head><body>
+<h1>What version of Unicode do passwords support?</h1>
+<p><em>by Michael S. Kaplan, published on 2011/01/20 07:01 -05:00, original URI: http://blogs.msdn.com/b/michkap/archive/2011/01/20/10118124.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<p>The other day, the question came in again.</p>
+<p>And when I say the question, I mean <b>THE</b> question.</p>
+<p>You know, the <b><a href="http://archives.miloush.net/michkap/archive/2005/12/23/506887.html">What Unicode version do you support?</a></b> question.</p>
+<p>Well, technically it was a slight variation, more of a <b>What version of Unicode is supported in passwords?</b> but clearly the same question is being asked. Someone administrating password policy for users of Windows in their organization want to know what version of Unicode is used in pass word validation.</p>
+<p>Unfortunately, not every question that is reasonable to ask is necessarily one that has a reasonable answer.</p>
+<p>Sure, to start with there is everything I pointed out in the <b><a href="http://archives.miloush.net/michkap/archive/2005/12/23/506887.html">What Unicode version do you support?</a></b> blog back in the end of 2005.</p>
+<p>But there is a bigger issue here.</p>
+<p>The fact that no validation is done on text in the password to remove illegal characters and/or replace them with � (U+fffd, aka REPLACEMENT CHARACTER).</p>
+<p>It doesn't care about illegal sequences or non-characters or any other of the rules that Unicode may have.</p>
+<p><strong>So really, it almost never ever matters!</strong></p>
+<p>I know, everyone is tripping on the use of the word almost in the previous sentence. They either know the exception, think they know it, or know that I am about to trot some exception out....</p>
+<p>Well, whichever one it is for you, strap in now please!</p>
+<p>The exception is <strong>password filters</strong>.</p>
+<p>First there is the password filter Microsoft provides, described in <a href="http://msdn.microsoft.com/library/ms722458.aspx">Strong Password Enforcement and Passfilt.dll</a>. Note the rules it runs under, particularly the character classification information:</p>
+<ul><li style="padding-left: 30px;"><em>Passwords must contain characters from three of the five following categories.</em></li>
+</ul><table cellpadding="5" cellspacing="5" border="1" style="padding-left: 30px;">
+<tbody>
+<tr>
+<th><em>Character categories</em></th><th><em>Examples</em></th>
+</tr>
+<tr>
+<td>
+<p><em>Uppercase letters of European languages (A through Z, with diacritic marks, Greek and Cyrillic characters)</em></p>
+</td>
+<td>
+<p><em>A, B, C, &hellip; Z</em></p>
+</td>
+</tr>
+<tr>
+<td>
+<p><em>Lowercase letters of European languages (a through z, sharp-s, with diacritic marks, Greek and Cyrillic characters)</em></p>
+</td>
+<td>
+<p><em>a, b, c, &hellip; z</em></p>
+</td>
+</tr>
+<tr>
+<td>
+<p><em>Base 10 digits (0 through 9)</em></p>
+</td>
+<td>
+<p><em>0, 1, 2, &hellip; 9</em></p>
+</td>
+</tr>
+<tr>
+<td>
+<p><em>Non-alphanumeric characters (special characters)</em></p>
+</td>
+<td>
+<p><em>$,!,%,^,(){}[];:&lt;&gt;?</em></p>
+</td>
+</tr>
+<tr>
+<td>
+<p><em>Any Unicode character that is categorized as an alphabetic character but is not uppercase or lowercase. This includes Unicode characters from Asian languages.</em></p>
+</td>
+<td><em></em></td>
+</tr>
+</tbody>
+</table>
+<p style="padding-left: 30px;"><em><strong>Note</strong>&nbsp;&nbsp;A given character can satisfy only one category. The </em><a target="_blank" href="http://go.microsoft.com/fwlink/?LinkId=205607"><span style="color: #1364c4;"><em>GetStringTypeW</em></span></a><em> function is used to test whether each character in the password is uppercase, lowercase, or alphanumeric.</em></p>
+<p>&nbsp;Okay now obviously if you are using the built in passfilt.dll then there are some Unicode version dependencies here, based on the version of Unicode used to supply data for <a target="_blank" href="http://go.microsoft.com/fwlink/?LinkId=205607"><span style="color: #1364c4;">GetStringTypeW</span></a>. And possibly not including different Unicode nornalization forms.</p>
+<p>And of course if you use&nbsp;other&nbsp;password filter providers instead of or in addition to this built-in one (or even create your own, ref: <a href="http://msdn.microsoft.com/library/ms721884.aspx">Password Filter Programming Considerations</a>), it could&nbsp;contain rules with version dependencies as well.&nbsp;</p>
+<p>I personally find these rules to be rather weird in some senses, since there are "Unicode-esque" tricks that could be used to make a password much harder to guess or divine or even get at via keyloggers in the cases of specially design keyboards and unusual characters in Unicode, and yet all of such complexities are given minimal weight under the default passfilt.dll algorithm</p>
+<p>In the past (prior to working for Microsoft) I have helped several customers create both unusual keyboards as alluded to above and password filter DLLs that treat many of the complexities of Unicode as a valid method of increasing password complexity. And Unicode is a great area to help provide such additional complexity and to increase the ability to ferret out common lookalikes that Unicode might provide.</p>
+<p>Unicode version information&nbsp;has certainly bled into some of those (either dependent on or completely independent of the information <a target="_blank" href="http://go.microsoft.com/fwlink/?LinkId=205607"><span style="color: #1364c4;">GetStringTypeW</span></a>&nbsp;provides).</p>
+<p>But other than such things, passwords know no Unicode version....</p>
+<p><strong><span style="color: #ff0000;">Warning: the above applies to Windows; other applications may work by entirely different rules and when/if they do such rules tend to be STUPIDER in one or more senses.</span></strong></p>
+<hr/><p><strong>Cheong</strong> on 20 Jan 2011 5:27 PM:</p><div style="margin-left: 1em"><p>But... while the authentication providers don&#39;t care, the passwords themselves is different when hashed.</p>
+<p>Say... if Windows stored the password hashed in UTF-16, and you pass UTF-8 in for hash comparison, wouldn&#39;t the result be different?</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 20 Jan 2011 9:21 PM:</p><div style="margin-left: 1em"><p>If you use a conversion mechanism that validates whether the Unicode is &quot;valid&quot; then yes, this can happen. But Windows does not treat it as a string that is to be hashed in a given encoding....</p></div>
+<hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2011/01/21/10118575.html" title="And then nearly ten years later they added another one...">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2011/01/19/10117441.html" title="The key to Swahli (== KiSwahili)">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2011-01">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2011-01-20">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2011/01/20/10118124.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+</html>

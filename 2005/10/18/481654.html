@@ -1,0 +1,28 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2005/10/18/481654.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:40 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Font Linking vs. Font Fallback, #2</title></head><body>
+<h1>Font Linking vs. Font Fallback, #2</h1>
+<p><em>by Michael S. Kaplan, published on 2005/10/18 03:31 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2005/10/18/481654.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P><FONT face=Tahoma>Last January, I talked about <a href="http://archives.miloush.net/michkap/archive/2005/01/17/354279.html">Keeping it simple with complex scripts</A>, and more recently I talked about <a href="http://archives.miloush.net/michkap/archive/2005/10/01/476022.html">Font Linking vs. Font Fallback</A>.</FONT></P>
+<P><FONT face=Tahoma>One of the most important parts of that post was a quoting of the rules of what makes a script complex according to the rules of Uniscribe:</FONT></P><FONT face=Tahoma>
+<BLOCKQUOTE>
+<P><EM><FONT size=2>A complex script has at least one of the following attributes: </FONT></EM>
+<UL>
+<LI><EM><FONT size=2>Allows bidirectional rendering. </FONT></EM>
+<LI><EM><FONT size=2>Has contextual shaping. </FONT></EM>
+<LI><EM><FONT size=2>Has combining characters. </FONT></EM>
+<LI><EM><FONT size=2>Has specialized word-breaking and justification rules. </FONT></EM>
+<LI><EM><FONT size=2>The need to filter out some illegal character sequences.</FONT></EM></LI></UL></BLOCKQUOTE></FONT>
+<P><FONT face=Tahoma>The other day I was having a conversation with Peter Constable about a particular bug that we had found in Vista with particular languages that were showing those NULL GLYPHS (i.e. square boxes) rather than the characters in question. Since most font linking is really only used for CJK, it would be a font fallback problem.</FONT></P>
+<P><FONT face=Tahoma>Now as that second post explained, font fallback is what Uniscribe does. Did this bug indicate a bug in Uniscribe?</FONT></P>
+<P><FONT face=Tahoma>Peter explained to me that it was not really a bug, per se. Because the script in question was not one that was considered complex as per the above definitions. But clearly it did require special help to find the glyphs needed for display.</FONT></P>
+<P><FONT face=Tahoma>So clearly&nbsp;the script&nbsp;would need Uniscribe to have it on the list of scripts that would require font fallback. It has led to the consideration of needing yet another bullet point added to the definition of complex scripts so that the definition and the behavior could still remain consistent:</FONT></P>
+<UL dir=ltr style="MARGIN-RIGHT: 0px">
+<LI><EM><FONT face=Tahoma size=2>The need to&nbsp;fall back&nbsp;to font choices that represent characters outside of the ranges covered by the core Windows fonts</FONT></EM></LI></UL>
+<P><FONT face=Tahoma>This would allow the behavior we see in Uniscribe in Vista to match the definition in the Vista update of the Platform SDK, particularly the update for the <A href="http://msdn.microsoft.com/library/en-us/intl/uniscrib_1a0j.asp">About Complex Scripts</A> topic....</FONT></P>
+<P><FONT face=Tahoma></FONT>&nbsp;</P>
+<P><FONT face=Tahoma color=#ff1493><EM>This post brought to you by</EM> "<FONT size=6>ᙧ</FONT>" <EM>(<A href="http://www.fileformat.info/info/unicode/char/1667">U+1667</A>, a.k.a. CANADIAN SYLLABICS CARRIER TTSU)</EM></FONT></P>
+<hr/><div style="margin-left: 1em"><em>no comments</em></div><hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2007/10/11 <a href="http://archives.miloush.net/michkap/archive/2007/10/11/5396360.html">If you aren't adequate, I guess that means you're inadequate; if you're not complex, I suppose that means you're simple?</a></p><p>2007/05/21 <a href="http://archives.miloush.net/michkap/archive/2007/05/21/2781650.html">Could you really call it a symbolic gesture from MS Typography?</a></p><p>2007/04/14 <a href="http://archives.miloush.net/michkap/archive/2007/04/14/2137215.html">Rhymes with Amharic #4 (a.k.a. we're all [sub]set so turning out the lights and going to [em]bed!)</a></p><p>2007/02/04 <a href="http://archives.miloush.net/michkap/archive/2007/02/04/1600427.html">So how does that Naqittaut keyboard work, exactly?</a></p><p>2006/06/16 <a href="http://archives.miloush.net/michkap/archive/2006/06/16/634124.html">Neither GDI nor Uniscribe solve the ultimate font problem completely, either</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2005/10/18/482088.html" title="How best to alter case">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2005/10/17/481627.html" title="Round trip calls do not always go both ways">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2005-10">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2005-10-18">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2005/10/18/481654.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:40 GMT -->
+</html>

@@ -1,0 +1,77 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2010/03/19/9980203.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:35 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Strange how unsympathetic I was, until I was suddenly quite sympathetic</title></head><body>
+<h1>Strange how unsympathetic I was, until I was suddenly quite sympathetic</h1>
+<p><em>by Michael S. Kaplan, published on 2010/03/19 07:01 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2010/03/19/9980203.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P>I get a lot of email.</P>
+<P>Like at least 400 and sometimes as many as 1500 pieces of email a day, not counting spam (if&nbsp;I accept the premise that email is communication then I won't consider spam to be something I will call email).</P>
+<P>Th organization system of rules that files stuff is staggeringly complex and allows me to scan through mail I need to see very quickly, and to triage items as they come in.</P>
+<P>Not sleeping very much helps too. :-)</P>
+<P>Sometimes people send me mail&nbsp;to report issues or ask questions about a problem they are having.</P>
+<P>I will wade in and look into the problem and help them if I can or point them in a more hopeful direction if I can't.</P>
+<P>Like the other day when someone reported a problem that didn't seem like his bug or even a bug in the platform he was using (Delphi), but on the OS underneath it (Windows, or Windows 7 to be precise).</P>
+<P>I looked into it and sure enough his analysis was spot on.</P>
+<P>But he didn't have the backstory, so I thought about it and figured it would be worth a blog to talk about the problem he is seeing. Maybe it will help someone else....</P>
+<P>So there was this bug.</P>
+<P>Wait, I should start at the beginning.</P>
+<P>Like, before the bug.</P>
+<P>Sound good?</P>
+<P>You know how there has been this bug push that started in Vista and has continued unabated since that time to move people off of LCIDs and into Locale Names?</P>
+<P>Like some of what is behind&nbsp;blogs I have written like <A href="http://archives.miloush.net/michkap/archive/2007/07/23/4021529.html" mce_href="http://archives.miloush.net/michkap/archive/2007/07/23/4021529.html"><STRONG>Your LCID sucks</STRONG></A>?</P>
+<P>Well under the covers, one of the big changes was to have the name stored in the registry and not just the LCID, right here:</P>
+<P><IMG style="WIDTH: 761px; HEIGHT: 399px" title="HKCU\Control Panel\International" alt="HKCU\Control Panel\International" src="http://trigeminal.fmsinc.com/images/localename1.jpg" width=761 height=399 mce_src="http://trigeminal.fmsinc.com/images/localename1.jpg"></P>
+<P>Now obviously you should not depend on this <STRONG>LocaleName</STRONG> any more than you used to depend on <STRONG>Locale</STRONG>. Which some people did occasionally, even though this wasn't documented or supported, even though there have been documented and supported ways to do this since the earliest days -- functions like <A href="http://msdn.microsoft.com/library/dd318135.aspx" mce_href="http://msdn.microsoft.com/library/dd318135.aspx">GetUserDefaultLCID</A>.</P>
+<P>Anyway, this new value was added, this <STRONG>LocaleName</STRONG>. And all of the code inside was changed to be name based, so that none of the NLS code was depending on the LCID anymore.</P>
+<P>Everyone knew that some people were still reading that darn <STRONG>Locale</STRONG>&nbsp;registry value, so the value was not removed. But&nbsp;the <STRONG>Locale</STRONG>&nbsp;value was only there and being kept in sync with the <STRONG>LocaleName</STRONG> value for backward compatibility for these not entirely well-behaved apps that really were doing something that has been wrong since the earliest days.</P>
+<P>All well and good, everyone can be happy, right?</P>
+<P>Well, not entirely.</P>
+<P>Like I said, there was this bug.</P>
+<P>It turned out that in Windows 7, in some <STRONG>RUNAS/Impersonation</STRONG> scenarios, where one runs as another user, loads their HKCU registry, and does some work (as in the <A href="http://archives.miloush.net/michkap/archive/2005/03/19/398994.html" mce_href="http://archives.miloush.net/michkap/archive/2005/03/19/398994.html"><STRONG>Impersonation and NLS</STRONG></A> blog I wrote back in 2005) to change the user locale, that the work to keep the <STRONG>LocaleName</STRONG> and <STRONG>Locale</STRONG> registry values in sync was not happening.</P>
+<P>So you get something different; something like this:</P>
+<P><IMG style="WIDTH: 761px; HEIGHT: 399px" title="HKCU\Control Panel\International" alt="HKCU\Control Panel\International" src="http://trigeminal.fmsinc.com/images/localename2.jpg" width=761 height=399 mce_src="http://trigeminal.fmsinc.com/images/localename2.jpg"></P>
+<P>(00000809 is the en-GB locale.)&nbsp;</P>
+<P>Maybe slightly different than this case, but the two values would definitely not be in sync.</P>
+<P>So in this one obscure case, the effort to support this unsupported scenario was not, in fact, being supported.</P>
+<P>A few early cases that were reported, I myself gave advice that they update the application, because even if/when this was fixed it wouldn't change the fact that what they were doing was wrong -- so their fix should happen and it should be independent of the Windows fix.</P>
+<P>Now soon after that, as later cases proved, it turns out that the impersonation scenario was not entirely 100% obscure, as many OEMs using tools to image their machines&nbsp;with specific locales were using impersonation this way.</P>
+<P>But there wasn't such a good reason to bend over backward to make this all work, since no supported code in Windows was using the <STRONG>Locale</STRONG> registry value. It was still these outlier cases.</P>
+<P>There were some&nbsp;complaints, but the customers who were complaining would readily admit that they were doing the wrong thing.</P>
+<P>So it seemed like the case was kind of closed....</P>
+<P>Or maybe not.</P>
+<P>Because although all the NLS and Regional and Language Options code&nbsp;was no longer using <STRONG>HKCU\Control Panel\International,Locale</STRONG> in any of its initialization routines, that there was at least&nbsp;one bit of supported code that was still [indirectly] using this registry value, at the time of session initialization for the user.</P>
+<P>That one function is <A href="http://msdn.microsoft.com/library/dd318127.aspx" mce_href="http://msdn.microsoft.com/library/dd318127.aspx">GetThreadLocale</A> (the one I mention in blogs like <A href="http://archives.miloush.net/michkap/archive/2005/08/22/454360.html" mce_href="http://archives.miloush.net/michkap/archive/2005/08/22/454360.html"><STRONG>Why I think the thread locale really stinks</STRONG></A>).</P>
+<P>At session initialization (as in at logon) for a user,&nbsp;this registry value gets put in the <A href="http://en.wikipedia.org/wiki/Thread_Environment_Block" mce_href="http://en.wikipedia.org/wiki/Thread_Environment_Block">TEB</A>, and unless you change the user locale and change it back, both <STRONG>HKCU\Control Panel\International,Locale</STRONG>&nbsp;and <A href="http://msdn.microsoft.com/library/dd318127.aspx" mce_href="http://msdn.microsoft.com/library/dd318127.aspx">GetThreadLocale</A>&nbsp;will contain that wrong value in this scenario.</P>
+<P>And not as a coincidence; one is causing the other.</P>
+<P>Strange how unsympathetic I was to people hitting the unsupported registry value and how sympathetic I am to people calling a documented function!</P>
+<P>This bug causes some of the random problems Delphi users are seeing like <A href="http://qc.embarcadero.com/wc/qcmain.aspx?d=80189" mce_href="http://qc.embarcadero.com/wc/qcmain.aspx?d=80189">this one</A> and <A href="http://social.technet.microsoft.com/Forums/en/w7itprogeneral/thread/b4f90f07-206c-494b-8d14-ee17bfa689e0" mce_href="http://social.technet.microsoft.com/Forums/en/w7itprogeneral/thread/b4f90f07-206c-494b-8d14-ee17bfa689e0">this one</A>&nbsp;-- and probably others if you look; although I find the thread locale to be in its own way evil it may not be the best policy to punish people for using the evil we're giving out just because it is evil. </P>
+<P>I've been calling the thread locale evil for years and rally haven't scared very many people off of it yet. Certainly Delphi never got the memo (they really shouldn't be using the thread locale anyway, even if this bug was not happening).</P>
+<P>Anyway, not sure yet what will happen here eventually. </P>
+<P>For now, the officially sanctioned workaround (via <A href="http://blogs.msdn.com/shawnste" mce_href="http://blogs.msdn.com/shawnste">Shawn</A>):</P>
+<OL>
+<LI>Open Regional and Language Options</LI>
+<LI>Under "Format" pick anything else. (eg: English (United States)).</LI>
+<LI>Press "Apply"</LI>
+<LI>Under "Format" pick your desired locale (eg: English (United Kingdom)).</LI>
+<LI>Press OK.</LI></OL>
+<P>But if I hear anything else, I'll holler....</P>
+<hr/><p><a id="9982339" href="#9982339">#</a> <strong>Mike</strong> on 20 Mar 2010 6:20 AM:</p><div style="margin-left: 1em"><P>SetThreadLocale is used by both MFC and ATL 2010, so maybe Microsoft didn't get the memo either. &nbsp; A simple find in files on the MFC and ATL source code will show you these areas. &nbsp;Someone has to go through them and see if this bug has an impact on the specifc areas that GetThreadLocale is used in. &nbsp;Here's a summary:</P>
+<UL>
+<LI>- CComCurrency conversion</LI>
+<LI>- ATL string support functions (many places)</LI>
+<LI>- MFC's AfxComparePath (GetStringTypeEx)</LI>
+<LI>- MFC's DDX_Text function (used in dialog boxes) - converting from strings to numbers and vice versa</LI>
+<LI>- some OLE stuff and some ATL registration stuff</LI></UL></div>
+<p><strong>Steve</strong> on 8 Mar 2011 2:22 AM:</p><div style="margin-left: 1em"><p>As Mike mentioned, using MFC/ATL&#39;s CString can become a problem. For example, my computer is a en-US version of Windows 7 with the default system locale set to ja-JP. &nbsp;In a non-unicode program, converting from CStringA to BSTR via the AllocSysString() function will incorrectly convert the string to unicode.</p>
+<p>One simple(although not perfect) workaround is to call SetThreadLocal(GetSystemDefaultLCID()) in InitInstance().</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 8 Mar 2011 8:06 AM:</p><div style="margin-left: 1em"><p>Even better is to use CStringW, instead!</p>
+</div>
+<p><strong>Daniel</strong> on 30 Aug 2012 2:25 AM:</p><div style="margin-left: 1em"><p>What a relief! Thanks, I no longer need to select a language from the drop down in SQL Server Management Studio all the time. SSMS does need reopening for it to take affect.</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 30 Aug 2012 7:26 AM:</p><div style="margin-left: 1em"><p>Cool!</p>
+<p>SQL Server UI almost always religiously sets the thread locale, which is why that worked. But I agree that chaging it once is easier than having to change it every time! :-)</p>
+</div>
+<hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2010/05/08 <a href="http://archives.miloush.net/michkap/archive/2010/05/08/10002804.html">That GetThreadLocale bug, again (aka Delphi has more users than I originally thought)</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2010/03/20/9978451.html" title="Watch your language, Michael! (aka What the @#%&amp;*! is an Elevated Command Prompt?)">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2010/03/18/9976688.html" title="Whether the currency sign is right or wrong could be something of a crapshoot">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2010-03">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2010-03-19">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2010/03/19/9980203.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:35 GMT -->
+</html>

@@ -1,0 +1,104 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2008/03/01/7971061.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:36 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Hinting? Hinting at Spaghetti is what it's doing, which just makes me hungry...</title></head><body>
+<h1>Hinting? Hinting at Spaghetti is what it's doing, which just makes me hungry...</h1>
+<p><em>by Michael S. Kaplan, published on 2008/03/01 10:16 -05:00, original URI: http://blogs.msdn.com/b/michkap/archive/2008/03/01/7971061.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P><EM><FONT color=#ff0000 size=1>Please read the <A class="" href="http://archives.miloush.net/michkap/archive/2008/02/28/7934999.html" mce_href="http://archives.miloush.net/michkap/archive/2008/02/28/7934999.html">disclaimer</A>; content not approved by Microsoft!</FONT></EM></P>
+<P>Developer Josh asked:</P>
+<BLOCKQUOTE>
+<P><EM><FONT face="times new roman,times">I understand you can call SystemParametersInfo with SPI_GETCLEARTYPE to see if Cleartype is enabled, but according to MSDN, SPI_GETCLEARTYPE isn’t supported on winXP.&nbsp; How can I find out if it’s enabled on a winXP system?</FONT></EM></P></BLOCKQUOTE>
+<P>What I have always&nbsp;disliked functions like <A class="" href="http://msdn2.microsoft.com/library/ms724947.aspx" mce_href="http://msdn2.microsoft.com/library/ms724947.aspx">SystemParametersInfo</A> (a dislike that extends to functions like <A class="" href="http://msdn2.microsoft.com/library/ms776270.aspx" mce_href="http://msdn2.microsoft.com/library/ms776270.aspx">GetLocaleInfo</A>) is that it becomes a dumping ground of data/configuration with mounds of new items added with each version, and often the documentation and sometimes even the header files don't match what is actually implemented.</P>
+<P>Plus even if the documentation is right, if you look at how clusters of similar functionality are used, you can look at the steps and missteps that the platform took over the years as features were implemented, modified, tweaked,&nbsp;and extended. </P>
+<P>But let's look at all of the anti-aliasing/hinting items in <A class="" href="http://msdn2.microsoft.com/library/ms724947.aspx" mce_href="http://msdn2.microsoft.com/library/ms724947.aspx">SystemParametersInfo</A>&nbsp;for a moment. I changed a bit of the formatting info and split the "supported by platform _____" in a separate column. It could probably do with some more work but this is a start at least....</P>
+<P>I also fixed up some of the really weird inconsistencies like the fact thatt he first instance of <STRONG>ClearTyoe</STRONG> had no link but an inline definition and such...</P>
+<BLOCKQUOTE>
+<P>
+<TABLE class="" width="90%" border=1>
+<TBODY>
+<TR>
+<TH class="">Desktop parameter</TH>
+<TH class="">First Supported</TH>
+<TH class="">Meaning</TH></TR>
+<TR>
+<TD class="" width="20%">
+<P mce_keep="true">SPI_GETCLEARTYPE</P></TD>
+<TD class="" align=middle width="10%">Vista</TD>
+<TD class="">
+<P>Determines whether <A id=ctl00_rs1_mainContentContainer_ctl35 onclick="javascript:Track('ctl00_rs1_mainContentContainer_ctl00|ctl00_rs1_mainContentContainer_ctl35',this);" href="http://go.microsoft.com/FWLink/?LinkId=84132">ClearType</A> is enabled. The <I>pvParam</I> parameter must point to a <B>BOOL</B> variable that receives TRUE if <A id=ctl00_rs1_mainContentContainer_ctl35 onclick="javascript:Track('ctl00_rs1_mainContentContainer_ctl00|ctl00_rs1_mainContentContainer_ctl35',this);" href="http://go.microsoft.com/FWLink/?LinkId=84132">ClearType</A> is enabled, or FALSE otherwise.</P>
+<P><A id=ctl00_rs1_mainContentContainer_ctl35 onclick="javascript:Track('ctl00_rs1_mainContentContainer_ctl00|ctl00_rs1_mainContentContainer_ctl35',this);" href="http://go.microsoft.com/FWLink/?LinkId=84132">ClearType</A> is a software technology that improves the readability of text on liquid crystal display (LCD) monitors.</P></TD></TR>
+<TR>
+<TD class="" width="20%">
+<P>SPI_GETFONTSMOOTHING</P></TD>
+<TD class="" align=middle width="10%">2000 (NT4?)</TD>
+<TD class="">
+<P>Determines whether the font smoothing feature is enabled. This feature uses font antialiasing to make font curves appear smoother by painting pixels at different gray levels. </P>
+<P>The <I>pvParam</I> parameter must point to a <B>BOOL</B> variable that receives TRUE if the feature is enabled, or FALSE if it is not.</P></TD></TR>
+<TR>
+<TD class="" width="20%">
+<P mce_keep="true">SPI_GETFONTSMOOTHINGCONTRAST</P></TD>
+<TD class="" align=middle width="10%">XP</TD>
+<TD class="">
+<P>Retrieves a contrast value that is used in <A id=ctl00_rs1_mainContentContainer_ctl31 onclick="javascript:Track('ctl00_rs1_mainContentContainer_ctl00|ctl00_rs1_mainContentContainer_ctl31',this);" href="http://go.microsoft.com/FWLink/?LinkId=84132">ClearType</A> smoothing. The <I>pvParam</I> parameter must point to a <B>UINT</B> that receives the information. Valid contrast values are from 1000 to 2200. The default value is 1400. </P></TD></TR>
+<TR>
+<TD class="" width="20%">
+<P mce_keep="true">SPI_GETFONTSMOOTHINGORIENTATION</P></TD>
+<TD class="" align=middle width="10%">XP SP2</TD>
+<TD class="">
+<P>Retrieves the font smoothing orientation. The <I>pvParam</I> parameter must point to a <B>UINT</B> that receives the information. The possible values are FE_FONTSMOOTHINGORIENTATIONBGR (blue-green-red) and FE_FONTSMOOTHINGORIENTATIONRGB (red-green-blue). </P></TD></TR>
+<TR>
+<TD class="" width="20%">
+<P mce_keep="true">SPI_GETFONTSMOOTHINGTYPE</P></TD>
+<TD class="" align=middle width="10%">XP</TD>
+<TD class="">
+<P>Retrieves the type of font smoothing. The <I>pvParam</I> parameter must point to a <B>UINT</B> that receives the information. The possible values are FE_FONTSMOOTHINGSTANDARD and FE_FONTSMOOTHINGCLEARTYPE. </P></TD></TR>
+<TR>
+<TD class="" width="20%">
+<P>SPI_SETCLEARTYPE</P></TD>
+<TD class="" align=middle width="10%">Vista</TD>
+<TD class="">
+<P>Turns <A id=ctl00_rs1_mainContentContainer_ctl35 onclick="javascript:Track('ctl00_rs1_mainContentContainer_ctl00|ctl00_rs1_mainContentContainer_ctl35',this);" href="http://go.microsoft.com/FWLink/?LinkId=84132">ClearType</A> on or off. The <I>pvParam</I> parameter is a <B>BOOL</B> variable. Set <I>pvParam</I> to TRUE to enable ClearType, or FALSE to disable it. </P>
+<P><A id=ctl00_rs1_mainContentContainer_ctl35 onclick="javascript:Track('ctl00_rs1_mainContentContainer_ctl00|ctl00_rs1_mainContentContainer_ctl35',this);" href="http://go.microsoft.com/FWLink/?LinkId=84132">ClearType</A> is a software technology that improves the readability of text on LCD monitors.</P></TD></TR>
+<TR>
+<TD class="" width="20%">
+<P>SPI_SETFONTSMOOTHING</P></TD>
+<TD class="" align=middle width="10%">2000 (NT4?)</TD>
+<TD class="">
+<P>Enables or disables the font smoothing feature, which uses font antialiasing to make font curves appear smoother by painting pixels at different gray levels. </P>
+<P>To enable the feature, set the <I>uiParam</I> parameter to TRUE. To disable the feature, set <I>uiParam</I> to FALSE.</P></TD></TR>
+<TR>
+<TD class="" width="20%">
+<P mce_keep="true">SPI_SETFONTSMOOTHINGCONTRAST</P></TD>
+<TD class="" align=middle width="10%">XP</TD>
+<TD class="">
+<P>Sets the contrast value used in <A id=ctl00_rs1_mainContentContainer_ctl34 onclick="javascript:Track('ctl00_rs1_mainContentContainer_ctl00|ctl00_rs1_mainContentContainer_ctl34',this);" href="http://go.microsoft.com/FWLink/?LinkId=84132">ClearType</A> smoothing. The <I>pvParam</I> parameter is the contrast value. Valid contrast values are from 1000 to 2200. The default value is 1400. </P>
+<P>SPI_SETFONTSMOOTHINGTYPE must also be set to FE_FONTSMOOTHINGCLEARTYPE.</P></TD></TR>
+<TR>
+<TD class="" width="20%">
+<P mce_keep="true">SPI_SETFONTSMOOTHINGORIENTATION</P></TD>
+<TD class="" align=middle width="10%">XP SP2</TD>
+<TD class="">
+<P>Sets the font smoothing orientation. The <I>pvParam</I> parameter is either FE_FONTSMOOTHINGORIENTATIONBGR (blue-green-red) or FE_FONTSMOOTHINGORIENTATIONRGB (red-green-blue). </P></TD></TR>
+<TR>
+<TD class="" width="20%">
+<P mce_keep="true">SPI_SETFONTSMOOTHINGTYPE</P></TD>
+<TD class="" align=middle width="10%">XP</TD>
+<TD class="">
+<P>Sets the font smoothing type. The <I>pvParam</I> parameter is either FE_FONTSMOOTHINGSTANDARD, if standard anti-aliasing is used, or FE_FONTSMOOTHINGCLEARTYPE, if <A id=ctl00_rs1_mainContentContainer_ctl35 onclick="javascript:Track('ctl00_rs1_mainContentContainer_ctl00|ctl00_rs1_mainContentContainer_ctl35',this);" href="http://go.microsoft.com/FWLink/?LinkId=84132">ClearType</A> is used. The default is FE_FONTSMOOTHINGSTANDARD. </P>
+<P>SPI_SETFONTSMOOTHING must also be set.</P></TD></TR></TBODY></TABLE></P></BLOCKQUOTE>
+<P mce_keep="true">Obviously the alphabetical order is best for lookups, but the odd coverage variability makes it kind of weird, anyway.</P>
+<P mce_keep="true">A&nbsp;chronological order&nbsp;might be&nbsp;better for looking at the order they came into being, and one with dependencies clearly divided out rather than inline with the text could also be useful.</P>
+<P mce_keep="true">But to answer Josh's question, while SPI_GETCLEARTYPE claims to not be supported until Vista (as you can see in the tale as well), it does appear to be in&nbsp;the XP code base so it might work. But let's be cautious and not do that -- we can actually just check for </P>
+<UL>
+<LI>SPI_GETFONTSMOOTHING == TRUE</LI>
+<LI>
+<DIV mce_keep="true">SPI_GETFONTSMOOTHINGTYPE == FE_FONTSMOOTHINGCLEARTYPE</DIV></LI></UL>
+<P mce_keep="true">and then one is working with flags that are supported in any platform XP and up, when ClearType was first added to Windows....</P>
+<P mce_keep="true">The new flags were probably added top try to make it easier to sort through asll these strange settings, but did it really help? Did it really help anything at all, especially since it never bothered to explain what it was equivalent to, something that even <A class="" href="http://msdn2.microsoft.com/library/ms776270.aspx" mce_href="http://msdn2.microsoft.com/library/ms776270.aspx">GetLocaleInfo</A>&nbsp;with its overlpping LCTYPE values tries to do. </P>
+<P mce_keep="true">But do all of these random collected flags feel like the most usable UI? Are they what would be there if one was working from scratch, even if they had to handle the backcompat support story too? Now it is like <STRONG>spaghetti documentation</STRONG>!</P>
+<P mce_keep="true">If I were tasked to fix this (and had any documentation writing ability!), I would start them all from scratch, include not just deoendency info like the topic does now but also more interaction info and even historical equivalencies....</P>
+<P mce_keep="true">&nbsp;</P>
+<P mce_keep="true"><FONT color=#ff00ff><EM>This blog brought to you by</EM><FONT size=5> ⎚ </FONT><EM>(<A class="" href="http://www.fileformat.info/info/unicode/char/239a" mce_href="http://www.fileformat.info/info/unicode/char/239a">U+239a</A>, aka CLEAR SCREEN SYMBOL)</EM></FONT></P>
+<hr/><div style="margin-left: 1em"><em>no comments</em></div><hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2008/03/02/7934470.html" title="On putting the cart before the horse (or the computer in front of the keyboard?)">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2008/03/01/7966892.html" title="Saying you want to be 1,00,000 strong may not be (and often is not) a typo!">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2008-03">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2008-03-01">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2008/03/01/7971061.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:36 GMT -->
+</html>

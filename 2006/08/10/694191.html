@@ -1,0 +1,30 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2006/08/10/694191.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:39 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Roman numerals are Latin script!</title></head><body>
+<h1>Roman numerals are Latin script!</h1>
+<p><em>by Michael S. Kaplan, published on 2006/08/10 05:12 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2006/08/10/694191.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<FONT face=Tahoma>
+<P>Earlier this year, I talked about the <A href="http://archives.miloush.net/michkap/archive/2005/03/12/394716.html"><STRONG>stability of the Unicode Character Database</STRONG></A>. And about how there are really not all that many changes that happen to items like the general category that the <A href="http://msdn2.microsoft.com/en-us/library/k43c6164(en-US,VS.80).aspx">CharUnicodeInfo class</A> depends on. And the same is true of other&nbsp;property values. </P>
+<P>But in that battle of <STRONG><A href="http://archives.miloush.net/michkap/archive/2005/03/25/402444.html">consistency vs. correctness</A></STRONG>, sometimes it is correctness that will win.</P>
+<P>Yesterday at the Unicode Technical Committee meeting (being held at Adobe in Seattle), one of those occasional changes that from time to time will happen, happened. </P>
+<P>It started because of something that Mark Davis (well, one of his colleagues) noticed:</P>
+<BLOCKQUOTE dir=ltr style="MARGIN-RIGHT: 0px">
+<P><FONT face="Times New Roman" size=2>We have a bug in 5.0 in that a case pair is split across two different script values. We should fix this in U5+, and add an invariant test to ensure that this doesn't recur.&nbsp;<BR><BR></FONT><FONT face="Consolas,Courier New,Courier" size=2><STRONG>2183;ROMAN NUMERAL REVERSED ONE HUNDRED;Lu;0;L;;;;;N;;;;2184;<BR>2183&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ; Common # L&amp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ROMAN NUMERAL REVERSED ONE HUNDRED<BR><BR>2184;LATIN SMALL LETTER REVERSED C;Ll;0;L;;;;;N;;;2183;;2183<BR>2184&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ; Latin # L&amp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; LATIN SMALL LETTER REVERSED C</STRONG><BR></FONT></P></BLOCKQUOTE>
+<P>Roman Numerals are something I have talked about before (like in <STRONG><A href="http://archives.miloush.net/michkap/archive/2005/01/24/359347.html">this</A></STRONG> post).</P>
+<P>Now the truth is that almost all of the Roman Numerals in Unicode have two things in common:</P>
+<OL>
+<LI>They all have a general category of <A href="http://www.fileformat.info/info/unicode/category/Nl/index.htm">Nl</A> (Number Letter);</LI>
+<LI>They all have a script membership of <STRONG>Common</STRONG>.</LI></OL>
+<P>In fact, the first point is true of all but the two characters above, and the second point is true of all but one of them. </P>
+<P>But the honest truth is that is that putting them in the script value of <STRONG>Common</STRONG> never really made very much sense, because even&nbsp;if they are used within other scripts, they never really stop being Latin letters.&nbsp;And having these two charcters as a case pair and with <A href="http://www.fileformat.info/info/unicode/category/Lu/index.htm"><STRONG>Lu</STRONG></A>/<A href="http://www.fileformat.info/info/unicode/category/Ll/index.htm"><STRONG>Ll</STRONG></A> general categories but different scripts is really weird.</P>
+<P>And having these two different from all of the rest since they all have the same issue is also bad.</P>
+<P>So the plan? To update the script membership of the roman numerals (<EM>all of them</EM>) from <STRONG>Common</STRONG> to <STRONG>Latin</STRONG>, which is what they are. But since those two characters happen to have a case relationship, to leave be the difference in general category of the two characters mentioned above.</P>
+<P>This is a change that will happen in a future version of the standard. And does allow for a slightly more correct result, albeit one that might cause some people to be concerned.</P>
+<P>In fact, I anticipate at least one bug being reported based on someone noticing the change, and my predition will be that they are not really even using the characters in question! I will keep you posted on this, in any case. :-)</P>
+<P>I'll talk more about other such changes in another post....</P>
+<P>&nbsp;</P>
+<P><FONT color=#ff1493><EM>This post brought to you by</EM> <STRONG><FONT size=6>ↄ</FONT></STRONG> <EM>(<A href="http://www.fileformat.info/info/unicode/char/2184">U+2184</A>, a.k.a. LATIN SMALL LETTER REVERSED C)</EM></FONT></P></FONT>
+<hr/><div style="margin-left: 1em"><em>no comments</em></div><hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2007/01/31 <a href="http://archives.miloush.net/michkap/archive/2007/01/31/1563080.html">Where is the character?</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2006/08/10/694593.html" title="Why are there MODIFIER LETTERS that are not in the Letter, Modifier category?">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2006/08/09/693147.html" title="Happy &#39;Not Aimee Mann&#39;s Birthday&#39; !!!">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2006-08">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2006-08-10">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2006/08/10/694191.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:39 GMT -->
+</html>

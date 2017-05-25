@@ -1,0 +1,64 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2012/09/14/10349328.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:26 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Do you have the [short] time for this? Part #2: How does it feel to be out of sync?</title></head><body>
+<h1>Do you have the [short] time for this? Part #2: How does it feel to be out of sync?</h1>
+<p><em>by Michael S. Kaplan, published on 2012/09/14 07:01 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2012/09/14/10349328.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<p>Previous blog in the series: <a title="Do you have the [short] time for this? Part #1: The intro" href="../13/10348936.html"><strong>Do you have the [short] time for this? Part #1: The intro</strong></a>.</p>
+<p>With part 1, I laid out the history of long time and short time.</p>
+<p>And I made it all sound like a story with a happy ending.</p>
+<p>Sounds like all is good, right?</p>
+<p>Wrong!</p>
+<p>There are still several lingering problems.</p>
+<p>They all have pretty much the same cause, though.</p>
+<p>And all of them would not exist if the original Win32 solution had been used everywhere.</p>
+<p><em>I'm not saying that VB, VBA, .NET, or the people clamoring for a "short time" were wrong, per se.</em></p>
+<p><strong><em>But I am saying that they share blame for these bugs with the NLS team members who did the work to support "short time"!</em></strong></p>
+<p>First I'll show what these formats look like in en-US, where one of the problems doesn't exist:</p>
+<table border="1" cellspacing="3" cellpadding="3">
+<tbody>
+<tr>
+<td><strong>LOCALE_STIMEFORMAT</strong></td>
+<td><strong>LOCALE_SSHORTTIME</strong></td>
+</tr>
+<tr>
+<td>h:mm:ss tt</td>
+<td>h:mm tt</td>
+</tr>
+<tr>
+<td>hh:mm:ss tt</td>
+<td>hh:mm tt</td>
+</tr>
+<tr>
+<td>H:mm:ss</td>
+<td>H:mm</td>
+</tr>
+<tr>
+<td>HH:mm:ss</td>
+<td>HH:mm</td>
+</tr>
+</tbody>
+</table>
+<p>You will no doubt notice that the four options for long time match the four for short time (with the <span style="font-family: courier new,courier;"><strong>TIME_NOSECONDS</strong></span> flag being passed for the long time!).</p>
+<p>In other words, they can kind of do okay when they match.</p>
+<p>HOWEVER, there is no rule that enforces a need for them to match!</p>
+<p>And HOWEVER #2, no documentation or description suggests that such matching is needed, wanted, desired, or even pined for!</p>
+<p>In fact, there are several examples of locales -- more&nbsp;then three and less than twenty --&nbsp;in Windows 8 that have non-matching long time/short time formats.</p>
+<p>But since neither the people who originally provided&nbsp;the data nor the people who reviewed&nbsp;the data&nbsp;in Windows 8 were ever even given an insinuation that this is the case, they can hardly be blamed for not always having done so.</p>
+<p>I still don't know that I would want to formally request it, if no one wanted to update the documentation.</p>
+<p>People owning the underlying technologies would have to put their money where their mouth is here, if they want to change the rules and asked for what would otherwise be gratuitous busywork.</p>
+<p>The other problem would of course be that "fixing" those as cases would not keep people from either adding new locales or modify existing ones to make them&nbsp;be out of sync again.</p>
+<p>This means that there would need to be both <strong>Locale Builder</strong> updates (all new locales and locales we reviewed were done via <strong>Local Builder</strong>), and we'd probably need some doc updates there too.</p>
+<p>I know they aren't updating <strong>Locale Builder</strong> these days, but they will have to spend some dev cycles for an internal update if they want to change the rules to force data to be better.</p>
+<p><em>Not that I would object to a public <strong>Locale Builder</strong> update, either.</em> :-)</p>
+<p>But no one is going to build in new requirements on top of me or us&nbsp;if they can't be bothered to support it in their own toolset we are relying on!</p>
+<p>Ironically, had they never gone this "we need a unique short time" route, this problem wouldn't even exist.</p>
+<p>Because if there was only one set of formats that were modified as needed, they would all be in sync, with no special&nbsp;work needed.</p>
+<p><em>And if this blog seems a scosh shriller than usual, it is how often this kind of thing has been reported as a bug in the data when the real bug has actual villians who caused the problems!</em></p>
+<p>And there's more -- as I'll talk about in the next part....</p>
+<hr/><p><strong>Doug Ewell</strong> on 14 Sep 2012 7:15 AM:</p><div style="margin-left: 1em"><p>But wait, they *don&#39;t* match in your table. The entries with capital &#39;H&#39; and &#39;HH&#39; have &#39;tt&#39; in the short format but not in the long format. Why would anyone want A.M./P.M. with their 24-hour format anyway? And in fact, on my copy of 7 the short formats with &#39;H&#39; do not have &#39;tt&#39;.</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 14 Sep 2012 10:05 AM:</p><div style="margin-left: 1em"><p>Sorry, that was a bug in my table, fixed now.</p></div>
+<hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2012/09/17 <a href="../17/10350018.html">Do you have the [short] time for this? Part 3: What a tangled we weave...</a></p></div><p><em>go to <a id="newer" href="../17/10350018.html" title="Do you have the [short] time for this? Part 3: What a tangled we weave...">newer</a> or <a id="older" href="10349328.html" title="Do you have the [short] time for this? Part #2: How does it feel to be out of sync?">older</a> post, or back to <a href="../../../index-2.html">index</a> or <a href="../../../index-2.html#2012-09">month</a> or <a href="../../../index-2.html#2012-09-14">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2012/09/14/10349328.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:26 GMT -->
+</html>

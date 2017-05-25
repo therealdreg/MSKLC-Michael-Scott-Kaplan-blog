@@ -1,0 +1,42 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2007/06/25/3537065.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:38 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Sometimes you drop the BOM, and sometimes the BOM drops you!</title></head><body>
+<h1>Sometimes you drop the BOM, and sometimes the BOM drops you!</h1>
+<p><em>by Michael S. Kaplan, published on 2007/06/26 01:16 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2007/06/25/3537065.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P>Back when I posted <A class="" href="http://archives.miloush.net/michkap/archive/2007/06/22/3466480.html" mce_href="http://archives.miloush.net/michkap/archive/2007/06/22/3466480.html"><STRONG>Your VC++ files don't support Unicode identifers? Drop a BOM on them!</STRONG></A>, I promised I'd say more about how Microsoft's Visual C++ was deciding what parts of Unicode could be used as valid identifiers.</P>
+<P>And if you'll recall, I talked about how</P>
+<BLOCKQUOTE>
+<P><EM>...one should not assume that the full support of </EM><A class="" href="http://www.unicode.org/reports/tr31" mce_href="http://www.unicode.org/reports/tr31"><EM>Unicode Standard Annex #31 (Identifier and Pattern Syntax)</EM></A><EM> is being implemented, but hopefully some not entirely incompatible subset is what would turn out to be available....</EM></P></BLOCKQUOTE>
+<P>Well, consider my hopes dashed at this point....</P>
+<P>I'll include the code comment above the validation function, though it is my heartfelt desire to see this code ripped out with extreme prejudice in some future version. :-)</P>
+<BLOCKQUOTE>
+<BLOCKQUOTE>
+<P>//<BR>// Validate Unicode Identifier<BR>//<BR>// Every symbol of an identifer can belong to one of the following two<BR>// disjoint sets of characters:<BR>//<BR>// 1. Characters from the basic character set. We don't have to enforce it here,<BR>// and we also know that such characters cannot be entered as UCNs;<BR>//<BR>// 2. Characters greater than 0x80 encoded either directly or as UCNs. The exact ranges<BR>// are specified by Annex E in C++ Standard or by a superset of it in clr. It is not <BR>// implemented yet, but most likely we will decide to go with the clr range.<BR>//</P></BLOCKQUOTE></BLOCKQUOTE>
+<P>Of course currently the code does not do anything in #2 (as&nbsp;the comment indicates); instead for #2 it&nbsp;just relies heavily on the CRT <A class="" href="http://msdn2.microsoft.com/library/y13z34da.aspx" mce_href="http://msdn2.microsoft.com/library/y13z34da.aspx">iswspace function</A>, which of course relies heavily on the NLS GetStringTypeW function looking for those C1_SPACE characters&nbsp;(which of course means that the compilation behavior&nbsp;can be&nbsp;OS-dependent as new Unicode versions are supported.</P>
+<P>It also means there are a lot of very silly characters that could be chosen to be identifiers right now (including lots of undefined ones and lots of weird symbols).</P>
+<P>I mean, imagine code something like this:</P>
+<BLOCKQUOTE><FONT face="Consolas,Cambria Math,Lucida Console,Courier New,Courier">
+<P>if (≤ &lt; ≲) {<BR>&nbsp;&nbsp;&nbsp; ≥();<BR>}</P></FONT></BLOCKQUOTE>
+<P>and so on....</P>
+<P>Like I said, future versions should really be a lot more reasonable in this regard. And they will if I have any say in the matter at all.</P>
+<P>So please don't get to enjoying this too much....</P>
+<P mce_keep="true">&nbsp;</P>
+<P><FONT color=#ff00ff><EM>This post brought to you by</EM> <FONT size=5>≲</FONT> <EM>(<A class="" href="http://www.fileformat.info/info/unicode/char/2272" mce_href="http://www.fileformat.info/info/unicode/char/2272">U+2272</A>, a.k.a. LESS-THAN OR EQUIVALENT TO)</EM></FONT></P>
+<hr/><p><strong>Dean Harding</strong> on 26 Jun 2007 2:19 AM:</p><div style="margin-left: 1em"><p>I guess it also means it suffers from the same problem that C# does, whereby you could have 7 different functions called &quot;àáâãäå&quot; differing only by normalization :-)</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 26 Jun 2007 5:19 AM:</p><div style="margin-left: 1em"><p>Well, that is technically a feature (for obfuscation engines), one that is possibly expanded in C++. :-)</p>
+</div>
+<p><strong>Erzengel</strong> on 27 Jun 2007 3:24 PM:</p><div style="margin-left: 1em"><p>#define ≤ &lt;=</p>
+<p>#define ≥ &gt;=</p>
+<p>Now we just need a way to write those easily. :-)</p></div>
+<p><strong>Jan Kucera</strong> on 29 Jun 2007 5:04 AM:</p><div style="margin-left: 1em"><p>Erzengel: Autocorrect? :)</p>
+<p>But I too would welcome to be able to use ≤, ≥, ≠, ∞, ... in code syntax. How cool would be to define custom operators resulting in</p>
+<p>if (myElement ∉ mySet) ... I always wished that!</p>
+<p>Though, if (myVar = &#177;2) might be quite challenging to get work :)</p>
+<p>Michael, so you don't recommend to name functions ∛ or similar?</p></div>
+<p><strong>Michael S. Kaplan</strong> on 29 Jun 2007 8:56 AM:</p><div style="margin-left: 1em"><p>Nope. I only recommend using characters in names that follow the more sensible rules of the UAX, in anticipation of conformance in the future. :-)</p>
+</div>
+<hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2007/06/26/3558548.html" title="The MB_PRECOMPOSED flag is stupid, and the MB_COMPOSITE ain&#39;t no genius either">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2007/06/25/3521939.html" title="Sometimes when you say &#39;the fix is in&#39; you mean it in a good way">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2007-06">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2007-06-25">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2007/06/25/3537065.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:38 GMT -->
+</html>

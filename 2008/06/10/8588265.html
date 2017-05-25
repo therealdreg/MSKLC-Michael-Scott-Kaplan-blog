@@ -1,0 +1,97 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2008/06/10/8588265.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:36 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>When Unicode's "PDF" character isn't supported, you really *can* say that the app's Bidi support doesn't POP!</title></head><body>
+<h1>When Unicode's "PDF" character isn't supported, you really *can* say that the app's Bidi support doesn't POP!</h1>
+<p><em>by Michael S. Kaplan, published on 2008/06/10 03:01 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2008/06/10/8588265.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P>The&nbsp;problem that came in was an interesting one:</P>
+<BLOCKQUOTE><FONT face="times new roman,times">
+<UL>
+<LI>Win32 application running on Windows XP (Hebrew language);</LI>
+<LI>Rich edit control in the application;</LI>
+<LI>Try to display the folder path in left - to - right (i.e.&nbsp;in the form of C:\&lt;Hebrew folder name&gt;.txt, thus it is meant to be an "LTR" chunk, independent of the rest of the surrounding information);</LI>
+<LI>Current UI language settings should be used;</LI>
+<LI>Application uses BIDI control characters LRE/PDF to specify text as embedded left-to-right;</LI></UL>
+<P>When displaying the folder path, it does not show the text from left to right order. </P></FONT></BLOCKQUOTE>
+<P mce_keep="true">Indeed.</P>
+<P mce_keep="true">Let's dig into this one a bit, shall we?</P>
+<P mce_keep="true">If you are like me and you have spidey senses about this kind of thing, they are probably tingling right now. You may recall posts like these ones:</P>
+<UL>
+<LI>
+<DIV mce_keep="true"><A class="" href="http://archives.miloush.net/michkap/archive/2008/03/04/8015052.html" mce_href="http://archives.miloush.net/michkap/archive/2008/03/04/8015052.html"><STRONG>Consistency in the Windows Shell is not overrated; it's just underobserved!</STRONG></A></DIV></LI>
+<LI>
+<DIV mce_keep="true"><A class="" href="http://archives.miloush.net/michkap/archive/2008/04/18/8405696.html" mce_href="http://archives.miloush.net/michkap/archive/2008/04/18/8405696.html"><STRONG>The mythical nature of bidirectional support, and where the wheels come off the wagon</STRONG></A></DIV></LI>
+<LI>
+<DIV mce_keep="true"><A class="" href="http://archives.miloush.net/michkap/archive/2008/04/21/8413627.html" mce_href="http://archives.miloush.net/michkap/archive/2008/04/21/8413627.html"><STRONG>The pros and cons of context, aka CONTEXT is a four-letter-word</STRONG></A></DIV></LI></UL>
+<P mce_keep="true">but although there seem to be familiar issues, none of them are quite the same.</P>
+<P mce_keep="true">Let's look at UAX#9 to get the definition of these controls:</P>
+<BLOCKQUOTE>
+<BLOCKQUOTE>
+<BLOCKQUOTE>
+<H3 class=section>2.1 <A class="" title=Explicit_Directional_Embedding name=Explicit_Directional_Embedding></A>Explicit Directional Embedding</H3>
+<P><EM>The following codes signal that a piece of text is to be treated as embedded. For example, an English quotation in the middle of an Arabic sentence could be marked as being embedded left-to-right text. If there were a Hebrew phrase in the middle of the English quotation, the that phrase could be marked as being embedded right-to-left. These codes allow for nested embeddings.</EM></P>
+<P mce_keep="true">
+<TABLE class=noborder cellSpacing=2 cellPadding=2 border=0 class="noborder">
+<TBODY>
+<TR>
+<TH class=noborder align=left class="noborder"><EM>Abbr.</EM></TH>
+<TH class=noborder align=left class="noborder"><EM>Code</EM></TH>
+<TH class=noborder align=left class="noborder"><EM>Chart</EM></TH>
+<TH class=noborder class="noborder"><EM>Name</EM></TH>
+<TH class=noborder class="noborder"><EM>Description</EM></TH></TR>
+<TR>
+<TH class=noborder style="VERTICAL-ALIGN: middle" vAlign=top class="noborder"><EM>LRE</EM></TH>
+<TH class=noborder style="VERTICAL-ALIGN: middle" vAlign=top class="noborder"><SPAN style="FONT-WEIGHT: 400"><EM>U+202A</EM></SPAN></TH>
+<TH class=noborder style="VERTICAL-ALIGN: middle; TEXT-ALIGN: center" vAlign=top class="noborder"><EM><IMG style="VERTICAL-ALIGN: top" alt=http://www.unicode.org/cgi-bin/refglyph?24-202A src="http://www.unicode.org/cgi-bin/refglyph?24-202A"></EM></TH>
+<TD class=noborder style="VERTICAL-ALIGN: middle" vAlign=top class="noborder"><EM>LEFT-TO-RIGHT EMBEDDING</EM></TD>
+<TD class=noborder style="VERTICAL-ALIGN: middle" vAlign=top class="noborder"><EM>Treat the following text as embedded left-to-right.</EM></TD></TR>
+<TR>
+<TH class=noborder style="VERTICAL-ALIGN: middle" vAlign=top class="noborder"><EM>RLE</EM></TH>
+<TH class=noborder style="VERTICAL-ALIGN: middle" vAlign=top class="noborder"><SPAN style="FONT-WEIGHT: 400"><EM>U+202B</EM></SPAN></TH>
+<TH class=noborder style="VERTICAL-ALIGN: middle; TEXT-ALIGN: center" vAlign=top class="noborder"><EM><IMG style="VERTICAL-ALIGN: top" alt=http://www.unicode.org/cgi-bin/refglyph?24-202B src="http://www.unicode.org/cgi-bin/refglyph?24-202B"></EM></TH>
+<TD class=noborder style="VERTICAL-ALIGN: middle" vAlign=top class="noborder"><EM>RIGHT-TO-LEFT EMBEDDING</EM></TD>
+<TD class=noborder style="VERTICAL-ALIGN: middle" vAlign=top class="noborder"><EM>Treat the following text as embedded right-to-left.</EM></TD></TR></TBODY></TABLE></P>
+<P><EM>The effect of right-left line direction, for example, can be accomplished by embedding the text with RLE...PDF.</EM></P></BLOCKQUOTE></BLOCKQUOTE></BLOCKQUOTE>
+<P mce_keep="true">Okay, so much for homework. Let's get practical now!</P>
+<P mce_keep="true">On the whole I think we should try things out and make sure we can reproduce the issue.</P>
+<P mce_keep="true">We will take a nice string that meets the particular criteria, such as:</P>
+<BLOCKQUOTE>
+<P dir=ltr mce_keep="true"><FONT size=6>C:\שיקול דעת מוטעה.txt</FONT></P></BLOCKQUOTE>
+<P mce_keep="true">Now any time someone talks about RichEdit, I like to start in Notepad, then a RichEdit control, then Word. So let's try without the <A class="" href="http://www.fileformat.info/info/unicode/char/202a" mce_href="http://www.fileformat.info/info/unicode/char/202a">U+202a</A> (LEFT-TO-RIGHT EMBEDDING) and <A class="" href="http://www.fileformat.info/info/unicode/char/202c" mce_href="http://www.fileformat.info/info/unicode/char/202c">U+202c</A> (POP DIRECTIONAL FORMATTING) first -- in both LTR and RTL contexts.</P>
+<P mce_keep="true">In Notepad:</P>
+<P mce_keep="true"><IMG src="http://trigeminal.fmsinc.com/images/ltrinrtl01.png"><BR><IMG src="http://trigeminal.fmsinc.com/images/ltrinrtl02.png"></P>
+<P mce_keep="true">and then a RichEdit control (I use WordPad here but you could choose any old RichEdit control):</P>
+<P mce_keep="true"><IMG src="http://trigeminal.fmsinc.com/images/ltrinrtl03.png"><BR><IMG src="http://trigeminal.fmsinc.com/images/ltrinrtl04.png"></P>
+<P mce_keep="true">and then in Word (I am using Word 2003 here):</P>
+<P mce_keep="true"><IMG src="http://trigeminal.fmsinc.com/images/ltrinrtl05.png"><BR><IMG src="http://trigeminal.fmsinc.com/images/ltrinrtl06.png"></P>
+<P mce_keep="true">Hmmm.... I see the problem here. If you put any kind of RIGHT-TO-LEFT-OSITY on top of the string, despair follows.</P>
+<P mce_keep="true">This does seem like a good time for those embedding characters!</P>
+<P mce_keep="true">So we'll use the same string but put <A class="" href="http://www.fileformat.info/info/unicode/char/202a" mce_href="http://www.fileformat.info/info/unicode/char/202a">U+202a</A> (LEFT-TO-RIGHT EMBEDDING)&nbsp;prefixing the string and <A class="" href="http://www.fileformat.info/info/unicode/char/202c" mce_href="http://www.fileformat.info/info/unicode/char/202c">U+202c</A> (POP DIRECTIONAL FORMATTING)&nbsp;suffixing it.</P>
+<P mce_keep="true">Again, first in Notepad:</P>
+<P mce_keep="true"><IMG src="http://trigeminal.fmsinc.com/images/ltrinrtl07.png"><BR><IMG src="http://trigeminal.fmsinc.com/images/ltrinrtl08.png"></P>
+<P mce_keep="true">and then WordPad to look at RichEdit:</P>
+<P mce_keep="true"><IMG src="http://trigeminal.fmsinc.com/images/ltrinrtl09.png"><BR><IMG src="http://trigeminal.fmsinc.com/images/ltrinrtl10.png"></P>
+<P mce_keep="true">and then finally in Word:</P>
+<P mce_keep="true"><IMG src="http://trigeminal.fmsinc.com/images/ltrinrtl11.png"><BR><IMG src="http://trigeminal.fmsinc.com/images/ltrinrtl12.png"></P>
+<P mce_keep="true">Damn.</P>
+<P mce_keep="true">It works fine in our EDIT control, but not in our RICHEDIT control or in Word.</P>
+<P mce_keep="true">What's up with that?</P>
+<P mce_keep="true">RichEdit expert <A class="" href="http://blogs.msdn.com/murrays/" mce_href="http://blogs.msdn.com/murrays/">Murray Sargent</A> explained what is going on:</P>
+<BLOCKQUOTE>
+<P mce_keep="true"><FONT face="times new roman,times"><EM>No RichEdit version supports LRE, RLE, and PDF. They’re on the wish list[...]</EM></FONT></P></BLOCKQUOTE>
+<P mce_keep="true">Ah, I guess that says it all. I took the liberty of asking him to add an entry to the wishlist on behalf of those of my readers who care about such things. :-)</P>
+<P mce_keep="true">Though it really is times like this that I find myself think all of the work in RichEdit and Word and other parts of Office to support math<FONT size=1><SUP>1</SUP></FONT> might have been more ideally preceded by finishing this important bit about support of&nbsp;bidirectional text<FONT size=1><SUP>2</SUP></FONT>.</P>
+<P mce_keep="true">Luckily IE does the right thing here, both with Unicode and with its own <STRONG>dir</STRONG> tag that can be put places like&nbsp;the level of a paragraph or a span or a div. And these non-IE components for rich text might have support before we actually need complex mathematical operations to express how long we've been waiting for the support....</P>
+<P mce_keep="true">&nbsp;</P>
+<P mce_keep="true"><FONT size=1>1 - First added to Unicode in UTR#25 in the end of August 2003.<BR>2 - First added to Unicode in UAX #9 in the middle of August 1999.</FONT></P>
+<P mce_keep="true">&nbsp;</P>
+<P mce_keep="true"><EM><FONT color=#ff00ff>This blog brought to you by <A class="" href="http://www.fileformat.info/info/unicode/char/202a" mce_href="http://www.fileformat.info/info/unicode/char/202a">U+202a</A>, <A class="" href="http://www.fileformat.info/info/unicode/char/202b" mce_href="http://www.fileformat.info/info/unicode/char/202b">U+202b</A>, and&nbsp;<A class="" href="http://www.fileformat.info/info/unicode/char/202c" mce_href="http://www.fileformat.info/info/unicode/char/202c">U+202c</A> (aka LEFT-TO-RIGHT EMBEDDING, RIGHT-TO-LEFT EMBEDDING, and POP DIRECTIONAL FORMATTING).</FONT></EM></P>
+<hr/><p><a id="8590271" href="#8590271">#</a> <strong>James</strong> on 10 Jun 2008 2:22 PM:</p><div style="margin-left: 1em"><P>Hi Michael,</P>
+<P>Thank you for the post. I am stuck on that. :-)</P>
+<P>James</P></div>
+<p><a id="8590413" href="#8590413">#</a> <strong>David Weiss</strong> on 10 Jun 2008 4:56 PM:</p><div style="margin-left: 1em"><P>Do your readers know what "שיקול דעת מוטעה" means? That is a very non-subtle hint about how you feel about RichEdit here.</P></div>
+<p><a id="8590445" href="#8590445">#</a> <strong>Michael S. Kaplan</strong> on 10 Jun 2008 5:22 PM:</p><div style="margin-left: 1em"><p>It seemed mildly subtle for most readers, and both obvious snd funny for the rest. :-)</p>
+</div>
+<hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2008/06/10/8589120.html" title="Gee -- No, G.E. -- No, GE (Ґ), aka The good guys can win in the end">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2008/06/09/8583970.html" title="But What of Michael?">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2008-06">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2008-06-10">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2008/06/10/8588265.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:36 GMT -->
+</html>

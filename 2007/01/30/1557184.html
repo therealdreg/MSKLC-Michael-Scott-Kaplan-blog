@@ -1,0 +1,168 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2007/01/30/1557184.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:38 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Not the coolest, but</title></head><body>
+<h1>Not the coolest, but</h1>
+<p><em>by Michael S. Kaplan, published on 2007/01/30 05:34 -08:00, original URI: http://blogs.msdn.com/michkap/archive/2007/01/30/1557184.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostOld -->
+<p>The thing released today that I am going to talk about is not the coolest product that will be widely available&nbsp;starting today,&nbsp;January 30, 2007.</p> <p>It will not be used by as many people. </p> <p>It will not change as many lives.</p> <p>It is not localized into as many (or frankly any) other languages.</p> <p>It will not have as big of an impact on the various companies providing hardware and software for computers.</p> <p>But I still think it is cool as hell, cool enough that I do not resent it being buried under&nbsp;whatever else is going to be released on this fine day.</p> <p>What product am I blathering about? You probably know already.</p> <p>It is the one that fixes <a class="" href="http://archives.miloush.net/michkap/archive/2006/06/27/648618.html" mce_href="http://archives.miloush.net/michkap/archive/2006/06/27/648618.html"><strong>this problem</strong></a> and <a class="" href="http://archives.miloush.net/michkap/archive/2006/06/27/648723.html" mce_href="http://archives.miloush.net/michkap/archive/2006/06/27/648723.html"><strong>this problem</strong></a> and <a class="" href="http://archives.miloush.net/michkap/archive/2006/01/26/517728.html" mce_href="http://archives.miloush.net/michkap/archive/2006/01/26/517728.html"><strong>this problem</strong></a>, not to mention some other important bugs and problems that have been reported here and elsewhere.</p> <p><strong><font size="4">Microsoft Keyboard Layout Creator 1.4 has now been released!</font></strong></p> <p>The download page can be found <a class="" href="http://go.microsoft.com/fwlink/?LinkId=82315&amp;clcid=0x409" mce_href="http://go.microsoft.com/fwlink/?LinkId=82315&amp;clcid=0x409">right here</a>. The download is&nbsp;a bit larger than (a&nbsp;little over twice the size of)&nbsp;its younger cousin (<a class="" href="http://go.microsoft.com/fwlink/?LinkId=17223&amp;clcid=0x409" mce_href=" http://go.microsoft.com/fwlink/?LinkId=17223&amp;clcid=0x409">MSKLC 1.3</a>), though if you are looking for 64-bit support (AMD64/x64 or IA64), or if you are looking for custom locale support on Vista, you'll probably consider it to be worth the <a class="" href="http://www.microsoft.com/downloads/info.aspx?na=47&amp;p=1&amp;SrcDisplayLang=en&amp;SrcCategoryId=&amp;SrcFamilyId=FB7B3DCD-D4C1-4943-9C74-D8DF57EF19D7&amp;u=details.aspx%3ffamilyid%3d0856EACB-4362-4B0D-8EDD-AAB15C5E04F5%26displaylang%3den" mce_href="http://www.microsoft.com/downloads/info.aspx?na=47&amp;p=1&amp;SrcDisplayLang=en&amp;SrcCategoryId=&amp;SrcFamilyId=FB7B3DCD-D4C1-4943-9C74-D8DF57EF19D7&amp;u=details.aspx%3ffamilyid%3d0856EACB-4362-4B0D-8EDD-AAB15C5E04F5%26displaylang%3den">.NET Framework&nbsp;2.0</a> requirement.</p> <p>If not, then you'll still find <a class="" href="http://go.microsoft.com/fwlink/?LinkId=17223&amp;clcid=0x409" mce_href=" http://go.microsoft.com/fwlink/?LinkId=17223&amp;clcid=0x409">MSKLC 1.3</a> is available, and it can run just fine with version 1.0 or <a class="" href="http://www.microsoft.com/downloads/info.aspx?na=47&amp;p=2&amp;SrcDisplayLang=en&amp;SrcCategoryId=&amp;SrcFamilyId=FB7B3DCD-D4C1-4943-9C74-D8DF57EF19D7&amp;u=details.aspx%3ffamilyid%3d262D25E3-F589-4842-8157-034D1E7CF3A3%26displaylang%3den" mce_href="http://www.microsoft.com/downloads/info.aspx?na=47&amp;p=2&amp;SrcDisplayLang=en&amp;SrcCategoryId=&amp;SrcFamilyId=FB7B3DCD-D4C1-4943-9C74-D8DF57EF19D7&amp;u=details.aspx%3ffamilyid%3d262D25E3-F589-4842-8157-034D1E7CF3A3%26displaylang%3den">1.1</a> of the .NET Framework.</p> <p>Enjoy!</p> <p mce_keep="true">&nbsp;</p> <p><em><font color="#ff00ff">This post is sponsored by every freaking character in Unicode 5.0</font></em></p>
+<hr/><p><a id="1557855" href="#1557855">#</a> <strong>Nick Lamb</strong> on Tuesday, January 30, 2007 12:11 PM:</p><div style="margin-left: 1em"><p>Does it fix the problem I reported here?</p></div>
+<p><a id="1557930" href="#1557930">#</a> <strong>Michael S. Kaplan</strong> on Tuesday, January 30, 2007 12:34 PM:</p><div style="margin-left: 1em"><P>I assume you mean the limitations around UTF-16, i.e. only one code point in SGCAPS or dead keys (I can't remember which off the very top of my head)?</P>
+<P>No changes were made to the limitations in the underlying Windows platform or the code in the USER subsystem, which is where the limitaion comes from. Though we did improve detection of the problem here for SGCAPS.</P></div>
+<p><a id="1557942" href="#1557942">#</a> <strong>Michael S. Kaplan</strong> on Tuesday, January 30, 2007 12:40 PM:</p><div style="margin-left: 1em"><P>No, I just found the bug -- the one with the unpaired surrogate throwing an exception that only happens on the 102 key. That bug was not fixed in 1.4, it is being tracked for a future version.</P></div>
+<p><a id="1558704" href="#1558704">#</a> <strong>Mihai</strong> on Tuesday, January 30, 2007 2:33 PM:</p><div style="margin-left: 1em"><p>Congrats!</p></div>
+<p><a id="1607841" href="#1607841">#</a> <strong>Paul Gorodyansky</strong> on Monday, February 05, 2007 8:21 PM:</p><div style="margin-left: 1em"><p>Michael,</p>
+<p>Could you please clarify one thing regarding MSKLC 1.4?</p>
+<p>I've found only 32-bit Vista in ur lab :) it's why I am asking:</p>
+<p>a) I do know - from you (have read here) and others that under XP64 (not Vista) &nbsp;a user must have _two_ custom keyboard files:</p>
+<p> - one in %WINDIR%\System32 directory </p>
+<p> - another in %WINDIR%\SysWOW64 directory - for &quot;older&quot; 32-bit applications running under this 64-bit OS</p>
+<p>b) Is it the same under 64-bit Vista? I mean, I use MSKLC, it prepared for me several directories and under 64-bit Vista:</p>
+<p>(a) file from &nbsp; &nbsp; &nbsp; &nbsp; i386 &nbsp; &nbsp; &nbsp; &nbsp; sub-directory should go to the %WINDIR%\System32 directory</p>
+<p> (b) and file from &nbsp; &nbsp; &nbsp; &nbsp;wow64 &nbsp; &nbsp;sub-directory should go to the %WINDIR%\SysWOW64 directory</p>
+<p>Right? (64-bit Vista has such directory as well as XP64, right?)</p>
+<p>I am asking because someone wrote that while it was necessary under XP64 it is not necessary anymore under Vista, that is under 64-bit Vista &nbsp;only (a) should be done and that file will work fine for both 64-bit applications and for older 32-bit ones.</p>
+<p>It's not correct, is it? We do need (a) _and_ (b) under 64-bit Vista, don't we?</p>
+<p>-- </p>
+<p>Thanks,</p>
+<p>Paul</p></div>
+<p><a id="1607867" href="#1607867">#</a> <strong>Michael S. Kaplan</strong> on Monday, February 05, 2007 8:29 PM:</p><div style="margin-left: 1em"><p>Yes, under 64-bit you need two files -- and the setup that is built will always have them. This is true of Vista and of 64-bit Windows prior to Vista.</p></div>
+<p><a id="1611684" href="#1611684">#</a> <strong>Cristian Secară</strong> on Tuesday, February 06, 2007 8:14 AM:</p><div style="margin-left: 1em"><p>Related question: if I use my &quot;Windows DDK 3790.1830&quot; to build a keyboard layout driver for Windows Server 2003 in x64 or IA-64 build environments, only one .dll is generated, presumably the non-wow64. What's the mistery ?</p>
+<p>Cristi</p></div>
+<p><a id="1611707" href="#1611707">#</a> <strong>Michael S. Kaplan</strong> on Tuesday, February 06, 2007 8:22 AM:</p><div style="margin-left: 1em"><p>Um, MSKLC is nice enough to build the two separate binaries. If you are using the DDK you have to do all that yourself. The difficulty in accomplishing this is why MSKLC exists!</p></div>
+<p><a id="1612028" href="#1612028">#</a> <strong>Cristian Secară</strong> on Tuesday, February 06, 2007 9:18 AM:</p><div style="margin-left: 1em"><p>Yes, MSKLC is useful tool, but for x86 keyboard .dll files I am using DDK, it makes more fun :) (and I suspect that back in 2002 I had no choice in doing otherwise)</p>
+<p>I see that the WDK is out, I will download and play with it a little. If I will not succeed, no problem, I am happy with the new MSKLC also :)</p>
+<p>Cristi</p></div>
+<p><a id="1612188" href="#1612188">#</a> <strong>Michael S. Kaplan</strong> on Tuesday, February 06, 2007 9:57 AM:</p><div style="margin-left: 1em"><p>More fun for who? That format is simply awful to work with, and quite unforgiving.... </p>
+<p>But anyway, make sure to be careful -- it is way to easy to create keyboards that won't work well or at all when you do it the hard way, something that MSKLC goes out of its wasy to help guard against. :-)</p></div>
+<p><a id="1612818" href="#1612818">#</a> <strong>Cristian Secară</strong> on Tuesday, February 06, 2007 12:15 PM:</p><div style="margin-left: 1em"><p>Fun for me, don't know about others :)</p>
+<p>It's now more than five years since the users are happy with my keyboard driver, so I suppose it is well written. Apart from that, with the DDK I am offering support for NT 4.0 versions too, something that MSKLC can't do as far as I know (for exemple on NT 4.0 there are no multimedia keys).</p>
+<p>Cristi</p></div>
+<p><a id="1612840" href="#1612840">#</a> <strong>Michael S. Kaplan</strong> on Tuesday, February 06, 2007 12:22 PM:</p><div style="margin-left: 1em"><p>Not sure what you mean -- the keyboards should install on NT 4.0, too?</p></div>
+<p><a id="1613211" href="#1613211">#</a> <strong>PaulGor</strong> on Tuesday, February 06, 2007 2:06 PM:</p><div style="margin-left: 1em"><p>May I report a usability problem in MSKLC 1.4 under Vista? </p>
+<p>Say I prepared installer for my custome (Phonetic) Russian keyboard layout and some end-end-user :-) got it and decided to install:</p>
+<p>- s/he sees - for a split second - a window with &quot;Preparing Install&quot;</p>
+<p>- then there is nothing on screen - for a long time, I say 15 seconds</p>
+<p>- only then Installer window appears</p>
+<p>I am afraid, such user will be confused...</p>
+<p>It's probably better if there is a window all the time on screen after s/he clicked on install.exe ....</p>
+<p>*********</p>
+<p>Two small unrelated questions.</p>
+<p>I use MSKLC on _32-bit_ &nbsp;Vista and get folders like &nbsp; &nbsp;i386 &nbsp; and wow64.</p>
+<p>1) Will those layout files work under older system - XP64?</p>
+<p>2) I look at the size of the files: 6k in i386 and 7k in wow64 -</p>
+<p>and then I look what file the Installer placed into System32 folder of my 32-bit Vista -</p>
+<p>I see that it's 6k file (that is, it's from i386 folder)</p>
+<p>Is it Ok? I mean, it's _32_-bit Vista - should it be a file from wow64 folder?</p>
+<p>Or the Installer (built under 32-bit Vista) will place to System32 - </p>
+<p>being it 64-bit Vista or 32-bit Vista - same file (from i386) for both?</p>
+<p>Thanks,</p>
+<p>Paul</p></div>
+<p><a id="1613328" href="#1613328">#</a> <strong>Michael S. Kaplan</strong> on Tuesday, February 06, 2007 2:17 PM:</p><div style="margin-left: 1em"><P>The pause is pure Windows Installer stuff; we complained but they say it is by design. :-(</P>
+<P>The way the folder breakout works:</P>
+<UL>
+<LI><STRONG>i386</STRONG> -- installs to system32 on an x86 box (any version of Windows)</LI>
+<LI><STRONG>ia64</STRONG> -- installs to system32 on an Itanium-64 box (any 64-bit version of Windows)</LI>
+<LI><STRONG>amd64</STRONG> -- installs to system32 on an AMD64/x64 box (any 64-bit version of Windows)</LI>
+<LI><STRONG>wow64</STRONG> -- installs to syswow64 on an IA64/AMD64/x64 box (any 64-bit version of Windows)</LI></UL>
+<P>Simple enough? :-)</P></div>
+<p><a id="1613525" href="#1613525">#</a> <strong>PaulGor</strong> on Tuesday, February 06, 2007 2:34 PM:</p><div style="margin-left: 1em"><p>&gt; Simple enough? :-)</p>
+<p>Almost :) Sorry for double-checking but it looks like eventhough I built the files under 32-bit Windows,</p>
+<p>_the same_ dll from i386 is used (placed to System32) on each of 3 systems:</p>
+<p> - 32-bit Vista</p>
+<p> - 64-bit Vista</p>
+<p> - XP64</p>
+<p>Right? But last two are not &quot;x86 boxes&quot;, they are &nbsp;&quot;x64 boxes&quot;, aren't they?</p>
+<p>I am new to 64-bit world, so may ask stupid questions, sorry!</p></div>
+<p><a id="1613851" href="#1613851">#</a> <strong>Michael S. Kaplan</strong> on Tuesday, February 06, 2007 3:30 PM:</p><div style="margin-left: 1em"><P>Well, two things (channeling Raymond's psychic powers, too!):</P>
+<OL>
+<LI>Have you tried the keyboard in a 64-bit process? If the wrong one were there, it would immediately fail.</LI>
+<LI>How are you checking this? (Hint: redirection can mislead the answer!)</LI></OL></div>
+<p><a id="1614517" href="#1614517">#</a> <strong>PaulGor</strong> on Tuesday, February 06, 2007 6:03 PM:</p><div style="margin-left: 1em"><p>&gt; Have you tried the keyboard in a 64-bit process</p>
+<p>No, I did not - if I had an access to a 64-bit Vista, I'd try and not ask questions :)</p>
+<p>I also dont' have XP64. All I have - 32-bit Vista</p>
+<p>I guess what I don't understand from your list above is the following (regarding regular Intel machines):</p>
+<p> - i386 -- installs to system32 on an x86 box (any version of Windows) </p>
+<p>x86 box - does it include 64-bit XP or 64-bit Vista or not?</p>
+<p>If the answer is &quot;yes&quot; then I _can_ offer the dll from i386 which I built under 32-bit Vista to my Russian readers _even_ if they have XP64 or 64-bit Vista.</p>
+<p>If the answer is &quot;No&quot; then I need to have _two_ sets of i386 files - one built under 32-bit Vista and another - built under 64-bit Vista.</p></div>
+<p><a id="1614628" href="#1614628">#</a> <strong>Michael S. Kaplan</strong> on Tuesday, February 06, 2007 6:09 PM:</p><div style="margin-left: 1em"><p>No, an x86 box is 32-bit only. Ever. If you have a 64-bit box you never use the i386 file.</p>
+<p>64-bit ALWAYS requires two files.</p>
+<p>Microsoft ONLY supports using the installation package as we built it -- which includes all four dirs. If you split it up, you are on your own as this is an untested, unsupported configuration.</p>
+<p>I will probably blog about this soon to make sure it is entirely clear....</p></div>
+<p><a id="1614775" href="#1614775">#</a> <strong>PaulGor</strong> on Tuesday, February 06, 2007 6:44 PM:</p><div style="margin-left: 1em"><p>1)</p>
+<p>&gt; No, an x86 box is 32-bit only. Ever. </p>
+<p>&gt; If you have a 64-bit box you never use the i386 file.</p>
+<p>Then there is a missing line in your list above (or I am missign something) - you had there a line about </p>
+<p>i386 for x86 box (and file from there goes to System32)</p>
+<p>but there is no line about</p>
+<p>i386 for x64 box...</p>
+<p>2) No, my question was not about &quot;not using Installer&quot;, please let me state it better:</p>
+<p>Fact.</p>
+<p>I have Installer build on x86 box - under 32-bit Vista.</p>
+<p>It works _there_ fine - according to your list a file from i386 folder goes to System32 folder of that 32-bit Vista</p>
+<p>Question.</p>
+<p>If I copy this _that_ Installer (built on x86 box) onto a x64 box -</p>
+<p>XP64 or Vista 64-bit - will it work?</p>
+<p>In that Installer - built under 32-bit Vista (it's all I have) there is no file for x64 box, is it?</p></div>
+<p><a id="1614812" href="#1614812">#</a> <strong>PaulGor</strong> on Tuesday, February 06, 2007 6:49 PM:</p><div style="margin-left: 1em"><p>Monday... Sorry, Michael, please - if you can - remove my last comment - I finally got it :)</p>
+<p>That is when I build Installer on my 32-bit Vista, MSKLC still creates a file fro a 64-bit system - it puts it to </p>
+<p>ia64</p>
+<p>folder.</p>
+<p>Why I was so stupid I guess is because I saw unknown for me word</p>
+<p>Itanium</p>
+<p>and did not read what's in parenthesys - assumed that it's &quot;some other platform such as say AMD) :)</p>
+<p>Thanks for patience!</p></div>
+<p><a id="1614911" href="#1614911">#</a> <strong>Cristian Secară</strong> on Tuesday, February 06, 2007 6:59 PM:</p><div style="margin-left: 1em"><p>&gt; Not sure what you mean -- the keyboards should install on NT 4.0, too?</p>
+<p>Yes, but not the same driver fol all versions ... my standardized Romanian keyboard layout driver is available separately for NT 4.0, 2000 and XP. Until recently for x86 only, now also for XP 64 bit, thanks to MSKLC 1.4 :)</p>
+<p>The NT 4.0 version is a distinct build with Windows DDK. The source code is similar but not the same as for for 2000/XP.</p>
+<p>As far as I know, MSKLC files are not compatible with NT 4.0.</p>
+<p>Surprisingly or not, I can still find NT 4.0s around me, used for dedicated tasks (e.g. DVS Pronto digital disk recorder, SD version), for which no one finds any reason for upgrading (except, perhaps, an upgrade to the entire system) ...</p>
+<p>Cristi</p></div>
+<p><a id="1614998" href="#1614998">#</a> <strong>Michael S. Kaplan</strong> on Tuesday, February 06, 2007 7:07 PM:</p><div style="margin-left: 1em"><p>Actually, they work just find in NT 4.0, I have instslled them many times!</p></div>
+<p><a id="1615348" href="#1615348">#</a> <strong>Cristian Secară</strong> on Tuesday, February 06, 2007 7:41 PM:</p><div style="margin-left: 1em"><p>Well, glad to hear that, but I never tried it, because this is what the MSKLC page says: &quot;... your system must meet the following requirements: Windows 2000, Windows XP, Windows Server 2003 or Windows Vista (MSKLC will not run on Windows 95, Windows 98, Windows ME or Windows NT4)&quot;.</p>
+<p>I always believe what Microsoft says, I don't feel the need to search for proof :)</p>
+<p>Cristi</p></div>
+<p><a id="1615423" href="#1615423">#</a> <strong>Michael S. Kaplan</strong> on Tuesday, February 06, 2007 7:57 PM:</p><div style="margin-left: 1em"><p>MSKLC can't run there.</p>
+<p>The keyboards that MSKLC creates can.</p>
+<p>There is a difference! :-)</p></div>
+<p><a id="1615524" href="#1615524">#</a> <strong>Cristian Secară</strong> on Tuesday, February 06, 2007 8:14 PM:</p><div style="margin-left: 1em"><p>True, I becomed confused here by the english text ... :(</p>
+<p>Unrelated question: is there any possibility to strip the &quot;Company&quot; entry field from the .dll property ? I don't feel confortable with this, since I publish my drivers under my real name &quot;brand&quot;, not under my company name brand.</p>
+<p>Cristi</p></div>
+<p><a id="1615670" href="#1615670">#</a> <strong>Michael S. Kaplan</strong> on Tuesday, February 06, 2007 8:34 PM:</p><div style="margin-left: 1em"><P>You can put something like a hyphen in there instead..... :-)</P></div>
+<p><a id="1615829" href="#1615829">#</a> <strong>PaulGor</strong> on Tuesday, February 06, 2007 9:39 PM:</p><div style="margin-left: 1em"><p>I've placed a word 'personal' there</p></div>
+<p><a id="1615882" href="#1615882">#</a> <strong>PaulGor</strong> on Tuesday, February 06, 2007 9:58 PM:</p><div style="margin-left: 1em"><p>Another MSKLC question.</p>
+<p>Under Windows XP (x86) end user - being just a member of Users group - add say &quot;Russian&quot; layout via Control Panel</p>
+<p>but can not replace it with a custom layout because he does not have rights to copy a file to System32 folder.</p>
+<p>Is it the same for Vista? I saw that MSKLC says something about Administrator Rights - does it mean that a member of Users groups will not be able to use Installer?</p></div>
+<p><a id="1615901" href="#1615901">#</a> <strong>Michael S. Kaplan</strong> on Tuesday, February 06, 2007 10:04 PM:</p><div style="margin-left: 1em"><p>This is a Windows requirement.</p>
+<p>Keyboards are stored in the system dir and have to have info about them written to HKLM. An administrator must do the initial initial installation, always, in any and every version of Windows.</p></div>
+<p><a id="1616006" href="#1616006">#</a> <strong>PaulGor</strong> on Tuesday, February 06, 2007 10:19 PM:</p><div style="margin-left: 1em"><p>Thanks, I get it - a user who belongs to Users group is capable to &quot;Add&quot; a Russian keyboard layout (not being an Admin) only because the file kbdru.dll is already in System32 and is already registered in HKLM. Righ?</p></div>
+<p><a id="1616160" href="#1616160">#</a> <strong>Michael S. Kaplan</strong> on Tuesday, February 06, 2007 10:32 PM:</p><div style="margin-left: 1em"><p>Exactly. There are two different operations:</p>
+<p>1) Installing a new keyboard layout on the machine.</p>
+<p>2) Adding a keyboard on the machine to the user's Language Bar.</p>
+<p>#1 requires you to be an admin, but #2 does not.</p>
+<p>Now MSKLC 1.4 blurs the line a little bit since it will actually try to do both things when you run setup (due to user confusion at needing to go through separate steps to get #2 done when doing #1). But there are still these two separate operations....</p></div>
+<p><a id="1620839" href="#1620839">#</a> <strong>PaulGor</strong> on Wednesday, February 07, 2007 1:02 PM:</p><div style="margin-left: 1em"><p>MSKLC 1.4 as well as setup.exe it bulds require .NET 2.0</p>
+<p>There was no complain about that on the 32-bit Vista machine I found in the lab at work.</p>
+<p>So Vista already has .NET 2.0, right?</p></div>
+<p><a id="1622124" href="#1622124">#</a> <strong>Michael S. Kaplan</strong> on Wednesday, February 07, 2007 5:14 PM:</p><div style="margin-left: 1em"><p>setup.exe used by built keyboard layouts does not require .NET of any version; MSKLC the tool does require 2.0.</p>
+<p>Vista has a recent enough version, yes.</p></div>
+<p><a id="1628753" href="#1628753">#</a> <strong>PaulGor</strong> on Thursday, February 08, 2007 1:10 PM:</p><div style="margin-left: 1em"><p>MSKLC &quot;package&quot; question.</p>
+<p>Somehow I thought that setup.exe is the program that checks Windows version and does needed things to layout files, but apparently it does not work without .msi files.</p>
+<p>Why then it's kind of large? Entire .zip takes 300k - is it a little bit too much for copying couple dll to their folders and make Registry changes?</p></div>
+<p><a id="1628765" href="#1628765">#</a> <strong>Michael S. Kaplan</strong> on Thursday, February 08, 2007 1:15 PM:</p><div style="margin-left: 1em"><P>If you look at the series I did about <A class="" href="http://archives.miloush.net/michkap/archive/2006/12/27/1368334.html"><STRONG>Converting a Project to Unicode</STRONG></A>, you will see exactly where setup.exe comes from (the extra step is code I added that decides which .MSI file to use).</P>
+<P>Since setup.exe, three .MSI files, and four DLLs are there, these things will take a small amount of space.... how else to support three different platforms?</P></div>
+<p><a id="1630315" href="#1630315">#</a> <strong>Dean Harding</strong> on Thursday, February 08, 2007 6:10 PM:</p><div style="margin-left: 1em"><p>I've also found that setup.exe's are usually a bit bigger because they link to the c runtime statically, rather than dynamically (i.e. to the .lib, rather than the .dll). Obviously, your setup.exe needs to have as few dependencies as possible (usually just USER32, KERNEL32 and GDI32 if you can!) and you certainly can't be sure the user has the c runtime installed (at least, not for VC8, maybe in Vista?) so you link statically. Thus making the executable bigger.</p></div>
+<p><a id="1630579" href="#1630579">#</a> <strong>Michael S. Kaplan</strong> on Thursday, February 08, 2007 7:10 PM:</p><div style="margin-left: 1em"><p>In the case of MSKLC, we dynamically link to msvcrt.dll, using the rules that let us link to the ones in earlier versions. Since we do not run on Win9x anyway, the fact that Win95 may not have the DLL did not seem too terribly important. :-)</p></div>
+<p><a id="1630836" href="#1630836">#</a> <strong>Dean Harding</strong> on Thursday, February 08, 2007 8:15 PM:</p><div style="margin-left: 1em"><p>Yeah, that would be another option.</p></div>
+<p><a id="2256294" href="#2256294">#</a> <strong>Francis Leboutte</strong> on Tuesday, April 24, 2007 2:06 AM:</p><div style="margin-left: 1em"><p>Hello</p>
+<p>I'm trying to update and port my French Dvorak layouts to Vista (see URL). I have installed .NET Framework 2.0 and last version of MS KLC on a XP pro PC. MS KLC starts but doesn't display any layout (just a gray background). Anything else seems to work, for example I can load one of my old source file and test it or validate it. What can I do?</p>
+<p>Thanks,</p>
+<p>Francis</p></div>
+<p><a id="2256423" href="#2256423">#</a> <strong>Michael S. Kaplan</strong> on Tuesday, April 24, 2007 2:19 AM:</p><div style="margin-left: 1em"><P>Hi Francis,</P>
+<P>See <STRONG><A class="" href="http://archives.miloush.net/michkap/archive/2007/04/19/2185812.html">this</A></STRONG> post, it sounds like the same issue as what you are seeing?</P></div>
+<p><a id="2257558" href="#2257558">#</a> <strong>Francis Leboutte</strong> on Tuesday, April 24, 2007 3:53 AM:</p><div style="margin-left: 1em"><p>Exactly. Changing the DPI and rebooting fixes the problem. Thank you. Have a nice day,</p>
+<p>Francis</p></div>
+<hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2011/05/23 <a href="http://archives.miloush.net/michkap/archive/2011/05/23/10167319.html">Philosophical about enablement, the impossible, and the infeasible</a></p><p>2010/05/04 <a href="http://archives.miloush.net/michkap/archive/2010/05/04/10003033.html">The wacky world of WOW64 keyoards, un-leashed, un-locked, un-something-or-other</a></p><p>2008/08/27 <a href="http://archives.miloush.net/michkap/archive/2008/08/27/8896193.html">Uniqueness of the Name and Description...</a></p><p>2008/05/10 <a href="http://archives.miloush.net/michkap/archive/2008/05/10/8484238.html">Why Bengali keyboards can't be found on XP 64 bit</a></p><p>2007/02/07 <a href="http://archives.miloush.net/michkap/archive/2007/02/07/1616301.html">I do not think that word means what the Platform SDK thinks it means</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2007/01/31/1563080.html" title="Where is the character?">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2007/01/30/1556199.html" title="What to do if she sees right through you">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2007-01">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2007-01-30">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2007/01/30/1557184.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:38 GMT -->
+</html>

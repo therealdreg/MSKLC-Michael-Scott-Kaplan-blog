@@ -1,0 +1,38 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2011/06/30/10181768.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Falling back can sometimes be falling over</title></head><body>
+<h1>Falling back can sometimes be falling over</h1>
+<p><em>by Michael S. Kaplan, published on 2011/06/30 07:01 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2011/06/30/10181768.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<p><span style="color: #ff0000;"><em>This blog reminds me of <strong>"<a title="Fall over&quot; is not the same thing as &quot;fall back&quot;" href="http://archives.miloush.net/michkap/archive/2008/05/22/8519481.html">Fall over" is not the same thing as "fall back"</a></strong> for [hopefully] somewhat obvious&nbsp;reasons....</em></span></p>
+<p>It is the most simple and innocent of questions that can tend to add to the most convoluted of answers.</p>
+<p>Like yesterday.</p>
+<p>The question was:</p>
+<p style="padding-left: 60px;"><em><span style="font-family: times new roman,times; font-size: medium;">Hello,</span></em></p>
+<p style="padding-left: 60px;"><em><span style="font-family: times new roman,times; font-size: medium;">I&rsquo;m wondering where could I get a list of languages with info regarding the preferred fallback language for each of them.</span></em></p>
+<p style="padding-left: 60px;"><em><span style="font-family: times new roman,times; font-size: medium;">Thanks for your help.</span></em></p>
+<p>This is just such a question.</p>
+<p>Unfortunately, there are two different answers.</p>
+<p>I mean, at least two answers.</p>
+<p>Even after you ignore the kinds of questions that issues like&nbsp;Raymond's <a href="http://blogs.msdn.com/b/oldnewthing/archive/2010/05/07/10008871.aspx">The many ways of converting a string from one language to another</a> bring up.</p>
+<p>So in one case, you have the fallback described by the Win32 GetLocaleInfoEx/LOCALE_SPARENT and managed CultureInfo.Parent chain.</p>
+<p>This one will, for example, tell you that <strong>uk-UA</strong> (Ukrainian - Ukraine) falls back to <strong>uk</strong> (Ukrainian - Neutral), which falls back to Invariant.</p>
+<p>And in the other case, you have the fallback officially determined for language resources.</p>
+<p>This one will, for example,&nbsp;tell you&nbsp;that <strong>uk-UA</strong> (Ukrainian - Ukrainian) falls back to <strong>ru-RU</strong> (Russian - Russia), which falls back to English.</p>
+<p>Um.</p>
+<p>Which one is right?</p>
+<p>In managed code, the first one is right -- it is how the resource loader works. Though in&nbsp;.Net 4.0&nbsp;it co-opts some of the native resource fallback list.</p>
+<p>In native (Win32) code, it is a complicated system that builds a UI language list built up from principally the second one, though essentially including the first one as well in most cases.</p>
+<p>If (given the fact that Windows uses both native and managed code) this sounds vaguely insane to you, then you should vaguely congratulate yourself for being vaguely on track.</p>
+<p>Because all of this way to freaking complicated for words, for no good reason.</p>
+<p>Especially since the LOCALE_SPARENT/CultureInfo.Parent scheme should be able to return the "combined" list of (for example):</p>
+<p><strong>uk-UA</strong> --&gt; <strong>uk</strong> --&gt; <strong>ru-RU</strong> --&gt; <strong>ru</strong> --&gt; <strong>en-US</strong> --&gt; <strong>en</strong> --&gt; <strong>Invariant</strong></p>
+<p>So that the rules of both lists can be accommodated, in ways that users can appreciate the results of and developers query and use as they need (from either native or managed code).</p>
+<p>For now we just live with the very different scenarios leading to very different results....</p>
+<hr/><p><strong>Jan Kučera</strong> on 30 Jun 2011 11:25 PM:</p><div style="margin-left: 1em"><p>Well actually the interesting part to me is what should I fallback to from sr-Latn-BA and similar cases... &nbsp;to sr-Cyrl-BA or sr-Latn (and vice versa)? Should I be giving more importance to the regional differences (eg. date format, currency etc.) or to the script - maybe people could happen to not to know the other script?</p>
+</div>
+<p><strong>Peter Krefting</strong> on 1 Jul 2011 12:36 AM:</p><div style="margin-left: 1em"><p>Well, in reality, it is a personal preference, so instead of specifying a single language for a locale, I&#39;d like to specify a list of languages, just like I do in the language settings of my web browser (I have mine set up as sv --&gt; nb --&gt; no --&gt; da --&gt; nn --&gt; en --&gt; de). Mac OS X lets me do this, and I sometimes do get Norwegian or Danish UI in software that I install that do not have Swedish localization, and I do prefer that to English, but I do know people who would not like that to happen.</p>
+</div>
+<hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2011/07/01/10182228.html" title="Once more into the UCS-2 breach, SQL Server marches">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2011/06/29/10181212.html" title="There&#39;s no &quot;I&quot; in IDN, part 5: Stephen Colbert&#39;s job is not in any jeopardy">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2011-06">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2011-06-30">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2011/06/30/10181768.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+</html>

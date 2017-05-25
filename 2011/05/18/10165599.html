@@ -1,0 +1,60 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2011/05/18/10165599.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>A difference that makes no difference makes a blog</title></head><body>
+<h1>A difference that makes no difference makes a blog</h1>
+<p><em>by Michael S. Kaplan, published on 2011/05/18 07:01 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2011/05/18/10165599.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<p>One of the most interesting things about digit substitution is the weird cases.</p>
+<p>like if you look at the relevant fields you get from <a href="http://msdn.microsoft.com/library/dd318101.aspx">GetLocaleInfo</a> or <a href="http://msdn.microsoft.com/library/dd318103.aspx">GetLocaleInfoEx</a>:</p>
+<p><a href="http://msdn.microsoft.com/library/dd373863.aspx">LOCALE_SNATIVEDIGITS</a>: </p>
+<p style="padding-left: 30px;">Native equivalents of ASCII 0 through 9. The maximum number of characters allowed for this string is eleven, including a terminating null character. For example, Arabic uses "٠١٢٣٤٥ ٦٧٨٩". See also LOCALE_IDIGITSUBSTITUTION.</p>
+<p><a href="http://msdn.microsoft.com/library/dd373769.aspx">LOCALE_IDIGITSUBSTITUTION</a>: </p>
+<table align="center" cellpadding="3" cellspacing="3" border="1" style="width: 95%;">
+<tbody>
+<tr>
+<th>Value</th><th>Meaning</th>
+</tr>
+<tr>
+<td>0</td>
+<td>Context-based substitution. Digits are displayed based on the previous text in the same output. European digits follow Latin scripts, Arabic-Indic digits follow Arabic text, and other national digits follow text written in various other scripts. When there is no preceding text, the locale and the displayed reading order determine digit substitution, as shown in the following table.
+<div xmlns="http://www.w3.org/1999/xhtml" class="mtps">
+<div class="mtps"><span class="mtps">Locale&nbsp;&nbsp;&nbsp;&nbsp; </span><span class="mtps">Reading order&nbsp;&nbsp;&nbsp;&nbsp; </span><span class="mtps">Digits used</span></div>
+<div class="mtps"><span class="mtps">Arabic&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span class="mtps">Right-to-left&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span class="mtps">Arabic-Indic</span></div>
+<div class="mtps"><span class="mtps">Thai&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span class="mtps">Left-to-right&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span class="mtps">Thai digits</span></div>
+<div class="mtps"><span class="mtps">All others </span><span class="mtps">Any&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span class="mtps">No substitution used</span></div>
+</div>
+</td>
+</tr>
+<tr>
+<td>1</td>
+<td>No substitution used. Full Unicode compatibility.</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Native digit substitution. National shapes are displayed according to LOCALE_SNATIVEDIGITS.</td>
+</tr>
+</tbody>
+</table>
+<p>So basically <a href="http://msdn.microsoft.com/library/dd373863.aspx">LOCALE_SNATIVEDIGITS</a>&nbsp;can be some native set of digits.</p>
+<p>And <a href="http://msdn.microsoft.com/library/dd373769.aspx">LOCALE_IDIGITSUBSTITUTION</a>&nbsp;decides whether to always use 0123456789 (which happens when the value is 1), to always be <a href="http://msdn.microsoft.com/library/dd373863.aspx">LOCALE_SNATIVEDIGITS</a>&nbsp;(which happens when the value is 2), or to sometimes be one and sometimes another (which happens when the value is 0, for some locales).</p>
+<p>Of course the times these settings fall down is any time <a href="http://msdn.microsoft.com/library/dd373863.aspx">LOCALE_SNATIVEDIGITS</a>&nbsp;is "0123456789" and <a href="http://msdn.microsoft.com/library/dd373769.aspx">LOCALE_IDIGITSUBSTITUTION</a>&nbsp;is 0 or 2 -- since these settings basically ask the system to replace 0123456789 to 0123456789.</p>
+<p>Oops.</p>
+<p>Now of course you can set it this way yourself in Regional and Language Options. </p>
+<p>And every version of Windows has had some locales that have data like this in anywhere from at least&nbsp;2 to 6 locales.</p>
+<p>Here's some managed code that builds a list:</p>
+<hr />
+<p><span style="font-family: Consolas,Lucida Console,Courier New,Courier,Fixed;"><b>using System;<br />using System.Text;<br />using System.Globalization;<br />using System.Runtime.InteropServices;<br /><br />public class Test {<br />&nbsp;&nbsp;&nbsp; public static void Main() {<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; StringBuilder sb;<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; foreach(CultureInfo ci in CultureInfo.GetCultures(CultureTypes.SpecificCultures)) {<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; uint uDS;<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; GetLocaleInfoW((uint)ci.LCID, LOCALE_IDIGITSUBSTITUTION | LOCALE_RETURN_NUMBER, out uDS, 4);<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; if(uDS==0 || uDS==2) {<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; sb = new StringBuilder(11);<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; GetLocaleInfoW((uint)ci.LCID, LOCALE_SNATIVEDIGITS, sb, 11);<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; if(sb.ToString().Equals("0123456789")) {<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Console.WriteLine("{0}\tIDIGITSUBSTITUTION=={1}\t SNATIVEDIGITS=={2}", ci.Name, uDS, sb.ToString());<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }<br />&nbsp;&nbsp;&nbsp; }<br /><br />&nbsp;&nbsp;&nbsp; static uint LOCALE_RETURN_NUMBER = 0x20000000;<br />&nbsp;&nbsp;&nbsp; static uint LOCALE_IDIGITSUBSTITUTION = 0x1014;<br />&nbsp;&nbsp;&nbsp; static uint LOCALE_SNATIVEDIGITS = 19;<br /><br />&nbsp;&nbsp;&nbsp; [DllImport("kernel32.dll", CharSet=CharSet.Unicode, ExactSpelling=true, CallingConvention=CallingConvention.StdCall)]<br />&nbsp;&nbsp;&nbsp; private static extern int GetLocaleInfoW(uint Locale, uint LCType, StringBuilder lpLCData, int cchData);<br /><br />&nbsp;&nbsp;&nbsp; [DllImport("kernel32.dll", CharSet=CharSet.Unicode, ExactSpelling=true, CallingConvention=CallingConvention.StdCall)]<br />&nbsp;&nbsp;&nbsp; private static extern int GetLocaleInfoW(uint Locale, uint LCType, out uint lpLCData, int cchData);<br />}</b></span></p>
+<hr />
+<p>You can run this on various versions of Windows.</p>
+<p>Like in XP SP2, the list is ky-KG, mn-MN, ar-LY, ar-DZ, ar-MA, and ar-TN.</p>
+<p>Or In Windows Server 2008, where the improved list is ky-KG and MN-MN.</p>
+<p>Or&nbsp;in Windows 7, where the small backslide the list is en-US, ar-LY, ar-DZ, ar-MA, and ar-TN.</p>
+<p>Ultimately there are two problems here -- one to do with theoretical data purity (the data just seems wrong), and the other to do with data performance (asking the system to do processing that isn't necessary can have performance impact).</p>
+<p>Though in practice, since a user can set it the same way in Regional and Language Options, I'd rather that the system just determined when the operation would be a no-op (this scenario) and just stopped processing. Since then everyone will benefit, including any user with the wrong settings, any custom locale with the wrong settings, and any future data with the wrong settings (the latter is a reasonable supposition since very version has been wrong in at least a &nbsp;few cases so far!).</p>
+<p>Even if this&nbsp;optimization is not happening (it may be!) and even if it never happens, the "wrong" data doesn't lead to wrong results.</p>
+<p>Thus my conclusion:</p>
+<p>You see, as any cat will tell you, curiosity never killed anything other than a few hours.</p>
+<p>And a difference that makes no difference? It makes <span style="color: #888888; text-decoration: line-through;">no difference</span>a blog.</p>
+<hr/><div style="margin-left: 1em"><em>no comments</em></div><hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2011/10/06 <a href="http://archives.miloush.net/michkap/archive/2011/10/06/10221131.html">The unused case case (i.e. the case of the unused case), part 2</a></p><p>2011/10/05 <a href="http://archives.miloush.net/michkap/archive/2011/10/05/10220274.html">The unused case case (i.e. the case of the unused case)</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2011/05/19/10166285.html" title="How do I find out what state you&#39;re in?">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2011/05/17/10164632.html" title="You can choose to *not* impose a &quot;Non-English Tax&quot; on your feature. Or you can be a jerk. Whichever....">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2011-05">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2011-05-18">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2011/05/18/10165599.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+</html>

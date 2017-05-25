@@ -1,0 +1,20 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2006/08/12/696284.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:39 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Getting string comparisons of file names right</title></head><body>
+<h1>Getting string comparisons of file names right</h1>
+<p><em>by Michael S. Kaplan, published on 2006/08/12 03:01 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2006/08/12/696284.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<FONT face=Tahoma>
+<P>I have spoken of the importance of using .NET 2.0's OrdinalIgnoreCase and Vista's CompareStringOrdinal for comparisons of symbolic identifiers in the past many times. </P>
+<P>But not everyone reads this blog, of course. :-) </P>
+<P>Just yesterday,&nbsp;a question that was asked kind proves that: </P>
+<BLOCKQUOTE dir=ltr style="MARGIN-RIGHT: 0px">
+<P><FONT face="Times New Roman" size=2>Hi<BR><BR>I was going through this link <A href="http://msdn.microsoft.com/netframework/default.aspx?pull=/library/en-us/dndotnet/html/StringsinNET20.asp">http://msdn.microsoft.com/netframework/default.aspx?pull=/library/en-us/dndotnet/html/StringsinNET20.asp</A> which encourages usage of StringComparison.Ordinal for filename comparisons. Basically, I would like to understand what will be the response in the following case:<BR><BR><FONT face="Consolas,Courier New"><STRONG>filename.StartsWith(parentname, StringComparison.OrdinalIgnoreCase)<BR></STRONG></FONT><BR>parentname: file1<BR>filename: FILE1TEXT<BR>current culture: Turkish<BR><BR>I believe, in this case it will return true. However, being a Turkish user I would like the call to fail because I is not the upper case of i. In this case how do we make the comparisons.<BR><BR>Cheers</FONT></P></BLOCKQUOTE>
+<P>Well, I think I mentioned <A href="http://archives.miloush.net/michkap/archive/2005/06/02/424128.html">previously</A> that the <A href="http://msdn.microsoft.com/netframework/default.aspx?pull=/library/en-us/dndotnet/html/StringsinNET20.asp">New Recommendations for Strings in .NET 2.0</A> were confusing. Sort of proves my point, huh? :-)</P>
+<P>It is natural if one has expectations in one's language for one to expect that the OS will use those same rules. The only problem is that sometimes it doesn't. Especially in this case....</P>
+<P>OrdinalIgnoreCase <STRONG>is</STRONG> the way to go in this situation. The only way to go, in fact!</P>
+<P>&nbsp;</P>
+<P><FONT color=#ff1493><EM>This post brought to you by</EM> <STRONG><FONT size=6>İ</FONT></STRONG> <EM>(<A href="http://www.fileformat.info/info/unicode/char/0130">U+0130</A>, a.k.a. LATIN CAPITAL LETTER I WITH DOT ABOVE)</EM></FONT></P></FONT>
+<hr/><div style="margin-left: 1em"><em>no comments</em></div><hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2007/09/23 <a href="http://archives.miloush.net/michkap/archive/2007/09/23/5070899.html">If it isn't Unicode, it isn't ANY code!</a></p><p>2006/12/04 <a href="http://archives.miloush.net/michkap/archive/2006/12/04/1203795.html">SQL and the CLR: Part 0</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2006/08/13/697002.html" title="Snakes on an Invisible Plane">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2006/08/12/696161.html" title="You think that&#39;s bad? Just wait, it gets worse...">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2006-08">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2006-08-12">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2006/08/12/696284.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:39 GMT -->
+</html>

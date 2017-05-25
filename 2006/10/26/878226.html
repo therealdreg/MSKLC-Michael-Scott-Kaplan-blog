@@ -1,0 +1,48 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2006/10/26/878226.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:39 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Suggest a Topic!</title></head><body>
+<h1>Suggest a Topic!</h1>
+<p><em>by Michael S. Kaplan, published on 2006/10/26 23:20 -07:00, original URI: http://blogs.msdn.com/michkap/pages/878226.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostOld -->
+<H2>Suggest a Topic (October 26th, 2006) </H2>
+<DIV class=postcontent>
+<P><FONT face=Tahoma>Yes, here is where you can suggest a topic for future coverage by <EM>Sorting it all Out</EM>. I will allow any item that even remotely&nbsp;makes sense for me to cover, and will probably remove items after they are covered. We'll see how it goes, I am new at this....</FONT></P>
+<P><FONT face=Tahoma>(Due to the way the blog server is set up, comments close in 90 days. At this point, a new suggestion page gets set up every 90 days, if I don't forget to create a new one. I'll try to not forget. :-)</FONT></P>
+<P><FONT face=Tahoma></FONT>&nbsp;</P>
+<P><FONT face=Tahoma><STRONG><FONT size=4>Older suggestion pages (these suggestions are still "on the list" to happen):</FONT></STRONG><BR><A class="" href="http://archives.miloush.net/michkap/archive/2006/07/25/678160.html" mce_href="http://archives.miloush.net/michkap/archive/2006/07/25/678160.html">July 2006</A><BR></FONT><A href="http://archives.miloush.net/michkap/archive/2005/04/01/404554.html"><FONT face=Tahoma>April 2005</FONT></A></P></DIV>
+<hr/><p><a id="923658" href="#923658">#</a> <strong>Michael Liu</strong> on Wednesday, November 01, 2006 11:42 AM:</p><div style="margin-left: 1em"><p>Is there a WideCharToMultiByte equivalent in .NET 1.1/2.0 for the ASCII code page? I'd like to perform a best-fit mapping of non-ASCII characters (for a legacy system) but both Encoding.ASCII and Encoding.GetEncoding(20127) simply turn non-ASCII characters into ???????. The following code does what I want, but it uses reflection to access the internal CodePageEncoding type:</p>
+<p>String s = &quot;...&quot;;</p>
+<p>Type t = Type.GetType(&quot;System.Text.CodePageEncoding&quot;, true);</p>
+<p>Encoding e = (Encoding) Activator.CreateInstance(t, new Object[] { 20127 });</p>
+<p>s = Encoding.Default.GetString(e.GetBytes(s));</p></div>
+<p><a id="930842" href="#930842">#</a> <strong>Mike Dimmick</strong> on Thursday, November 02, 2006 9:03 AM:</p><div style="margin-left: 1em"><P>I've noticed over the last few days that IE 7.0 seems to be substituting a different font for U+20AC, the Euro sign (<STRONG>€</STRONG>), than the paragraph's font would seem to suggest. For whatever reason it seems to be coming from the user's selected font in Internet Options. I'm running IE7 final on Windows XP (7.0.5730.11). I noticed this because my default font is Georgia, and the shape of the glyph is particularly jarring with surrounding text in Arial or Verdana.</P>
+<P>I'd have put this on Connect but the IE7 feedback site is still closed (presumably until Vista RTMs).</P>
+<P>Another annoyance is that IE7's installer seems to reset the fonts selected in this dialog back to the defaults - Times New Roman and (spit) Courier New. There's a reason that Lucida Console is the default in Notepad these days (in Windows XP).</P></div>
+<p><a id="933090" href="#933090">#</a> <strong>Mike Dimmick</strong> on Thursday, November 02, 2006 12:23 PM:</p><div style="margin-left: 1em"><p>Damn. Doesn't seem to be doing it here. It is doing it on Wikipedia and The Register when the font is bold, but not when 'not bold'. Example: <a rel="nofollow" target="_new" href="http://en.wikipedia.org/wiki/Euro">http://en.wikipedia.org/wiki/Euro</a>, <a rel="nofollow" target="_new" href="http://www.theinquirer.net/default.aspx">http://www.theinquirer.net/default.aspx</a> (headline 'Google rejects €34 million fine').</p></div>
+<p><a id="1182668" href="#1182668">#</a> <strong>ph_arnaud</strong> on Friday, December 01, 2006 5:35 AM:</p><div style="margin-left: 1em"><p>Hi,</p>
+<p>How are applications running on localized Vista supposed to show filepath names to the user with localized folder names?</p>
+<p>For example:</p>
+<p>At least in German Vista Ultimate and Home, a dir in command prompt shows:</p>
+<p>C:\Program Files</p>
+<p>C:\Users</p>
+<p>C:\Windows</p>
+<p>(not showing hidden or system items).</p>
+<p>Windows Explorer shows:</p>
+<p>C &gt; Benutzer</p>
+<p>C &gt; Programme</p>
+<p>C &gt; Windows</p>
+<p>If UI shows a confirmation message with a path name say to some user application data file using:</p>
+<p>SHGetFolderPath ( CSIDL_MYPICTURES )</p>
+<p>this function returns:</p>
+<p>C:\Users\admin\Pictures</p>
+<p>(I had hoped this would return the localized name, then all legacy code would show localized UI strings on Vista without more effort... and couldn't the hidden 'junctions' folders actually make the path a valid one? &nbsp;well a digression, it doesn't seem to work that way...)</p>
+<p>Is this purpose of SHGetLocalizedName(), to convert a path such as returned by SHGetFolderPath to something the user would understand browsing with Windows Explorer?</p>
+<p>C:\Betnutzer\admin\Bilder</p>
+<p>I've tried using SHGetLocalizedName on the result of SHGetFolderPath but get an error (GetLastError returns 'Invalid window handle')</p>
+<p>Is it worth trying to figure this out, because this is the solution to my question, or is another approach (different API function better)?</p>
+<p>I would expect this would confuse average users, who don't use the command line, to see English folder names coming from their Vista applications, while Explorer shows localized names for directories.</p>
+<p>However I noticed that German WordPad and Paint show the English names of directories in the MRU list in German Vista, which doesn't match my expectation for consistent folder names.</p>
+<p>thanks for your insight on this.</p></div>
+<hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2006/10/27/878277.html" title="When collations collide?">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2006/10/26/874646.html" title="&#39;Managing&#39; [List] Separator Anxiety">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2006-10">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2006-10-26">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2006/10/26/878226.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:39 GMT -->
+</html>

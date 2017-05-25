@@ -1,0 +1,36 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2010/06/08/10017386.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:35 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Hunting for VK_HANGUL, aka If you press a key that your code can't process, did you really press it?</title></head><body>
+<h1>Hunting for VK_HANGUL, aka If you press a key that your code can't process, did you really press it?</h1>
+<p><em>by Michael S. Kaplan, published on 2010/06/08, original URI: http://blogs.msdn.com/b/michkap/archive/2010/06/08/10017386.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNewMonth -->
+<p><span style="color: #ff0000;"><em>The title is an allusion&nbsp;to one of the only Hardy Boys novels I was able to get into growing up (<a href="http://en.wikipedia.org/wiki/Hunting_for_Hidden_Gold">this one</a>), especially the original version which is the one I read first. There is neither literal nor symbolic connection between the books and this blog, though the differences between the two versions might be an interesting future blog....</em></span></p>
+<p>Rob's question was direct and to the point:</p>
+<p style="PADDING-LEFT: 30px; FONT-FAMILY: "><span style="font-family: times new roman,times;"><em>[Our product] uses a keyboard filter to ensure that input from specific keyboards goes only to specific sessions running on the machine.&nbsp; We recently discovered that the Korean keyboard&rsquo;s Han/Eng (VK_HANGUL) key does not work.&nbsp; </em></span></p>
+<p style="PADDING-LEFT: 30px; FONT-FAMILY: "><span style="font-family: times new roman,times;"><em>We&rsquo;re getting a scan code of 0x0072 from the driver.&nbsp; This eventually gets passed to MapVirtualKeyEx (scancode, MAPVK_VSC_TO_VK[_EX], hklKorean), which fails to convert to a VK.</em></span></p>
+<p style="PADDING-LEFT: 30px; FONT-FAMILY: "><span style="font-family: times new roman,times;"><em>Working the other way to see what MVKE expected, it returns a scan code of 0xE038 for VK_HANGUL.&nbsp; This seems weird because 1) it&rsquo;s not what the keyboard actually sends, and 2) it&rsquo;s identical to VK_RMENU (which unsurprisingly does not map to a scan code if using a Korean layout).</em></span></p>
+<p style="PADDING-LEFT: 30px; FONT-FAMILY: "><span style="font-family: times new roman,times;"><em>Our standard method of feeding raw scan codes to MKVE to convert to virtual keys works for everything else, so I wondered if anyone could shed some light on why VK_HANGUL is special, and how raw input thread is able to map/translate this scancode into something that MVKE is willing to convert.</em></span></p>
+<p style="PADDING-LEFT: 30px; FONT-FAMILY: "><span style="font-family: times new roman,times;"><em>Thanks,<br />Rob</em></span></p>
+<p>Now it's a funny thing about keys like that Han/Eng key. </p>
+<p>By which I mean this key:</p>
+<p><img src="http://trigeminal.fmsinc.com/images/koreankbd2.jpg" border="0" /></p>
+<p>The funny thing?</p>
+<p>That they aren't a part of the keyboard layout DLL mapping, the one that exists between <strong>scan code</strong> values and <strong>virtual key</strong> values.</p>
+<p>There is another very well known key that behaves somewhat like this.</p>
+<p>One that I discussed years ago in <a href="http://archives.miloush.net/michkap/archive/2006/09/26/771554.html"><strong>In case you have a yen to extend your keyboard (or at least want a yen?)</strong></a>.</p>
+<p>This key:</p>
+<p><img src="http://trigeminal.fmsinc.com/images/japanese_keyboard.png" /></p>
+<p>Yep, that old Yen key.</p>
+<p>Now the two cases are not completely analogous (one is a modifier key, the other one that contains a character), but in both cases the results are completely IME moderated and thus you cannot use the keyboarding functions in USER32.DLL to interrogate the HKL for information.</p>
+<p>Now let's say you wanted (rather than creating a keyboard layout that made use of a key, as was the case in that older blog) to work with the existing keyboards as they are.</p>
+<p>Believe it or not, the answer is very simple -- you have to hard code the <strong>scan code</strong> value and do the special operation you want to with it.</p>
+<p>This may urk you, it urks me as well.</p>
+<p>Though if you stop and think about it, are the IMEs doing anything better here?</p>
+<p>The Input Method Editors are essentially doing the same thing in this case -- hard coding these specific keys to get their work done.</p>
+<p>And we know this because the sophisticated functions used to interrogate keyboard layouts do not return the information in question, the information that they return for pretty much every other key on the keyboard....</p>
+<p>Now of course this leaves one final bit of mess in the case of <strong>VK_HANGUL</strong>: the fact that trying to map it to a <strong>scan code</strong> returns a value (and the wrong value, at that!). this part seems to me like kind of a bug, like someone hitting the end of a table and returning the last value in the table, even though it is technically wrong. </p>
+<p>But fixing it now after it has behaved that way for over a decade, for the sake of a key that won't work unless it is used by every IME that doesn't depend on a working mapping? </p>
+<p>Trying to get that bug addressed would definitely be an uphill battle!</p>
+<hr/><div style="margin-left: 1em"><em>comments not archived</em></div><hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2010/06/09/10019823.html" title="About that Portuguese localization question, redux...">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2010/06/07/10019790.html" title="Malay or Malaysian?">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2010-06">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2010-06-08">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2010/06/08/10017386.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:35 GMT -->
+</html>

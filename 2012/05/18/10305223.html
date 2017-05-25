@@ -1,0 +1,87 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2012/05/18/10305223.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:33 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>There's no "I" in IDN, part 13: Desktop and Managed and Metro; oh my!</title></head><body>
+<h1>There's no "I" in IDN, part 13: Desktop and Managed and Metro; oh my!</h1>
+<p><em>by Michael S. Kaplan, published on 2012/05/18 07:01 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2012/05/18/10305223.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<p>Previous blogs in this series:</p>
+<ul>
+<li><strong><a title="part 12: Emoji + IDN == U+1F4A9 (PILE OF POO)" href="../../02/27/10273315.html">part 12: Emoji + IDN == U+1F4A9 (PILE OF POO)</a></strong></li>
+<li><strong><a title="part 11: There's no place like ::1, not even 127.0.0.1!" href="../../../2011/10/25/10229790.html">part 11: There's no place like ::1, not even 127.0.0.1!</a></strong></li>
+<li><strong><a title="part 10: Who needs IDN support? How much? When? (Part 2)" href="../../../2011/09/21/10214081.html">part 10: Who needs IDN support? How much? When? (Part 2)</a></strong></li>
+<li><strong><a title="part 9: Who needs IDN support? How much? When? (Part 2)" href="../../../2011/09/16/10212216.html">part 9: Who needs IDN support? How much? When? (Part 1)</a></strong></li>
+<li><strong><a title="part 8: Punycode don't do the PUA" href="../../../2011/08/12/10195062.html">part 8: Punycode don't do the PUA</a></strong></li>
+<li><strong><a title="part 7: IDN comes to AdWords" href="../../../2011/07/28/10190701.html">part 7: IDN comes to AdWords</a>&nbsp;</strong></li>
+<li><strong><a title="part 6: It isn't like there's an &quot;I&quot; in EAI, either!" href="../../../2011/07/14/10186414.html">part 6: It isn't like there's an "I" in EAI, either!</a></strong></li>
+<li><strong><a title="part 5: Stephen Colbert's job is not in any jeopardy" href="../../../2011/06/29/10181212.html">part 5: Stephen Colbert's job is not in any jeopardy</a></strong></li>
+<li><strong><a title="part 4: the 'path' to Hell is paved with IDN bugs" href="../../../2011/06/17/10173790.html">part 4: the 'path' to Hell is paved with IDN bugs</a></strong></li>
+<li><strong><a title="part 3: There's no &quot;I&quot; in DIY, either!" href="../../../2011/05/25/10168228.html">part 3: There's no "I" in DIY, either!</a></strong></li>
+<li><strong><a title="part 2: Try not to use the wrong functions!" href="../../../2011/04/02/10149149.html">part 2: Try not to use the wrong functions!</a></strong></li>
+<li><strong><a title="part 1: If you're not Unicode, you're just wrong!" href="../../../2011/02/14/10128621.html">part 1: If you're not Unicode, you're just wrong!</a></strong></li>
+</ul>
+<p>I might have been the only software developer in the world&nbsp;who is confused about the world of "Desktop" versus "Metro".</p>
+<p>Though I'm inclined to doubt it. :-)</p>
+<p>Like when I was asked just the other day:</p>
+<p style="padding-left: 30px;"><span style="font-family: times new roman,times; font-size: medium;"><em>I am looking for an API that converts Unicode to Punycode.&nbsp; I can see that there&rsquo;s already a .NET API just for this, but it&rsquo;s not in Metro.&nbsp; What would it take to make it Metro?</em></span></p>
+<p>&nbsp;My first thought was to point to <a href="http://msdn.microsoft.com/library/windows/desktop/dd318149.aspx">IdnToAscii</a>.</p>
+<p>A function that claims to be available to both Desktop and Metro apps.</p>
+<p>But someone was concerned about this answer:</p>
+<p style="padding-left: 30px;"><span style="font-family: times new roman,times; font-size: medium;"><em>As far as I know, IdnToAscii is only for C++.<br />The&nbsp;question is for C#/VB.</em></span></p>
+<p>Okay, here is where things get complicated.</p>
+<p>I think I have it straight now, though.</p>
+<p>Here are the travails to get there -- imagine each one required several emails to clarify (since each one did!):</p>
+<ul>
+<li>The Base Class Libraries (BCL) in the .NET Framework that runs on ARM is a subset of the full&nbsp;BCL. (<strong>OH NO!</strong>)</li>
+<li>The System.Globalization Namespace is included in that subset (<strong>OH YES!</strong>)</li>
+<li>The IdnMapping class is apparently not being included (<strong>OH NO!</strong>)</li>
+<li>The IdnToAscii function is available to both the Desktop and Metro apps (<strong>OH YES!</strong>)</li>
+<li>If you are using C# or VB, p/invoke cannot be used to run arbitrary code (<strong>OH NO!</strong>)</li>
+<li>IdnToAscii is on the white list of legal functions to p/invoke to (<strong>OH YES!</strong>)</li>
+</ul>
+<p>So really, the fact that you cannot get all of this from a glance at the docs is that the docs are a work in progress.</p>
+<p>But I can live with that -- as long as people can get to functionality, they are not blocked.</p>
+<p>We can get stuff done!</p>
+<p>Whether&nbsp;Desktop or Metro.</p>
+<p>Whether Native or Managed.</p>
+<p>Whether x86 or x64 or WoA (ARM).</p>
+<p>I think I know what my first Modern app will be!</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<hr/><p><strong>Joshua</strong> on 18 May 2012 11:05 AM:</p><div style="margin-left: 1em"><p>If you are using C# or VB, p/invoke cannot be used to run arbitrary code (OH NO!)</p>
+<p>We will not be releasing an ARM build of our product then (need our own native DLL for a few key tasks).</p></div>
+<p><strong>Michael S. Kaplan</strong> on 18 May 2012 2:45 PM:</p><div style="margin-left: 1em"><p>Well, you may want to dig in to get the right answer for your code -- my case kind of proves that the answer can be complicated!</p>
+</div>
+<p><strong>Simon Buchan</strong> on 18 May 2012 8:48 PM:</p><div style="margin-left: 1em"><p>My understanding of the entire point of WinRT was that APIs are WinRT apis (applies to &quot;Metro style&quot; applications in the docs), not &quot;C++&quot; or &quot;.NET&quot; apis: basically it&#39;s supposed to extend the language independence of .NET metadata to native code and scripting languages. So any &quot;Metro&quot; API should be accessible from any WinRT supporting language, so I&#39;m more surprised that there&#39;s no .NET binding to it through some static class somewhere. I guess P/Invoke isn&#39;t so horrible, but it could be far better.</p>
+</div>
+<p><strong>Simon Buchan</strong> on 18 May 2012 9:01 PM:</p><div style="margin-left: 1em"><p>@Joshua: Cross-language/runtime interop is what WinRT is *for*. Recommendation for portal code is for you to, in your Metro builds, compile your native dll with your exports wrapped with C++/CX definitions:</p>
+<p>// foo.h</p>
+<p>...</p>
+<p>int foo_bar(const char* str);</p>
+<p>// WinRT.cpp</p>
+<p>#include &quot;foo.h&quot;</p>
+<p>namespace MyComponent</p>
+<p>{</p>
+<p> &nbsp; &nbsp;public ref class Foo sealed</p>
+<p> &nbsp; &nbsp;{</p>
+<p> &nbsp; &nbsp;public:</p>
+<p> &nbsp; &nbsp; &nbsp; &nbsp;static int Bar(Platform::String^ str)</p>
+<p> &nbsp; &nbsp; &nbsp; &nbsp;{</p>
+<p> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;// Platform::String^ is pretty close to System.String in .NET.</p>
+<p> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;// Convert UTF-16 to UTF-8 here...</p>
+<p> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;return foo_bar(utf8Str);</p>
+<p> &nbsp; &nbsp; &nbsp; &nbsp;}</p>
+<p> &nbsp; &nbsp;}</p>
+<p>}</p>
+<p>Then you get a WinRT .dll that&#39;s indistinguishable from any other, including builtins.</p>
+</div>
+<p><strong>cheong00</strong> on 20 May 2012 11:02 PM:</p><div style="margin-left: 1em"><p>He can just enable the setting &quot;configuration&quot;-&gt;&quot;uri&quot;-&gt;&quot;idn&quot; in app.config or web.config and let Uri.DnsSafeHost class handle it. It&#39;s available on PCL too.</p>
+</div>
+<p><strong>Alan McF</strong> on 23 May 2012 12:56 PM:</p><div style="margin-left: 1em"><p>@joshua It works for me in a Metro C# app too. &nbsp;When I add various Win32 API P/Invoke calls they work in *most* cases, but running WACK (Windows App Cert Kit) highlights that of the one I used &quot;socket&quot; and etc are forbidden but has no complaints about IdnToAscii.</p>
+</div>
+<p><strong>Pavel Minaev [MSFT]</strong> on 13 Jun 2012 1:24 PM:</p><div style="margin-left: 1em"><p>&gt;&gt; If you are using C# or VB, p/invoke cannot be used to run arbitrary code</p>
+<p>It cannot be used to run arbitrary code in a sense that you can&#39;t P/Invoke, say, a desktop-only API. But from everything I&#39;ve seen, it can absolutely be used to P/Invoke into the Metro subset of Win32, or your own DLLs. Or did that change in RP?</p>
+</div>
+<hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2013/10/17 <a href="../../../2013/10/17/10453790.html">There's no "I" in IDN, part 19: There's no "I" in IPv6, either!</a></p><p>2013/10/08 <a href="../../../2013/10/08/10454553.html">There's no "I" in IDN, part 18: There isn't even an "I" in John C. Klensin's name!</a></p><p>2013/09/13 <a href="../../../2013/09/13/10448110.html">There's no "I" in IDN, part 17: EAI made it to China, and everybody knows it!</a></p><p>2013/04/19 <a href="../../../2013/04/19/10412471.html">There's no "I" in IDN, part 16: It's a good thing they decided to call it EAI!</a></p><p>2012/10/12 <a href="../../10/12/10359120.html">There's no "I" in IDN, part 15: Still no 'I' in EAI.... but we could use an US sometime soon!</a></p><p>2012/08/08 <a href="../../08/08/10337799.html">There's no "I" in IDN, part 14: It turns out there's no "I" in IE, either</a></p></div><p><em>go to <a id="newer" href="../21/10308135.html" title="Whither WM_UNICHAR in Windows 7 (and 8!)">newer</a> or <a id="older" href="../17/10306133.html" title="That &#39;keyboard culture list&#39; you may have heard so much about">older</a> post, or back to <a href="../../../index-2.html">index</a> or <a href="../../../index-2.html#2012-05">month</a> or <a href="../../../index-2.html#2012-05-18">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2012/05/18/10305223.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:33 GMT -->
+</html>

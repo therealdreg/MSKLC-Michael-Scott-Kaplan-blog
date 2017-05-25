@@ -1,0 +1,46 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2005/02/09/369958.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:42 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>What is the difference between Big Endian and Little Endian Unicode?</title></head><body>
+<h1>What is the difference between Big Endian and Little Endian Unicode?</h1>
+<p><em>by Michael S. Kaplan, published on 2005/02/09 13:03 -05:00, original URI: http://blogs.msdn.com/b/michkap/archive/2005/02/09/369958.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P>A very common question that comes up has much to do with the meaning of the suffixes in UTF-16LE and UTF-16BE.</P>
+<P>It all comes back to the way processors work. When you look at a byte (like 0x41) it is easy to say you know what it is. But when looking at two bytes in a row (like 0x41 0x00) as if it were&nbsp;a single 16-bit WORD you have to decide if you are looking at the number 0x4100 or the number 0x0041.</P>
+<P>I always found&nbsp;the clearest description came from Bruce McKinney's Hardcore Visual Basic:</P>
+<BLOCKQUOTE dir=ltr>
+<P><FONT size=2><EM>Endian refers to the order in which bytes are stored. The term is taken from a story in Gulliver’s Travels by Jonathan Swift about wars fought between those who thought eggs should be cracked on the Big End and those who insisted on the Little End. With chips, as with eggs, it doesn’t really matter as long as you know which end is up.</EM></FONT></P></BLOCKQUOTE>
+<P>And indeed, it is pretty crucial to know which end is up. This is especially interesting for UTF-16, which in the end is a bunch of arrays of WORDs that happen to correspond to characters in Unicode. The difference between <A href="http://www.fileformat.info/info/unicode/char/0041/index.htm">U+0041</A> ("A", a.k.a. LATIN CAPITAL LETTER A) and <A href="http://www.fileformat.info/info/unicode/char/4100/index.htm">U+4100</A> ("䄀", a.k.a. an ideograph in CJK Extension A that refers to calamity, disaster, evil, or misfortune) is quite striking!</P>
+<P>On Windows platforms, which are mostly little endian, UTF-16LE is just called "Unicode" and UTF-16BE is just called "Unicode (Big Endian)". Which is much less confusing for the majority of people who do not work cross-platform.</P>
+<P><EM>(Speaking frankly, this does not bother me much -- anyone smart enough to be annoyed by the terminology is smart enough to know that not everyone is as smart as they are in these matters)</EM></P>
+<P>For more information, simple web searches with the following search string:</P>
+<BLOCKQUOTE dir=ltr>
+<BLOCKQUOTE dir=ltr>
+<P>"big endian" "little endian"</P></BLOCKQUOTE></BLOCKQUOTE>
+<P>will return enough results to keep one busy for some time...</P>
+<P>&nbsp;</P>
+<P><FONT color=#800080><EM>This post brought to you by </EM>"䄀"<EM> (</EM></FONT><A href="http://www.fileformat.info/info/unicode/char/4100/index.htm"><EM>U+4100</EM></A><FONT color=#800080><EM>, a.k.a. an ideograph in CJK Extension A that refers to calamity, disaster, evil, or misfortune)</EM></FONT></P>
+<hr/><p><a id="369997" href="#369997">#</a> <strong>Stewie</strong> on 9 Feb 2005 12:23 PM:</p><div style="margin-left: 1em">Put me down, you Brobdingnagian blunderbuss!<br><br>(before you delete this, this is at least tangentially on topic!)</div>
+<p><a id="370070" href="#370070">#</a> <strong>Michael Kaplan</strong> on 9 Feb 2005 2:31 PM:</p><div style="margin-left: 1em">I posted it, Stewie. :-)</div>
+<p><a id="370144" href="#370144">#</a> <strong>Ryan Myers</strong> on 9 Feb 2005 4:31 PM:</p><div style="margin-left: 1em">Byte Order Mark time!  Unfortunately, there's absolutely no standardization on when to use it, just the convention that if you don't encounter it you should assume the host endianness.  And it's even funnier when you encounter BOMs in mid-text, such as when you've used cat to combine two files produced on machines of different endianness... oh, and if you're transcoding, under what conditions do you prefix, or remove, the BOM?</div>
+<p><a id="370149" href="#370149">#</a> <strong>Michael Kaplan</strong> on 9 Feb 2005 4:35 PM:</p><div style="margin-left: 1em">Luckily, reports of problems are fairly overblown. :-)<br><br>If you concatenate two files then sure you *ought* to remove it, but if you proceed without removing it than all that happens is that an invisible character with zero width is there -- which does not matter.<br><br>If they are of different endianness and a tool combines them then thast is a bug for the tool -- as you should never combine two such files.</div>
+<p><strong>aaaa</strong> on 17 Jan 2010 7:20 AM:</p><div style="margin-left: 1em"><P>"Little Endian" means that the lower-order byte of the number is stored in memory at the lowest address, and the high-order byte at the highest address. For example, a 4 byte Integer</P>
+<P>Byte3 Byte2 Byte1 Byte0</P>
+<P>will be arranged in memory as follows:</P>
+<P>Base Address+0 Byte0<BR>Base Address+1 Byte1<BR>Base Address+2 Byte2<BR>Base Address+3 Byte3</P>
+<P>Intel processors (those used in PC's) use "Little Endian" byte order.</P>
+<P>"Big Endian" means that the high-order byte of the number is stored in memory at the lowest address, and the low-order byte at the highest address. The same 4 byte integer would be stored as:</P>
+<P>Base Address+0 Byte3<BR>Base Address+1 Byte2<BR>Base Address+2 Byte1<BR>Base Address+3 Byte0</P>
+<P>Motorola processors (those used in Mac's) use "Big Endian" byte order. </P></div>
+<p><strong>Michael S. Kaplan</strong> on 17 Jan 2010 10:29 AM:</p><div style="margin-left: 1em"><p>A little late, no? :)</p>
+<p>Also note that Macs are moving to Intel non-Motorola these days...</p>
+</div>
+<p><strong>m bilal javed</strong> on 27 Apr 2011 9:36 PM:</p><div style="margin-left: 1em"><p>which is greater in number little or big endian</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 28 Apr 2011 1:52 AM:</p><div style="margin-left: 1em"><p>Neither is &quot;bigger&quot; -- they represent the same number, represented differently in how it is encoded.</p>
+</div>
+<p><strong>Diane</strong> on 10 Feb 2012 9:56 AM:</p><div style="margin-left: 1em"><p>How can I open a file once I have saved it as unicode big endian?</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 13 Feb 2012 7:36 AM:</p><div style="margin-left: 1em"><p>Diane, see the answer <strong><a href="http://archives.miloush.net/michkap/archive/2012/02/13/10267034.html">here</a></strong>.</p></div>
+<hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2012/02/13 <a href="http://archives.miloush.net/michkap/archive/2012/02/13/10267034.html">"Now that its been saved, how do I open it?"</a></p><p>2005/09/11 <a href="http://archives.miloush.net/michkap/archive/2005/09/11/463444.html">unicodeFFFE... is Microsoft off its rocker?</a></p><p>2005/05/24 <a href="http://archives.miloush.net/michkap/archive/2005/05/24/421343.html">Encoding scheme, encoding form, or other</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2005/02/09/370291.html" title="New info about old usability tests">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2005/02/08/369197.html" title="Why ACP != OEMCP (usually)">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2005-02">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2005-02-09">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2005/02/09/369958.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:42 GMT -->
+</html>

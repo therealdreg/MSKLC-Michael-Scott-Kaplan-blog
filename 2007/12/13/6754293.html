@@ -1,0 +1,58 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2007/12/13/6754293.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:36 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>About the Fonts folder in Windows, Part 4 (Eto Akta Gamat, aka Magical Protection?)</title></head><body>
+<h1>About the Fonts folder in Windows, Part 4 (Eto Akta Gamat, aka Magical Protection?)</h1>
+<p><em>by Michael S. Kaplan, published on 2007/12/13 10:01 -05:00, original URI: http://blogs.msdn.com/b/michkap/archive/2007/12/13/6754293.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P>Recently, Tony read <A class="" href="http://archives.miloush.net/michkap/archive/2006/08/27/726378.html" mce_href="http://archives.miloush.net/michkap/archive/2006/08/27/726378.html"><STRONG>About the Fonts folder in Windows, Part 3 (aka What changes in Vista?)</STRONG></A> that was posted last year and <A class="" href="http://archives.miloush.net/michkap/archive/2006/08/27/726378.html#6619895" mce_href="http://archives.miloush.net/michkap/archive/2006/08/27/726378.html#6619895">commented</A>:</P>
+<BLOCKQUOTE>
+<P><EM><FONT face="times new roman,times">Hm, the Fonts folder has changed drastically in Vista.<BR><BR>I'm one of the people trying to install Office 97 SP2b and getting hung up because the installer can't rename Tahoma.ttf.<BR><BR>It seems in addition to all the nice NTFS ACLs, Microsoft in its infinite wisdom has added magical protection so that not even Administrator can change the privileges on fonts or the font folder.<BR><BR>So where's the manual override now?</FONT></EM></P></BLOCKQUOTE>
+<P>So to start with, if it is true that Office 97 (any service pack) is attempting to overwrite the version of Tahoma that ships in Vista with the version it has, then Office 97 setup has a serious bug where what pretty much has got to be an older file with an older version attached to it is trying to replace a newer, more recent version.</P>
+<P>Now <STRONG>that</STRONG> is a serious no-no. And one of the number one problems with the way people install fonts some of the time.</P>
+<P>I won't be <STRONG>too</STRONG> surprised though. :-(</P>
+<P>Remember that David Vaskevitch story I told <A class="" href="http://archives.miloush.net/michkap/archive/2005/07/11/437352.html" mce_href="http://archives.miloush.net/michkap/archive/2005/07/11/437352.html"><STRONG>a few years back</STRONG></A>?&nbsp;Well, let's just say I had an easy time finding the setup bugs because before that (when I was working with Suzanne Goebel on the&nbsp;ODE 97 Setup Wizard, we spent days tracking down problems that would turn out to be Office setup bugs that were always postponed without really being able to present much more than the bug title. And since David V. and I don't have the kind of relationship that I could use to get <EM>all</EM> of those bugs fixed, let's just say that I knew of quite a few bugs that weren't fixed and had the lack off sleep to prove it -- including one week when I had to bill out something like 81 hours.</P>
+<P>So any time a new Office 97 setup bug&nbsp;is pointed out to me, I&nbsp;can't ever even pretend to muster surprise....</P>
+<P>But to get to the second part of Tony's questions, the "magical protection" stuff, there&nbsp;is no magic.&nbsp;I'll explain....</P>
+<P>If you go the Fonts folder, right-click on Tahoma and look at the menu that pops up:</P>
+<P><IMG height=612 src="http://trigeminal.fmsinc.com/images/tahomaprop01.png" width=820></P>
+<P>You can click on the <STRONG>Properties</STRONG> option on the right-click menu:</P>
+<P><IMG src="http://trigeminal.fmsinc.com/images/tahomaprop02.png"></P>
+<P>And then click on the <STRONG>Security</STRONG> tab:</P>
+<P><IMG src="http://trigeminal.fmsinc.com/images/tahomaprop03.png"></P>
+<P>Now those permissions on <STRONG>SYSTEM</STRONG>? They are also the same permissions on the <STRONG>Administrators</STRONG> and <STRONG>Users</STRONG> groups. None of them have permission to delete the file....</P>
+<P>None of those users/groups have permission to give themselves permission either. At least not explicitly. :-(</P>
+<P>So <EM>that</EM> <STRONG>Edit...</STRONG> button is not going to help much just yet....</P>
+<P>Now <STRONG>TrustedInstaller</STRONG>? Slightly different story:</P>
+<P><IMG src="http://trigeminal.fmsinc.com/images/tahomaprop04.png"></P>
+<P>And that is obviously what is being used to do all kinds of Windows-specific setup tasks. </P>
+<P>But let's hit that <STRONG>Advanced</STRONG> button:</P>
+<P><IMG src="http://trigeminal.fmsinc.com/images/tahomaprop05.png"></P>
+<P>Kind of tells us what we already knew. </P>
+<P>But let's slide over to the <STRONG>Owner</STRONG> tab:</P>
+<P><IMG src="http://trigeminal.fmsinc.com/images/tahomaprop06.png"></P>
+<P>Assuming you have permission to do it,&nbsp;you can set the owner here if you like the choice, or hit the <STRONG>Edit...</STRONG> button and see the large number of choices:</P>
+<P><IMG src="http://trigeminal.fmsinc.com/images/tahomaprop07.png"></P>
+<P>Pick your new owner, and you will be given one last piece of information:</P>
+<P><IMG src="http://trigeminal.fmsinc.com/images/tahomaprop08.png"></P>
+<P>And after that you will be able to do things to the file -- no magic tricks or ACLs, just regular old NTFS security stuff.</P>
+<P>But this should never be your first thing to do out of some strange need to control files or whatever -- only when there is a bug like the one Tony describes with a setup trying to replace a newer file with an older one.</P>
+<P>If you know what I mean :-)</P>
+<P mce_keep="true">&nbsp;</P>
+<P><FONT color=#ff00ff><EM>This post brought to you by</EM><FONT size=6> ༖ </FONT><EM>(<A class="" href="http://www.fileformat.info/info/unicode/char/0f16" mce_href="http://www.fileformat.info/info/unicode/char/0f16">U+0f16</A>, aka TIBETAN LOGOTYPE SIGN LHAG RTAGS)</EM></FONT></P>
+<hr/><p><a id="6767276" href="#6767276">#</a> <strong>Alex</strong> on 13 Dec 2007 10:43 PM:</p><div style="margin-left: 1em"><p>This is what we do when we want to update a font manually. What if we want to distribute a font file to other machines?</p></div>
+<p><a id="6767485" href="#6767485">#</a> <strong>Michael S. Kaplan</strong> on 13 Dec 2007 11:11 PM:</p><div style="margin-left: 1em"><p>Hi Alex -- </p>
+<p>This is what Microsoft does with fonts that IT includes as a part of Windows only. These cannot be redistributed. Which fonts are you thinking of here?</p>
+<p>There is a separate topic in the suggestion box about installation issues that will I think touch more on what you are thijking about here? Though if not then you should add another there so I can cover the whole topic....</p>
+</div>
+<p><a id="6768272" href="#6768272">#</a> <strong>Larry Osterman [MSFT]</strong> on 14 Dec 2007 1:58 AM:</p><div style="margin-left: 1em"><p>I do feel obliged to point out that that following Michael's instructions can (and will) cause your machine to be unusable in the future.</p>
+<p>Messing with the ACLs can cause unexpected results, and may result in disasterous consequences for your system. &nbsp;KB articles 885409 and 823659 spell out some of the issues: <a rel="nofollow" target="_new" href="http://support.microsoft.com/kb/885409">http://support.microsoft.com/kb/885409</a> and <a rel="nofollow" target="_new" href="http://support.microsoft.com/kb/823659/">http://support.microsoft.com/kb/823659/</a></p>
+<p>There has been at least one security update that failed because people changed the ACLs on system directories (MS05-051): <a rel="nofollow" target="_new" href="http://support.microsoft.com/kb/909444">http://support.microsoft.com/kb/909444</a></p>
+<p>So you can make these changes, but you're playing with fire.</p></div>
+<p><a id="6768747" href="#6768747">#</a> <strong>Alex</strong> on 14 Dec 2007 3:47 AM:</p><div style="margin-left: 1em"><p>Ah, you mean it only applies to the original files, and if I create new font file using the eudc editor and copy the TTE file to other computers, I won't run into the same situation?</p></div>
+<p><a id="6770199" href="#6770199">#</a> <strong>Michael S. Kaplan</strong> on 14 Dec 2007 8:59 AM:</p><div style="margin-left: 1em"><p>Exactly....</p>
+</div>
+<p><a id="6770503" href="#6770503">#</a> <strong>Michael S. Kaplan</strong> on 14 Dec 2007 10:07 AM:</p><div style="margin-left: 1em"><p>I do agree with Larry that caution is warranted, though all of the problems reported thus far have to do with adding restrictions, not removing them....</p>
+</div>
+<hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2008/10/09 <a href="http://archives.miloush.net/michkap/archive/2008/10/09/8992849.html">About the Fonts folder in Windows, Part 5 (Nothing personal!)</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2007/12/14/6766621.html" title="Amharic&#39;s on the phone, you want I should take a message?">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2007/12/13/6689013.html" title="If you play with your gadget, there are all kinds of problems you can run into">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2007-12">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2007-12-13">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2007/12/13/6754293.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:36 GMT -->
+</html>

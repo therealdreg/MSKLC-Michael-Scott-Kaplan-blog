@@ -1,0 +1,25 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2010/01/31/9955888.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:35 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Not quite so portable as that...</title></head><body>
+<h1>Not quite so portable as that...</h1>
+<p><em>by Michael S. Kaplan, published on 2010/01/31 07:01 -05:00, original URI: http://blogs.msdn.com/b/michkap/archive/2010/01/31/9955888.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P>Over in the Suggestion Box, <A href="http://folk.uio.no/" mce_href="http://folk.uio.no/">DreymaR</A> asked:</P>
+<BLOCKQUOTE>
+<P><FONT face="times new roman,times"><EM>Hello Michael, and thanks ever so much for sharing insights about the workings of the Windows layout routines!</EM></FONT></P>
+<P><FONT face="times new roman,times"><EM>I hope you're the person to ask about this, or if you aren't, that you could tell me who might be?</EM></FONT></P>
+<P><FONT face="times new roman,times"><EM>In these days I'm very portable, and happily so. I 'take my digital life with me' by USB flash drive, and this allows me to work comfortably on computers where I have no installation rights. That's nice!</EM></FONT></P>
+<P><FONT face="times new roman,times"><EM>When it comes to the keyboard layout however, I'm not yet fully satisfied. I've used MSKLC to make an enhanced layout (Unicode, some keys moved around etc) that I'm very fond of. I can use the freeware script PortableKeyboardLayout to take that with me, but this solution is imperfect because it's too slow at times (it's written in a scripting language) and doesn't always play 100% nice with the input stream. (It has other virtues, but that's another matter.)</EM></FONT></P>
+<P><FONT face="times new roman,times"><EM>So what I'd really like would be to be able to code or script an analogue to the LoadKeyboardLayout API, that instead of looking in the registry and system folders could take its values from a specified file and an MSKLC-made install! (I hope I'm right in thinking that what the MSKLC installer does is detect the architecture and then simply copy the right .dll and some registry values to where the system expects them to be?)</EM></FONT></P>
+<P><FONT face="times new roman,times"><EM>That way, I could run a script or program that loaded and activated a layout from my USB drive, without installing anything to the local hard drive! Any tips/ideas whether this is doable and if so, how?</EM></FONT></P></BLOCKQUOTE>
+<P>Now Bob knows I hate to be the bearer of bad news....</P>
+<P>But this is a capability that MSKLC does not provide, and there is no back door into the sanctioned input stream in Windows to support what is being requested here.</P>
+<P>Now obviously Text Service Framework (TSF) Text Input Profiles (TIPs) can accomplish this, but they are&nbsp;complex DLLs that also require administrative permissions to write to the registry and let the system know where they are. There is no mechanism for inserting an input method without that level of access/authority on the machine....</P>
+<P>Sorry about that!</P>
+<hr/><p><strong>Mihai</strong> on 1 Feb 2010 10:03 AM:</p><div style="margin-left: 1em"><p>&quot;without that level of access/authority&quot;</p>
+<p>Depending on the type of customizations required, a lot of stuff can be done with keyboard hooks.</p>
+<p>Not very elegant, nice, and clean to use &quot;for real&quot;</p>
+<p>But if the request is for something that you run on a random system without being admin, then it's gone like it was never there, hooks are probably the only way.</p></div>
+<hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2010/02/01/9956085.html" title="Cautionary thoughts on embedding">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2010/01/29/9955550.html" title="Dr. International is dead, long live Dr. International...">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2010-01">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2010-01-31">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2010/01/31/9955888.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:35 GMT -->
+</html>

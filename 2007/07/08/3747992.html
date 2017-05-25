@@ -1,0 +1,31 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2007/07/08/3747992.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:38 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>UnLCMapString or LCUnMapString?</title></head><body>
+<h1>UnLCMapString or LCUnMapString?</h1>
+<p><em>by Michael S. Kaplan, published on 2007/07/08 03:01 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2007/07/08/3747992.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P>Just the other day, developer George was asking me about that <STRONG><A class="" href="http://archives.miloush.net/michkap/archive/2005/03/16/396704.html" mce_href="http://archives.miloush.net/michkap/archive/2005/03/16/396704.html">Reversing sort keys</A></STRONG> post I wrote way back when.</P>
+<P>His main interest was not in the functionality, but in the name of the function! :-)</P>
+<P>He couldn't decide whether the name of the function would be <STRONG>Un</STRONG>LCMapString or LC<STRONG>Un</STRONG>MapString....</P>
+<P>An interesting problem is positional morphology, no?</P>
+<P>Well, actually, no!</P>
+<P>The <A class="" href="http://msdn2.microsoft.com/library/ms776290.aspx" mce_href="http://msdn2.microsoft.com/library/ms776290.aspx">LCMapString</A> function has a simple job -- it does locale sensitive mapping of&nbsp;string. And in almost all cases, those mappings have reverse mappings, which means that operations&nbsp;involving A(B(A(&lt;string&gt;))) == A(&lt;string&gt;).</P>
+<P>You can see this with</P>
+<UL>
+<LI>LCMAP_FULLWIDTH and LCMAP_HALFWIDTH</LI>
+<LI>LCMAP_HIRAGANA and LCMAP_KATAKANA</LI>
+<LI>LCMAP_SIMPLIFIED_CHINESE and LCMAP_TRADITIONAL_CHINESE</LI>
+<LI>LCMAP_LOWERCASE and LCMAP_UPPERCASE</LI>
+<LI>LCMAP_BYTEREV is its own reversing operation</LI></UL>
+<P>And the only mapping that has no reversing operation is LCMAP_SORTKEY. </P>
+<P>Thus, if the functionality to reverse sort keys ever did exist, it would almost certainly be another flag for <A class="" href="http://msdn2.microsoft.com/library/ms776290.aspx" mce_href="http://msdn2.microsoft.com/library/ms776290.aspx">LCMapString</A> to use, not a whole new function (which neatly sidesteps the positional morphology question by rejecting the premise&nbsp;that either name makes sense!). :-)</P>
+<P>But let's pretend that is not the case, and that one did have to choose between two different function names for reversing operations. And you were looking at either UnLCMapString or LCUnMapString.</P>
+<P>What would the best name have been?</P>
+<P>Now keep in mind this is not the opinion of&nbsp;a trained&nbsp;linguist, but I'll give it a shot....</P>
+<P>Given that the name LCMapString really exists for the purpose of locale-sensitive mapping of&nbsp;a string, if one were positing a function name for the reverse operation&nbsp;(locale-sensitive unmapping of a string), it seems like the best name choice would in fact be LCUnMapString.</P>
+<P>Of course this implies that the process for creating the names of Win32 API functions is either consistent or intuitive, a shaky assumption at best. But for a function that probably shouldn't ever exist even if the functionality did (which it doesn't), there is no harm in being idealistic about the process, right? :-)</P>
+<P mce_keep="true">&nbsp;</P>
+<P><FONT color=#ff00ff><EM>This post brought to you by</EM> ᴙ <EM>(<A class="" href="http://www.fileformat.info/info/unicode/char/1d19" mce_href="http://www.fileformat.info/info/unicode/char/1d19">U+1d19</A>, a.k.a.LATIN LETTER SMALL CAPITAL REVERSED R)</EM></FONT></P>
+<hr/><div style="margin-left: 1em"><em>no comments</em></div><hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2008/01/13 <a href="http://archives.miloush.net/michkap/archive/2008/01/13/7090976.html">On reversing the irreversible (the introduction)</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2007/07/08/3764316.html" title="Being more like Doron">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2007/07/07/3746794.html" title="TTC indexes, the easy way...">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2007-07">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2007-07-08">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2007/07/08/3747992.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:38 GMT -->
+</html>

@@ -1,0 +1,77 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2007/08/17/4425267.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:37 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Ever look in the mirror[ing] and not like what you see?</title></head><body>
+<h1>Ever look in the mirror[ing] and not like what you see?</h1>
+<p><em>by Michael S. Kaplan, published on 2007/08/17 03:16 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2007/08/17/4425267.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P>From the TV show <STRONG><EM>Angel</EM></STRONG>, the episode entitled <STRONG>Epiphany</STRONG>:</P>
+<BLOCKQUOTE>
+<DIV class=divider></DIV>
+<P><EM><B>Angel</B>: I'm still not sure what happened...<BR><B>Lorne</B>: What's not to understand? You think you're the first guy who ever rolled over, saw what was lying next to him, and went GYAAAAH!?</EM></P></BLOCKQUOTE>
+<P>Okay, my challenge now is to appear to tie THAT quote in while veering back into the appropriate. Hopefully I do well.</P>
+<P>Here goes....</P>
+<P>For a long time now, there are implementers of Unicode who really feel the need to stop tweaking existing property values in the Unicode Standard since the changes can have a huge impact on their implementations and on their customers, changes that are not always well understood until it is too late.</P>
+<P>Opposing those people are the implementers of Unicode who notice discrepancies or inconsistencies and in the interests of trying to make values more understandable and consistent try from time to time (and UTC meeting to UTC meeting) to tweak those properties.</P>
+<P>You can see the conflict here:</P>
+<BLOCKQUOTE>
+<P>The second group says "It is messy how it is now." </P>
+<P>And the first group says "Life can be messy, let's leave it alone." </P>
+<P>So the second group says "This is a bug we should fix. what's the harm?" </P>
+<P>And the first group says "I don't have what is&nbsp;bad about it right&nbsp;in front of me but when we do this sort of thing stuff breaks." </P>
+<P>So the second group says "Well, let's just make it a <STRONG>Public Review Issue</STRONG> and then we'll know if anyone feels like we have broken them, and we can reconsider." </P>
+<P>Then that first group, with no convincing thing to say against that argument, reluctantly concurs.</P></BLOCKQUOTE>
+<P>Then, a few months later, we are back in the UTC and there is little feedback against it and minimal feedback at all. With no reason to avoid the change, no one really has much to argue against. So it gets into the standard.</P>
+<P>And then, half a year later, someone stands up, points out that the Emperor was wearing no clothes those day, and we have a corrigendum.</P>
+<P>This time around there were two Public Review Issues: <A class="" href="http://www.unicode.org/review/resolved-pri.html#pri80" mce_href="http://www.unicode.org/review/resolved-pri.html#pri80">#80</A> which talks about (among other things) changing the Bidi_-Mirrored property on some characters including QUOTE characters, and <A class="" href="http://www.unicode.org/review/resolved-pri.html#pri91" mce_href="http://www.unicode.org/review/resolved-pri.html#pri91">#91</A> which is the update UAX #9 itself. Yada yada yada. and the change made it in to Unicode 5.0.</P>
+<P>Luckily Jonathan Kew produced a document that was discusses in this recent UTC meeting which pointed out all of the things this broke. A corrigendum has been issued, which you can read about in <A class="" href="http://www.unicode.org/versions/corrigendum6.html" mce_href="http://www.unicode.org/versions/corrigendum6.html">Corrigendum #6: Bidi Mirroring</A>. The data changes listed there are:</P>
+<BLOCKQUOTE>
+<BLOCKQUOTE>
+<H3>Changes to Bidi Mirroring</H3>
+<P>When this corrigendum is applied to Unicode 5.0.0, the Bidi_Mirrored property of the characters 2018..201F and 301D..301F is changed to "false" and their Bidi_Mirroring_Glyph is adjusted accordingly. Make the following changes to data files:</P>
+<P>1. Change the 11 lines in UnicodeData.txt which define properties for these characters to have the following contents:</P><PRE><SPAN style="FONT-SIZE: smaller">    2018;LEFT SINGLE QUOTATION MARK;Pi;0;ON;;;;;N;SINGLE TURNED COMMA QUOTATION MARK;;;;
+    2019;RIGHT SINGLE QUOTATION MARK;Pf;0;ON;;;;;N;SINGLE COMMA QUOTATION MARK;;;;
+    201A;SINGLE LOW-9 QUOTATION MARK;Ps;0;ON;;;;;N;LOW SINGLE COMMA QUOTATION MARK;;;;
+    201B;SINGLE HIGH-REVERSED-9 QUOTATION MARK;Pi;0;ON;;;;;N;SINGLE REVERSED COMMA QUOTATION MARK;;;;
+    201C;LEFT DOUBLE QUOTATION MARK;Pi;0;ON;;;;;N;DOUBLE TURNED COMMA QUOTATION MARK;;;;
+    201D;RIGHT DOUBLE QUOTATION MARK;Pf;0;ON;;;;;N;DOUBLE COMMA QUOTATION MARK;;;;
+    201E;DOUBLE LOW-9 QUOTATION MARK;Ps;0;ON;;;;;N;LOW DOUBLE COMMA QUOTATION MARK;;;;
+    201F;DOUBLE HIGH-REVERSED-9 QUOTATION MARK;Pi;0;ON;;;;;N;DOUBLE REVERSED COMMA QUOTATION MARK;;;;
+    301D;REVERSED DOUBLE PRIME QUOTATION MARK;Ps;0;ON;;;;;N;;;;;
+    301E;DOUBLE PRIME QUOTATION MARK;Pe;0;ON;;;;;N;;;;;
+    301F;LOW DOUBLE PRIME QUOTATION MARK;Pe;0;ON;;;;;N;;;;;</SPAN></PRE>
+<P>2. Remove the following 9 lines from DerivedBinaryProperties.txt, and change the count at the bottom of the file accordingly from 537 to 526:</P><PRE><SPAN style="FONT-SIZE: smaller">    2018 ; Bidi_Mirrored # Pi LEFT SINGLE QUOTATION MARK
+    2019 ; Bidi_Mirrored # Pf RIGHT SINGLE QUOTATION MARK
+    201A ; Bidi_Mirrored # Ps SINGLE LOW-9 QUOTATION MARK
+    201B..201C ; Bidi_Mirrored # Pi [2] SINGLE HIGH-REVERSED-9 QUOTATION MARK..LEFT DOUBLE QUOTATION MARK
+    201D ; Bidi_Mirrored # Pf RIGHT DOUBLE QUOTATION MARK
+    201E ; Bidi_Mirrored # Ps DOUBLE LOW-9 QUOTATION MARK
+    201F ; Bidi_Mirrored # Pi DOUBLE HIGH-REVERSED-9 QUOTATION MARK
+
+    301D ; Bidi_Mirrored # Ps REVERSED DOUBLE PRIME QUOTATION MARK
+    301E..301F ; Bidi_Mirrored # Pe [2] DOUBLE PRIME QUOTATION MARK..LOW DOUBLE PRIME QUOTATION MARK
+
+    # Total code points: 526</SPAN></PRE>
+<P>3. Remove the following 11 lines from BidiMirroring.txt:</P><PRE><SPAN style="FONT-SIZE: smaller">    2018; 2019 # [BEST FIT] LEFT SINGLE QUOTATION MARK
+    2019; 2018 # [BEST FIT] RIGHT SINGLE QUOTATION MARK
+
+    # 201A; SINGLE LOW-9 QUOTATION MARK
+    # 201B; SINGLE HIGH-REVERSED-9 QUOTATION MARK
+
+    201C; 201D # [BEST FIT] LEFT DOUBLE QUOTATION MARK
+    201D; 201C # [BEST FIT] RIGHT DOUBLE QUOTATION MARK
+
+    # 201E; DOUBLE LOW-9 QUOTATION MARK
+    # 201F; DOUBLE HIGH-REVERSED-9 QUOTATION MARK
+
+    301D; 301E # REVERSED DOUBLE PRIME QUOTATION MARK
+    301E; 301D # DOUBLE PRIME QUOTATION MARK
+
+    # 301F; LOW DOUBLE PRIME QUOTATION MARK</SPAN></PRE></BLOCKQUOTE></BLOCKQUOTE>
+<P>For more info (and soon for the link to updated data&nbsp;files for those who need them), see the&nbsp;link to the Corrigendum.&nbsp;</P>
+<P>The wider issue here goes back to the original group #1 and group #2 I first talked about, and the dynamics which will likely need to start changing there in order for big companies (like Microsoft and others) to be able/willing to pick up changes more quickly.</P>
+<P>Obviously staying multiple versions behind is the safest thing to do in products but not the most helpful for the standard or frankly for customers, but a better balance has to be reached when issues like this come up. The changes to the dynamic in the UTC need to be <STRONG>fewer changes</STRONG> with a common default being <STRONG>no changes</STRONG> without boith significant problems from implementers affecting customers, significant discussion, and then significant feedback when the PRI is issued....</P>
+<P mce_keep="true">&nbsp;</P>
+<P><FONT color=#ff00ff><EM>This post brought to you by</EM> <FONT size=5>‘</FONT> <EM>(<A class="" href="http://www.fileformat.info/info/unicode/char/2018" mce_href="http://www.fileformat.info/info/unicode/char/2018">U+2018</A>, a.k.a. LEFT SINGLE QUOTATION MARK)</EM></FONT></P>
+<hr/><div style="margin-left: 1em"><em>no comments</em></div><hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2007/08/18 <a href="http://archives.miloush.net/michkap/archive/2007/08/18/4455146.html">Who are the heirs of Bernard R. Miller? (aka U+2323 when you say that!)</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2007/08/17/4440496.html" title="Some blog boggles and a few disclaimers">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2007/08/17/4424917.html" title="Normalize Wide Shut">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2007-08">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2007-08-17">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2007/08/17/4425267.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:37 GMT -->
+</html>

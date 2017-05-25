@@ -1,0 +1,40 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2006/03/13/550191.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:40 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Who broke the UTF-8 support?</title></head><body>
+<h1>Who broke the UTF-8 support?</h1>
+<p><em>by Michael S. Kaplan, published on 2006/03/13 03:21 -05:00, original URI: http://blogs.msdn.com/b/michkap/archive/2006/03/13/550191.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P><FONT face=Tahoma>George asked me the other day via email:</FONT></P>
+<BLOCKQUOTE dir=ltr style="MARGIN-RIGHT: 0px">
+<P><FONT face=Georgia size=2>When I make the following call in Visual C++ (Visual Studio 2003), it succeeds:</FONT></P>
+<BLOCKQUOTE dir=ltr style="MARGIN-RIGHT: 0px">
+<P><FONT face="Courier New"><STRONG>char * plocale = setlocale( LC_ALL, ".65001" );</STRONG></FONT></P></BLOCKQUOTE>
+<P><FONT face=Georgia size=2>But when I try this in 8.0 (Visual Studio 2005), plocale is NULL.</FONT></P>
+<P><FONT face=Georgia size=2>Who broke the UTF-8&nbsp;locale support? And when will it be fixed?</FONT></P></BLOCKQUOTE>
+<P><FONT face=Tahoma>A very similar question was actually asked on one of the internal Microsoft aliases late last year. It was answered by none other than VC++ guru Martyn Lovell:</FONT></P>
+<BLOCKQUOTE dir=ltr style="MARGIN-RIGHT: 0px">
+<P><FONT face="Times New Roman" size=2>VC7 didn’t support UTF8 (or 7) correctly. But it didn’t error, it just silently did the wrong thing.<BR><BR></FONT><FONT size=2>We tried to find time to do the work in VC8 to support these codepages, but we didn’t have time.<BR><BR></FONT><FONT size=2>So now, at least, we explicitly error so that you know that we don’t work right in these codepages<BR><BR></FONT><FONT size=2>Martyn</FONT></P></BLOCKQUOTE>
+<P><FONT face=Tahoma>So George -- saying that it used to work might be an overstatement.</FONT></P>
+<P><FONT face=Tahoma>But look on the bright side -- if it stops failing in the next version, its a good indication that things are now expected to work properly.... :-)</FONT></P><FONT face=Tahoma></FONT>
+<hr/><p><a id="550331" href="#550331">#</a> <strong>Ben Bryant</strong> on 13 Mar 2006 7:20 AM:</p><div style="margin-left: 1em">Good to see this post. It leads me to wonder what effect the person was expecting setlocale 65001 would actually have if it did work (it certainly wouldn't affect the code page used in Windows APIs or messages).<br><br>Multibyte charsets is a fuzzy area in Visual C++. Most people don't know there are two families of multibyte functions (in addition to the Win32 ANSI APIs), one for standard C/setlocale, and the others are Microsoft ones based on the default system locale but can be changed on the fly. I've struggled to understand this because MSDN completely ignores the distinction and I wrote about it here:<br><br><a rel="nofollow" target="_new" href="http://codesnipers.com/?q=node/46">http://codesnipers.com/?q=node/46</a><br><br>&quot;locale dependent&quot; functions: start out in &quot;C&quot; locale; are controlled by setlocale; use header stdlib.h; examples are mblen, isleadbyte, _mbstrlen, mbtowc, wctomb.<br><br>default system locale functions: start out in GetACP locale; are controlled by _setmbcp; use header mbstring.h; examples are _mbclen, _isleadbyte, _mbslen.<br></div>
+<p><strong>Ariel</strong> on 17 Jun 2009 4:01 AM:</p><div style="margin-left: 1em"><p>Just saw this post.</p>
+<p>I just found out that a piece of code that receives a string in a given encoding, and breaks it down to pieces. The nice thing is that it makes sure that it makes sure that the string doesn't break in the middle of a character.</p>
+<p>The whole logic relies on _mbstrlen_l().</p>
+<p>But now I find out that _mbstrlen_l() doesn't support utf-8, because _create_locale(LC_CTYPE, ".65001") return null.</p>
+<p>Frustrating!</p></div>
+<p><strong>Michael S. Kaplan</strong> on 18 Jun 2009 2:29 PM:</p><div style="margin-left: 1em"><p>This is misleading -- even when creating UTF-8 locales &quot;worked&quot;, _mbstrlen_l() didn't work with it -- this function only ever worked with CJK double-byte code pages. Perhaps code that didn't expect it to work in places where it won't might be preferred?</p>
+<p>Now that is what I find most frustrating! :-)</p>
+</div>
+<p><strong>Sorin Ionuț Sb&#226;rnea</strong> on 29 Apr 2010 4:40 AM:</p><div style="margin-left: 1em"><p>I would like to know if there is a way of using UTF-8 in your source code that would compile and run on Microsoft and non-Microsoft compiler (like gcc). There is an interesting question at <a rel="nofollow" target="_new" href="http://stackoverflow.com/questions/688760/how-to-create-a-utf-8-string-literal-in-visual-c-2008">http://stackoverflow.com/questions/688760/how-to-create-a-utf-8-string-literal-in-visual-c-2008</a> but I do not like the current accepted answer: no solution. Is this still true or the msvc 2008 or 2010 introduced some changes here?</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 29 Apr 2010 9:14 AM:</p><div style="margin-left: 1em"><p>Not really related ssbarnea, except tangentially. Perhaps you wanted to put something in the Suggestion Box? :-)</p>
+</div>
+<p><strong>Sorin Ionuț Sb&#226;rnea</strong> on 6 May 2010 3:09 PM:</p><div style="margin-left: 1em"><p>Thanks Michael, but I'm sure that the suggestion box is already full of other stuff. </p>
+<p>I would really want to see if you could come with a simple Unicode &quot;&#161;qʃɹoʍ oʃʃǝɥ&quot; application that will compile and run on Windows, OS X and Linux.</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 6 May 2010 5:28 PM:</p><div style="margin-left: 1em"><p>It is not full at all; there is one item in it at the moment.</p>
+<p>I have a lot of other topics, and that list is one of my later to-do lists; I do not track random comments in unrelated blogs. So if you are okay with me potentially never getting to it then I suppose here is fine too....</p>
+</div>
+<hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2006/03/14/551068.html" title="GDI Font Linking in GDI+">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2006/03/13/550148.html" title="Suggestions need to be fully formed">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2006-03">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2006-03-13">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2006/03/13/550191.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:40 GMT -->
+</html>

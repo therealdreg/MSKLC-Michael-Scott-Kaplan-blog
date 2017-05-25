@@ -1,0 +1,93 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2010/03/22/9979228.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:35 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Uniscribe on your own? Uniscribe on your mobile device?</title></head><body>
+<h1>Uniscribe on your own? Uniscribe on your mobile device?</h1>
+<p><em>by Michael S. Kaplan, published on 2010/03/22 07:01 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2010/03/22/9979228.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P>Okay, today we're gonna do a twofer!</P>
+<P>First, regular reader and "friend of SIAO" <A id=ctl00___ctl00___ctl01___Comments___Comments_ctl01_NameLink title="Jan Kučera" target=_blank>Jan Kučera</A> asked, over in the Suggestion Box:</P>
+<BLOCKQUOTE>
+<P><EM><FONT face="times new roman,times">Greetings! What references (and advices) would you suggest to someone considering implementing a complex script rendering engine? (on a platform where there is no such available of course :-))</FONT></EM></P>
+<P><EM><FONT face="times new roman,times">Jan</FONT></EM></P></BLOCKQUOTE>
+<P>Yikes!</P>
+<P>I suppose you would want to hear me recommend Imitrex for the migraines such work will&nbsp;surely cause? :-)</P>
+<P>The only advice I can really give is to look at the specs for fonts like the <A href="http://www.microsoft.com/typography/otspec/" mce_href="http://www.microsoft.com/typography/otspec/">OpenType specification</A>; in parts like the various appendices that go into the kinds of things that fonts can expect from the various shaping engines. </P>
+<P>That will be a huge effort.</P>
+<P>Heck, it <STRONG>is</STRONG> a huge effort, in Uniscribe.</P>
+<P>Maybe if you don't care for needles you can try to use Motrin or Tylenol, instead. There will be many headaches in the future, there....</P>
+<P>Okay, moving on to number two. :-)</P>
+<P>Over in the Suggestion Box, <A href="http://blogs.msdn.com/user/Profile.aspx?UserID=15093" mce_href="http://blogs.msdn.com/user/Profile.aspx?UserID=15093">alexcohn</A> asked:</P>
+<BLOCKQUOTE>
+<P><FONT face="times new roman,times"><EM>I would like to find a way to enable Uniscribe bidi support in Windows Mobile. The available solutions by 3rd parties are expensive and use dangerous hooks all around the system. Furthermore, they are not standard, and it is a burden on aplication developers to look for glitches with each one of these tools.</EM></FONT></P>
+<P><FONT face="times new roman,times"><EM>What does it take to build Uniscribe - enabled smartphone? If it requires special licensing, who may be a relevant point of contact in Microsoft?</EM></FONT></P></BLOCKQUOTE>
+<P>Well, the main thing it takes is a CE platform on the device that includes the Uniscribe component.</P>
+<P>For example you can see the CE 5.0 instructions in the <A href="http://msdn.microsoft.com/en-us/library/ms917973.aspx" mce_href="http://msdn.microsoft.com/en-us/library/ms917973.aspx">Creating a Complex Scripts-enabled Run-Time Image</A> topic, with the 6.0 version of that same topic <A href="http://msdn.microsoft.com/en-us/library/ee491707.aspx" mce_href="http://msdn.microsoft.com/en-us/library/ee491707.aspx">right here</A>.</P>
+<P>That topic even has a list of supported locales, a table that is the same in both versions:</P>
+<P>
+<TABLE border=1>
+<TBODY>
+<TR vAlign=top>
+<TH width="50%">Locale</TH>
+<TH width="50%">HKL value</TH></TR>
+<TR vAlign=top>
+<TD width="50%">Arabic</TD>
+<TD width="50%">00000401</TD></TR>
+<TR vAlign=top>
+<TD width="50%">Hebrew</TD>
+<TD width="50%">0000040D</TD></TR>
+<TR vAlign=top>
+<TD width="50%">Thai</TD>
+<TD width="50%">0000041E</TD></TR>
+<TR vAlign=top>
+<TD width="50%">Hindi</TD>
+<TD width="50%">00010439</TD></TR>
+<TR vAlign=top>
+<TD width="50%">Tamil</TD>
+<TD width="50%">00000449</TD></TR>
+<TR vAlign=top>
+<TD width="50%">Kanada</TD>
+<TD width="50%">0000044B</TD></TR>
+<TR vAlign=top>
+<TD width="50%">Gujarati </TD>
+<TD width="50%">00000447</TD></TR>
+<TR vAlign=top>
+<TD width="50%">Telugu</TD>
+<TD width="50%">0000044A</TD></TR>
+<TR vAlign=top>
+<TD width="50%">Punjabi </TD>
+<TD width="50%">00000446</TD></TR>
+<TR vAlign=top>
+<TD width="50%">Marathi</TD>
+<TD width="50%">0000044E</TD></TR></TBODY></TABLE></P>
+<P>This suggests that this is a port of the XP RTM version of Uniscribe to the CE platform that is in 5.0 (the Uniscribe updates for Bengali and Malayalam came in XP SP2, asnd the ones for other languages such as Oriya came in Vista -- not sure if those were ported).</P>
+<P>Now as a special note, CE Uniscribe does not do surrogate support like its desktop ancestor does, as discussed in <A href="http://msdn.microsoft.com/en-us/library/ms904394.aspx" mce_href="http://msdn.microsoft.com/en-us/library/ms904394.aspx">Working With Unicode Surrogates</A>. If that is what you were looking for, you won't need Uniscribe after all....</P>
+<P>But the problem if you aren't building your own CE for a device is that it seems like none of the OEMs ever chose to include this component. </P>
+<P>Unless someone knows of a device that chose to include it?</P>
+<P><EM>Now note that none of this applies to the upcoming version, which has had no solid information on this topic discussed....</EM></P>
+<hr/><p><strong>Pavanaja U B</strong> on 22 Mar 2010 9:40 PM:</p><div style="margin-left: 1em"><P>It is a very sad state of affairs that Win CE 5.0 has given the support for opentype rendering way back. But none of the device manufacturers thought to include it in the device. &nbsp;</P>
+<P>What will be the situation with Windows Phone 7?</P>
+<P>Another interesting development: Silverlight 4 RC has now Indic/opentype rendering. Does it uses Uniscribe? Or has it it's own rendering engine? If it has it's own rendering engine, then it is a good news in a way. The reason is that SL is now avilable for most platforms including mobile phones.</P>
+<P>-Pavanaja</P></div>
+<p><strong>Michael S. Kaplan</strong> on 22 Mar 2010 10:37 PM:</p><div style="margin-left: 1em"><p>No idea about 7 -- nothing has been said yet.</p>
+<p>I agree it sucks that no OEMs ever picked up the Uniscribe component....</p>
+<p>But SL4? It must be using the underlying system, not any inbuilt support (SL does not do Indic itself AFAIK, yet).</p>
+</div>
+<p><strong>Pavanaja U B</strong> on 23 Mar 2010 4:42 AM:</p><div style="margin-left: 1em"><p>SL 4 RC does support Indic. Read this - <a rel="nofollow" target="_new" href="http://timheuer.com/blog/archive/2010/03/15/whats-new-in-silverlight-4-rc-mix10.aspx#language">http://timheuer.com/blog/archive/2010/03/15/whats-new-in-silverlight-4-rc-mix10.aspx#language</a></p></div>
+<p><strong>Mike Dimmick</strong> on 23 Mar 2010 6:40 AM:</p><div style="margin-left: 1em"><p>The set of components included in Windows Mobile is strictly circumscribed by Microsoft. There is a base set of components the OEM MUST include, the rest mostly they MUST NOT include, with only a very few that they MAY include (e.g. the GPS stack, we discovered). It was done that way to ensure software portability between different Windows Mobile devices. Many of the components are a bit different from the standard Windows CE box - Windows Mobile hasn't had a proper released Windows CE version number since WM 2003 (CE 4.20), WM 5.0 was 'CE 5.01' etc.</p>
+<p>There are custom Windows CE platforms put together by OEMs, some of which run on identical hardware to Windows Mobile devices, but these are generally for industrial/enterprise use rather than for sale to end-users. I'm working right now with Motorola's MC9090-G (over $2500 per unit!) which is available either with Windows Mobile (5.0, 6.0, 6.1) or Motorola's custom Windows CE 5.0 platform. It still doesn't include Uniscribe, though.</p>
+<p>I suspect Windows Phone 7 will not have any native/unmanaged code support. It's so much easier to sandbox managed code - something becoming increasingly important as the phone heads into an ever-more-hostile environment.</p>
+<p>In my opinion Windows Mobile is likely to simply stagnate. There might be a few 6.5 patch releases but nothing further.</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 23 Mar 2010 8:20 AM:</p><div style="margin-left: 1em"><p>Yes, but Uniscribe *is* of the components any system builder can add -- I pointed to the way how!</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 23 Mar 2010 8:22 AM:</p><div style="margin-left: 1em"><P>That's pretty exciting about Silverlight, actually! :-)</P></div>
+<p><strong>Pavanaja U B</strong> on 23 Mar 2010 9:16 PM:</p><div style="margin-left: 1em"><P>Yesterday I did some experimentation with SL 4 RC using Expression Blend 4 Trial. What I found is that it's Indic input handling and rendering seems to be similar to what experience I am having with Notepad (Notepad, ie, Windows and Word, ie, Office have different behaviours). It looks like that SL is using uniscribe. </P>
+<P>-Pavanaja</P></div>
+<p><strong>Michael S. Kaplan</strong> on 23 Mar 2010 9:24 PM:</p><div style="margin-left: 1em"><p>Actually, it turns out it's using the same kind of engine as WPF rather than the Uniscribe, but they are much more similar in the Indics than in ones like Arabic....</p>
+</div>
+<p><strong>Jan Kučera</strong> on 18 Apr 2010 5:23 AM:</p><div style="margin-left: 1em"><P>First of all, thanks for getting to these topics. Actually I was not expecting much more than Yikes! :) Thanks for the tip, it definitely makes sense to look at this from the other point. When the time I will have to do some similar attempt comes.</P>
+<P>Second, I have a very strong feeling that if Microsoft included Uniscribe in the MUST include group for OEMs, no one would ever demur, if they even noticed it. I guess it won't happen ever anyway, will it...</P>
+<P>Which is a pitty for Microsoft I think - lots of home-made Indic enabling solutions on mobile phones were presented on the INFITT conference, but no single interest for Windows Mobile platform, which is actually the only one eventually capable of supporting it!</P></div>
+<hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2010/03/23/9982461.html" title="Learning to spell in Bengali (when one has a cool input method)">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2010/03/21/9982732.html" title="My thoughts on the health care thing (given my life, my multiple sclerosis, and my iBot)">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2010-03">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2010-03-22">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2010/03/22/9979228.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:35 GMT -->
+</html>

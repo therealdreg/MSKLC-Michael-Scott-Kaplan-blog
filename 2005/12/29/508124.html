@@ -1,0 +1,57 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2005/12/29/508124.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:40 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Best practices for keyboards #0: MSKLC warnings in 1.0/1.1</title></head><body>
+<h1>Best practices for keyboards #0: MSKLC warnings in 1.0/1.1</h1>
+<p><em>by Michael S. Kaplan, published on 2005/12/29 21:01 -05:00, original URI: http://blogs.msdn.com/b/michkap/archive/2005/12/29/508124.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P><FONT face=Tahoma>When MSKLC was first developed, it had no validation step, and no warnings. But then as Simon Earnshaw, Cathy Wissink, and I were getting more involved with the process of creating this tool that was going to make it so much easier to create new layouts, we reached a realization.</FONT></P>
+<P><FONT face=Tahoma>While it may be a bit too draconian to simply block people from doing things that do not fall in the category of our "best practices" (especially when scenarios may alter those practices!), at least adding in warnings would allow a little bit of social engineering to take place. People would be gently encouraged to avoid creating layouts that could cause problems out in the wild.</FONT></P>
+<P><FONT face=Tahoma>Here are the warnings that exist in MSKLC today (this is from the MSKLC help file, in the topic entitled 'Validation Reference'):</FONT></P><FONT face=Tahoma>
+<BLOCKQUOTE dir=ltr style="MARGIN-RIGHT: 0px">
+<BLOCKQUOTE dir=ltr style="MARGIN-RIGHT: 0px">
+<BLOCKQUOTE dir=ltr style="MARGIN-RIGHT: 0px">
+<H2><FONT face=Arial color=#808080>Warnings</FONT></H2>
+<P><FONT face=Arial color=#808080>Warnings will not block the building of the keyboard but indicate potential problems that should be reviewed and corrected as appropriate. Warnings include:</FONT></P>
+<BLOCKQUOTE>
+<P><FONT face=Arial color=#808080>Defined character(s)</FONT></P>
+<UL>
+<LI><FONT face=Arial color=#808080>Character defined exclusively on a key that may not be present on all keyboards. </FONT>
+<LI><FONT face=Arial color=#808080>An unpaired surrogate code point was defined. </FONT></LI></UL>
+<P><FONT face=Arial color=#808080>Caps Lock/AltGr+CapsLock</FONT></P>
+<UL>
+<LI><FONT face=Arial color=#808080>Marked to be the same as SHIFT, but the characters do not appear to be cased versions of each other </FONT>
+<LI><FONT face=Arial color=#808080>Marked to be different than SHIFT, but the characters appear to be cased versions of each other </FONT></LI></UL>
+<P><FONT face=Arial color=#808080>Caps Lock/SCGAPS</FONT></P>
+<UL>
+<LI><FONT face=Arial color=#808080>SGCaps and CapsLock are both specified on the same Virtual Key </FONT></LI></UL>
+<P><FONT face=Arial color=#808080>Layout table</FONT></P>
+<UL>
+<LI><FONT face=Arial color=#808080>Character is not contained in the Windows code page of the specified language </FONT>
+<LI><FONT face=Arial color=#808080>Character is defined more than once in the layout </FONT></LI></UL>
+<P><FONT face=Arial color=#808080>Ligatures</FONT></P>
+<UL>
+<LI><FONT face=Arial color=#808080>Not all characters in ligature are contained in the Windows code page of the specified language </FONT></LI></UL>
+<P><FONT face=Arial color=#808080>Dead Keys</FONT></P>
+<UL>
+<LI><FONT face=Arial color=#808080>Dead key table is empty </FONT>
+<LI><FONT face=Arial color=#808080>Dead key defined on a ligature </FONT>
+<LI><FONT face=Arial color=#808080>Dead key without defined name </FONT>
+<LI><FONT face=Arial color=#808080>Dead key's base character does not exist in the keyboard layout </FONT>
+<LI><FONT face=Arial color=#808080>Combining character is not contained in the Windows code page of the specified language </FONT>
+<LI><FONT face=Arial color=#808080>Last entry in a dead key table should use a space as its base character </FONT></LI></UL>
+<P><FONT face=Arial color=#808080>CTRL/SHIFT + CTRL shift states</FONT></P>
+<UL>
+<LI><FONT face=Arial color=#808080>Unicode control characters defined in CTRL shift states </FONT></FONT></LI></UL></BLOCKQUOTE></BLOCKQUOTE></BLOCKQUOTE></BLOCKQUOTE>
+<P><FONT face=Tahoma>Looking at things today,&nbsp;</FONT><FONT face=Tahoma>MSKLC has revolutionized keyboard layouts internally as well!</FONT></P>
+<P><FONT face=Tahoma>These days when subsidiary contacts have new keyboards that&nbsp;they want&nbsp;to be added to Windows based on new standards they have to also provide the .KLC file with the layout. And as we have been picking up keyboards for the Vista release, we have been getting even more ideas for validation warnings -- because when&nbsp;mistakes are&nbsp;easy to make, people will make them and that can hardly be considered their fault.</FONT></P>
+<P><FONT face=Tahoma>All of thses issues apply to&nbsp;customers outside of Microsoft just as much as they do to these internal contacts, so they do make sense to add.</FONT></P>
+<P><FONT face=Tahoma>Future posts in this series will talk about some of these new issues that have come up, and which may well be added to the validation process in&nbsp;upcoming releases of MSKLC....</FONT></P>
+<P><FONT face=Tahoma></FONT>&nbsp;</P>
+<P><FONT face=Tahoma color=#ff1493><EM>This post brought to you by</EM> "<FONT size=6>ଊ</FONT>" <EM>(<A href="http://www.fileformat.info/info/unicode/char/0b0a">U+0b0a</A>, a.k.a. ORIYA LETTER UU)</EM></FONT></P>
+<hr/><p><a id="508148" href="#508148">#</a> <strong>Centaur</strong> on 29 Dec 2005 11:48 PM:</p><div style="margin-left: 1em">Why is it a problem when “Character is defined more than once in the layout”?</div>
+<p><a id="508159" href="#508159">#</a> <strong>Michael S. Kaplan</strong> on 30 Dec 2005 12:29 AM:</p><div style="margin-left: 1em">In our experience, usually when it happens it is by accident -- so the warning is a good one to make sure that it is not done unintentionally. Note that we also give a warning in the situation where you put a chasracter on the 102 key only, since it may not be on all user keyboards!).</div>
+<p><a id="508373" href="#508373">#</a> <strong>Crissov</strong> on 31 Dec 2005 7:23 AM:</p><div style="margin-left: 1em">It most often happens with the dot or comma on VK_DECIMAL in my experience, which is a useless warning IMHO. It would be worth a warning on the contrary, when any character on VK_DECIMAL is defined nowhere else.<br><br>The log uses “Ctl” for “Control” by the way, whereas it’s usually “Ctrl”.</div>
+<p><a id="508380" href="#508380">#</a> <strong>Michael S. Kaplan</strong> on 31 Dec 2005 10:09 AM:</p><div style="margin-left: 1em">This is a good point, Crisov. We do that for other characters, it would make sense to do here. And the abbreviation should also be consistent.<br><br>Thanks! :-)</div>
+<hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2005/12/30/508157.html" title="More on cursor movement">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2005/12/29/508045.html" title="What&#39;s a secondary distinction?">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2005-12">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2005-12-29">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2005/12/29/508124.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:40 GMT -->
+</html>

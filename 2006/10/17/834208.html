@@ -1,0 +1,68 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2006/10/17/834208.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:39 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>The version of App Locale that runs on Vista?</title></head><body>
+<h1>The version of App Locale that runs on Vista?</h1>
+<p><em>by Michael S. Kaplan, published on 2006/10/17 03:00 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2006/10/17/834208.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<FONT face=Tahoma size=3>
+<P>The question that Eiji asked me was simple enough: </P>
+<BLOCKQUOTE><FONT face="Times New Roman,Times" size=2>
+<P>Do you know the apploc version that supports Vista? <BR><BR>I got the question from Internal user (who needs it for Vista selfhosting on en-us and run Japanese ANSI apps with en system locale).<BR><BR>I tried the existing apploc on Vista, but the installation failed with unknown error. <BR><BR>And, in my opinion, the situation has not been changed since XP/WS03, I think we need the support for Vista.</P></FONT></BLOCKQUOTE>
+<P>Of course my first instinct in such situations is&nbsp;to scream&nbsp;<STRONG>Use Unicode!</STRONG> but I figured I should contain myself. So I stopped for a moment.</P>
+<P>And then I thought about the issue that came up with <A href="http://archives.miloush.net/michkap/archive/2006/06/27/648618.html" mce_href="http://archives.miloush.net/michkap/archive/2006/06/27/648618.html"><STRONG>Keyboards under LUA</STRONG></A> where an MSKLC-created install could not be installed on Vista unless it was run from an elevated command prompt....</P>
+<P>So I tried the elevated command prompt in this new&nbsp;scenario&nbsp;and yes, <A href="https://www.microsoft.com/globaldev/tools/apploc.mspx" mce_href="https://www.microsoft.com/globaldev/tools/apploc.mspx">App Locale</A>&nbsp;(AppLocale) installed just fine. And I did my typical quick test (running Notepad with a Japanese system locale, typing the Hiragana vowels: </P>
+<BLOCKQUOTE>
+<P>あいうえお</P></BLOCKQUOTE>
+<P>saving the file, and then opening it up from Explorer and seeing the text showing up as: </P>
+<BLOCKQUOTE>
+<P>‚&nbsp;‚¢‚¤‚¦‚¨</P></BLOCKQUOTE>
+<P>but then looking correct again if I open it with the "Japanese'd" Notepad provided by App Locale shortcut. </P>
+<P>So it looks to me like App Locale works fine under Vista. You just need to the right permissions to be installing it. :-) </P>
+<P><EM>Note that as </EM><A href="http://blogs.msdn.com/heaths/" mce_href="http://blogs.msdn.com/heaths/"><EM>Heath Stewart</EM></A><EM> pointed out </EM><A href="http://blogs.msdn.com/heaths/archive/2006/09/26/Custom-Actions-under-UAC-in-Vista.aspx" mce_href="http://blogs.msdn.com/heaths/archive/2006/09/26/Custom-Actions-under-UAC-in-Vista.aspx"><EM>here</EM></A><EM> and </EM><A href="http://blogs.msdn.com/rflaming/archive/2006/10/01/780096.aspx" mce_href="http://blogs.msdn.com/rflaming/archive/2006/10/01/780096.aspx"><EM>Robert Flaming</EM></A><EM> pointed out </EM><EM><A class="" href="http://blogs.msdn.com/rflaming/archive/2006/10/01/780096.aspx" mce_href="http://blogs.msdn.com/rflaming/archive/2006/10/01/780096.aspx">here</A></EM><EM>, an install program&nbsp;with a more conventional name like&nbsp;SETUP.EXE will&nbsp;try to be&nbsp;elevated all on its own,&nbsp;for backward compatibility, with the thousands of other installers that came before it (and without needing manifests or other adjuncts). So you can think of the programs that hit this problem&nbsp;as a much less common scenario of ruggedly independent projects that can't use ordinary and accepted names for their installers....</EM></P>
+<P><EM>This&nbsp;may even&nbsp;inspire a decent&nbsp;idea for the next&nbsp;release of MSKLC -- adding a bootstrap program called setup.exe to start things up and work around the whole&nbsp;<A href="http://archives.miloush.net/michkap/archive/2006/06/27/648618.html" mce_href="http://archives.miloush.net/michkap/archive/2006/06/27/648618.html"><STRONG>Keyboards under LUA</STRONG></A> issue simply? :-)</EM></P>
+<P mce_keep="true">&nbsp;</P>
+<P><FONT color=#ff0080><EM>This post brought to you by</EM> ಌ <EM>(<A href="http://www.fileformat.info/info/unicode/char/0c8c" mce_href="http://www.fileformat.info/info/unicode/char/0c8c">U+0c8c</A>, a.k.a. KANNADA LETTER VOCALIC L)</EM></FONT></P></FONT>
+<hr/><p><a id="836002" href="#836002">#</a> <strong>Tyler</strong> on 17 Oct 2006 4:11 PM:</p><div style="margin-left: 1em"><p>Regarding naming things setup.exe to get elevation:</p>
+<p>Please don't do that. &nbsp;If you want your setup.exe to elevate every time, then USE A MANIFEST. &nbsp;InstallDetection can be turned off and then you look stupid.</p>
+<p>As for AppLocale, I assume this is an instance of a misauthored MSI.</p></div>
+<p><a id="837125" href="#837125">#</a> <strong>Michael S. Kaplan</strong> on 17 Oct 2006 8:09 PM:</p><div style="margin-left: 1em"><p>Hmmm.... because the info on this is so widely available and intuitive that I would know how to do it instantly, right? :-) </p>
+<p>j/k</p>
+</div>
+<p><a id="7023539" href="#7023539">#</a> <strong>Ryan</strong> on 7 Jan 2008 10:59 PM:</p><div style="margin-left: 1em"><p>I've tried to run apploc.msi on the elevated command prompt but it still won't install. If you could, please include step-by-step instrustions.</p></div>
+<p><a id="7024168" href="#7024168">#</a> <strong>Michael S. Kaplan</strong> on 8 Jan 2008 12:28 AM:</p><div style="margin-left: 1em"><p>Are you an admin on the box? What is the error you get?</p>
+<p>You should be able to just run it directly from the elevated command prompt....</p>
+</div>
+<p><a id="7031079" href="#7031079">#</a> <strong>Ryan</strong> on 8 Jan 2008 1:35 PM:</p><div style="margin-left: 1em"><p>I've tried different ways and for some of them, the installation remains incomplete, and for others, it can't find it, and a few others it just gives me a message saying it can't run a prgram needed to finish installing it. </p></div>
+<p><a id="7031151" href="#7031151">#</a> <strong>Michael S. Kaplan</strong> on 8 Jan 2008 1:40 PM:</p><div style="margin-left: 1em"><P>There is only one way to run it:</P>
+<OL>
+<LI>Be an admin on a box where no weid group policy issues might block the app.</LI>
+<LI>Open an elevated command prompt.</LI>
+<LI>Change to the same directory as apploc.msi is.</LI>
+<LI>Type apploc.msi from within the command prompt and hit enter</LI></OL>
+<P>And that is it. I just tried it again on another machine and ut worked for me a moment ago just as it did when I first wrote this post....</P></div>
+<p><a id="7033042" href="#7033042">#</a> <strong>Ryan</strong> on 8 Jan 2008 4:48 PM:</p><div style="margin-left: 1em"><p>I ran the elevated command prompt and I had already saved the file under the (C:) drive. In the command prompt, I typed in C:\apploc.msi, and it starts the installation, but then a message comes up saying the file maybe unsafe and it cancels the installation. </p></div>
+<p><a id="7033289" href="#7033289">#</a> <strong>Michael S. Kaplan</strong> on 8 Jan 2008 5:20 PM:</p><div style="margin-left: 1em"><P>That sounds like group policy stuff &nbsp;-- most people get the warning &nbsp;that files from the Internet my not be safe but they give you the choice to allow it anyway. Does it happen if the file is somewhere a bit less protected than the root drive?</P>
+<P>This has nothing to do with AppLocale -- this is policy on the machine.</P></div>
+<p><a id="7033515" href="#7033515">#</a> <strong>Ryan</strong> on 8 Jan 2008 5:45 PM:</p><div style="margin-left: 1em"><p>I've tried it on a less protected area but it still says the file is unsafe and will not install it.</p></div>
+<p><a id="7033568" href="#7033568">#</a> <strong>Michael S. Kaplan</strong> on 8 Jan 2008 5:53 PM:</p><div style="margin-left: 1em"><P>That error has nothing to do with AppLocale, as I mentioned. You can try looking at file properties to see if there is some way to claim it is "safe", maybe.</P></div>
+<p><a id="7033736" href="#7033736">#</a> <strong>Ryan</strong> on 8 Jan 2008 6:08 PM:</p><div style="margin-left: 1em"><p>I've gone through the file properties and I could not find a way to make it &quot;safe&quot;. Although the installer is listed in my program list, it does not appear as a file anyway, except for the installer. </p></div>
+<p><a id="7033914" href="#7033914">#</a> <strong>Michael S. Kaplan</strong> on 8 Jan 2008 6:27 PM:</p><div style="margin-left: 1em"><p>In XP the text that shows up is: &quot;Security: This file came from another computer and might be blocked to help protect this computer&quot;.</p>
+<p>It has an Unlock button next to it, and group policy can disallow the ability to unblock if they want to. That is honestly what it sounds like is happening here....</p>
+</div>
+<p><a id="7034025" href="#7034025">#</a> <strong>Ryan</strong> on 8 Jan 2008 6:50 PM:</p><div style="margin-left: 1em"><p>That message came up last night but I clicked &quot;unblock&quot; and it still does not work.</p></div>
+<p><a id="7038465" href="#7038465">#</a> <strong>Michael S. Kaplan</strong> on 9 Jan 2008 4:04 AM:</p><div style="margin-left: 1em"><p>I don't know what else to tell you, really -- this is an MSI installation issue, nothing to do with AppLocale specifically (these steps have worked for countless people so I am not sure what got you in this state).</p>
+<p>The only other thing I can think of is that all of these different prior install attempts have left cruft on the machine that is blocking the install now, so that forcible uninstalls in all modes (non-elevated, elevated, etc.) would be the only way to clean out the system and let an install be successful. Beyond that, MSI is enough beyond me that I don't know what else to try....</p>
+</div>
+<p><a id="8508240" href="#8508240">#</a> <strong>Christopher Thomas</strong> on 15 May 2008 11:19 AM:</p><div style="margin-left: 1em"><p>Hey I got in the Admin Command prompt to vista I'm just now having problems changing Directories I'm currently in c:\Windows\system32</p>
+<p>I need to be in c:\Users\DesertGecko96</p>
+<p>then I would be able to run it I am in the right directory when I'm not on the admin</p></div>
+<p><a id="8508927" href="#8508927">#</a> <strong>Michael S. Kaplan</strong> on 15 May 2008 3:24 PM:</p><div style="margin-left: 1em"><p>So you could type</p>
+<p>cd &nbsp;c:\Users\DesertGecko96</p>
+<p>right?</p>
+</div>
+<p><a id="8744402" href="#8744402">#</a> <strong>Andy</strong> on 17 Jul 2008 12:35 PM:</p><div style="margin-left: 1em"><p>Hi, I was following your guide and managed to install apploc, but before is successfully installs, the set says it cannot create apploc.lnk and I need to verify if the file location exists and when I press &quot;OK&quot;, the program says it's been successfully installed. I looked around, but I cannot find the program. </p></div>
+<p><a id="8744793" href="#8744793">#</a> <strong>Michael S. Kaplan</strong> on 17 Jul 2008 3:31 PM:</p><div style="margin-left: 1em"><p>It should be in a directory under &quot;Program Files&quot;....</p>
+</div>
+<hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2011/04/04 <a href="http://archives.miloush.net/michkap/archive/2011/04/04/10149502.html">UXTheme in the non-Unicode world isn't "Double Secret ANSI"</a></p><p>2010/03/16 <a href="http://archives.miloush.net/michkap/archive/2010/03/16/9976677.html">That Chinese Dictionary can work anywhere, if you let it</a></p><p>2008/04/23 <a href="http://archives.miloush.net/michkap/archive/2008/04/23/8415969.html">On the clipboard, and why sometimes the dumber you are the better you can do</a></p><p>2007/03/17 <a href="http://archives.miloush.net/michkap/archive/2007/03/17/1903060.html">A checkpoint on search engine results contrast, ultimately leading to an irreverent bit of exposition</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2006/10/17/837884.html" title="The &#39;T&#39; is tough to figure out">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2006/10/17/834208.html" title="The version of App Locale that runs on Vista?">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2006-10">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2006-10-17">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2006/10/17/834208.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:39 GMT -->
+</html>

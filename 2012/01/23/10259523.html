@@ -1,0 +1,37 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2012/01/23/10259523.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>You can do CESU-8 if you need to; we went in a slightly different direction....</title></head><body>
+<h1>You can do CESU-8 if you need to; we went in a slightly different direction....</h1>
+<p><em>by Michael S. Kaplan, published on 2012/01/23 07:01 -05:00, original URI: http://blogs.msdn.com/b/michkap/archive/2012/01/23/10259523.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<p>Regular reader Dan asked me via the Contact link:</p>
+<p style="padding-left: 60px;"><em>We just upgraded our customer desktops from&nbsp;Windows 2000&nbsp;to Windows 7, and we're seeing a major break in our text processing app.</em></p>
+<p style="padding-left: 60px;"><em>We've debugged the problem pretty thoroughly, and it doesn't look it's our app&nbsp;at all. Notepad seems to be breaking our Plane 1 and Plane 2 text. Which seems like it must&nbsp;be impossible, isn't support of supplementary characters a Windows 7 feature?</em></p>
+<p>I'll admit I was&nbsp;confused at first, though the problem he described seemed kind of familiar.</p>
+<p>And then it came to me.</p>
+<p>The app was basically&nbsp;supporting supplementary characters on Windows before we really were.</p>
+<p>Well, that isn't entirely accurate.</p>
+<p>But the was a weird time before XP shipped that we were okay with the six byte form for supplementary characters, before Unicode got more explicit about considering it to be ill-formed and before we started conforming to Unicode's stricter definition....</p>
+<p>Dan's Line of Business app was essentially using CESU-8, not UTF-8. And given the weird difference between how Notepad initially detects UTF-8 and how it converts the data&nbsp;-- described previously in blogs like <strong><a title="(It wasn't me)" href="http://archives.miloush.net/michkap/archive/2010/08/14/10050078.html">(It wasn't me)</a></strong> -- and the solution becomes clearer.</p>
+<ul>
+<li>Either move to the 4-byte form of UTF-8 supplementary characters, or</li>
+<li>Do all off the conversion outside of Notepad and Windows!</li>
+</ul>
+<p>Personally, I'd recommend the former option -- the latter is kind of contrary to what Windows, Microsoft, and Unicode are doing these days.</p>
+<p>Though if an application has a heavy investment in the 6-byte form, then as long as it is kept internal to the app (or properly marked when communicating with those who understand it), it isn't the end of the world....</p>
+<hr/><p><strong>Doug Ewell</strong> on 23 Jan 2012 8:02 AM:</p><div style="margin-left: 1em"><p>Uh-uh. No bueno. The so-called &quot;6-byte form&quot; -- applying the UTF-8 algorithm to UTF-16 code units -- was NEVER valid. UTF-8 has always been defined in terms of &quot;characters&quot; or abstract code points. All Unicode did was insist that apps detect and reject the invalid form. Dan has to convert his data. No defense.</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 23 Jan 2012 10:18 AM:</p><div style="margin-left: 1em"><p>or he can claim to be using CESU-8!</p>
+</div>
+<p><strong>Simon Buchan</strong> on 23 Jan 2012 12:47 PM:</p><div style="margin-left: 1em"><p>Personally I&#39;m fine with using whatever bizarre encoding(s) someone wants to use so long as they: don&#39;t lose information, are sufficiently specified, and don&#39;t have bad performance re-encoding. The only problem* with CESU-8 is when people claim it&#39;s UTF-8!</p>
+<p>* Other than having to add some otherwise unnecessary code - if you can simplify things, do so!</p>
+</div>
+<p><strong>cron22</strong> on 23 Jan 2012 2:28 PM:</p><div style="margin-left: 1em"><p>I mean, which encodings did Windows support prior to UTF-8 anyway? &nbsp;I thought that it was all ASCII then. &nbsp;</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 23 Jan 2012 3:45 PM:</p><div style="margin-left: 1em"><p>We supported a bunch of different ACPs and OEMCPs, each of which had limited coverage....</p></div>
+<p><strong>Doug Ewell</strong> on 26 Jan 2012 8:19 AM:</p><div style="margin-left: 1em"><p>@Simon: Or when they expect Windows (or other OS, or apps) to support broken UTF-8 as if it were well-formed. Even if it used to.</p>
+<p>There&#39;s another problem with CESU-8: it&#39;s unnecessarily large.</p>
+</div>
+<hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2012/01/24/10259941.html" title="The evolving Story of Locale Support, part 16: We can&#39;t scale to a Xishuangbanna Dai locale, but…">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2012/01/20/10258838.html" title="It is *not* called the Desert Desert, dammit!">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2012-01">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2012-01-23">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2012/01/23/10259523.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+</html>

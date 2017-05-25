@@ -1,0 +1,51 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2012/04/23/10296348.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:33 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Four cases where I don't like ResolveLocaleName (and you shouldn't either!)</title></head><body>
+<h1>Four cases where I don't like ResolveLocaleName (and you shouldn't either!)</h1>
+<p><em>by Michael S. Kaplan, published on 2012/04/23 07:01 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2012/04/23/10296348.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<p>In the past, I've written many times about <a href="http://msdn.microsoft.com/library/windows/desktop/dd317768.aspx">ConvertDefaultLocale</a> -- you can check them out <a href="http://blogs.msdn.com/search/searchresults.aspx?q=ConvertDefaultLocale%20&amp;sections=3381">here</a>.</p>
+<p>Mostly, I just complain about weird silliness that the function does in it's strange efforts to convert neutral LCIDs to specific LCIDs, and to try to bridge differences between the .Net Framework and old versions of Windows.</p>
+<p>But there is another function, one that is pretty awful too. In some ways even worse, perhaps?</p>
+<p>The function I mean is <a href="http://msdn.microsoft.com/library/windows/desktop/dd319112.aspx">ResolveLocaleName</a>, added in Windows 7.</p>
+<p>It's one of those cool functions that is documented as "<strong>Applies to: desktop apps | Metro style apps</strong>".</p>
+<p>However, it isn't really very cool in its implementation.</p>
+<p>It's algorithm:</p>
+<ol>
+<li>Take the name it was given, see if it is a valid locale of some kind;</li>
+<li>If&nbsp;the name in step #1&nbsp;a valid locale, return the "specific" version of it if it's a neutral or the locale's name if it isn't;</li>
+<li>If the name in step #1 isn't a valid locale, then strip the right-most hyphen delimited portion of the name;</li>
+<li>If the name in step #3 is not an empty string, start again at step #1 with that new name.</li>
+</ol>
+<p>Technically it is slightly more complicated than this, but the step are good enough for our current purposes.</p>
+<p>Now it does some good&nbsp;things.</p>
+<p>For example <strong>en-Latn-US</strong> becomes <strong>en-US</strong> and both <strong>fil-Latn</strong> and <strong>fil-Latn-PH</strong> become <strong>fil-PH</strong> and <strong>ug-Arab-CN</strong> becomes <strong>ug-CN</strong>.</p>
+<p><em>I call this Case&nbsp;#1, the "fix the problem of including script names when we don't use them and other such&nbsp;bugs" case.</em></p>
+<p>But it also does some worse things.</p>
+<p>Like <strong>en-Latn-AU</strong> also becomes <strong>en-US</strong>.</p>
+<p><em>I call this Case #2, the "it could have been smarter" case.</em></p>
+<p>And even worse things.</p>
+<p>Like <strong>zh-Hant-TW</strong> becomes <strong>zh-HK</strong>.</p>
+<p><em>I call this Case #3, the "geopolitically stupid that begs for an exception in the code" case.</em></p>
+<p>And some much worse things.</p>
+<p>Like <strong>en-Cyrl-TT</strong> also becomes <strong>en-US</strong>.</p>
+<p><em>I call this Case #4, the "morph ridiculous combinations of tags to valid locales" case.</em></p>
+<p>And then some downright ridiculous things.</p>
+<p>:Like <strong>en-CanYouBelieve-THISCRAP</strong> also becomes <strong>en-US</strong>.</p>
+<p><em>I call this Case #5, the "what the hell were we thinking that day?" case.</em></p>
+<p>How many people can imagine better ways this function could have been implemented?</p>
+<p>Knowing (for example) that:</p>
+<ul>
+<li>every valid locale has the knowledge - via GetLocaleInfoEx(... LOCALE_SSCRIPTS, ...) -- of valid scripts that may or may not be specified, and so on;</li>
+<li>the practice of simply stripping information rather than conditionally adding it back can be replaced by one that intelligently processes these items.</li>
+</ul>
+<p>We could have been tremendously smarter here.</p>
+<p>And you should be, yourself. And not follow our (much poorer) example in this case.</p>
+<p>I have no dev interviews at the moment, but if I did this might be high on my list of potential questions: doing <strong>ResolveLocaleName</strong> better....</p>
+<hr/><p><strong>Doug Ewell</strong> on 23 Apr 2012 7:11 AM:</p><div style="margin-left: 1em"><p>OMG. Didn&#39;t anyone responsible for this method read BCP 47? At all?</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 23 Apr 2012 7:58 AM:</p><div style="margin-left: 1em"><p>I wouldn&#39;t want to speculate on that! :-)</p>
+</div>
+<hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2012/08/07 <a href="http://archives.miloush.net/michkap/archive/2012/08/07/10337516.html">ResolveLocaleName cleans up and flies right</a></p><p>2012/08/07 <a href="http://archives.miloush.net/michkap/archive/2012/08/07/10337515.html">ResolveLocaleName cleans up and flies right</a></p><p>2012/06/28 <a href="http://archives.miloush.net/michkap/archive/2012/06/28/10324848.html">You've got to ACCentuate the positive (or perhaps it would be better not to be so quick to do so!)</a></p><p>2012/05/17 <a href="http://archives.miloush.net/michkap/archive/2012/05/17/10306133.html">That 'keyboard culture list' you may have heard so much about</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2012/04/24/10297008.html" title="Can&#39;t Touch This! (Though I can TYPE this because I have the hardware, and the keyboard…)">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2012/04/19/10295225.html" title="It must be a [Hebrew] leap year; I double Adar you to guess how I know....">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2012-04">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2012-04-23">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2012/04/23/10296348.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:33 GMT -->
+</html>

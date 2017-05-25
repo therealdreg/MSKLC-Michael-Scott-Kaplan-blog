@@ -1,0 +1,57 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2010/08/10/10047945.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:35 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>What's up with the name of the "Print Screen" key?</title></head><body>
+<h1>What's up with the name of the "Print Screen" key?</h1>
+<p><em>by Michael S. Kaplan, published on 2010/08/10 07:01 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2010/08/10/10047945.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<p>So, yesterday Satchmo, in response to my <a href="http://archives.miloush.net/michkap/archive/2010/08/09/1950492.html" title="Flirting with a strange keyboard, will you remember its language in the morning?"><strong>Flirting with a strange keyboard, will you remember its language in the morning?</strong></a> blog, asked:</p>
+<p style="padding-left: 60px;"><em><span style="font-family: times new roman,times;">Hi Michael, So why API GetKeyNameText() returns "Sys Req" instead of "Print Scrn" when using VK_SNAPSHOT? And why does it return "Num +" instead of "+" when using VK_ADD? I was thinking about using this function to display the keys in a settings window, so international users can customize the hotkeys of my program.</span></em></p>
+<p>Of course&nbsp;the question&nbsp;was off-topic for <em>that</em> blog, but still interesting, so I thought I'd make it a topic for another blog.</p>
+<p><strong>This</strong> blog, in fact.....</p>
+<p>Now to start let's look at the function signature for <a href="http://msdn.microsoft.com/library/ms646300.aspx">GetKeyNameText</a>:</p>
+<p style="padding-left: 30px;"><span style="font-family: courier new,courier;"><strong>int WINAPI GetKeyNameText(<br />&nbsp; __in&nbsp;&nbsp; LONG lParam,<br />&nbsp; __out&nbsp; LPTSTR lpString,<br />&nbsp; __in&nbsp;&nbsp; int cchSize<br />);</strong></span></p>
+<p>and the meaning of that lParam parameter:</p>
+<p style="padding-left: 30px;">The second parameter of the keyboard message (such as WM_KEYDOWN) to be processed. The function interprets the following bit positions in the <em>lParam</em>. </p>
+<table align="center" border="1" style="padding-left: 30px;">
+<tbody>
+<tr>
+<th>Bits</th><th>Meaning</th>
+</tr>
+<tr>
+<td>16-23</td>
+<td>Scan code.</td>
+</tr>
+<tr>
+<td>24</td>
+<td>Extended-key flag. Distinguishes some keys on an enhanced keyboard.</td>
+</tr>
+<tr>
+<td>25</td>
+<td>"Don't care" bit. The application calling this function sets this bit to indicate that the function should not distinguish between left and right CTRL and SHIFT keys, for example.</td>
+</tr>
+</tbody>
+</table>
+<p>Now at risk of answering a question with a question, this provides a somewhat&nbsp;direct&nbsp;counter-question to Satchmo:</p>
+<p><strong>How are you sending VK_SNAPSHOT to a function that is taking scan codes and not virtual keys? :-)</strong></p>
+<p>More seriously, looking at a typical keyboard:</p>
+<p><img src="http://trigeminal.fmsinc.com/images/SysReq.jpg" border="0" /></p>
+<p>Clearly, one must pick a string for the name.</p>
+<p>And the one the keyboard picks may not be so great but it is not "wrong" really.</p>
+<p>That it is the keyboard picking here is described in <a href="http://archives.miloush.net/michkap/archive/2010/08/09/1950492.html" title="Flirting with a strange keyboard, will you remember its language in the morning?"><strong>Flirting with a strange keyboard, will you remember its language in the morning?</strong></a>, including the workaround if one wants to have a layout with a different set of names for keys....</p>
+<p>Now if the underlying question is <strong>Michael, why did they do it this weird way?</strong> then the answer is that I have no idea what they were thinking of years ago when they did all of this. :-)</p>
+<p>Now as to the larger question, when the Catalan issue I first described in <a href="http://archives.miloush.net/michkap/archive/2010/08/09/1950492.html" title="Flirting with a strange keyboard, will you remember its language in the morning?"><strong>Flirting with a strange keyboard, will you remember its language in the morning?</strong></a>&nbsp;first came up, I suggested that a better and more scalable solution was done, putting all of the key name text returning code into USER32.DLL directly with the resources thereof made localizable (which the current architecture doesn't allow). But it was <strong>WON'T FIXED</strong> and I do not hold out much hope of improvement....</p>
+<hr/><p><strong>Satchmo Pops</strong> on 11 Aug 2010 12:03 AM:</p><div style="margin-left: 1em"><p>&quot;How are you sending VK_SNAPSHOT to a function that is taking scan codes and not virtual keys?&quot;</p>
+<p>I first obtained a scan code for VK_SNAPSHOT using MapVirtualKey() and then I used GetKeyNameText() to get the key&#39;s label. At the beginning I was excited to use this function to get the localized key names of the keyboard. But the feature does not longer appeal to me since one cannot really get all the text/names from the keys (for example for the dual keys Print Scrn / Sys Rq I can only get Sys Req). Even more, I just found out that GetKeyNameText() is just *not accurate* at all.</p>
+<p>Below is the output of the function changing to a Swedish input locale (LCID 0x041d) versus the report of a user using a physical Swedish keyboard.</p>
+<p><span style="font-family:courier new,courier;"><span style="font-size:xx-small;">Virtual Keys&nbsp;&nbsp;&nbsp;&nbsp;English&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Swedish (API) labels &nbsp; &nbsp;Swedish (Real Keyboard) labels<br />---------------------------------------------------------------------------------<br />VK_CONTROL &nbsp; &nbsp;&nbsp; Ctrl&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;CTRL&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Ctrl<br />VK_SHIFT&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Shift&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; SKIFT&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;bold Up-arrow&gt;<br />VK_MENU&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Alt&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ALT&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Alt<br />VK_SNAPSHOT &nbsp;&nbsp;&nbsp; Sys Req&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Sys Req&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SysRq<br />VK_BACK&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Backspace &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; BACKSTEG&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;backarrow&gt;<br />VK_RETURN &nbsp; &nbsp; &nbsp; Enter &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; RETUR&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Enter</span></span></p>
+<p>* All outputs presented verbatim by letter/case except figurative text enclosed by &lt;&gt;.</p></div>
+<p><strong>Satchmo Pops</strong> on 11 Aug 2010 1:07 PM:</p><div style="margin-left: 1em"><p>Michael, have you written or do you know of a good book about making programs for the international community? The subject does not seem to be easy, and there is plenty of very good details spread all over.</p>
+<p>Until recently I started to be more concern about internationalization. Just few days ago I did not know about the existence of those API functions (although I know now that I cannot rely on them for stuff like displaying hotkeys or key accelerators). One more fact, I actually used vbKeySnapshot (the VBRUN.KeyCodeConstants from VB6) which is what I mostly code with (VB6 and VBA6). It seems to me that the best way will be to have resource files for every single language, and compile them with the EXE (one for every country).</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 11 Aug 2010 3:07 PM:</p><div style="margin-left: 1em"><p>I previously wrote about the book(s) I&#39;m not writing <a href="http://archives.miloush.net/michkap/archive/2005/08/28/457383.html">here</a>.... and there is also info there about good (and not good) books....</p></div>
+<p><strong>Steve &#39;Sly&#39; Williams</strong> on 11 Aug 2010 4:30 PM:</p><div style="margin-left: 1em"><p>SysReq (or SysRq) is the un-shifted function of that key (like 5 is un-shifted and % is shifted on a US keyboard). &nbsp;Print Screen is the shifted function of that key. &nbsp;GetKeyNameText() returns the un-shifted name.</p>
+<p>We used GetKeyNameText() to display game controls in Microsoft&#39;s Game Room. &nbsp;We had to be careful of some key names that were really quite long compared to the short symbol on the physical key, but overall it fixed all localization issues we had with different keyboard layouts.</p>
+</div>
+<hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2010/08/11/10048694.html" title="Loading the strings from the MUI file?">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2010/08/09/10047417.html" title="{Insert a pun about the word Serbian here, I can&#39;t think of one}">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2010-08">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2010-08-10">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2010/08/10/10047945.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:35 GMT -->
+</html>

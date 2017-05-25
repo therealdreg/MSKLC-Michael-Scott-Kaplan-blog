@@ -1,0 +1,29 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2012/09/13/10348936.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:26 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Do you have the [short] time for this? Part #1: The intro</title></head><body>
+<h1>Do you have the [short] time for this? Part #1: The intro</h1>
+<p><em>by Michael S. Kaplan, published on 2012/09/13 07:01 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2012/09/13/10348936.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<p>Once upon a time, there were two Win32 functions:</p>
+<ul>
+<li><a title="GetTimeFormat" href="http://msdn.microsoft.com/library/windows/desktop/dd318130">GetTimeFormat</a>&nbsp;with the dwFlags value of TIME_NOSECONDS</li>
+<li><a title="GetLocaleInfo" href="http://msdn.microsoft.com/library/windows/desktop/dd318101">GetLocaleInfo</a> with the LCType value of <a title="LOCALE_STIMEFORMAT" href="http://msdn.microsoft.com/library/windows/desktop/dd373896">LOCALE_STIMEFORMAT</a></li>
+</ul>
+<p>This is how the Windows Shell would decide how to display the time in its clock.</p>
+<p>Every locale had a default time format, and a list of potential other time formats they could choose instead.</p>
+<p>There was no "short time" format. There was just a "time" format that you could pass a flag to modify if you wanted.</p>
+<p>Things worked okay.</p>
+<p>And then .NET and its <a title="DateTimeFormatInfo" href="http://msdn.microsoft.com/library/System.Globalization.DateTimeFormatInfo.aspx">DateTimeFormatInfo</a> came,</p>
+<p>As&nbsp;.NET was largely meant to replace VB and VBA, it included a <a title="LongTimePattern" href="http://msdn.microsoft.com/library/system.globalization.datetimeformatinfo.longtimepattern.aspx">LongTimePattern</a> and a <a title="ShortTimePattern" href="http://msdn.microsoft.com/library/system.globalization.datetimeformatinfo.shorttimepattern.aspx">ShortTimePattern</a> and actively avoided the notion of "one time format and modification by flags" stuff.</p>
+<p>Suddenly everyone started hating that there was no "short time".</p>
+<p>And then, starting with .NET 2.0, we had custom cultures.</p>
+<p>They became custom <strong>locales</strong> in Vista and beyond.</p>
+<p>And the meaning of TIME_NOSECONDS was retconed to being "use the short time format" now they had a short time to look at:</p>
+<p><a href="http://msdnshared.blob.core.windows.net/media/MSDNBlogsFS/prod.evol.blogs.msdn.com/CommunityServer.Blogs.Components.WeblogFiles/00/00/00/33/81/1325.shorttimery.jpg"><img style="max-width: 550px;" border="0" alt="" src="http://msdnshared.blob.core.windows.net/media/MSDNBlogsFS/prod.evol.blogs.msdn.com/CommunityServer.Blogs.Components.WeblogFiles/00/00/00/33/81/1325.shorttimery.jpg" /></a></p>
+<p>So now we are where we are.</p>
+<p>The old way of doing it is left to the curiosity of SD logs, and the retcon has been achieved.</p>
+<p>But clearly there must be a problem, or I wouldn't be writing a blog or blogs about it.</p>
+<p>For the problem, you'll have to wait until tomorrow!</p>
+<hr/><div style="margin-left: 1em"><em>no comments</em></div><hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2012/09/17 <a href="../17/10350018.html">Do you have the [short] time for this? Part 3: What a tangled we weave...</a></p><p>2012/09/14 <a href="../14/10349328.html">Do you have the [short] time for this? Part #2: How does it feel to be out of sync?</a></p></div><p><em>go to <a id="newer" href="../14/10349328.html" title="Do you have the [short] time for this? Part #2: How does it feel to be out of sync?">newer</a> or <a id="older" href="../11/10348081.html" title="Inconsistencies aren&#39;t as important when they&#39;re irrelevant">older</a> post, or back to <a href="../../../index-2.html">index</a> or <a href="../../../index-2.html#2012-09">month</a> or <a href="../../../index-2.html#2012-09-13">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2012/09/13/10348936.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:26 GMT -->
+</html>

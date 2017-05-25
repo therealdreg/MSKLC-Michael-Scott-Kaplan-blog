@@ -1,0 +1,36 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2012/08/17/10340803.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:30 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>No do-overs or mulligans in International!</title></head><body>
+<h1>No do-overs or mulligans in International!</h1>
+<p><em>by Michael S. Kaplan, published on 2012/08/17 07:01 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2012/08/17/10340803.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<p>It is well known that intl.cpl is a relentless beast that does what it is asked to with cunning nd ruthless efficiency.</p>
+<p>If you know how to ask for it, at least. :-)</p>
+<p>The question from the other day was simple enough:</p>
+<p style="padding-left: 60px;"><em><span style="font-family: times new roman,times;">After installing language pack on a English OS, the welcome screen language can't be changed back to English if it was changed to another language by running following command in system context.</span></em><br /><em><span style="font-family: times new roman,times;">control intl.cpl,, /f:"settings.xml"</span></em><br />&nbsp;<br /><em><span style="font-family: times new roman,times;">setting.xml contains:</span></em></p>
+<p style="padding-left: 120px;"><strong><span style="font-family: courier new,courier;">&lt;gs:GlobalizationServices xmlns:gs="urn:longhornGlobalizationUnattend"&gt;</span></strong><br /><strong><span style="font-family: courier new,courier;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;gs:UserList&gt;</span></strong><br /><strong><span style="font-family: courier new,courier;">&nbsp;&nbsp;&nbsp;&nbsp; &lt;gs:User UserID="Current" CopySettingsToSystemAcct="true" /&gt; </span></strong><br /><strong><span style="font-family: courier new,courier;">&nbsp;&nbsp;&nbsp;&nbsp; &lt;/gs:UserList&gt;</span></strong><br /><strong><span style="font-family: courier new,courier;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;gs:MUILanguagePreferences&gt; </span></strong><br /><strong><span style="font-family: courier new,courier;">&nbsp;&nbsp;&nbsp;&nbsp; &lt;gs:MUILanguage Value="da-dk" /&gt; </span></strong><br /><strong><span style="font-family: courier new,courier;">&nbsp;&nbsp;&nbsp;&nbsp; &lt;gs:MUIFallback Value="da-DK" /&gt; </span></strong><br /><strong><span style="font-family: courier new,courier;">&nbsp;&nbsp;&nbsp; &lt;/gs:MUILanguagePreferences&gt; </span></strong><br /><strong><span style="font-family: courier new,courier;">&nbsp;&nbsp;&nbsp; &lt;/gs:GlobalizationServices&gt;</span></strong></p>
+<p>I don't know about you, but I like it when the answer is right there in the question!</p>
+<p>Did you see it?</p>
+<p>It is in the <span style="color: #ff0000;"><strong><span style="font-family: Courier New;" face="Courier New">&lt;gs:User UserID="Current" CopySettingsToSystemAcct="true" /&gt;</span></strong></span>&nbsp;line.</p>
+<p>Because by setting the user account and requesting that the setting be&nbsp;copied to system accounts, one has formally requested that the copy take place.</p>
+<p>The user context/system context difference is simply whether the user running the script has permission to make the change!</p>
+<p>Just like in this UI in Windows 7/Server 2008 R2/Windows 8/Server 2012&nbsp;intl.cpl:</p>
+<p><a href="http://msdnshared.blob.core.windows.net/media/MSDNBlogsFS/prod.evol.blogs.msdn.com/CommunityServer.Blogs.Components.WeblogFiles/00/00/00/33/81/4721.CopyToSettings01.jpg"><img title="Copy to System Settings v1" border="0" alt="Copy to System Settings v1" src="http://msdnshared.blob.core.windows.net/media/MSDNBlogsFS/prod.evol.blogs.msdn.com/CommunityServer.Blogs.Components.WeblogFiles/00/00/00/33/81/4721.CopyToSettings01.jpg" /></a></p>
+<p>or this one in the Vista/Server 2008 intl.cpl:</p>
+<p><a href="http://msdnshared.blob.core.windows.net/media/MSDNBlogsFS/prod.evol.blogs.msdn.com/CommunityServer.Blogs.Components.WeblogFiles/00/00/00/33/81/0042.CopyToSettings02.jpg"><img title="Copy to System Settings v2" border="0" alt="Copy to System Settings v2" src="http://msdnshared.blob.core.windows.net/media/MSDNBlogsFS/prod.evol.blogs.msdn.com/CommunityServer.Blogs.Components.WeblogFiles/00/00/00/33/81/0042.CopyToSettings02.jpg" /></a></p>
+<p>The follow up question was:</p>
+<p style="padding-left: 60px;"><span style="font-family: times new roman,times;">Is there a way to revert this change on&nbsp; machines where this XML file was already used and the machines are in problem state?</span><span style="font-family: times new roman,times;"></span></p>
+<p>Unfortunately, no.</p>
+<p>It doesn't store any previous settings.</p>
+<p>And there is no mulligan....</p>
+<p>So, to fix, one would have to:</p>
+<ol>
+<li>Create a new XML file that sets everything back to English and does include the <strong><span style="color: #ff0000; font-family: Courier New;" face="Courier New" color="#ff0000">CopySettingsToSystemAcct="true"</span></strong>&nbsp;piece, and then</li>
+<li>Run the original XML file that makes the desired per-user changes and does <strong>not</strong> include the&nbsp;<strong><span style="color: #ff0000; font-family: Courier New;" face="Courier New" color="#ff0000">CopySettingsToSystemAcct="true"</span></strong> piece.</li>
+</ol>
+<p>When this unattend feature was being created in&nbsp;Longhorn (which became Vista), this very scenario was discussed.</p>
+<p>But the fact that the UI didn't support it made it less interesting, so the idea was dropped, especially since just running two files could get the desired effect.</p>
+<p>Just like steps 1 and 2, above!</p>
+<hr/><div style="margin-left: 1em"><em>no comments</em></div><hr/><p><em>go to <a id="newer" href="../20/10341516.html" title="The evolving Story of Locale Support, part 26: Hey Windows 8, there&#39;s someone on the phone for you.">newer</a> or <a id="older" href="../16/10340297.html" title="In the land of the unsupported, previous blogs and tools can be king">older</a> post, or back to <a href="../../../index-2.html">index</a> or <a href="../../../index-2.html#2012-08">month</a> or <a href="../../../index-2.html#2012-08-17">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2012/08/17/10340803.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:30 GMT -->
+</html>

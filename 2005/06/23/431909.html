@@ -1,0 +1,17 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2005/06/23/431909.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:41 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>What normalization form does SQL Server use, REDUX</title></head><body>
+<h1>What normalization form does SQL Server use, REDUX</h1>
+<p><em>by Michael S. Kaplan, published on 2005/06/23 11:06 -07:00, original URI: http://blogs.msdn.com/michkap/archive/2005/06/23/431909.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostOld -->
+<FONT face=Tahoma>
+<P><FONT face=Tahoma>This question came up a few times at TechEd in Orlando, and recently it was asked again in the newsgroups by a guy named Tim:</FONT></P>
+<BLOCKQUOTE dir=ltr>
+<P><EM>Does SQL server allow input in both NFC and NFD? If so does it<BR>normalize so a select on an NFC piece of text returns NFD and vice<BR>versa? If normalized, is this at input or when the select is run - i.e.<BR>does output form always match input form?<BR><BR>Any pointers to documentaion covering this will be much appreciated.</EM></P></BLOCKQUOTE>
+<P><FONT face=Tahoma>Not sure I would be so bold as to call this blog <STRONG>documentation</STRONG>, but one of my first blog posts talks about it a little -- </FONT><FONT face=Tahoma><a href="http://archives.miloush.net/michkap/archive/2004/11/29/271476.html">Normalization and Microsoft -- what's the story?</A></FONT></P></FONT>
+<P><FONT face=Tahoma>One additional point to make here is that SQL Server does not modify your data at all by tranforming it from one normalization form to another. It simply treats them as being equal in the index.</FONT></P>
+<P><FONT face=Tahoma>If it did not, then it would have to modify your data when you store it. What if you were building up a database of various normalized and partially normalized strings to show comparisons of how they render based on fonts? SQL Server would be destroying your application through the normalization process!</FONT></P>
+<P><FONT face=Tahoma>So it leaves your data alone and just makes sure to do the right thing in any index you create on the column into which the insert is done....</FONT></P>
+<hr/><div style="margin-left: 1em"><em>no comments</em></div><hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2005/06/24/432114.html" title="Seeing red. But in a good way....">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2005/06/23/431866.html" title="What normalization form does SQL Server use?">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2005-06">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2005-06-23">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2005/06/23/431909.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:41 GMT -->
+</html>

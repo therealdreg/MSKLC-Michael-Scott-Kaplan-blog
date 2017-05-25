@@ -1,0 +1,38 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2007/03/29/1989831.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:38 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Why does it use strings to represent numbers, exactly?</title></head><body>
+<h1>Why does it use strings to represent numbers, exactly?</h1>
+<p><em>by Michael S. Kaplan, published on 2007/03/29 14:21 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2007/03/29/1989831.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P>Aaron asks:</P>
+<BLOCKQUOTE>
+<P><EM><FONT face="times new roman,times">Hello!&nbsp; I've got a question that's been nagging at me for a while now.&nbsp; I work for a dev tools company and design a fair number of public APIs.&nbsp; So I tend to be critical of other companies public APIs and usually wonder "what made them decide to do X?"&nbsp; And the EnumLocalesProc (and by association, the EnumSystemLocales API) is one of those question-generators.<BR><BR>Why does the EnumLocalesProc receive a string, when all of the locale APIs take an LCID, which is an integer?&nbsp; If the string passed into the callback is nothing more than a string representation of an LCID (in hex form), then doesn't that basically mean everyone using that API has to convert it to an integer form?&nbsp; If so, then what's the purpose to it being a string in the first place instead of an integer?&nbsp; As a corollary, what's the purpose to it having an A and W version if it's simply passing numerical information?<BR><BR>I am rather new to NLS and i8n support, so I feel like I must be missing some piece of the rather complex puzzle.&nbsp; Thanks for shedding any light onto this for me!&nbsp; It's really not a dire need, since I can still make use of the API.&nbsp; But I hate not understanding why something is the way it is.&nbsp; ;-)<BR><BR>Sincerely,<BR>Aaron</FONT></EM></P></BLOCKQUOTE>
+<P>Ah, the eternal question about why <A class="" href="http://msdn2.microsoft.com/library/ms776334.aspx" mce_href="http://msdn2.microsoft.com/library/ms776334.aspx">EnumSystenLocales</A> has to support A and W versions, and why&nbsp;the <A class="" href="http://msdn2.microsoft.com/library/ms776304.aspx" mce_href="http://msdn2.microsoft.com/library/ms776304.aspx">EnumLocalesProc</A>&nbsp;callback&nbsp;that returns a number has to do it as a string....</P>
+<P>This is actually a question I asked Julie years ago, and her answer (which covered the original, pre-LOCALE_RETURN_NUMBER behavior in <A class="" href="http://msdn2.microsoft.com/library/ms776270.aspx" mce_href="http://msdn2.microsoft.com/library/ms776270.aspx">GetLocaleInfo</A>!), was that it was based on how the data was stored.</P>
+<P>The data was originally stored in the registry as strings for all user override values and lists of locales used for enumeration, and the full data in locale.nls was stored as strings, too. Even for the values that were numbers.</P>
+<P>So in the end, functions that dealt with all of this string data just returned it as string data as well. It was just easier.</P>
+<P><EM>(Of course it might have been easier in the end to make these numbers; there are interesting architectural consequences to the fact that these started as strings that I'll talk about another day!)</EM></P>
+<P>Of course within a version or two the obvious need in apps that have to make thousands of calls&nbsp;to <A class="" href="http://msdn2.microsoft.com/library/ms776270.aspx" mce_href="http://msdn2.microsoft.com/library/ms776270.aspx">GetLocaleInfo</A>&nbsp;for something like LOCALE_RETURN_NUMBER to be added was met. But no one ever tried to change <A class="" href="http://msdn2.microsoft.com/library/ms776334.aspx" mce_href="http://msdn2.microsoft.com/library/ms776334.aspx">EnumSystenLocales</A>/<A class="" href="http://msdn2.microsoft.com/library/ms776304.aspx" mce_href="http://msdn2.microsoft.com/library/ms776304.aspx">EnumLocalesProc</A>&nbsp;since one just couldn't make the same argument. Plus the semantics behind changing a callback were also not entirely clear, and no one wanted to add a function.</P>
+<P>Now note that internally (until Vista) the data was still stored as strings.</P>
+<P>So even though customers were relieved of the burden of conversions, we were not (which meant the performance hit was still there).</P>
+<P>In Vista this changed and we started storing numbers and numbers, with all the attendant benefits of type appropriateness. And now the string-based <A class="" href="http://msdn2.microsoft.com/library/ms776304.aspx" mce_href="http://msdn2.microsoft.com/library/ms776304.aspx">EnumLocalesProc</A>&nbsp;is just one of those historical oddities that people could ask about from time to time....</P>
+<P mce_keep="true">&nbsp;</P>
+<P><FONT color=#ff00ff><EM>This post brought to you by</EM> ฐ <EM>(<A class="" href="http://www.fileformat.info/info/unicode/char/0e10" mce_href="http://www.fileformat.info/info/unicode/char/0e10">U+0e10</A>, a.k.a. THAI CHARACTER THO THAN)</EM></FONT></P>
+<hr/><p><strong>woizero hannah</strong> on 29 Mar 2007 8:01 PM:</p><div style="margin-left: 1em"><p>Meekael..</p>
+<p>Thank you for your work in making sure my language and alphabet does not become a historical oddity that people ask about from time to time. I have just discovered Nyala in vista!!! Wey Hey!!!!!</p>
+<p>thank you and the &quot; Many people were instrumental to getting the Ethiopian script in general and the Amharic language in particular supported in Vista&quot; &nbsp;especially the one crucial piece (you) were heavily involved with ! Well done you and &nbsp;Ning Jin-Grisaffi and especially Daniel Yacob for getting an Amharic input method into the product after suddenly finding out y'alldid not have one!).</p>
+<p> I hope you &nbsp;blog more about this whole issue some day. :-)</p></div>
+<p><strong>zvik</strong> on 16 Apr 2007 5:45 AM:</p><div style="margin-left: 1em"><p>Hello,</p>
+<p> &nbsp; I tried to use MultiByteToWideChar() function to </p>
+<p> &nbsp;convert UTF-16 encoded string and it failed.</p>
+<p> &nbsp; Is it designed to get only ANSI / UTF-8 code</p>
+<p> &nbsp; or it can get UTF-16 format with special parameters?</p>
+<p>Thanks a lot,</p>
+<p> &nbsp;Zvi.</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 16 Apr 2007 5:54 AM:</p><div style="margin-left: 1em"><p>It cannot ever be used to &quot;get UTF-16&quot; and convert it to UTF-16, no.</p>
+<p>Kind of off-topic though, isn't it? Maybe you could explain what you are trying to do in the Suggestion Box?</p>
+</div>
+<hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2007/03/30/1995343.html" title="When a font looks like crap....">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2007/03/29/1985735.html" title="I Kana understand you, could you repeater that? (Part 1)">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2007-03">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2007-03-29">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2007/03/29/1989831.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:38 GMT -->
+</html>

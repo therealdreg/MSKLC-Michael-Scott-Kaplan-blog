@@ -1,0 +1,73 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2010/12/13/10103924.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>I swear the Romanian bug is fixed; it was fixed 4.5 years ago!</title></head><body>
+<h1>I swear the Romanian bug is fixed; it was fixed 4.5 years ago!</h1>
+<p><em>by Michael S. Kaplan, published on 2010/12/13 07:01 -05:00, original URI: http://blogs.msdn.com/b/michkap/archive/2010/12/13/10103924.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<p>It was a bit like that Latvian bug.</p>
+<p>The one I described in <a href="http://archives.miloush.net/michkap/archive/2010/07/13/10037608.html" title="I swear the Latvian bug is fixed; it was fixed 4.5 years ago!"><strong>I swear the Latvian bug is fixed; it was fixed 4.5 years ago!</strong></a>.</p>
+<p>Though I admit I get slightly less email about this other issue.</p>
+<p>In its latest incarnation,&nbsp;the mails that came in the other day, first this one:</p>
+<p style="padding-left: 120px;"><span style="font-family: times new roman,times;">Dear Michael Kaplan,<br /><br />I am writing to this email address because I've seen it mentioned in a previous blog entry&lt;</span><a target="_blank" href="http://archives.miloush.net/michkap/archive/2010/11/30/10098113.html"><span style="font-family: times new roman,times;">http://blogs.msdn.com/b/michkap/archive/2010/11/30/10098113.aspx</span></a><span style="font-family: times new roman,times;">&gt;<br />.<br /><br />My question is mentioned in the subject of this email: *How to do accent insensitive comparison under Windows*?<br /><br />My test case would be:<br />voila == voil&aacute;<br />garcon == gar&ccedil;on<br />kase == k&auml;se, or better kaese == k&auml;se<br />arsita == arșiță (Romanian s and t with comma bellow, and a with breve)<br />arsita == arşiţă (Romanian s and t with cedilla, and a with breve)<br />arşiţă == arșiță<br /><br />I've hacked a MSDN C++ sample &lt;</span><a target="_blank" href="http://pastebin.com/fG9APFDt"><span style="font-family: times new roman,times;">http://pastebin.com/fG9APFDt</span></a><span style="font-family: times new roman,times;">&gt;, but it doesn't quite work as expected.<br /><br />After reading the documentation of Boost.Locale&lt;</span><a target="_blank" href="http://cppcms.sourceforge.net/boost_locale/html/tutorial.html"><span style="font-family: times new roman,times;">http://cppcms.sourceforge.net/boost_locale/html/tutorial.html</span></a><span style="font-family: times new roman,times;">&gt; I was left with the impression that C++ could work as expected (at least "garcon" should be equal with "gar&ccedil;on")<br /><br />If it is possible in C++ how about the Romanian s and t with comma bellow characters? The C++ locale for Romanian on Windows is equivalent with ISO-8859-2.<br /><br />I've been informed that Microsoft doesn't want to add support for ISO-8859-16 in their products, UTF-8 and Unicode being the future, but how can I use C++ to have "arsita" and "arșiță" as equal?<br /><br />Thank you in advance.<br /><br />Sincerely,<br />Cristian Adam</span></p>
+<p>and then this other one:</p>
+<p style="padding-left: 120px;"><span style="font-family: times new roman,times;">Dear Michael Kaplan,<br /><br />I have found the CompareString Win32 function and I've made a test application &lt;</span><a target="_blank" href="http://pastebin.com/6mvkpzxx"><span style="font-family: times new roman,times;">http://pastebin.com/6mvkpzxx</span></a><span style="font-family: times new roman,times;">&gt;.<br /><br />The results on Windows XP are:<br /><br />---------------------------<br />Comparison<br />---------------------------<br />voila == voil&aacute;<br />garcon == gar&ccedil;on<br />kase == k&auml;se<br />kase &gt; kaese<br />arsita == arşiţă<br />arsita &gt; arșiță<br />arşiţă &gt; arșiță<br /><br />---------------------------<br />OK<br />---------------------------<br /><br />CompareString on Windows XP doesn't recognize the s and t comma bellow for Romanian language!!!<br /><br />Should I file a bug report through Microsoft Connect?<br /><br />Sincerely,<br />Cristian Adam.</span></p>
+<p>Aha, now we know what the problem is.</p>
+<p><strong>First of all, you do not need to use that weird way to contact me, use the Contact link on THIS page in THIS blog!</strong></p>
+<p>And then, second of all....</p>
+<p>XP is not going to be updated to support the Romanian S and T with comma below letters.</p>
+<p>EVER.</p>
+<p>There are updates to fonts to display them, you can use MSKLC to create keyboards for them.</p>
+<p>But if you want collation and casing to work, you have to either:</p>
+<ul>
+<li>settle for the cedilla-below letters, or</li>
+<li>upgrade to Vista or Server 2008 or Windows 7 or Server 2008 R2 (or later, when later comes out)</li>
+</ul>
+<p>No XP solution to this problem is going to materialize that will give the right answer for accent insensitive comparisons.</p>
+<p>You can search on this site for the Romanian issue with these letters because I have talked about it often in the past.</p>
+<p>No, it is not worth the time of putting in a Connect bug -- because it can't be fixed downlevel. The fix already exists, and has existed for over half a decade....</p>
+<p>But with all that said, the real problem here is not the one I have been talking about, either here or in that other blog about Latvian.</p>
+<p>The "problem" is that there are lots of people who still love XP, and that every day those people notice a problem that they want fixed.</p>
+<p>Hell, I have one machine (a Dell Latitude D820) that I use for many things. It runs like crap on Vista, and Dell refuses to support with Windows 7 on it -- no drivers, occasional blue screens, etc. Though Vista is supported by Dell on it.&nbsp;So believe me, that one machine will be running XP for years to come.</p>
+<p>But if your language is Latvian or Romanian, you have an even better reason to upgrade:</p>
+<p><span style="font-size: large;">Because you want your <strong>@#%&amp;*!</strong> language to work right.</span></p>
+<p>That one machine of mine that @#%&amp;*! Dell won't support on Windows 7? It is doing specific tasks at home that involve neither language. And I have lower expectations because I know it is running something that&nbsp;was mostly developed&nbsp;a decade ago.</p>
+<p>By the way, that XP machine is running IE8 (I am not part of the 45% of China that is using @#%&amp;*! IE6).</p>
+<p>But as I said earlier in this blog and many times in this Blog, XP is not going to get updated collation, or casing....</p>
+<hr/><p><strong>Mihai</strong> on 13 Dec 2010 11:09 AM:</p><div style="margin-left: 1em"><p>Actually, it does look like LINGUISTIC_IGNOREDIACRITIC has problems with Romanian.</p>
+<p>Try:</p>
+<p>wchar_t const szNoAccents[] &nbsp; = { 0x0061, 0x0072, 0x0073, 0x0069, 0x0074, 0x0061, 0x0000 };</p>
+<p>wchar_t const szWithComma[] &nbsp; = { 0x0061, 0x0072, 0x0219, 0x0069, 0x021B, 0x0103, 0x0000 };</p>
+<p>int result = CompareStringEx(</p>
+<p>	L&quot;ro-RO&quot;,</p>
+<p>	LINGUISTIC_IGNOREDIACRITIC,</p>
+<p>	szNoAccents, -1,</p>
+<p>	szWithComma, -1,</p>
+<p>	NULL, NULL, 0</p>
+<p>);</p>
+<p>Result: CSTR_LESS_THAN, should be CSTR_EQUAL.</p>
+<p>Tried it on Windows 7.</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 13 Dec 2010 2:20 PM:</p><div style="margin-left: 1em"><p>If you look at the Romanian data, we don&#39;t consider these to be diacritic differences -- the letters are given independant weight.</p>
+<p>If you choose anything other than Romanian, you can get the comma below ignored....</p>
+</div>
+<p><strong>Mihai</strong> on 13 Dec 2010 3:35 PM:</p><div style="margin-left: 1em"><p>Hmmm...</p>
+<p>I agree that these are technically different, stand-alone characters.</p>
+<p>But the lack of support was missing for such a long time (and the ANSI applications on non-Romanian systems did not allow even for the cedilla form) that a lot of people find it handy to just do the searches without &quot;accents&quot;</p>
+<p>Very handy (try searching for &quot;resita&quot; in Google or Bing and you will find &quot;Reşiţa&quot;, nice)</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 13 Dec 2010 4:10 PM:</p><div style="margin-left: 1em"><p>But we can&#39;t have it both ways if search/string compare and SORT use the same function -- otherwise the order will be wrong, and that is what the Romanian collation is built for. These letters must have primary weight (like the cedilla below characters used to), or dictionarioes will be wrong.</p>
+<p>Until they add an EqualString function, that is. :-)</p>
+</div>
+<p><strong>zedware1</strong> on 13 Dec 2010 9:04 PM:</p><div style="margin-left: 1em"><p>I am now using Google Chrome on Windows XP. No IE6 anymore.</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 13 Dec 2010 10:33 PM:</p><div style="margin-left: 1em"><p>Ah, but you&#39;re still using XP....</p>
+</div>
+<p><strong>Mihai</strong> on 14 Dec 2010 10:35 AM:</p><div style="margin-left: 1em"><p>I agree think that sort and search are different beasts, and most people don&#39;t even grok that.</p>
+<p>Adding an extra API would make it quite confusing.</p>
+<p>But by default sorting in most languages will be messed up if one uses any kind of *_IGNORE* flag.</p>
+</div>
+<p><strong>Tae</strong> on 31 Jan 2013 7:52 AM:</p><div style="margin-left: 1em"><p>What’s up with their censored swearing? Romanian s and t with comma bellow is unavailable in XP. You might want to replace “@#%&amp;*!” with “fucked”.</p>
+</div>
+<hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2010/12/14/10104459.html" title="Falling back shouldn&#39;t mean falling over (though perhaps it does, a bit)">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2010/12/11/10103541.html" title="The latest Windows 7 LIP: Quechua it if you can!">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2010-12">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2010-12-13">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2010/12/13/10103924.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+</html>

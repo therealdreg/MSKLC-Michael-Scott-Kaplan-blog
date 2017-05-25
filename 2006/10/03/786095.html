@@ -1,0 +1,30 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2006/10/03/786095.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:39 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>What's the KeyboardDataQueueSize for?</title></head><body>
+<h1>What's the KeyboardDataQueueSize for?</h1>
+<p><em>by Michael S. Kaplan, published on 2006/10/03 11:15 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2006/10/03/786095.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<FONT face=Tahoma>
+<P>The question was about the following registry key: </P>
+<BLOCKQUOTE>
+<P><FONT face="courier new,courier">HKLM\SYSTEM\CurrentControlSet\Services\Kbdclass\Parameters\KeyboardDataQueueSize</FONT></P></BLOCKQUOTE>
+<P>It went something like this: </P>
+<BLOCKQUOTE>
+<P><FONT face="times new roman,times">Could someone tell me if the default value of 100 on Win XP SP2 (EN-GB) means that 50 keystrokes will be buffered (as a result of DBCS) by the keyboard driver, or do we still use single-byte chars for things like the keyboard buffers, so 100 keystrokes will be buffered?</FONT></P></BLOCKQUOTE>
+<P>Now my first thought was simple enough:</P>
+<BLOCKQUOTE><FONT face="Times New Roman,times">
+<P>The buffer has nothing to do with DBCS, it has to do with how many keystrokes are buffered for when no one is actually clearing the buffer, like if some process is busy enough to seem like it is hung).<BR><BR>It is before keystrokes are mapped to characters though, so character characteristics are not involved....<BR><BR>With that said, the truth is that some character entries may consist of two or even more keystrokes (in an IME you could need one or two for a pronunciation plus arrow keys to move down the candidate list, you could have chained dead keys, the Unicode IME takes four keystrokes, new text based TIPs in Vista could have combinations that take many keystrokes).<BR><BR>So the 100 can go faster than one might think!&nbsp;</P></FONT></BLOCKQUOTE>
+<P>Now every word of that is true, but it also has nothing to do with the original registry key in question (thus hearkening to that old riddle about this proving I must work for Microsoft if I can have an answer is that is 100% true and 100% useless!). I had forgotten about the separation between the kernel mode piece of the USER subsystem (sometimes affectionately known as UserK (or userk or user/k, you get the picture) and the piece that runs in user mode. Luckily Hiro-san was able to clear things up:</P>
+<BLOCKQUOTE><FONT face="Times New Roman,times">
+<P>Actually, the parameter is for the hardware and/or drivers, and has nothing to do with the hung application or whatever is happening in the user mode.<BR><BR>Apps don’t communicate directly with the drivers.&nbsp; The RIT is reading the input from keyboard drivers, and distribute it to the application message queues.<BR><BR>If an app is hung and not retrieving the window messages, the input messages will pile up in the app’s own message queue, which is far more permissive than the narrow channels between the drivers and the RIT.</P></FONT></BLOCKQUOTE>
+<P>The registry key is for that queue on the kernel side, which is never the one that is hung up; it is those meaage queues back in user mode that can have all of the problems with hanging and such when theyare busy but someone keeps trying to type.</P>
+<P>Though it is worth noting that the buffer in question is for keystrokes, long before any notion of even the possibility of an expectation of a character manages to come up. So perhaps my original thoughts are useful if you take out the misleading suggestion about who uses the 100 character buffer. :-)</P>
+<P mce_keep="true">&nbsp;</P>
+<P><FONT color=#ff00ff><EM>This post brought to you by</EM> <FONT size=7>ಟ</FONT> <EM>(<A class="" href="http://www.fileformat.info/info/unicode/char/0c9f" mce_href="http://www.fileformat.info/info/unicode/char/0c9f">U+0c9f</A>, a.k.a. KANNADA LETTER TTA)</EM></FONT></P></FONT>
+<hr/><p><strong>Tony Lee</strong> on 3 Oct 2006 11:54 AM:</p><div style="margin-left: 1em">Isn't the 50 because every key down is followed by a key up (excluding auto-repeat) and not because some key strokes take more than one byte?</div>
+<p><strong>Michael S. Kaplan</strong> on 3 Oct 2006 11:59 AM:</p><div style="margin-left: 1em"><p>Its not really 50, it is 100 items in the queue -- which can be quite a few different mixtures of things (including the keyup and key down, as you mention). It is not counting individual keystrokes or anything like that....</p>
+</div>
+<p><strong>Mihai</strong> on 3 Oct 2006 12:33 PM:</p><div style="margin-left: 1em">If it works like the old keyboard buffer it also stores the autorepeat keydown messages, so it can go quite fast.<br/><br/>On the plain-vanila PC, the keyboard 20 bytes circular buffer is maintainted by the BIOS (and the address is 0000:041e). The two words before the buffer point to the head and the tail, and making them the same was a popular way to "empty" the keyboard buffer.<br/>Old times :-)</div>
+<hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2006/10/04/788429.html" title="Wild[card] thing, You make my CHAR sing">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2006/10/03/784459.html" title="They say it happens to everyone, at some point...">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2006-10">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2006-10-03">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2006/10/03/786095.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:39 GMT -->
+</html>

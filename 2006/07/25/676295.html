@@ -1,0 +1,70 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2006/07/25/676295.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:39 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Our non-Unicode heritage</title></head><body>
+<h1>Our non-Unicode heritage</h1>
+<p><em>by Michael S. Kaplan, published on 2006/07/25 03:01 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2006/07/25/676295.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P><FONT face=Tahoma color=#ff0000 size=2><EM>Apologies for the small George Carlin riff in italics below, it is based on the <STRONG>Civil War</STRONG> bit he did during his New Jersey HBO special back in the early 90s. I lack the budget to have Mr. Carlin do a Podcast saying this bit, so please use your imagination to get the full effect!</EM></FONT></P>
+<P><FONT face=Tahoma><EM>The first version of Windows (1.0) shipped back in 1985, and it didn't have all that much in the way of impressively compelling international support. There were other good reasons for nobody to buy it, so most people probably did notice the lack. </EM></FONT></P>
+<P><FONT face=Tahoma><EM>Anyway, about seven years after the first version was released, seven years later, Windows NT 3.1 was shown at the PDC in San Fransisco. And it supported Unicode.</EM></FONT></P>
+<P><FONT face=Tahoma><EM><STRONG>Not so you'd really notice it, of course.</STRONG> </EM></FONT></P>
+<P><FONT face=Tahoma><EM>Just sort of 'on paper.'</EM></FONT></P>
+<P><FONT face=Tahoma><EM>Of course now, fourteen years later, and Microsoft is planning on shipping Windows Vista, a fully Unicode operating system.</EM></FONT></P>
+<P><FONT face=Tahoma><EM><STRONG>But not so you'd really notice it.</STRONG></EM></FONT></P>
+<P><FONT face=Tahoma><EM>Because we still have these components that don't support Unicode.</EM></FONT></P>
+<P><FONT face=Tahoma><EM>Components who figure a code page is a really keen way to encode.</EM></FONT></P>
+<P><FONT face=Tahoma><EM>And the developers study the encoding carefully, and they try to improve on the strategies and the tactics to increase the component's utility. In case we have to go through writing new non-Unicode support some time. [sarcasm]</EM></FONT></P>
+<P><FONT face=Tahoma><EM>In fact, some of these components actually get used in top of the line applications and they go out and shoot for the moon with the features they provide.</EM></FONT></P>
+<P><FONT face=Tahoma><EM>You know what I say? <STRONG>Use live ammunition, would you please?</STRONG> </EM></P></FONT>
+<P><FONT face=Tahoma>That was fun. :-)</FONT></P>
+<P><FONT face=Tahoma>Anyway, let's get down to it.</FONT></P>
+<P><FONT face=Tahoma>One of those components, I mentioned briefly in <STRONG><A href="http://archives.miloush.net/michkap/archive/2006/05/19/601823.html">this post</A></STRONG>: wininet.dll. </FONT></P>
+<P><FONT face=Tahoma>It came up because we had an interest in changing the defaults for the <A href="http://technet2.microsoft.com/WindowsServer/en/library/99a88b4c-c9cc-45f6-9f52-2297e2560ac81033.mspx?mfr=true">NtfsAllowExtendedCharacterIn8dot3Name</A> setting, documented as:</FONT></P>
+<BLOCKQUOTE dir=ltr style="MARGIN-RIGHT: 0px"><FONT face=Tahoma>
+<P><FONT face="Times New Roman" size=2>Specifies whether the characters from the extended character set, including diacritic characters, can be used in short file names using the 8.3 naming convention on NTFS volumes.</FONT></P>
+<P>
+<TABLE dir=ltr cellSpacing=0 cellPadding=0 border=1>
+<TBODY>
+<TR vAlign=top>
+<TD>
+<P><B><FONT face="Times New Roman" size=2>Value</FONT></B></P></TD>
+<TD>
+<P><B><FONT face="Times New Roman" size=2>Meaning</FONT></B></P></TD></TR>
+<TR vAlign=top>
+<TD>
+<P><FONT face="Times New Roman" size=2>0</FONT></P></TD>
+<TD>
+<P><FONT face="Times New Roman" size=2>On NTFS volumes, file names using the 8.3 naming convention are limited to the standard ASCII character set (minus any reserved values).</FONT></P></TD></TR>
+<TR class=record vAlign=top>
+<TD>
+<P><FONT face="Times New Roman" size=2>1</FONT></P></TD>
+<TD>
+<P><FONT face="Times New Roman" size=2>On NTFS volumes, file names using the 8.3 naming convention may use extended characters.</FONT></P></TD></TR></TBODY></TABLE></P>
+<P><FONT face="Times New Roman" size=2>This entry does not exist in the registry by default. You can add it by using the registry editor Regedit.exe.</FONT></P></FONT></BLOCKQUOTE>
+<P><FONT face=Tahoma>Of course what is not mentioned in that informational topic is that years ago it was decided that this value should be set anytime the default system locale was Chinese, Japanese, or Korean (and unset anytime it wasn't). </FONT></P>
+<P><FONT face=Tahoma>There are several problemes here -- </FONT></P>
+<OL>
+<LI><FONT face=Tahoma>It&nbsp;is mildly inconvenient as we are trying to reduce the number of dependencies to the system locale</FONT> 
+<LI><FONT face=Tahoma>we also (generally) reduce the odd interactions like that are so hard to track.</FONT> 
+<LI><FONT face=Tahoma>The old logic actually stomps on the preferences of anyone who actually uses the setting, any time the locale is changed</FONT></LI></OL>
+<P><FONT face=Tahoma>After talking with various partners and knowledgable people in the file system and the various markets, we tried just setting it always and being done with it. Unicode had been around for some time, maybe it was "time to cut the cord" (the exact words of one of the file system architects).</FONT></P>
+<P><FONT face=Tahoma>In fact, if you have Beta 2 of Vista then that is what you have on your install.</FONT></P>
+<P><FONT face=Tahoma>Everything was going great until we found out that that one several-year old baby still had the cord attached. :-(</FONT></P>
+<P><FONT face=Tahoma>The wininet cache (that is used to basically cache everything that various processes including IE use accessing the internet) does not support Unicode, since wininet.dll doesn't (wininet supports a Unicode interface that converts anything you throw at it, but that is more or less it).</FONT></P>
+<P><FONT face=Tahoma>Now for a page on the web it would not be too noticeable; after all, if a cache item of an internet access cannot be reached, then it just wouldn't get used -- you just go right to the internet. Unfortunately if you have a user name that isn't on your default system code page then the path to the cache itself is broken. So you fail even trying to get to it to fail -- so basically you lose Internet Explorer.</FONT></P>
+<P><FONT face=Tahoma>Oops.</FONT></P>
+<P><FONT face=Tahoma>Anyway, no worries, even though no beta customers had reported the problem, there was no sense waiting for a report -- clearly this was a big enough regression that it had to be fixed.</FONT></P>
+<P><FONT face=Tahoma>The change has been reverted for future builds, so that wininet.dll's lack of Unicode support (and incidently of the Windows non-Unicode heritage!) is preserved for another version.</FONT></P>
+<P><FONT face=Tahoma>Though I suppose it means that there aren't a whole lot of Windows user names off the default system code page that are used on CJK system locale machines. Or if there are then those customers probably don't try to use IE much. Since they are as broken in the prior versions as they will be in the new version.</FONT></P>
+<P><FONT face=Tahoma>And of course the people who use that <A href="http://technet2.microsoft.com/WindowsServer/en/library/61cd1970-5254-47c2-96d4-a66c780446381033.mspx?mfr=true">NtfsDisable8dot3NameCreation</A> setting to block the creation of short file names are probably not going to be too happy either if they have long user names or names with characters off the default system code page, for roughly the same reason.</FONT></P>
+<P><FONT face=Tahoma>In the end I am not really too worried about it since both ANSI support and short file name support on NTFS are there for backwards compatibility. So I suppose the overlap is consistent enough that people are not hitting this particular bug much.</FONT></P>
+<P><FONT face=Tahoma>But it is a story that I have been shaking my head about since the problem was identified....</FONT></P>
+<P><FONT face=Tahoma></FONT></P>
+<P><FONT face=Tahoma color=#ff1493><EM>This post brought to you by</EM> <STRONG><FONT face="Iskoola Pota" size=6>ඤ</FONT></STRONG> <EM>(<A href="http://www.fileformat.info/info/unicode/char/0da4">U+0da4</A>, a.k.a. SINHALA LETTER TAALUJA NAASIKYAYA)</EM></FONT></P>
+<hr/><p><a id="677690" href="#677690">#</a> <strong>Random Reader</strong> on 25 Jul 2006 4:09 AM:</p><div style="margin-left: 1em">From this I infer that the wininet cache only uses short file names; why is that still the case today? &nbsp;I would have expected that to change for the NT line at some point, especially if the IE team is responsible for it.<br><br>Is it just a case of it not being a priority to change, or is there something &quot;bigger&quot; behind it?</div>
+<p><a id="677804" href="#677804">#</a> <strong>Michael S. Kaplan</strong> on 25 Jul 2006 7:51 AM:</p><div style="margin-left: 1em">Yep, short names is their business. Hard to know why, exactly (when they had to install on Win9x the reason was more obvious).</div>
+<p><a id="678084" href="#678084">#</a> <strong>Ben Cooke</strong> on 25 Jul 2006 1:58 PM:</p><div style="margin-left: 1em">I did try to answer this for myself, but I can't find any easy way to get the short filename of a file under Windows XP without writing code. (Side note: I'm finally running Windows XP! I've been using 2000 as my primary OS for years now. My Windows XP install is so fresh that I don't have a compiler installed yet.)<br><br>If you have the setting on to store short filenames in the system code page, what does it store if your filename consists entirely of characters that aren't in the system code page? Does it end up just called ~1? :)<br><br>Also, does toggling that option when there are already files stored with short names confuse NTFS, or does it track for each file the character encoding used for its short filename?<br><br>(Side note 2: Back on my old system I actually had NtfsDisable8dot3NameCreation on for a bit, but I realised how often I actually use the short filenames as shortcuts. I quite often run &quot;c:\progra~1&quot;, for example. It's too bad that you can't have the creation of the entries in the FS disabled but just have the OS (or even just the shell!) preserve the illusion that they are there. I realise that'd get very ugly very quickly, though...</div>
+<p><a id="678092" href="#678092">#</a> <strong>Michael S. Kaplan</strong> on 25 Jul 2006 2:09 PM:</p><div style="margin-left: 1em">From a CMD prompt, dir /x will do the trick here....<br><br>The algorithm actually fills in other characters that fit within the ACSII range if 8.3 is limited to ASCII.</div>
+<hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2008/05/29 <a href="http://archives.miloush.net/michkap/archive/2008/05/29/8560847.html">Ask a simple question, and then duck!</a></p><p>2006/12/31 <a href="http://archives.miloush.net/michkap/archive/2006/12/31/1383831.html">More on our non-Unicode heritage</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2006/07/25/677592.html" title="Is East Asian support installed?">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2006/07/24/677020.html" title="Blogging is stupid, sometimes">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2006-07">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2006-07-25">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2006/07/25/676295.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:39 GMT -->
+</html>

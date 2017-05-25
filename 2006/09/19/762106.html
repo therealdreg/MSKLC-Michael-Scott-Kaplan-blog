@@ -1,0 +1,40 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2006/09/19/762106.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:39 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Put in on my Tab, please</title></head><body>
+<h1>Put in on my Tab, please</h1>
+<p><em>by Michael S. Kaplan, published on 2006/09/19 10:41 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2006/09/19/762106.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<FONT face=Tahoma>
+<P>The question that came in just the other day using code like the following:</P>
+<BLOCKQUOTE dir=ltr style="MARGIN-RIGHT: 0px"><FONT face="Consolas,Courier New" size=2>
+<P><STRONG>Console.WriteLine("\t\u3094".IndexOf("\t")); // returns 0<BR>Console.WriteLine("\t\u3098".IndexOf("\t")); // returns 0<BR>Console.WriteLine("\t\u3099".IndexOf("\t")); // returns -1<BR>Console.WriteLine("\t\u309a".IndexOf("\t")); // returns -1<BR>Console.WriteLine("\t\u309b".IndexOf("\t")); // returns -1<BR>Console.WriteLine("\t\u309c".IndexOf("\t")); // returns -1<BR>Console.WriteLine("\t\u309d".IndexOf("\t")); // returns 0</STRONG></P></FONT></BLOCKQUOTE>
+<P>There are a bunch of users who are pretty confused by the behavior here.... searching for a TAB combined with the following characters:</P>
+<UL>
+<LI><A href="http://www.fileformat.info/info/unicode/char/3094">U+3094</A> - HIRAGANA LETTER VU 
+<LI><A href="http://www.fileformat.info/info/unicode/char/3098">U+3098</A> - <EM>UNDEFINED</EM> 
+<LI><A href="http://www.fileformat.info/info/unicode/char/3099">U+3099</A> - COMBINING KATAKANA-HIRAGANA VOICED SOUND MARK 
+<LI><A href="http://www.fileformat.info/info/unicode/char/309a">U+309a</A> - COMBINING KATAKANA-HIRAGANA SEMI-VOICED SOUND MARK 
+<LI><A href="http://www.fileformat.info/info/unicode/char/309b">U+309b</A> - KATAKANA-HIRAGANA VOICED SOUND MARK 
+<LI><A href="http://www.fileformat.info/info/unicode/char/309c">U+309c</A> - KATAKANA-HIRAGANA SEMI-VOICED SOUND MARK 
+<LI><A href="http://www.fileformat.info/info/unicode/char/309d">U+309d</A> - HIRAGANA ITERATION MARK</LI></UL>
+<P>The report it is a bit confusing that the four in the middle behave differently than the three on the ends.</P>
+<P>Of course to start I'll point out that these strings are not all that meaningful, linguistically. How does one voice or semi-voice a tab? :-)</P>
+<P>To some extent you could consider it a side effect of the way that collation&nbsp;is implemented to achieve the results I discussed in <A href="http://archives.miloush.net/michkap/archive/2005/06/01/423711.html"><STRONG>Knock knock! Who's there? Kana! Kana Who?</STRONG></A>, but those voice and semi-voiced sound marks are given a diacritic weight only, just as we might do with <A href="http://www.fileformat.info/info/unicode/char/030a">U+030a</A> (COMBINING RING ABOVE) or <A href="http://www.fileformat.info/info/unicode/char/0327">U+0327</A> (COMBINING CEDILLA). And the thing about characters that are only given diacritic weight is that they have no independent identity. They merge their weight in with the previous character, so look at the sort keys of all of these strings:</P>
+<BLOCKQUOTE dir=ltr style="MARGIN-RIGHT: 0px"><FONT face="Consolas,Courier New" size=2>
+<P><FONT color=#008000><STRONG>07 05 22 04 01 02 03 01 01 ff 02 ff ff 01 00</STRONG></FONT></P>
+<P><FONT color=#800080><STRONG>07 05 01 01 01 01 00</STRONG></FONT></P>
+<P><FONT color=#ff0000><STRONG>07 05 01 03 01 01 01 00</STRONG></FONT></P>
+<P><FONT color=#ff0000><STRONG>07 05 01 04 01 01 01 00</STRONG></FONT></P>
+<P><FONT color=#ff0000><STRONG>07 05 01 03 01 01 01 00</STRONG></FONT></P>
+<P><FONT color=#ff0000><STRONG>07 05 01 04 01 01 01 00</STRONG></FONT></P>
+<P><FONT color=#0000ff><STRONG>07 05 07 05 01 01 01 01 00</STRONG></FONT></P></FONT></BLOCKQUOTE>
+<P>Now the sort key in purple is the undefined character -- in that one the second character has no weight so the weight is the same as that of the tab.</P>
+<P>And the one in blue is using the iteration mark, which acts as a repeater. See how the primary weight 07 05 is repeated? </P>
+<P>The one in green has a tab with no extra weight, follosed by another character.</P>
+<P>And those four in the middle in red each have some diacritic weight put on them. Kind of a less extreme case of the phenomenon I described in <STRONG><A href="http://archives.miloush.net/michkap/archive/2006/03/07/545097.html">What do you get when you combine a base character with a buttload of diacritics?</A></STRONG></P>
+<P>So you can think of them not as TAB characters, but as TAB++ or something. Trying to find the TAB inside of them is like trying to find the "<STRONG>a</STRONG>" inside the "<STRONG>å</STRONG>". Which you cannot do,&nbsp;because it really is no longer an "<STRONG>a</STRONG>" anymore....</P>
+<P>&nbsp;</P>
+<P><FONT color=#ff1493><EM>This post brought to you by</EM> <STRONG><FONT size=6>ゝ</FONT></STRONG> <EM>(<A href="http://www.fileformat.info/info/unicode/char/309d">U+309d</A>, a.k.a. HIRAGANA ITERATION MARK)</EM></FONT></P></FONT>
+<hr/><div style="margin-left: 1em"><em>no comments</em></div><hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2007/07/06 <a href="http://archives.miloush.net/michkap/archive/2007/07/06/3722803.html">A non-spacing mark and a diacritic are not always the same thing</a></p><p>2007/04/10 <a href="http://archives.miloush.net/michkap/archive/2007/04/10/2071471.html">When methods use collation to 'disturb the peace' we charge them with being 'out of sorts'</a></p><p>2007/02/17 <a href="http://archives.miloush.net/michkap/archive/2007/02/17/1698307.html">Giving a character a new identity (by giving it some secondary weight)</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2006/09/20/763157.html" title="Variation on that theme of wanting more keys covered by MSKLC">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2006/09/19/761547.html" title="Ready... set... Don&#39;t Reboot!">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2006-09">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2006-09-19">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2006/09/19/762106.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:39 GMT -->
+</html>

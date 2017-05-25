@@ -1,0 +1,56 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2007/11/16/6291947.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:37 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Detecting ALTGR fails when ALTGR isn't there (Just Czech-ed out in Word 2007)</title></head><body>
+<h1>Detecting ALTGR fails when ALTGR isn't there (Just Czech-ed out in Word 2007)</h1>
+<p><em>by Michael S. Kaplan, published on 2007/11/16 10:16 -05:00, original URI: http://blogs.msdn.com/b/michkap/archive/2007/11/16/6291947.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P>Some prior posts on this topic:</P>
+<LI>28 Dec 2004 <STRONG><A class="" href="http://archives.miloush.net/michkap/archive/2004/12/28/333168.html" mce_href="http://archives.miloush.net/michkap/archive/2004/12/28/333168.html">"To start press the ALTGR key." Hmm... where's the ALTGR key? </A></STRONG>
+<LI>21&nbsp;Apr 2005 <STRONG><A class="" href="http://archives.miloush.net/michkap/archive/2005/04/21/410305.html" mce_href="http://archives.miloush.net/michkap/archive/2005/04/21/410305.html">Intuitive is in the eye of the beholder </A></STRONG>&nbsp; 
+<LI>15 Mar 2006 <STRONG><A class="" href="http://archives.miloush.net/michkap/archive/2006/03/15/552031.html" mce_href="http://archives.miloush.net/michkap/archive/2006/03/15/552031.html">Multilingual keyboards and Microsoft Word</A></STRONG>&nbsp; 
+<LI>17 Apr 2006 <STRONG><A class="" href="http://archives.miloush.net/michkap/archive/2006/04/17/577196.html" mce_href="http://archives.miloush.net/michkap/archive/2006/04/17/577196.html">Get off my freaking key!</A></STRONG></LI>
+<LI>08 Sep 2007 <A class="" href="http://archives.miloush.net/michkap/archive/2007/09/08/4825659.html" mce_href="http://archives.miloush.net/michkap/archive/2007/09/08/4825659.html"><STRONG>Detecting ALTGR can only hope to work when ALTGR is in fact there....</STRONG></A></LI>
+<P>Now in that last post I talked about my MacBook Pro, what has managed to become (among other things) my favorite Vista machine.</P>
+<P>I even have Office 2007 installed on it:</P>
+<P><IMG src="http://trigeminal.fmsinc.com/images/Word2007onMacVista.png"></P>
+<P>Now let's take a look at the Czech keyboard, in the base, shift, and AltGr states:</P>
+<P><IMG src="http://trigeminal.fmsinc.com/images/CzechBase.png"></P>
+<P><IMG src="http://trigeminal.fmsinc.com/images/CzechShift.png"></P>
+<P><IMG src="http://trigeminal.fmsinc.com/images/CzechAltGr.png"></P>
+<P>Of course we are going to focus on that AltGr shift state -- and we'll look at that bottom row:</P>
+<UL>
+<LI>AltGr+X == <STRONG>#</STRONG></LI>
+<LI>AltGr+C == <STRONG>&amp;</STRONG></LI>
+<LI>AltGr+V == <STRONG>@</STRONG></LI>
+<LI>AltGr+B == <STRONG>{</STRONG></LI>
+<LI>AltGr+N == <STRONG>}</STRONG></LI></UL>
+<P>If you test it on Notepad, everything works as you expect when you type the keystrokes sequentially, using CTRL+ALT since there is no ALTGR on this keyboard:</P>
+<P><IMG src="http://trigeminal.fmsinc.com/images/NotepadCzechAltGr.png"></P>
+<P>When you go to look at Word 2007</P>
+<P><IMG src="http://trigeminal.fmsinc.com/images/WordCzechAltGr01.png"></P>
+<P>and type those same keystrokes, the results&nbsp;are not the same:</P>
+<P><IMG src="http://trigeminal.fmsinc.com/images/WordCzechAltGr02.png"></P>
+<P>Essentially, CTRL+ALT+X works, and so does CTRL+ALT+B.</P>
+<P>However, the other three keys re swallowed up by Word 2007, as follows:</P>
+<UL>
+<LI>CTRL+ALT+C == © (<A class="" href="http://www.fileformat.info/info/unicode/char/00a9" mce_href="http://www.fileformat.info/info/unicode/char/00a9">U+00a9</A>, a.k.a. COPYRIGHT SIGN)</LI>
+<LI>CTRL+ALT+V == &lt;PASTE SPECIAL&gt; -- since my clipboard was empty nothing happened as &lt;PASTE SPECIAL&gt; is not available -- but it did not fall back to the keyboard assignment</LI>
+<LI>CTRL+ALT+N == something odd happened to the page that I could not undo; I am not sure what this keystroke combination does in Word but it is not the end curly brace</LI></UL>
+<P>I could not find the place for disabling the helpful shortcuts, though the fact that the two unassigned keystrokes work gives me some hope that it is possible to make the keyboard work properly (in prior versions some of them don't ever seem to work correctly?).</P>
+<P>So if I ever get around to finishing that add-in (or convincing someone over there to do it!) then everything should work properly.</P>
+<P>In the meantime, this seems like a fairly compelling scenario to me....</P>
+<P mce_keep="true">&nbsp;</P>
+<P><FONT color=#ff00ff><EM>This post brought to you by</EM><FONT size=5> © </FONT><EM>(<A class="" href="http://www.fileformat.info/info/unicode/char/00a9" mce_href="http://www.fileformat.info/info/unicode/char/00a9">U+00a9</A>, a.k.a. COPYRIGHT SIGN)</EM></FONT></P>
+<hr/><p><a id="6322606" href="#6322606">#</a> <strong>Zooba</strong> on 16 Nov 2007 7:06 PM:</p><div style="margin-left: 1em"><p>If you click on the Office Button (the big ball in the corner) and choose Options and Customize, there's a little button near the bottom &quot;Keyboard Shortcuts: Customize...&quot;.</p>
+<p>If you go straight to the &quot;Press new shortcut key&quot; textbox and press (for example) Ctrl+Alt+N, you will see that it is assigned to ViewNormal. Choose &quot;All Commands&quot; from the left-hand list and type &quot;ViewNormal&quot; into the right hand list and you can remove the shortcut key for that command.</p>
+<p>Rinse and repeat. :)</p></div>
+<p><a id="6326009" href="#6326009">#</a> <strong>Michael S. Kaplan</strong> on 16 Nov 2007 10:00 PM:</p><div style="margin-left: 1em"><p>I am happy to report that if you remove the entries, the keyboard works properly!</p>
+<p>I think I may have to finish that Word add-in after all. :-)</p>
+</div>
+<p><a id="6352704" href="#6352704">#</a> <strong>MSDNArchive</strong> on 17 Nov 2007 10:28 PM:</p><div style="margin-left: 1em"><p>Michael, try the sequence after changing the language of the document (there is a shortcut available in Word's status bar). It works for me:)</p>
+</div>
+<p><a id="6353476" href="#6353476">#</a> <strong>Michael S. Kaplan</strong> on 17 Nov 2007 11:02 PM:</p><div style="margin-left: 1em"><p>Does not seem to help here after I reset all of the keyboard shortcuts. Maybe there are additional steps?</p>
+</div>
+<hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2012/04/26 <a href="http://archives.miloush.net/michkap/archive/2012/04/26/10297903.html">Michael's Keyboard Laws for Developers, Part 5</a></p><p>2008/01/17 <a href="http://archives.miloush.net/michkap/archive/2008/01/17/7126999.html">Virtual PC + Word 2007 ≠ AltGr support?</a></p><p>2007/11/28 <a href="http://archives.miloush.net/michkap/archive/2007/11/28/6568455.html">There is more to being an OEM for Windows than having the coolest hardware</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2007/11/16/6298366.html" title="Michael&#39;s Keyboard Laws for Developers, Part 2">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2007/11/15/6264439.html" title="&#39;But there&#39;s no Latins in our Divehi font, Duckman.&#39; &#39;Well, they don&#39;t *speak* Latin in the Maldives, do they?&#39;">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2007-11">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2007-11-16">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2007/11/16/6291947.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:37 GMT -->
+</html>

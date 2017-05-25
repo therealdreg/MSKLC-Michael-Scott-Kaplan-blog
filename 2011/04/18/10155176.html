@@ -1,0 +1,45 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2011/04/18/10155176.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>We are missing the Naira, not the Narnia, though technically we are missing the Narnia too</title></head><body>
+<h1>We are missing the Naira, not the Narnia, though technically we are missing the Narnia too</h1>
+<p><em>by Michael S. Kaplan, published on 2011/04/18 07:01 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2011/04/18/10155176.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<p><span style="color: #ff0000;">This is a blog about the Naira.<em> Cue gratuitous Naira graphic here:</em></span></p>
+<p><img src="http://blogs.msdn.com/cfs-file.ashx/__key/CommunityServer-Blogs-Components-WeblogFiles/00-00-00-33-81/3581.Naira01.jpg" /></p>
+<p>From time to time I have talked about currency symbols and times that they were not fully covered by Windows -- for both good reasons (e.g. they did not exist when Windows was released) and bad ones (e.g. no one mentioned it).</p>
+<p>From the recent change to add the new Rupee in India&nbsp;(<a href="http://archives.miloush.net/michkap/archive/2011/03/22/10144474.html" title="Rupee! Rupee! Let down your 
+
+CHAR!"><strong>Rupee! Rupee! Let down your CHAR!</strong></a>) to the unused Tenge in Kazakhstan (<a href="http://archives.miloush.net/michkap/archive/2010/07/15/10038526.html" title="It is with a tenge of sorrow that I say 
+
+this"><strong>It is with a Tenge of sorrow that I say this</strong></a>) to the unused Guarani in Paraguay (<a href="http://archives.miloush.net/michkap/archive/2010/04/12/9993605.html" title="The elusive G-sign said to exist in 
+
+South America may not be in Windows, says a customer who has hunted for it"><strong>The elusive G- sign said to exist in South America may not be in Windows, says a customer who has hunted for it</strong></a>), there are always current signs that we end up a little behind on.</p>
+<p>Well i guess we can say that there is perhaps another one.</p>
+<p>Where?</p>
+<p>Well, in Nigeria, there is the <a href="http://en.wikipedia.org/wiki/Nigerian_naira">Nigerian Naira</a>.</p>
+<p>It has a currency sign in Unicode that has been around at least since Unicode 1.1.</p>
+<p>DerivedAge.txt in the Unicode Character Database doesn't go back to 1.0 and I'm too lazy to look it up in the book, so we'll call it 1.1.</p>
+<p>Okay, hang on, that sounds pathetic.&nbsp;I'll check, I have the Unicode 1.0 books on the shelf in the other room.</p>
+<p>Aha, I'm back! And this currency sign is in Unicode Name Index of Unicode 1.0, on&nbsp; page <strong>666</strong> of volume 1 of the standard.</p>
+<p><em>Don't even get me started on the 666 thing, or the fact that I'm apparently <strong>not</strong> too lazy to go dig up an old book reference but I <strong>am</strong> too lazy to fix up the text to account for the decision to go look it up after all, and being initially wrong in my guess!</em></p>
+<p>Anyway, since <strong>Unicode 1.0</strong> it has been <span style="font-size: x-large;">₦</span> (U+20a6, aka NAIRA SIGN). This guy:</p>
+<p><img src="http://blogs.msdn.com/cfs-file.ashx/__key/CommunityServer-Blogs-Components-WeblogFiles/00-00-00-33-81/3581.Naira01.jpg" /></p>
+<p>And an ISO 4217 International currency designator of <strong>NGN</strong>.</p>
+<p>That currency sign is in all of our fonts, so everything looks good, right?</p>
+<p>Well, not entirely.</p>
+<p>You see the three locales in Windows for Nigeria have a <a href="http://msdn.microsoft.com/library/dd373847.aspx">LOCALE_SINTLSYMBOL</a> (the&nbsp;ISO 4217 value)&nbsp;of <strong>NIO</strong>-- which is actually the designator for the Nicaraguan Cordoba oro.</p>
+<p>And the <a href="http://msdn.microsoft.com/library/dd373836.aspx">LOCALE_SCURRENCY</a>?</p>
+<p>Well, just read 'em and weep:</p>
+<p>&nbsp;<img src="http://blogs.msdn.com/cfs-file.ashx/__key/CommunityServer-Blogs-Components-WeblogFiles/00-00-00-33-81/2783.Naira02.jpg" />&nbsp;&nbsp;&nbsp;&nbsp; <img src="http://blogs.msdn.com/cfs-file.ashx/__key/CommunityServer-Blogs-Components-WeblogFiles/00-00-00-33-81/5468.Naira03.jpg" />&nbsp;&nbsp;&nbsp;&nbsp; <img src="http://blogs.msdn.com/cfs-file.ashx/__key/CommunityServer-Blogs-Components-WeblogFiles/00-00-00-33-81/7870.Naira04.jpg" /></p>
+<p>Yes, that's what it looks like. They all have <strong><span style="font-size: x-large;">LATIN CAPITAL LETTER N</span></strong> there.</p>
+<p>Um.</p>
+<p>Yes.</p>
+<p>No.</p>
+<p>Really.</p>
+<p>It's like the Tenge thing or the Guarani thing all over again!</p>
+<p>We should probably fix those -- all three of those locales, for both <a href="http://msdn.microsoft.com/library/dd373847.aspx">LOCALE_SINTLSYMBOL</a> and <a href="http://msdn.microsoft.com/library/dd373836.aspx">LOCALE_SCURRENCY</a>.</p>
+<p>I suppose one could look on the bright side: at least the <a href="http://msdn.microsoft.com/library/dd373863.aspx">LOCALE_SNATIVECURRNAME</a>&nbsp;and <a href="http://msdn.microsoft.com/library/dd373844.aspx">LOCALE_SENGCURRNAME</a>&nbsp;are correct for all three (yo-NG, ig-NG, ha-Latn-NG). It's a start....</p>
+<hr/><p><strong>Klimax</strong> on 19 Apr 2011 1:28 AM:</p><div style="margin-left: 1em"><p>Looks like placeholder which was forgotten...</p></div>
+<hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2011/04/19/10155540.html" title="Unicode 6.0 -- one web page at a time">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2011/04/16/10154700.html" title="Chain Chain Chain, Chain of Dead Keys">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2011-04">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2011-04-18">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2011/04/18/10155176.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+</html>

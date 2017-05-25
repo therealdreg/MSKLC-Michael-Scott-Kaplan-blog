@@ -1,0 +1,54 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2011/08/17/10189025.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Having 103, 106, or 109 keys when they may not be expected</title></head><body>
+<h1>Having 103, 106, or 109 keys when they may not be expected</h1>
+<p><em>by Michael S. Kaplan, published on 2011/08/17 07:01 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2011/08/17/10189025.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<p>Sometimes Microsoft has a bug.</p>
+<p>It happens.</p>
+<p>I know that you all have trouble believing this!</p>
+<p>Usually, it get fixed. Sometimes right away, sometimes eventually.</p>
+<p>Did&nbsp;we know about the bug in time? Was it fixed after the impact became clear? Every bug has its own story. It's own Battles. It's own mythology.</p>
+<p>But one bug really stands out in my mind.</p>
+<p>That bug is the periodic inability of Microsoft to handle the following keyboards well:</p>
+<ul>
+<li>Japanese 106-key keyboard</li>
+<li>Japanese 109-key keyboard</li>
+<li>Korean 103-key keyboard</li>
+<li>Korean 106-key keyboard</li>
+</ul>
+<p>Now these problems&nbsp;aren't software layout issues -- they're hardware.</p>
+<p>After setup, you get to them through the hardware device update UI:</p>
+<p><img src="http://msdnshared.blob.core.windows.net/media/MSDNBlogsFS/prod.evol.blogs.msdn.com/CommunityServer.Blogs.Components.WeblogFiles/00/00/00/33/81/5707.jpnkor01.jpg" /></p>
+<p>(note that it takes a minimum of <strong>NINE</strong> clicks to get to the UI here that lets you make a selection), not the UI I usually talk about:</p>
+<p><img src="http://msdnshared.blob.core.windows.net/media/MSDNBlogsFS/prod.evol.blogs.msdn.com/CommunityServer.Blogs.Components.WeblogFiles/00/00/00/33/81/0638.jpnkor02.jpg" /></p>
+<p>(it takes&nbsp;just <strong>FOUR</strong> clicks to get here, which is a little better, I guess).</p>
+<p>Now the problems here are huge, as Cameron Beccario's <strong><a title="Installing Japanese Keyboards on Windows XP" href="http://blogs.msdn.com/b/cambecc/archive/2005/01/24/359359.aspx">Installing Japanese Keyboards on Windows XP</a></strong>&nbsp;from 2005 points out.</p>
+<p>And as I have pointed out in blogs like <strong><a title="Keyboards: plug-and-play, not plug-and-communicate-what-they-look-like" href="http://archives.miloush.net/michkap/archive/2007/11/05/5892994.html">Keyboards: plug-and-play, not plug-and-communicate-what-they-look-like</a></strong>.</p>
+<p>And also as countless bugs from customers and partners and OEMs and IHVs have made clear.</p>
+<p>The bug got "worse" in Vista (the old "text mode setup was no longer available) and then failed to improve in Windows 7.</p>
+<p>And the problem is simple:</p>
+<ol>
+<li>There is no good way to detect what the hardware is, and</li>
+<li>There is no good way to understand the problem when the wrong hardare is chosen</li>
+</ol>
+<p>So everything works fine except when your hardware doesn't match, or you buy new hardware that doesn't match.</p>
+<p>The communication with big OEMs like Dell (where it shouldn't be a problem since they completely control the hardware situation and can thus choose the exact driver to use!) has at times broken down and gone wrong enough like when e.g. it killed their efforts at one point to use the Japanese 109 key keyboard for Japanese customers.</p>
+<p>And the communication with the small IHVs and OEMs is not much better.</p>
+<p>Trivia -- you can plug in multiple monitors or multiple printers and have no problem loading multiple drivers for them -- this does not work for keyboards, which allow only one hardware level driver. There are good reasons for that, with a backcompat bar high enough to require weeks of review for a simple two-line change (let alone a huge architectural one like this).</p>
+<p>But even ignoring the multiple driver issue, this problem (choosing the right driver for the given hardware) has efforts to be fixed stopped at every turn:</p>
+<ul>
+<li>It can't be fixed&nbsp;it in the OOBE (Out of Box Experience) wizard since it should have been solved by the OEM before the OOBE wizard ever comes up, and it would introduce an "un-neccesary" reboot, and confusing UI;</li>
+<li>It can't be fixed&nbsp;in core setup because there is no good way to detect what the hardware is and no good UI to let people change it (this used to be a text mode setup option back in the XP and earlier days and didn't help much);</li>
+<li>It can't be fixed&nbsp;in OEM communications because there is no good way to help OEMs getting it wrong understand how to do it right;</li>
+<li>It can't be fixed&nbsp;in IHV communications because it is too hard to tell when it will be a problem until it is too late (e.g. we never know it's as bad as the 109-key keyboard until its too late);</li>
+<li>It can't be fixed&nbsp;it in PNP because the hardware here is not idenitifying what it is well enough to automatically detect which kind of keyboard it is, in either the PS/2 or USB worlds;</li>
+<li>It can't be fixed&nbsp;in the driver INF files because it would introduce huge backcompat problems, and they too lack the ability to detect what the hardware is in many cases;</li>
+</ul>
+<p>I could go on quoting the various issues from various teams that have over the years been asked to ease the problem, and to be honest I am just getting started with the above list to give you a flavor of the problem.</p>
+<p>But even though I could argue many of the arguments raised successfully, they would beat me in their next salvoe, or the one after&nbsp;that. These people have their reasons,and the vast majority of them are correct.</p>
+<p>And yet we still have this one small set of broken keyboard hardware/software scenario that belies the claims of my <strong><a title="Keyboards: hardware vs. software" href="http://archives.miloush.net/michkap/archive/2005/01/21/357960.html">Keyboards: hardware vs. software</a></strong>&nbsp;blog about how well these two teams support stuff.</p>
+<p>Though our best hope lies in improving the OEM/IHV communication channels, as this is the most solvable&nbsp;area in the stack. Stay tuned....</p>
+<hr/><div style="margin-left: 1em"><em>no comments</em></div><hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2011/08/18/10196878.html" title="Console Unicode support, and a little Hillel....">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2011/08/16/10196054.html" title="The road to standards compat is paved with app back-INcompat">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2011-08">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2011-08-17">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2011/08/17/10189025.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+</html>

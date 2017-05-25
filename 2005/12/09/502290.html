@@ -1,0 +1,22 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2005/12/09/502290.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:40 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>More on the C4819 error</title></head><body>
+<h1>More on the C4819 error</h1>
+<p><em>by Michael S. Kaplan, published on 2005/12/09 22:01 -05:00, original URI: http://blogs.msdn.com/b/michkap/archive/2005/12/09/502290.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P><FONT face=Tahoma>The other day, Raoul contacted me with the following question:</FONT></P><FONT face=Tahoma><FONT size=2>
+<BLOCKQUOTE dir=ltr style="MARGIN-RIGHT: 0px">
+<P><EM><FONT face="Times New Roman">I found your blog doing trying to figure out a warning I'm currently getting in VS2005, and am hoping you might be able to help me out. Sorry to bother you...</FONT></EM></P>
+<P><EM><FONT face="Times New Roman">My company's currently considering switching to VS2005, and in one of our files a C4819 error has popped up twice now for no obvious reason... We had one other file with the error and there were a few bad characters in there, but in the problem file, I can't seem to find anything that's actually broken... In fact, if I put a #pragma warning(disable:4819) around the block that gets the warning, the file compiles fine, but if I delete the block in question, the error is still there... does this make sense at all? I guess we could add the warning to our project ignore list, but that seems like a waste of valid information...</FONT></EM></P></BLOCKQUOTE></FONT></FONT>
+<P><FONT face=Tahoma>Raoul is talking about one or both of the following posts:</FONT></P>
+<UL>
+<LI><FONT face=Tahoma><a href="http://archives.miloush.net/michkap/archive/2005/01/05/347394.html">The new compiler error C4819</A></FONT></LI>
+<LI><FONT face=Tahoma><a href="http://archives.miloush.net/michkap/archive/2005/01/08/349230.html">How does it detect invalid characters?</A></FONT></LI></UL>
+<P><FONT face=Tahoma>One of the problems that can come up is something invalid that does not have a visible representation, or something that looks close enough to a valid character to escape attempts to find the problem.</FONT></P>
+<P><FONT face=Tahoma>In the end, the easiest way I have found to deal with this is to open the file in Notepad and then use "File | Save as..." to save it as an ANSI file. This will convert the bad character(s) to the <a href="http://archives.miloush.net/michkap/archive/2005/12/03/499661.html">default character</A> which should be easy to spot (or at least easier).</FONT></P>
+<P><FONT face=Tahoma>I think there is an option to do this in Visual Studio, too -- but I have not looked into that yet. And Notepad is something I know. :-)</FONT></P>
+<P><FONT face=Tahoma></FONT>&nbsp;</P>
+<P><FONT face=Tahoma color=#ff1493><EM>This post brought to you by</EM> "<FONT face="Mongolian Baiti" size=6>ᡵ</FONT>" <EM>(<A href="http://www.fileformat.info/info/unicode/char/1875">U+1875</A>, MONGOLIAN LETTER MANCHU RA)</EM></FONT></P>
+<hr/><div style="margin-left: 1em"><em>no comments</em></div><hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2008/05/19 <a href="http://archives.miloush.net/michkap/archive/2008/05/19/8518545.html">Everyone seems averse to the BOM these days; Should we blame TSA? :-)</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2005/12/10/502415.html" title="CurrentRegion is not based on the GEOID">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2005/12/09/502274.html" title="Perhaps not the best person?">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2005-12">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2005-12-09">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2005/12/09/502290.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:40 GMT -->
+</html>

@@ -1,0 +1,31 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2012/08/14/10338893.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:30 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Getting your spidey senses FIXED</title></head><body>
+<h1>Getting your spidey senses FIXED</h1>
+<p><em>by Michael S. Kaplan, published on 2012/08/14 07:01 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2012/08/14/10338893.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<p>The other day,&nbsp;<strong>Peter Parker</strong>&nbsp;(probably not his real name) asked:</p>
+<p style="padding-left: 30px;"><span style="font-family: times new roman,times; font-size: large;"><em>How can I determine if a font is fixed width, like Visual Studio does?</em></span></p>
+<p>Well,&nbsp;he certainly can't rely on his spidey sense even if he was the real Peter Parker, since Spiderman doesn't scale! :-)</p>
+<p>When he referred to "like Visual Studio does", he meant the <strong>Bold</strong> items on the list:</p>
+<p><img title="Fixed width fonts are BOLD as love" border="0" alt="Fixed width fonts are BOLD as love" src="http://msdnshared.blob.core.windows.net/media/MSDNBlogsFS/prod.evol.blogs.msdn.com/CommunityServer.Blogs.Components.WeblogFiles/00/00/00/33/81/8004.vsfonts01.jpg" /></p>
+<p>&nbsp;The principle is simple enough:</p>
+<ul>
+<li>if the font identifies itself as fixed in its own data as you get by asking for a <span style="font-family: courier new,courier;">FIXED_PITCH</span> font in the <span style="font-family: courier new,courier;">fdwPitchAndFamily</span> member, or</li>
+<li>it follows the "fixed enough" principles discussed <strong><a title="Fonts that are 'fixed-width' even if they do not claim to be" href="../../../2005/09/11/463672.html">here</a></strong> for East Asian fonts.</li>
+</ul>
+<p>You can see many examples of this being correctly done for <strong>Meiryo/</strong><strong>Meiryo UI</strong> (since the Latins are based on <strong>Verdana</strong>) and <strong>Microsoft YaHei</strong>/<strong>Microsoft JhengHei</strong> (since the Latins are based on <strong>Segoe UI</strong>) and so on.</p>
+<p>It may even interest our Marvel action hero enough to want to emulate the checks.</p>
+<p>However, there are three problems here;</p>
+<ul>
+<li>while Visual Studio correctly flags <strong>MingLiU</strong>, it misses in the three MingLiU-esque fonts that are just as fixed as well as others, and</li>
+<li>almost every East Asian font <strong>is</strong> fixed width for the East Asian characters, at least, and</li>
+<li>some other scripts show the same characteristics of "fixed width within the script".</li>
+</ul>
+<p>I suppose there could be an IsfixedWidth&nbsp;method where you can pass the font name and some text.</p>
+<p>It could then return whether all of <em>that</em> text you passed in is the exact same width per character!</p>
+<p>For now, you are mildly on your own checking for this.</p>
+<p>Even if you spin a web any size and catch thieves just like flies...</p>
+<hr/><div style="margin-left: 1em"><em>no comments</em></div><hr/><p><em>go to <a id="newer" href="../15/10339749.html" title="It may be easier to get your GEO on, instead...">newer</a> or <a id="older" href="../13/10338914.html" title="Unraveling the job creation issue">older</a> post, or back to <a href="../../../index-2.html">index</a> or <a href="../../../index-2.html#2012-08">month</a> or <a href="../../../index-2.html#2012-08-14">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2012/08/14/10338893.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:30 GMT -->
+</html>

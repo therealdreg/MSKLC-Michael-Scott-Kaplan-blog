@@ -1,0 +1,24 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2006/03/02/542395.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:40 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>CompareString ignores case by lowercasing....</title></head><body>
+<h1>CompareString ignores case by lowercasing....</h1>
+<p><em>by Michael S. Kaplan, published on 2006/03/02 15:59 -05:00, original URI: http://blogs.msdn.com/b/michkap/archive/2006/03/02/542395.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P><FONT face=Tahoma>I was having a converation with <A HREF="http://blogs.msdn.com/shawnste">Shawn</A> earlier and had something of an epiphany that I thought I'd share....</FONT></P>
+<P><FONT face=Tahoma>I have mentioned that Windows handles its "ignore case" functionality (as in the way we handle it in <A HREF="http://archives.miloush.net/michkap/archive/2006/02/09/528297.html">RtlCompareUnicodeString</A>&nbsp;and </FONT><FONT face=Tahoma><A HREF="http://archives.miloush.net/michkap/archive/2005/12/22/506595.html">CompareStringOrdinal</A>) for the filesystem and the registry and environment variables and such by UPPERCASING prior to comparison.</FONT></P>
+<P><FONT face=Tahoma>But in the past here when I have talked about linguistic comparisons via CompareString, and especially when you look </FONT><FONT face=Tahoma>at sort&nbsp;key examples like in <A HREF="http://archives.miloush.net/michkap/archive/2005/06/16/429667.html">this post</A>:</FONT></P><FONT face=Tahoma>
+<BLOCKQUOTE dir=ltr style="MARGIN-RIGHT: 0px">
+<P><FONT face=Tahoma>Case Sensitive</FONT></P>
+<BLOCKQUOTE dir=ltr>
+<P><FONT face="Courier New" size=2>limes 0E 48 0E 32 0E 51 0E 21 0E 91 01 01 01 01 00<BR>lIMES 0E 48 0E 32 0E 51 0E 21 0E 91 01 01 02 12 12 12 12 01 01 00<BR>LIMES 0E 48 0E 32 0E 51 0E 21 0E 91 01 01 12 12 12 12 12 01 01 00</FONT></P></BLOCKQUOTE>
+<P><FONT face=Tahoma>Case Insensitive</FONT></P><FONT face=Tahoma>
+<BLOCKQUOTE dir=ltr>
+<P><FONT face="Courier New" size=2>limes 0E 48 0E 32 0E 51 0E 21 0E 91 01 01 01 01 00<BR>lIMES 0E 48 0E 32 0E 51 0E 21 0E 91 01 01 01 01 00<BR>LIMES 0E 48 0E 32 0E 51 0E 21 0E 91 01 01 01 01 00</FONT></P></BLOCKQUOTE></BLOCKQUOTE></FONT></FONT>
+<P><FONT face=Tahoma>it is clear that for our tables it is the uppercasing and unusual casing that gets the extra weight, thus ignoring case (basically ignoring weights) is a way of doing a very firm, de facto </FONT><FONT face=Tahoma>LOWERCASING prior to comparison.</FONT></P>
+<P><FONT face=Tahoma>I had never really thought of it that way </FONT><FONT face=Tahoma>until just a moment ago....</FONT></P>
+<P><FONT face=Tahoma>Not that it is a 100% rule -- I mean if you take the <A HREF="http://archives.miloush.net/michkap/archive/2005/11/26/495072.html">Hungarian Technical Sort</A> into account where the weights for the exemplar characters in Hungarian are reversed in this respect (while not touching those unusual case situations). But it is usually true. :-)</FONT></P>
+<P><FONT face=Tahoma></FONT>&nbsp;</P>
+<P><FONT face=Tahoma color=#ff1493><EM>This post brought to you by</EM> "Œ" <EM>(<A href="http://www.fileformat.info/info/unicode/char/0152">U+0152</A>, a.k.a. LATIN CAPITAL LIGATURE OE)</EM></FONT></P>
+<hr/><div style="margin-left: 1em"><em>no comments</em></div><hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2008/11/01 <a href="http://archives.miloush.net/michkap/archive/2008/11/01/9028213.html">What's the shape of the sort?</a></p><p>2006/08/01 <a href="http://archives.miloush.net/michkap/archive/2006/08/01/685351.html">Sometimes, ignoring case is stupid</a></p><p>2006/06/02 <a href="http://archives.miloush.net/michkap/archive/2006/06/02/615571.html">What the @!#$% is the TERTIARY_WEIGHTS() function for?</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2006/03/02/542489.html" title="When macros obfuscate in a way that encourages bugs....">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2006/03/01/541309.html" title="Address formats are hard, let&#39;s go shopping!">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2006-03">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2006-03-02">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2006/03/02/542395.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:40 GMT -->
+</html>

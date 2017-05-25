@@ -1,0 +1,22 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2007/06/22/3452969.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:38 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>TTC indexes, the hard way...</title></head><body>
+<h1>TTC indexes, the hard way...</h1>
+<p><em>by Michael S. Kaplan, published on 2007/06/22 03:01 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2007/06/22/3452969.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P><EM>I swear that I had already answered this question, but I couldn't find it anywhere. Hopefully it isn't a repeat.</EM> :-)</P>
+<P>Meema asked in the Suggestion Box:</P>
+<BLOCKQUOTE>
+<P><EM><FONT face="times new roman,times">hi!<BR><BR>I have been looking for a solution that doesn't require parsing the actual TTC file bytes. Is there any way of getting the ttc index of a font (given the facename and style or just hDC/LOGFONT)?<BR><BR>Thanks. I appreciate any answer.<BR><BR>Meema</FONT></EM></P></BLOCKQUOTE>
+<P>Unfortunately, there is not a way to do this. </P>
+<P>You have to work with the description of the OpenType file format (<A class="" href="http://www.microsoft.com/typography/otspec/otff.htm" mce_href="http://www.microsoft.com/typography/otspec/otff.htm">here</A>) and its information about the TTC Header table, which will have pointers to the individual fonts inside the file (and from there you can get the names of each font and eventually work backward based on the index).</P>
+<P>This is obviously not as entirely trivial as one might like (using the best metric there is, the amount of samples that are out there, which is approximately none!).</P>
+<P>So I talked to Sergey about the possibility of putting together some&nbsp;examples for working with&nbsp;font files for problems like this -- real problems if you want to work with functions like <A class="" href="http://msdn2.microsoft.com/library/ms536754.aspx" mce_href="http://msdn2.microsoft.com/library/ms536754.aspx">TTEmbedFontFromFileA</A>&nbsp;and <A class="" href="http://msdn2.microsoft.com/library/ms536720.aspx" mce_href="http://msdn2.microsoft.com/library/ms536720.aspx">CreatFontPackage</A>&nbsp;that just assume you have this data. And lots of other random tidbits that one might want to get at....</P>
+<P>And I might also play a bit more in this space, like I did in <STRONG><A class="" href="http://archives.miloush.net/michkap/archive/2006/02/13/530814.html" mce_href="http://archives.miloush.net/michkap/archive/2006/02/13/530814.html">Getting all of the localized names of a font</A></STRONG>. Because going in blind to specs like the OTF/TTF one to write a bit of code&nbsp;actually make for interesting little projects to work on.... :-)</P>
+<P mce_keep="true">&nbsp;</P>
+<P><FONT color=#ff00ff><EM>This post brought to you by</EM> <FONT size=5>ശ</FONT> <EM>(<A class="" href="http://www.fileformat.info/info/unicode/char/0d36" mce_href="http://www.fileformat.info/info/unicode/char/0d36">U+0d36</A>, a.k.a. MALAYALAM LETTER SHA)</EM></FONT></P>
+<hr/><p><a id="3510864" href="#3510864">#</a> <strong>Meema</strong> on 24 Jun 2007 11:31 PM:</p><div style="margin-left: 1em"><p>Thanks! Yup, parsed the whole darn thing. Had to use EnumFontFamiliesEx(...) since GetOutlineTextMetrics(...) has a bug on Vista and couldn't get the Full Name of the provided font in HDC.</p>
+<p>I'm kinda glad there's not easier way of doing it. I would have shot my leg knowing I went through all that for nothing.</p></div>
+<hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2007/07/07 <a href="http://archives.miloush.net/michkap/archive/2007/07/07/3746794.html">TTC indexes, the easy way...</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2007/06/22/3465654.html" title="Liaison may not be the best role any more (for me)">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2007/06/21/3438416.html" title="Oops! Somebody did broken it!">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2007-06">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2007-06-22">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2007/06/22/3452969.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:38 GMT -->
+</html>

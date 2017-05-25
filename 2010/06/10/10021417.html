@@ -1,0 +1,67 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2010/06/10/10021417.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:35 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>WORD SORT...Why'd it have to be...WORD SORT?</title></head><body>
+<h1>WORD SORT...Why'd it have to be...WORD SORT?</h1>
+<p><em>by Michael S. Kaplan, published on 2010/06/10 07:01 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2010/06/10/10021417.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<p>So the other day I was in one of those email threads again.</p>
+<p>One of those threads that makes me wonder if anyone realizes I have not worked in the NLS code for years.</p>
+<p>No worries, the nature of the questions hasn't changed all that much. :-)</p>
+<p>The question went something like this:</p>
+<blockquote>
+<blockquote>
+<blockquote><span style="font-family: consolas,lucida console,courier new,courier,fixed;"><b>
+<p>--create table tab1<br />--(a nvarchar(100))<br /><br />--insert into tab1 values ('2-1'), ('21') ,('3-1'), ('31') ,('3-1-'), ('31-') <br /><br />select a from tab1 order by 1 <br />select a collate latin1_general_bin&nbsp; from tab1 order by 1 <br /><br />begin tran<br />update tab1<br />set a = a + N'-'<br />select a from tab1 order by 1 <br />select a collate latin1_general_bin&nbsp; from tab1 order by 1 <br />rollback<br /><br />--drop table tab1</p>
+<p>Output looks like following. </p>
+<p>a<br />----------------------------------------------------------------------------------------------------<br />21<br />2-1<br />31<br />3-1<br />3-1-<br />31-</p>
+<p>(6 row(s) affected)</p>
+<p><br />----------------------------------------------------------------------------------------------------<br />2-1<br />21<br />3-1<br />3-1-<br />31<br />31-</p>
+<p>(6 row(s) affected)</p>
+<p><br />(6 row(s) affected)<br />a<br />----------------------------------------------------------------------------------------------------<br />2-1-<br />21-<br />3-1-<br />3-1--<br />31-<br />31--</p>
+<p>(6 row(s) affected)</p>
+<p><br />----------------------------------------------------------------------------------------------------<br />2-1-<br />21-<br />3-1-<br />3-1--<br />31-<br />31--</p>
+<p>(6 row(s) affected)</p>
+<p>We clearly see the sort order getting modified for which I cannot find a reason. If I replace hyphens with any other special character (eg ^, +, /, &ldquo; etc), sort order seems to work fine. </p>
+<p>a<br />----------------------------------------------------------------------------------------------------<br />2^1<br />21<br />3^1<br />3^1^<br />31<br />31^</p>
+<p>(6 row(s) affected)</p>
+<p><br />----------------------------------------------------------------------------------------------------<br />21<br />2^1<br />31<br />31^<br />3^1<br />3^1^</p>
+<p>(6 row(s) affected)</p>
+<p><br />(6 row(s) affected)<br />a<br />----------------------------------------------------------------------------------------------------<br />2^1^<br />21^<br />3^1^<br />3^1^^<br />31^<br />31^^</p>
+<p>(6 row(s) affected)</p>
+<p><br />----------------------------------------------------------------------------------------------------<br />21^<br />2^1^<br />31^<br />31^^<br />3^1^<br />3^1^^</p>
+<p>(6 row(s) affected)</p>
+<p>I have been trying to understand this flip in sort order for a while and nothing in String sort help or anywhere which explains this flip. Now as I understand it, hyphens are treated as pure symbols (no weight to them I suppose). So the first output then should be other way, shouldn&rsquo;t it? That&rsquo;s what happens when we add a hyphen to it (second output). </p>
+<p>What I am missing here? Why does hyphen get some really special, special character treatment? How do we explain this?</p>
+</b></span></blockquote>
+</blockquote>
+</blockquote>
+<p>Regular readers will probably know why the titular allusion to Indiana Jones was thusly inspired....</p>
+<p>
+<p>
+<p>The rest of you can sample some of the following blogs:</p>
+<ul>
+<li><a href="http://archives.miloush.net/michkap/archive/2005/05/05/414845.html" title="A few of the gotchas of CompareString"><strong>A few of the gotchas of CompareString</strong></a></li>
+<li><a href="http://blogs.msdn.com/controlpanel/blogs/posteditor.aspx/Is it a bug" title="Is it a bug?"><strong>Is it a bug?</strong></a></li>
+<li><a href="http://archives.miloush.net/michkap/archive/2006/11/25/1151550.html" title="Punctuation... now, isn't that SPECIAL [weights]?"><strong>Punctuation... now, isn't that SPECIAL [weights]?</strong></a></li>
+<li><a href="http://archives.miloush.net/michkap/archive/2006/11/16/1086283.html" title="The problem of string comparisons, WORD sorts, and the minus that is treated like the hyphen"><strong>The problem of string comparisons, WORD sorts, and the minus that is treated like the hyphen</strong></a></li>
+<li><a href="http://archives.miloush.net/michkap/archive/2007/09/20/5008305.html" title="A&amp;P of Sort Keys, part 9 (aka Not always transitive, but punctual and punctuating)...."><strong>A&amp;P of Sort Keys, part 9 (aka Not always transitive, but punctual and punctuating)....</strong></a></li>
+<li><a href="http://archives.miloush.net/michkap/archive/2007/10/30/5774614.html" title="EXPECTED is in the eye of the [non-expecting type of ]expectant"><strong>EXPECTED is in the eye of the [non-expecting type of ]expectant</strong></a></li>
+</ul>
+<p>and so on.</p>
+<p>Now SQL Server does not give one the choice between word sorts and string sorts -- it is always a word sort, except when it is a _BIN or _BIN2 collation, in which case the hyphen and such will be in a string sort-ish kind of situation (along with everything else that changes).</p>
+<p>So in particular when one is looking at:</p>
+<p><strong>21<br />2-1</strong></p>
+<p>versus:</p>
+<p><strong>2-1-<br />21-</strong></p>
+<p>and wondering why the order changes, it becomes fairly obvious in the world of the <strong>word sort</strong>, where the hyphen in always given quadernary weight.</p>
+<p>Or maybe it isn't? :-)</p>
+<p>Let's look at the four sort keys (winning lower weights are blue, losing higher larger weights are red):</p>
+<p><strong><span style="font-family: courier new,courier;">21&nbsp;&nbsp; 0d 1a 0d 19 01 01 01 01 <span style="color: #0000ff;">00</span><br />2-1&nbsp; 0d 1a 0d 19 01 01 01 01 <span style="color: #ff0000;">ff</span> fe 82 12 00<br /><br />2-1- 0d 1a 0d 19 01 01 01 01 ff <span style="color: #ff0000;">fe</span> 82 12 ff fd 82 12 00<br />21-&nbsp;&nbsp;0d 1a 0d 19 01 01 01 01 ff <span style="color: #0000ff;">fd</span> 82 12 00</span></strong></p>
+<p>See what's happening here? In terms of primary weights all four strings are actually identical, and it is just the nature of these very doubleplusnonprimary weights that we call hyphens that cause the problems....</p>
+<p>But CompareString on Windows 7 is not giving me the same results as the ones they are claiming are coming from SQL Server. </p>
+<p>So this looks like a SQL Server-specific problem -- maybe a bug that has been fixed in some vfersion of Windows?</p>
+</p>
+</p>
+<hr/><div style="margin-left: 1em"><em>no comments</em></div><hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2010/06/11/10022741.html" title="Call it Reversible Error, aka Yes it has no weight; it was supposed to have no weight!">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2010/06/09/10019823.html" title="About that Portuguese localization question, redux...">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2010-06">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2010-06-10">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2010/06/10/10021417.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:35 GMT -->
+</html>

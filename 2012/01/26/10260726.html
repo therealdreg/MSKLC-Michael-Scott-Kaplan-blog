@@ -1,0 +1,54 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2012/01/26/10260726.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>If font linking doesn't fit the text to a T (or ț!), a Romanian letter may be right but not quite look it</title></head><body>
+<h1>If font linking doesn't fit the text to a T (or ț!), a Romanian letter may be right but not quite look it</h1>
+<p><em>by Michael S. Kaplan, published on 2012/01/26 07:01 -05:00, original URI: http://blogs.msdn.com/b/michkap/archive/2012/01/26/10260726.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<p>I've talked about font linking in a bunch of&nbsp;different blogs&nbsp;over the years, such as:</p>
+<ul>
+<li><strong><a title="Font substitution and linking #1" href="http://archives.miloush.net/michkap/archive/2005/03/20/399322.html">Font substitution and linking #1</a></strong></li>
+<li><strong><a title="Font substitution and linking #2" href="http://archives.miloush.net/michkap/archive/2005/05/16/417711.html">Font substitution and linking #2</a></strong></li>
+<li><strong><a title="Font substitution and linking #3" href="http://archives.miloush.net/michkap/archive/2005/06/18/430507.html">Font substitution and linking #3</a></strong></li>
+<li><strong><a title="GDI Font Linking in GDI+" href="http://archives.miloush.net/michkap/archive/2006/03/14/551068.html">GDI Font Linking in GDI+</a></strong></li>
+<li><strong><a title="Apocalypse Font (aka Guess they must have picked the wrong eight characters.)" href="http://archives.miloush.net/michkap/archive/2008/11/19/9116067.html">Apocalypse Font (aka Guess they must have picked the wrong eight characters.)</a></strong></li>
+<li><strong><a title="Ready... set... Reboot Redux" href="http://archives.miloush.net/michkap/archive/2005/12/12/502463.html">Ready... set... Reboot Redux</a></strong></li>
+<li><strong><a title="How Do You Solve a Problem Like Meiryo? (Windows XP edition)" href="http://archives.miloush.net/michkap/archive/2008/06/18/8614758.html">How Do You Solve a Problem Like Meiryo? (Windows XP edition)</a></strong></li>
+<li><strong><a title="The evolving Story of Locale Support, part 12: Logic dictates that we keep a sense of proportion about the RATIO" href="http://archives.miloush.net/michkap/archive/2011/12/09/10246051.html">The evolving Story of Locale Support, part 12: Logic dictates that we keep a sense of proportion about the RATIO</a></strong></li>
+<li><strong><a title="You don't have to trust Microsoft's choices about fonts" href="http://archives.miloush.net/michkap/archive/2007/06/16/3345079.html">You don't have to trust Microsoft's choices about fonts</a></strong></li>
+<li><strong><a title="When the system locale is the display language" href="http://archives.miloush.net/michkap/archive/2007/04/28/2311321.html">When the system locale is the display language</a></strong></li>
+</ul>
+<p>and so on. Many of them make a point implicitly that I am going to make quite explicit today.</p>
+<p>And that point is simply <strong>The thing that sucks most about GDI font linking is the way it mixes fonts that don't look right next to each other</strong>.</p>
+<p>Anyway, the other day colleague and coworker Laura passed on a question people were trying to get a handle on.</p>
+<p>Basically, it was a Romanian product that had strings looking something like this:</p>
+<p><a href="http://msdnshared.blob.core.windows.net/media/MSDNBlogsFS/prod.evol.blogs.msdn.com/CommunityServer.Blogs.Components.WeblogFiles/00/00/00/33/81/1016.fontlink01.jpg"><img border="0" alt="The Ts don't all seem to line up here!" src="http://blogs.msdn.com/resized-image.ashx/__size/550x0/__key/communityserver-blogs-components-weblogfiles/00-00-00-33-81/1016.fontlink01.jpg" width="138" height="54" /></a></p>
+<p>Let me blow that up in case your browser doesn't make it bigger:</p>
+<p><a href="http://msdnshared.blob.core.windows.net/media/MSDNBlogsFS/prod.evol.blogs.msdn.com/CommunityServer.Blogs.Components.WeblogFiles/00/00/00/33/81/3113.fontlink02.jpg"><img border="0" alt="The Ts don't all seem to line up here, but bigger!" src="http://blogs.msdn.com/resized-image.ashx/__size/550x0/__key/communityserver-blogs-components-weblogfiles/00-00-00-33-81/3113.fontlink02.jpg" /></a></p>
+<p>Now they were claiming to be using Segoe UI.</p>
+<p>And for whatever it's worth,&nbsp;the glyphs of most of the characters look to my amateur eye to be somewhat Segoe-like, perhaps. But not exactly.</p>
+<p>Remember that at one point, there were many more fonts floating around that were missing these characters.</p>
+<p><em>Perhaps&nbsp;a forensic typographer could do better, a-la <strong><a title="İ ş&eacute;&egrave; đ&ecirc;&auml;đ ķ&eacute;&yuml;&scaron;" href="http://archives.miloush.net/michkap/archive/2007/08/22/4519235.html">İ ş&eacute;&egrave; đ&ecirc;&auml;đ ķ&eacute;&yuml;&scaron;</a></strong> etc.</em></p>
+<p>But do you see the fourth letter, which is clearly U+0074, aka LATIN SMALL LETTER T, versus the sixth letter, which is clearly U+021b, aka LATIN SMALL LETTER T WITH COMMA BELOW?</p>
+<p>Well, Segoe UI does not look this weird with these Latin letters alongside each other.</p>
+<p>In fact, here is just about every <strong>S</strong> and <strong>s</strong> and <strong>T</strong> and <strong>t</strong> in Segoe UI, right next to each other:</p>
+<p><a href="http://msdnshared.blob.core.windows.net/media/MSDNBlogsFS/prod.evol.blogs.msdn.com/CommunityServer.Blogs.Components.WeblogFiles/00/00/00/33/81/7635.fontlink03.jpg"><img border="0" alt="Comparig all the Ss and Ts in Segoe UI -- all the same size." src="http://blogs.msdn.com/resized-image.ashx/__size/550x0/__key/communityserver-blogs-components-weblogfiles/00-00-00-33-81/7635.fontlink03.jpg" /></a></p>
+<p>None come even close to being this incorrect looking....</p>
+<p>For the sake of good looking Romanian text, at least!</p>
+<p>Thankfully, they're going to fix this one, before a negative entry would need to be added to&nbsp;lists like <strong><a title="The history of messing up Romanian on computers" href="http://archives.miloush.net/michkap/archive/2011/08/24/10199324.html">The history of messing up Romanian on computers</a></strong>. If you know what I&nbsp;mean....</p>
+<p>Though even if not, we've come a long way banishing the cedillas from Romanian text, right? :-)</p>
+<hr/><p><strong>John Cowan</strong> on 26 Jan 2012 8:52 AM:</p><div style="margin-left: 1em"><p>In one sense you are right, but it is *way* better to use the right letter in the wrong font than to just render a stupid box, as all applications did until fairly recently. &nbsp;As far as I know, browsers led the way here. &nbsp;(Of course, before Unicode a box was the best you could do, because you were only guessing at what the character meant anyway.)</p>
+</div>
+<p><strong>Cristian</strong> on 26 Jan 2012 9:04 AM:</p><div style="margin-left: 1em"><p>Speaking of products with problems... G□□gle has released the latest maps.google.ro (or .fr, .de, .it, but not the .com) with maps rendered with fonts lacking s and t comma bellow.</p>
+<p><a rel="nofollow" target="_new" href="https://plus.google.com/u/0/107732192814812927690/posts/f9FGWcQ9gXv">plus.google.com/.../f9FGWcQ9gXv</a></p>
+<p>Unfortunately G□□gle use almost exclusively cedillas in their Romanian product translations.</p>
+</div>
+<p><strong>Miguel Sousa</strong> on 26 Jan 2012 12:26 PM:</p><div style="margin-left: 1em"><p>Since Segoe UI supports U+021b, why was it showing up that way? You don&#39;t really explain in the post.</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 27 Jan 2012 7:28 AM:</p><div style="margin-left: 1em"><p>The original font wasn&#39;t Segoe UI....</p>
+</div>
+<p><strong>Cristian</strong> on 27 Jan 2012 8:55 AM:</p><div style="margin-left: 1em"><p>Since I&#39;ve talked about G□□gle which has problems with s comma and t comma characters, I should talk also about Microsoft which has problems with the old characters s cedilla and t cedilla. See <a rel="nofollow" target="_new" href="https://plus.google.com/107732192814812927690/posts/b1f2Ljvz8Hw">plus.google.com/.../b1f2Ljvz8Hw</a></p>
+<p>I think this relates somehow to the problem presented in this blog entry.</p>
+</div>
+<hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2012/01/30/10261662.html" title="An SDK for the OSK? No way. Though if I may, I&#39;ll just say...">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2012/01/25/10260491.html" title="3 x 7 can be a lot more than 21,sometimes!">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2012-01">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2012-01-26">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2012/01/26/10260726.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+</html>

@@ -1,0 +1,52 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2011/03/15/10141137.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Making TableTextService work for both 32-bit and 64-bit on a 64-bit Windows...</title></head><body>
+<h1>Making TableTextService work for both 32-bit and 64-bit on a 64-bit Windows...</h1>
+<p><em>by Michael S. Kaplan, published on 2011/03/15 07:01 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2011/03/15/10141137.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<p>So last week I got a note from Alex via the Contact link:</p>
+<p style="padding-left: 60px;"><strong>Subject: 64-bit TableTextService and 32-bit programs</strong></p>
+<p style="padding-left: 60px;">Hi, I am using TableTextService to maintain my own Cantonese input method after reading your post: <a href="http://archives.miloush.net/michkap/archive/2006/07/27/679538.html">http://blogs.msdn.com/b/michkap/archive/2006/07/27/679538.aspx</a> The posts you wrote about TableTextService is really informative and useful, I couldn't type Chinese without reading them! Few weeks ago, I upgraded my computer to Windows 7 (64-bit, Home Premium). Everything runs fine except the input method. I have US English and Cantonese input method configured. I found that the input method created by 32-bit TableTextService didn't work in 64-bit programs: I could still switch to Cantonese input method, but the computer kept typing English when I tried to type Chinese in 64-bit programs (such as 64-bit IE). The situation is similar if I try to type Chinese in 32-bit programs with 64-bit TableTextService configured. I wonder if you have experienced similar problems before? Do you have any suggestions/ solutions? Is there any way for TableTextService to work on 32-bit/ 64-bit programs no matter which version (32 or 64 bit) of TableTextService I configured? Many thanks. Alex</p>
+<p>Well, I actualy did cover this in the series describing the TableTextService, though admittedly it's a litle buried.</p>
+<p>If you check <a href="http://archives.miloush.net/michkap/archive/2008/06/30/8669123.html" title="Behold the Table Driven Text Service, Part 12 (The knights who say நீ, redux, #2)"><strong>Behold the Table Driven Text Service, Part 12 (The knights who say நீ, redux, #2)</strong></a>, it has a bit in the middle that covers this, basically steps 2a and 4a....</p>
+<p>The trick is that you have to register it twice -- in the two different directories with the two different DLLs.</p>
+<p>Anyway, to repeat steps 2, 2a, 3, 4, and 4a:</p>
+<p style="padding-left: 30px;">2) Copy the text file to <strong>\Program Files\Windows NT\TableTextService</strong> on your machine (if the "Program Files" on your machine is another language, use that directory, do not create a new one!). If you drg it in you will be prompted to elevate:</p>
+<p style="padding-left: 30px;"><img src="http://trigeminal.fmsinc.com/images/tamilinput02.png" /></p>
+<p style="padding-left: 30px;">so accept that and copy the file. When you are done it will look something like the following:</p>
+<p style="padding-left: 30px;"><img height="600" width="960" src="http://trigeminal.fmsinc.com/images/tamilinput01.png" /></p>
+<p style="padding-left: 30px;">Though if you do not have MUI language packs installed those language directories will be missing and you might have some localized path chunks up in the breadcrumb bar.</p>
+<p style="padding-left: 30px;">2a) If you running on a 64-bit machine then you must also put a copy of this file in <strong>\Program Files (x86)\Windows NT\TableTextService</strong> on your machine (if the "Program Files (x86)" on your machine is another language, use that directory, do not create a new one!). If you skip this step on a 64-bit machine then you will not be able to use the input method in 32-bit processes.</p>
+<p style="padding-left: 30px;">You will get that same elevation prompt as the other directory if you drag the file in</p>
+<p style="padding-left: 30px;"><img src="http://trigeminal.fmsinc.com/images/tamilinput02.png" /></p>
+<p style="padding-left: 30px;">and when you are done it will look something like this:</p>
+<p style="padding-left: 30px;"><img src="http://trigeminal.fmsinc.com/images/tamilinput03.png" /></p>
+<p style="padding-left: 30px;">Though if you do not have MUI language packs installed those language directories will be missing and you might have some localized path chunks up in the breadcrumb bar.</p>
+<p style="padding-left: 30px;">3) Open up an elevated command prompt. All you have to do is right click on the icon in the Start Menu or whereever to get this menu:</p>
+<p style="padding-left: 30px;"><img src="http://trigeminal.fmsinc.com/images/tamilinput04.png" /></p>
+<p style="padding-left: 30px;">and select the <strong>Run as <span style="text-decoration: underline;">a</span>dministrator</strong> option.</p>
+<p style="padding-left: 30px;">4) You will be put in the system32 directory. You need to navigate to the place you put the file in step 2, ande then run the command to register the input method:</p>
+<p style="padding-left: 30px;"><img src="http://trigeminal.fmsinc.com/images/tamilinput05.png" /></p>
+<p style="padding-left: 30px;">The command to run is</p>
+<blockquote style="padding-left: 30px;">
+<p><span style="font-size: medium;"><strong>rundll32 TableTextService.dll RegisterProfile TableTextServiceTamil.txt</strong> </span></p>
+</blockquote>
+<p style="padding-left: 30px;">and it is somewhat case sensitive so do not experiment with the case unless you are being paid by me to test this (since I am paying no one this rules you all out).</p>
+<p style="padding-left: 30px;">You will then be prompted to OKAY this registration you just requested:</p>
+<p style="padding-left: 30px;"><img src="http://trigeminal.fmsinc.com/images/tamilinput06.png" /></p>
+<p style="padding-left: 30px;">Say OK to this.</p>
+<p style="padding-left: 30px;">4a) If you are running on a 64-bit machine, you must also navigate to the place you put the other file in that elevated command prompt:</p>
+<p style="padding-left: 30px;"><img src="http://trigeminal.fmsinc.com/images/tamilinput07.png" /></p>
+<p style="padding-left: 30px;">Run the same command again:</p>
+<blockquote style="padding-left: 30px;">
+<p><span style="font-size: medium;"><strong>rundll32 TableTextService.dll RegisterProfile TableTextServiceTamil.txt</strong> </span></p>
+</blockquote>
+<p style="padding-left: 30px;">and then you'll get that dialog again:</p>
+<p style="padding-left: 30px;"><img src="http://trigeminal.fmsinc.com/images/tamilinput08.png" /></p>
+<p style="padding-left: 30px;">Just OK it again.</p>
+<hr/><p><strong>Raymond</strong> on 27 Apr 2011 1:38 AM:</p><div style="margin-left: 1em"><p>Hi, I&#39;m trying to build my own input method using the TableTextService. However, I&#39;m not quite following what you&#39;ve said in your articles... is there any reference material that explains the various configuration parameters more in-depth? Thanks so much!!</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 27 Apr 2011 5:56 AM:</p><div style="margin-left: 1em"><p>There is a whole series of posts here, which you can see all the links for if you look at part 12 (linked to near the top of this blog right here). AFAIK, no other documentation exists....</p></div>
+<hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2011/03/16/10141835.html" title="Reporting one casualty in the operation; luckily it was the stupidest member of the unit">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2011/03/14/10140462.html" title="Microsoft is better as one big company">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2011-03">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2011-03-15">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2011/03/15/10141137.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+</html>

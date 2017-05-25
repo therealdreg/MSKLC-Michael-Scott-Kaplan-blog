@@ -1,0 +1,38 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2011/08/25/10198837.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>The SQL app that works fine until you have to support Chinese....</title></head><body>
+<h1>The SQL app that works fine until you have to support Chinese....</h1>
+<p><em>by Michael S. Kaplan, published on 2011/08/25 07:01 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2011/08/25/10198837.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<p>The other day, Serge asked me via the Contact link:</p>
+<p style="padding-left: 60px;"><span style="font-family: times new roman,times;">I coming to you based on a question I have post on SQL forum relative to how can I handle Chinese characters in SQL server tables.</span></p>
+<p style="padding-left: 60px;"><span style="font-family: times new roman,times;">I have been pointed to your blog by a guy, hoping you could help me cause I could not find any answer for now.</span></p>
+<p style="padding-left: 60px;"><span style="font-family: times new roman,times;">The scenario is as follow :</span><br /><span style="font-family: times new roman,times;">I have an application which is getting different text from an SQL server database. Those database can contains different text language inside and based on the system settings I am fetching from my tables proper language ID identify by its short string ( Ex: US-en would be en)</span></p>
+<p style="padding-left: 60px;"><span style="font-family: times new roman,times;">We have then now a customer which request to get Chinese characters. For that he has send us its Chinese text in CSV format and then through how application we import those text inside SQL. After importing we have notice that all imported Chinese characters are shown in SQL server tables as "?".</span></p>
+<p style="padding-left: 60px;"><span style="font-family: times new roman,times;">For now our SQL server version is US running under Windows server 2008 US. We use default SQL server settings for Collation.</span></p>
+<p style="padding-left: 60px;"><span style="font-family: times new roman,times;">As I have never work with Chinese characters yet in SQL I have no idea how to set SQL server properly.</span></p>
+<p style="padding-left: 60px;"><span style="font-family: times new roman,times;">Hope you could give me a lift</span><br /><span style="font-family: times new roman,times;">Regards</span><br /><span style="font-family: times new roman,times;">Serge</span></p>
+<p>By long-standing convention/decision, the default server collation for the US product is a SQL compatibility collation.</p>
+<p>One that cannot handle Chinese in its non-Unicode columns.</p>
+<p>But rather than run through collation choices that would still lead to limitations (both code page 936 and 950 are missing characters), the better strategy in the end will be to use <strong>Unicode columns</strong>.</p>
+<p>And of course to use Unicode throughout the process, so you never lose data....</p>
+<hr/><p><strong>Joshua</strong> on 25 Aug 2011 9:18 AM:</p><div style="margin-left: 1em"><p>A stupid trick that results in smaller databases on average is to use UTF-8 declared as Windows-1252.</p>
+<p>Consider your plans very carefully before using it. You don&#39;t get certain advantages of storing data in its native character set (case insensitive, correct local sorting, etc.).</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 25 Aug 2011 12:51 PM:</p><div style="margin-left: 1em"><p>It also will give worse results for Chinese (since Han uses 3-4 bytes per characer in UTF-8)....</p>
+</div>
+<p><strong>cheong00</strong> on 25 Aug 2011 6:34 PM:</p><div style="margin-left: 1em"><p>Actually I&#39;ve seen one application that&#39;s created by the time of one of the first SQL version mandates their user to set locale to US English SQL collation too. (Changing collation is extremely painful if your database contains large number of stored procedures using temp tables.)</p>
+<p>Since the application has to deal with Chinese characters, they implemented interesting method to store Chinese characters as Big5 code points in the Chinese character fields. (For example, &quot;，&quot; would be stored as #A141) In this way, common SQL functions such as &quot;like&quot; comparison would actually work too.)</p>
+</div>
+<p><strong>Joshua</strong> on 26 Aug 2011 11:49 AM:</p><div style="margin-left: 1em"><p>The usage model that I encountered was Chinese names in otherwise English text.</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 26 Aug 2011 4:22 PM:</p><div style="margin-left: 1em"><p>Losing so much of the actual supported functiionality in SQL Server and risking data corruption from valid operations is seldom worth the risk....</p>
+</div>
+<p><strong>Pawel Dyda</strong> on 2 Sep 2011 11:20 AM:</p><div style="margin-left: 1em"><p>But what about Surrogate Pairs (four bytes characters)?</p>
+<p>Let&#39;s say we have to support Multilingual Data Processing so we cannot switch collation to Chinese. How to limit results then? I mean when you say &quot;SELECT * FROM something WHERE key=&#39;chinese&#39;?</p>
+<p>OK, let&#39;s face it there is probably no way (at least not in MS SQL 2005). I am not sure if it is working in newer versions...</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 2 Sep 2011 12:18 PM:</p><div style="margin-left: 1em"><p>Of course there is a way -- SQL Server collation support in all versions, 2000 and later! Surrogate pairs require SQL 2008 or later collations (or binary ones)....</p></div>
+<hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2011/08/26/10200787.html" title="Every character has a story #34: LATIN LETTER T WITH CEDILLA (U+0162/U+0163)">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2011/08/24/10199324.html" title="The history of messing up Romanian on computers">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2011-08">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2011-08-25">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2011/08/25/10198837.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+</html>

@@ -1,0 +1,35 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2007/06/17/3354902.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:38 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>The built-in attempt to support multi-monolingual keyboards is kinda broken</title></head><body>
+<h1>The built-in attempt to support multi-monolingual keyboards is kinda broken</h1>
+<p><em>by Michael S. Kaplan, published on 2007/06/17 12:31 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2007/06/17/3354902.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P>The plan for the design isn't flawed, though there is a flaw in its implemenation.</P>
+<P>It starts with something I did not mention explicitly but talked a bit about in <A class="" href="http://archives.miloush.net/michkap/archive/2006/08/03/687472.html" mce_href="http://archives.miloush.net/michkap/archive/2006/08/03/687472.html"><STRONG>Keyboard UI in setup hoist by its own petard?</STRONG></A>&nbsp;and also a bit in <STRONG><A class="" href="http://archives.miloush.net/michkap/archive/2006/09/03/738032.html" mce_href="http://archives.miloush.net/michkap/archive/2006/09/03/738032.html">On building a list of keyboards</A></STRONG>.</P>
+<P>I'll start by looking in intl.inf on Windows XP for a moment.</P>
+<P>You know that feature that adds a keyboard layout every time you switch the locale?</P>
+<P>Well, the data supporting this feature can be found (in both XP and Server 2003) in intl.inf. We'll concentrate on Dutch but all locales have it:</P>
+<BLOCKQUOTE>
+<P><STRONG>00000413 = %Dutch_Standard%&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ,850&nbsp;&nbsp;&nbsp;&nbsp; ,1,,0413:00020409,0413:00000413,0409:00000409</STRONG></P></BLOCKQUOTE>
+<P>Those last three entries represent the three keyboards that were chosen to be the three keyboard associated with the locale:</P>
+<UL>
+<LI>A US International keyboard layout sitting under the Dutch language</LI>
+<LI>A Dutch keyboard layout sitting under the Dutch language</LI>
+<LI>A US keyboard sitting under the English language</LI></UL>
+<P>Of course due to a bug affecting both XP and Server 2003, only the first keyboard on this list is added -- the other two sit in this data file but are not used (a bug that happens with almost every locale other than the EA ones).</P>
+<P>By the way this is not the bug I&nbsp;was referring to at the beginning of this post.</P>
+<P>So we will skip ahead to Vista -- intl.inf is no longer there, but that data is still needed. So it was added to <A class="" href="http://msdn2.microsoft.com/library/ms776270.aspx" mce_href="http://msdn2.microsoft.com/library/ms776270.aspx">GetLocaleInfo</A>/<A class="" href="http://msdn2.microsoft.com/library/ms776365.aspx" mce_href="http://msdn2.microsoft.com/library/ms776365.aspx">GetLocaleInfoEx</A> with the LOCALE_SKEYBOARDSTOINSTALL lctype. Same data, and they fixed the bug with only one keyboard on the list being installed.</P>
+<P>Which exposes the other problem.</P>
+<P>It is one I talked about in <STRONG><A class="" href="http://archives.miloush.net/michkap/archive/2006/03/07/545115.html" mce_href="http://archives.miloush.net/michkap/archive/2006/03/07/545115.html">The real problems with keyboard switching</A></STRONG>, the first two bullet points from that post in particular:</P>
+<BLOCKQUOTE>
+<LI><FONT face="times new roman,times"><EM>When the script is the same (e.g. both the original and new layout use the Latin script as in English and French), subtle differences exist in the location of some of the letters that both of them share (such as the switching of the 'A' and the 'Z' keys between English and French). </EM></FONT>
+<LI><FONT face="times new roman,times"><EM>In many cases, all of the punctuation moves around in specific ways that seem to be pretty difficult to keep track of in a reasonable way. </EM></FONT></LI></BLOCKQUOTE>
+<P>The problem is that although having a keyboard marked as being for the English language can be useful (especially in programs like Word that use the language to help determine the tagging of content, which impacts spell checking and other operations), it is not useful to switch the physical layout. In almost all of the cases where the main keyboard for the locale fully supports the Latin script, the better keyboard layout to use is <STRONG>that language's</STRONG> layout with the English layout on top of it.</P>
+<P>Almost every time, this&nbsp;really is a flaw in the implementation of this feature idea (a feature that is already of limited use since no one really explains the use in either Windows or the programs that would leverage it like Word).</P>
+<P>Of course in any version people could add their own layouts that follow these rules, but while the idea is understandable it isn't terribly intuitive without it being explained. And nobody is explaining any of it at the moment....</P>
+<P>And the only fix for this would be to update almost ll lof the data behind the various locales that have the problem (most of them).</P>
+<P mce_keep="true">&nbsp;</P>
+<P><FONT color=#ff00ff><EM>This post brought to you by</EM> <FONT size=5>ძ</FONT> <EM>(<A class="" href="http://www.fileformat.info/info/unicode/char/10eb" mce_href="http://www.fileformat.info/info/unicode/char/10eb">U+10eb</A>, a.k.a. GEORGIAN LETTER JIL)</EM></FONT></P>
+<hr/><div style="margin-left: 1em"><em>no comments</em></div><hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2008/10/23 <a href="http://archives.miloush.net/michkap/archive/2008/10/23/9013000.html">Does MS just make up these punctuation-challenged keyboards to piss people off?</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2007/06/18/3374502.html" title="If you don&#39;t always preserve case, you don&#39;t always preserve meaning">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2007/06/17/3349316.html" title="Good blog post titles at SIAO are all about following Beaver">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2007-06">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2007-06-17">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2007/06/17/3354902.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:38 GMT -->
+</html>

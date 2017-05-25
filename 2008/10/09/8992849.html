@@ -1,0 +1,41 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2008/10/09/8992849.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:35 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>About the Fonts folder in Windows, Part 5 (Nothing personal!)</title></head><body>
+<h1>About the Fonts folder in Windows, Part 5 (Nothing personal!)</h1>
+<p><em>by Michael S. Kaplan, published on 2008/10/09 10:01 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2008/10/09/8992849.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<p>A series is never so dead that it can't be revived for another run!</p>
+<p>Previous blogs in the series:</p>
+<ul>
+<li><b><a href="http://archives.miloush.net/michkap/archive/2006/06/25/646701.html" mce_href="http://archives.miloush.net/michkap/archive/2006/06/25/646701.html">Part 1 - What are we talking about?</a></b></li>
+<li><b><a href="http://archives.miloush.net/michkap/archive/2006/07/02/654110.html" mce_href="http://archives.miloush.net/michkap/archive/2006/07/02/654110.html">Part 2 - Adding fonts</a></b></li>
+<li><b><a href="http://archives.miloush.net/michkap/archive/2006/08/27/726378.html" mce_href="http://archives.miloush.net/michkap/archive/2006/08/27/726378.html">Part 3 - What changes in Vista?</a></b></li>
+<li><b><a href="http://archives.miloush.net/michkap/archive/2007/12/13/6754293.html" mce_href="http://archives.miloush.net/michkap/archive/2007/12/13/6754293.html">Part 4 - Eto Akta Gamat, aka Magical Protection?</a></b></li></ul>
+<p>And why was this series taken out of mothballs?<br></p>
+<p>Well, the other day Crister asked via the Contact link (and not via the Suggestion Box):</p>
+<blockquote>
+<p><i><font face="times new roman,times">Hi !<br>I have a problem finding the font-folder on win2003 server running in terminal-server mode. SHGetSpecialFolderPath(...,CSIDL_FONTS) should return the font-folder. The problem under terminal-server is that it will return the current users font folder and not the systems font folder...<br>What is the corrrect way of finding the system font folder?<br><br>thanks</font></i><br></p></blockquote>
+<p>Now at first I was confused since (to the dismay of some and the relief of others) there is no "per-user" <b>Fonts</b> folder.</p>
+<p>Which is not to say that my "official" recommendations from the whole <b><a href="http://archives.miloush.net/michkap/archive/2008/09/08/8932366.html" mce_href="http://archives.miloush.net/michkap/archive/2008/09/08/8932366.html">On installing and removing fonts series</a></b> didn't suggest the power of not being all global and system-wide with your fonts, it is just that Windows doesn't have the notion built-in. Some assembly is required.</p>
+<p>And yes, many people have asked me why Microsoft hasn't tried to mix it up here yet.</p>
+<p>No idea really, other than of course the long-standing fact that the <b>Fonts</b> folder has not been owned by the <b>Typography Group</b> in any version of Windows that as ever shipped in Windows, which of course makes it harder to control the destiny/direction of the architecture.</p>
+<p>Though as a group they do have other cool things they own, like being able to help fill that folder up each version with fonts that support so many languages. :-)<br></p>
+<p>Wait, we<font size="1"><sup>1</sup></font> were talking about something....</p>
+<p>Oh yeah, Terminal services.</p>
+<p>If ever the thought of a user <b>Fonts</b> folder made sense it would be this scenario, given how much wider than a singles session things happen in TS and embedded within a session operations related to the the <b>Fonts</b> folder tends to be. </p>
+<p>But as far as I know, that gap has not been bridged.</p>
+<p>Now I am not going to praise Apple for jumping in here and providing something, because to my conservative (some would say narrow) mindset the only thing worse than a raw implementation (ours) is a half-baked one where you have no good management story (theirs) But they get some points for trying, just like Office does (their half baked solutions e.g. calendars and time zones and address formats irk my sense of avoiding chaos too, for what it's worth!).</p>
+<p>So for now, CSIDL_FONTS does not have a "common" brother like many of the other folders have for <a href="http://msdn.microsoft.com/library/bb762204.aspx" mce_href="http://msdn.microsoft.com/library/bb762204.aspx">SHGetSpecialFolderPath</a>. Thus shlobj.h has a</p>
+<blockquote>
+<p><b><font face="Consolas,lucida console,courier new,courier,fixed">#define CSIDL_FONTS&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 0x0014&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // windows\fonts<br></font></b></p></blockquote>
+<p>but nothing like there is for others in the TS scenario such as<br></p>
+<blockquote>
+<p><b><font face="Consolas,lucida console,courier new,courier,fixed">#define CSIDL_STARTUP&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 0x0007&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // Start Menu\Programs\Startup</font></b><b><font face="Consolas,lucida console,courier new,courier,fixed"><br>#define CSIDL_COMMON_STARTUP&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 0x0018&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // All Users\Startup</font></b><br></p></blockquote>
+<p>and there isn't a secret, private way to get this either...</p>
+<p mce_keep="true">&nbsp;</p>
+<p><font size="1">1 - The royal<sup>2</sup> <b>we</b>, by which I mean <b>I</b>.<br>2 - As opposed to the medical <b>we</b>, by which I mean <b>you</b>.</font></p>
+<p mce_keep="true">&nbsp;</p>
+<p><font color="#ff00ff"><i>This blog brought to you by</i><font size="6"> ঘ </font><i>(<a href="http://www.fileformat.info/info/unicode/char/0998" mce_href="http://www.fileformat.info/info/unicode/char/0998">U+0998</a>, aka BENGALI LETTER GHA)</i></font><br></p>
+<hr/><div style="margin-left: 1em"><em>no comments</em></div><hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2008/10/10/8993742.html" title="Feeling the cold vs. feeling [un]comfortably numb">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2008/10/09/8992427.html" title="Making a point without explaining the whole point of the point? *That* is the point!">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2008-10">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2008-10-09">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2008/10/09/8992849.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:35 GMT -->
+</html>

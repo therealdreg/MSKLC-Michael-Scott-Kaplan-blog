@@ -1,0 +1,22 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2011/07/11/10183229.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Only ask the question if you have the cache to spend on the answer</title></head><body>
+<h1>Only ask the question if you have the cache to spend on the answer</h1>
+<p><em>by Michael S. Kaplan, published on 2011/07/11 07:01 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2011/07/11/10183229.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<p>The message that came from Josh was an interesting one:</p>
+<p style="padding-left: 30px;"><em><span style="font-family: times new roman,times; font-size: medium;">I&rsquo;m investigating unexpectedly high memory usage in a feature I wrote, and I tracked it down to the fact that getting the DisplayName property of a CultureInfo object (InvariantCulture in this case) seems to trigger allocation of literally thousands of strings, which are not GC&rsquo;d as far as I can tell.&nbsp; Is this a known issue?&nbsp; I can provide some example callstacks (at the point the allocations occurred) if it helps.</span></em></p>
+<p style="padding-left: 30px;"><em><span style="font-family: times new roman,times; font-size: medium;">Thanks!</span></em></p>
+<p>People have a tendency to look at the way memory gets used in the .NET Framework, so this particular allocation comes up from time to time.</p>
+<p>Basically, it is for filling in locale data in the hash nodes that the .NET BCL uses to store its list of locales and the data in it.</p>
+<p>The list is fairly static per machine (even when custom locales are installed, this is not a very common occurrence), and as data that is unlikely to change often but which may be requested at some point if it was ever requested. If it never is then it will page out eventually, but freeing it isn't necessarily a reasonable thing to do....</p>
+<p>Now I'm not gong to unilaterally defend the design here, since I'm sure any compotent&nbsp;person reading this blog&nbsp;can question&nbsp;some of the actual allocations here, in some cases.</p>
+<p>But in the end, I know that the people who have a full time job keeping that memory size down are the ones in the best position to fight those battles, so even if I am startled I shouldn't be too surprised or shocked. Therefore I am going to set that argument aside and assume that the people who did it had their reasons and that they are reasonable.</p>
+<p>Perhaps, as can be the case in this Blog, it might make more sense to attack a different notion.</p>
+<p>You may remember when I wrote <strong><a title="Having neither army nor navy, Invariant is apparently just a dialect" href="http://archives.miloush.net/michkap/archive/2010/03/04/9971425.html">Having neither army nor navy, Invariant is apparently just a dialect</a></strong>.</p>
+<p>Now perhaps requesting the invariant culture's display name -- Invariant Language (Invariant Country) -- may seem important.</p>
+<p>But if the locale is not being used for anything else than it probably isn't worth it.</p>
+<p>And that is from me, speaking as the person who took Microsoft down the road of filling in all this data -- for the locake/culture that doesn't even exist, in this world where everything varies....</p>
+<hr/><div style="margin-left: 1em"><em>no comments</em></div><hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2011/07/12/10185373.html" title="The first isn&#39;t always #1">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2011/07/09/10184809.html" title="At least Louis C.K. didn&#39;t say &quot;There is a lot people that are großer...&quot;">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2011-07">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2011-07-11">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2011/07/11/10183229.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+</html>

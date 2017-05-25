@@ -1,0 +1,50 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2007/08/25/4564548.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:37 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>MSKLC keyboard layout names in your own language</title></head><body>
+<h1>MSKLC keyboard layout names in your own language</h1>
+<p><em>by Michael S. Kaplan, published on 2007/08/25 17:31 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2007/08/25/4564548.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P>When&nbsp;I wrote <STRONG><A class="" href="http://archives.miloush.net/michkap/archive/2007/08/23/4535058.html" mce_href="http://archives.miloush.net/michkap/archive/2007/08/23/4535058.html">Getting the language (and more!) of an LCID-less keyboard</A></STRONG>, which admittedly covered a lot of ground, I realized there were a lot of other points that would have to be clarified.</P>
+<P>Like how MUI (Multilingual User Interface) fits in.</P>
+<P>I mean, it is clear from looking at the registry that something is going on:</P>
+<P><IMG src="http://trigeminal.fmsinc.com/images/valleygirl03.png"></P>
+<P>That bit with the <STRONG>Custom Language Display Name</STRONG> and the <STRONG>Layout Display Name</STRONG> and their <A href="http://msdn2.microsoft.com/library/ms538594.aspx">SHLoadIndirectString</A> style strings is fairly obvious.</P>
+<P><EM>(I still have to talk more about </EM><A href="http://msdn2.microsoft.com/library/ms538594.aspx"><EM>SHLoadIndirectString</EM></A><EM>; I'll do that another day)</EM></P>
+<P>And it leads people like regular reader Ivan Petrov to wonder and even <A class="" href="http://archives.miloush.net/michkap/archive/2007/08/23/4535058.html#4540661" mce_href="http://archives.miloush.net/michkap/archive/2007/08/23/4535058.html#4540661">ask</A>:</P>
+<BLOCKQUOTE>
+<P><EM><FONT face="times new roman,times">Hi Michael :-)<BR><BR>I've the following question:<BR><BR>How can someone USE, let's say something like the MUI technology, for the Description text when the custom Keyboard Layout is installed?<BR><BR>I mean when some user is using English User interface (MUI) to see the English Description text and if some user (on the same machine) is using a Bulgarian User interface, to see a Bulgarian Description text. All this at the Language bar and in the Text Services and Input Languages window in the Installed services under the Keyboard tree as localized node!<BR><BR>Regards,<BR><BR>Ivan.</FONT></EM></P></BLOCKQUOTE>
+<P>Now of those two MUI-friendly strings, the <STRONG>Layout Display Name</STRONG> actually was added in Windows XP and is used to support localized keyboard layout names in every user interface language in Windows. All of the strings are in input.dll and the localizers can get to them.</P>
+<P>But for custom keyboard layouts, obviously one cannot add strings to the input.dll file that ships in Windows. So we talked about it an decided that the resources of the layout DLL itself would work just fine. Starting with MSKLC 1.4, we automatically add the language name at string resource 1100 and the layout name at string resource 1000.</P>
+<P>Of course there is no user interface within MSKLC to let you specify the various translations of those two strings, which would seem to defeat the purpose.</P>
+<P>But let's take a closer look at the .KLC file from those adventures the other day, near the bottom of the file:</P>
+<BLOCKQUOTE>
+<P>DESCRIPTIONS<BR>0409&nbsp;&nbsp;&nbsp; Like Totally Fer Shure<BR><BR>LANGUAGENAMES<BR>0409&nbsp;&nbsp;&nbsp; Valley Girl (California)</P></BLOCKQUOTE>
+<P>And there you have it. For any language you wish to add a translation for, and this is for either or both strings, you can add them here. MSKLC will not let you edit the name directly but if they are there then it will build the keyboard layout DLL containing them. Quite happily, in fact....</P>
+<P>You are LCID (technically LANGID) bound since all of the resources are contained in the one DLL and there is no way to do multilingual resource tagging in one file. Perhaps in&nbsp;a future version this would change to including the various .mui files in the language name directories. And then custom languages might fare better (of course for the time being <STRONG><A class="" href="http://archives.miloush.net/michkap/archive/2006/12/16/1300320.html" mce_href="http://archives.miloush.net/michkap/archive/2006/12/16/1300320.html">MUI does not work well with custom locales</A></STRONG> so MSKLC has some time before anyone needs to worry about getting that bit right. :-)</P>
+<P>It is funny, the feature idea within MSKLC has been suggested for years but it never really got very far, as people struggled over what to make that UI look like -- some big grid where you choose the target language and put in the translation? Or would you give the DLL to some localization company and have them translate? Probably once they are separate DLLs, sure. But for now many some UI would have been nice? :-)</P>
+<P>Ah well, no worries. If you want to put in some different translations of the custom language name (ignored unless it is in fact a custom language) and/or the keyboard layout name, adding them to the file is easy enough by just putting in the LANGID and the name, one line to each you add.</P>
+<P mce_keep="true">&nbsp;</P>
+<P><FONT color=#ff00ff><EM>This post brought to you by</EM> <FONT size=6>࿏</FONT> <EM>(<A class="" href="http://www.fileformat.info/info/unicode/char/0fcf" mce_href="http://www.fileformat.info/info/unicode/char/0fcf">U+0fcf</A>, a.k.a. TIBETAN SIGN RDEL NAG GSUM)</EM></FONT></P>
+<hr/><p><a id="4566521" href="#4566521">#</a> <strong>Mike</strong> on 25 Aug 2007 9:00 PM:</p><div style="margin-left: 1em"><p>Slightly off-topic request. For some months, the \ key on my Acer Tablet's UK-keyboard has not worked (it's between left shift and z, as expected). At first I thought the keypad was broken, but I had that replaced. It still doesn't work. So I tried to remap the keyboard using tools like MSKLC or KeyTweak. Interestingly when I test that key in these apps, it works perfectly.</p>
+<p>I loaded the UK-Extended Keyboard layout into MSKLC, noting the following:</p>
+<p>1. even though the \ registers when I tap it without a layout loaded, it fails when I do have a UK layout loaded</p>
+<p>2. if I &quot;Test Keyboard Layout&quot; with UK-Extended then the key works (in both shift states)</p>
+<p>3. The Validate Layout log says : &quot; &nbsp; &nbsp;WARNING: '\' defined on OEM_5 (Base) but not defined elsewhere. This key may not be present on all keyboards.&quot;</p>
+<p>I'm stumped. Why isn't Windows (XP SP2) paying attention to this key?</p></div>
+<p><a id="4566806" href="#4566806">#</a> <strong>Michael S. Kaplan</strong> on 25 Aug 2007 9:22 PM:</p><div style="margin-left: 1em"><p>Seems like something for the Suggestion Box?</p>
+</div>
+<p><a id="4579296" href="#4579296">#</a> <strong>Ivan Petrov</strong> on 26 Aug 2007 4:45 PM:</p><div style="margin-left: 1em"><p>Ahaaa,</p>
+<p>Thank you for the post Michael :-)</p>
+<p>Regards,</p>
+<p>Ivan.</p></div>
+<p><strong>DilanR</strong> on 8 Apr 2013 2:03 PM:</p><div style="margin-left: 1em"><p>Mike, in this case what will be displayed language on the language bar? I have issue with getting a custom keyboard for Kurdish to appear under the name Kurdish? </p>
+</div>
+<p><strong>DilanR</strong> on 8 Apr 2013 2:40 PM:</p><div style="margin-left: 1em"><p>I think in the .KLC file there are some information that can not be changed, they appear right at the top such as </p>
+<p>LOCALENAME</p>
+<p>LOCALID </p>
+<p><a rel="nofollow" target="_new" href="http://msdn.microsoft.com/en-us/goglobal/bb895996.aspx">msdn.microsoft.com/.../bb895996.aspx</a></p>
+<p>and there is no way to allocate a custom keyboard under a non represented language in above list. </p>
+</div>
+<hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2012/05/17 <a href="http://archives.miloush.net/michkap/archive/2012/05/17/10306133.html">That 'keyboard culture list' you may have heard so much about</a></p><p>2008/02/25 <a href="http://archives.miloush.net/michkap/archive/2008/02/25/7893424.html">What the #$!*& is a KeyboardLayoutId, anyway?</a></p><p>2008/01/28 <a href="http://archives.miloush.net/michkap/archive/2008/01/28/7287476.html">Behold the Table Driven Text Service, Part 5 (All about the language, baby!)</a></p><p>2007/09/02 <a href="http://archives.miloush.net/michkap/archive/2007/09/02/4701403.html">When the NLS keyboard's notions about LCIDs aren't the same as in NLS, part #1</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2007/08/25/4565131.html" title="Depends on what you meant about what you meant...">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2007/08/25/4563239.html" title="On Becoming Jane">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2007-08">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2007-08-25">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2007/08/25/4564548.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:37 GMT -->
+</html>

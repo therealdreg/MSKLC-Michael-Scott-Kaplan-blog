@@ -1,0 +1,57 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2010/12/03/10099877.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Code as though the Console is as it should be, to show everyone what it can be</title></head><body>
+<h1>Code as though the Console is as it should be, to show everyone what it can be</h1>
+<p><em>by Michael S. Kaplan, published on 2010/12/03 07:01 -05:00, original URI: http://blogs.msdn.com/b/michkap/archive/2010/12/03/10099877.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<p><strong><span style="color: #ff0000;"><em><span style="font-size: small;">For those who want today's technical content with no back story, you should&nbsp;do two things: 1) realize you are a very boring person, and 2) skip to the last section of today's blog....</span></em></span></strong></p>
+<p><em><span style="font-size: xx-small;"><span style="color: #ff0000;"><strong>Disclaimer: I have not had a beer with either Phil Lucido or Bryan Tuttle, though I believe I technically owe each of them a beer (at least), if that counts.</strong></span></span></em></p>
+<p>Now I am very well aware of the fact that I don't live in an ideal world. And yet, at each point as I go through life, I can imagine what the ideal version of the situation might be like.</p>
+<p>Once I do this,&nbsp;I can, by comparing that ideal to how things actually are, do two things:</p>
+<ul>
+<li>through the cynical power of snark, I can put that which is in its place, and</li>
+<li>through the idealistic power of imagination, I can find ways to make things just a little closer to that ideal.</li>
+</ul>
+<p>Much of my life goes this way, and after decades like this, I'm pretty comfortable with it.</p>
+<p>There is a quote that&nbsp;I think of, one that inspires me to do more than I do, to be more than I am, from the TV show Angel:</p>
+<p style="padding-left: 30px;"><em><span style="font-family: times new roman,times;"><span style="font-size: small;">But that's why there's us - champions. Doesn't matter where we come from, what we've done or suffered, or even if we make a difference. We live as though the world is as it should be, to show it what it can be.</span></span></em></p>
+<p>Which is not to say I am a <strong>hero</strong>, or even a <strong>champion</strong>. Though interestingly enough one of my current roles has me as the point of contact for several people who do explicitly act as <strong>champions</strong> and are called such -- <strong>World-Readiness Champions</strong>. And when they come to talk to me about issues I like to point out what the ideal solution might look like, before moving to the one that is more likely to be possible given current resources. I like the context it can give.</p>
+<p>If you are a regular reader and you enjoy this blog, then there may be some dimensions by which you are feeling a little of the same.</p>
+<p>Anyway, I was thinking of all this not too long ago, when I was talking to someone about a recent blog of mine, <a href="http://archives.miloush.net/michkap/archive/2010/10/07/10072032.html" title="Myth busting in the console"><strong>Myth busting in the console</strong></a>.</p>
+<p>It occurred to me that I had not followed my usual pattern.</p>
+<p>So today, I am going to take a step back and fill in those blanks. In the form of an almost fantasy-like vision of what the past could have been.....</p>
+<hr />
+<p>The ideal in my mind happened one Friday, fifteen years ago. Somehow I was working on Windows then (though in reality I would not be on Windows until half a decade later).</p>
+<p>This ideal involves Phil Lucido (one of the most amazing force that Microsoft's C Runtime has ever known) who was hanging out with the Windows folks&nbsp;at a WIM on a Friday afternoon, having a beer with me and Bryan Tuttle (one of those few people I know who can work at 96% efficiency and who I miss in Windows&nbsp;every time I hear about a build break due to bad merge that no one understands). </p>
+<p>Over that beer I am explaining these things about the&nbsp;console that I somehow managed to know then rather than, upset that the various console apps just recently made to work well on the NT platform weren't doing.</p>
+<p>Suddenly, we know what to do.</p>
+<p>Phil goes back to his office and fixes all of the console support in the CRT to support Unicode. With his interim builds as he works and using a&nbsp;combination of the CRT and the regular Unicode Win32 API, Bryan and I update all of the console apps to support Unicode. </p>
+<p>The three of us work all weekend.</p>
+<p>By Monday, we have transformed the runtime, and the platform. Every FINDSTR, every TRACERT, every PING, XCOPY, every bit of these pieces of the console&nbsp;use Unicode. Because that's what it should have been doing anyway.</p>
+<p>I suspect that even in this fantasy world DaveC isn't especially thrilled that so many tools that are actually still running mostly ASCII text are going to emit text that is twice the size since it will double the size of a lot fo log files. But he doesn't push us to revert the changes, which is good&nbsp;(we were lucky that UTF-8 didn't really exist yet on the platform or he may have pushed to have it all redone to use UTF-8 and keep the ASCII text size down!).</p>
+<hr />
+<p>Ok, now this is getting silly, I suppose?</p>
+<p>We are looking at the other end if the telescope here -- with me writing a blog titled <a href="http://archives.miloush.net/michkap/archive/2010/10/07/10072032.html" title="Myth busting in the console"><strong>Myth busting in the console</strong></a>&nbsp;that points out that more than a decade and a half of console applications have been created and used without taking any of that information into account.</p>
+<p>Changing it all now (if Phil still worked for Microsoft and Bryan still worked for Windows and the company still had a way for such things to get done by people over a weekend) would pretty much break a ton of applications that depend on the current behavior that aren't expecting such a new behavior.</p>
+<p>So okay, knowing how easy it is to support Unicode in the console is the kind of story that could have South Park's <strong>Captain Hindsight</strong> as the hero, and his power to make us feel better knowing what we could have done would allow us that meager level of empowerment.</p>
+<p>But what can we do now?</p>
+<p>Ah, I'm glad you asked.</p>
+<p>For what I think every console application should do going forward (and what some percentage of the existing ones should be updated to do though of course that is a much harder sell!) is in the next section.</p>
+<hr />
+<p>&nbsp;How to do console apps right:</p>
+<p>(source material in <a href="http://archives.miloush.net/michkap/archive/2010/10/07/10072032.html" title="Myth busting in the console"><strong>Myth busting in the console</strong></a>&nbsp;and the <a href="http://archives.miloush.net/michkap/archive/2007/01/05/1413001.html" title="Converting a project to Unicode series"><strong>Converting a project to Unicode series</strong></a>)</p>
+<ol>
+<li>Within the console window itself, everything coming into the app and going out of it should be UTF-16 LE, via functions&nbsp;like&nbsp;<strong>ReadConsoleW</strong> and <strong>WriteConsoleW</strong>. There are no backcompat issues doing this with the exception of those in love with question amrks and other corrupted text, and I don't care about them. At all. There should literally be no way to deal with the console window itself that is not Unicode, Unicode, Unicode, Unicode.</li>
+<li>For input and output that uses files, the encoding should be the input and output encoding that have been set.</li>
+<li>#2 means for Managed code that it should be able to set it to use UTF-16 LE if it likes, or whatever it feels like. And since they don't do that, people should do what I do in those samples and use Win2 within managed console apps,</li>
+<li>#2 means for native code that it should the Win32 API and use those code pages to get the text into/out of the files (and add a single command line switch to tell the app to use UTF-16 since that is the one that you can't set right now).</li>
+</ol>
+<p>Such a solution would mean that anyone depending on your application behaving like every other semi-broken app over the last 15+ years will get exactly what they want.</p>
+<p>Every application that wants to do better can do exactly that -- it can do better, using your app that is better when it needs to.</p>
+<p>Every person who follows these principles is in my eyes a<strong> HERO</strong>.</p>
+<p>A <strong>CHAMPION</strong>.</p>
+<p>How big of a hero or champion is just to do with the quality and the quantity, the depth and the scope.</p>
+<p>If you decide you are one of those heroes, those champions, feel free to let me know about it (in comments or via <a href="http://archives.miloush.net/michkap/archive/2004/05/24/280092.html"><strong>the Contacting Me&nbsp;link</strong></a>!).</p>
+<hr/><div style="margin-left: 1em"><em>no comments</em></div><hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2010/12/04/10100294.html" title="One person&#39;s curse word is another person&#39;s....">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2010/12/02/10099342.html" title="Morrissey? I know How Soon Now Is -- it&#39;s as soon as I can get the latest Mac Office installed!">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2010-12">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2010-12-03">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2010/12/03/10099877.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+</html>

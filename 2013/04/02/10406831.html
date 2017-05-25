@@ -1,0 +1,48 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2013/04/02/10406831.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:20 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>All abbreviated days of week are created equal. But some are less equal than others!</title></head><body>
+<h1>All abbreviated days of week are created equal. But some are less equal than others!</h1>
+<p><em>by Michael S. Kaplan, published on 2013/04/02 07:01 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2013/04/02/10406831.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<p>Short date formats, as a general rule, are pretty consistent.</p>
+<p>They always have a <strong>d</strong> or a <strong>dd</strong>. And not a <strong>ddd</strong> or a&nbsp;<strong>dddd</strong>.</p>
+<p><em>Which is just another way of saying that we&nbsp;have <strong>6</strong> or <strong>06</strong>, but never <strong>Sat</strong> or <strong>Saturday</strong>.</em></p>
+<p>They always have an <strong>m</strong> or <strong>mm</strong>. And not an <strong>mmm</strong> or an <strong>mmmm</strong>.</p>
+<p><em>Which is just another way of saying that we have <strong>1</strong> or <strong>01</strong>, but never <strong>Jan</strong> or <strong>January</strong>.</em></p>
+<p>And they always have a <strong>yy</strong> or <strong>yyyy</strong>.</p>
+<p>But there is something else about rules that is important to remember.</p>
+<p>There is always an exception that proves them!</p>
+<p>Take Japanese, for example.</p>
+<p>It's <a href="http://msdn.microsoft.com/en-us/library/windows/desktop/dd373839.aspx">LOCALE_SDAYNAME*</a> values have been consistent for quite some time:</p>
+<p><img src="http://msdnshared.blob.core.windows.net/media/MSDNBlogsFS/prod.evol.blogs.msdn.com/CommunityServer.Blogs.Components.WeblogFiles/00/00/00/33/81/6433.jajp02.png" alt="" /></p>
+<p>As have its <a href="http://msdn.microsoft.com/en-us/library/windows/desktop/dd373831.aspx">LOCALE_SABBREVDAYNAME*</a> values:</p>
+<p><img src="http://msdnshared.blob.core.windows.net/media/MSDNBlogsFS/prod.evol.blogs.msdn.com/CommunityServer.Blogs.Components.WeblogFiles/00/00/00/33/81/4377.jajp01.png" alt="" /></p>
+<p>And its <a href="http://msdn.microsoft.com/en-us/library/windows/desktop/dd373890.aspx">LOCALE_SSHORTESTDAYNAME*</a> values:</p>
+<p><img src="http://msdnshared.blob.core.windows.net/media/MSDNBlogsFS/prod.evol.blogs.msdn.com/CommunityServer.Blogs.Components.WeblogFiles/00/00/00/33/81/5187.jajp03.png" alt="" width="271" height="118" /></p>
+<p>Savvy readers will note that the latter two sets are identical -- the abbreviated name <strong>is</strong> the shortest name, every day of the week.</p>
+<p>And now we get to the formats.</p>
+<p>The default <a href="http://msdn.microsoft.com/en-us/library/windows/desktop/dd373886.aspx">LOCALE_SSHORTDATE</a> for ja-JP is:</p>
+<p style="padding-left: 30px;"><span style="font-size: xx-large;"><strong>yyyy/MM/dd</strong></span></p>
+<p>And the full list including optional alternate formats is:</p>
+<p><img src="http://msdnshared.blob.core.windows.net/media/MSDNBlogsFS/prod.evol.blogs.msdn.com/CommunityServer.Blogs.Components.WeblogFiles/00/00/00/33/81/0841.jajp04.png" alt="" width="508" height="138" /></p>
+<p>Wow! Formats five through seven of the 8 include the day name in parentheses!</p>
+<p>And have had this for many versions of Windows!</p>
+<p>You can see it in <strong>Regional and Language</strong> too, shown here for Windows&nbsp;<strong>7</strong> and Server 2008 R2:</p>
+<p><img src="http://msdnshared.blob.core.windows.net/media/MSDNBlogsFS/prod.evol.blogs.msdn.com/CommunityServer.Blogs.Components.WeblogFiles/00/00/00/33/81/7220.jajp05.png" alt="" />&nbsp; <img src="http://msdnshared.blob.core.windows.net/media/MSDNBlogsFS/prod.evol.blogs.msdn.com/CommunityServer.Blogs.Components.WeblogFiles/00/00/00/33/81/4571.jajp06.png" alt="" width="501" height="602" /></p>
+<p>Now it is easy to get unhappy about this break in the rules.</p>
+<p>Even though it has been going on for more years than most of these people got their jobs!</p>
+<p>Or, as we learned&nbsp;from prior blogs&nbsp;<strong><a title="Sometimes MMM is MMMM, other times MMM is M! (aka Not all abbreviations are created equal)" href="../../../2012/02/05/10263576.html">Sometimes MMM is MMMM, other times MMM is M! (aka Not all abbreviations are created equal)</a></strong> and <strong><a title="The awkward insert of shortest day names..." href="../../../2012/02/08/10265404.html">The awkward insert of shortest day names...</a></strong>, relying in general rules in locale data is a bad idea.</p>
+<p>A really, really, really,&nbsp;REALLY, <strong>REALLY</strong>&nbsp;bad idea.</p>
+<p><strong>Just as it was with abbreviated months and <em>their </em>use, so it is with abbreviated days.</strong></p>
+<p>Please just embrace the differences, and give people&nbsp;their preferences.</p>
+<p>They'll be grateful in Japan.</p>
+<p>And in the rest of the world.... :-)</p>
+<hr/><p><strong>David Warner</strong> on 3 Apr 2013 2:31 AM:</p><div style="margin-left: 1em"><p>That doesn&#39;t look like Windows 8, unless you went to a lot of effort to enable the old Aero theme from Windows 7 :)</p>
+<p>There are a lot of alternate short date formats with MMM or even MMMM (English - Australia has this), and Kazakh&#39;s only option is &#39;d-MMM-yy&#39;.</p>
+<p>I noticed one of the options for Sakha (Russia) short dates is &#39;dd yyyy MM d&#39; - do the Sakha people really write the day twice, once with a leading zero?</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 3 Apr 2013 7:11 AM:</p><div style="margin-left: 1em"><p>Windows 7, sorry!</p>
+</div>
+<hr/><p><em>go to <a id="newer" href="../03/10407114.html" title="“The ‘Smart Quotes’ are leaking all over the Internet!”">newer</a> or <a id="older" href="../01/10406100.html" title="If it isn&#39;t English, the WP8 Messaging App can get the numbers all wrong">older</a> post, or back to <a href="../../../index-2.html">index</a> or <a href="../../../index-2.html#2013-04">month</a> or <a href="../../../index-2.html#2013-04-02">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2013/04/02/10406831.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:20 GMT -->
+</html>

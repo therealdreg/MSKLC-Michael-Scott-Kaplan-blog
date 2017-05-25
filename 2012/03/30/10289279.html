@@ -1,0 +1,33 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2012/03/30/10289279.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>I guess it might have been more to do with localization than localizability after all!</title></head><body>
+<h1>I guess it might have been more to do with localization than localizability after all!</h1>
+<p><em>by Michael S. Kaplan, published on 2012/03/30 07:01 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2012/03/30/10289279.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<p>The other day in <strong><a title="How to localize a product very wrongly like" href="http://archives.miloush.net/michkap/archive/2012/03/27/10287870.html">How to localize a product very wrongly like</a></strong>, I made a fairly candy ass statement:</p>
+<p style="padding-left: 180px;"><span style="font-size: x-small;">...the simple fact that either:</span></p>
+<p style="padding-left: 210px;"><span style="font-size: x-small;">*The fundamental difference between the way different units of measurements are defined in different locales cannot be handled by localization, or</span><br /><span style="font-size: x-small;">*This difference is exposed but is done so in a way that was either not properly described or not properly tested.</span></p>
+<p style="padding-left: 180px;"><span style="font-size: x-small;">I can't say for sure which one, though I have my suspicions.</span></p>
+<p style="padding-left: 180px;"><span style="font-size: x-small;">Especially since there are also some unrelated UI problems that make localization of the UI difficult.</span></p>
+<p style="padding-left: 180px;"><span style="font-size: x-small;">Perhaps someone on the Shell team can weigh in on the actual root cause of this bug that apples to Vista, Server 2008, Windows 7, Server 2008 R2, and (according to BrautKrautBleibtBlauKleid) Windows 8 in the Consumer Preview.</span></p>
+<p>I honestly didn't know which it was.</p>
+<p>Now my charge about the poor localizability of the user interface is true.</p>
+<p>But perhaps it was unfair to assume that the team that made one mistake also made the other....</p>
+<p>Especially since of my very first readers <a href="http://blogs.msdn.com/b/oldnewthing">Raymond Chen</a> cleared up the mystery and implicitly pointed out my assumption was wrong:</p>
+<p style="padding-left: 30px;"><em><span style="font-family: times new roman,times; font-size: medium;">It's actually case 2 (the conversion formula is localizable, but localization was not done).</span></em></p>
+<p>Well that really puts a cat among the pigeons!</p>
+<p>I took a quick look and although I looked at the resources in calc.exe.mui, how localization of the conversions might be done seemed like it might be complicated.</p>
+<p>I didn't find the hidden cache of formulas, for example.</p>
+<p>I'm going to have to ask some people, and&nbsp;to try and find the localization instructions.</p>
+<p>How else to judge how, or if, the decision was made, explicitly?</p>
+<p>Worst case, the <strong>Supreme Court of SIAO</strong> can judge who dropped the ball here....</p>
+<p>Best case, maybe we could get the bug fixed some day!</p>
+<p><em>I can't hold out too much hope for a fix in v.Next given how little time is left and this is pretty much entirely unanticipated work. But perhaps one day....</em></p>
+<hr/><p><strong>Jeroen</strong> on 30 Mar 2012 8:26 AM:</p><div style="margin-left: 1em"><p>It looks like the formulas are stored in an XML file embedded as a resource named IDS_TEMPALTE_XML.</p>
+<p>Notice the typo in the name, maybe that is the cause of the bug?</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 30 Mar 2012 1:16 PM:</p><div style="margin-left: 1em"><p>You may be givng them too much credit, Jeroen. :-)</p>
+</div>
+<hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2012/04/02/10289808.html" title="When you have two different models, the easiest place to fall short is in the interaction between &#39;em…">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2012/03/29/10288809.html" title="The On-Screen Keyboard vs the Touch Keyboard: 2 very different Windows 8 things…">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2012-03">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2012-03-30">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2012/03/30/10289279.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+</html>

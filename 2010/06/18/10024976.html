@@ -1,0 +1,56 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2010/06/18/10024976.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:35 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Bugs hidden in plain sight, and commented that way too</title></head><body>
+<h1>Bugs hidden in plain sight, and commented that way too</h1>
+<p><em>by Michael S. Kaplan, published on 2010/06/18 07:01 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2010/06/18/10024976.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<p>In my time working in windows, I have seen a lot of different code.</p>
+<p>As begets any project of this size written over this much time by this many developers, there is a lot there.</p>
+<p>Some parts of it are ordinary.</p>
+<p>Other parts of it are quite brilliant.</p>
+<p>Still other parts are just wrong.</p>
+<p>Every once in a while the wrongness even includes a comment that vmakes the wrongness so entirely clear to anyone who read the comment and went so far as to think about what it said that one has to conclude that no one was reading the comment and thinking about whether it might be true.</p>
+<p>An example of this phenomenon can be seen in blogs of mine like <a href="http://archives.miloush.net/michkap/archive/2008/04/07/8364480.html" title="The Bug(s) Spotted, aka Design flaws are worse than bugs"><strong>The Bug(s) Spotted, aka Design flaws are worse than bugs</strong></a>, just to give one example.</p>
+<p>Today I am going to talk about another!</p>
+<p>Now before I get into that, let me backpedal a bit and mention a small point of obviation, or at least&nbsp;of mitigation.</p>
+<p>When code has been around for a while (like multiple versions) it is treated as if it is a bit more stable. More likely to be right. </p>
+<p>As a consequence, comments associated with that code are sometimes given that same bit of extra authority. And people who see it in passing who are not thinking about bugs or code reviews can easily let that authority stand, subconsciously.</p>
+<p>It is of course still just as wrong, mind you. </p>
+<p>But otherwise smart people can go so far as to quote the code with its comment when making a tangantial point, not even seeing the problem in either one!</p>
+<p>Such as this bit from a piece of mail the other day, one that came up in a conversation about console applications (I have been involved in several such email threads/meetings after blogs like <a href="http://archives.miloush.net/michkap/archive/2008/03/18/8306597.html" title="Conventional wisdom is retarded, aka What the @#%&amp;amp;* is _O_U16TEXT?"><strong>Conventional wisdom is retarded, aka What the @#%&amp;* is _O_U16TEXT?</strong></a> and <a href="http://archives.miloush.net/michkap/archive/2010/02/15/9963784.html" title="The real problem(s) with all of these console &quot;fallback&quot; discussions"><strong>The real problem(s) with all of these console "fallback" discussions</strong></a> and <a href="http://archives.miloush.net/michkap/archive/2010/04/07/9989346.html" title="Anyone who says the console can't do Unicode isn't as smart as they think they are"><strong>Anyone who says the console can't do Unicode isn't as smart as they think they are</strong></a> and <a href="http://archives.miloush.net/michkap/archive/2010/05/07/10008232.html" title="Cunningly conquering communicated console caveats. Comprende, mon Capit&amp;aacute;n?"><strong>Cunningly conquering communicated console caveats. Comprende, mon Capit&aacute;n?</strong></a>, as you might expect).</p>
+<p>Product details removed for hopefully obvious reasons:</p>
+<blockquote>
+<p><span style="font-family: times new roman,times;"><em><span style="color: #3366ff;">The current console output behavior for&nbsp;&lt;redacted&gt; and&nbsp;&lt;redacted&gt; was painfully established through years of international testing.<br />That&rsquo;s not to say there are no issues &ndash; just that we need to be cautious about making changes.</span><br /></em></span><br /><span style="font-family: consolas,lucida console,courier new,courier,fixed;"><b><span style="color: #339966;">// if redirected to a pipe or a file, don't use WriteConsole;<br />// it drops redirected output on the floor<br />// if going to a file, we should not use console codepage, we<br />// should use ANSI codepage OR write unicode &amp; a unicode<br />// filemarker at beginning of file.<br />// Since we don't know if this is the first thing in the file,<br />// let's go the ANSI route.</span><br />WideCharToMultiByte(GetACP())<br />WriteFile(hStdOut)</b></span></p>
+</blockquote>
+<p>See the problems?</p>
+<p>&nbsp;Let's make it interesting, in a Tosh.0 sort of way....</p>
+<p>How many problems do you see, in any of the following:</p>
+<ul>
+<li>The email text (above, in <em><span style="font-family: Times New Roman; color: #3366ff;">blue</span></em>);</li>
+<li>The comment (above, in <strong><span style="font-family: Consolas; color: #339966;">green</span></strong>);</li>
+<li>The algorithm implied by the pseudo code (above, in <strong><span style="font-family: Consolas;">black</span></strong>).</li>
+</ul>
+<p>Make Daniel proud....how many problems can you find in 20 seconds?</p>
+<p>Ready? Set? Go!</p>
+<hr/><p><strong>Daniel</strong> on 18 Jun 2010 8:55 AM:</p><div style="margin-left: 1em"><p> No semicolon in C code? ;)</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 18 Jun 2010 2:42 PM:</p><div style="margin-left: 1em"><p>I said algorithm implied; the pseudo-code complier doesn&#39;t require semicolons!</p></div>
+<p><strong>Robert</strong> on 18 Jun 2010 11:48 PM:</p><div style="margin-left: 1em"><p>This seems to be largely consistent with the remarks in the documentation of the WriteConsole function</p>
+<p><a target="_new" rel="nofollow" href="http://msdn.microsoft.com/en-us/library/ms687401(VS.85).aspx">msdn.microsoft.com/.../ms687401(VS.85).aspx</a></p>
+<p>Though using ANSI just because a BOM is too hard to think about seems like a bad excuse. They should probably be using Unicode without BOM. That doesn&#39;t specify the encoding, but neither do ANSI text files, given the console code page as another reasonable choice for redirected console output (cmd.exe does that, for example, in &quot;echo ab&ccedil;&oslash;&uuml; &gt; redirected.txt&quot;).</p></div>
+<p><strong>Ralph Trickey</strong> on 21 Jun 2010 5:25 PM:</p><div style="margin-left: 1em"><p>There isn&#39;t &#39;a&#39; ansi codepage, he probably meant 1252, the latin-1 Western european code page. If this were to run on any non european based language, it&#39;s got a reasonable chance to not do what&#39;s expected, and almost guaranteed to not be readable on any other system.</p>
+<p>The comment says that they don&#39;t want to use the console codepage, but getacp returns the system codepage, which is also the console codepage. </p>
+<p>The email also implies that there are issues, which makes for a very bad smell to this code.</p>
+<p>That&#39;s one mistake per section, did I miss any?</p>
+<p>Ralph</p>
+</div>
+<p><strong>Yuhong Bao</strong> on 21 Jun 2010 11:07 PM:</p><div style="margin-left: 1em"><p>Is it the ANSI vs OEM code page?</p>
+</div>
+<p><strong>Random832</strong> on 22 Jun 2010 6:13 AM:</p><div style="margin-left: 1em"><p>&quot;The comment says that they don&#39;t want to use the console codepage, but getacp returns the system codepage, which is also the console codepage.&quot;</p>
+<p>Not on &#39;european based languages&#39; it&#39;s not, by default - in fact, pretty much not on anything except Chinese, Japanese, Korean, Vietnamese, and Thai. (and Unicode-only locales, I suppose - what will this code do on those?)</p>
+<p>(Incidentally, the difference between the console codepage and the OEMCP is that one of them can be affected by the chcp command)</p>
+<p>But, yeah, considering that cmd itself (/u) writes no-BOM unicode data to redirected output, there&#39;s really no excuse. And if they really think one is necessary, and their program always writes output, they could just write one at the beginning of the program, rather than trying to detect whether this is the first time their function is being called.</p>
+</div>
+<hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2010/06/27 <a href="http://archives.miloush.net/michkap/archive/2010/06/27/10028282.html">Bugs hidden in plain sight, and commented that way too ANSWERS</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2010/06/19/10026233.html" title="They got the $2000 from me, which is probably all they were looking for....">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2010/06/17/10026082.html" title="How come nobody ever told me about The Unicode Blog?">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2010-06">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2010-06-18">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2010/06/18/10024976.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:35 GMT -->
+</html>

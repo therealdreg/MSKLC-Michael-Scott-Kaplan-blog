@@ -1,0 +1,53 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2008/12/09/9187379.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:35 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>UCS-2 to UTF-16, Part 8: It's the end of the string as we know it (and I feel ellipses)</title></head><body>
+<h1>UCS-2 to UTF-16, Part 8: It's the end of the string as we know it (and I feel ellipses)</h1>
+<p><em>by Michael S. Kaplan, published on 2008/12/09 10:01 -05:00, original URI: http://blogs.msdn.com/b/michkap/archive/2008/12/09/9187379.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<p>Previous blogs in this series of blogs on this Blog:</p>
+
+<ul>
+<li><b><a href="http://archives.miloush.net/michkap/archive/2008/08/30/8907667.html" mce_href="http://archives.miloush.net/michkap/archive/2008/08/30/8907667.html">Part 0: 
+The intro, sans content</a></b> 
+</li>
+<li><b><a href="http://archives.miloush.net/michkap/archive/2008/09/08/8931641.html" mce_href="http://archives.miloush.net/michkap/archive/2008/09/08/8931641.html">Part 1: 
+Getting the obvious out of the way</a></b> 
+</li>
+<li><b><a href="http://archives.miloush.net/michkap/archive/2008/09/15/8952073.html" mce_href="http://archives.miloush.net/michkap/archive/2008/09/15/8952073.html">Part 2: 
+A&amp;P of a 'linguistic character'</a></b> 
+</li>
+<li><b><a href="http://archives.miloush.net/michkap/archive/2008/09/18/8956650.html" mce_href="http://archives.miloush.net/michkap/archive/2008/09/18/8956650.html">Part 3: 
+It starts with cursor movement (where MS simultaneously gets better and 
+worse)</a></b> 
+</li>
+<li><b><a href="http://archives.miloush.net/michkap/archive/2008/10/06/8977552.html" mce_href="http://archives.miloush.net/michkap/archive/2008/10/06/8977552.html">Part 4: 
+Talking about the ask&nbsp;</a></b> 
+</li>
+<li><b><a href="http://archives.miloush.net/michkap/archive/2008/10/15/9000371.html" mce_href="http://archives.miloush.net/michkap/archive/2008/10/15/9000371.html">Part 5: 
+What's on the Next Level?</a></b> 
+</li>
+<li><b><a href="http://archives.miloush.net/michkap/archive/2008/11/24/9134826.html" mce_href="http://archives.miloush.net/michkap/archive/2008/11/24/9134826.html">Part 6: 
+An exercise left for whoever needs some exercise</a></b></li>
+<li><b><a href="http://archives.miloush.net/michkap/archive/2008/12/04/9173687.html" mce_href="http://archives.miloush.net/michkap/archive/2008/12/04/9173687.html">Part 7: If it makes the SQL Server columns too small then it made the Oracle columns either too smallER or too smallEST</a></b><br></li>
+</ul>
+
+<p>Now when you only have a certain amount of space in a control and you have to truncate the text inside it, one common thing for developers to do is look at the <a href="http://msdn.microsoft.com/library/system.globalization.stringinfo.aspx" mce_href="http://msdn.microsoft.com/library/system.globalization.stringinfo.aspx">StringInfo class</a> that I have talked about <b><a href="http://archives.miloush.net/michkap/archive/2005/04/29/413366.html" mce_href="http://archives.miloush.net/michkap/archive/2005/04/29/413366.html">before</a></b> and avoid the truncation of text on character boundaries.</p>
+<p>If you need to do it in native rather than managed code, having to do all the work yourself may even seem a little daunting, but once aimed at the way to solve the perceived problem, you may be off aned running. <br></p>
+<p>You know, make it <b>a simple UCS-2 vs. UTF-16 issue like the ones we have done before</b>. </p>
+<p>To be honest, this is usually the wrong approach.</p>
+<p>It is a great approach oif what one is worried about is <b>size of storage</b>, like a SQL Server column whose size cannot be exceeded.</p>
+<p>But not so good if one is dealing with a rendering issue -- with truncation of the display of text in a user interface.</p>
+<p>Lest we forget, the width of the widest character and the skinniest one really shows the heart of the problem. Just think about what UI will do with</p>
+<blockquote>
+<p><b><font size="5">WWWWWWWWWWWWWWWWWWWW</font></b></p>
+</blockquote>
+<p>vs.</p>
+<blockquote>
+<p><font size="5">iiiiiiiiiiiiiiiiiiii</font></p>
+</blockquote>
+<p>In both cases we are seeing 20 characters, but clearly one string is gonna take up a whole lot more space than the other.</p>
+<p>Using the <b>character</b> boundary, even the <b><i>linguistic</i></b> character boundary, is not the most sensible way to tackle the problem.</p>
+<p>A good way to turn in these rendering scenarios is toward rendering solutions, since they have two things over everyone else -- not only do they have the ACTUAL width of the text to work with, but they also pack some of the linguistic data about character boundaries right in them! </p><p>The simplest solution might be to go the <a href="http://msdn.microsoft.com/library/ms533909.aspx" mce_href="http://msdn.microsoft.com/library/ms533909.aspx">DrawText</a> direction for rendering -- with the special flag</p><ul><li>DT_MODIFYSTRING</li></ul><p>combined with one of the magical truncation-friendly flags:</p><ul><li>DT_END_ELLIPSIS -- <i>For displayed text, if the end of a string does not fit in the rectangle, it is truncated and ellipses are added. If a word that is not at the end of the string goes beyond the limits of the rectangle, it is truncated without ellipses.</i><br></li><li>DT_PATH_ELLIPSIS -- <i>For displayed text, replaces characters in the middle of the string with ellipses so that the result fits in the specified rectangle. If the string contains backslash (\) characters, DT_PATH_ELLIPSIS preserves as much as possible of the text after the last.</i><br></li><li>DT_WORD_ELLIPSIS -- <i>Truncates any word that does not fit in the rectangle and adds ellipses.</i> <br></li></ul><p>What the <a href="http://msdn.microsoft.com/library/ms533909.aspx" mce_href="http://msdn.microsoft.com/library/ms533909.aspx">DrawText</a> documentation does not mention in there is that most of the problems we talked about before -- from surrogate pairs to combining characters to what happens when complex scripts are rendered and so on -- are all built-in there. So most of the work will be done for us!</p><p>Finally, a situation where the native code has more to say for itself than the managed code, since there isn't really a DrawText.NET analogue.</p><p>Though perhaps you are already imagining how one would handle the specific scenario you need based on the three flags if you had to write it yourself -- and whether you are daunted by the complexity or delighted by it, the problem, along with the complexities of combining characters and surrogate pairs, is at least a tractable one....</p><p>&nbsp;</p><p><font color="#ff00ff"><i>This blog brought to you by</i><font size="6"> ܢ&nbsp; </font><i>(<a href="http://www.fileformat.info/info/unicode/char/0722" mce_href="http://www.fileformat.info/info/unicode/char/0722">U+0722</a>, aka SYRIAC LETTER NUN)</i></font><br></p>
+<hr/><div style="margin-left: 1em"><em>no comments</em></div><hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2009/06/29 <a href="http://archives.miloush.net/michkap/archive/2009/06/29/9800913.html">UCS-2 to UTF-16, Part 11: Turning it up to Eleven!</a></p><p>2009/06/10 <a href="http://archives.miloush.net/michkap/archive/2009/06/10/9723321.html">UCS-2 to UTF-16, Part 10: Variation[ Selector] on a theme...</a></p><p>2008/12/16 <a href="http://archives.miloush.net/michkap/archive/2008/12/16/9223301.html">UCS-2 to UTF-16, Part 9: The torrents of breaking CharNext/CharPrev</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2008/12/10/9189637.html" title="LoadKeyboardLayout is a 00bada55 puppy dog tail wagger of a function">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2008/12/09/9186642.html" title="Yes, Virginia, there is a plate of shrimp">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2008-12">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2008-12-09">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2008/12/09/9187379.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:35 GMT -->
+</html>

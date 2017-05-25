@@ -1,0 +1,64 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2005/03/18/398479.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:42 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Reason #124 to update your Platform SDK from time to time</title></head><body>
+<h1>Reason #124 to update your Platform SDK from time to time</h1>
+<p><em>by Michael S. Kaplan, published on 2005/03/18 03:53 -05:00, original URI: http://blogs.msdn.com/b/michkap/archive/2005/03/18/398479.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P>Antti Nivala asked in the microsoft.public.platformsdk.mslayerforunicode newsgroup:</P>
+<BLOCKQUOTE dir=ltr>
+<P><FONT size=2>Our software uses <A title=MSLU href="http://www.microsoft.com/globaldev/handson/dev/mslu_announce.mspx" target=_blank>MSLU</A>. I noticed that if I run our programs with Application Verifier 2.50 with the Handles test enabled, I get a bunch of Invalid Handle exceptions during module loading. In the end, these prevent the program from running. The call stack points to MSLU. If I rebuild the program without MSLU, the Invalid Handle exceptions no longer appear.</FONT></P>
+<P><FONT size=2>Is this a known issue? Is it OK, or is MSLU (or I) doing something that is not perfectly OK?</FONT></P>
+<P><FONT size=2>Note that I am not saying that MSLU would have caused any real problems in the normal use of our program. I just want to confirm why the Handles test of Application Verifier 2.50 fails if MSLU is used.</FONT></P>
+<P><FONT size=2>Here's some relevant output from WinDbg:</FONT></P>
+<BLOCKQUOTE dir=ltr>
+<P><FONT size=2><FONT face="Courier New" size=1>===========================================================<BR>VERIFIER STOP 00000300: pid 0xCD8: invalid handle exception for current stack trace<BR><BR>&nbsp;00000000 : (null)<BR>&nbsp;00000000 : (null)<BR>&nbsp;00000000 : (null)<BR>&nbsp;00000000 : (null)<BR>===========================================================<BR><BR>(cd8.d14): Invalid handle - code c0000008 (!!! second chance !!!)<BR>eax=c0000008 ebx=7c8097ad ecx=0012fde4 edx=7c90eb3d esi=00000001 edi=7c800000 <BR>eip=7c90eb74 esp=0012fd90 ebp=0012fde0 iopl=0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; nv up ei pl nz na po nc<BR>cs=001b&nbsp; ss=0023&nbsp; ds=0023&nbsp; es=0023&nbsp; fs=003b&nbsp; gs=0000 efl=00000206<BR>ntdll!KiRaiseUserExceptionDispatcher+0x37:<BR>7c90eb74 8b0424&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; mov&nbsp;&nbsp;&nbsp;&nbsp; eax,[esp] <BR>ss:0023:0012fd90=c0000008<BR>0:000&gt; kb<BR>ChildEBP RetAddr&nbsp; Args to Child<BR>0012fde0 7c90eb93 7c90d9eb 7c83928f 00400000 ntdll!KiRaiseUserExceptionDispatcher+0x37<BR>0012fe00 004577dc 00400000 004a5864 00000004 ntdll!KiFastSystemCallRet+0x4<BR>0012fe3c 00456b67 00484cec 00484fb0 004a5864 MFStatus!ResolveThunk+0xc9 [d:\xpclient\sdktools\unicows\delay\resolve.c @ 188]<BR>0012fe90 0045cb59 004a81d0 00000fa0 7c80b529 MFStatus!kernel32_GetProcAddress_Thunk+0x1f [d:\xpclient\sdktools\unicows\delay\thunk_stub.c @ 46]<BR>0012fea4 0045c977 00459336 00000094 00000005 MFStatus!_mtinitlocks+0x2b [f:\vs70builds\3077\vc\crtbld\crt\src\mlock.c @ 133]<BR>0012fea8 00459336 00000094 00000005 00000001 MFStatus!_mtinit+0x5 [f:\vs70builds\3077\vc\crtbld\crt\src\tidtable.c @ 117]<BR>0012ffc0 7c816d4f 7c911978 ffffffff 7ffdf000 MFStatus!wWinMainCRTStartup+0xe0 [f:\vs70builds\3077\vc\crtbld\crt\src\crt0.c @ 184]<BR>0012fff0 00000000 00459256 00000000 78746341 kernel32!BaseProcessStart+0x23</FONT></FONT></P>
+<P><FONT size=2>Thanks in advance!</FONT></P>
+<P><FONT size=2>Antti</FONT></P></BLOCKQUOTE></BLOCKQUOTE>
+<P>This is a bug I was pretty sure I was familiar with, so I asked "What version of the .LIB are you using?". Antti replied:</P>
+<BLOCKQUOTE dir=ltr>
+<P><FONT size=2>I think it was from Platform SDK July 2002 edition. Anyway, I upgraded to using the LIB version that ships with Platform SDK February 2003 and the problem disappeared.</FONT></P>
+<P><FONT size=2>Thanks :-)</FONT></P>
+<P><FONT size=2>Antti</FONT></P></BLOCKQUOTE>
+<P>Yep, that was the problem. It has to do with the MSLU loader (contained in unicows.lib) which does the following:</P>
+<OL>
+<LI>Takes its&nbsp;bunch of data segments, one per API that might be called, with all of the necessary info for the API (the name, the name of the "stub" function to call if the API cannot be found, a pointer to our ResolveThunk() function,&nbsp;etc.). 
+<LI>The first time an API is called, ResolveThunk() is called with all the API information in #1. 
+<LI>ResolveThunk() figures out what API should be called. It fixes up that pointer to itself,&nbsp;changing it to the actual API. 
+<LI>Call FlushInstructionCache() to flush out any cached information for the modified code in the change to #3 
+<LI>All future calls to the API go directly to it, making ResolveThunk() a "call once per API" function.</LI></OL>
+<P>The problem with this bug is that it turns out step #4 was not needed, so the call was pretty much ignored on all platforms.&nbsp;Unfortunately,&nbsp;the handle being used in the call was not valid for the call to FlushInstructionCache() and <A href="http://msdn.microsoft.com/library/en-us/dnappcom/html/appverifier.asp">AppVerifier</A> is an application that works hard to find such problems.</P>
+<P>The fix was simple enough -- just remove the call to FlushInstructionCache. It was doing nothing other than breaking AppVerifier anyway.</P>
+<P>The bug was&nbsp;customer-reported (customers use our tools, even if we do not always do it&nbsp; :-) ), and I had the fix in the next Platform SDK....</P>
+<P>The moral of the story? Update your Platform SDK from time to time -- it may fix impotant bugs! :-)</P>
+<P>&nbsp;</P>
+<P><FONT color=#ff0000><EM>This post brought to you by</EM> "！" <EM>(<A href="http://www.fileformat.info/info/unicode/char/ff01/index.htm">U+ff01</A>, FULLWIDTH EXCLAMATION MARK)</EM></FONT></P>
+<hr/><p><a id="398515" href="#398515">#</a> <strong>Nektar</strong> on 18 Mar 2005 4:51 AM:</p><div style="margin-left: 1em">Update your platform SDK? Do you think that it is easy. The SDK is huge, even though you might only wish to get the documentation for a single api, such as the IE api, or only a single library like <a title="MSLU" href="http://www.microsoft.com/globaldev/handson/dev/mslu_announce.mspx" target="_blank">MSLU</a>. You still have to download the core SDK 150 mb plus I think. And then go through a temperomental installation process. I don't need all that SDK. I might need a single library. The web page from where you get the SDK has bugs. On XP SP2 it throws up an error dialog box. Plus, the SDK only works and is tested with only Visual Studio. What about other compilers, Borland? Why doesn't it include a free C++ compiler. MS offers its compiler for free. Why don't you include it with the SDK? Or at least include some essential Windows headers with the free C++ compiler. Also, where is some help for beginners. Where?<br>The whole SDK thing is a mess. Surely there should be a better way. How do other companies do it? How does Apple do it? I think that they provide an online list of downloadable PDFs containing the documentation. Why not Microsoft? Why should I have to browse or buy a huge MSDN Library? Whenever I bring up this topic people say that the SDK process is ok. But I think not. There should be a much better way. Why do many students have downloaded eg. the Java SDK whilst nobody knows about the Platform SDK?</div>
+<p><a id="398595" href="#398595">#</a> <strong>Michael Kaplan</strong> on 18 Mar 2005 8:01 AM:</p><div style="margin-left: 1em">There is an International MVP with the handle of Ted who spends time in the microsoft.public.platformsdk.mslayerforunicode newsgroup. Every time a Platform SDK update comes out on MSDN Universal he gives exact info on how to get the one file that has unicows.lib in it and get out that one .LIB file....<br><br>And the methods he use are hardly the only ways to get targeted updates (not all methods include needing MSDN Universal!). To my knowledge I have never intentionally and only once unintentionally broken backward compatibility (it wa not me; they changed the build environment on me!). Regular downloads of this .LIB file make all of the difference in the world. All one needs is a little creativity!</div>
+<p><a id="399498" href="#399498">#</a> <strong>Dean Harding</strong> on 20 Mar 2005 7:18 PM:</p><div style="margin-left: 1em">There was a post a while back (<a target="_new" href="http://blogs.msdn.com/loripe/archive/2005/03/01/382684.aspx">http://blogs.msdn.com/loripe/archive/2005/03/01/382684.aspx</a>) on how MS distributes SDKs, and I assume there'll be some progress in the Whidbey timeframe.  So it's not a complete loss :)</div>
+<p><strong>john</strong> on 5 Jun 2008 2:17 PM:</p><div style="margin-left: 1em"><p>Dont mind Michael, i am facing similar issue....</p>
+<p>my gui application crashesh when used with application varifier. I am using win 2k3.</p>
+<p>This error is thrown under AppVerifier -</p>
+<p>ERROR_CODE: (NTSTATUS) 0xc0000008 - An invalid HANDLE was specified.</p>
+<p>This is the stack.</p>
+<p>0:007&gt; kb</p>
+<p>ChildEBP RetAddr &nbsp;Args to Child &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</p>
+<p>0871f684 00393933 08ad76af 022aaff8 022aaff0 ntdll!DbgBreakPoint</p>
+<p>0871f888 003d3001 003d7ba8 00000300 c0000008 vrfcore!VerifierStopMessageEx+0x4bd </p>
+<p>0871f8ac 003c8f5b 00000300 003c3204 c0000008 vfbasics!VfBasicsStopMessage+0xd1 </p>
+<p>0871f8e0 7c84f937 0871f8f8 0871fc78 00000025 vfbasics!AVrfpVectoredExceptionHandler+0x9b </p>
+<p>0871f908 7c813fb5 00000000 022aaff0 7c888f68 ntdll!RtlpCallVectoredHandlers+0x57</p>
+<p>0871f91c 7c814055 0871fc78 0871f99c 000002b0 ntdll!RtlCallVectoredExceptionHandlers+0x15</p>
+<p>0871f98c 7c82eda4 0871fc78 0871f99c 00010007 ntdll!RtlDispatchException+0x19</p>
+<p>0871fc6c 7c82ed3b 0871fc78 c0000008 00000000 ntdll!RtlRaiseException+0x3d</p>
+<p>0871fccc 7c821a34 77e91822 000002b0 00000004 ntdll!KiRaiseUserExceptionDispatcher+0x37</p>
+<p>0871fcd0 77e91822 000002b0 00000004 0871fcf6 ntdll!ZwQueryObject+0xc</p>
+<p>0871fcec 71c0be3a 000002b0 0871fd0c 00000000 kernel32!GetHandleInformation+0x5f</p>
+<p>0871fd04 71c106f0 000002b0 0ae14fc0 0ae14fc0 WS2_32!DSOCKET::FindIFSSocket+0x1c</p>
+<p>0871fd28 063033f2 000002b0 0a30c6f0 00000025 WS2_32!send+0x50</p>
+<p>0871fd44 062f241f 0ae14fc0 0a30c6f0 00000025 ssl!sock_write+0x22 </p>
+<p>0871fd64 062e9333 0ae14fc0 0a30c6f0 00000025 ssl!BIO_write+0x6f</p>
+<p>thanks.</p>
+<p>can someone help?</p></div>
+<hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2005/04/27 <a href="http://archives.miloush.net/michkap/archive/2005/04/27/412454.html">Reason #8 to not be so anxious to update your Platform SDK?</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2005/03/18/398489.html" title="Every character has a story #7: U+20a37 and U+200ae (Extension B Ideographs)">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2005/03/17/398034.html" title="YASG (yet another speaking gig) near Cleveland!">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2005-03">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2005-03-18">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2005/03/18/398479.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:42 GMT -->
+</html>

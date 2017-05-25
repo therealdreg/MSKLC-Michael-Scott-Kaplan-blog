@@ -1,0 +1,53 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2010/04/11/9990383.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:35 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>When one dishes it out but can't take it (aka Raising the roof, 2010 edition)</title></head><body>
+<h1>When one dishes it out but can't take it (aka Raising the roof, 2010 edition)</h1>
+<p><em>by Michael S. Kaplan, published on 2010/04/11 07:01 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2010/04/11/9990383.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P>Do you know that old saying <STRONG>Don't dish it out if you can't take it</STRONG>, by any chance?</P>
+<P>Microsoft doesn't always follow this, from a technical perspective.</P>
+<P>Perhaps I should explain....</P>
+<P>There are times that Microsoft has issues or bugs in its code, which it then has to fix.</P>
+<P>You probably already knew, that of course.</P>
+<P>If you think back to what you were doing a few days after Christmas in 2005, you may have been reading <A href="http://archives.miloush.net/michkap/archive/2005/12/27/507599.html" mce_href="http://archives.miloush.net/michkap/archive/2005/12/27/507599.html"><STRONG>When the roof got raised, and why</STRONG></A>, and you will see an example of such a bug. </P>
+<P>In that case, the bug happened&nbsp;because stored strings in a locale did not need to have the same kinds of safeguards and checks when being retrieved by a <A href="http://msdn.microsoft.com/library/dd318103.aspx" mce_href="http://msdn.microsoft.com/library/dd318103.aspx">GetLocaleInfoEx</A> or used&nbsp;in other functions, when compared to&nbsp;the strings you might want to set in a <A href="http://msdn.microsoft.com/library/dd374049.aspx" mce_href="http://msdn.microsoft.com/library/dd374049.aspx">SetLocaleInfo</A> function or one of the other functions where you might be providing customized information like the ones that use a <A href="http://msdn.microsoft.com/library/dd319095.aspx" mce_href="http://msdn.microsoft.com/library/dd319095.aspx">NUMBERFMT</A> structure.</P>
+<P>Interestingly, the importance of the limitations for each field is in most cases an illusion.</P>
+<P>The serious problems that come up, like the ones I mentioned in <A href="http://archives.miloush.net/michkap/archive/2010/03/02/9971296.html" mce_href="http://archives.miloush.net/michkap/archive/2010/03/02/9971296.html"><STRONG>Seeing double? You're not drunk; you're just running pseudo! (aka Announcement: Pseudo Day!)</STRONG></A>, happen within the legal limits for fields, so the fact that there are safeguards don't specifically help.</P>
+<P>The few times that it was literally problems with the length that came up, like in the case of <A href="http://archives.miloush.net/michkap/archive/2005/12/27/507599.html" mce_href="http://archives.miloush.net/michkap/archive/2005/12/27/507599.html"><STRONG>When the roof got raised, and why</STRONG></A>, there were no security or other issues with the code that came up due to locales having longer strings than were documented. The only "bug" was in the documentation, and the only unintuitive piece was the fact that the Get* and Set* functions has two different rules.</P>
+<P>Since Microsoft creates the data and it goes through all kinds of checks and screenings, this doesn't come up very much. But like I said the code handles the functionality case pretty well anyway.</P>
+<P>Which is why I had come to realize since that blog in the end of 2005 that the importance of the limitation is probably overblown.</P>
+<P>But the other day I had this proven to me in a way that I never even thought of before.</P>
+<P>Let me take a step back here and mention that my machines have a lot more locales on them then yours probably do.</P>
+<P>I won't give an exact number, mind you.</P>
+<P>But I take serious advantage of the <STRONG>custom locale</STRONG> support in Vista and Windows 7 and have added all kinds of different locales. Locales that there is:</P>
+<UL>
+<LI>no good reason why they have never shipped;</LI>
+<LI>no way we would ever want to ship;</LI>
+<LI>no way we ever could ship without getting into geopolitical or legal problems.</LI></UL>
+<P>But of course since my machines are never shipped to&nbsp;customers, it is safe for me to do this on my machine, just as it would be safe for you to do the same for the purposes of adding one locale or twelve or twelve hundred or however many you could come up with data for....</P>
+<P>These custom locales are "safe" in the same way that Microsoft's built-in ones are, because the methods and objects and tools used to create then construct them in a way that validates the data.</P>
+<P><STRONG>You may know where I am going with this blog now, by the way!</STRONG></P>
+<P>As one of the few people who recognized the plot twist in <STRONG>The Sixth Sense</STRONG> way before the end of the movie, I have a certain amount of respect for those whose brains can think ahead like that. :-)</P>
+<P>Now of course you cannot set the AM/PM strings to exceed the length, because those are checked.</P>
+<P>But in Vista, a change was made to stop storing certain fields that were pretty much only there for POSIX locale support and which were actually not used for locales formatting/parsing&nbsp;since they stored the data by other means anyway. Fields like <A href="http://msdn.microsoft.com/library/dd373896.aspx" mce_href="http://msdn.microsoft.com/library/dd373896.aspx">LOCALE_STIME</A> and <A href="http://msdn.microsoft.com/library/dd373837.aspx" mce_href="http://msdn.microsoft.com/library/dd373837.aspx">LOCALE_SDATE</A> -- look at the docs for them. They are deprecated, and if you try to retrieve them they will be derived from one of the respective formats that contain them.</P>
+<P>Because of this, you might create a locale with date and/or time formats that contain separators that are longer than three characters, just based on simple data you got from the CLDR or some other source.</P>
+<P>And now suddenly you are in the same boat as the person in Microsoft who caused those problems that led to <A href="http://archives.miloush.net/michkap/archive/2005/12/27/507599.html" mce_href="http://archives.miloush.net/michkap/archive/2005/12/27/507599.html"><STRONG>When the roof got raised, and why</STRONG></A>. And your "gets" can now do more than your "sets" could ever do!</P>
+<P>Who would have thought that custom locales would give you the opportunity to create the same kinds of bugs yourself? :-)</P>
+<P>Imagine if they fix this and break a locale that someone has deployed -- a locale based on data hosted by the CLDR or other source. Wow, this is setting up for an interesting future problem!</P>
+<P>As it turns out, the story here wasn't this easy even right now; the way I found the bug shows that.</P>
+<P>I created a locale with <STRONG>Microsoft Locale Builder</STRONG>, saved it out as an LDML file, and created a setup package which I then installed.</P>
+<P>But the bug I ran into?&nbsp;Later that same day, MSLB could not load the LDML file that it had created; it could not load from the existing custom locale I installed (that again it had created).</P>
+<P>Loading from LDML in MSLB would pop up&nbsp;this error:</P>
+<P><IMG style="WIDTH: 480px; HEIGHT: 204px" src="http://trigeminal.fmsinc.com/images/mslb01.jpg" width=480 height=204 mce_src="http://trigeminal.fmsinc.com/images/mslb01.jpg"></P>
+<P>while trying to load from the existing, installed locale would pop up a slightly different error:</P>
+<P><IMG style="WIDTH: 480px; HEIGHT: 219px" src="http://trigeminal.fmsinc.com/images/mslb02.jpg" width=480 height=219 mce_src="http://trigeminal.fmsinc.com/images/mslb02.jpg">&nbsp;</P>
+<P>I'd be more forgiving of the first error&nbsp;if there actually was a "TimeSeparator" field in the LDML so I had some sense of what to change/fix, but no dice.</P>
+<P>Both errors are kind of confusing, so hopefully people can find this blog to get hints on how to work around the problem. :-)</P>
+<P>Just to help people searching for the error before there is a KB article, I'll put it in text so search engines can&nbsp;find it:</P>
+<BLOCKQUOTE>
+<P><FONT size=4>Parameter name: The property 'GregorianDateTimeFormat.TimeSeparator' must be less than or equal to 4 characters in length.</FONT></P></BLOCKQUOTE>
+<P><EM>By the way, shouldn't that be <STRONG>three</STRONG> characters in length?</EM></P>
+<P>Until they get around to fixing this issue (if they do, I mean - there is a backcompat risk to fixing by adding more validation), you can enjoy this interesting opportunity to <STRONG>raise the roof yourself</STRONG>! </P>
+<hr/><div style="margin-left: 1em"><em>no comments</em></div><hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2010/04/12/9993605.html" title="The elusive G-sign said to exist in South America may not be in Windows, says a customer who has hunted for it">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2010/04/10/9990226.html" title="Getting rid of that extra notification...">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2010-04">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2010-04-11">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2010/04/11/9990383.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:35 GMT -->
+</html>

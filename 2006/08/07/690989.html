@@ -1,0 +1,36 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2006/08/07/690989.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:39 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Fixing a bug in the documentation</title></head><body>
+<h1>Fixing a bug in the documentation</h1>
+<p><em>by Michael S. Kaplan, published on 2006/08/07 10:49 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2006/08/07/690989.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<FONT face=Tahoma>
+<P>Back when I posed the question the other day about <STRONG><A href="http://archives.miloush.net/michkap/archive/2006/08/01/684909.html">32 bit vs. 64 bit HKLs?</A></STRONG>, SDiZ properly <A href="http://archives.miloush.net/michkap/archive/2006/08/01/684909.html#685007">identified</A> the issue as sign extension, and Igor Tandetnik even <A href="http://archives.miloush.net/michkap/archive/2006/08/01/684909.html#685162">pointed out</A> the MSDN article that explains it (search for the "USER and GDI handles are sign extended 32b values" section of the <A href="http://msdn.microsoft.com/library/en-us/dnmidl/html/midl64b.asp">article</A>, which I then quoted in a later <A href="http://archives.miloush.net/michkap/archive/2006/08/01/684909.html#685274">comment</A>.</P>
+<P>Regular reader Mihai then made an <A href="http://archives.miloush.net/michkap/archive/2006/08/01/684909.html#685378">excellent point</A> about the docs&nbsp; related to the HKL that seem to point in the wrong direction and perhaps lead to confusion here: </P>
+<BLOCKQUOTE dir=ltr style="MARGIN-RIGHT: 0px">
+<P><FONT face="Times New Roman" size=2>Ok, is clear this is cause by signed extension. <BR>But I think is a bug, because the doc says: <BR>"The low word contains a Language Identifier for the input language and the high word contains a device handle to the physical layout of the keyboard" </FONT></P></BLOCKQUOTE>
+<P>And this is a bug. Mihai is right. But it is a doc. bug -- a doc. point firmly embedded in the 32-bit world. Though since these handle 'void *' values are signed both managed and unmanaged code will handle them properly, like if you use the following code (which also gives the answer to the other question I asked -- about what the KLID value of an MSKLC-generated keyboard such as "A0000409"&nbsp;might lead to: </P>
+<BLOCKQUOTE dir=ltr style="MARGIN-RIGHT: 0px"><B><FONT face="Consolas,Courier New" size=2>
+<P>System.Int32 i32;<BR>System.Int64 i64;</P>
+<P>i32 = -268368865;<BR>i64 = i32;</P>
+<P>System.Console.WriteLine(i32.ToString("x") + "\t\t" + i32);<BR>System.Console.WriteLine(i64.ToString("x") + "\t" + i64);</P>
+<P>i32 = -1610611703;<BR>i64 = i32;</P>
+<P>System.Console.WriteLine(i32.ToString("x") + "\t\t" + i32);<BR>System.Console.WriteLine(i64.ToString("x") + "\t" + i64);</P>
+<P>i32 = -536869884;<BR>i64 = i32;</P>
+<P>System.Console.WriteLine(i32.ToString("x") + "\t\t" + i32);<BR>System.Console.WriteLine(i64.ToString("x") + "\t" + i64);</P></FONT></B></BLOCKQUOTE>
+<P>This little bit of managed code will output the following: </P>
+<BLOCKQUOTE dir=ltr style="MARGIN-RIGHT: 0px"><B><FONT face="Consolas,Courier New" size=2>
+<P>f001041f&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; -268368865<BR>fffffffff001041f&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; -268368865<BR>a0000409&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; -1610611703<BR>ffffffffa0000409&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; -1610611703<BR>e0000404&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; -536869884<BR>ffffffffe0000404&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; -536869884</P></FONT></B></BLOCKQUOTE>
+<P>As to why I used the decimal version of the numbers rather than the hexidecimal one, it is because managed code is rather unwilling to consider the hex value to be a valid 32-bit signed value, even though once it is assigned it will readily display that value as the hex version. It actually makes dealing with things like the <A href="http://msdn.microsoft.com/library/en-us/cpref/html/frlrfsystemwindowsformsinputlanguageclasstopic.asp">InputLanguage</A>'s <A href="http://msdn2.microsoft.com/en-us/library/system.windows.forms.inputlanguage.handle.aspx">InputLanguage.Handle</A> property harder to deal with. Best to keep that value opaque and use <A href="http://msdn2.microsoft.com/en-us/library/system.windows.forms.inputlanguage.culture.aspx">InputLanguage.Culture</A>.LCID to get that Locale ID if you need it. :-)</P>
+<P>But then I started thinking about what one sentence could be used to replace:</P>
+<BLOCKQUOTE dir=ltr style="MARGIN-RIGHT: 0px">
+<P><FONT face="Times New Roman" size=2>"The low word contains a Language Identifier for the input language and the high word contains a device handle to the physical layout of the keyboard"</FONT></P></BLOCKQUOTE>
+<P>to handle the reality where we are talking about a bit more than just the high word. Identifying the doc bug is easy, but fixing it is a bit harder in topics like <A href="http://msdn.microsoft.com/library/en-us/winui/winui/windowsuserinterface/userinput/keyboardinput/keyboardinputreference/keyboardinputfunctions/getkeyboardlayout.asp">GetKeyboardLayout</A> that contain this bit of boilerplate text.</P>
+<P>What would you try and put in there?</P>
+<P>&nbsp;</P>
+<P><FONT color=#ff1493><EM>This post brought to you by</EM> <FONT size=6><STRONG>Ḁ</STRONG></FONT> <EM>(<A href="http://www.fileformat.info/info/unicode/char/1e00">U+1e00</A>, a.k.a. LATIN CAPITAL LETTER A WITH RING BELOW)</EM></FONT></P></FONT>
+<hr/><p><strong>Maurits [MSFT]</strong> on 8 Aug 2006 10:17 PM:</p><div style="margin-left: 1em">&gt; Maurits is right<br><br>Of course I am. ;) &nbsp;But I think you meant Mihai?</div>
+<p><strong>Michael S. Kaplan</strong> on 8 Aug 2006 11:05 PM:</p><div style="margin-left: 1em">Oops -- yes, I did!</div>
+<hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2006/08/07/691332.html" title="They really do look a little bit alike, revisted">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2006/08/06/690214.html" title="You say ĭtalics, I say ītalics. It is much more complicated in Cyrillic....">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2006-08">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2006-08-07">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2006/08/07/690989.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:39 GMT -->
+</html>

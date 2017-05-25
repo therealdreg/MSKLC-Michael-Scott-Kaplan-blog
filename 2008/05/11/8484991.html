@@ -1,0 +1,39 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2008/05/11/8484991.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:36 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>On the popularity of Unicode: percentages are not raw numbers</title></head><body>
+<h1>On the popularity of Unicode: percentages are not raw numbers</h1>
+<p><em>by Michael S. Kaplan, published on 2008/05/11 03:01 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2008/05/11/8484991.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P>There has been a lot of recent buzz based on the <A class="" href="http://googleblog.blogspot.com/2008/05/moving-to-unicode-51.html" mce_href="http://googleblog.blogspot.com/2008/05/moving-to-unicode-51.html">Moving to Unicode 5.1</A> post in the googleblog written by Mark Davis.</P>
+<P>Enough that people keep sending me email asking if I had seen it, much of that traffic being there because I haven't blogged about it myself yet....</P>
+<P>One of the most interesting points in the blog was about the Uptick in native Unicode webpages:</P>
+<BLOCKQUOTE>
+<P id=vpxp14><FONT face="times new roman,times">Just last December there was an interesting milestone on the web. For the first time, we found that Unicode was the most frequent encoding found on web pages, overtaking both ASCII and Western European encodings—and by coincidence, within 10 days of one another. What's more impressive than simply overtaking them is the speed with which this happened; take a look at the blue line in this graph.</FONT></P>
+<DIV style="TEXT-ALIGN: center"><A onblur="try {parent.deselectBloggerImageGracefully();} catch(e) {}" href="http://bp1.blogger.com/_Ap14FtNN91w/SBzrtHJfLnI/AAAAAAAAA5U/TV7_g2_sWq0/s1600-h/Unicode2.gif"><IMG id=BLOGGER_PHOTO_ID_5196287230324190834 style="CURSOR: pointer" alt="" src="http://bp1.blogger.com/_Ap14FtNN91w/SBzrtHJfLnI/AAAAAAAAA5U/TV7_g2_sWq0/s320/Unicode2.gif" border=0></A></DIV>
+<P id=vpxp14><FONT face="times new roman,times">You can see a long-term decline in pages encoded in ASCII (unaccented letters A through Z). More recently, there's been a significant drop in the use of encodings covering only Western European letters (ASCII and a few accented letters like Ä, Ç, and Ø). We're seeing similar declines in other language-specific encodings. Unicode, on the other hand, is showing a sharp increase in usage.<BR><BR>This is based on our indexing of web pages, and thus may vary somewhat from what other search engines find. However, the trends are pretty clear, and the continued rise in use of Unicode makes it even easier to do the processing for the many languages that we cover.</FONT></P></BLOCKQUOTE>
+<P>The fact that we are really only looking at percentages here might make it easier for a company like Google to make resource allocation decisions based on web content encoding that they have to index.</P>
+<P>But conclusions about growth (as the title of the art implies) might be a bit much, since there are other crucial factors here which Google has access to but is not provided in this quick example -- factors like </P>
+<UL>
+<LI>the raw number of pages with each encoding, and </LI>
+<LI>the parts of the world where traffic is coming from, and</LI>
+<LI>the correlation (if any) between encoding and part of the world, and</LI>
+<LI>the type of web page (static HTML, blog, whatever), and</LI>
+<LI>other trends in the data that can be measured</LI></UL>
+<P>would make it much easier to assess whether we are looking at an interesting&nbsp;phenomenon or an uptick in the number of web sites created by a particular tool used all over China or India, or an uptick in the number of blogs created in blogspot, or whatever.</P>
+<P>I just don't want to draw conclusions of a multi-dimensional issue based on looking st just one dimension -- the encoding of pages (because while that is perfectly reasonable if one is looking what encodings to put resources in, it is not as interesting for making conclusions about the overall web -- since the reasons may have to do with entirely different issues).</P>
+<P><FONT color=#ff00ff><EM>This blog brought to you by</EM><FONT size=7> ಝ </FONT><EM>(<A class="" href="http://www.fileformat.info/info/unicode/char/0c9d" mce_href="http://www.fileformat.info/info/unicode/char/0c9d">U+0c9d</A>, aka KANNADA LETTER JHA)</EM></FONT></P>
+<hr/><p><a id="8486762" href="#8486762">#</a> <strong>Jeroen Ruigrok van der Werven</strong> on 11 May 2008 6:49 AM:</p><div style="margin-left: 1em"><p>So, can you get any similar data from the Live guys?</p></div>
+<p><a id="8486818" href="#8486818">#</a> <strong>Michael S. Kaplan</strong> on 11 May 2008 7:08 AM:</p><div style="margin-left: 1em"><p>Possibly; I have not investigated yet.</p>
+<p>The initial stage is just my &quot;being critical of unscientific conclusions&quot; behavior. :-)</p>
+</div>
+<p><a id="8487920" href="#8487920">#</a> <strong>Matt Rhoten</strong> on 11 May 2008 1:06 PM:</p><div style="margin-left: 1em"><p>It seems to be that a more interesting measure would be the international-ness of the content.</p>
+<p>For example, a page encoded in UTF-8 whose content would fit in ISO-Latin-1 (or even ASCII) is only trivially a Unicode page. But if that page contained substantial amounts of content not encodable in ASCII, that's a little more interesting!</p>
+<p>Lots of people working on currently English-only sites have designs on worldwide content down the road. These people are reflected in the chart, which seems to indicate that UTF-8 adoption is taking place at the expense of Western encodings (raw page counts would help clarify this). I applaud these people for getting the infrastructure in place to be truly worldwide. </p></div>
+<p><a id="8488081" href="#8488081">#</a> <strong>Michael S. Kaplan</strong> on 11 May 2008 1:55 PM:</p><div style="margin-left: 1em"><p>Exactly -- there are so many interesting ways one could establish the ACTUAL patterns here, if only the real info were provided....</p>
+</div>
+<p><a id="8488310" href="#8488310">#</a> <strong>John Cowan</strong> on 11 May 2008 2:54 PM:</p><div style="margin-left: 1em"><p>My guess -- and that's all it is, a guess -- is that the encodings represent encodings-in-use rather than declared-encodings, such that something declared UTF-8 but only using the ASCII repertoire would be labeled ASCII on this chart.</p>
+<p>Disclaimer: I work for Google, but not on search or i18n.</p></div>
+<p><a id="8488356" href="#8488356">#</a> <strong>int19h</strong> on 11 May 2008 3:02 PM:</p><div style="margin-left: 1em"><p>This is not at all surprising, since most Web authoring tools these days usually default to UTF-8.</p></div>
+<hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2008/05/11/8488020.html" title="The vector of this spam is [apparently] indeterminate">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2008/05/10/8484238.html" title="Why Bengali keyboards can&#39;t be found on XP 64 bit">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2008-05">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2008-05-11">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2008/05/11/8484991.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:36 GMT -->
+</html>

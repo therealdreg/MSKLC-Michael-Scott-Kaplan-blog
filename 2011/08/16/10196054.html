@@ -1,0 +1,96 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2011/08/16/10196054.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>The road to standards compat is paved with app back-INcompat</title></head><body>
+<h1>The road to standards compat is paved with app back-INcompat</h1>
+<p><em>by Michael S. Kaplan, published on 2011/08/16 07:01 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2011/08/16/10196054.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<p>The other day, Jacob Sch&auml;ffer responded to <strong><a title="Windows isn't Office (and vice versa)" href="http://archives.miloush.net/michkap/archive/2011/08/14/10193046.html">Windows isn't Office (and vice versa)</a></strong> in a comment:</p>
+<p style="padding-left: 90px;"><span style="font-family: times new roman,times;">The fact is that I'm hunting a *stable* way to use Locale Names for lookup *AND* need access to locale data on XP as well as on newer OS versions - using unique Locale Names for input. However, since the Locale Names for some locales can't be directly built on XP - even with good will - this appear to be a problem for me, since the environment I work in is VBA7 in Office 2010 (which - by the way - don't implement ANY way to lookup locale information by Locale Name, but only by LCID).</span></p>
+<p style="padding-left: 90px;"><span style="font-family: times new roman,times;">What I see is that the Windows environment can NOT deliver a *stable* mapping from Locale Names to Locale Identifiers unless I implement all sorts of workarounds. That's perfectly fine with me, since the world goes on and *if* I need backward compatibility I'm asking for trouble. Period.</span></p>
+<p style="padding-left: 90px;"><span style="font-family: times new roman,times;">Anyway, please point to an ISO standard that define "029" as a proper country identifier. The MSDN documentation for the LOCALE_SISO3166CTRYNAME says that it should return the ISO 3166 name for a country. I'd like to know which country "029" represent and where to find the ISO standard that says so ???</span></p>
+<p style="padding-left: 90px;"><span style="font-family: times new roman,times;">Now, let's assume that such a standard doesn't exist. Then, can developers rely on LOCALE_SISO3166CTRYNAME after all, or is the ISO standard insufficient in this regard ???</span></p>
+<p style="padding-left: 90px;"><span style="font-family: times new roman,times;">All the best /Jacob</span></p>
+<p>One of the big problems here is that Jacob's Windows versions of interest span the period between when Microsoft's NLS data was pretty much based on Microsoft's terms and when Microsoft decided to try and follow the relevant standards that were in the process of being formalized at the time.</p>
+<p>Most of the actual differences are listed in <a href="http://support.microsoft.com/default.aspx?scid=kb;en-us;939949">Microsoft Knowledge Base Article 939949</a>&nbsp;(Error message when you run an application or try to access a Web site on a computer that has a particular .NET Framework 2.0 software update installed: "Culture name 'Culture' is not supported").</p>
+<p>The article enumerates 13 changes:</p>
+<table class="table" border="1" cellspacing="3" cellpadding="3">
+<tbody>
+<tr>
+<td><b>Old culture name </b></td>
+<td><b>New culture name </b></td>
+</tr>
+<tr>
+<td>az-AZ-Latn</td>
+<td>az-Latn-AZ</td>
+</tr>
+<tr>
+<td>uz-UZ-Latn</td>
+<td>uz-Latn-UZ</td>
+</tr>
+<tr>
+<td>sr-SP-Latn</td>
+<td>sr-Latn-CS</td>
+</tr>
+<tr>
+<td>az-AZ-Cyrl</td>
+<td>az-Cyrl-AZ</td>
+</tr>
+<tr>
+<td>uz-UZ-Cyrl</td>
+<td>uz-Cyrl-UZ</td>
+</tr>
+<tr>
+<td>sr-SP-Cyrl</td>
+<td>sr-Cyrl-CS</td>
+</tr>
+<tr>
+<td>bs-BA-Cyrl</td>
+<td>bs-Cyrl-BA</td>
+</tr>
+<tr>
+<td>sr-BA-Latn</td>
+<td>sr-Latn-BA</td>
+</tr>
+<tr>
+<td>sr-BA-Cyrl</td>
+<td>sr-Cyrl-BA</td>
+</tr>
+<tr>
+<td>bs-BA-Latn</td>
+<td>bs-Latn-BA</td>
+</tr>
+<tr>
+<td>iu-CA-Latn</td>
+<td>iu-Latn-CA</td>
+</tr>
+<tr>
+<td>div-MV</td>
+<td>dv-MV</td>
+</tr>
+<tr>
+<td>en-CB</td>
+<td>en-029</td>
+</tr>
+</tbody>
+</table>
+<p>Most of the first eleven represent Microsoft trying to build names the same way it built LCIDs, in language-region[-script] order. But after the folks who wrote one of the early name RFCs refused to entertain the notion of "name aliases", Microsoft eventually bit the bullet and decided it was better to break backward compatibility with less commonly used locale names than have yet another Microsoft-specific standard....</p>
+<p>The last item was to replace an ill-advised "private" name for "English in the Carribean"&nbsp;(which had no ISO 3166 name), with an ISO 3166 numeric code (used by the UN, too).</p>
+<p>And the second-last item was to correct a mistake where Win2000 originally though Divehi had only an ISO 639-2 name, and no ISO 639-1 name.</p>
+<p>Can we trust the changes? Well, whether you can or not, you can trust the direction. It's coming from a good place.</p>
+<p>In the end, Microsoft decided to do "the right thing', and all it cost was a bit of compatibility....</p>
+<hr/><p><strong>Doug Ewell</strong> on 16 Aug 2011 10:25 AM:</p><div style="margin-left: 1em"><p>Allowing language-region-script as a &quot;name alias&quot; for language-script-region would have made parsing and matching of language tags much more difficult.</p>
+<p>Numeric code elements are all generated by UN Statistics Division, and later used in ISO 3166-1, but the ones for supranational regions (like &#39;029&#39; for &quot;Caribbean&quot;) are only used in UN M.49 (and the Language Subtag Registry). ISO 3166 doesn&#39;t concern itself with such regions.</p>
+<p>Thanks to MS for following the standards here.</p>
+</div>
+<p><strong>Mihai</strong> on 17 Aug 2011 11:48 AM:</p><div style="margin-left: 1em"><p>Agree with Doug: thanks to MS for (almost) following the standards here.</p>
+<p>:-)</p>
+<p>Added the &quot;almost&quot; because of the of the non-so-standard the sorting is specified. But it only affects few locales. Not to mention that at the time MS made this decision the standard way was to use @, and the -u- extension was not on the radar yet (reference to UTS #35 :-)</p>
+<p>So sometimes being too early can get you in trouble (see UCS2/UTF-16 :-)</p>
+<p>But maybe in the future? One can hope :-)</p>
+</div>
+<p><strong>Jacob Sch&#228;ffer</strong> on 21 Aug 2011 11:46 AM:</p><div style="margin-left: 1em"><p>Excellent, thanks. I recognise that standards are followed as far as possible and seem to have been since Windows Vista. Great!</p>
+<p>I have a suggestion, though. Please add the above mentioned list to the NLS API References at MSDN along with a proper explanation as to why things changed. A good place to start might be at &quot;Language Identifier Constants and Strings&quot; (<a rel="nofollow" target="_new" href="http://msdn.microsoft.com/en-us/library/dd318693(v=VS.85).aspx">msdn.microsoft.com/.../dd318693(v=VS.85).aspx</a>) and similarly for the varity of .NET &quot;CultureInfo&quot; documentation and - al least - at the NLS information page at the Go Global Developer Center (<a rel="nofollow" target="_new" href="http://msdn.microsoft.com/en-us/goglobal/bb896001">msdn.microsoft.com/.../bb896001</a>).</p>
+</div>
+<hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2011/11/22 <a href="http://archives.miloush.net/michkap/archive/2011/11/22/10239572.html">The evolving Story of Locale Support, part 10: Perhaps it is best to think of it as unintelligent design?</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2011/08/17/10189025.html" title="Having 103, 106, or 109 keys when they may not be expected">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2011/08/15/10195601.html" title="If you change the behavior of typing sequences you should never type, is it a bug?">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2011-08">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2011-08-16">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2011/08/16/10196054.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+</html>

@@ -1,0 +1,25 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2007/12/28/6883105.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:36 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Getting grouping's number right...</title></head><body>
+<h1>Getting grouping's number right...</h1>
+<p><em>by Michael S. Kaplan, published on 2007/12/28 10:01 -05:00, original URI: http://blogs.msdn.com/b/michkap/archive/2007/12/28/6883105.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P>Developer Amy asked:</P>
+<BLOCKQUOTE>
+<P><EM><FONT face="times new roman,times">Hi </FONT></EM></P>
+<P><EM><FONT face="times new roman,times">I need to display number with the setting in Regional Options on Digital grouping symbol and Digital grouping </FONT></EM></P>
+<P><EM><FONT face="times new roman,times">I tried using <A class="" href="http://msdn2.microsoft.com/library/ms221632.aspx" mce_href="http://msdn2.microsoft.com/library/ms221632.aspx">VarBstrFromR8</A> and passing LOCALE_NOUSEROVERRIDE&nbsp; to dwFlags but it doesn’t seem to do the trick. </FONT></EM></P>
+<P><EM><FONT face="times new roman,times">Any hint? </FONT></EM></P>
+<P><EM><FONT face="times new roman,times">Thanks<BR>Amy</FONT></EM></P></BLOCKQUOTE>
+<P>This question was really interesting to me since Amy was actually wanting to pick up the user's settings from Regional and Language Options yet was passing the LOCALE_NOUSEROVERRIDE flag, which is documented as:</P>
+<BLOCKQUOTE>
+<P><EM>Uses the system default locale settings, rather than custom locale settings. </EM></P></BLOCKQUOTE>
+<P>So clearly that would not be something to pass....</P>
+<P>But&nbsp;she implied in the message that she had actually both passing and not passing the flags, do I quickly moved in from there. :-)</P>
+<P>It does appear that <A class="" href="http://msdn2.microsoft.com/library/ms221632.aspx" mce_href="http://msdn2.microsoft.com/library/ms221632.aspx">VarBstrFromR8</A> does not do as good of a job as <A class="" href="http://msdn2.microsoft.com/library/ms776317.aspx" mce_href="http://msdn2.microsoft.com/library/ms776317.aspx">GetNumberFormat</A> and <A class="" href="http://msdn2.microsoft.com/library/ms776367.aspx" mce_href="http://msdn2.microsoft.com/library/ms776367.aspx">GetNumberFormatEx</A> do for all of the various locale-specific and user-overridden grouping information that it might, and I definitely would recommend using <A class="" href="http://msdn2.microsoft.com/library/ms776317.aspx" mce_href="http://msdn2.microsoft.com/library/ms776317.aspx">GetNumberFormat</A> or <A class="" href="http://msdn2.microsoft.com/library/ms776367.aspx" mce_href="http://msdn2.microsoft.com/library/ms776367.aspx">GetNumberFormatEx</A> directly in order to assure the right results.</P>
+<P>COM and OLE automation just have too many strange and intricate compatibility behaviors, which made me stop trusting those results to be internationally correct year ago....</P>
+<P mce_keep="true">&nbsp;</P>
+<P><FONT color=#ff00ff><EM>This post brought to you by</EM><FONT size=5> ໜ </FONT><EM>(<A class="" href="http://www.fileformat.info/info/unicode/char/0edc" mce_href="http://www.fileformat.info/info/unicode/char/0edc">U+0edc</A>, aka LAO HO NO)</EM></FONT></P>
+<hr/><div style="margin-left: 1em"><em>no comments</em></div><hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2007/12/28/6883657.html" title="A meaningful (and dare I say radical) usage of the essentially meaningless (dingbatesque) members of the RADICAL blocks">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2007/12/27/6875879.html" title="No upproblems with $UpCase when you do a upVista upgrade">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2007-12">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2007-12-28">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2007/12/28/6883105.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:36 GMT -->
+</html>

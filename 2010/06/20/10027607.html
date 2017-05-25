@@ -1,0 +1,30 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2010/06/20/10027607.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:35 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Bytes and Characters and bugs and W's</title></head><body>
+<h1>Bytes and Characters and bugs and W's</h1>
+<p><em>by Michael S. Kaplan, published on 2010/06/20 07:01 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2010/06/20/10027607.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<p>There are times that I am very happy for some of the eccentricities of the way I look at code.</p>
+<p>And the way they keep me from certain kinds of bugs.</p>
+<p>Like&nbsp;a few hours ago when&nbsp;I happened to spot Matthew Wilson's <a href="http://www.drdobbs.com/blog/archives/2010/06/getting_caught.html">memset() Considered Harmful - especially to those who (think they) know what they're doing!</a> blog. </p>
+<p>Just the title at first.</p>
+<p>And two things immediately came to mind.</p>
+<p>The first thing?</p>
+<p><strong>I know the problem he ran into.</strong></p>
+<p>Did you see it too? Before you clicked on the link, I mean. :-)</p>
+<p>The second thing that came to mind?</p>
+<p><strong>Too bad he didn't use <a href="http://msdn.microsoft.com/library/1fdeehz6.aspx">wmemset</a>; it would have saved some time here!</strong></p>
+<p>The truth is that one of the biggest sources of bugs if one moves a lot between Unicode and non-Unicode programming is byte/character count problems. In fact that is one of the great things about <a href="http://msdn.microsoft.com/library/1fdeehz6.aspx">wmemset</a>, the way it (and its ilk) takes that particular variable out of the equation even if one doesn't happen to have <a href="http://msdn.microsoft.com/library/sccxfda3.aspx">std::fill_n()</a> at one's disposal. :-)</p>
+<p>My trial by fire for all of this was MSLU; the constant need on a per-function basis to be thinking about the Unicode and the non-Unicode kept me on my toes here and really drilled the issues into me to think very very carefully about buffer sizes. And also to feel smugly superior to all the Win9x code that tended to pop up with "bugs" occasionally related to non-Unicode buffers that were twice the size they needed to be except on the CJK versions where those were the expected buffers (and no they were not thinking ahead brilliantly, they were just messing up byte/character counts in <a href="http://msdn.microsoft.com/library/dd374130.aspx">WideCharToMultiByte</a> calls!).</p>
+<p>Now there are some flaws in the docs for <a href="http://msdn.microsoft.com/library/1fdeehz6.aspx">wmemset</a>&nbsp;and its ilk that I just noticed, like the security warning that really is two different problems between memset() and wmemset() and therefore deserves a bit of wordsmithing beyond a generic pointer to warnings about avoiding buffer overruns.</p>
+<p>And the suggestion that the .Net Framework equivalent for memset() and wmemset() is <a href="http://msdn.microsoft.com/library/system.buffer.setbyte.aspx">System::Buffer::SetByte</a>? </p>
+<p>That's a keeper, for sure. I mean what better way to introduce byte/character mismatches into the .Net world so elegantly than that method and a cast or two? :-)</p>
+<p>Now of course the viewpoint doesn't make me invulnerable to all bugs, it just makes a certain class a bug a lot less likely....</p>
+<hr/><p><strong>Seth</strong> on 20 Jun 2010 1:11 PM:</p><div style="margin-left: 1em"><p>Even using wchar_t based functions isn&#39;t a general solution, since it only works with characters that are in the BMP.</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 20 Jun 2010 1:23 PM:</p><div style="margin-left: 1em"><p>Well, if you&#39;re gonna drag user characters into it then its not just supplementary characters, it&#39;s variation selectors and nonspacing characters and other grapheme cluster causers as well! :-)</p>
+<p>But for the low level, avoiding security bugs on whole strings one knows to be valid, wmemset does okay....</p>
+</div>
+<hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2010/06/21/10027792.html" title="Ettore, we hardly knew ya...">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2010/06/19/10026233.html" title="They got the $2000 from me, which is probably all they were looking for....">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2010-06">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2010-06-20">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2010/06/20/10027607.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:35 GMT -->
+</html>

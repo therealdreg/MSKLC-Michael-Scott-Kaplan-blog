@@ -1,0 +1,59 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2007/11/19/6387630.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:37 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>The incredible missing Language Bar</title></head><body>
+<h1>The incredible missing Language Bar</h1>
+<p><em>by Michael S. Kaplan, published on 2007/11/19 10:01 -05:00, original URI: http://blogs.msdn.com/b/michkap/archive/2007/11/19/6387630.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P>Over in the Suggestion Box, <STRONG>IMEless in Tōkyō</STRONG> asked:</P>
+<BLOCKQUOTE>
+<P><EM><FONT face="times new roman,times">The IME bar occasionally disappears. By disappears, I do not mean &nbsp;becomes transparent or hidden; it is really gone. When I click on another application, the IME is available; click back and it is gone. Thus, it must be on a per-application basis. I have no idea how to reproduce it consistently, but I have experienced it on Windows 2000 (JP) and Windows XP (ENG and JP) on multiple machines. I typically hit it once or twice a week. Completely restarting that application fixes it. As well as in XP (not 2000 so far) pressing the IME language change key sequence (such as Alt + Shift) will "often" restore it.<BR><BR>Any ideas what is going on? Is this a known issue? Restarting the application is easy enough, but often not very desirable.</FONT></EM></P></BLOCKQUOTE>
+<P>This is an interesting issue, one that has occasionally plagued me as well.</P>
+<P>I have since then seen a particular KB article that suggested&nbsp;a possible cause to me:</P>
+<P><A class="" href="http://support.microsoft.com/kb/918184" mce_href="http://support.microsoft.com/kb/918184">MSKB 918184</A>: The Windows Language bar closes unexpectedly when you start a Citrix Presentation Server-published application on a Windows Server 2003 SP1-based computer that runs Terminal Services</P>
+<P>Now I know what you might be thinking -- how can that be relevant?</P>
+<P>Well, if you look at the article, see what it says about the symptoms:</P>
+<BLOCKQUOTE>
+<P><FONT face="times new roman,times">You experience this issue when the following conditions are true.</FONT></P>
+<UL>
+<LI><FONT face="times new roman,times">The computer is a Microsoft Windows Server 2003 Service Pack 1 (SP1)-based computer that runs Terminal Services. </FONT></LI>
+<LI><FONT face="times new roman,times">The application that you start closes all the currently open foreground windows. </FONT></LI>
+<LI><FONT face="times new roman,times">Multiple input languages are enabled on the server. </FONT></LI>
+<LI><FONT face="times new roman,times">Support for East Asian languages is configured on the server. </FONT></LI></UL></BLOCKQUOTE>
+<P>My theory is that someone is minimizing the window in the app -- maybe it is minimizing all windows indiscriminately, which if you think about it makes more sense.</P>
+<P>I could be totally off base, but on at least one occasion I actually verified that the Language Bar window was hidden (which would explain why the keyboard shortcut for switching made it visible again), so I think for now it makes for a good working theory. :-)</P>
+<P>Anyone else running into this issue find other possible causes?</P>
+<P mce_keep="true">&nbsp;</P>
+<P><FONT color=#ff00ff><EM>This post brought to you by</EM><FONT size=5> ঘ </FONT><EM>(<A class="" href="http://www.fileformat.info/info/unicode/char/0998" mce_href="http://www.fileformat.info/info/unicode/char/0998">U+0998</A>, a.k.a. BENGALI LETTER GHA)</EM></FONT></P>
+<hr/><p><a id="6415126" href="#6415126">#</a> <strong>Dean Harding</strong> on 19 Nov 2007 7:30 PM:</p><div style="margin-left: 1em"><p>If it happens again, you might want to try Spy++ or something to &quot;find&quot; the window again... it's gotta be there somewhere :-)</p>
+</div>
+<p><a id="6418236" href="#6418236">#</a> <strong>Peter</strong> on 19 Nov 2007 9:47 PM:</p><div style="margin-left: 1em"><p>Let me say that I'm also from Tōkyō, and it's really nice to see the place spelled correctly with diacritics.</p>
+<p>My experiences are very similar to IMEless. I run into the same issue every few weeks. At work I use XP Pro (JP) and at home I use XP Pro (EN). I do not explicitly use Terminal Services for remote activities, but the service is enabled. I seem to notice the issue when switching between applications, which often includes an Office application such as Excel. I particularly remember the issue with Excel because I had a very large workbook that would take a while to load; I really did not want to reload it, but I needed the IME to type so I was forced to reload it. I've also experienced it with IE and Firefox as well.</p>
+<p>Thanks Dean for the tip. I'll try Spy++ next time to find it. I suppose it should also show up in Process Explorer.</p></div>
+<p><a id="6424156" href="#6424156">#</a> <strong>Pavanaja U B</strong> on 20 Nov 2007 2:12 AM:</p><div style="margin-left: 1em"><p>I use Win XP Pro (EN). I too have faced this kind of problem many times. I am also not able to pin-point the exact reason, or the exact sequence of action which lead to this kind of problem. I am from India and use Kannada extensively. </p>
+<p>I have the Indic IME downloaded from BhashaInaida.com web-site. That IME is buggy - it makes the application (Word, Excel) to crash if typed very fast. In Vista and Office 2007(under XP or Vista), there is no proper cursor movement, etc. The sad news is that MS has forgotten that it has to take care of BhashaIndia.com web-site and the Bhasha project. The Indic activity has come to a standstill in MS.</p>
+<p>-Pavanaja</p></div>
+<p><a id="6428628" href="#6428628">#</a> <strong>Jeroen Ruigrok van der Werven</strong> on 20 Nov 2007 5:38 AM:</p><div style="margin-left: 1em"><p>Peter: I prefer writing (or transliterating) Toukyou as one would write it with hiragana. (Especially since in Dutch if I would pronounce Tokyo like this the o's would already sound long since they're at the end of syllables and as such the macron adds nothing for me. Digressing further: Japanese pronunciation is easy for Dutch natives I found out.)</p>
+<p>Back to the topic: Anyway, I noticed recently that at times my IME, when it's in JP, KO or CH only shows the two-letter abbreviation and suddenly misses all the additional icons (I always have the language band adjusted to a fuller width). I am not entirely sure what is happening here on the XP Pro machine.</p>
+<p>I'll open up Spy++ when it happens again.</p></div>
+<p><a id="6446960" href="#6446960">#</a> <strong>Peter</strong> on 20 Nov 2007 7:08 PM:</p><div style="margin-left: 1em"><p>Jeroen,</p>
+<p>Toukyou* is fine with me, too, as *I* know it's still a long vowel. I am OK with Tookyoo**, as well. However, Tōkyō is not just my preference, it is how romanization works in Japan. For example, if you go to Tōkyō Station, it is properly spelled out with macrons. Of course it should be because that is how the Hepburn romanization system works. Absolutely unacceptable is Tokyo, which isn't based on any romanization system. It is merely Tōkyō stripped of the diacritics.</p>
+<p>*But how would you differentiate it from トウキョウ [toːkyoː]? Remember that even though it is spelled とうきょう, it is pronounced トーキョー.</p>
+<p>**But how would you differentiate it from トオキョオ [tookyoo]?</p>
+<p>Regarding the missing IME icons, that happens to me very often.</p>
+<p>Actually, it's happening right now.</p>
+<p>But I can still switch between kana and latin with the normal toggle key (I'm on a Japanese keyboard at the moment with a dedicated key, but Alt+~ works as well).</p>
+<p>Spy++ does not really help here because the IME is there. It's just not showing all of the necessary icons.</p>
+<p>Switching to another application does not restore the missing icons.</p>
+<p>Even when switching to Korean or Chinese (which I often need to use as well), there too the icons are missing.</p>
+<p>I've only been able to fix this by restarting the system.</p>
+<p>I wonder if I could fix it by manually killing and then restarting conime.exe. Maybe I'll try it a little later.</p></div>
+<p><a id="6449738" href="#6449738">#</a> <strong>Cheong</strong> on 20 Nov 2007 10:40 PM:</p><div style="margin-left: 1em"><p>I'm a HKSAR version of WinXP Pro user. My system has CH-TW/JP/EN language installed. I've only hit this problem once since 2004, but that was fixed by restarting Explorer.EXE.</p>
+<p>I don't know if it matters, but the only MS Office application I installed here is MS Outlook. I use OpenOffice extensively.</p></div>
+<p><a id="6608428" href="#6608428">#</a> <strong>Mark Steward</strong> on 30 Nov 2007 12:39 AM:</p><div style="margin-left: 1em"><p>Peter, I suspect your problem is different - does it look the same (missing icons) when you open the Command Prompt?</p>
+<p>Cheers,</p>
+<p> &nbsp; &nbsp;Mark</p></div>
+<p><strong>jmdesp</strong> on 22 Jul 2011 4:02 AM:</p><div style="margin-left: 1em"><p>I&#39;d love a Windows 7 update of this story. Especially for the case of a language bar that is missing for all applications, is still missing after a reboot (so the minimize theory doesn&#39;t seem to be working), but *does* get visible for elevation privilege requests (and only for them)</p>
+</div>
+<hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2011/07/26 <a href="http://archives.miloush.net/michkap/archive/2011/07/26/10189661.html">The incredible missing Language Bar, Windows 7 Edition</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2007/11/20/6420601.html" title="Michael&#39;s Keyboard Laws for Developers, Part 3">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2007/11/19/6386152.html" title="Khmer, and I&#39;ll tell you about all the text stacks">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2007-11">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2007-11-19">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2007/11/19/6387630.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:37 GMT -->
+</html>

@@ -1,0 +1,42 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2007/07/11/3815916.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:38 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Any sufficiently confusing technology is indistinguishable from magic</title></head><body>
+<h1>Any sufficiently confusing technology is indistinguishable from magic</h1>
+<p><em>by Michael S. Kaplan, published on 2007/07/11 10:46 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2007/07/11/3815916.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P>Last month when I posted <STRONG><A class="" href="http://archives.miloush.net/michkap/archive/2007/06/09/3174676.html" mce_href="http://archives.miloush.net/michkap/archive/2007/06/09/3174676.html">Guilt by [font ]association (aka The consequences of picking the wrong font #3)</A></STRONG>, I said I'd try to dedfine font association better.</P>
+<P>I'm not going to do that just yet.</P>
+<P>Though I will talk about another bug that might be related to it, one that might help discern what is going on a bit. Or maybe it will confuse things further....</P>
+<P>The report came in just the other day. Some specific text:</P>
+<BLOCKQUOTE>
+<P>國 (U+570b): In Gulim, MS UI Gothic, PMingLiU, SimSun<BR>国 (U+56fd): In MS UI Gothic, PMingLiU, SimSun<BR>龱 (U+9fb1): In PMingLiU, SimSun<BR>⺋ (U+2e8b, CJK RADICAL SEAL): In SimSun<BR>Մ (U+0544, ARMENIAN CAPITAL LETTER MEN): Not in Tahoma, Segoe UI</P></BLOCKQUOTE>
+<P>When stuck in Notepad using a specific font (Century)&nbsp;was reportedly showing some strange behavior. Not when there was an en-US default system locale:</P>
+<P><IMG height=225 src="http://trigeminal.fmsinc.com/images/en-US_Western.png" width=690></P>
+<P>but when the default system locale was ko-KR (Korean):</P>
+<P><IMG src="http://trigeminal.fmsinc.com/images/ko-KR_Western.png"></P>
+<P>The kicker, though? If you changed the script to Greek:</P>
+<P><IMG src="http://trigeminal.fmsinc.com/images/fontdlg_script.png"></P>
+<P>then both English:</P>
+<P><IMG src="http://trigeminal.fmsinc.com/images/en-US_Greek.png"></P>
+<P>and Korean:</P>
+<P><IMG src="http://trigeminal.fmsinc.com/images/ko-KR_Greek.png"></P>
+<P>look fine.</P>
+<P>So much for the <A class="" href="http://msdn2.microsoft.com/library/ms533931.aspx" mce_href="http://msdn2.microsoft.com/library/ms533931.aspx">LOGFONT</A> lfCharSet member not being relevant to Unicode text rendering, huh? :-)</P>
+<P>Though the original people were assuming it was to do with font linking, that would not be the case since Century is not in any GDI font link chain. It can't be due to Uniscribe font fallback since the text is not (for the most part) complex. It is not even font substitution, another lingering legacy thing I have discussed <STRONG><A class="" href="http://archives.miloush.net/michkap/archive/2005/03/20/399322.html" mce_href="http://archives.miloush.net/michkap/archive/2005/03/20/399322.html">before</A></STRONG>, since the font is not on the list.</P>
+<P>I believe it was Arthur C. Clarke who said that <EM>Any sufficiently advanced technology is indistinguishable from magic.</EM> </P>
+<P>Though by the time you go through all of the thesaurus words for "ways to change what the font is" that make even smart people like <A class="" href="http://babelstone.blogspot.com/" mce_href="http://babelstone.blogspot.com/">Andrew West</A> uncomfortable (as he mentioned <STRONG><A class="" href="http://archives.miloush.net/michkap/archive/2007/07/09/3784549.html#3813552" mce_href="http://archives.miloush.net/michkap/archive/2007/07/09/3784549.html#3813552">here</A></STRONG>), it may not seem so much like magic as maelstrom, if you know what I mean.</P>
+<P>Somehow, I think the title of this post covers the situation better here. :-)</P>
+<P>This latest behavior has been attributed to font association. the feature I mentioned in <A class="" href="http://archives.miloush.net/michkap/archive/2007/06/09/3174676.html" mce_href="http://archives.miloush.net/michkap/archive/2007/06/09/3174676.html"><STRONG>this post</STRONG></A>. Though that is still so ill-defined that one may as well give in to the confusion and just say it works by magic.</P>
+<P>I will see what I can do to try to provide a better definition than that -- one that will unconfuse things....</P>
+<P mce_keep="true">&nbsp;</P>
+<P><FONT color=#ff00ff><EM>This post brought to you by</EM> <FONT size=5>উ</FONT> <EM>(<A class="" href="http://www.fileformat.info/info/unicode/char/0989" mce_href="http://www.fileformat.info/info/unicode/char/0989">U+0989</A>, a.k.a. BENGALI LETTER U)</EM></FONT></P>
+<hr/><p><a id="3816068" href="#3816068">#</a> <strong>David Brabant</strong> on 11 Jul 2007 11:07 AM:</p><div style="margin-left: 1em"><p>&quot;I believe it was Arthur C. Clarke who said that Any sufficiently advanced technology is indistinguishable from magic.&quot;</p>
+<p>You are right. That's Clarke's third law.</p>
+<p><a rel="nofollow" target="_new" href="http://en.wikipedia.org/wiki/Clarke">http://en.wikipedia.org/wiki/Clarke</a>'s_three_laws</p></div>
+<p><a id="3816223" href="#3816223">#</a> <strong>Michael S. Kaplan</strong> on 11 Jul 2007 11:18 AM:</p><div style="margin-left: 1em"><p>I always liked Niven's Law (1a Never throw shit at an armed man. 1b. Never stand next to someone who is throwing shit at an armed man) better, though it is much harder to fit into a technology blog. :-)</p>
+</div>
+<p><a id="3818160" href="#3818160">#</a> <strong>Mihai</strong> on 11 Jul 2007 2:44 PM:</p><div style="margin-left: 1em"><p>And another &quot;law&quot; I have recently found (not quite in the same class, but good):</p>
+<p>&quot;Always code as if the person who will maintain your code is a maniac serial killer that knows where you live&quot;</p></div>
+<hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2008/02/29 <a href="http://archives.miloush.net/michkap/archive/2008/02/29/7945019.html">A more definitive definition of[ Font ]Association (a technology that helps us put the backward in backward compatibility!)</a></p><p>2007/10/25 <a href="http://archives.miloush.net/michkap/archive/2007/10/25/5660564.html">Is it a Unicode issue? A non-Unicode issue? What the hell is it? (aka Beware former [Font ]Associations)</a></p><p>2007/07/11 <a href="http://archives.miloush.net/michkap/archive/2007/07/11/3820654.html">They don't [font] associate with font linkers, among others</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2007/07/11/3820654.html" title="They don&#39;t [font] associate with font linkers, among others">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2007/07/09/3785722.html" title="Oh Canada!">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2007-07">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2007-07-11">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2007/07/11/3815916.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:38 GMT -->
+</html>

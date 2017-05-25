@@ -1,0 +1,47 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2013/01/21/10386721.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:24 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>It's not how long it is, it's how you describe it when it's long!</title></head><body>
+<h1>It's not how long it is, it's how you describe it when it's long!</h1>
+<p><em>by Michael S. Kaplan, published on 2013/01/21 07:01 -05:00, original URI: http://blogs.msdn.com/b/michkap/archive/2013/01/21/10386721.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<p><span style="color: #ff0000;">Okay, a long hiatus after surgery, I'm going to ease back into blogging. Thank you to all who have wished me well.</span></p>
+<p><span style="color: #ff0000; font-size: x-small;"><em>Those who wished me ill can take solace in the fact that they weren't <strong>completely</strong> unsuccessful.</em> :-)</span></p>
+<p><span style="color: #ff0000;">I <strong>will</strong> be talking about the injury and the hospital and the nursing home and the accessibility issues I now face as a fulltime gimp at home, at my girlfriend's place, and at work on other days, in other blogs in the future.</span></p>
+<p><span style="color: #ff0000;">For today, I thought I'd cover a question from my email Inbox....</span></p>
+<p>The question I was asked was:</p>
+<p style="padding-left: 30px;"><span style="font-family: times new roman,times; font-size: medium;">I was using a program that was&nbsp;describing time durations like the ones returned by GetDurationFormat. But for longer time periods, it was describing months and years, and I couldn't get GetDurationFormat to <em>do</em> that. What's the secret, what am I missing?</span></p>
+<p>Upon further questioning, he admitted that the program was &mu;Torrent.</p>
+<p>I decided not to ask what he was trying to (perhaps illegally!) download.</p>
+<p>Or whether it was porn.</p>
+<p>Or what porn might take weeks or&nbsp;months to download.</p>
+<p>I had in mind reproing it and&nbsp;getting a screenshot, I explained.</p>
+<p>He gave me the name of the file and right after I took the screenshot:</p>
+<p><a href="http://msdnshared.blob.core.windows.net/media/MSDNBlogsFS/prod.evol.blogs.msdn.com/CommunityServer.Blogs.Components.WeblogFiles/00/00/00/33/81/8308.utorrent.jpg"><img style="max-width: 550px;" src="http://msdnshared.blob.core.windows.net/media/MSDNBlogsFS/prod.evol.blogs.msdn.com/CommunityServer.Blogs.Components.WeblogFiles/00/00/00/33/81/8308.utorrent.jpg" alt="" border="0" /></a></p>
+<p>I deleted the file and uninstalled &mu;Torrent.&nbsp;:-)</p>
+<p>But it proved his point -- although I couldn't get a screenshot of it (it jumped to days too quickly and I didn't want to keep it downloading any longer than&nbsp;I needed to for the art. Bad enough it was on a work machine!), I did see it saying weeks for a few moments, and I could extrapolate based on the customer report to me that it was probably doing that.</p>
+<p>I am reasonably certain that they aren't using <a href="http://msdn.microsoft.com/en-us/library/windows/desktop/dd318092.aspx" target="_blank">GetDurationFormatEx</a> or its LCID favoring cousin.</p>
+<p>Because we never defined any other symbols to use for longer time periods.</p>
+<p>They must be rolling their own.</p>
+<p>Building on it by taking our function and parsing the results to extend them feels very painful and risky....</p>
+<p>But it got me thinking about a few other things.</p>
+<p>First of all, some people have way too much free time and free hard drive space!</p>
+<p>Second of all, adding these might be a good idea, though it multiplies the risk of grammatical mistakes that even the current function could show with custom format strings that use words (I have seen programs that use it this way).</p>
+<p>Third of all, the function only taking a <a href="http://msdn.microsoft.com/en-us/library/windows/desktop/ms724950.aspx">SYSTEMTIME</a> in lpDuration or the 100-nanosecond values in ullDuration is rather awkward. Why not the option of two <a href="http://msdn.microsoft.com/en-us/library/windows/desktop/ms724950.aspx">SYSTEMTIME</a> values as real datetime values to get the duration between? There are lots of usage scenarios where the function would be quite useful but either of the&nbsp;options we give would be quite awkward if not unreasonable. Why make them do&nbsp;so much&nbsp;extra work?</p>
+<p>When you get down to it, a duration that is very long becomes awkward very quickly.</p>
+<p>Like the title says, <strong>it's not&nbsp;how long it is, it's how you describe it when it's long!</strong></p>
+<p>I'll suggest something to the NLS folks (well, I'll make sure they see this blog!).</p>
+<p>It's good to be back.</p>
+<hr/><p><strong>Paul Clapham</strong> on 21 Jan 2013 8:52 AM:</p><div style="margin-left: 1em"><p>Good to see you back, Michael!</p>
+</div>
+<p><strong>DaveC</strong> on 21 Jan 2013 10:47 AM:</p><div style="margin-left: 1em"><p>Welcome back Michael</p>
+</div>
+<p><strong>cheong00</strong> on 21 Jan 2013 6:03 PM:</p><div style="margin-left: 1em"><p>Welcome back!</p>
+</div>
+<p><strong>Doug Ewell</strong> on 22 Jan 2013 7:43 AM:</p><div style="margin-left: 1em"><p>Displaying time intervals generically in terms of months and years can be problematic, because months and years aren&#39;t always the same length. If the interval is 30 days, is that a &quot;month&quot; or not? Should it matter which calendar months were spanned by the interval? If GetDurationFormat(Ex) doesn&#39;t do this, it&#39;s probably for a reason.</p>
+</div>
+<p><strong>Rollo</strong> on 3 Feb 2013 2:42 PM:</p><div style="margin-left: 1em"><p>Agree with Doug - durations in months and years don&#39;t make any sense unless you know the starting date/time, and even then it gets rather annoying if you need to compare two durations at different starting points..</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 4 Feb 2013 9:53 PM:</p><div style="margin-left: 1em"><p>When (or if) you&#39;re using &mu;Torrent, then you know the exact context for weeks, months, or even years. It would be a very useful adjunct feature!</p></div>
+<hr/><p><em>go to <a id="newer" href="10387105.html" title="The top 10 reasons the people responsible for Building 86 should be glad Jews don&#39;t believe there&#39;s a Hell">newer</a> or <a id="older" href="../../../2012/12/20/10379645.html" title="The Cherokee LIP on Windows 8, part 2: Let&#39;s talk about the keyboards!">older</a> post, or back to <a href="../../../index-2.html">index</a> or <a href="../../../index-2.html#2013-01">month</a> or <a href="../../../index-2.html#2013-01-21">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2013/01/21/10386721.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:24 GMT -->
+</html>

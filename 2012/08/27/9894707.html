@@ -1,0 +1,195 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2012/08/27/9894707.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:47 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>From KLID to GUID (aka KLIDoral stimulation, it feels GUID)</title></head><body>
+<h1>From KLID to GUID (aka KLIDoral stimulation, it feels GUID)</h1>
+<p><em>by Michael S. Kaplan, published on 2009/09/15 10:01 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2009/09/15/9894707.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P><EM><FONT color=#ff0000><STRONG>Apologies for the title (note to self: never author blog titles under the influence to try to appear as a cunning linguist!)</STRONG></FONT></EM></P>
+<P>So it was just the other day that Yong asked:</P>
+<BLOCKQUOTE>
+<BLOCKQUOTE>
+<P><FONT face="times new roman,times">Ok, so it looks like we got a regression (or a design change) on Vista/Windows 7 from Windows XP.</FONT></P>
+<P><FONT face="times new roman,times">On XP/W2K3:<BR>============Start of regopts.txt============<BR>[RegionalSettings] <BR>InputLocale = 0409:00000409,0404:E0020404 <BR>============End of regopts.txt============<BR>// Just having this adds for example the Chinese Traditional (ChangJie) keyboard.</FONT></P>
+<P><FONT face="times new roman,times">On Windows Vista SP2/W2K8 SP2 <BR>============Start of regopts.xml============</FONT></P>
+<P><FONT face="times new roman,times">&lt;gs:GlobalizationServices xmlns:gs="urn:longhornGlobalizationUnattend"&gt;<BR>&nbsp; &lt;!-- User List--&gt;<BR>&nbsp; &lt;gs:UserList&gt;<BR>&nbsp;&nbsp;&nbsp; &lt;gs:User UserID="Current" CopySettingsToSystemAcct="true" /&gt;<BR>&nbsp; &lt;/gs:UserList&gt;<BR>&nbsp; &lt;!--System locale--&gt;<BR>&nbsp; &lt;gs:SystemLocale Name="zh-TW"/&gt;</FONT></P>
+<P><FONT face="times new roman,times">&nbsp; &lt;gs:InputPreferences&gt;<BR>&nbsp;&nbsp;&nbsp; &lt;!--en-US--&gt;<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;gs:InputLanguageID Action="add" ID="0409:00000409" Default="true"/&gt;<BR>&nbsp;&nbsp;&nbsp; &lt;!--zh-TW-ChangJie--&gt;<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;gs:InputLanguageID Action="add" ID="0404:E0020404"/&gt;<BR>&nbsp; &lt;/gs:InputPreferences&gt;</FONT></P>
+<P><FONT face="times new roman,times">&lt;/gs:GlobalizationServices&gt;<BR>============End of regopts.xml============<BR>It fails with:</FONT></P>
+<P><FONT face="times new roman,times">Unexpected Failure.&nbsp; Unsupported parameter.</FONT></P>
+<P><FONT face="times new roman,times">On Windows 7/W2K8 R2.<BR>It fails with:<BR>Event ID: 10008<BR>Source: International<BR>Error while changing keyboard/input method for "0404:E0020404".</FONT></P></BLOCKQUOTE></BLOCKQUOTE>
+<P>This is one of those architected backcompat breaks that was put in -- GUIDs were now needed, to replace the "fake" KLID values of prior versions that would forward to the appropriate Text Services Framework TIPs (which had been around for several versions, often atop the same KLID values that the older IMM based variants of IME that they replaced used to be on).</P>
+<P>It amazed me that after all this time no one had still seemed to have published the list of the GUIDs so that people could replace existing scripts!</P>
+<P>In fact, no one had asked me if such a list existed, really.</P>
+<P>Which is odd since that is the sort of question I do tend to get a lot.</P>
+<P>Anyway, I thought I would just take care of that now.</P>
+<P>Here is the big table, with the old and new values:</P>
+<P>
+<TABLE border=1>
+<TBODY>
+<TR>
+<TD><STRONG>LANGID</STRONG></TD>
+<TD><STRONG>XP/Server 2003 KLID</STRONG></TD>
+<TD><STRONG>Language/Script</STRONG></TD>
+<TD><STRONG>Input method description</STRONG></TD>
+<TD><STRONG>Vista/Windows 7</STRONG></TD></TR>
+<TR>
+<TD>0411</TD>
+<TD>00000411</TD>
+<TD>Japanese</TD>
+<TD>Japanese keyboard</TD>
+<TD><FONT color=#009900><STRONG>No Change</STRONG></FONT></TD></TR>
+<TR>
+<TD>0411</TD>
+<TD>E0010411</TD>
+<TD>Japanese</TD>
+<TD>Japanese IME</TD>
+<TD>{03B5835F-F03C-411B-9CE2-AA23E1171E36}{A76C93D9-5523-4E90-AAFA-4DB112F9AC76}</TD></TR>
+<TR>
+<TD>0412</TD>
+<TD>E0010412</TD>
+<TD>Korean</TD>
+<TD>Korean IME</TD>
+<TD>{A028AE76-01B1-46C2-99C4-ACD9858AE02F}{B5FE1F02-D5F2-4445-9C03-C568F23C99A1}</TD></TR>
+<TR>
+<TD>0412</TD>
+<TD>00000412</TD>
+<TD>Korean</TD>
+<TD>Korean keyboard</TD>
+<TD><STRONG><FONT color=#009900>No Change</FONT></STRONG></TD></TR>
+<TR>
+<TD>0404</TD>
+<TD>00000404</TD>
+<TD>Traditional Chinese</TD>
+<TD>US Keyboard</TD>
+<TD><STRONG><FONT color=#009900>No Change</FONT></STRONG></TD></TR>
+<TR>
+<TD>0804</TD>
+<TD>00000804</TD>
+<TD>Simplified Chinese</TD>
+<TD>US Keyboard</TD>
+<TD><STRONG><FONT color=#009900>No Change</FONT></STRONG></TD></TR>
+<TR>
+<TD>0404</TD>
+<TD>E0010404</TD>
+<TD>Traditional Chinese</TD>
+<TD>Phonetic</TD>
+<TD>{531FDEBF-9B4C-4A43-A2AA-960E8FCDC732}{761309DE-317A-11D4-9B5D-0080C882687E}</TD></TR>
+<TR>
+<TD>0804</TD>
+<TD>E0010804</TD>
+<TD>Simplified Chinese</TD>
+<TD>QuanPin</TD>
+<TD>{E429B25A-E5D3-4D1F-9BE3-0C608477E3A1}{54FC610E-6ABD-4685-9DDD-A130BDF1B170}</TD></TR>
+<TR>
+<TD>0404</TD>
+<TD>E0020404</TD>
+<TD>Traditional Chinese</TD>
+<TD>ChangJie</TD>
+<TD>{531FDEBF-9B4C-4A43-A2AA-960E8FCDC732}{4BDF9F03-C7D3-11D4-B2AB-0080C882687E}</TD></TR>
+<TR>
+<TD>0804</TD>
+<TD>E0020804</TD>
+<TD>Simplified Chinese</TD>
+<TD>ShuangPin</TD>
+<TD>{E429B25A-E5D3-4D1F-9BE3-0C608477E3A1}{EF63706D-31C4-490E-9DBB-BD150ADC454B}</TD></TR>
+<TR>
+<TD>0404</TD>
+<TD>E0030404</TD>
+<TD>Traditional Chinese</TD>
+<TD>Quick</TD>
+<TD>{531FDEBF-9B4C-4A43-A2AA-960E8FCDC732}{6024B45F-5C54-11D4-B921-0080C882687E}</TD></TR>
+<TR>
+<TD>0404</TD>
+<TD><EM>Did not exist?!?</EM></TD>
+<TD>Traditional Chinese</TD>
+<TD>New Quick</TD>
+<TD>{531FDEBF-9B4C-4A43-A2AA-960E8FCDC732}{0B883BA0-C1C7-11D4-87F9-0080C882687E}</TD></TR>
+<TR>
+<TD>0804</TD>
+<TD>E0030804</TD>
+<TD>Simplified Chinese</TD>
+<TD>ZhengMa</TD>
+<TD>{E429B25A-E5D3-4D1F-9BE3-0C608477E3A1}{733B4D81-3BC3-4132-B91A-E9CDD5E2BFC9}</TD></TR>
+<TR>
+<TD>0404</TD>
+<TD>E0040404</TD>
+<TD>Traditional Chinese</TD>
+<TD>Big5</TD>
+<TD><STRONG><FONT color=#ff0000>REMOVED</FONT></STRONG></TD></TR>
+<TR>
+<TD>0404</TD>
+<TD>E0050404</TD>
+<TD>Traditional Chinese</TD>
+<TD>Array</TD>
+<TD>{E429B25A-E5D3-4D1F-9BE3-0C608477E3A1}{D38EFF65-AA46-4FD5-91A7-67845FB02F5B}</TD></TR>
+<TR>
+<TD>0804</TD>
+<TD>E0050804</TD>
+<TD>Simplified Chinese</TD>
+<TD>NeiMa</TD>
+<TD><STRONG><FONT color=#ff0000>REMOVED</FONT></STRONG></TD></TR>
+<TR>
+<TD>0404</TD>
+<TD>E0060404</TD>
+<TD>Traditional Chinese</TD>
+<TD>DaYi</TD>
+<TD>{E429B25A-E5D3-4D1F-9BE3-0C608477E3A1}{037B2C25-480C-4D7F-B027-D6CA6B69788A}</TD></TR>
+<TR>
+<TD>0404</TD>
+<TD>E0070404</TD>
+<TD>Traditional Chinese</TD>
+<TD>Unicode</TD>
+<TD><FONT color=#ff0000><STRONG>REMOVED</STRONG></FONT></TD></TR>
+<TR>
+<TD>0404</TD>
+<TD>e0080404</TD>
+<TD>Traditional Chinese</TD>
+<TD>New Phonetic</TD>
+<TD>{531FDEBF-9B4C-4A43-A2AA-960E8FCDC732}{B2F9C502-1742-11D4-9790-0080C882687E}</TD></TR>
+<TR>
+<TD>0404</TD>
+<TD>e0090404</TD>
+<TD>Traditional Chinese</TD>
+<TD>New ChangJie</TD>
+<TD>{531FDEBF-9B4C-4A43-A2AA-960E8FCDC732}{F3BA907A-6C7E-11D4-97FA-0080C882687E}</TD></TR>
+<TR>
+<TD>0804</TD>
+<TD>E00E0804</TD>
+<TD>Simplified Chinese</TD>
+<TD>PinYin</TD>
+<TD>{81D4E9C9-1D3B-41BC-9E6C-4B40BF79E35E}{F3BA9077-6C7E-11D4-97FA-0080C882687E}</TD></TR>
+<TR>
+<TD>0404</TD>
+<TD>E01F0404</TD>
+<TD>Traditional Chinese</TD>
+<TD>Alphanumeric (ABC)</TD>
+<TD>{81D4E9C9-1D3B-41BC-9E6C-4B40BF79E35E}{FCA121D2-8C6D-41fb-B2DE-A2AD110D4820}</TD></TR></TBODY></TABLE></P>
+<P>A few quick words about this table.</P>
+<UL>
+<LI>Yes, the three input methods based on having a code point (Big5, NeiMa, and Unicode) were removed;</LI>
+<LI>And yes, the four keyboards stay in as they were in prior methods, unchanged;</LI>
+<LI>The rest of the input methods are now associated with two different GUID values -- the first identifying the TIP engine and the second identifying the language profile under that TIP engine. </LI></UL>
+<P>Note that this information is mostly useless to you but does explain why all of the IMEs that use TextTableService.DLL have the same GUID for the first one -- you can use this imnformation to sound particularly impressive at a client site, by the way. :-)</P>
+<P>The two GUIDs are used the same way that the KLID values used to be used. Thus for Yong's case,</P>
+<BLOCKQUOTE>
+<P><STRONG><FONT size=3>0404:E0020404</FONT></STRONG></P></BLOCKQUOTE>
+<P>becomes</P>
+<BLOCKQUOTE>
+<P><FONT size=3><STRONG>0404:{531FDEBF-9B4C-4A43-A2AA-960E8FCDC732}{4BDF9F03-C7D3-11D4-B2AB-0080C882687E}</STRONG></FONT></P></BLOCKQUOTE>
+<P>Anyway, sorry I never printed this list before; I did mean to but never got around to it. And then I forgot. :-(</P>
+<P>Hopefully this will be of user to people, going forward!</P>
+<hr/><p><a id="9895644" href="#9895644">#</a> <strong>ray</strong> on 15 Sep 2009 10:01 PM:</p><div style="margin-left: 1em"><p>Consider your pun license revoked.</p></div>
+<p><a id="9896184" href="#9896184">#</a> <strong>Michael S. Kaplan</strong> on 17 Sep 2009 1:42 AM:</p><div style="margin-left: 1em"><p>With this Blog, it has been revoked for over 2 years now. I now pun without a license....</p>
+</div>
+<p><a id="9901070" href="#9901070">#</a> <strong>JJ</strong> on 29 Sep 2009 8:02 PM:</p><div style="margin-left: 1em"><p>Don't be silly. &nbsp;Aardvarkian programmers never pun. &nbsp;They 'cant'.</p></div>
+<p><strong>Carlos</strong> on 30 Jan 2010 4:45 PM:</p><div style="margin-left: 1em"><P>I followed the directions and included this on my unattend.xml:</P>
+<P>At the "&lt;settings pass="oobeSystem"&gt;"</P>
+<P>"&lt;InputLocale&gt;"0409:00000409;0409:00020409;0c0a:0000040a;0804:{81D4E9C9-1D3B-41BC-9E6C-4B40BF79E35E}{F3BA9077-6C7E-11D4-97FA-0080C882687E};0404:{531FDEBF-9B4C-4A43-A2AA-960E8FCDC732}{761309DE-317A-11D4-9B5D-0080C882687E};0411:{03B5835F-F03C-411B-9CE2-AA23E1171E36}{A76C93D9-5523-4E90-AAFA-4DB112F9AC76}"&lt;/InputLocale&gt;"</P>
+<P>After sysprep, the only one I get is English-US. When I try with all the XP codes (0409:00000409;0409:00020409;0c0a:0000040a;0804:00000804;0804:e00e0804;0404:00000404;0404:e0010404;0411:00000411;0411:e0010411) I get only en-US, US-Int, es-ES, zh-CH (US Keyboard), zh-TW (US Keyboard) and jp-JP (US Keyboard).</P>
+<P>Am I missing something here?</P>
+<P>Thank you,</P>
+<P>Carlos</P></div>
+<p><strong>mrtech86</strong> on 27 Aug 2012 10:54 AM:</p><div style="margin-left: 1em"><p>This worked perfectly for my project. Thank you!</p>
+</div>
+<hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2012/08/28 <a href="http://archives.miloush.net/michkap/archive/2012/08/28/10344043.html">'If it is easy, then there are samples. And if it's very easy, everyone is writing them.'</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2009/09/16/9895869.html" title="If it ain&#39;t a soup question, keep it the hell out of the room">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2009/09/14/9894607.html" title="What is impossible for Microsoft can be simply undesireable for Unicode">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2009-09">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2009-09-15">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2012/08/27/9894707.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:47 GMT -->
+</html>

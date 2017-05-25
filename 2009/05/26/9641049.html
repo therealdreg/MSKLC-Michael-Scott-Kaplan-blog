@@ -1,0 +1,66 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2009/05/26/9641049.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:35 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>The Whey doesn't get a locale, either</title></head><body>
+<h1>The Whey doesn't get a locale, either</h1>
+<p><em>by Michael S. Kaplan, published on 2009/05/26 03:01 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2009/05/26/9641049.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<p><i>As a by the way, this blog does NOT represent anything&nbsp;beyond my own 
+personal thoughts based on the way I think things are going. You could even blame it on my Tegretol dosage, to be perfectly honest (if the pain were not so intense I'd have skipped this med for sure). I am not 
+even on the team that decides these things any more and I wasn't in charge of 
+the strategy when I was then. Anyone who quotes me with prefacing words like 
+"According to Microsoft..." is a complete and utter moron.</i> <br></p>
+<p>It starts with a nursery rhyme, as it turns out a very popular one from what I am told:</p>
+<blockquote>
+<p><i><font face="times new roman,times">Little Miss Muffet <br>Sat on a tuffet, <br>Eating her curds and whey; <br>Along came a spider, <br>Who sat down beside her <br>And frightened Miss Muffet away.</font></i> <br></p>
+</blockquote>
+<p>You might wonder where I am going from here.</p>
+<p>Well, first there is the mail I got (product and personal info removed because it just seemed prudent):</p>
+<blockquote>
+<blockquote>
+<p><font face="times new roman,times">Dear Michael ..<br><br>We have been contacted by a group of Kurdish people who would like to translate our product to Kurdish. However the problem we are facing is that we cannot find (checked winnt.h) the language ids (e.g. LANG_KURDISH) associated with the Kurdish language and sub language/culture.<br><br>I have been reading the following paper <a href="http://proceedings.informingscience.org/InSITE2007/IISITv4p353-363Ali323.pdf" mce_href="http://proceedings.informingscience.org/InSITE2007/IISITv4p353-363Ali323.pdf">It is Time to Add Kurdish Culture to VS .NET Globalization<br></a>Since you have been referenced and I think to remember that you are involved with globalization at Microsoft I thought you are the right person to contact :-)<br><br>Have the language ids for Kurdish already been defined? If not would it be possible to do so?<br><br>As always thank you for your time and efforts.<br>Best Regards,</font> <br></p>
+</blockquote>
+</blockquote>
+<p>Ah, so the title and the nursery rhyme is a bad pun (<b>curds vs. Kurds</b>) skirting a geopolitically sensitive issue!</p>
+The answer is that there is no LANG_KURDISH defined. Although the paper starts off on very solid ground it ignores the geopolitical issues completely, to wit:<br>
+<ul>
+<li>Kurdistan is not a country but a region owned by Iraq, Iran, Turkey, Azerbaijan, Syria, and Armenia. </li>
+<li>And only one of those countries recognizes their chunk as an autonomous entity (Iraq).</li>
+<li>And only one recognizes Kurds as a minority (Iran).</li>
+<li>And only three (Iraq, Iran, and Armenia) recognize Kurdish officially as a minority language; it is banned in Syria and I have talked previously about the efforts to ban individual letters in Turkey as an effort against Kurdish.</li>
+</ul>
+<p>Plus I have no idea who the authors talked to; although they quoted my book several times they never contacted me (by the address provided in the book or any other way) and I don't believe they contacted anyone with knowledge/understanding of the issue, or they would have gotten a much more accurate (though for them not so happy) of an answer.<br></p>
+<p>Remember that nothing gets added to .NET; it is first added to Windows and then later to .NET.<br></p>
+<p>So assuming that there were going to see (for example, off the top of my head) some or all of the following new locales added:</p>
+<ul>
+<li>ku-Arab-IR</li>
+<li>ku-Arab-IQ <br></li>
+<li>ku-Cyrl-AZ</li>
+<li>ku-Latn-AZ</li>
+<li>ku-Arab-SY<br></li>
+<li>ku-Latn-SY</li>
+<li>ku-Cyrl-AM</li>
+<li>ku-Latn-AM</li>
+<li>ku-Latn-TR<br></li>
+</ul>
+<p>without (in many cases) the support and assistance of the governments who decide to let Microsoft ship software in their countries, and with the unhappiness of severaql of those countries as a part of the process, it is easy to imagine software banned in some of those places.</p>
+<p>Microsoft can't set policy here, or be used as proof of a policy.<br></p>
+<p>Thus we have our answer: the locale id values have not been defined, and they cannot be given the present environment.<br></p>
+<p>In the end, whether we are talking about Kurdish, or Kashmiri, or any of a number of such languages, <b><a href="http://archives.miloush.net/michkap/archive/2005/12/17/505062.html" mce_href="http://archives.miloush.net/michkap/archive/2005/12/17/505062.html">Sometimes, tech companies cannot take sides</a></b>. If you do things with custom locales and custom keyboards, then the operating system will support the efforts, but these things can't so easily be put in the box, built in. And thus they can't be so easily put into the .Net Framework,<br></p>
+<p>On the other hand, this is yet another reasons that <b><a href="http://archives.miloush.net/michkap/archive/2007/07/23/4021529.html" mce_href="http://archives.miloush.net/michkap/archive/2007/07/23/4021529.html">LCIDs suck</a></b>, and any software -- Microsoft or any other company -- that depends on LCIDs needs to get off of them. For everyone's sake. Note that it is the software's dependence on LCIDs that led to the question being asked in the first place!<br></p>
+<p>&nbsp;</p>
+<p><font><font color="#ff1493"><i>This post brought to you by</i><font size="7"> </font><font size="7">ڵ </font><i>(<a href="http://www.fileformat.info/info/unicode/char/06b5">U+06b5</a>, a.k.a. ARABIC LETTER LAM WITH SMALL V)</i></font></font></p>
+<hr/><p><strong>John Cowan</strong> on 26 May 2009 4:46 PM:</p><div style="margin-left: 1em"><p>FWIW, CLDR (the Unicode Common Locale Data Repository) currently supports the following locales: generic ku-IR, ku-IQ, ku-SY, and ku-TR, plus script-specific ku-Arab-IR, ku-Arab-IQ, ku-Arab-SY, and ku-Latn-TR. &nbsp;Of course, if people added more data they could get more locales.</p>
+<p>Sigh.</p></div>
+<p><strong>Michael S. Kaplan</strong> on 27 May 2009 1:26 AM:</p><div style="margin-left: 1em"><p>Hey John,</p>
+<p>Of course this kind of underscores the problem with simply adding CLDR support, doesn't it? :-)</p>
+</div>
+<p><strong>Random832</strong> on 5 Jun 2009 5:05 PM:</p><div style="margin-left: 1em"><p>What about just adding a locale for some generic country (US? Invariant Country?) so they can at least get the language?</p></div>
+<p><strong>Michael S. Kaplan</strong> on 8 Jun 2009 5:21 PM:</p><div style="margin-left: 1em"><p>That would not be a good idea for the sake of people who do live in a region (it is also impossible for invariant and inflammatory &nbsp;for US).</p>
+</div>
+<p><strong>Andy</strong> on 22 Jun 2009 3:25 PM:</p><div style="margin-left: 1em"><p>Not very nice to make fun of a suppressed and persecuted people. Bad pun? Adding insult to injury, more like.</p></div>
+<p><strong>Michael S. Kaplan</strong> on 23 Jun 2009 3:31 AM:</p><div style="margin-left: 1em"><p>Not making fun of anybody, just pointing out emotional flaws in an attempt at a technical justification for an issue that serious repercussions.</p>
+<p>The pun is perhaps bad, but most are (as are most of my blog titles!).</p>
+</div>
+<hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2011/11/08 <a href="http://archives.miloush.net/michkap/archive/2011/11/08/10234995.html">The evolving Story of Locale Support, part 5 (...until the decision was made to not refuse to add it)</a></p><p>2010/10/01 <a href="http://archives.miloush.net/michkap/archive/2010/10/01/10070128.html">Kurdish with an Arabic Accent?</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2009/05/27/9644420.html" title="The whole truth about MB_PRECOMPOSED and MB_COMPOSITE">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2009/04/09/9539475.html" title="Two wrongs don&#39;t make a right, but two lefts can take a good whack at it">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2009-05">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2009-05-26">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2009/05/26/9641049.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:35 GMT -->
+</html>

@@ -1,0 +1,22 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2011/01/12/10114507.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Adding a whole new DISMension to an old issue</title></head><body>
+<h1>Adding a whole new DISMension to an old issue</h1>
+<p><em>by Michael S. Kaplan, published on 2011/01/12 07:01 -05:00, original URI: http://blogs.msdn.com/b/michkap/archive/2011/01/12/10114507.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<p>So the question asked the other day was&nbsp;of a type&nbsp;that I had heard before:</p>
+<p style="padding-left: 30px;"><span style="font-family: times new roman,times;">I cannot uninstall Danish from one machine (or at least change the default system language to en-US).<br /><br />Can anyone help me? Do I have to sysprep the system to change the setting for the default user or is there any other (faster) way to do this??</span></p>
+<p style="padding-left: 30px;"><img src="http://blogs.msdn.com/cfs-file.ashx/__key/CommunityServer-Blogs-Components-WeblogFiles/00-00-00-33-81/4744.danishenglish.jpg" /></p>
+<p>Unfortunately, the answer to how to remove Danish here is not one that the person asking will be terribly happy about.</p>
+<p>Because Danish was <strong>the first language installed</strong>.</p>
+<p>As I explained in <a href="http://archives.miloush.net/michkap/archive/2007/09/21/5025885.html" title="If you had gotten there first, you might have staked your claim too!"><strong>If you had gotten there first, you might have staked your claim too!</strong></a> and <a href="http://archives.miloush.net/michkap/archive/2007/12/17/6784443.html" title="What's the difference between running a localized version of Windows and running Windows with that user interface language?"><strong>What's the difference between running a localized version of Windows and running Windows with that user interface language?</strong></a>, there is a fundamental difference between the first language that is installed with a copy of Windows and any additional languages added.</p>
+<p>That difference can impact the file system and registry keys and things like security account names (though Danish, which is not localized for server SKUs, doesn't do account names as far as I know).</p>
+<p>There is one way to change these settings in an image, and it is described in <a href="http://technet.microsoft.com/en-us/library/dd744360(WS.10).aspx" title="Languages and International Servicing Command-Line Options">Languages and International Servicing Command-Line Options</a>, which explains the switches that the <strong>Deployment Image Servicing and Management (DISM.exe) tool</strong> uses for language support.</p>
+<p>The most important one for this scenario is the <strong>/Set-SKUIntlDefaults:</strong> switch, which can change this fundamental setting.</p>
+<p>Now if the system has been running for any length of time there have probably been many Microsoft and third party applications installed, and DISM is unable to handle the myriad of changes that any of these installations&nbsp;may have made to the registry or configuration of their own binaries that depend on the installed system settings.</p>
+<p>So this <strong>DISM </strong>switch, while&nbsp;potentially useful in a clean image, is much more limited in its usefulness once a system has been in production for any length of time....</p>
+<hr/><p><strong>Yuhong Bao</strong> on 13 Jan 2011 11:46 PM:</p><div style="margin-left: 1em"><p>Japanese was once special in that it was the only language version ported to the NEC PC-98. Last release of Japanese Windows for it was Win2000, BTW.</p>
+</div>
+<hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2011/01/13/10115302.html" title="Doing it for appearances, Hong Kong style!">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2011/01/11/10114118.html" title="If only they had VISION and not just SIGHT">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2011-01">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2011-01-12">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2011/01/12/10114507.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+</html>

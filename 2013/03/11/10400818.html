@@ -1,0 +1,76 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2013/03/11/10400818.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:21 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>That MSKLC with a jailbroken Surface RT thing? I dared to disturb the universe, and...</title></head><body>
+<h1>That MSKLC with a jailbroken Surface RT thing? I dared to disturb the universe, and...</h1>
+<p><em>by Michael S. Kaplan, published on 2013/03/11 07:01 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2013/03/11/10400818.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<p>The thing about J. Alfred Prufrock and his love song is that he never got around to trying to disturb the universe.</p>
+<p>Now I didn't want to be as prissy as he was.</p>
+<p>So, after I blogged the blog in this Blog entitled <strong><a title="Developing for a jailbroken Surface RT -- dare I disturb the universe?" href="../../02/25/10396490.html">Developing for a jailbroken Surface RT -- dare I disturb the universe?</a></strong>, some of you assumed I might have gotten fired.</p>
+<p><em>If you aren't a Microsoft employee, that link may or may not work for you. Pretend it was scintillating, either way. </em>:-)</p>
+<p>I mean, no blogs all last week, right?</p>
+<p>Thankfully, I was not fired.</p>
+<p>It's just that, well, last week was pretty&nbsp;busy.</p>
+<p>I had to write an internal World-Readiness wiki article about <a title="World-Readiness in the Console" href="https://microsoft.sharepoint.com/teams/askwintl/SitePages/World-Readiness in the Console.aspx">World-Readiness in the Console</a>, talking about the PowerShell ISE in particular (you may not be able to see that link if you don't work for Microsoft, but if you <em>can</em> see it you can decide if I wasn't too blogy, which i apparently am sometimes.</p>
+<p>And I had get ready to be talking about scripting with the PowerShell ISE at the monthly World-Readiness Champions meeting, only to have that presentation pushed to next month.</p>
+<p>And I had to get my MYCI (Mid Year Check In) done&nbsp;a week early, since my manager had to cross the puddle for a W3C meeting.</p>
+<p>Like i said, a busy week.</p>
+<p>But I had time to catch up with my manager (the <strong>Senior Program Manager Lead</strong>) and talk to him about that <strong><a title="Developing for a jailbroken Surface RT -- dare I disturb the universe?" href="../../02/25/10396490.html">Developing for a jailbroken Surface RT -- dare I disturb the universe?</a></strong> blog.</p>
+<p>We talked about the issues and the hurdles and came up with a strategy.</p>
+<p>Then I had a quick hallway converation with <em>his</em> manager (the <strong>Principal IPM&nbsp;Group Manager</strong>) and all went well.</p>
+<p>And then I chatted with <em>his</em> manager (the <strong>Senior Director</strong>), and got all green lights.</p>
+<p>Finally, before I contrived a way to run into <em>his</em> manager (the <strong>Corporate Vice President of Development</strong>), he came to tak to us and do a Q&amp;A with the Windows International group.</p>
+<p>And he gave the lazy nod of approval for the project!</p>
+<p>Just to be sure the lazy nod of approval was genuine, I asked him privately after the Q&amp;A (sometimes,<strong>&nbsp;Corporate Vice Presidents of Development</strong>&nbsp;have to be more encouraging in public than they are in private to not seem like jerks).</p>
+<p>But the <strong>Corporate Vice President of Development</strong> confirmed the lazy nod. I shook his hand and said <strong>THANK YOU!</strong> and tried not to act like I had just scored a touchdown.</p>
+<p>Even though I totally did!</p>
+<p>So now I just need to revive the MSKLC project tree.</p>
+<p>And build two binaries (<strong>SETUP.EXE</strong> and <strong>KBDMSI.DLL</strong>)&nbsp;with the ARM compiler/linker.</p>
+<p>And pick up all the ARM cross compilers.</p>
+<p>And remove IA64 support from MSKLC.</p>
+<p>And&nbsp;maybe do some of the other bug fixes I mentioned in <strong><a title="The evolving Story of Locale Support, part 4 (working beyond one's bugs, and the case for an MSKLC update)" href="../../../2011/11/04/10233999.html">The evolving Story of Locale Support, part 4 (working beyond one's bugs, and the case for an MSKLC update)</a></strong>.</p>
+<p>And update the help file.</p>
+<p>And then try to convince&nbsp;someone to test the thing!</p>
+<p>And we may even have a conversation with someone from LCA or&nbsp;my manager's manager's manager's manager (that <strong>Corporate Vice President of Development</strong>)&nbsp;about <strong>in this one narrow case</strong> putting the special keys to avoid the need for a jailbreak to install&nbsp;a keyboard layout one creates, to install on a Surface RT.</p>
+<p>Disturbing the universe sure makes one busy, doesn't it?</p>
+<p>Guess I'd better go update those committments! :-)</p>
+<p>One thing that is <strong>not</strong> on the table here is&nbsp;trying to get MSKLC itself on the Surface RT. This would only be for the layouts (otherwise the test burden would be explosively more complicated).</p>
+<p><em>People who wanted to author the setup on their Surface RT will have to <strong>Remote Desktop</strong> to the other machine with MSKLC on it!</em></p>
+<p>But even with that simpler task, it is pretty complicated, as the single x86 SETUP.EXE that picks the right platform-specific MSI would never work on ARM.</p>
+<p>It will&nbsp;need its own bootstrapper SETUP.EXE to go with its MSI.</p>
+<p>And <strong>KBDUTOOL.EXE</strong> (the one binary that did most of the cross-architecture work before) will have to be taught all about ARM.</p>
+<p>This might take some time.</p>
+<p>Plus I have my <em>actual</em> job to do -- this is sort of as close to a&nbsp;sanctioned <strong><a title="What I'd do with my 'Microsoft 20% time'" href="../../../2011/12/23/10250600.html">20% time</a></strong> idea as I'm ever likely to get! :-)</p>
+<p>Stay tuned....</p>
+<hr/><p><strong>Doug Ewell</strong> on 11 Mar 2013 7:44 AM:</p><div style="margin-left: 1em"><p>For a moment, I imagined I saw something in there about updating MSKLC for plain old Windows as well. That would be a Good Thing™. BTW, MSKLC works for me again after upgrading from 7 to 8.</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 11 Mar 2013 7:57 AM:</p><div style="margin-left: 1em"><p>The update will also help the non Surface RT cases, too!</p>
+</div>
+<p><strong>Azarien</strong> on 11 Mar 2013 10:38 AM:</p><div style="margin-left: 1em"><p>This is great. I can&#39;t live without a 3rd party keyboard layout that I&#39;ve been using for years now :-)</p>
+</div>
+<p><strong>John Cowan</strong> on 11 Mar 2013 7:28 PM:</p><div style="margin-left: 1em"><p>Hurrah, hurrah!</p>
+</div>
+<p><strong>cheong00</strong> on 11 Mar 2013 7:47 PM:</p><div style="margin-left: 1em"><p>Great news.</p>
+<p>Hope Microsoft understands that for many people, their ability to type-in words will be seriously crippled without their familiar IME, therefore is a very important part of UX.</p>
+<p>It&#39;s very good investment to make a great OS even greater.</p>
+</div>
+<p><strong>Yuhong Bao</strong> on 12 Mar 2013 6:24 PM:</p><div style="margin-left: 1em"><p>&quot;(otherwise the test burden would be explosively more complicated).&quot;</p>
+<p>Why?</p>
+</div>
+<p><strong>Yuhong Bao</strong> on 12 Mar 2013 6:27 PM:</p><div style="margin-left: 1em"><p>So basically NtUserLoadKeyboardLayoutEx on RT will be changed to allow third party keyboard layouts, right? </p>
+</div>
+<p><strong>Alex Cohn</strong> on 12 Mar 2013 11:50 PM:</p><div style="margin-left: 1em"><p>Congrats!</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 13 Mar 2013 7:42 AM:</p><div style="margin-left: 1em"><p>&lt;the blog&gt; &quot;(otherwise the test burden would be explosively more complicated).&quot;</p>
+<p>&lt;Yuhong Bao&gt; Why?</p>
+<p>Having to test the full UI and all the functionality, not to mention everything the compiler (for ARM) and two cross-compilers (for x86 and x64) explodes testable scenarios by over 2000%, or more!</p>
+<p>&lt;Yuhong Bao&gt; So basically NtUserLoadKeyboardLayoutEx on RT will be changed to allow third party keyboard layouts, right? </p>
+<p>Not necessarily...</p>
+</div>
+<p><strong>Yuhong Bao</strong> on 13 Mar 2013 1:35 PM:</p><div style="margin-left: 1em"><p>I mean, how else will MSKLC created keyboard layouts be able to load on RT without jailbreaking? Of course, a MS-signed util would have to be created (if it does not already exist) to actually call this function. I wonder if you will do a blog post on how exactly it will work.</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 13 Mar 2013 3:02 PM:</p><div style="margin-left: 1em"><p>I imagine that I will!</p>
+</div>
+<hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2013/04/17 <a href="../../04/17/10411861.html">One of these days you'll want to stand back, as I am working to ARM myself with another Surface RT!</a></p></div><p><em>go to <a id="newer" href="../13/10401001.html" title="Sorting it all Out&#39;s [unoficial!] Windows Phone 8 World-Readiness Report Card">newer</a> or <a id="older" href="../../02/28/10398041.html" title="Why aren&#39;t there any Cherokee keyboard layouts on Windows Phone 8?">older</a> post, or back to <a href="../../../index-2.html">index</a> or <a href="../../../index-2.html#2013-03">month</a> or <a href="../../../index-2.html#2013-03-11">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2013/03/11/10400818.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:21 GMT -->
+</html>

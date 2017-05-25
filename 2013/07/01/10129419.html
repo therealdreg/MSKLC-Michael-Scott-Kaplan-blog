@@ -1,0 +1,74 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2013/07/01/10129419.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:47 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>UTF-8 default isn't in the latest Notepad, either</title></head><body>
+<h1>UTF-8 default isn't in the latest Notepad, either</h1>
+<p><em>by Michael S. Kaplan, published on 2011/02/15 07:01 -05:00, original URI: http://blogs.msdn.com/b/michkap/archive/2011/02/15/10129419.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<p>Allow me to intentionally misquote a West Wing episode I enjoyed:</p>
+<p style="padding-left: 30px;"><span style="font-family: times new roman,times;">Every once in a while, every once in a while, there's a bug report with an absolute right and an absolute wrong, but those reports almost always include blue screens of death. Other than that, there aren't very many un-nuanced bug reports in writing a blog that's way too big for ten words. I'm the author of Sorting it all Out, not the author of the readers who agree with me.</span></p>
+<p>That was fun. :-)</p>
+<p>It is true that I often start blogs with "simple questions" which turn out to have complicated answers.</p>
+<p>And when the answers are simple they usually are simple in a bad way: like the word <strong>NO</strong>.</p>
+<p>This is one of those blogs....</p>
+<p>The question, as you have probably gathered, was simple:</p>
+<p style="padding-left: 30px;"><em>Customer wants to automatically use UTF-8 when saving files with Notepad instead of ANSI by default.</em></p>
+<p>The answer is indeed that no, it isn't possible. This default is hard-coded into Notepad.</p>
+<p>They made the decision in 1993 when Notepad was added to NT 3.1, and have stuck to their guns -- even after UTF-8 support was added in 1998-1999.</p>
+<p>Sorry.</p>
+<p>Now as a workround, you <em>could</em> try the following:</p>
+<ol>
+<li>Create your own app to start every text file rather than starting them in Notepad directly;</li>
+<li>Add the UTF-8 BOM to this otherwise empty file you create;</li>
+<li>Hope they never start a new file in Notepad or fail to use your "Wolves' Highway" application.</li>
+</ol>
+<p>But in the end, there is no way to keep Chloe on the Wolves' Highway. That might be why she was shot and killed by ranchers.</p>
+<p>And why users will seldom follow the directions here, either....</p>
+<hr/><p><strong>Hiroshi</strong> on 15 Feb 2011 2:55 PM:</p><div style="margin-left: 1em"><p>This is a large inconvenience.</p>
+<p>I use Notepad pretty much daily, and most of my data is not in English.</p>
+<p>I manually need to select the UTF-8 encoding.</p>
+<p>Also, I often need to work with CSV data exports from customers in multiple countries in multiple languages.</p>
+<p>Very often there is &quot;mojibake&quot; since the data is saved in the local codepage. Very few are knowledgeable enough to understand how to save in a Unicode encoding, or even understand why they should. I need to switch the non-Unicode setting for my entire system several times a week to view and repair.</p>
+<p>Hopefully this can be improved in a future Windows.</p>
+<p>Also, at that time, please consider renaming &quot;Unicode&quot; and &quot;Unicode big endian&quot; to &quot;UTF-16 LE&quot; and &quot;UTF-16 BE&quot;, respectively.</p>
+</div>
+<p><strong>Yuhong Bao</strong> on 15 Feb 2011 5:27 PM:</p><div style="margin-left: 1em"><p>&quot;I need to switch the non-Unicode setting for my entire system several times a week to view and repair.&quot;</p>
+<p>I suggested adding a codepage number field in the Open dialog before so that the ACP won&#39;t have to be switched to do this.</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 15 Feb 2011 8:02 PM:</p><div style="margin-left: 1em"><p>The question was how to change the default to UTF-8 without changing it in the dialog; your suggestion would not have helped even if it had been done. :-)</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 15 Feb 2011 8:05 PM:</p><div style="margin-left: 1em"><p>Hiroshi,</p>
+<p>If you have characters outside the ACP, you are warned that data is not gong to be saved properly.</p>
+<p>We cannot rename the entries, most users do not understand the other terms; the few who do have no problems understanding the current behavior....</p></div>
+<p><strong>Cheong</strong> on 15 Feb 2011 9:43 PM:</p><div style="margin-left: 1em"><p>I&#39;m with YuHong Bao&#39;s suggestion even if it doesn&#39;t solve this particular problem.</p>
+<p>My files litterd in harddisk contains files in ANSI (Big5, GB2312, SJIS), Unicode, UTF-8. Each time I want to open them, if it&#39;s in one of the ANSI codepage range, I&#39;d usually need to fire up a web browser, switch to a correct code page, fire up notepad, and then copy and paste everything there. After finished editing, I&#39;ll save it as UTF-8.</p>
+<p>It&#39;d be great if I can switch the codepage be used to open file in notepad if I want to.</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 15 Feb 2011 10:07 PM:</p><div style="margin-left: 1em"><p>I understand. But let&#39;s try and keep this blog ON TOPIC. I&#39;ll talk about that issue another day....</p>
+</div>
+<p><strong>John Cowan</strong> on 16 Feb 2011 9:22 AM:</p><div style="margin-left: 1em"><p>Notepad is a joke. &nbsp;There are plenty of real plain-text editors, for every value of &quot;real&quot; from TextPad to Emacs.</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 16 Feb 2011 12:12 PM:</p><div style="margin-left: 1em"><p>It is the joke people keep wanting to <span style="color:#888888;"><span style="text-decoration:line-through;">tell</span></span>use, though....</p></div>
+<p><strong>Peter</strong> on 16 Feb 2011 12:21 PM:</p><div style="margin-left: 1em"><p>@John Cowan: Maybe I got you wrong, but TextPad is also a good example for bad Unicode support. For example it cannot process files with multiple scripts.</p>
+</div>
+<p><strong>GunSmoker</strong> on 21 May 2011 7:12 PM:</p><div style="margin-left: 1em"><p>BTW, any chance for this to change? It&#39;s 2011, not 1995 after all. Where can we vote for this? :)</p>
+<p>Well, if not default out-of-the-box - at least an option to do this. It should help a lot in multi-language world...</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 22 May 2011 2:52 AM:</p><div style="margin-left: 1em"><p>I doubt it will ever change.</p>
+</div>
+<p><strong>modernshoppers</strong> on 1 Jul 2013 12:35 AM:</p><div style="margin-left: 1em"><p>There is a simple fixer, to set Unicode(UTF8) as default for notepad -</p>
+<p>!!!!!!!!!!!!!!!!!!!!!!!!!</p>
+<p>!!!!!!!!!!!!!!!!!!!!!!!!!</p>
+<p>!!!!!!!!!!!!!!!!!!!!!!!!!</p>
+<p>!!!!!!!!!!!!!!!!!!!!!!!!!</p>
+<p>!!!!!!!!!!!!!!!!!!!!!!!!!</p>
+<p><a rel="nofollow" target="_new" href="http://www.softpedia.com/get/System/OS-Enhancements/Notepad-Default-UTF-8-Unicode-Creator.shtml">www.softpedia.com/.../Notepad-Default-UTF-8-Unicode-Creator.shtml</a></p>
+<p>!!!!!!!!!!!!!!!!!!!!!!!!!</p>
+<p>!!!!!!!!!!!!!!!!!!!!!!!!!</p>
+<p>!!!!!!!!!!!!!!!!!!!!!!!!!</p>
+<p>!!!!!!!!!!!!!!!!!!!!!!!!!</p>
+<p>!!!!!!!!!!!!!!!!!!!!!!!!!</p>
+<p>!!!!!!!!!!!!!!!!!!!!!!!!!</p>
+</div>
+<hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2013/07/17 <a href="http://archives.miloush.net/michkap/archive/2013/07/17/10434782.html">UTF-8 default isn't in the Windows 8.1 Notepad, either. As expected...</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2011/02/16/10130119.html" title="Windows the Enabler">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2011/02/14/10128621.html" title="There&#39;s no &quot;I&quot; in IDN, part 1: If you&#39;re not Unicode, you&#39;re just wrong!">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2011-02">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2011-02-15">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2013/07/01/10129419.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:47 GMT -->
+</html>

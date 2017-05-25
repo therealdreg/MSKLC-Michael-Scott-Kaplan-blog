@@ -1,0 +1,33 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2007/07/13/3837355.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:38 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>What the hell is up with Timor-Leste? [Microsoft edition]</title></head><body>
+<h1>What the hell is up with Timor-Leste? [Microsoft edition]</h1>
+<p><em>by Michael S. Kaplan, published on 2007/07/13 03:01 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2007/07/13/3837355.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P>It has been not quite a year since I first explained <A class="" href="http://archives.miloush.net/michkap/archive/2006/08/19/706950.html" mce_href="http://archives.miloush.net/michkap/archive/2006/08/19/706950.html"><STRONG>What the hell is up with Timor-Leste</STRONG></A>.</P>
+<P>Well, the other day a developer named Julie (not&nbsp;associated&nbsp;with any other developer named Julie who I have previously known) sent me some mail as she was having problems loading some of the Timor-Leste info via <A class="" href="http://msdn2.microsoft.com/library/ms776300.aspx" mce_href="http://msdn2.microsoft.com/library/ms776300.aspx">GetGeoInfo</A>.</P>
+<P>Basically all of the localized content like the GEO_FRIENDLYNAME and GEO_OFFICIALNAME <A class="" href="http://msdn2.microsoft.com/library/ms776305.aspx" mce_href="http://msdn2.microsoft.com/library/ms776305.aspx">SYSGEOTYPE</A> values, for a specific GEOID value. The one for Timor-Leste.</P>
+<P>Hmmm, I wondered. Did somebody break this?</P>
+<P>The&nbsp;comment in the .RC file seemed intact:</P>
+<BLOCKQUOTE>
+<P><FONT face="consolas,lucida console,courier new,courier"><STRONG><FONT color=#009900>&nbsp;&nbsp;&nbsp; // Resources are in &lt;= 0xffff, so this one will be clipped to 16 bits, however<BR>&nbsp;&nbsp;&nbsp; // GetGeoInfo(0x6f60e7) will still return the correct value<BR></FONT>&nbsp;&nbsp;&nbsp; 0x6f60e7, L"$$$$$Democratic Republic of Timor-Leste"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <FONT color=#9900ff>// this one is out of bounds !!</FONT></STRONG></FONT></P></BLOCKQUOTE>
+<P>The bit in <STRONG><FONT face=Consolas color=#9900ff>purple</FONT></STRONG> was added years ago (I was investigating it at the time I wrote that first&nbsp;blog post)&nbsp;and the bit in <STRONG><FONT face=Consolas color=#009900>green</FONT></STRONG> was added by another developer earlier this year to clarify the [expected] behavior. </P>
+<P>I had never added dev unit tests for this even when I was looking at it,&nbsp;but I did talk to a tester at the time and she verified that it was not being caught by automation. Though she said she'd follow up on that, the tester who I had originally talked to was no longer in the group, so I didn't know what the test coverage situation was. Suddenly I realized that this is how things get missed. :-(</P>
+<P>Then I looked at the code and noticed an interesting head check that then developer Julie (another Julie, the one who runs our org, and the one who put in the <STRONG><FONT face=Consolas color=#9900ff>purple</FONT></STRONG> comment!) put in way back in the end of 2000:</P>
+<BLOCKQUOTE>
+<P><FONT face="consolas,lucida console,courier new,courier"><STRONG>&nbsp;&nbsp;&nbsp; //&nbsp; Make sure we're not hitting the GEO ID that is out of bounds.<BR>&nbsp;&nbsp;&nbsp; //<BR>&nbsp;&nbsp;&nbsp; //&nbsp; !!! NOTE !!! This is needed because the East Timor Geo Id<BR>&nbsp;&nbsp;&nbsp; //&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; is out of bounds and wraps to 0x60e7.<BR>&nbsp;&nbsp;&nbsp; //<BR>&nbsp;&nbsp;&nbsp; if (ResourceID == 0x60e7)<BR>&nbsp;&nbsp;&nbsp; {<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; return (0);<BR>&nbsp;&nbsp;&nbsp; }</STRONG></FONT></P></BLOCKQUOTE>
+<P>So it was basically failing the call and had been doing so for as long as GEO support has been in Windows XP -- just for the localized name entries.</P>
+<P>Which ironically would have worked had this check never been added,&nbsp;due to the way <A class="" href="http://msdn2.microsoft.com/library/ms647486.aspx" mce_href="http://msdn2.microsoft.com/library/ms647486.aspx">LoadString</A>&nbsp;and Win32 string tables silently&nbsp;truncate entries into a USHORT.</P>
+<P>And which was missed by a lot of people after that, each of whom assumed that the comment meant the issue had been investigated and determined to not be a problem. :-)</P>
+<P>You can see this bug in Regional Options, when you look at the Region settings, which are missing an entry for Timor-Leste:</P>
+<P><IMG height=823 src="http://trigeminal.fmsinc.com/images/timorXP.png" width=434></P>
+<P><EM>(the screenshot is XP SP2 but the behavior is the same in Server 2003 and Vista)</EM></P>
+<P>So anyway, I&nbsp;sent mail to the first Julie (the one who&nbsp;asked me the question),&nbsp;explaining that there was this problem and that I'd get the bug reported for a future version. </P>
+<P>And a blog post describing the whole story, which you are reading now.</P>
+<P>I mean, how often does one developer Julie report a bug caused by code written by a different developer Julie? :-)</P>
+<P>The interesting question is how to work around this problem. Perhaps another day....</P>
+<P mce_keep="true">&nbsp;</P>
+<P><FONT color=#ff00ff><EM>This post brought to you by</EM> <FONT size=5>J</FONT> <EM>(<A class="" href="http://www.fileformat.info/info/unicode/char/004a" mce_href="http://www.fileformat.info/info/unicode/char/004a">U+004a</A>, a.k.a. LATIN CAPITAL LETTER J)</EM></FONT></P>
+<hr/><div style="margin-left: 1em"><em>no comments</em></div><hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2008/03/22 <a href="http://archives.miloush.net/michkap/archive/2008/03/22/8330506.html">GetGeoInfo is a mostly useless bloody waste of a function that only a "B" Ark Golgafrincham could love</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2007/07/13/3849288.html" title="What does DAO have that ADO/ADOx/JRO do not?">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2007/07/12/3829450.html" title="Wait til you see my &#39;O&#39;[EMCP based technology]">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2007-07">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2007-07-13">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2007/07/13/3837355.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:38 GMT -->
+</html>

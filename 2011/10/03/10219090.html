@@ -1,0 +1,31 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2011/10/03/10219090.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Never doubt that a program like Notepad can change the world. Indeed, it is of the only things that ever has!</title></head><body>
+<h1>Never doubt that a program like Notepad can change the world. Indeed, it is of the only things that ever has!</h1>
+<p><em>by Michael S. Kaplan, published on 2011/10/03 14:01 +00:00, original URI: http://blogs.msdn.com/b/michkap/archive/2011/10/03/10219090.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostGoogleFeed -->
+<p>The question came in just the other day:</p>
+<p style="padding-left:60px"><span style="font-family:times new roman,times">...customer says that when they specify a page as “UTF-8N”, it doesn’t render correctly on IE, but does on other browsers.  I searched for “UTF-8N” and found references only on Japanese-language pages.  The one English-language reference I found is <a href="http://social.msdn.microsoft.com/Forums/en/csharplanguage/thread/7a9decde-25c1-439e-8110-212eed64f371">this one</a> where someone claimed that “UTF-8N” is simply UTF-8 without a BOM.  Is that true?  (How could anyone expect such a scheme to work?)  Do we explicitly not support “UTF-8N”?  Do we differ from competitors in this regard?</span></p>
+<p>Peter pointed out what UTF-8N is:</p>
+<p style="padding-left:30px">UTF-8N was a proprietary designation that once appeared in some IBM documentation. It is <b>not</b> a valid charset identifier for use in HTML or XML. Valid charset identifiers are registered with IANA and can be found in this registry page:`</p>
+<p style="padding-left:30px"><a href="http://www.iana.org/assignments/character-sets">http://www.iana.org/assignments/character-sets</a></p>
+<p style="padding-left:30px">This is specified, for instance, in section 5.2 of the HTML 4.1 spec: </p>
+<p style="padding-left:30px"><a href="http://www.w3.org/TR/1999/REC-html401-19991224/charset.html">http://www.w3.org/TR/1999/REC-html401-19991224/charset.html</a></p>
+<p>Now in the original thread it was NaseerBatt who pointed out the same meaning, without mentioning the "non-standard nature" of it:</p>
+<div style="padding-left:60px"><em><span style="font-family:times new roman,times">UTF-8 without BOM is UTF-8N .Do you mean there no in-built mechanism or hack in C#/.NET that helps to detect this encoding (UTF-8N)?</span></em></div>
+<p> Now the issue of the UTF-8 BOM is an interesting one that Microsoft has been in the center of since the beta of Windows 2000, where Notepad changed the world in its simple decision to always emit the Byte Order Mark (BOM) and time you save a file as UTF-8.</p>
+<p>It made life easier fr many people working on other Microsoft products, since it is faster to work with the first few bytes of a file than to validate the encoding of the entire file.</p>
+<p>Though outside of Microsoft, it isn't as well thought of.</p>
+<p>So why do some other browsers seem to support if but not IE?</p>
+<p>Well, remember that you can always have UTF-8 without a BOM -- in fact many people often prefer it.</p>
+<p>Now there are two ways to deal with an HTML document that has a non-official "UTF-8N" encoding tag:</p>
+<ul>
+<li>You can treat the file as some default encoding like ISO-8859-1 or Windows CP1252, or the CP_ACP, or</li>
+<li>You an go through the various encoding detection steps that you would if there was no encoding tag.</li>
+</ul>
+<p>There are strong philosophical issues underlying the choice of approaches. including the one that happens to appear to be used by IE this case: if the text is mislabeled, don't try to do any further work....</p>
+<p>In the end, the best answer is to probably just don't tag text inappropriately....</p>
+<p>I won't suggest inserting a BOM in front of UTF-8 unless you're sure you won't start complaining about why that's a bad idea.</p>
+<hr/><div style="margin-left: 1em"><em>comments not archived</em></div><hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2011/10/04/10219770.html" title="I can&#39;t _____ [an MS rant]">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2011/09/30/10218499.html" title="Locale vs. UI Language, and the downside of flexibility">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2011-10">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2011-10-03">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2011/10/03/10219090.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+</html>

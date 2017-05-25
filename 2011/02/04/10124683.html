@@ -1,0 +1,50 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2011/02/04/10124683.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Whatever happened to EUROCONVERT?</title></head><body>
+<h1>Whatever happened to EUROCONVERT?</h1>
+<p><em>by Michael S. Kaplan, published on 2011/02/04 07:01 -05:00, original URI: http://blogs.msdn.com/b/michkap/archive/2011/02/04/10124683.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<p>The question that came to me via the C<strong>ontacting Michael...</strong> link was:</p>
+<p style="padding-left: 30px;"><em>What happened to all of the Euro conversion precision work? Why hasn't it been updated?</em></p>
+<p>Ah, life without questions you wish no one ever asked would be so very very dull, would it not? :-)</p>
+<p>Let me start by saying that I am not a lawyer, and that my knowledge of the currency market and the conversion thereof would shame me in front of my friend Monica were it not for the fact that she already knows I am retarded in such matters.</p>
+<p>In fact my primary skill in these matters is in not bouncing checks!</p>
+<p>So while you may be reading this for amusement, entertainment, or education, if there are legal or compliance reasons that you are seeking this information you should consider making contact with someone who know what they are taking about when it comes to financial matters as a prt of their professional responsibilities.</p>
+<p>With all that said, let me explain....</p>
+<hr />
+<p>You see, when the Euro first came out there was a lot of concern about all of the various pieces of financial information stored in programs like Excel and Access. </p>
+<p>And given the varying exchange rates between the different currencies, there was more than a little stress surrounding the way one would do the conversion between these currencies and the Euro.</p>
+<p>Thus in Excel the EUROCONVERT function was added (and in Access an object model method was added that makes the same underlying call).</p>
+<p>It's description:</p>
+<p style="PADDING-LEFT: 60px">Converts a number to euros, converts a number from euros to a euro member <br />currency, or converts a number from one euro member currency to another by <br />using the euro as an intermediary (triangulation). The currencies available for <br />conversion are those of European Union (EU) members that have adopted the <br />euro. The function uses fixed conversion rates that are established by the EU.</p>
+<p>The function signature:</p>
+<p style="PADDING-LEFT: 60px; FONT-FAMILY: "><span style="font-family: courier new,courier;"><strong>EUROCONVERT(number,source,target,full_precision,triangulation_precision)</strong></span></p>
+<p>You can get info on the parameters and how they work <a href="http://office.microsoft.com/en-us/excel-help/euroconvert-function-HP010342482.aspx?CTT=5&amp;origin=HP010342161">here</a>&nbsp;in the docs. it goes on for some time about all it does relating to EU law and such.</p>
+<p>Now what are the important points to keep in mind?</p>
+<ul>
+<li>This information has largely been removed from docs in later versions of Excel;</li>
+<li>It was removed entirely from Project;</li>
+<li>It was removed&nbsp;from the docs in Access;</li>
+<li>The list of currencies has not been updated in the docs since that time; </li>
+<li>Presumably it was not updated to support other currencies themselves, either.</li>
+</ul>
+<p>So how can a method presumably added for compliance be so marginalized by a Microsoft product, if Microsoft is not trying to get in trouble with the European Union?</p>
+<p>A funny thing happened with all of these rules, you know.</p>
+<p>Everybody hated them, they were insanely complicated and difficult to maintain.</p>
+<p>Well, maybe not everybody. I mean, I don't know every single person.</p>
+<p>But the people I talked to hated it all.</p>
+<p>So the EU put together some formal guidelines that would scale better. Pages <a href="http://ec.europa.eu/economy_finance/euro/adoption/conversion/index_en.htm">like this</a> one explain it well, and given the way it stresses <strong>significant figures (rather than decimal points)</strong>it gets away from the need to define the bove info on decimal places to hang on to and such.</p>
+<p>Now where does this leave the tool -- is it bogus now?</p>
+<p>Actually, no. The old rules were applications of analogous principles, thus the same results would be returned either way. It's just that one way requires one to carry around a lot of per-currency table entries&nbsp;and get new entries as new currencies were added. The new method requires none of that....</p>
+<p>You can think of it as the classic difference between an algorithmic vs. a table-based approach!</p>
+<p>So the fact that EUROCONVERT/EuroConvert have not been updated but have been marginalized is really okay here. The EU moved on to doing things in a better way.</p>
+<p><em>The above describes how the situation was explained to me; if it is wrong then my sin is in who I chose to believe. :-)</em></p>
+<hr/><p><strong>John Cowan</strong> on 4 Feb 2011 9:41 AM:</p><div style="margin-left: 1em"><p>Well, someone has to carry around those 6-digit conversion factors just the same, and update them as new currencies are added to the euro area.</p>
+</div>
+<p><strong>carlos</strong> on 4 Feb 2011 9:57 AM:</p><div style="margin-left: 1em"><p>The explanation is much simpler than that. &nbsp;This function was used for converting between the now defunct European currencies (Franc, Lira, Peseta, etc.) during to the transition to the Euro. &nbsp;The conversion happened almost a decade ago, so nobody cares now how many Liras there were in a Deutsche Mark or whatever.</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 4 Feb 2011 10:28 AM:</p><div style="margin-left: 1em"><p>Carlos, new countries have been added to the Euro zone since then, some this very year (Estonia, anyone?). This is an active issue.</p>
+</div>
+<hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2011/02/05/10125236.html" title="I serve at the pleasure of the customer (except maybe when they annoy me?)">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2011/02/03/10124048.html" title="Mike Myers is the one who who brought deeper (if not subtler) meaning. WTF?">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2011-02">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2011-02-04">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2011/02/04/10124683.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+</html>

@@ -1,0 +1,42 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2006/01/23/515987.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:40 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>It is not just the good SQL queries that have trouble, sometimes</title></head><body>
+<h1>It is not just the good SQL queries that have trouble, sometimes</h1>
+<p><em>by Michael S. Kaplan, published on 2006/01/23 03:01 -05:00, original URI: http://blogs.msdn.com/b/michkap/archive/2006/01/23/515987.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P><FONT face=Tahoma>It was way back in March of 2005 that I talked about a class of problems in a post entitled <A href="http://archives.miloush.net/michkap/archive/2005/03/11/394359.html"><STRONG>When good SQL queries have trouble</STRONG></A>.</FONT></P>
+<P><FONT face=Tahoma>In that post I contrasted the behavior of SQL Server and the behavior of&nbsp;</FONT><FONT face=Tahoma>.NET and I made the claim that </FONT><FONT face=Tahoma>SQL Server would never see the individual characters where .NET always would.</FONT></P>
+<P><FONT face=Tahoma>Allow me to correct myself a little bit. :-)</FONT></P>
+<P><FONT face=Tahoma>I will suggest some different strings:</FONT></P>
+<BLOCKQUOTE dir=ltr style="MARGIN-RIGHT: 0px">
+<P><FONT face="Courier New"><STRONG>เก์&nbsp;&nbsp;&nbsp;&nbsp;U+0e40 U+0e01 U+0e4c&nbsp;&nbsp;&nbsp;&nbsp; (THAI CHARACTER SARA E +&nbsp;THAI CHARACTER KO KAI +&nbsp;THAI CHARACTER THANTHAKHAT)</STRONG></FONT></P>
+<P><FONT face="Courier New"><STRONG>ก์&nbsp;&nbsp;&nbsp;&nbsp; U+0e01 U+0e4c&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (THAI CHARACTER KO KAI +&nbsp;THAI CHARACTER THANTHAKHAT)</STRONG></FONT></P></BLOCKQUOTE>
+<P><FONT face=Tahoma>There are two important differences with these two strings:</FONT></P>
+<OL>
+<LI><FONT face=Tahoma>Both of these combinations exist in the compression tables for Thai, and</FONT> 
+<LI><FONT face=Tahoma>one is actually a subset of the other.</FONT></LI></OL>
+<P><FONT face=Tahoma>So, when looking at the following code:</FONT></P>
+<BLOCKQUOTE dir=ltr style="MARGIN-RIGHT: 0px">
+<P><STRONG><FONT face="Courier New">using System;<BR>using System.Globalization;</FONT></STRONG></P>
+<P><STRONG><FONT face="Courier New">CompareInfo ci = CompareInfo.GetCompareInfo("th-TH");</FONT></STRONG></P>
+<P><STRONG><FONT face="Courier New">Console.WriteLine(ci.IndexOf("0123\u0e40\u0e01\u0e4c456", "\u0e40"));<BR>Console.WriteLine(ci.IndexOf("0123\u0e40\u0e01\u0e4c456", "\u0e01"));<BR>Console.WriteLine(ci.IndexOf("0123\u0e40\u0e01\u0e4c456", "\u0e4c"));</FONT></STRONG></P></BLOCKQUOTE>
+<P><FONT face=Tahoma>What will be seen in the console will not be what you get for the non-Thai and the binary cultures:</FONT></P>
+<BLOCKQUOTE dir=ltr style="MARGIN-RIGHT: 0px">
+<P><FONT face="Courier New"><STRONG>4<BR>5<BR>6</STRONG></FONT></P></BLOCKQUOTE>
+<P><FONT face=Tahoma>For Thai, it will instead be:</FONT></P>
+<BLOCKQUOTE dir=ltr style="MARGIN-RIGHT: 0px">
+<P><FONT face="Courier New">-1<BR>-1<BR>6</FONT></P></BLOCKQUOTE>
+<P><FONT face=Tahoma>The set up for the post probably gives away the reason -- if a compression in seen that starts off with the character for which the search is happening, then it will not see the individual character. But anytime the character being seached for is not the start of a compression, then the search attempt succeeds.</FONT></P>
+<P><FONT face=Tahoma>This is clearly an implementation-specific issue, just like the original SQL Server one. Though the .NET Framework issue makes me a little more uncomfortable since if you are looking at it from a black box testing point of view, there is a real inconsistency that is hard to get a good handle on. Though the advice of the original post does help reassure me somewhat:</FONT></P>
+<BLOCKQUOTE dir=ltr style="MARGIN-RIGHT: 0px">
+<BLOCKQUOTE dir=ltr style="MARGIN-RIGHT: 0px">
+<P><EM><FONT size=2>People who use these languages understand why certain groupings of characters behave a particular way.</FONT></EM><FONT face=Tahoma></FONT></P></BLOCKQUOTE></BLOCKQUOTE>
+<P><FONT face=Tahoma>Since those people would not expect to find these cases ever, they won't usually be surprised when they are missed (and when they are hit, some sort of assumption about an over-eager program will probably be assumed).</FONT></P>
+<P><FONT face=Tahoma>Which is not to say that it isn't a bug, or that some thought into fixing it should be considered. It just explains why it has never been reported before even though it has existed in Windows for as long as compression have! :-)</FONT></P>
+<P><FONT face=Tahoma><EM>(Thanks once again to Ryan Cavalcante for managing to ferret out a hard to find issue that led to finding another not-entirely-related one!)</EM></FONT></P>
+<P><FONT face=Tahoma></FONT>&nbsp;</P>
+<P><FONT face=Tahoma color=#ff1493><EM>This post brought to you by</EM> "เ" <EM>(<A href="http://www.fileformat.info/info/unicode/char/0e40">U+0e40</A>, a.k.a. THAI CHARACTER SARA E)</EM></FONT></P>
+<P><FONT face=Tahoma></FONT>&nbsp;</P>
+<hr/><div style="margin-left: 1em"><em>no comments</em></div><hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2006/01/24/516661.html" title="Invariant is a really good choice (any time there is no better choice)">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2006/01/22/515864.html" title="Questions about font linking, etc.">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2006-01">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2006-01-23">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2006/01/23/515987.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:40 GMT -->
+</html>

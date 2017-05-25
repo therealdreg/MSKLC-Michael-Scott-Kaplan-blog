@@ -1,0 +1,122 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2012/08/01/10335466.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:31 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>When my decisions come back to haunt me (and/or others!)</title></head><body>
+<h1>When my decisions come back to haunt me (and/or others!)</h1>
+<p><em>by Michael S. Kaplan, published on 2012/08/01 07:01 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2012/08/01/10335466.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<p>A little over two half decades ago, I made a particular technical decision for a project I was working on at Microsoft.</p>
+<p>I mention the reason over a half decade ago in a blog in this Blog o' mine.</p>
+<p>And a little under two days ago, a blog by Eric Lawrence brought it all home to roost.</p>
+<p>His blog on <a title="EricLaw's IEInterals" href="http://blogs.msdn.com/b/ieinternals/">EricLaw's IEInterals</a> titled <a title="Brain Dump: Shims, Detours, and other 'magic'" href="http://blogs.msdn.com/b/ieinternals/archive/2012/07/31/internet-explorer-compatibility-detours-shims-virtualization-for-toolbars-activex-bhos-and-other-native-extensions.aspx">Brain Dump: Shims, Detours, and other &ldquo;magic&rdquo;</a> is a good read, and describes a fascinating bug involving IE10, a third party extension IE10 ships, and MSLU, the Microsoft Layer for Unicode.</p>
+<p>You can read the full blog (it's a good read!) but I'll quote the relevant portion here:</p>
+<p style="padding-left: 60px;"><span style="font-family: times new roman,times; font-size: small;">I spent several hours pondering this question and aimlessly touring around in the debugger. I was whining about this scenario to a colleague, complaining about code so ancient that it was shipping with unicows.dll, when I realized that I&rsquo;d never used this library myself, and in fact I&rsquo;d never seen a toolbar use it before. When trying to explain what it did to the colleague, I decided that I&rsquo;d probably stop hand-waving and pulled up unicows up on Wikipedia. And bam, there it was, plain as day:&nbsp;</span></p>
+<p style="padding-left: 120px;"><em><span style="font-family: times new roman,times; font-size: small;">By adding the UNICOWS.LIB to the link command-line [ ... ] the linker will resolve referenced symbols with the one provided by UNICOWS.LIB instead. When a wide-character function is called for the first time at runtime, the function stub in UNICOWS.LIB first receives control and [ ... ] if the OS natively supports the W version (i.e. Windows NT/2000/XP/2003), then the function stub updates the in-memory import table so that future calls will directly invoke the native W version without any more overhead.</span></em></p>
+<p style="padding-left: 60px;"><span style="font-family: times new roman,times; font-size: small;">&hellip;and there&rsquo;s the problem!</span></p>
+<p style="padding-left: 60px;"><span style="font-family: times new roman,times; font-size: small;">When IE first loads a toolbar, the shims run against the module and wrap all calls to CreateWindow with a call to the compatibility wrapper function. But when IE loaded this toolbar, it didn&rsquo;t find any calls to CreateWindow, because those calls had been pointed at a function inside unicows.dll instead of at the original function in user32.dll. As a result, the compatibility shim wasn&rsquo;t applied, and the function call failed.</span></p>
+<p style="padding-left: 60px;"><span style="font-family: times new roman,times; font-size: small;">Now, this wouldn&rsquo;t have happened if unicows did its import-table fixup the &ldquo;normal&rdquo; way, using the GetProcAddress function. That's because the compatibility shims are applied to GetProcAddress as well, and the fixup would have been applied properly at the time that unicows did the update of the import table. However, for reasons lost to the mists of time, the implementers of unicows instead copied the source code of GetProcAddress from user32 into their own DLL, so the shims had no way to recognize it. While we could add a new shim to handle unicows.dll, the obscurity and low priority of this scenario mean that we instead decided to outreach to the vendor and request that they update their build process to remove the long-defunct support for Windows &lsquo;9x.</span></p>
+<p>Well, I'll object a little about the characterization that things that feel so recent to me are "lost to the mists of time". :-)</p>
+<p>Though I won't complain too much, since the issue in question caused him to be randomized so obnoxiously!</p>
+<p>The blog my mine that covers the issue is from point one of May of 2005's <strong><a title="Why does MSLU wrap ________ ?" href="../../../2005/05/04/414562.html">Why does MSLU wrap ________ ?</a></strong>:</p>
+<p style="padding-left: 60px;"><span style="font-family: times new roman,times; font-size: medium;">1) There is, for example, the GetProcAddress function. It takes a string, but never a Unicode string, on NT or otherwise. So why would it need to be wrapped?</span><br />&nbsp;<br /><span style="font-family: times new roman,times; font-size: medium;">Well, it turns out that the GetMonitorInfo function, defined in multimon.h, is not just a simple prototype. There is a bunch of complex code in it that conditionally calls various APIs, including GetProcAddress, to get a function pointer to replace any call to GetMonitorInfo. Because of this, MSLU could not wrap the GetMonitorInfo function, because the wrapper would never be used. The only way to allow the to wrapper to work was to wrap GetProcAddress and look for where someone was trying to retrieve the address of GetMonitorInfoA or GetMonitorInfoW!</span></p>
+<p>This was back in the heady days when I had the DaveC like power to have influence on pretty much any function in&nbsp;multiple versions of Windows.</p>
+<p>Even if the versions were Windows 95, Windows 98, and Windows Me.</p>
+<p>I suppose there is a small procedural problem with trusting&nbsp;a troubled&nbsp;perfectionist such&nbsp;as myself&nbsp;to act as&nbsp;sole architect/program manager,&nbsp;principal developer, and&nbsp;only tester on a project.</p>
+<p>But my manager at the time had quite a knack for making me feel slightly&nbsp;foolish while asking questions that in retrospect seem quite reasonable like</p>
+<p style="padding-left: 30px;"><em>Don't we need someone with PM experience here?</em></p>
+<p>or</p>
+<p style="padding-left: 30px;"><em>Should I really be in the only one in charge of testing&nbsp; code I wrote myself?</em></p>
+<p>while simultaneously making me feel like I could get the job done.</p>
+<p>So perhaps I can be forgiven this particular sin.</p>
+<p>Though really I think I owe Eric lunch one of these days to apologize.</p>
+<p>Eric -- sorry about that! Call me after I get back from Brisbane in a couple of weeks! :-)</p>
+<hr/><p><strong>Yuhong Bao</strong> on 1 Aug 2012 10:10 AM:</p><div style="margin-left: 1em"><p>So why couldn&#39;t MSLU call through to the OS GetProcAddress function?</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 1 Aug 2012 10:41 AM:</p><div style="margin-left: 1em"><p>Because there was no way to hook the multimon functions without hooking GetProcAddress.</p>
+</div>
+<p><strong>Yuhong Bao</strong> on 1 Aug 2012 12:21 PM:</p><div style="margin-left: 1em"><p>Why did that hook make it impossible?</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 1 Aug 2012 1:36 PM:</p><div style="margin-left: 1em"><p>If you look at the SDK header file for multimon, you&#39;ll understand. It contains complex delayload logic that unicows.lib could not change except by overriding GetProcAddress.</p></div>
+<p><strong>GregM</strong> on 1 Aug 2012 1:39 PM:</p><div style="margin-left: 1em"><p>When I first read that first sentence, my mind silently inserted &quot;and a&quot; between &quot;two&quot; and &quot;half&quot;, which made me wonder at how you were working at MS when you were 16. &nbsp;:)</p>
+</div>
+<p><strong>GregM</strong> on 1 Aug 2012 1:41 PM:</p><div style="margin-left: 1em"><p>Yuhong, it says right in the quoted article (or rather it says that no one knows why):</p>
+<p>However, ***for reasons lost to the mists of time***, the implementers of unicows instead copied the source code of GetProcAddress from user32 into their own DLL.</p>
+</div>
+<p><strong>Yuhong Bao</strong> on 1 Aug 2012 2:14 PM:</p><div style="margin-left: 1em"><p>I know. I am asking why the override make it impossible to call the *original OS* GetProcAddress function.</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 1 Aug 2012 2:20 PM:</p><div style="margin-left: 1em"><p>Check out the CODE in the header file, you will quickly understand. I promise. :-)</p>
+</div>
+<p><strong>GregM</strong> on 1 Aug 2012 7:27 PM:</p><div style="margin-left: 1em"><p>Yuhong, where did you read that it was impossible for MSLU to call GetProcAddress? &nbsp;All it says is that they didn&#39;t do it, and no one remembers why.</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 1 Aug 2012 9:33 PM:</p><div style="margin-left: 1em"><p>Actually, Eric saw that MSLU was wrapping it.</p>
+</div>
+<p><strong>Mike Dimmick</strong> on 2 Aug 2012 6:51 AM:</p><div style="margin-left: 1em"><p>The question is why the multiple monitor support did the strange thing. The answer is because multiple-monitor support was added in Windows 98 and the MultiMon.h header was written to detect whether real support was available, and fall back to a basic implementation if not.</p>
+<p>The implementation #defines GetMonitorInfo (for example) to xGetMonitorInfo, which is implemented in-line in the header. However, this is an ANSI/Unicode function due to the szDevice member of MONITORINFOEX. An ANSI build dynamically loads the underlying GetMonitorInfoA if it&#39;s available, while a Unicode build loads GetMonitorInfoW, which doesn&#39;t exist on Windows 98. In this case a Unicode program linked with unicows would not support multiple monitors (because the test is for the presence of that API) whereas the ANSI build would. The only way for MSLU to do the right thing is to intercept GetProcAddress.</p>
+<p>I&#39;d have to argue the case of whether this API really needed A/W variants since the szDevice field is the display driver name, not a user-generated name. Still, that&#39;s what was done and that&#39;s the compatibility issue.</p>
+</div>
+<p><strong>Joshua</strong> on 2 Aug 2012 3:58 PM:</p><div style="margin-left: 1em"><p>? When you hook a function you need to leave a way to call its base. Unicows.dll should have done it that way. It can still be fixed now since the only reason you care is for shims.</p>
+</div>
+<p><strong>GregM</strong> on 2 Aug 2012 5:28 PM:</p><div style="margin-left: 1em"><p>This is the section I was referring to:</p>
+<p>&quot;Now, this wouldn’t have happened if unicows did its import-table fixup the “normal” way, using the GetProcAddress function. That&#39;s because the compatibility shims are applied to GetProcAddress as well, and the fixup would have been applied properly at the time that unicows did the update of the import table. However, for reasons lost to the mists of time, the implementers of unicows instead copied the source code of GetProcAddress from user32 into their own DLL, so the shims had no way to recognize it. &quot;</p>
+<p>MSLU took over the GetProcAddress function, and then instead of calling the OS version of GetProcAddress when it determined that it wasn&#39;t a function that it cared about, it re-implemented GetProceAddress itself. &nbsp;Yuhong is asking why it couldn&#39;t call the OS version instead of implementing it itself. &nbsp;We don&#39;t know that it *couldn&#39;t*, we just know that it *didn&#39;t*. &nbsp;It could be that the author simply *thought* that it couldn&#39;t do so.</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 2 Aug 2012 8:03 PM:</p><div style="margin-left: 1em"><p>It was easier (well, better performance) to copy it then do a string compare on every call to check for a particular function...</p></div>
+<p><strong>EricLaw [ex-MSFT]</strong> on 3 Aug 2012 11:33 AM:</p><div style="margin-left: 1em"><p>Hi, Michael-- Thanks for sharing your insights on the history of this code! (FWIW, IE10 doesn&#39;t ship the extension in question, we just found it during our compat-test pass.)</p>
+</div>
+<p><strong>Alex Cohn</strong> on 3 Aug 2012 11:51 PM:</p><div style="margin-left: 1em"><p>I wonder, how many corporate intranets will get stuck with an older version of IE (and all the security holes involved) because they use a component linked with unicows.</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 5 Aug 2012 8:52 PM:</p><div style="margin-left: 1em"><p>Hey @Alex Cohn - as long as they ship the DLL, they&#39;ll be fine... :-)</p>
+</div>
+<p><strong>Alex Cohn</strong> on 6 Aug 2012 1:30 PM:</p><div style="margin-left: 1em"><p>No Michael, according to @EricLaw they&#39;re screwed because the new shims are necessary to make old components work in IE10, but they did not prepare shims for unicows </p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 6 Aug 2012 2:09 PM:</p><div style="margin-left: 1em"><p>They can simply remove unicows and be done with it.</p>
+</div>
+<p><strong>Alex Cohn</strong> on 6 Aug 2012 6:32 PM:</p><div style="margin-left: 1em"><p>Wait a sec... If a component was built to use unicows, can the &nbsp;corporate admin simply remove the dll after install? I guess, no. They can &nbsp;unicows with a dummy one, that does nothing. Or IE10 could seamlessly disable the dll.</p>
+<p>Current solution reqires rebuild of the component. Though trivial, it may not be possible in some corporate scenarios. They will try the new IE, find that it does not work, and fall back to old version.</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 7 Aug 2012 12:33 AM:</p><div style="margin-left: 1em"><p>Relink is your friend!</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 7 Aug 2012 12:37 AM:</p><div style="margin-left: 1em"><p>A corporate admin relying on a component still supporting Win9x is in a world of hurt here.</p>
+</div>
+<p><strong>Alex Cohn</strong> on 7 Aug 2012 12:00 PM:</p><div style="margin-left: 1em"><p>&quot; A corporate admin relying on a component still supporting Win9x is in a world of hurt&quot; - unless it was written in COBOL.</p>
+</div>
+<p><strong>John Kim</strong> on 25 Nov 2012 10:30 PM:</p><div style="margin-left: 1em"><p>Hello,</p>
+<p>I&#39;m a web based solution provider and recently have faced very difficult situation because our product use unicows.dll.</p>
+<p>Many of our customers cliam problems with IE10.</p>
+<p>They want to use IE10 on Windwos7.</p>
+<p>Of course we can rebuild our old product.</p>
+<p>However, It is difficult to replace old products on their production systems with rebuilded one.</p>
+<p>Sould we give up IE10?</p>
+<p>I&#39;m really tied up with this dilema.</p>
+<p>So I&#39;d like to get information about the official plan of Microsoft for this problem.</p>
+<p>Any advise from any of you will be highly appreciated.</p>
+</div>
+<p><strong>John Kim</strong> on 25 Nov 2012 10:35 PM:</p><div style="margin-left: 1em"><p>I&#39;m a web based solution provider and recently have faced very difficult situation because our product use unicows.dll.</p>
+<p>Many of our customers cliam problems with IE10.</p>
+<p>They want to use IE10 on Windwos7.</p>
+<p>Of course we can rebuild our old product.</p>
+<p>However, It is difficult to replace old products on their production systems with rebuilded one.</p>
+<p>Sould we give up IE10?</p>
+<p>I&#39;m really tied up with this dilema.</p>
+<p>So I&#39;d like to get information about the official plan of Microsoft for this problem.</p>
+<p>Any advise from any of you will be highly appreciated.</p>
+</div>
+<p><strong>John M Kim</strong> on 25 Nov 2012 10:47 PM:</p><div style="margin-left: 1em"><p>Hello,</p>
+<p>I&#39;m a web based solution provider and recently have faced very difficult situation because our product use unicows.dll.</p>
+<p>Many of our customers cliam problems with IE10.</p>
+<p>They want to use IE10 on Windwos7.</p>
+<p>Of course we can rebuild our old product.</p>
+<p>However, It is difficult to replace old products on their production systems with rebuilded one.</p>
+<p>Sould we give up IE10?</p>
+<p>I&#39;m really tied up with this dilema.</p>
+<p>So I&#39;d like to get information about the official plan of Microsoft for this problem.</p>
+<p>Any advise from any of you will be highly appreciated.</p>
+</div>
+<p><strong>John M Kim</strong> on 25 Nov 2012 11:09 PM:</p><div style="margin-left: 1em"><p>P.S.</p>
+<p>IE10 with Window8 also makes same problem.</p>
+</div>
+<p><strong>Yuhong Bao</strong> on 16 Apr 2013 4:27 PM:</p><div style="margin-left: 1em"><p>BTW, this code is actually in UNICOWS.LIB (I disassembled it). </p>
+<p>Trivia: A similar trick was used in Win9x to call undocumented functions in KERNEL32 that was exported only by ordinal, after a check was inserted into the KERNEL32 GetProcAddress against this during the Win95 betas.</p>
+</div>
+<hr/><p><em>go to <a id="newer" href="../02/10335988.html" title="Ya gotta have options, man!">newer</a> or <a id="older" href="../../07/31/10335040.html" title="Well we have over 75% of them covered, at least....">older</a> post, or back to <a href="../../../index-2.html">index</a> or <a href="../../../index-2.html#2012-08">month</a> or <a href="../../../index-2.html#2012-08-01">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2012/08/01/10335466.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:31 GMT -->
+</html>

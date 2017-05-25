@@ -1,0 +1,289 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2005/01/02/345393.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:42 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Culture names are <b>not</b> region names (and vice versa)</title></head><body>
+<h1>Culture names are <b>not</b> region names (and vice versa)</h1>
+<p><em>by Michael S. Kaplan, published on 2005/01/02 02:12 -05:00, original URI: http://blogs.msdn.com/b/michkap/archive/2005/01/02/345393.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P>Back in May of 2004, someone asked the following question in the newsgroups:</P>
+<BLOCKQUOTE dir=ltr>
+<P><EM><FONT size=2>I'm programming in ASP.NET. How could I convert my date to UK format ?<BR><BR>Thanks in advance.</FONT></EM></P></BLOCKQUOTE>
+<P>To which someone else suggested the following code:</P>
+<BLOCKQUOTE dir=ltr>
+<P><FONT size=2>DateTime x=DateTime.Now;<BR>string s=x.ToString(System.Globalization.CultureInfo.CreateSpecificCulture("uk").DateTimeFormat);</FONT></P></BLOCKQUOTE>
+<P>To&nbsp;his credit, this code was compiled and ran; in the end he was convinced he had the solution. </P>
+<P>However, there are many problems with this code:</P>
+<UL>
+<LI>He passed a region to <A title=CreateSpecificCulture href="http://msdn.microsoft.com/library/en-us/cpref/html/frlrfsystemglobalizationcultureinfoclasscreatespecificculturetopic.asp" target=_blank>CreateSpecificCulture</A>,&nbsp; which is expecting a possibly neutral culture (from which it would always return a non-neutral one) 
+<LI>He passed <STRONG>UK</STRONG> for Great Britain/England/United Kingdom&nbsp;and expected back results that match properties in England, which the ISO standard and .NET&nbsp;uses <STRONG>GB</STRONG> 
+<LI>He used&nbsp;the CreateSpecificCulture method at all in case where you want to get formatting for a specific location, since its behavior is to pick the first non-neutral culture.<FONT size=1><SUP>1</SUP></FONT></LI></UL>
+<P>So why did the code run, you may skeptically be thinking? Though probably not if you thought about the title of this post!</P>
+<P>Well, it has to with the overlap of ISO 639 (the two letter language codes) and ISO 3166 (the two letter region codes). Or in his case, using the wrong abbreviation in the wrong method and having it find some random region that happens to use the abbreviation (in this case the Ukranian neutral locale was being created).</P>
+<P>This is kinda unavoidable since </P>
+<OL>
+<LI>there are only so many two-letter combinations 
+<LI>language and country names are not always the same 
+<LI>there is at least an attempt to make the string choice for each somewhat meaningful 
+<LI>the two standards are handled by two different committees that do not work together on assignments</LI></OL>
+<P>See the following table for a list of the overlaps. The bad overlaps where you will get wrong results are marked in red.</P>
+<P>
+<TABLE class=MsoTableGrid cellSpacing=0 cellPadding=0>
+
+<TR>
+<TD>
+<P class=MsoNormal><B><I><SPAN><FONT size=2>Code<o:p></o:p></FONT></SPAN></I></B></P></TD>
+<TD>
+<P class=MsoNormal><B><I><SPAN><FONT size=2>Language<o:p></o:p></FONT></SPAN></I></B></P></TD>
+<TD>
+<P class=MsoNormal><B><I><SPAN><FONT size=2>Region<o:p></o:p></FONT></SPAN></I></B></P></TD></TR>
+<TR>
+<TD>
+<P class=MsoNormal><SPAN><FONT color=#ff0000>ar<o:p></o:p></FONT></SPAN></P></TD>
+<TD>
+<P class=MsoNormal><SPAN><FONT color=#ff0000>Arabic<o:p></o:p></FONT></SPAN></P></TD>
+<TD>
+<P class=MsoNormal><SPAN><FONT color=#ff0000>Argentina<o:p></o:p></FONT></SPAN></P></TD></TR>
+<TR>
+<TD>
+<P class=MsoNormal><SPAN>az<o:p></o:p></SPAN></P></TD>
+<TD>
+<P class=MsoNormal><SPAN>Azeri</SPAN><SPAN><o:p></o:p></SPAN></P></TD>
+<TD>
+<P class=MsoNormal><SPAN>Azerbaijan<o:p></o:p></SPAN></P></TD></TR>
+<TR>
+<TD>
+<P class=MsoNormal><SPAN><FONT color=#ff0000>be<o:p></o:p></FONT></SPAN></P></TD>
+<TD>
+<P class=MsoNormal><SPAN><FONT color=#ff0000>Belarusian<o:p></o:p></FONT></SPAN></P></TD>
+<TD>
+<P class=MsoNormal><SPAN><FONT color=#ff0000>Belgium<o:p></o:p></FONT></SPAN></P></TD></TR>
+<TR>
+<TD>
+<P class=MsoNormal><SPAN>bg<o:p></o:p></SPAN></P></TD>
+<TD>
+<P class=MsoNormal><SPAN>Bulgarian<o:p></o:p></SPAN></P></TD>
+<TD>
+<P class=MsoNormal><SPAN>Bulgaria<o:p></o:p></SPAN></P></TD></TR>
+<TR>
+<TD>
+<P class=MsoNormal><SPAN><FONT color=#ff0000>ca<o:p></o:p></FONT></SPAN></P></TD>
+<TD>
+<P class=MsoNormal><SPAN><FONT color=#ff0000>Catalan<o:p></o:p></FONT></SPAN></P></TD>
+<TD>
+<P class=MsoNormal><SPAN><FONT color=#ff0000>Canada<o:p></o:p></FONT></SPAN></P></TD></TR>
+<TR>
+<TD>
+<P class=MsoNormal><SPAN>de<o:p></o:p></SPAN></P></TD>
+<TD>
+<P class=MsoNormal><SPAN>German<o:p></o:p></SPAN></P></TD>
+<TD>
+<P class=MsoNormal><SPAN>Germany<o:p></o:p></SPAN></P></TD></TR>
+<TR>
+<TD>
+<P class=MsoNormal><SPAN>es<o:p></o:p></SPAN></P></TD>
+<TD>
+<P class=MsoNormal><SPAN>Spanish<o:p></o:p></SPAN></P></TD>
+<TD>
+<P class=MsoNormal><SPAN>Spain<o:p></o:p></SPAN></P></TD></TR>
+<TR>
+<TD>
+<P class=MsoNormal><SPAN>fi<o:p></o:p></SPAN></P></TD>
+<TD>
+<P class=MsoNormal><SPAN>Finnish<o:p></o:p></SPAN></P></TD>
+<TD>
+<P class=MsoNormal><SPAN>Finland<o:p></o:p></SPAN></P></TD></TR>
+<TR>
+<TD>
+<P class=MsoNormal><SPAN>fo<o:p></o:p></SPAN></P></TD>
+<TD>
+<P class=MsoNormal><SPAN>Faroese<o:p></o:p></SPAN></P></TD>
+<TD>
+<P class=MsoNormal><SPAN>Faroe Islands</SPAN><SPAN><o:p></o:p></SPAN></P></TD></TR>
+<TR>
+<TD>
+<P class=MsoNormal><SPAN>fr<o:p></o:p></SPAN></P></TD>
+<TD>
+<P class=MsoNormal><SPAN>French<o:p></o:p></SPAN></P></TD>
+<TD>
+<P class=MsoNormal><SPAN>France<o:p></o:p></SPAN></P></TD></TR>
+<TR>
+<TD>
+<P class=MsoNormal><SPAN>hr<o:p></o:p></SPAN></P></TD>
+<TD>
+<P class=MsoNormal><SPAN>Croatian<o:p></o:p></SPAN></P></TD>
+<TD>
+<P class=MsoNormal><SPAN>Croatia</SPAN><SPAN><o:p></o:p></SPAN></P></TD></TR>
+<TR>
+<TD>
+<P class=MsoNormal><SPAN>hu<o:p></o:p></SPAN></P></TD>
+<TD>
+<P class=MsoNormal><SPAN>Hungarian<o:p></o:p></SPAN></P></TD>
+<TD>
+<P class=MsoNormal><SPAN>Hungary</SPAN><SPAN><o:p></o:p></SPAN></P></TD></TR>
+<TR>
+<TD>
+<P class=MsoNormal><SPAN>id<o:p></o:p></SPAN></P></TD>
+<TD>
+<P class=MsoNormal><SPAN>Indonesian<o:p></o:p></SPAN></P></TD>
+<TD>
+<P class=MsoNormal><SPAN>Indonesia</SPAN><SPAN><o:p></o:p></SPAN></P></TD></TR>
+<TR>
+<TD>
+<P class=MsoNormal><SPAN>is<o:p></o:p></SPAN></P></TD>
+<TD>
+<P class=MsoNormal><SPAN>Icelandic<o:p></o:p></SPAN></P></TD>
+<TD>
+<P class=MsoNormal><SPAN>Iceland<o:p></o:p></SPAN></P></TD></TR>
+<TR>
+<TD>
+<P class=MsoNormal><SPAN>it<o:p></o:p></SPAN></P></TD>
+<TD>
+<P class=MsoNormal><SPAN>Italian<o:p></o:p></SPAN></P></TD>
+<TD>
+<P class=MsoNormal><SPAN>Italy<o:p></o:p></SPAN></P></TD></TR>
+<TR>
+<TD>
+<P class=MsoNormal><SPAN>lt<o:p></o:p></SPAN></P></TD>
+<TD>
+<P class=MsoNormal><SPAN>Lithuanian<o:p></o:p></SPAN></P></TD>
+<TD>
+<P class=MsoNormal><SPAN>Lithuania</SPAN><SPAN><o:p></o:p></SPAN></P></TD></TR>
+<TR>
+<TD>
+<P class=MsoNormal><SPAN>lv<o:p></o:p></SPAN></P></TD>
+<TD>
+<P class=MsoNormal><SPAN>Latvian<o:p></o:p></SPAN></P></TD>
+<TD>
+<P class=MsoNormal><SPAN>Latvia</SPAN><SPAN><o:p></o:p></SPAN></P></TD></TR>
+<TR>
+<TD>
+<P class=MsoNormal><SPAN>mk<o:p></o:p></SPAN></P></TD>
+<TD>
+<P class=MsoNormal><SPAN>Macedonian<o:p></o:p></SPAN></P></TD>
+<TD>
+<P class=MsoNormal><SPAN>FYROM</SPAN><SPAN><o:p></o:p></SPAN></P></TD></TR>
+<TR>
+<TD>
+<P class=MsoNormal><SPAN>mn<o:p></o:p></SPAN></P></TD>
+<TD>
+<P class=MsoNormal><SPAN>Mongolian<o:p></o:p></SPAN></P></TD>
+<TD>
+<P class=MsoNormal><SPAN>Mongolia</SPAN><SPAN><o:p></o:p></SPAN></P></TD></TR>
+<TR>
+<TD>
+<P class=MsoNormal><SPAN>nl<o:p></o:p></SPAN></P></TD>
+<TD>
+<P class=MsoNormal><SPAN>Dutch<o:p></o:p></SPAN></P></TD>
+<TD>
+<P class=MsoNormal><SPAN>The Netherlands</SPAN><SPAN><o:p></o:p></SPAN></P></TD></TR>
+<TR>
+<TD>
+<P class=MsoNormal><SPAN>no<o:p></o:p></SPAN></P></TD>
+<TD>
+<P class=MsoNormal><SPAN>Norwegian<o:p></o:p></SPAN></P></TD>
+<TD>
+<P class=MsoNormal><SPAN>Norway</SPAN><SPAN><o:p></o:p></SPAN></P></TD></TR>
+<TR>
+<TD>
+<P class=MsoNormal><SPAN><FONT color=#ff0000>pa<o:p></o:p></FONT></SPAN></P></TD>
+<TD>
+<P class=MsoNormal><SPAN><FONT color=#ff0000>Punjabi<o:p></o:p></FONT></SPAN></P></TD>
+<TD>
+<P class=MsoNormal><SPAN><FONT color=#ff0000>Panama</FONT></SPAN><SPAN><o:p></o:p></SPAN></P></TD></TR>
+<TR>
+<TD>
+<P class=MsoNormal><SPAN>pl<o:p></o:p></SPAN></P></TD>
+<TD>
+<P class=MsoNormal><SPAN>Polish<o:p></o:p></SPAN></P></TD>
+<TD>
+<P class=MsoNormal><SPAN>Poland</SPAN><SPAN><o:p></o:p></SPAN></P></TD></TR>
+<TR>
+<TD>
+<P class=MsoNormal><SPAN>pt<o:p></o:p></SPAN></P></TD>
+<TD>
+<P class=MsoNormal><SPAN>Portuguese<o:p></o:p></SPAN></P></TD>
+<TD>
+<P class=MsoNormal><SPAN>Portugal<o:p></o:p></SPAN></P></TD></TR>
+<TR>
+<TD>
+<P class=MsoNormal><SPAN>ro<o:p></o:p></SPAN></P></TD>
+<TD>
+<P class=MsoNormal><SPAN>Romanian<o:p></o:p></SPAN></P></TD>
+<TD>
+<P class=MsoNormal><SPAN>Romania</SPAN><SPAN><o:p></o:p></SPAN></P></TD></TR>
+<TR>
+<TD>
+<P class=MsoNormal><SPAN>ru<o:p></o:p></SPAN></P></TD>
+<TD>
+<P class=MsoNormal><SPAN>Russian<o:p></o:p></SPAN></P></TD>
+<TD>
+<P class=MsoNormal><SPAN>Russia</SPAN><SPAN><o:p></o:p></SPAN></P></TD></TR>
+<TR>
+<TD>
+<P class=MsoNormal><SPAN><FONT color=#ff0000>sa<o:p></o:p></FONT></SPAN></P></TD>
+<TD>
+<P class=MsoNormal><SPAN><FONT color=#ff0000>Sanskrit<o:p></o:p></FONT></SPAN></P></TD>
+<TD>
+<P class=MsoNormal><SPAN><FONT color=#ff0000>Saudi Arabia</FONT></SPAN></P></TD></TR>
+<TR>
+<TD>
+<P class=MsoNormal><SPAN>sk<o:p></o:p></SPAN></P></TD>
+<TD>
+<P class=MsoNormal><SPAN>Slovak<o:p></o:p></SPAN></P></TD>
+<TD>
+<P class=MsoNormal><SPAN>Slovakia</SPAN><SPAN><o:p></o:p></SPAN></P></TD></TR>
+<TR>
+<TD>
+<P class=MsoNormal><SPAN><FONT color=#ff0000>sv<o:p></o:p></FONT></SPAN></P></TD>
+<TD>
+<P class=MsoNormal><SPAN><FONT color=#ff0000>Swedish</FONT></SPAN></P></TD>
+<TD>
+<P class=MsoNormal><SPAN><FONT color=#ff0000>El Salvador</FONT></SPAN></P></TD></TR>
+<TR>
+<TD>
+<P class=MsoNormal><SPAN>th<o:p></o:p></SPAN></P></TD>
+<TD>
+<P class=MsoNormal><SPAN>Thai<o:p></o:p></SPAN></P></TD>
+<TD>
+<P class=MsoNormal><SPAN>Thailand<o:p></o:p></SPAN></P></TD></TR>
+<TR>
+<TD>
+<P class=MsoNormal><SPAN>tr<o:p></o:p></SPAN></P></TD>
+<TD>
+<P class=MsoNormal><SPAN>Turkish<o:p></o:p></SPAN></P></TD>
+<TD>
+<P class=MsoNormal><SPAN>Turkey<o:p></o:p></SPAN></P></TD></TR>
+<TR>
+<TD>
+<P class=MsoNormal><SPAN><FONT color=#ff0000>tt<o:p></o:p></FONT></SPAN></P></TD>
+<TD>
+<P class=MsoNormal><SPAN><FONT color=#ff0000>Tatar<o:p></o:p></FONT></SPAN></P></TD>
+<TD>
+<P class=MsoNormal><SPAN><FONT color=#ff0000>Trinidad and Tobago<o:p></o:p></FONT></SPAN></P></TD></TR>
+<TR>
+<TD>
+<P class=MsoNormal><SPAN>uz<o:p></o:p></SPAN></P></TD>
+<TD>
+<P class=MsoNormal><SPAN>Uzbek<o:p></o:p></SPAN></P></TD>
+<TD>
+<P class=MsoNormal><SPAN>Uzbekistan</SPAN><SPAN><o:p></o:p></SPAN></P></TD></TR></TABLE></P>
+<P>For the full lists of cultures and regions, see the <A title=CultureInfo href="http://msdn.microsoft.com/library/en-us/cpref/html/frlrfsystemglobalizationcultureinfoclasstopic.asp" target=_blank>CultureInfo</A> and <A title=RegionInfo href="http://msdn.microsoft.com/library/en-us/cpref/html/frlrfsystemglobalizationregioninfoclasstopic.asp" target=_blank>RegionInfo</A> help topics.</P>
+<P>This very non-bug has been reported internally by people wondering why creating a RegionInfo from a neutral (region-less) culture like "AR" was succeeding, as they were not thinking about how when you pass it to a RegionInfo you are not getting "Arabic" you are getting "Argentina".</P>
+<P>Of course, this is just a symptom about a larger problem that affects international testing in general, which I will be talking about in a future post. Think of this post as describing the tip of the iceberg. :-)</P>
+<P><EM><FONT size=2>1 - In this specific case the method would quite literally return the wrong results even if you passed the right language&nbsp;associated with the UK -- en, because the default culture returned from CreateSpecificCulture would be en-US, not en-GB.</FONT></EM></P>
+<P>&nbsp;</P>
+<P><FONT color=#800080><EM>This post sponsored by </EM>"o"<EM>, </EM>"ο"<EM>, and </EM>"о"<EM> (U+006f, U+03bf, and&nbsp;U+043e; a.k.a. LATIN SMALL LETTER O; GREEK SMALL LETTER OMICRON; CYRILLIC SMALL LETTER O).</EM></FONT></P>
+<hr/><p><a id="345401" href="#345401">#</a> <strong>Barry Dorrans</strong> on 2 Jan 2005 1:27 AM:</p><div style="margin-left: 1em">The whole GB/UK thing is one great big mess up caused by ISO and whoever requested GB in the first place.<br><br>They are actually different things. The UK is, roughly speaking, &quot;The United Kingdom of Great Britain and Nothern Ireland&quot; (plus some little islands dotted around the coast).<br><br>Domain names use UK, as politically speaking that's correct, otherwise anyone in Northern Ireland would be left without a region specific domain suffix. <br><br>However UK is not a valid country code in ISO 3166, it's GB or GBR. Janet (the academic network) where asked to persue ISO to see if GB could be switched to UK, but ISO politely said now. ISO don't seem to want to issue UK to anyone. For example Ukraine was given UA (although perhaps that makes sense culturally, I don't know what ukrainain for Ukraine is).<br><br>The arguement over .UK has been going on for at least 20 years. It would have been nice to have EN-UK as an &quot;alias&quot; for &quot;EN-GB&quot; in the .net framework, even if it wasn't strictly ISO compliant.<br><br>Just in case there are people out there who can't help reading imperialism into geography, I should point out the &quot;Great&quot; long predates the Empire, and is a geographical description to differentiate Great Britain from Little Britain (Brittany). <br></div>
+<p><a id="345436" href="#345436">#</a> <strong>Michael Kaplan</strong> on 2 Jan 2005 5:33 AM:</p><div style="margin-left: 1em">Well, it is best not to obsess about the two-letter code's letters *too* much. <br><br>Changing a code would affect a ton of processes and computer systems even for a country not often used -- for this one it would obviously be huge.<br><br>Here at Microsoft we get a lot of grief for when we do not following standards, and when there are times (like this one) that a standard will work but there may be a slightly &quot;nicer&quot; solution for customers, we have to weigh the cost/benefit of going with the standard. In the end it is just two letters, and they are in many cases arbitrary (UA for the Ukraine? Feh!).</div>
+<p><a id="345482" href="#345482">#</a> <strong>Christian Mogensen</strong> on 2 Jan 2005 11:24 AM:</p><div style="margin-left: 1em">Aliases are evil in cases like this.<br>What happens when the alias &quot;en-uk&quot; gets sent to another machine? Most likely the wrong thing. (Pounds get treated as dollars, centigrade as farenheit...)<br><br>So bravo for Microsoft for sticking to the list, even if it seems like an odd list.<br><br>I wonder if an enum would have been a better solution than the string codes we have ended up with?<br></div>
+<p><a id="345484" href="#345484">#</a> <strong>Michael Kaplan</strong> on 2 Jan 2005 11:39 AM:</p><div style="margin-left: 1em">The enum might have been possible, but it would not have been a very extensible solution when one considers the support for custom cultures that is being added to the 'Whidbey' release of the .NET Framework!</div>
+<p><a id="345500" href="#345500">#</a> <strong>Barry Dorrans</strong> on 2 Jan 2005 1:25 PM:</p><div style="margin-left: 1em">Custom cultures is an interesting one; you just know someone will do EN-UK within 20 seconds. You really can't win this one though, EN-GB means that there is, strictly speaking, no culture code for Northern Ireland.<br><br>Still, hopefully that'll make euro migration easier when it finally happens.</div>
+<p><a id="345508" href="#345508">#</a> <strong>Michael Kaplan</strong> on 2 Jan 2005 1:44 PM:</p><div style="margin-left: 1em">Indeed! And people will be able to do things such as that quite easily.<br><br>I'll be putting up some sample code that shows custom cultures off sometime soon, so people can see them in action.</div>
+<p><a id="345537" href="#345537">#</a> <strong>Michael Giagnocavo</strong> on 2 Jan 2005 4:30 PM:</p><div style="margin-left: 1em">Are custom cultures good as they sound? Meaning we can finally do es-US? <br><br>(I hope MSN picks up on this feature, as I'd like to give them my geographic location (GT) but without being sent Spanish content.)<br><br>BTW, why was ㅇ(U+3147 Hangul Letter Ieung) discriminated against for sponsorship?  <br></div>
+<p><a id="345560" href="#345560">#</a> <strong>Michael Kaplan</strong> on 2 Jan 2005 5:50 PM:</p><div style="margin-left: 1em">They are (in my opinion!). I do not know to what extent MSN is using managed code and cultures, and custom locales are still a ways off....<br><br>No discrimination, here -- its up to the characters to sponsor things. :-)</div>
+<p><a id="346649" href="#346649">#</a> <strong>Norman Diamond</strong> on 4 Jan 2005 5:54 PM:</p><div style="margin-left: 1em">Since the string &quot;UK&quot; is not the string &quot;UA&quot; and the string &quot;en-UK&quot; is not the string &quot;en-US&quot;, why did those function calls yield results?  Wouldn't straight error returns help programmers figure out that the correct solution is something else?<br><br>By the way, in the human readable (longer string) version of &quot;en-gb&quot;, do you know what &quot;B.K.&quot; stands for?  It sort of looks like someone took the second half of &quot;G.B.&quot; and the second half of &quot;U.K.&quot;.</div>
+<p><a id="346651" href="#346651">#</a> <strong>Michael Kaplan</strong> on 4 Jan 2005 6:03 PM:</p><div style="margin-left: 1em">Please read what was posted -- they are picking up the UKRANIAN LANGUAGE (which is UK) not the UKRAINE REGION (which is UA).<br><br>Tf you call the wrong method and you pass yh wrong parameter, how surpised should you be if you get the wrong results?<br><br>And how can we know that it was a mistake, anyway?</div>
+<p><a id="346751" href="#346751">#</a> <strong>Norman Diamond</strong> on 4 Jan 2005 11:13 PM:</p><div style="margin-left: 1em">&gt; Please read what was posted -- they are<br>&gt; picking up the UKRANIAN LANGUAGE <br><br>When I read what was posted, I saw this:<br><br>&gt; (in this case the Ukranian neutral locale<br>&gt; was being created).<br><br>Taking these two together with one of your other postings, I'm gradually getting the idea that &quot;neutral locale&quot; and &quot;language&quot; are synonyms at Microsoft, but this wasn't intuitively obvious when first reading.<br><br>&gt; you pass yh wrong parameter, how surpised<br>&gt; should you be if you get the wrong results? <br><br>Sure, but I didn't realize that UK was a valid language code.<br><br>&gt; And how can we know that it was a mistake,<br>&gt; anyway?<br><br>Of course, if it's a valid language code then you must accept it.  I both didn't know that UK was a valid language code and didn't yet know that &quot;neutral locale&quot; meant language, so inferred that a match was being chosen based on the first &quot;U&quot;.  Indeed I am glad to learn that was not the case.</div>
+<p><a id="346777" href="#346777">#</a> <strong>Michael Kaplan</strong> on 5 Jan 2005 12:11 AM:</p><div style="margin-left: 1em">UKRANIAN == a language<br><br>UKRAINE == a region<br><br>Ukranian - Ukraine == a full locale<br><br>Ukranian - Neutral == a neutral locale, which is to say regionless locale.</div>
+<hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2011/07/06 <a href="http://archives.miloush.net/michkap/archive/2011/07/06/10183433.html">Maybe there is a movement of people who want to send an ever-so-respectful BITE ME</a></p><p>2005/01/04 <a href="http://archives.miloush.net/michkap/archive/2005/01/04/346116.html">Why international test is an art (and why there are few fine artists)</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2005/01/03/345719.html" title="Accessibility, Internationalization, and Keyboards (#3: MSKLC&#39;s UI)">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2005/01/02/345389.html" title="Updated EULA for the Microsoft Layer for Unicode (MSLU)">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2005-01">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2005-01-02">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2005/01/02/345393.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:42 GMT -->
+</html>

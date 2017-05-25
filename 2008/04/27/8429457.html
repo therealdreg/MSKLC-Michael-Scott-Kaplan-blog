@@ -1,0 +1,44 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2008/04/27/8429457.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:36 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>THANK GOD IT'S FROODAY?</title></head><body>
+<h1>THANK GOD IT'S FROODAY?</h1>
+<p><em>by Michael S. Kaplan, published on 2008/04/27 03:01 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2008/04/27/8429457.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P><EM><FONT color=#ff0000 size=1>Content of </FONT></EM><A class="" href="http://blogs.msdn.com/michkap" mce_href="http://blogs.msdn.com/michkap"><EM><FONT size=1>Michael Kaplan's personal blog</FONT></EM></A><FONT color=#ff0000 size=1><EM> not approved by Microsoft (see </EM></FONT><A class="" href="http://archives.miloush.net/michkap/archive/2008/02/28/7934999.html" mce_href="http://archives.miloush.net/michkap/archive/2008/02/28/7934999.html"><EM><FONT size=1>disclaimer</FONT></EM></A><FONT color=#ff0000 size=1><EM>)!<BR></EM></FONT><EM><FONT color=#ff0000 size=1>Regular readers should keep in mind that all I said in <A class="" href="http://archives.miloush.net/michkap/archive/2008/03/30/8340299.html" mce_href="http://archives.miloush.net/michkap/archive/2008/03/30/8340299.html"><STRONG>The End?</STRONG></A> still applies; the allusion to the X-Files continues for people who understand such references....</FONT></EM></P>
+<P>The other day, colleague Santhosh pointed out to some people that "The abbreviated day name for Friday for ml-IN is wrong."</P>
+<P>Curious.</P>
+<P>I wrote up a little program to take a look:</P>
+<BLOCKQUOTE>
+<P class=code><STRONG>using System;<BR>using System.Globalization;<BR><BR></STRONG><STRONG>namespace Testing {<BR>&nbsp;&nbsp;&nbsp; class Testing {<BR><BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [STAThread]<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; static void Main(string[] args)<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; CultureInfo ci = new CultureInfo("ml-IN");<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; DateTimeFormatInfo dtfi = ci.DateTimeFormat;<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; for(int i=0; i &lt; 7; i++) {<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Console.WriteLine("{0}\t{1}", dtfi.DayNames[i], dtfi.AbbreviatedDayNames[i]);<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }<BR>&nbsp;&nbsp;&nbsp; }<BR>}</STRONG></P></BLOCKQUOTE>
+<P mce_keep="true">A quick chcp 65001 and a clipboard copy/paste and I got the data back:</P>
+<BLOCKQUOTE>
+<P mce_keep="true"><FONT size=3>ഞായറാഴ്ച&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ഞായറ്.<BR>തിങ്കളാഴ്ച&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; തിങ്കള്.<BR>ചൊവ്വാഴ്ച&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ചൊവ്വ.<BR>ബുധനാഴ്ച&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ബുധന്.<BR>വ്യാഴാഴ്ച&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; വ്യാഴം.<BR>വെള്ളിയാഴ്ച&nbsp;&nbsp;&nbsp;&nbsp; വെളോളി.<BR>ശനിയാഴ്ച&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ശനി.</FONT></P></BLOCKQUOTE>
+<P mce_keep="true">Indeed. That full name</P>
+<BLOCKQUOTE>
+<P mce_keep="true"><FONT size=5>വെള്ളിയാഴ്ച</FONT></P></BLOCKQUOTE>
+<P mce_keep="true">looks okay, but that abbreviated name</P>
+<BLOCKQUOTE>
+<P mce_keep="true"><FONT size=5>വെളോളി.</FONT></P></BLOCKQUOTE>
+<P mce_keep="true">does look a bit off.</P>
+<P mce_keep="true">Santhosh also suggested that abbreviated name should instead have been</P>
+<BLOCKQUOTE>
+<P mce_keep="true"><FONT size=5>വെള്ളി.</FONT></P></BLOCKQUOTE>
+<P mce_keep="true">and that does look like a bit better of an abbreviated form, all things considered.</P>
+<P mce_keep="true">The problem is indeed that what was expected was a nice conjunct with a LETTER LLA/Chandrakkala/LETTER LLA which instead ended up with a VOWEL SIGN OO in between them. Which would indeed be wrong.</P>
+<P mce_keep="true">I wonder if someone was doing it with Unicode code points -- putting a <A class="" href="http://www.fileformat.info/info/unicode/char/0d4b" mce_href="http://www.fileformat.info/info/unicode/char/0d4b">U+0d4b</A> rather than <A class="" href="http://www.fileformat.info/info/unicode/char/0d4d" mce_href="http://www.fileformat.info/info/unicode/char/0d4d">U+0d4d</A> -- thus perhaps making it a simple typo in data entry?</P>
+<P mce_keep="true">It is funny -- putting the chandrakkala in there does something minor on the rendering side, basically</P>
+<P mce_keep="true"><FONT size=6>ളള</FONT></P>
+<P mce_keep="true">versus</P>
+<P mce_keep="true"><FONT size=6>ള്ള</FONT></P>
+<P mce_keep="true">If you look very carefully (and your OS supports it) you'll see it is a bit more connected. :-)</P>
+<P mce_keep="true">Though this is one of those weird cases one might hesitate to call it a conjunct in the conventional sense (since the former isn't really anything so if not for the "Virama" model one would wonder whether one could just shape it without the extra invisible character....</P>
+<P mce_keep="true">&nbsp;</P>
+<P mce_keep="true"><FONT color=#ff00ff><EM>This blog brought to you by</EM><FONT size=5> ോ </FONT><EM>(<A class="" href="http://www.fileformat.info/info/unicode/char/0d4b" mce_href="http://www.fileformat.info/info/unicode/char/0d4b">U+0d4b</A>, aka MALAYALAM VOWEL SIGN OO)</EM></FONT></P></FONT>
+<hr/><p><a id="8430692" href="#8430692">#</a> <strong>Mark</strong> on 27 Apr 2008 3:38 AM:</p><div style="margin-left: 1em"><p>What sort of script is this? I just can't understand!</p></div>
+<p><a id="8436770" href="#8436770">#</a> <strong>Pavanaja U B</strong> on 29 Apr 2008 4:24 AM:</p><div style="margin-left: 1em"><p>&gt; Sunday, April 27, 2008 3:38 AM by Mark </p>
+<p>&gt; What sort of script is this? I just can't understand!</p>
+<p>That is Malayalam, an Indian language. Incidentally, the word malayalam written in English is a palindrome.</p>
+<p>-Pavanaja</p></div>
+<hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2008/04/27/8434147.html" title="The Beginning? #1, aka I don&#39;t mean anything personal by this">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2008/04/26/8426857.html" title="Uncheck != uninstall (even in SP3 or SP* for that matter)">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2008-04">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2008-04-27">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2008/04/27/8429457.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:36 GMT -->
+</html>

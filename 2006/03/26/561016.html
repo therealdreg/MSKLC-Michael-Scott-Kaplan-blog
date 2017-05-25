@@ -1,0 +1,33 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2006/03/26/561016.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:40 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Non-default paths and instructions....</title></head><body>
+<h1>Non-default paths and instructions....</h1>
+<p><em>by Michael S. Kaplan, published on 2006/03/26 03:00 -05:00, original URI: http://blogs.msdn.com/b/michkap/archive/2006/03/26/561016.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<FONT face=Tahoma>
+<P>Leandro Becker wrote to me via the contact link:</P>
+<BLOCKQUOTE dir=ltr style="MARGIN-RIGHT: 0px">
+<P><FONT face="Times New Roman" size=2>Hi<BR><BR></FONT><FONT face="Times New Roman" size=2>When building the CRT 7.1 following your blog instructions, after some minutes compiling I´ve got the following error:<BR><BR></FONT><FONT face="Times New Roman" size=2># *** These are the compiler switches for the XDLL model (MSVCPRTD.LIB):<BR>#<BR># CL = -c -nologo -Zelp8 -W3 -WX -GFy -DWIN32 -GB -Gi- -GS -Zc:wchar_t -Zc:forScope \<BR># -DWIN32_LEAN_AND_MEAN -DNOSERVICE -Fdbuild\intel\MSLUP71D.pdb \<BR># -D_MBCS -D_MB_MAP_DIRECT -D_CRTBLD -DWINHEAP -D_RTC -D_MT -D_DLL -DCRTDLL2<BR>#<BR># ML = -c -nologo -coff -Cx -Zm -DQUIET -D?QUIET -Di386 -D_WIN32 -DWIN32 \<BR># -D_MBCS -D_MB_MAP_DIRECT -D_CRTBLD -DWINHEAP -D_RTC -D_MT -D_DLL -DCRTDLL2<BR><BR></FONT><FONT face="Times New Roman" size=2>=-=-=-=-= Doing CRTL Source build (Libraries) =-=-=-=-=<BR>NMAKE : warning U4004: too many rules for target 'build\intel'<BR>NMAKE : fatal error U1073: don't know how to make '"C:\Program Files\Microsoft Visual Studio .NET 2003\VC7\PlatformSDK\include\winver.h"'<BR>Stop.<BR><BR></FONT><FONT face="Times New Roman" size=2>***<BR>*** BUILD ABORTED -- ErrorLevel is non-zero!<BR>***<BR><BR></FONT><FONT face="Times New Roman" size=2>C:\Arquivos de programas\Microsoft Visual Studio .NET 2003\Vc7\crt\src&gt;<BR><BR></FONT><FONT face="Times New Roman" size=2>Do you know some issue like this ?</FONT></P></BLOCKQUOTE>
+<P>As soon as I saw the email I knew what the problem was (you might see the problem as well!).</P>
+<P>And within five minutes of the first mail I got a second one from Leandro, who also saw what the problem was:</P>
+<BLOCKQUOTE dir=ltr style="MARGIN-RIGHT: 0px">
+<P><FONT face="Times New Roman" size=2>Sorry, I thing I´ve found the problem. I´ve copied the VCTOOLS from your post that is C:\Program Files path in the error, but my Windows is PT-BR, so the correct folder is C:\Arquivos de Programas.<BR><BR>Sorry :-(</FONT></P></BLOCKQUOTE>
+<P>No need to be sorry, Leandro!</P>
+<P>What I had been working on (and would have even finished before that second mail if Leandro had been neither as smart or as quick!) was a small paragraph that I added to the <A HREF="http://archives.miloush.net/michkap/archive/2004/12/06/276122.html">6.0</A>, <A HREF="http://archives.miloush.net/michkap/archive/2004/12/06/276123.html">7.0</A>, <A HREF="http://archives.miloush.net/michkap/archive/2004/12/06/276124.html">7.1</A>, and <A HREF="http://archives.miloush.net/michkap/archive/2005/10/07/478235.html">8.0</A> versions of the instructions (with the red emphasis included in each!):</P>
+<BLOCKQUOTE dir=ltr style="MARGIN-RIGHT: 0px">
+<P><FONT face=Tahoma color=#ff0000 size=2>In all instructions below, the assumption is a default install path and an en-US copy of Windows; if either is not the case, make sure you replace paths such as <STRONG>C:\Program Files\Microsoft Visual Studio&nbsp;2003</STRONG>&nbsp;with the appropriate install location.</FONT></P></BLOCKQUOTE>
+<P>Because this problem can occur any time there is a change due to:</P>
+<UL>
+<LI>Installation to the default location on a non-English version of Windows</LI>
+<LI>Installation on another drive</LI>
+<LI>Installation to a different path</LI></UL>
+<P>I had initially started changing all paths in the instruction for the first item, when I realized the second and third items made it more important to just let the person who knows where everything is installed make the changes here, as needed.</P>
+<P>Thanks for the heads-up, Leandro!</P></FONT>
+<hr/><p><a id="561251" href="#561251">#</a> <strong>Björn</strong> on 26 Mar 2006 7:23 AM:</p><div style="margin-left: 1em">I havn't looked at the instructions but why not use the VSINSTALLDIR/VCINSTALLDIR environment variables instead of the hardcoded path?</div>
+<p><a id="561262" href="#561262">#</a> <strong>Serge Wautier</strong> on 26 Mar 2006 8:22 AM:</p><div style="margin-left: 1em">There is some irony in the fact that a procedure eventually aimed at allowing better world-readiness requires patching culture-dependent hard coded information ;-)</div>
+<p><a id="561286" href="#561286">#</a> <strong>Ted</strong> on 26 Mar 2006 9:16 AM:</p><div style="margin-left: 1em">Yes, however, you could argue that carefully reading step 2 would kinda give it away as to what the path in step 4 should be set to. :)</div>
+<p><a id="561560" href="#561560">#</a> <strong>Michael S. Kaplan</strong> on 26 Mar 2006 8:43 PM:</p><div style="margin-left: 1em">No doubt, Ted. But additional clues never hurt....<br><br>Bj&#246;rn -- Good point, I have never really used the environment variables myself, but are they updated to handle all of these cases automatically?</div>
+<p><a id="562518" href="#562518">#</a> <strong>Björn</strong> on 27 Mar 2006 8:43 PM:</p><div style="margin-left: 1em">Yup, they are set during setup to the right locations.</div>
+<hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2006/03/27/561195.html" title="Is it a bug?">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2006/03/26/560595.html" title="What the %$#!* is wrong with VkKeyScan[Ex]?">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2006-03">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2006-03-26">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2006/03/26/561016.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:40 GMT -->
+</html>

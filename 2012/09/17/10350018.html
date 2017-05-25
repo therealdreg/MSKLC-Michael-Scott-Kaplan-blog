@@ -1,0 +1,66 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2012/09/17/10350018.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:26 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Do you have the [short] time for this? Part 3: What a tangled we weave...</title></head><body>
+<h1>Do you have the [short] time for this? Part 3: What a tangled we weave...</h1>
+<p><em>by Michael S. Kaplan, published on 2012/09/17 07:01 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2012/09/17/10350018.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<p>Previous blog in the series:</p>
+<ul>
+<li><strong><a title="Do you have the [short] time for this? Part #1: The intro." href="../13/10348936.html">Do you have the [short] time for this? Part #1: The intro.</a></strong></li>
+<li><strong><a title="Do you have the [short] time for this? Part #2: How does it feel to be out of sync?" href="../14/10349328.html">Do you have the [short] time for this? Part #2: How does it feel to be out of sync?</a></strong></li>
+</ul>
+<p>&nbsp;I could end it right here, really.</p>
+<p>I've already proven that as designed it doesn't work so well.</p>
+<p>I've proven that:</p>
+<ol>
+<li>some of the current data might be considered broken by a reasonable person, and</li>
+<li>the tool used to create new locales doesn't enforce creation of proper data, and</li>
+<li>the same tool, when used to review/modify existing locales doesn't help the problem then either, and</li>
+<li>the <a title="DateTimeFormatInfo" href="http://msdn.microsoft.com/library/System.Globalization.DateTimeFormatInfo.aspx">DateTimeFormatInfo</a>&nbsp;class, whether used&nbsp;normally or to publish a new custom culture, doesn't help either.&nbsp;</li>
+</ol>
+<p>So really, I could stop right there.</p>
+<p>But inside me are many facets.</p>
+<p>There is the <strong>engineer</strong>, who doesn't like when code isn't done right.</p>
+<p>And there is the <strong>architect</strong>, who doesn't like when things aren't designed the right way.</p>
+<p>And there is also the <strong>lawyer</strong>, who after having proven his point, can't stop himself from proving it more!</p>
+<p>So let's take a look at that dialog in Regional and Language Options, the one that has both <strong>long time</strong> and <strong>short time</strong>:</p>
+<p><a href="http://msdnshared.blob.core.windows.net/media/MSDNBlogsFS/prod.evol.blogs.msdn.com/CommunityServer.Blogs.Components.WeblogFiles/00/00/00/33/81/1325.shorttimery.jpg"><img style="max-width: 550px;" border="0" alt="" src="http://msdnshared.blob.core.windows.net/media/MSDNBlogsFS/prod.evol.blogs.msdn.com/CommunityServer.Blogs.Components.WeblogFiles/00/00/00/33/81/1325.shorttimery.jpg" /></a></p>
+<p>let's look at one of those dropdowns.</p>
+<p>And change the format:</p>
+<p><a href="http://msdnshared.blob.core.windows.net/media/MSDNBlogsFS/prod.evol.blogs.msdn.com/CommunityServer.Blogs.Components.WeblogFiles/00/00/00/33/81/1070.shorttimery01.jpg"><img style="max-width: 550px;" border="0" alt="" src="http://msdnshared.blob.core.windows.net/media/MSDNBlogsFS/prod.evol.blogs.msdn.com/CommunityServer.Blogs.Components.WeblogFiles/00/00/00/33/81/1070.shorttimery01.jpg" /></a></p>
+<p>Now once you make that change to the <strong>long time</strong> format, to put in on 24-hour time.</p>
+<p>Look at the clock in the notification area:</p>
+<p><a href="http://msdnshared.blob.core.windows.net/media/MSDNBlogsFS/prod.evol.blogs.msdn.com/CommunityServer.Blogs.Components.WeblogFiles/00/00/00/33/81/5857.shorttimery02.jpg"><img style="max-width: 550px;" border="0" alt="" src="http://msdnshared.blob.core.windows.net/media/MSDNBlogsFS/prod.evol.blogs.msdn.com/CommunityServer.Blogs.Components.WeblogFiles/00/00/00/33/81/5857.shorttimery02.jpg" /></a></p>
+<p>Huh?</p>
+<p>So we changed the <strong>long time</strong> and not the <strong>short time</strong>, and what is arguably the most visible <strong>short time</strong> in Windows since Windows 95 changes.</p>
+<p>The next thing to try is just change the <strong>short time</strong>, and leave the <strong>long time</strong> alone:</p>
+<p><a href="http://msdnshared.blob.core.windows.net/media/MSDNBlogsFS/prod.evol.blogs.msdn.com/CommunityServer.Blogs.Components.WeblogFiles/00/00/00/33/81/6521.shorttimery03.jpg"><img style="max-width: 550px;" border="0" alt="" src="http://msdnshared.blob.core.windows.net/media/MSDNBlogsFS/prod.evol.blogs.msdn.com/CommunityServer.Blogs.Components.WeblogFiles/00/00/00/33/81/6521.shorttimery03.jpg" /></a></p>
+<p>Okay, let's apply that change.</p>
+<p>The one that the examples clearly show.</p>
+<p>And let's check out that clock again:</p>
+<p><a href="http://msdnshared.blob.core.windows.net/media/MSDNBlogsFS/prod.evol.blogs.msdn.com/CommunityServer.Blogs.Components.WeblogFiles/00/00/00/33/81/6165.shorttimery04.jpg"><img style="max-width: 550px;" border="0" alt="" src="http://msdnshared.blob.core.windows.net/media/MSDNBlogsFS/prod.evol.blogs.msdn.com/CommunityServer.Blogs.Components.WeblogFiles/00/00/00/33/81/6165.shorttimery04.jpg" /></a></p>
+<p>What the hell?</p>
+<p>Okay, it looks like people who use <strong>GetTimeFormat</strong> with the dwFlags value of <strong><span style="font-family: courier new,courier;">TIME_NOSECONDS | TIME_NOTIMEMARKER</span></strong> are not using the <strong>short time</strong> value.</p>
+<p>Don't worry, they fixed this problem in Windows 8.</p>
+<p><em>I guess they felt kind of silly</em> :-)</p>
+<p>Of course, it looks like upgrade doesn't migrate the setting to the other setting, but that's another story.</p>
+<p>Didn't this change fundamentally change the definitions of where the settings are used? That just seems like a backcompat nightmare.</p>
+<p>But let's think about this UI for a moment.</p>
+<p>Any time you change one, wouldn't you find it reasonable if the applet changed the other for you?</p>
+<p>The number of times that you'd want them to be different? I'm guessing that's pretty rare.</p>
+<p>The default behavior should be to not have them different!</p>
+<p>Anyhow....</p>
+<p>Wouldn't it have been easier to not go the <strong>dedicated short time</strong> route?</p>
+<p>I mean, rather than fixing all these inconsistencies in&nbsp;the data.</p>
+<p>And in Regional Options.</p>
+<p>And in .NET.</p>
+<p>And in custom cultures.</p>
+<p>And in the Locale Builder?</p>
+<p>That's a minimum of four teams at Microsoft,&nbsp;located on&nbsp;two different continents.</p>
+<p>What a tangled we weave....</p>
+<hr/><p><strong>Doug Ewell</strong> on 17 Sep 2012 7:17 AM:</p><div style="margin-left: 1em"><p>&gt; Any time you change one, wouldn&#39;t you find it reasonable if the applet changed the other for you?</p>
+<p>That was one of my questions. The other was, realistically, does anyone really use short time as, or expect it to be, anything other than long time without seconds? It&#39;s not like the date formats, where long date and short date are very different: weekday, slashes, spelled-out month name, etc.</p>
+</div>
+<hr/><p><em>go to <a id="newer" href="../18/10350350.html" title="How would *you* define debacle?">newer</a> or <a id="older" href="../14/10349328.html" title="Do you have the [short] time for this? Part #2: How does it feel to be out of sync?">older</a> post, or back to <a href="../../../index-2.html">index</a> or <a href="../../../index-2.html#2012-09">month</a> or <a href="../../../index-2.html#2012-09-17">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2012/09/17/10350018.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:26 GMT -->
+</html>

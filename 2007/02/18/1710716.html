@@ -1,0 +1,43 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2007/02/18/1710716.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:38 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>When Equals ≠ ==</title></head><body>
+<h1>When Equals ≠ ==</h1>
+<p><em>by Michael S. Kaplan, published on 2007/02/18 22:31 -05:00, original URI: http://blogs.msdn.com/b/michkap/archive/2007/02/18/1710716.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P>There&nbsp;are two different&nbsp;ways to talk about equality in C#&nbsp;-- one with the <STRONG>Equals method</STRONG>, the other with the <STRONG>operator ==</STRONG>.</P>
+<P><EM>(There is also sometimes a ReferenceEquals method and other times a Compare method one could use looking for a return value of 0, but we'll leave them aside for now)</EM></P>
+<P>The question that came in the other day from Bertrand:</P>
+<BLOCKQUOTE>
+<P><EM>We recently had a bug that was caused by a direct == comparison between a CultureInfo instance and CultureInfo.InvariantCulture. == can return false even though the instance is the invariant culture. Using culture.Equals returns the right result consistently and should be used whenever doing culture info comparisons instead of ==.</EM></P></BLOCKQUOTE>
+<P>Behind the scenes, the <A class="" href="http://msdn2.microsoft.com/library/system.globalization.cultureinfo.aspx" mce_href="http://msdn2.microsoft.com/library/system.globalization.cultureinfo.aspx">CultureInfo class</A> does not override the == operator, so it us doing a reference comparison to look whether two objects are referencing one instance rather than two different instances that happen to point to the same object. In many situations the difference can be quite significant in terms of behavior, though in the case of Invariant this is not true since the object cannot be modified. Which perhaps helps to add to the confusion a bit.</P>
+<P>And the exact semantic of the <A class="" href="http://msdn2.microsoft.com/library/system.globalization.cultureinfo.equals.aspx" mce_href="http://msdn2.microsoft.com/library/system.globalization.cultureinfo.equals.aspx">CultureInfo.Equals</A> method is simple enough:</P>
+<OL>
+<LI>Do the two cultures have the same <A class="" href="http://msdn2.microsoft.com/library/system.globalization.cultureinfo.name.aspx" mce_href="http://msdn2.microsoft.com/library/system.globalization.cultureinfo.name.aspx">CultureInfo.Name</A> ?</LI>
+<LI>Does the <A class="" href="http://msdn2.microsoft.com/library/system.globalization.compareinfo.equals.aspx" mce_href="http://msdn2.microsoft.com/library/system.globalization.compareinfo.equals.aspx">CompareInfo.Equals</A> method when pointed at the respective CompareInfo objects of the two cultures return true? <BR>This method has its own two subparts to it:</LI>
+<OL>
+<LI>Are the two <A class="" href="http://msdn2.microsoft.com/library/system.globalization.compareinfo.lcid.aspx" mce_href="http://msdn2.microsoft.com/library/system.globalization.compareinfo.lcid.aspx">CompareInfo.LCID</A> values the same?</LI>
+<LI>Do the two CompareInfo objects have the same <A class="" href="http://msdn2.microsoft.com/library/system.globalization.compareinfo.name.aspx" mce_href="http://msdn2.microsoft.com/library/system.globalization.compareinfo.name.aspx">CompareInfo.Name</A>?</LI></OL></OL>
+<P>The addition of the CompareInfo stuff happened first in 2.0, in order to support the special <A class="" href="http://msdn2.microsoft.com/library/eaw6y1cb.aspx" mce_href="http://msdn2.microsoft.com/library/eaw6y1cb.aspx">GetCultureInfo overload</A> that allows them to be different, added for SQLCLR consistency (which I still haven't talked about, though I will some day, I promise!).</P>
+<P>There are some interesting side effects of the implementation:</P>
+<UL>
+<LI>== can return <STRONG>false</STRONG> when the two instances are guaranteed to return identical results in all operations (e.g. when both cultures are instances of <A class="" href="http://msdn2.microsoft.com/library/system.globalization.cultureinfo.invariantculture.aspx" mce_href="http://msdn2.microsoft.com/library/system.globalization.cultureinfo.invariantculture.aspx">InvariantCulture</A>);</LI>
+<LI>Equals can return <STRONG>true</STRONG> when the two instances might return not return results in all operations (e.g. when looking at userOverride==false vs. userOverride=true instances of the same culture).</LI></UL>
+<P>I guess what is important here is to step back and try and figure out what one is trying to do in checking for equality. That is the only way to make sure one is not surprised by the answer one gets....</P>
+<P mce_keep="true">&nbsp;</P>
+<P><FONT color=#ff00ff><EM>This post brought to you by</EM>&nbsp;<FONT size=5>≠</FONT> <EM>(<A class="" href="http://www.fileformat.info/info/unicode/char/2260" mce_href="http://www.fileformat.info/info/unicode/char/2260">U+2260</A>, a.k.a. NOT EQUAL TO)</EM></FONT></P>
+<hr/><p><a id="1718632" href="#1718632">#</a> <strong>josh</strong> on 19 Feb 2007 4:06 PM:</p><div style="margin-left: 1em"><p>Lisp still wins: &nbsp;eq, eql, equal, equalp</p></div>
+<p><a id="1718722" href="#1718722">#</a> <strong>Michael S. Kaplan</strong> on 19 Feb 2007 4:18 PM:</p><div style="margin-left: 1em"><p>Hmmm... is there a Lisp.Net?</p>
+</div>
+<p><a id="1719178" href="#1719178">#</a> <strong>Miral</strong> on 19 Feb 2007 5:26 PM:</p><div style="margin-left: 1em"><p>I just think the whole situation of which operators get implemented and which ones don't is completely braindead in .NET.</p>
+<p>The == operator should automatically call .Equals, since they're always logically equivalent (if nobody implements Equals, then it gets Object.Equals, which does reference comparison; if you really wanted reference comparison for something that does implement Equals then you can use Object.ReferenceEquals, which is more explicit).</p>
+<p>The &lt;, &gt; operators etc should automatically call into the IComparable interface implementations, if they exist. &nbsp;(If they don't exist, then using the operators should be invalid.)</p>
+<p>I can't see any sane reason why you'd implement &lt; without &gt;, for example, yet this almost seems to be encouraged in the current syntax. &nbsp;Ok, it's slightly more C++-like, but C++ operator overloading is *nuts*, so that's not a good thing.</p></div>
+<p><a id="1719350" href="#1719350">#</a> <strong>Michael S. Kaplan</strong> on 19 Feb 2007 6:06 PM:</p><div style="margin-left: 1em"><P><FONT face="Cambria Math,Arial Unicode MS,Code2000">Perhaps new operators should be defined for ∈, ∉, ∋, ∌, ≡, ≢, and ≣. :-)</FONT></P></div>
+<p><a id="1726394" href="#1726394">#</a> <strong>mihailik</strong> on 20 Feb 2007 8:57 AM:</p><div style="margin-left: 1em"><p>It is the stupidies thing to introduce in .NET Framework!</p>
+<p>The designer of the class MUST know what meant to be equal. And this thing should be consistently coded in BOTH operator== and Equals/GetHashCode.</p>
+<p>Since both GetHashCode and Equals works same way, I conclude somebody shall be sacked by skipping operator== in the class.</p>
+<p>There were bazillions reasons to invent new sorts of comparisons in .NET Framework. But God blessed those reasons were shut down hardly and enthusiastic inventors fined violently.</p>
+<p>So, please, keep it simple and throw this 'special comparison' thing out of sight. Nobody really cares about what a cool creative field/flag makes CultureInfo instances different. 1 bit wins.</p></div>
+<hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2007/02/19/1713911.html" title="Ever wonder why no one bothers to fold digits?">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2007/02/18/1709479.html" title="He had the strength of an OX[IA], I tell you">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2007-02">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2007-02-18">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2007/02/18/1710716.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:38 GMT -->
+</html>

@@ -1,0 +1,47 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2010/12/17/10106288.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Dude, you forgot to fflush! (aka toilet humor is undignified, as are flush puns)</title></head><body>
+<h1>Dude, you forgot to fflush! (aka toilet humor is undignified, as are flush puns)</h1>
+<p><em>by Michael S. Kaplan, published on 2010/12/17 07:01 -05:00, original URI: http://blogs.msdn.com/b/michkap/archive/2010/12/17/10106288.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<p>it may come as no surprise to regular readers that some of the people in the set of "people who read this Blog" work at Microsoft.</p>
+<p>A few of that more restricted set even find one or more of the blogs within this Blog to be useful for their something in their work.</p>
+<p>And then a few of that even further restricted set find an interesting problem or issue or bug or design limitation along the way.</p>
+<p>In some of those cases, I help them get the bug in and/or help push for a fix in the bug.</p>
+<p>This blog is not one of those cases.</p>
+<p>In this case, the owners of the component that caused them trouble was deemed a "Won't Fix" bug, since i had a workaround.</p>
+<p>This blog you are reading now is going to describe the bug, and the workaround.</p>
+<p>First, the simple repro code:</p>
+<p style="padding-left: 90px;"><span style="font-family: consolas,lucida console,courier new,courier,fixed;"><strong>#include &lt;stdio.h&gt;<br />#include &lt;stdlib.h&gt;<br />#include &lt;windows.h&gt;<br />#include &lt;fcntl.h&gt;<br />#include &lt;io.h&gt;<br /><br />void Test1(int argc) {<br />&nbsp;&nbsp;&nbsp; int Mode;<br /><br />&nbsp;&nbsp;&nbsp; Mode = _setmode(_fileno(stdout), _O_U16TEXT);<br />&nbsp;&nbsp;&nbsp; fwprintf(stdout, L"first\nsecond\n");<br /><br />&nbsp;&nbsp;&nbsp; if (argc &gt; 2) {<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; fflush(stdout);<br />&nbsp;&nbsp;&nbsp; }<br /><br />&nbsp;&nbsp;&nbsp; if (argc &gt; 1) {<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; _setmode(_fileno(stdout), Mode);<br />&nbsp;&nbsp;&nbsp; }<br />}<br /><br /></strong></span><span style="font-family: courier new,courier;"><strong>void __cdecl wmain(&nbsp;&nbsp;&nbsp; int argc,&nbsp;&nbsp;PWSTR *argv) {<br />&nbsp;&nbsp;&nbsp; SetThreadUILanguage(0);<br /><br />&nbsp;&nbsp;&nbsp; Test1(argc);<br />&nbsp;&nbsp;&nbsp; exit(0);<br />}</strong></span></p>
+<p>So there are three cases here:</p>
+<ol>
+<li>When you execute the above with no additional command line arguments, e.g.<br /><br /><span style="font-family: consolas,lucida console,courier new,courier,fixed;"><strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; test &gt; out.txt</strong></span><br /><br />the result is fine.</li>
+<li>When you execute the above with 1 additional argument, e.g.<br /><br /><span style="font-family: consolas,lucida console,courier new,courier,fixed;"><strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; test 1 &gt; out1.txt</strong></span><br /><br />the result&nbsp;contains&nbsp;a spurious 0x0d byte that destroys the integrity of this UTF-16 file.</li>
+<li>When you execute the above with 2 additional arguments, e.g.<br /><br /><span style="font-family: consolas,lucida console,courier new,courier,fixed;"><strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; test 1 2 &gt; out2.txt</strong></span><br /><br />the result is fine.</li>
+</ol>
+<p>&nbsp;Obviously, proper line breaks are what we expect here, so that case #2 clearly looks like a bug.</p>
+<p>Now the most interesting case to me is the first case, and for some developers it is the most common.</p>
+<p>It has two features many developers who aren't the sort to be reading this Blog do quite commonly, in that</p>
+<ul>
+<li>no explicit flush of the file is done (it relies on the implicit flush expected to happen during cleanup), and</li>
+<li>the mode that is changed is not restored.</li>
+</ul>
+<p>This first case sees no bugs.</p>
+<p>Now the second case, which has no explicit flush (it still relies on the implicit flush) but does&nbsp;restore the mode, because even though the app is about to exit, many developers do like to do that sort of cleanup of settings they change.</p>
+<p>There are many reasons for this, but the one I find myself doing this for is that people often copy/paste code samples that they put elsewhere. This way, someone will do the cleanup in their app even if they don't&nbsp;pay the same attention to details....</p>
+<p>The third case is an interesting one, because in a console app that does not have its output redirected often does not flush.</p>
+<p>This simply doesn't occur to the developer in most cases; if the do think about it, they know that <strong>stdout </strong>will be implicitly flushed anyway.</p>
+<p>And here lies the hint as to the problem:</p>
+<p>All of the CRT's pending "text mode autoconvert \n to \r\n" that happen during the implicit <strong>fflush</strong> are done using the current mode of the stream, not the mode at the time that text was <strong>fwprintf</strong>'ed. And the pending text in the stream is in a state that is halfway to being handled.</p>
+<p>Therefore, to avoid the risk here, it is best to always explicitly flush in the current mode, rather than having the implicit flush happen after the mode has changed.</p>
+<p><em>If I don't get any email from a doc writer (there are some doc writers who also read this blog) in a week or so, then I'll probably put in a bug suggesting the need to explicitly fflush prior to a mode change being added to the <strong>_setmode</strong> documentation. I'm just saying....</em></p>
+<p>Now I had in mind two different potential punchlines to&nbsp;end this blog on:</p>
+<ul>
+<li>one involving the need to not rely on the autoflush mechanisms found in so many airport and Microsoft campus toilets, just in case the flush doesn't happen correctly;</li>
+<li>another equating the mode change to whether one put the seat back in the state it was in (often down if a lady regularly uses the same toilet) and the desirability of msking sure to flush and make sure that the everything is clean prior to lowering the seat.</li>
+</ul>
+<p>But I couldn't think of any way to make either of them work out well (toilet humor is undignified, as are flush puns); this blog has been sitting in my "almost finished" pile for over a month now as I tried various ways to redeem it for a world that finds <strong>Jackass</strong>-style movies to be entertaining before I simply gave up.</p>
+<p>&nbsp;</p>
+<hr/><div style="margin-left: 1em"><em>no comments</em></div><hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2010/12/18/10106789.html" title="Short-sighted text processing #1: Uniscribe filters nothing">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2010/12/16/10105779.html" title="You can&#39;t ignore crap and hope it won&#39;t cause problems...">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2010-12">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2010-12-17">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2010/12/17/10106288.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+</html>

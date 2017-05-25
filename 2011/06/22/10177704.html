@@ -1,0 +1,42 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2011/06/22/10177704.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>There and Back Again (aka ACP --> UTF-8 --> ACP)</title></head><body>
+<h1>There and Back Again (aka ACP --> UTF-8 --> ACP)</h1>
+<p><em>by Michael S. Kaplan, published on 2011/06/22 07:01 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2011/06/22/10177704.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<p>Shortly after Raymond's <a href="http://blogs.msdn.com/b/oldnewthing/archive/2010/06/03/10019214.aspx">How do I convert an ANSI string directly to UTF-8?</a>, someone with the handle (I'm assuming it is not his real name) of Otis asked me to weigh in on the issue.</p>
+<p>I chose to hold back, it seemed to me that the blog and comments to it were proceeding appropriately.</p>
+<p>But Otis would periodiclly ping me on it, thinking there was perhaps more to say.</p>
+<p><em>I did respond to the other question Otis asked me, about whether I was jealous of the fact that more people commented on his blogs than mine -- I'm not. and you only have to look at many of the comments over there to see why.I'd probably stop reading the comments or turn them off i I had to deal with all that!</em></p>
+<p>But the big question:</p>
+<blockquote class="q">
+<p><em>Is there a way to convert an ANSI string directly to UTF-8 string? I have an ANSI string which was converted from Unicode based of the current code page. I need to convert this string to UTF-8.</em></p>
+<p><em>Currently I am converting the string from ANSI to Unicode (<code>Multi&shy;Byte&shy;To&shy;Wide&shy;Char(CP_<wbr>ACP)</wbr></code>) and then converting the Unicode to UTF-8 (<code>Wide&shy;Char&shy;To&shy;Multi&shy;byte(CP_<wbr>UTF8)</wbr></code>). Is there a way to do the conversion without the redundant conversion back to Unicode?</em></p>
+</blockquote>
+<p>has already been answered as well as I would have answered it -- there isn't one. You should use Unicode as your pivot encoding between the ACP and UTF-8.</p>
+<p>And bemoan the fact that the ACP can't be UTF-8, since that would make this question much easier to answer.</p>
+<p><em>I could post many links to blogs that continually tell the story about how <strong>that isn't gonna happen</strong> but I'll just be lazy and point to one of them; <strong><a title="UTF-8 and GB18030 are both 'NT' code pages, they just aren't 'ANSI' code pages" href="http://archives.miloush.net/michkap/archive/2007/01/03/1392379.html">UTF-8 and GB18030 are both 'NT' code pages, they just aren't 'ANSI' code pages</a></strong>. It points to some of the others.</em></p>
+<p><em>It still ain't gonna happen.</em></p>
+<p>If you are using the ACP anywhere, then you are lossy -- you should stop doing that. Keep around the old interface if you must but tell people to not use it.</p>
+<p>I'll have to talk more about the UELNT project (as I called it in that post) aka the MSL8&nbsp;project (as I call it <strong><a href="http://archives.miloush.net/michkap/archive/2007/02/23/1748028.html">here</a></strong>), one of these days.</p>
+<hr/><p><strong>Raymond Chen - MSFT</strong> on 22 Jun 2011 9:49 AM:</p><div style="margin-left: 1em"><p>There are many days I wish I had very few commenters.</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 22 Jun 2011 10:15 AM:</p><div style="margin-left: 1em"><p>Exactly!</p>
+</div>
+<p><strong>Random User 288534</strong> on 22 Jun 2011 12:10 PM:</p><div style="margin-left: 1em"><p>I enjoy Raymond&#39;s blog, as well as your&#39;s, Michael. You both frequently post interesting and/or entertaining information. I will agree that (proportionally) your (Michael&#39;s) commenters seem to &quot;try&quot; more, with regard to being on-topic, or at least intelligible.</p>
+<p>Sometimes I imagine a hypothetical post, in which Raymond talks about (say), &quot;NOT slamming someones hand in the door of a car.&quot; Maybe, by chance, the car in the story is a Nissan Leaf. In this case, aside from the handful of comments that actually add to the discussion, there would invariably be comments about:</p>
+<p>* &quot;Slamming hands in doors is stupid! Why is this post even needed?&quot;</p>
+<p>* &quot;Slamming other people&#39;s hands in doors is mean! Why would you do that?&quot;</p>
+<p>* &quot;What&#39;s so great about Nissans? Toyotas are clearly superior for door-slamming.&quot;</p>
+<p>* &quot;Obviously those Leafs will crash more often, running Micro$oft.&quot;</p>
+<p>* &quot;An open-source car wouldn&#39;t have this problem [somehow...]&quot;</p>
+<p>* &quot;Fords invented car-door-slamming first. How dare Nissan copy them?!&quot;</p>
+<p>And so on... Even so, I always hope neither of you will give up writing about topics you find interesting.</p>
+</div>
+<p><strong>Peter Krefting</strong> on 23 Jun 2011 1:05 AM:</p><div style="margin-left: 1em"><p>“You should use UTF-16 as your pivot encoding between the ACP and UTF-8” is a bit more technically correct. UTF-8 is an encoding of Unicode, after all.</p>
+</div>
+<p><strong>Yuhong Bao</strong> on 25 Jun 2011 4:01 PM:</p><div style="margin-left: 1em"><p>AFAIK UTF-8 was invented in 1992, and by the time the Win32 API was already defined as using A/W functions.</p>
+</div>
+<hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2011/06/23/10177947.html" title="Translating Tamil songs isn&#39;t entirely there yet....">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2011/06/21/10177222.html" title="The downside of managing to go native...">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2011-06">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2011-06-22">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2011/06/22/10177704.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+</html>

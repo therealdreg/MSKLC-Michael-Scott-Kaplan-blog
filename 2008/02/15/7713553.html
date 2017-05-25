@@ -1,0 +1,67 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2008/02/15/7713553.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:36 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Behold the Table Driven Text Service, Part 10 ("Even Jove nods," Atlas shrugged, "so we'll convert their old files, now.")</title></head><body>
+<h1>Behold the Table Driven Text Service, Part 10 ("Even Jove nods," Atlas shrugged, "so we'll convert their old files, now.")</h1>
+<p><em>by Michael S. Kaplan, published on 2008/02/15 09:31 -05:00, original URI: http://blogs.msdn.com/b/michkap/archive/2008/02/15/7713553.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P>Prior posts in the series:</P>
+<UL>
+<LI><A class="" href="http://archives.miloush.net/michkap/archive/2008/01/21/7178421.html" mce_href="http://archives.miloush.net/michkap/archive/2008/01/21/7178421.html"><STRONG>0 (You have to start somewhere)</STRONG></A> 
+<LI><A class="" href="http://archives.miloush.net/michkap/archive/2008/01/22/7179223.html" mce_href="http://archives.miloush.net/michkap/archive/2008/01/22/7179223.html"><STRONG>1 (Starting with a dictionary simple in every way)</STRONG></A> 
+<LI><A class="" href="http://archives.miloush.net/michkap/archive/2008/01/23/7179692.html" mce_href="http://archives.miloush.net/michkap/archive/2008/01/23/7179692.html"><STRONG>2 (Three ways to convert!)</STRONG></A> 
+<LI><A class="" href="http://archives.miloush.net/michkap/archive/2008/01/24/7180212.html" mce_href="http://archives.miloush.net/michkap/archive/2008/01/24/7180212.html"><STRONG>3 (Where do keystrokes come in?)</STRONG></A> 
+<LI><A class="" href="http://archives.miloush.net/michkap/archive/2008/01/25/7227422.html" mce_href="http://archives.miloush.net/michkap/archive/2008/01/25/7227422.html"><STRONG>4 (Specifying when to modify, if not how)</STRONG></A> 
+<LI><A class="" href="http://archives.miloush.net/michkap/archive/2008/01/28/7287476.html" mce_href="http://archives.miloush.net/michkap/archive/2008/01/28/7287476.html"><STRONG>5 (All about the language, baby!)</STRONG></A> 
+<LI><A class="" href="http://archives.miloush.net/michkap/archive/2008/01/29/7297793.html" mce_href="http://archives.miloush.net/michkap/archive/2008/01/29/7297793.html"><STRONG>6 (it is sufficient to be iconic, aka DaYi, DaYi Aynu!)</STRONG></A> 
+<LI><A class="" href="http://archives.miloush.net/michkap/archive/2008/01/30/7321697.html" mce_href="http://archives.miloush.net/michkap/archive/2008/01/30/7321697.html"><STRONG>7 (Configuration 'junk in the trunk', part 1)</STRONG></A> 
+<LI><A class="" href="http://archives.miloush.net/michkap/archive/2008/01/30/7588649.html" mce_href="http://archives.miloush.net/michkap/archive/2008/01/30/7588649.html"><STRONG>8 (Configuration 'junk in the trunk', part 2)</STRONG></A></LI>
+<LI><A class="" href="http://archives.miloush.net/michkap/archive/2008/01/30/7632387.html" mce_href="http://archives.miloush.net/michkap/archive/2008/01/30/7632387.html"><STRONG>9 (Will you be content if I tell you how some content can be defined?)</STRONG></A></LI></UL>
+<P>Last time, I explained a bit about what this one would be about -- it is&nbsp;a pure IME blog posting, so if IMEs do not interest you then you can skip on and wait for the next part....</P>
+<P>My exact words were:</P>
+<BLOCKQUOTE>
+<P><EM>Next time I'll look at how to convert from some on the old style IMEs if you have been using them in the past...</EM></P></BLOCKQUOTE>
+<P>I will now explain what the hell I was talking about. :-)</P>
+<P>You see, in prior versions of Windows,&nbsp;Microsoft provided&nbsp;for&nbsp;Traditional and Simplified Chinese users the&nbsp;dotIME which was similar&nbsp;to the&nbsp;Table Driven TIP in terms pf lots of its functionality, though it was based more directly on the old IMM (Input Method Manager) based IMEs.</P>
+<P>In addition,&nbsp;end users could be create there own dotIME&nbsp;by providing a "dictionary" text file and then running&nbsp;one of the&nbsp;conversion tools (named ImeGen.exe&nbsp;and UImeTool.exe).</P>
+<P>Now this text fule format, while very useful for its time, was not the format that the new Table Driven Tet Service IMEs use. Just a slightly different direction, one that is not being carried forward into Vista and beyond. Mea culpa, etc. -- this new format, maybe it will last longer!</P>
+<P>Therefore with Vista, those tools (ImeGen.exe and UImeTool.exe) are no longer supported, but Microsoft wanted to provide a way so that a customer could provide the text file nd it would convert the&nbsp;dictionary to the Table Driven TIP dictionary format....</P>
+<P>The syntax to make the conversion happen (all on one line)</P>
+<BLOCKQUOTE>
+<P><SPAN lang=EN-US style="FONT-FAMILY: Arial"><FONT face="courier new,courier"><STRONG>RunDll32.exe "%<SPAN class=SpellE>ProgramFiles</SPAN>%\Windows NT\TableTextService\TableTextService.dll" <SPAN class=SpellE>DictionaryGenerator</SPAN> [<I style="mso-bidi-font-style: normal">options</I>] &lt;<I style="mso-bidi-font-style: normal">output text file name</I>&gt;<?xml:namespace prefix = o ns = "urn:schemas-microsoft-com:office:office" /><o:p></o:p></STRONG></FONT></SPAN></P></BLOCKQUOTE>
+<P>Note that special, case-sensitive <STRONG>DictionaryGenerator</STRONG> keyword.</P>
+<P>And the options are as follows:</P>
+<BLOCKQUOTE>
+<P><FONT face="courier new,courier"><STRONG>-format:&lt;name&gt;</STRONG></FONT></P>
+<BLOCKQUOTE>
+<P><EM>Specify input text file format</EM></P></BLOCKQUOTE>
+<BLOCKQUOTE>
+<BLOCKQUOTE>
+<P><FONT face="courier new,courier">&lt;format&gt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Traditional | Simplified | HongKong</FONT></P></BLOCKQUOTE></BLOCKQUOTE>
+<P><FONT face="courier new,courier"><STRONG>-section:&lt;name&gt;:&lt;input text file name&gt;</STRONG></FONT></P>
+<BLOCKQUOTE>
+<P><EM>Specify input text file name for each particular section</EM></P>
+<P><EM>This option could be specify one or more of the following:</EM></P></BLOCKQUOTE>
+<BLOCKQUOTE>
+<BLOCKQUOTE>
+<P><FONT face="courier new,courier"><STRONG>&lt;name&gt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SettingFile | KeyStroke | Radical | Text | Phrase | Symbol</STRONG></FONT></P>
+<P><FONT face="courier new,courier"><STRONG>&lt;input text file name&gt;&nbsp;&nbsp;Specify input text file name</STRONG></FONT></P></BLOCKQUOTE></BLOCKQUOTE>
+<P><FONT face="courier new,courier"><STRONG>-cp:&lt;code page&gt;</STRONG></FONT></P>
+<BLOCKQUOTE>
+<P><EM>Specify code page value for convert text file to Unicode if input text file(s) are in some other code page. Note that there is only one setting to be used by all files.</EM></P></BLOCKQUOTE></BLOCKQUOTE>
+<BLOCKQUOTE>
+<P><FONT face="courier new,courier"><STRONG>&lt;output text file name&gt;</STRONG></FONT></P></BLOCKQUOTE>
+<BLOCKQUOTE>
+<BLOCKQUOTE>
+<P><EM>Specify output text file name</EM></P></BLOCKQUOTE></BLOCKQUOTE>
+<P mce_keep="true">Now this converter will only work from the text file, not the binary format file that the older tools (ImeGen.exe and UImeTool.exe)&nbsp;generated. </P>
+<P mce_keep="true">But if you have the text files this converter will reportedly save you some trouble. :-)</P>
+<P mce_keep="true">&nbsp;</P>
+<P mce_keep="true"><FONT color=#ff00ff><EM>This post brought to you by</EM><FONT size=5> ⑩ </FONT><EM>(<A class="" href="http://www.fileformat.info/info/unicode/char/2469" mce_href="http://www.fileformat.info/info/unicode/char/2469">U+2469</A>, aka CIRCLED NUMBER TEN)</EM></FONT></P>
+<hr/><p><a id="7719985" href="#7719985">#</a> <strong>John Cowan</strong> on 15 Feb 2008 1:53 PM:</p><div style="margin-left: 1em"><p>What is it with you guys and obsoleting your tools all the time? &nbsp;I have lots of spiffy new tools, but my old tools work just as they did in 1969, and often even better (faster, more Unicode, etc.)</p></div>
+<p><a id="7720393" href="#7720393">#</a> <strong>Michael S. Kaplan</strong> on 15 Feb 2008 2:19 PM:</p><div style="margin-left: 1em"><p>:-)</p>
+<p>I cannot answer definitively for another team, but I suspect it has to do with the fact that the actual teams involved were different, living and working on different continents -- it makes starting over much easier to contemplate.</p>
+<p>But I don't really know for sure. I prefer to not abandon stuff, personally, though I am sometimes overruled....</p>
+</div>
+<hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2009/07/09 <a href="http://archives.miloush.net/michkap/archive/2009/07/09/9827062.html">Atlas? Jove? Where's my Wubi? (The latter shrugged, the former nodded)</a></p><p>2008/10/21 <a href="http://archives.miloush.net/michkap/archive/2008/10/21/9009276.html">Behond the Table Driven Text Service, Part 14 (Don't expect too much from numbers)</a></p><p>2008/07/25 <a href="http://archives.miloush.net/michkap/archive/2008/07/25/8771255.html">Behold the Table Driven Text Service, Part 13 (Sinhalification proclamation!)</a></p><p>2008/06/30 <a href="http://archives.miloush.net/michkap/archive/2008/06/30/8669123.html">Behold the Table Driven Text Service, Part 12 (The knights who say நீ, redux, #2)</a></p><p>2008/06/21 <a href="http://archives.miloush.net/michkap/archive/2008/06/21/8632391.html">Back to Sri Lanka (conceptually)</a></p><p>2008/02/25 <a href="http://archives.miloush.net/michkap/archive/2008/02/25/7884260.html">Behold the Table Driven Text Service, Part 11 (The knights who say நீ, redux, #1)</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2008/02/16/7593530.html" title="♫ And it seems I&#39;m changing, for absolutely nothing will ever be the same as I was today ♫">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2008/02/15/7710418.html" title="Moving is a huge horking pain, even to a window office">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2008-02">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2008-02-15">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2008/02/15/7713553.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:36 GMT -->
+</html>

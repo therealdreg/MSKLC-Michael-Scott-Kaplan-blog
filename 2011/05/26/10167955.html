@@ -1,0 +1,147 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2011/05/26/10167955.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>To True Boldly Go Where No Font...(yada yada yada)</title></head><body>
+<h1>To True Boldly Go Where No Font...(yada yada yada)</h1>
+<p><em>by Michael S. Kaplan, published on 2011/05/26 07:01 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2011/05/26/10167955.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<p>One of the interesting features discussed in articles like <a href="http://msdn.microsoft.com/goglobal/bb688099">Script and Font Support in Windows</a>&nbsp;and <a href="http://msdn.microsoft.com/goglobal/ee426904">What&rsquo;s New for International Customers in Windows 7</a>&nbsp;is <strong>True Bold</strong> support.</p>
+<p>For example from that second link there is even an example which admittedly might have been picked to be more striking:</p>
+<p style="padding-left: 150px;">For instance, for bold texts the true bold font provides better text display than the simulated bold. </p>
+<p style="padding-left: 150px;">This is an example of text display in simulated bold versus true bold:</p>
+<p style="padding-left: 150px;">&nbsp;</p>
+<p style="padding-left: 150px;"><img src="http://i.msdn.microsoft.com/ee426904.image005(en-us,MSDN.10).jpg" align="middle" /></p>
+<p>But it doesn't spend a lot of real time explaning why it's a good thing, does it?</p>
+<p>Let's start by compring it to the non-bold font, with the same words (here in Windows 7 vs. Vista):</p>
+<p><img height="591" width="605" src="http://msdnshared.blob.core.windows.net/media/MSDNBlogsFS/prod.evol.blogs.msdn.com/CommunityServer.Blogs.Components.WeblogFiles/00/00/00/33/81/3326.latha01.jpg" />&nbsp;&nbsp;&nbsp;&nbsp; <img height="508" width="543" src="http://msdnshared.blob.core.windows.net/media/MSDNBlogsFS/prod.evol.blogs.msdn.com/CommunityServer.Blogs.Components.WeblogFiles/00/00/00/33/81/5543.latha02.jpg" /></p>
+<p>Can you see the differences? Aren't they a bit more striking, perhaps even with a great insight as to how it happened, when you cn see the base font that was being <em>thickened</em>? :-)</p>
+<p>The basic problem comes in the algorithmic "thickening" done -- whether by GDI, GDI+, WPF, WPF/DWrite, DWrite, or Silverlight.</p>
+<p>As good as it may or may not be, it can never be as good as when an actual typography expert is doing the work explicitly.</p>
+<p><em>Though I may not be the only one who wonders why OpenType doesn't define features that act as "hints" for algorithmic Bold or Italics. That too would let typographers support a better story than the lowest level algorithmic boldng supported now!</em></p>
+<p>This idea is not entirely new -- this is why so many fonts support regular, bold, italic, and bold-italic versions!</p>
+<p>Of course some of the most well-known fonts do not -- like <strong>Microsoft Sans Serif</strong>:</p>
+<p><img src="http://msdnshared.blob.core.windows.net/media/MSDNBlogsFS/prod.evol.blogs.msdn.com/CommunityServer.Blogs.Components.WeblogFiles/00/00/00/33/81/2475.micross01.jpg" /></p>
+<p>Now the lack of true bolds and true italics for this font has a direct impact on fine typography when you use italic or bold.</p>
+<p>But when you look at core fonts like <strong>Microsoft Sans Serif</strong> that always suppport large parts of the core scripts of the latest version of Unicode, the actual cost of creating bold, italic, and bold-italic versions can start to get bigger and bigger.</p>
+<p>And with the heavy push toward using <strong>Segoe UI</strong> in Windows rather than the UI fonts of prior versions (<strong>Tahoma</strong> and <strong>Microsoft Sans Serif</strong>), makes a lot of sense in terms of investment.</p>
+<p>Just as providing true bolds makes a lot more sense for all of these scripts like the Indics that aren't in the core fonts -- since they are the fonts the system goes to when you use the core fonts and ask for these other scripts.</p>
+<p>Though the story doesn't end there....</p>
+<p>Let's talk about <strong>Segoe UI</strong>, a font that was born with bold, italic, and bold-italic variants.</p>
+<p>And also more:</p>
+<p><img height="560" width="589" src="http://msdnshared.blob.core.windows.net/media/MSDNBlogsFS/prod.evol.blogs.msdn.com/CommunityServer.Blogs.Components.WeblogFiles/00/00/00/33/81/0728.segoeui.jpg" /></p>
+<p>Okay, so in addition to the expected <strong>gang of four</strong> that we expect in fonts, they added two more weights:</p>
+<ul>
+<li><strong>Segoe UI Light</strong></li>
+<li><strong>Segoe UI Semibold</strong></li>
+</ul>
+<p>And they didn't just pick up these names in as thesaurus, these weights have been around for a while, as this table from <a href="http://msdn.microsoft.com/library/dd145037.aspx">LOGFONT-&gt;lfWeight</a> "hints" at:</p>
+<table cellpadding="3" cellspacing="3" border="1">
+<tbody>
+<tr>
+<th>Value</th><th>Weight</th>
+</tr>
+<tr>
+<td>FW_DONTCARE</td>
+<td>0</td>
+</tr>
+<tr>
+<td>FW_THIN</td>
+<td>100</td>
+</tr>
+<tr>
+<td>FW_EXTRALIGHT</td>
+<td>200</td>
+</tr>
+<tr>
+<td>FW_ULTRALIGHT</td>
+<td>200</td>
+</tr>
+<tr>
+<td>FW_LIGHT</td>
+<td>300</td>
+</tr>
+<tr>
+<td>FW_NORMAL</td>
+<td>400</td>
+</tr>
+<tr>
+<td>FW_REGULAR</td>
+<td>400</td>
+</tr>
+<tr>
+<td>FW_MEDIUM</td>
+<td>500</td>
+</tr>
+<tr>
+<td>FW_SEMIBOLD</td>
+<td>600</td>
+</tr>
+<tr>
+<td>FW_DEMIBOLD</td>
+<td>600</td>
+</tr>
+<tr>
+<td>FW_BOLD</td>
+<td>700</td>
+</tr>
+<tr>
+<td>FW_EXTRABOLD</td>
+<td>800</td>
+</tr>
+<tr>
+<td>FW_ULTRABOLD</td>
+<td>800</td>
+</tr>
+<tr>
+<td>FW_HEAVY</td>
+<td>900</td>
+</tr>
+<tr>
+<td>FW_BLACK</td>
+<td>900</td>
+</tr>
+</tbody>
+</table>
+<p>Though of course by not providing hinted versions of these two additional fonts (as people complin about like in the comments of blogs like <a href="http://blogs.msdn.com/b/saveenr/archive/2009/05/03/beautiful-new-segoe-ui-fonts-in-windows-7.aspx">this one</a>), it makes them less useful overall:</p>
+<p style="padding-left: 90px;"><em><span style="font-family: times new roman,times;">I do not believe that the Segoe UI Light and Segoe UI Semibold weights have gone through the same rigorous hinting procedures as the original Segoe UI styles.</span></em></p>
+<p style="padding-left: 90px;"><em><span style="font-family: times new roman,times;">For example, it looks like counter control is not being used on the lower case letters b, d, p, and q. Look how their rounded overshoots and counter sizes are larger than they should be at normal "UI" font ppems. The numeral 1 in the Light weight and capital I in the Semibold weight also tends to protrude beyond the cap height at typical "UI" font ppems. I believe this may be because they are modifications of the outlines used in the Segoe marketing fonts to better match the style of the UI fonts.</span></em></p>
+<p style="padding-left: 90px;"><em><span style="font-family: times new roman,times;">The Light and Semibold weights also do not provide the same script and language support as the Regular and Bold weights. They have fewer glyphs overall (comparable to the original italic styles, which have no need for Arabic scripts, however). The OpenType feature sets are also divergent.</span></em></p>
+<p style="padding-left: 90px;"><em><span style="font-family: times new roman,times;">Developers should not presume to use these new alternative weights interchangeably with the originals. Depending on the users' display settings and locales, the users may experience a less than optimal result.</span></em></p>
+<p style="padding-left: 90px;"><em><span style="font-family: times new roman,times;">My guess is that these fonts were included mainly to render the text "Windows 7" in the fashion of "(semibold)Windows (light)7", to provide a consistent look with branding assets.</span></em></p>
+<p style="padding-left: 90px;"><em><span style="font-family: times new roman,times;">Perhaps these weights will receive more attention (and especially delta hinting for typical UI ppems) before Windows 7 ships.</span></em></p>
+<p><strong>Spolier</strong>: they didn't. :-)</p>
+<p>And it does without saying that also not providing either a <strong>Segoe UI Light Italic</strong> or a <strong>Segoe UI Semibold Italic</strong> limits their usefulness further -- since now they will just be using algorithmic italics (which can at times be even more destructive of text than algorithmic bold).</p>
+<p>So it is funny how&nbsp;all three&nbsp;axes:</p>
+<ul>
+<li>true bold/true italic</li>
+<li>additional weights</li>
+<li>OpenType hinting</li>
+</ul>
+<p>are all done in the name of fine typograpy, yet there is so little overlap between the three of them....</p>
+<p>There are also other uses for <strong>true italics</strong>, like the language specific issues I have discussed in blogs like <strong><a href="http://archives.miloush.net/michkap/archive/2006/08/06/690214.html" title="You say ĭtalics, I say ītalics. It is much more complicated in Cyrillic....">You say ĭtalics, I say ītalics. It is much more complicated in Cyrillic....</a></strong>&nbsp;for language-specific Cyrillic script issues and <strong><a href="http://archives.miloush.net/michkap/archive/2006/08/08/692896.html" title="When the font is the boss of you">When the font is the boss of you</a></strong>&nbsp;for taking care of some Japanese-specific issues.</p>
+<p>For the latter&nbsp;case, note that even people who object to the modified behavior of "ignoring" the italics request just suggested providing oblique support via other means -- no one who understands the language objects to the notion of using <strong>True Italics</strong> to providii9ng an experience superior to <strong>Algorithmic Italics</strong>.</p>
+<p>Now as&nbsp;typography in Windows and within other Microsoft products improves, the cost&nbsp;and even the time&nbsp;issues can obviously keep every single improvement happening to every single font.</p>
+<p>Though I do hope the grid gets to be filled in a little more completely, and with a little bit more overlap between features, than we see currently.</p>
+<p>Don't you? :-)</p>
+<p>And as a final point, and not for nothing, I'll point you at <strong><a href="http://archives.miloush.net/michkap/archive/2008/12/11/9194907.html" title="On why it's a bad thing to choose font information by name only">On why it's a bad thing to choose font information by name only</a></strong>&nbsp;and point out that more than ever you don't want to set fonts by name -- it leaves you in a really really bad place if you do (unless you don't mind your font selections being ignored, I mean!)....</p>
+<hr/><p><strong>Quppa</strong> on 26 May 2011 9:59 AM:</p><div style="margin-left: 1em"><p>What weight does Segoe UI Semilight (found in WP7 and maybe Windows 8) correspond to?</p>
+</div>
+<p><strong>RandomReader</strong> on 26 May 2011 10:04 AM:</p><div style="margin-left: 1em"><p>Even if true bold and regular are installed, you can usually get the simulated bold font by specifying something close to FW_SEMIBOLD in CreateFont. Few people realize that Windows has always supported Arial Semibold!</p>
+<p>By the way, I believe the additional weight variants in Windows 7 are in separate families, so applications can access them using only FW_NORMAL and FW_BOLD.</p>
+</div>
+<p><strong>Joshua</strong> on 26 May 2011 3:30 PM:</p><div style="margin-left: 1em"><p>Big push to Segoe UI, but Segoe UI depends on ClearType, and ClearType is bad for about 10% of people.</p>
+<p>Sigh.</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 26 May 2011 11:06 PM:</p><div style="margin-left: 1em"><p>Depends on may be an overstatement in this context....</p>
+</div>
+<p><strong>Miguel Sousa</strong> on 31 May 2011 11:43 AM:</p><div style="margin-left: 1em"><p>&quot;I may not be the only one who wonders why OpenType doesn&#39;t define features that act as &quot;hints&quot; for algorithmic Bold or Italics.&quot;</p>
+<p>That&#39;s like saying: I wonder why carmakers haven&#39;t put wings on automobiles to make them fly.</p>
+<p>&quot;That too would let typographers support a better story than the lowest level algorithmic boldng supported now!&quot;</p>
+<p>This is the common mistake that engineer-minded people make. Typography (and typeface design) cannot be done algorithmically because they are design trades, not mathematic trades. Engineers are the ones who need to come up with better algorithms for synthesizing faux bolds and italics. Designers will do their part of designing the true bolds and italics.</p>
+<p>&quot;OpenType hinting&quot;</p>
+<p>There&#39;s no such thing. OpenType is not in the business of hinting. Clarify your misconceptions of what OpenType is for by reading the spec&#39;s overview at <a rel="nofollow" target="_new" href="http://www.microsoft.com/typography/otspec/otover.htm">www.microsoft.com/.../otover.htm</a></p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 31 May 2011 9:34 PM:</p><div style="margin-left: 1em"><p>There are certainly things that could be added to allow type designers to augment and suppress the automatic processes that the autobold an autoitalics too. This is possible even if some type designers might think this to be something of a betrayal of what they try to do....</p>
+</div>
+<hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2011/05/30 <a href="http://archives.miloush.net/michkap/archive/2011/05/30/10169348.html">Semijazzed about semilight!</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2011/05/27/10168500.html" title="If it&#39;s overtly over-applied and overarching, it may be an overreach (e.g. in nOrway!)">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2011/05/25/10168228.html" title="There&#39;s no &quot;I&quot; in IDN, part 3: There&#39;s no &quot;I&quot; in DIY, either!">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2011-05">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2011-05-26">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2011/05/26/10167955.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+</html>

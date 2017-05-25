@@ -1,0 +1,77 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2010/07/21/10036699.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:35 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>It is easy (and obnoxious) to claim "size doesn't matter" if one has the size everyone wants</title></head><body>
+<h1>It is easy (and obnoxious) to claim "size doesn't matter" if one has the size everyone wants</h1>
+<p><em>by Michael S. Kaplan, published on 2010/07/21 07:01 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2010/07/21/10036699.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<p>The other day, in <a href="http://archives.miloush.net/michkap/archive/2010/07/09/10033379.html" title="The script can make the language more complicated [to use]"><strong>The script can make the language more complicated [to use]</strong></a>,&nbsp;I said:</p>
+<p style="padding-left: 30px;"><em><span style="font-family: times new roman,times;">There is a lingering size issue I'll talk about another day....</span></em></p>
+<p>Well, think of today as another day! :-)</p>
+<p>In the realm of international politics (one of my favorite people in this or any other world is cringing as she reads me use that phrase but I promise I'll be good!), there are several different philosophies that can guide the way one does the work.</p>
+<p>There is a way known as</p>
+<p style="padding-left: 30px;"><strong><span style="font-size: medium;">SHARE AND SHARE ALIKE</span></strong></p>
+<p>also known as basic fairness, where everybody is pretty much treated equally and contributes as much&nbsp;no matter who you are, when you showed up, how much you need, etc.</p>
+<p>Now this idea has some significant limitations as it means people who have less are forced to contribute just as much even if they don't have enough or if the problems were not of their own doing.</p>
+<p>So some prefer a different philosophy, more like</p>
+<p><span style="font-size: medium;"><strong>&nbsp;&nbsp;&nbsp; DIFFERENTIATED RESPONSIBILITY</strong></span></p>
+<p>which addresses that some by making sure that who pays in and how has a lot more to do with who can contribute and who did the most to require people to contribute.</p>
+<p>Now both of these try to be fair, but in different ways. There are specific times that each might be better than the other.</p>
+<p>Then, there is another way.</p>
+<p>This way might best described</p>
+<p><span style="font-size: medium;"><strong>&nbsp;&nbsp;&nbsp; FIRST COME, FIRST SERVED</strong></span></p>
+<p>and although popular, it has some drawbacks, especially in the situations where there is a specific cost to being late to the game.</p>
+<p>You could, by and large, think of Unicode and ISO/IEC 10646 in terms of international politics. It certainly involves international and can&nbsp;often be quite political! :-)</p>
+<p>Now every script gets to play, which kind of&nbsp;fits in the <strong>share and share alike</strong> philosophy, and some scripts need more effort than others but those resources are often allocated which fits well into <strong>differentiated responsibility</strong> a little bit.</p>
+<p>But for the most part, if you are one of the scripts whose code points are allocated after 0x7ff fo UTF-8 or after U+FFFF for UTF-8/UTF-16, it will cost you.</p>
+<p>The former puts you into three-bytes per Unicode code point land, and the latter puts you in four-bytes per Unicode code point land.</p>
+<p>And that <strong>will</strong> cost you, as I said.</p>
+<p>If you are in a land of broadband it may not be as important, but if you are in dial-up or heavily metered territory, those extra bytes will cost. Especially if some or all of the communication will be in that three-byte or four-byte range.</p>
+<p>I would argue that the USA is a country where connectivity among computer users including broadband is pretty prevalent. So its easy to look at the one language that pretty much stays in the one-byte per Unicode code point land and feel a little bitter, thinking about how one of the countries most able to afford the extra cost is the one that gets off cheapest.</p>
+<p>And it is easy to wonder why e.g. Syriac is below 0x7ff when so many scripts in heavy&nbsp;modern use are above it (though I suspect if they had put Devanagari below and all the other Indics above -- for example --&nbsp;we could have caused violence in lots of places!).</p>
+<p>When you add to that the fact that for most Indics, which use the Virama/Abugida method to encode, native text in the script will be almost twice as big, taking two Unicode code points for all letters other than the ones that use the inherent "a" vowel.</p>
+<p>Plus there are those alternate forms that require ZWJ and ZWNJ to be there too (I've talked about them before in blogs like <a href="http://archives.miloush.net/michkap/archive/2010/07/16/10038421.html" title="Which form to use if the form keeps changing?"><strong>Which form to use if the form keeps changing?</strong></a>). I'll remind everyone that the Unicode implementation suggestion from the&nbsp;Indic FAQ&nbsp;adds yet another character -- a three byte one -- the form most commonly used.</p>
+<p>The upshot is that for the Indic scripts, the cost per linguistic character in the script is&nbsp;3-6 bytes per (usually 6) with conjuncts being 9-15 or 15-21 or 21-27 bytes per. </p>
+<p>Having spoken to several people in Chennai and Coimbatore&nbsp;and Bangalore and Hyderabad, being told that this cost is no big deal by people who aren't paying metered usage and who use just 1 byte per character sounds just a tad condescending to more than just a few of the billion plus people potentially impacted.</p>
+<p>I&nbsp;can't argue with their logic, but I can say that one of the reasons&nbsp;so many of the original Indics were put together is that they were submitted at the same time by India, which really did think of them as a big Indic block. This is kind of what ewas asked for.</p>
+<p>Which points to another of those philosophies:</p>
+<p><strong><span style="font-size: medium;">&nbsp;&nbsp;&nbsp; BE CAREFUL WHAT YOU ASK FOR BECAUSE YOU MAY GET IT</span></strong></p>
+<p>Now they did not get out&nbsp;of it&nbsp;completely unscathed. They too are paying that extra price too, for Hindi (including a non-trivial possible amount of those prices for conjuncts). So it is not like they get it any easier. But obviously if they had originally requested one or more of the Indics be done as syllabaries in the original proposal (Tamil and Bengali are the only two I have seen suggested in such a way by native speakers though to be fair I have not&nbsp;spent a ton of time looking for&nbsp;many others!), then just like Ethiopic they might have gotten it.</p>
+<p>Which points to yet another of those&nbsp;philosophies:</p>
+<p><strong><span style="font-size: medium;">&nbsp;&nbsp;&nbsp; IF IT'S WATER UNDER THE BRIDGE NOW, ONE HAS TO MOVE ON</span></strong></p>
+<p>With the benefits of hindsight and post-mortem review and more knowledge, it is easy to criticize. And people do, in fact, criticize. Sometimes I think that is what 75% of this blog ends up being about. </p>
+<p>But there is not a lot anyone can do about it anymore.</p>
+<p>For me the worst part is that some of the people who did the original work don't even see an issue here -- they feel quite good about all they have done and don't see the irony that happens when they are a bit piqued when those it was done for aren't "more appreciative." I have found myself apologizing for "those who don't know any better" quite a bit in recent times.</p>
+<p>And talking about the importance of broadband (to help make sure everyone can cross the bridge that the water is running under)....</p>
+<p>To be honest, it is almost frightening (though predictable in retrospect) how much better of a response one gets when one starts by trying to actually understand a concern rather than leading off by attacking it.</p>
+<hr/><p><strong>John Cowan</strong> on 21 Jul 2010 7:58 AM:</p><div style="margin-left: 1em"><p>I questioned the placement of Syriac at the time, but it seems that there had always been a plan to reserve an area for RTL scripts, and that the assignment of U+590 to U+8FF as this area predates the existence of UTF-8. &nbsp;The Roadmaps &lt;<a rel="nofollow" target="_new" href="http://unicode.org/roadmaps/bmp/>">unicode.org/.../&gt;</a> highlight the three RTL areas in yellow, the other two being U+FB50 to U+FDFF and U+10800 to U+10FFF. &nbsp;Arguably Syriac belongs on Plane 1, but there really isn&#39;t any other current RTL script to place in the Plane 0 RTL area instead.</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 21 Jul 2010 8:30 AM:</p><div style="margin-left: 1em"><p>I know, I just wanted an example that was easy to criticize on it surface (and I have heard the criticism once before, in Coimbatore)....</p>
+</div>
+<p><strong>Doug Ewell</strong> on 21 Jul 2010 4:10 PM:</p><div style="margin-left: 1em"><p>&gt; But for the most part, if you are one of the scripts whose code points are allocated after 0x7ff fo UTF-8 or after U+FFFF for UTF-8/UTF-16, it will cost you.</p>
+<p>This just isn&#39;t a problem if you use SCSU.</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 21 Jul 2010 6:09 PM:</p><div style="margin-left: 1em"><p>Which takes care of one small part of the issue here, of course. :-)</p>
+</div>
+<p><strong>Random832</strong> on 22 Jul 2010 4:44 AM:</p><div style="margin-left: 1em"><p>&quot;This just isn&#39;t a problem if you use SCSU.&quot;</p>
+<p>Or data compression.</p>
+<p>Or you could make an encoding like GB18030 which puts this script in the number of bytes it has traditionally had, and everything else in more bytes.</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 22 Jul 2010 4:49 AM:</p><div style="margin-left: 1em"><p>Um, again there is more to it then that, as this blog points out. </p>
+<p>And if I may say so, it is details like the failure to notice that it is not simply a compression issue that make it so easy to dismiss the &quot;helpers&quot; since they don&#39;t even acknowledge this!</p></div>
+<p><strong>A CRM Riff</strong> on 22 Jul 2010 6:29 PM:</p><div style="margin-left: 1em"><p>Another stellar post from Michael Kaplan ’s Sorting it all Out blog regarding the size of the code solution </p>
+</div>
+<p><strong>Random832</strong> on 23 Jul 2010 4:59 AM:</p><div style="margin-left: 1em"><p>What part of this is there more to than can be solved by compression? You haven&#39;t mentioned a single aspect that&#39;s not to do with data size [dial-up, metered usage]. Lots of protocols have support for content compression (e.g. HTTP&#39;s &quot;Content-Encoding&quot;), and that has the benefit of being [if I may mix water metaphors] a ship that has not already sailed - in that protocols can be extended [and support for such extensions more widely implemented] or replaced much more easily than scripts can be moved to a different Unicode block or done as syllabaries.</p>
+<p>It&#39;s also a bit unfair to talk about &#39;bytes per linguistic character&#39; like one of these linguistic characters only carries as much meaning as an english letter - if that were true there would only be 26 of them. A better comparison would be the encoded [and/or compressed] sizes of translations of some standard text. Is it really going to come out as 21-27 times as many bytes as the same text in english?</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 23 Jul 2010 5:34 AM:</p><div style="margin-left: 1em"><p>The way that Unicode encodes extra details that have nothing to do with the language cannot be completely compressed by a generic algorithm that has no awarenress of specific qualities of the language in question, particularly when it is mixed with another language like English that has different qualities. Expecting every browser and oS and device to have separate per-language compession is very unrealistic.</p>
+<p>And I am talking about their language the way they talk about it and think about it -- which is the only way to really communicate with someone when you are telling them they have to make the sacrifices....</p>
+</div>
+<p><strong>Random832</strong> on 28 Jul 2010 6:00 AM:</p><div style="margin-left: 1em"><p>&quot;The way that Unicode encodes extra details that have nothing to do with the language cannot be completely compressed by a generic algorithm that has no awarenress of specific qualities of the language in question&quot;</p>
+<p>Says who? Note that I&#39;m not talking about watered-down &quot;compression&quot; like SCSU that never uses less than one byte per code point, i&#39;m talking about real compression like gzip. That works by detecting patterns of bytes.* For example, the fact that the first two bytes of each code point is the same for all characters that are from the same 64-character block, and the fact that some three-byte (or longer) sequences appear particularly often in the data. It doesn&#39;t need to know that in advance to work, it&#39;s evident from the data. In theory you could maybe get an improvement for small texts [in any language] by having a language-specific starting dictionary, but that&#39;s a separate matter from what it would take to put it on equal footing with english.</p>
+<p>I don&#39;t know what &quot;And I am talking about their language the way they talk about it and think about it&quot; was in response to, but the fact that a syllable [your &#39;linguistic characters&#39;] is &#39;worth&#39; more than a letter is not a matter of opinion - theirs, yours, or mine. So the &quot;21-27 byte&quot; number is manifestly unfair - if english has a size advantage due to how its script is encoded, it&#39;s 1:3 _if_ that. (The fair way to compare would be by taking translations of the same text in each language and measuring them)</p>
+<p>* well, it works by using a sliding window dictionary, but that certainly benefits from the presence of patterns of bytes.</p></div>
+<p><strong>Michael S. Kaplan</strong> on 6 Aug 2010 5:12 PM:</p><div style="margin-left: 1em"><p>Random, again you miss the point here related to HOW people in country look at it. What they would like is for people to notice and talk about what they see as problems TO BE PROBLEMS, not dismissd and minimized....</p>
+</div>
+<hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2010/08/12 <a href="http://archives.miloush.net/michkap/archive/2010/08/12/10049039.html">Strike TWO!</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2010/07/22/10033828.html" title="When I say Graphics.MeasureString can hang with you, I mean it in a bad way!">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2010/07/20/10040040.html" title="Amazon? Dumas would be spinning in his ` (grave) if he knew.">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2010-07">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2010-07-21">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2010/07/21/10036699.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:35 GMT -->
+</html>

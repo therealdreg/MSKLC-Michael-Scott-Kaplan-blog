@@ -1,0 +1,34 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2011/08/15/10195601.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>If you change the behavior of typing sequences you should never type, is it a bug?</title></head><body>
+<h1>If you change the behavior of typing sequences you should never type, is it a bug?</h1>
+<p><em>by Michael S. Kaplan, published on 2011/08/15 07:01 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2011/08/15/10195601.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<p>The Array IME has had a colorful history.</p>
+<p>Especially in the move from the old IMM32 based world to the the new Cicero based world....</p>
+<p>Finally things are pretty stable.</p>
+<p>I mean, they are as long as your goal is <strong>fast</strong>, <strong>error-free</strong> input!</p>
+<p>Even back in XP and Server 2003 and earlier, it was possible to see lots notdef glyphs:</p>
+<p><img src="http://msdnshared.blob.core.windows.net/media/MSDNBlogsFS/prod.evol.blogs.msdn.com/CommunityServer.Blogs.Components.WeblogFiles/00/00/00/33/81/4846.array01.jpg" width="607" height="297" /></p>
+<p>Of course they could not be selected, and hitting the number or trying to choose it would fail.</p>
+<p><em>It would at least beep to tell you, though!</em></p>
+<p>Now in Vista and later, the experience is not entirely unfamiliar:</p>
+<p><img src="http://msdnshared.blob.core.windows.net/media/MSDNBlogsFS/prod.evol.blogs.msdn.com/CommunityServer.Blogs.Components.WeblogFiles/00/00/00/33/81/4278.array02.jpg" width="794" height="483" /></p>
+<p>One big difference, though.</p>
+<p>Now, you can choose these "invalid" choices.</p>
+<p>Mostly they are U+25a1 (WHITE CIRCLE), a fitting image often used to represent the notdef glyph.</p>
+<p>Though an actual NULL might been better -- given the longstanding behavior described in <strong><a title="Short-sighted text processing #1: Uniscribe filters nothing" href="http://archives.miloush.net/michkap/archive/2010/12/18/10106789.html">Short-sighted text processing #1: Uniscribe filters nothing</a></strong>&nbsp;and <strong><a title="The Sally Kimball Addition To The Dead Keys Conundrum: An Encyclopedia Brown Mystery" href="http://archives.miloush.net/michkap/archive/2011/04/28/10159111.html">The Sally Kimball Addition To The Dead Keys Conundrum: An Encyclopedia Brown Mystery</a></strong>&nbsp;for illegal sequences.</p>
+<p>Not in the TableTextServiceArray.txt source file. But in the code, somehow?</p>
+<p>Note that this matches the original behavior of the IMM32-based Array IME...</p>
+<p>The actual strings in the source file look like they were probably a straight migration, though the behavior didn't migrate as well. :-(</p>
+<p><em>From an input point of view, this migration was as not entirely unlike the one from Win9x to WinNT described in <strong><a title="The Romanian keyboard layout on XP is the brokenest layout of all" href="http://archives.miloush.net/michkap/archive/2006/12/11/1259767.html">The Romanian keyboard layout on XP is the brokenest layout of all</a></strong>!</em></p>
+<p>&nbsp;But in the end, how serious is this change in behavior?</p>
+<p>Well, it depends.</p>
+<p>According to one point of view&nbsp;(which one might even call a "more Asian" point of view?), a change of behavior in invalid/illegal sequences isn't terribly important.</p>
+<p>Because it would be wrong to type them anyway!</p>
+<p>And, as a more concrete example, the original author of the Array IME, who voiced serious concerns about prior functionality loss and bugs in Vista only fixed in SP2 and Windows 7, has never AFAIK seriously complained about the issue...</p>
+<p>Though to someone with as much error-prone typing as I, it may seem harder to dismiss.</p>
+<p>What do people here think about it?</p>
+<hr/><div style="margin-left: 1em"><em>no comments</em></div><hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2011/08/16/10196054.html" title="The road to standards compat is paved with app back-INcompat">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2011/08/12/10195062.html" title="There&#39;s no &quot;I&quot; in IDN part 8: Punycode don&#39;t do the PUA">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2011-08">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2011-08-15">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2011/08/15/10195601.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+</html>

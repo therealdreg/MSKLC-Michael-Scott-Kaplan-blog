@@ -1,0 +1,29 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2005/01/10/349988.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:42 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Building sattelite assemblies in the Visual Studio IDE...</title></head><body>
+<h1>Building sattelite assemblies in the Visual Studio IDE...</h1>
+<p><em>by Michael S. Kaplan, published on 2005/01/10 08:39 -08:00, original URI: http://blogs.msdn.com/michkap/archive/2005/01/10/349988.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostOld -->
+<P>This seemed like a useful tip to share, originally posted in the newsgroup....</P>
+<P>The question that was asked:</P>
+<BLOCKQUOTE dir=ltr>
+<P><EM>I've internationalized my product. From most of the reading I've done, it&nbsp;seems that the satellite assemblies need to be built "by hand" and so I'vedone this in the post-build step of my project although this is not very&nbsp;elegant.</EM></P>
+<P><EM>However, I notice that when doing a build of any old c# project, the mysterious message "Building satellite assemblies..." gets spit out as&nbsp;partof the build. Does this mean there is some way that Visual Studoi can&nbsp;build the satellite assemblies for me that I am not aware of?</EM></P></BLOCKQUOTE>
+<P>And the answer (given by Kai Brinkmann of Microsoft):</P>
+<BLOCKQUOTE dir=ltr>
+<P><EM>You do not *have* to build your satellite assemblies by hand (using resgen&nbsp;and al). You can, of course, which allows you to modify existing assemblies&nbsp;or add new languages without having to rebuild everything, but the IDE can&nbsp;certainly handle it for you!</EM></P>
+<P><EM>All you have to do is add the .resx files for each language to your project.&nbsp;Make sure you follow the proper naming conventions, i.e. &lt;Base&nbsp;Name&gt;.&lt;culture ID&gt;.resx. The language neutral and fallback resources can&nbsp;also be added as &lt;Base Name&gt;.resx. (These resources will be embedded in the&nbsp;main assembly containing your code.) When you build your project, the&nbsp;appropriate satellite assemblies (&lt;Base Name&gt;.resources.dll) will&nbsp;automatically be created in the appropriate directories (culture ID)&nbsp;underneath your output directory (bin/&lt;Configuration&gt;). You'll notice that&nbsp;you won't have access to the .resources files this way (created manually&nbsp;using resgen). They are created at compile time, of course, and then&nbsp;embedded into the DLLs. However, they are not actually saved as separate&nbsp;files.</EM></P></BLOCKQUOTE>
+<P>Now I did not know that either, but it is pretty cool either way. :-)</P>
+<P>Andrew Eames, the guy who asked the original question, also made some observations after getting this cool advice for those who want to try this....</P>
+<BLOCKQUOTE dir=ltr>
+<P><EM>1) This should really be made clearer in the MSDN help - all of the localization topics in the help lead you towards using resgen and al - I didn't find any reference to the fact you could do this in VS</EM></P>
+<P><EM>2) The localized .resx files for controls and forms are not visible in the Solution Explorer unless Show all Files is Checked. Thus if you add a localized .resx file for a form it doesn't look like anything has happened</EM></P>
+<P><EM>3) For some odd reason, I had to add my localized files *twice* into the solution before they would appear. The first time, it seemed to go away and do something but the file wasn't added - the second time it actually got added to the solution</EM></P>
+<P><EM>4) Selecting multiple .resx files to add in the Add Item dialog didn't seem to work - maybe this is related to 3)</EM></P></BLOCKQUOTE>
+<P>I agree completely with #1 -- hopefully this post will do until that happens. #2 is also true (I always have that checked so I did not realize that things were being hidden that way!).</P>
+<P><FONT color=#800080><EM>This post is brought to you by </EM>"<FONT size=5>Ç</FONT>"<EM> (U+00c7, a.k.a. LATIN CAPITAL LETTER C WITH CEDILLA)</EM></FONT></P>
+<hr/><p><a id="350006" href="#350006">#</a> <strong>Joe</strong> on Monday, January 10, 2005 8:57 AM:</p><div style="margin-left: 1em">You're right that it's not very clear in MSDN and not easy to use.  Vote to improve it here:<br><br><a target="_new" href="http://lab.msdn.microsoft.com/ProductFeedback/viewfeedback.aspx?feedbackid=4fe229b4-276d-4721-a9d2-0489448a0eba">http://lab.msdn.microsoft.com/ProductFeedback/viewfeedback.aspx?feedbackid=4fe229b4-276d-4721-a9d2-0489448a0eba</a></div>
+<p><a id="9939523" href="#9939523">#</a> <strong>Jason</strong> on Monday, December 21, 2009 3:15 AM:</p><div style="margin-left: 1em"><p>Very useful. &nbsp;MSDN still doesn't mention this, and it's been 5 years!</p></div>
+<hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2005/01/10/350450.html" title="Encodings in Strings are Evil Things (Part 7.1)">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2005/01/10/349769.html" title="Every character has a story #1: U+213a (ROTATED CAPITAL Q)">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2005-01">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2005-01-10">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2005/01/10/349988.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:42 GMT -->
+</html>

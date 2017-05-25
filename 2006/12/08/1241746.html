@@ -1,0 +1,27 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2006/12/08/1241746.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:39 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Access and RTL MessageBox ≈ Oil and Water</title></head><body>
+<h1>Access and RTL MessageBox ≈ Oil and Water</h1>
+<p><em>by Michael S. Kaplan, published on 2006/12/08 14:19 -05:00, original URI: http://blogs.msdn.com/b/michkap/archive/2006/12/08/1241746.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P>Some questions, I get more than once, but not often enough for it to occur to me that maybe I should blog about it.</P>
+<P>One of those questions came to me from <A class="" href="http://blogs.msdn.com/drintl/" mce_href="http://blogs.msdn.com/drintl/">Dr. International</A> just the other day, but the first time the question was asked almost two years ago was by Benjamin, it went something like this:</P>
+<BLOCKQUOTE><FONT face="Times New Roman,Times"><I>
+<P>I have used your Unicode MessageBox code&nbsp;from VBA&nbsp;and tried both passing the Bidi flags and prepending two RLMs, and neither worked in Access. The code I used:<BR><BR></I><FONT face="Consolas,Lucida Console,Courier New,Courier"><B>Private Declare Function MessageBoxW _<BR>&nbsp;Lib "user32.dll" ( _<BR>&nbsp;ByVal hWnd As Long, _<BR>&nbsp;ByVal lpText As Long, _<BR>&nbsp;ByVal lpCaption As Long, _<BR>&nbsp;ByVal wType As Long) As Long</P>
+<P>Private Const MB_RIGHT As Long = &amp;H80000<BR>Private Const MB_RTLREADING As Long = &amp;H100000</P>
+<P>Public Sub Test()<BR>&nbsp;&nbsp;&nbsp; MessageBoxW 0&amp;, _<BR>&nbsp;&nbsp;&nbsp;&nbsp; StrPtr(ChrW(&amp;H5D0) &amp; ChrW(&amp;H5D1) &amp; ChrW(&amp;H5D2) &amp; ChrW(&amp;H5D3)), _<BR>&nbsp;&nbsp;&nbsp;&nbsp; StrPtr("test"), _<BR>&nbsp;&nbsp;&nbsp;&nbsp; MB_RIGHT Or MB_RTLREADING</P>
+<P>&nbsp;&nbsp;&nbsp; MessageBoxW 0&amp;, _<BR>&nbsp;&nbsp;&nbsp;&nbsp; StrPtr(ChrW(&amp;H200F) &amp; ChrW(&amp;H200F) &amp; ChrW(&amp;H5D0) &amp; ChrW(&amp;H5D1) &amp; ChrW(&amp;H5D2) &amp; ChrW(&amp;H5D3)), _<BR>&nbsp;&nbsp;&nbsp;&nbsp; StrPtr("test"), _<BR>&nbsp;&nbsp;&nbsp;&nbsp; 0&nbsp;&nbsp;&nbsp;&nbsp; <BR>End Sub</B></FONT><BR><BR><I>At first I thought&nbsp;my code was broken, but when I put it in Excel or Word, it works just fine.<BR><BR>So why is Access broken here?</P></I></FONT></BLOCKQUOTE>
+<P mce_keep="true">Benjamin is correct here; this code works fine in every Office application I tried, except for Access where nothing could make the MessageBox RTL&nbsp;or right-aligned. It even happens woth the VBA MsgBox.</P>
+<P mce_keep="true">I tried installing a CBT hook and looking at the EXSTYLE of the MessageBox, which was </P>
+<P mce_keep="true">WS_EX_DLGMODALFRAME | WS_EX_WINDOWEDGE | WS_EX_CONTROLPARENT</P>
+<P mce_keep="true">in Access but </P>
+<P mce_keep="true">WS_EX_DLGMODALFRAME | WS_EX_WINDOWEDGE | WS_EX_CONTROLPARENT | WS_EX_LAYOUTRTL</P>
+<P mce_keep="true">everywhere else, which implies that Access is itself installing a&nbsp;CBT hook after mine (easy enough for it to do since it gets to run code after I do but before&nbsp;VBA calls the function),&nbsp;and removing the WS_EX_LAYOUTRTL exstyle bit.</P>
+<P mce_keep="true">There is a&nbsp;happy ending&nbsp;to the story -- if you install a CBT hook you can actually put the style bit back, if you want to (the benefot to having your CBT hook running second is that you can fix whatever they may have broken!). A little heavy handed, to be sure. But desperate times can call for desperate measures!</P>
+<P mce_keep="true"><STRONG>As to why they do it, who knows? Maybe someone from the Access development team can chime in on this one? :-)</STRONG></P>
+<P mce_keep="true"><FONT color=#ff0000><EM>UPDATE&nbsp;12:28 PM: This problem only applies to Access 2003 --&nbsp;&nbsp;Access 2007 properly respects the passed-in flags....</EM></FONT></P>
+<P mce_keep="true">&nbsp;</P>
+<P mce_keep="true"><EM><FONT color=#ff00ff>This post brought to you by <A class="" href="http://www.fileformat.info/info/unicode/char/200f" mce_href="http://www.fileformat.info/info/unicode/char/200f">U+200f</A>, a.k.a. RIGHT-TO-LEFT MARK)</FONT></EM></P>
+<hr/><div style="margin-left: 1em"><em>no comments</em></div><hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2006/12/08/1242102.html" title="I guess we&#39;re not exporting the Zune just yet">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2006/12/07/1232365.html" title="Zipping up Unicode file PATHs">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2006-12">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2006-12-08">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2006/12/08/1241746.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:39 GMT -->
+</html>

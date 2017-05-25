@@ -1,0 +1,73 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2011/05/25/10168228.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>There's no "I" in IDN, part 3: There's no "I" in DIY, either!</title></head><body>
+<h1>There's no "I" in IDN, part 3: There's no "I" in DIY, either!</h1>
+<p><em>by Michael S. Kaplan, published on 2011/05/25 07:01 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2011/05/25/10168228.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<p style="padding-left: 30px;">Prior blogs in this series:</p>
+<ul>
+<li><strong><a href="http://archives.miloush.net/michkap/archive/2011/02/14/10128621.html" title="There's no &quot;I&quot; in IDN, part 1: If you're not Unicode, you're just wrong!">There's no "I" in IDN, part 1: If you're not Unicode, you're just wrong!</a></strong></li>
+<li><strong><a href="http://archives.miloush.net/michkap/archive/2011/04/02/10149149.html" title="There's no &quot;I&quot; in IDN, part 2: Try not to use the wrong functions!">There's no "I" in IDN, part 2: Try not to use the wrong functions!</a></strong></li>
+</ul>
+<p>As I started deciding what&nbsp;I was going to write in this third part, I thought back to the initial guidance.</p>
+<p>And how both initial parts strongly encouraged people to be calling the appropriate functions, since calling the wrong ones are never such a great idea.</p>
+<p>But looking at the current landscape,&nbsp;for all intents and purposes the only Microsoft&nbsp;application that works properly here (most of the time) is Internet Explorer. And even it gets the answer wrong some of the time (a fact only discovered a few months ago, even though the bug has apparently existed since Internet Explorer 7's RTW -- some specific scenario where IE takes a URL already in UTF-8 and converts it to UTF-8 again, with the expected cottage-cheese-inducing results).</p>
+<p>For all applications, there are several different possibilities for any <strong>Internationalized Domin Name</strong> access:</p>
+<ul>
+<li>INTERNET (everything is registered as Punycode) 
+<ul>
+<li>If you convert the URL to Punycode 
+<ul>
+<li><span style="color: #009900;"><strong>Everything works!</strong></span></li>
+</ul>
+</li>
+<li>If you don't convert the URL to Punycode 
+<ul>
+<li><strong><span style="color: #990000;">Everything fails!</span></strong></li>
+</ul>
+</li>
+</ul>
+</li>
+<li>INTRANET (everything is [<em>usually</em>] registered as UTF-8) 
+<ul>
+<li>If you're calling the right functions 
+<ul>
+<li><span style="color: #009900;"><strong>Everything works!</strong></span></li>
+</ul>
+</li>
+<li>If you're not calling the right functions 
+<ul>
+<li><strong><span style="color: #990000;">Everything fails!</span></strong></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p>&nbsp;Now this little tree of options looks awfully simple, here on this blog.</p>
+<p>But unfortunately it isn't simple at all -- because there is a real lack of a standard method to distinguish Internet from Intranet at the application level.</p>
+<p>And IE is&nbsp;a messy clusterf*** of meaning trying to make sense of it, as KB articles like <a href="http://support.microsoft.com/kb/2028170" title="2028170">2028170: Enabling "Automatically Detect Intranet Network" on a domain member computer will enable all the three Intranet Options automatically</a>&nbsp;hint at:</p>
+<p style="padding-left: 120px;">By default in Internet Explorer&nbsp;7 and Internet Explorer 8, "Automatically Detect Intranet Network"&nbsp;will be enabled to automatically control the following three options of Intranet detection:&nbsp;</p>
+<p style="padding-left: 120px;"><b>Include all local (intranet) sites not listed in other zones</b></p>
+<p style="padding-left: 120px;"><b>Include all sites that bypass the proxy server</b></p>
+<div class="indent" style="padding-left: 120px;"></div>
+<div class="indent" style="padding-left: 120px;"></div>
+<div class="indent" style="padding-left: 120px;"><b>Include all network paths (UNCs)</b></div>
+<div class="indent" style="padding-left: 120px;"></div>
+<div class="indent" style="padding-left: 120px;">If "Automatically Detect Intranet Network" is enabled on a computer that is a member of a domain, all three of these options will be enabled regardless of what is&nbsp;configured through domain policy.</div>
+<p>It is marked as by design, and the resolution section gives complex instructions explaining how to override these settings through administrative templates.</p>
+<p style="padding-left: 30px;"><img src="http://msdnshared.blob.core.windows.net/media/MSDNBlogsFS/prod.evol.blogs.msdn.com/CommunityServer.Blogs.Components.WeblogFiles/00/00/00/33/81/3301.lgpe01.jpg" /></p>
+<p>Not for the meek!</p>
+<p>Of course the engineer immediately jumps to an obvious question: <strong>why not require Punycode names to be assigned as aliases for even the INTRANET scenario?</strong></p>
+<p>Such a requirement would have made everything easier, for everybody!</p>
+<p>But you have to consider the original reason for Punycode: to support IDN without requiring the existing infrastructure to change.</p>
+<p>Well, the Intranet has been working just fine on UTF-8 and in some cases even with legacy code pages, and trying to force a change in all those cases would break a lot of people.</p>
+<p>Though I still believe publishing as a recommendation would really have made life easier for a lot of people, it was not be. In the current situation&nbsp;such INTRANET Punycode server&nbsp;names represent&nbsp;an easy way to test that the Punycode scenario works for anyone smart enough to convert to it for later INTERNET testing. Given the role that proxy servers place, testing resolution within an organization would be quite difficult without using Punycode resolution within the INTRANET.</p>
+<p>For now, if you use IE's zone-based support (or one of the few others like that inherent in AD/Exchange), you too will work as well as they do.</p>
+<p>Or you can DIY (<strong>Do It Yourself</strong>), which can be pretty complicated, depending on your scenario.</p>
+<p>There are many who feel that this is not good enough in the long&nbsp;run, that both Windows and .NET both need to try to make this easier. So people look to the future with interest.</p>
+<p>Some of those people are doing nothing until they see some signs of future improvements, while others are doing the things like those&nbsp;from <strong><a href="http://archives.miloush.net/michkap/archive/2011/02/14/10128621.html" title="There's no &quot;I&quot; in IDN, part 1: If you're not Unicode, you're just wrong!">Part 1</a></strong>&nbsp;and <strong><a href="http://archives.miloush.net/michkap/archive/2011/04/02/10149149.html" title="There's no &quot;I&quot; in IDN, part 2: Try not to use the wrong functions!">Part 2</a></strong>&nbsp;of this series, and keeping those endpoints in discrete bits of their code so that if they eventually still need to add a DIY piece they can add it, but just in case the system underneath comes up with the right answers everything might just work.</p>
+<p>I think that latter group will be in the best position to later either&nbsp;<strong>do nothing</strong> or in the worst case <strong>do&nbsp;a small amount of&nbsp;work</strong>. </p>
+<p>Realistically, few will do their own work to do what IE/AD/et. al. are doing here. There really is no "I" in DYI since it will take a lot of work, and definitely implies a "we" with a lot of developers and testers!</p>
+<hr/><div style="margin-left: 1em"><em>no comments</em></div><hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2013/10/17 <a href="http://archives.miloush.net/michkap/archive/2013/10/17/10453790.html">There's no "I" in IDN, part 19: There's no "I" in IPv6, either!</a></p><p>2013/10/08 <a href="http://archives.miloush.net/michkap/archive/2013/10/08/10454553.html">There's no "I" in IDN, part 18: There isn't even an "I" in John C. Klensin's name!</a></p><p>2013/09/13 <a href="http://archives.miloush.net/michkap/archive/2013/09/13/10448110.html">There's no "I" in IDN, part 17: EAI made it to China, and everybody knows it!</a></p><p>2013/04/19 <a href="http://archives.miloush.net/michkap/archive/2013/04/19/10412471.html">There's no "I" in IDN, part 16: It's a good thing they decided to call it EAI!</a></p><p>2012/10/12 <a href="http://archives.miloush.net/michkap/archive/2012/10/12/10359120.html">There's no "I" in IDN, part 15: Still no 'I' in EAI.... but we could use an US sometime soon!</a></p><p>2012/08/08 <a href="http://archives.miloush.net/michkap/archive/2012/08/08/10337799.html">There's no "I" in IDN, part 14: It turns out there's no "I" in IE, either</a></p><p>2012/05/18 <a href="http://archives.miloush.net/michkap/archive/2012/05/18/10305223.html">There's no "I" in IDN, part 13: Desktop and Managed and Metro; oh my!</a></p><p>2012/02/27 <a href="http://archives.miloush.net/michkap/archive/2012/02/27/10273315.html">There's no "I" in IDN, part 12: Emoji + IDN == U+1F4A9 (PILE OF POO)</a></p><p>2011/10/25 <a href="http://archives.miloush.net/michkap/archive/2011/10/25/10229790.html">There's no "I" in IDN, part 11: There's no place like ::1, not even 127.0.0.1!</a></p><p>2011/09/21 <a href="http://archives.miloush.net/michkap/archive/2011/09/21/10214081.html">There's no "I" in IDN, part 10: Who needs IDN support? How much? When? (Part 2)</a></p><p>2011/09/16 <a href="http://archives.miloush.net/michkap/archive/2011/09/16/10212216.html">There's no "I" in IDN, part 9: Who needs IDN support? How much? When? (Part 1)</a></p><p>2011/08/12 <a href="http://archives.miloush.net/michkap/archive/2011/08/12/10195062.html">There's no "I" in IDN part 8: Punycode don't do the PUA</a></p><p>2011/07/28 <a href="http://archives.miloush.net/michkap/archive/2011/07/28/10190701.html">There's no "I" in IDN, part 7: IDN comes to AdWords</a></p><p>2011/07/14 <a href="http://archives.miloush.net/michkap/archive/2011/07/14/10186414.html">There's no "I" in IDN, part 6: It isn't like there's an "I" in EAI, either!</a></p><p>2011/06/29 <a href="http://archives.miloush.net/michkap/archive/2011/06/29/10181212.html">There's no "I" in IDN, part 5: Stephen Colbert's job is not in any jeopardy</a></p><p>2011/06/17 <a href="http://archives.miloush.net/michkap/archive/2011/06/17/10173790.html">There's no "I" in IDN, part 4: the 'path' to Hell is paved with IDN bugs</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2011/05/26/10167955.html" title="To True Boldly Go Where No Font...(yada yada yada)">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2011/05/24/10167604.html" title="The Locales of Windows 7, all divvied up">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2011-05">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2011-05-25">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2011/05/25/10168228.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+</html>

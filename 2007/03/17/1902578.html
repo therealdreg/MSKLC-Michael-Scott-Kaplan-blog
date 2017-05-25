@@ -1,0 +1,23 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2007/03/17/1902578.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:38 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Just a small amount of text? That isn't very resourceful of you, young man!</title></head><body>
+<h1>Just a small amount of text? That isn't very resourceful of you, young man!</h1>
+<p><em>by Michael S. Kaplan, published on 2007/03/17 18:59 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2007/03/17/1902578.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P>John's question was simple enough:</P>
+<BLOCKQUOTE>
+<P><FONT face="times new roman,times"><EM>Anybody know a trick to have the Text properties of WinForm controls have their values stored in resource files rather than &lt;formname&gt;.Designer.cs?<BR><BR>When the text string is long, VS automatically puts the value in a resource string.&nbsp; However, when the value is fairly short, VS stores the value in the Designer.cs file.<BR><BR>I want all my strings in a resource file.&nbsp;&nbsp; Obviously, I can just code assignment statements during Load of the forms, but it seems like there should be some automatic way to tell VS to put all the strings in the resource file right from the UI editor.</EM></FONT></P></BLOCKQUOTE>
+<P>And he is right -- the exact cutoff point in a newly created project is exactly 200 characters<FONT size=1><SUP>1</SUP></FONT>; any&nbsp;time the text&nbsp;is&nbsp;longer than 200, it will be loaded from the form's associated resource file.</P>
+<P>(If you are using .NET 1.0 then it won't be in a designer.cs file since they didn't exist yet. But the principle is still the same!)</P>
+<P>People jumped in quickly with the answer -- just mark the form's <STRONG>Localizable</STRONG> property to to be <STRONG>true</STRONG> and then the text will always be in the form's resources (along with all of the other properties considered "localizable"....</P>
+<P>And while the answer is technically correct to answer the generic question, it is not always the best way to proceed....</P>
+<P>It&nbsp;is actually something one may want to carefully consider, since it fundamentally changes how the form is loaded and what&nbsp;tasks are done to accomplish the loading.&nbsp;But it is really the only way to force the property's contents to be loaded from resources in all cases, other than just manually doing that load yourself. </P>
+<P>In the end, the string assigned directly directly from code rather than loaded from resources is presumably faster, a principle which may apply to the rest of the affected properties as well.</P>
+<P>If the form is not intended to be localized, the manual resource load of the string may be the easier/faster way to get things done in the end....</P>
+<P mce_keep="true">&nbsp;</P>
+<P><EM><FONT size=1>1 - This is not characters in the user sense but in the developer sense -- the number of individual Unicode code points in UTF-16.</FONT></EM></P>
+<P mce_keep="true">&nbsp;</P>
+<P><FONT color=#ff00ff><EM>This post brought to you by</EM>&nbsp;ឦ <EM>(<A class="" href="http://www.fileformat.info/info/unicode/char/17a6" mce_href="http://www.fileformat.info/info/unicode/char/17a6">U+17a6</A>, a.k.a. KHMER INDEPENDENT VOWEL QII)</EM></FONT></P>
+<hr/><div style="margin-left: 1em"><em>no comments</em></div><hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2007/03/17/1903060.html" title="A checkpoint on search engine results contrast, ultimately leading to an irreverent bit of exposition">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2007/03/16/1895610.html" title="A way better model for features">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2007-03">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2007-03-17">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2007/03/17/1902578.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:38 GMT -->
+</html>

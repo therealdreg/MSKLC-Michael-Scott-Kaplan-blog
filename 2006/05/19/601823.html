@@ -1,0 +1,34 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2006/05/19/601823.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:39 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>MSLU doesn't support wininet.dll</title></head><body>
+<h1>MSLU doesn't support wininet.dll</h1>
+<p><em>by Michael S. Kaplan, published on 2006/05/19 09:31 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2006/05/19/601823.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P><FONT face=Tahoma>The Internet Extensions for Win32, a.k.a. WinINet.dll, has been around for a long time.</FONT></P>
+<P><FONT face=Tahoma>Does it support Unicode? <STRONG>Yes, it does</STRONG> -- a bunch of "W" functions, though many of them seem to convert the strings from Unicode.</FONT></P>
+<P><FONT face=Tahoma>Does it support Unicode on Win9x? <STRONG>No, it does not</STRONG> (as far as I know).</FONT></P>
+<P><FONT face=Tahoma>Does MSLU (the Microsoft Layer for Unicode on Win9x Systems) support the functions in it? <STRONG>No, it does not</STRONG></FONT><FONT face=Tahoma>.</FONT></P>
+<P><FONT face=Tahoma>So imagine my surprise when I noticed the following text in the help topic in the Platform SDK for <A href="http://msdn.microsoft.com/library/en-us/wininet/wininet/ftpputfile.asp">FtpPutFile</A>&nbsp;(similar text in&nbsp;most of the <A href="http://msdn.microsoft.com/library/en-us/wininet/wininet/wininet_functions.asp">other WinINet functions</A>):</FONT></P>
+<BLOCKQUOTE dir=ltr style="MARGIN-RIGHT: 0px">
+<P><FONT face="Times New Roman" size=2>Implemented as <B>FtpPutFileW</B> (Unicode) and <B>FtpPutFileA</B> (ANSI). Note that Unicode support on Windows Me/98/95 requires Microsoft Layer for Unicode.</FONT></P></BLOCKQUOTE>
+<P><FONT face=Tahoma>So just to dispell any&nbsp;lurking rumors, MSLU support has not been expanded to WinINet.dll and there are no plans for such an expansion.</FONT></P>
+<P><FONT face=Tahoma>I mean, after all, even <A href="http://www.microsoft.com/windows/support/endofsupport.mspx">extended support for Windows 98 and Windows Me</A> ends on July 11th of this year!</FONT></P>
+<P><FONT face=Tahoma>I'll mention this to the SDK folks, hopefully this post will be obsolete soon enough....</FONT></P>
+<P><FONT face=Tahoma></FONT>&nbsp;</P>
+<P><FONT face=Tahoma color=#ff1493><EM>This post brought to you by</EM> "<FONT size=6>ଐ</FONT>" <EM>(<A href="http://www.fileformat.info/info/unicode/char/0b10">U+0b10</A>, a.k.a. ORIYA LETTER AI)</EM></FONT></P>
+<hr/><p><a id="601973" href="#601973">#</a> <strong>Joel Spolsky</strong> on 19 May 2006 12:45 PM:</p><div style="margin-left: 1em">Yay for cut and paste documentation!</div>
+<p><a id="602016" href="#602016">#</a> <strong>Michael S. Kaplan</strong> on 19 May 2006 1:58 PM:</p><div style="margin-left: 1em">Hi Joel,<br><br>I've been thinking about it, and I am pretty sure it is worse that cut and paste, since the Win32 API function topics where an MSLU link is appropriate actually link to the MSLU topics -- which the copy/paste would have picked up!<br><br>This seems more like someone trying to answer the &quot;Unicode&quot; question for these functions and not knowing what to put, so looking at other topics for answers. Luckily, not being sure they are right, they did not add the link?<br><br>This is all theorizing though, the science of forensic documentation review is a relatively new field. :-)</div>
+<p><a id="602697" href="#602697">#</a> <strong>Yaytay</strong> on 20 May 2006 11:00 AM:</p><div style="margin-left: 1em">Simple solution for this problem: throw WinInet in the bin, that's where it belongs.<br>Or is the bin too good for it?</div>
+<p><a id="602718" href="#602718">#</a> <strong>Michael S. Kaplan</strong> on 20 May 2006 11:49 AM:</p><div style="margin-left: 1em">Well, to borrow and morph the words of Michael Everson, I am not going to be judgmental, no matter how stupid something is..... <br><br>:-)</div>
+<p><strong>Yuhong Bao</strong> on 4 Sep 2010 4:20 PM:</p><div style="margin-left: 1em"><p>&quot;though many of them seem to convert the strings from Unicode.&quot;</p>
+<p>Which might mean that it already supports Win9x without MSLU anyway.</p>
+</div>
+<p><strong>Yuhong Bao</strong> on 4 Sep 2010 4:39 PM:</p><div style="margin-left: 1em"><p>I disassembled it in IDA Pro and there is also some A wrappers that convert and call the W version in wininet too, even on Win9x. In any case, all this means that the W functions in wininet.dll are already available on Win9x without MSLU, at least the IE 6 SP1 version!</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 4 Sep 2010 5:36 PM:</p><div style="margin-left: 1em"><p>Why on earth would you still be running Win9x? :-)</p>
+</div>
+<p><strong>Yuhong Bao</strong> on 5 Sep 2010 11:45 AM:</p><div style="margin-left: 1em"><p>I am not, I was just disassembling DLLs.</p>
+</div>
+<hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2007/07/01 <a href="http://archives.miloush.net/michkap/archive/2007/07/01/3654867.html">Is Simple MAPI simply Unicode?</a></p><p>2007/01/04 <a href="http://archives.miloush.net/michkap/archive/2007/01/04/1409380.html">Converting a project to Unicode: Part 8 (Fitting MSLU into the mix)</a></p><p>2006/07/25 <a href="http://archives.miloush.net/michkap/archive/2006/07/25/676295.html">Our non-Unicode heritage</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2006/05/20/602745.html" title="How to REALLY handle the unattended version of Regional and Language Options">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2006/05/18/601531.html" title="Where are the other Tamils?">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2006-05">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2006-05-19">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2006/05/19/601823.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:39 GMT -->
+</html>

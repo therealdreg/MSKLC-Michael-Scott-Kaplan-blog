@@ -1,0 +1,46 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2007/01/15/1466291.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:38 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>How long can it get?</title></head><body>
+<h1>How long can it get?</h1>
+<p><em>by Michael S. Kaplan, published on 2007/01/15 03:01 -05:00, original URI: http://blogs.msdn.com/b/michkap/archive/2007/01/15/1466291.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P>Maybe you just have a dirty mind....</P>
+<P>On the other hand perhaps I just need to get out more.</P>
+<P>I am thinking about the maximum length for strings in resources, myself. Especially after Nizam asked:</P>
+<BLOCKQUOTE>
+<P><FONT face="times new roman,times"><EM>&nbsp;Do we have a limit on the length of a resource string?</EM></FONT></P></BLOCKQUOTE>
+<P>Well, if you head back to Windows 3.0/3.1 the limit is 256 characters (apparently brevity really did used to bet he soul of wit), but the current limit under is documented as 4097 characters for both <A class="" href="http://msdn2.microsoft.com/en-us/library/aa381050.aspx" mce_href="http://msdn2.microsoft.com/en-us/library/aa381050.aspx">Win32</A> and <A class="" href="http://msdn2.microsoft.com/en-us/library/ms940376.aspx" mce_href="http://msdn2.microsoft.com/en-us/library/ms940376.aspx">CE/Mobile</A>.</P>
+<P mce_keep="true">Though <A class="" href="http://blogs.msdn.com/jesperh/" mce_href="http://blogs.msdn.com/jesperh/">Jesper</A> had the comment of the day embedded in his response to the question:</P>
+<BLOCKQUOTE>
+<P mce_keep="true"><FONT face="times new roman,times">Localizers themselves have a tolerance of roughly 1k. Long strings aren’t fun.</FONT>&nbsp;</P></BLOCKQUOTE>
+<P mce_keep="true">For some reason this one had me laughing. I suspect the reason for this is the way that string resources are usually made available to localizers in tools is not really designed with really long strings in mind (after all, help content that is to be localized does not suffer from the same kind of limitation.</P>
+<P mce_keep="true">Now given the fact that a target language can often take up more space than a source language, I think it is pretty important for developers to not try to push this limit and use up all of the space (even ignoring Jesper's concerns, there is no way to avoid annoying a localizer if you do not leave them enough room to properly express themselves!</P>
+<P mce_keep="true">&nbsp;</P>
+<P mce_keep="true"><FONT color=#ff00ff><EM>This post brought to you by</EM>&nbsp;<FONT size=6>ᕯ</FONT> <EM>(<A class="" href="http://www.fileformat.info/info/unicode/char/156f" mce_href="http://www.fileformat.info/info/unicode/char/156f">U+156f</A>, a.k.a. CANADIAN SYLLABICS TTH)</EM></FONT></P>
+<hr/><p><a id="1471020" href="#1471020">#</a> <strong>Philihp Busby</strong> on 15 Jan 2007 7:27 AM:</p><div style="margin-left: 1em"><p>I can't stand limits. Is there any reason for this restriction?</p>
+<p>For someone who grew up in a world where we could have functions longer than 8 characters, things like this could get as frustrating as Oracle's 30-character limit on table names.</p></div>
+<p><a id="1471149" href="#1471149">#</a> <strong>Michael S. Kaplan</strong> on 15 Jan 2007 8:09 AM:</p><div style="margin-left: 1em"><P>Is there a scenario where you truly find yourself needing a bigger than 4k string in a string table? </P>
+<P>I can understand not liking limits, but this one seems clearly beyond what one would ever reasonably need....</P></div>
+<p><a id="1472407" href="#1472407">#</a> <strong>Mihai</strong> on 15 Jan 2007 1:54 PM:</p><div style="margin-left: 1em"><p>Another (artificial) limit is the length of the text in a dialog label. The resource compiler and the Visual Studio resource editor restrict this at 256 characters.</p>
+<p>But this is not a real system limit anymore. Try loading a long string from the string table and setting it as the label text at runtime. All is fine, nothing gets lost!</p>
+<p>It would be nice to get VS/RC updated to support what the OS supports. You can often see the effects of this limit in practice:</p>
+<p> - English dialogs with a long text split between several labels close to each other, each label with a text fragment, looking like a big text at runtime</p>
+<p> - Convoluted English text, so that the result fits in 256 characters (big pain for localization, when English has 253 characters :-)</p>
+<p> - Convoluted localization in some labels, because it has to fit in 256 characters</p>
+<p> - Truncated strings, because nobody noticed the rc warning that the string is too long</p></div>
+<p><a id="1474361" href="#1474361">#</a> <strong>Rob Kennedy</strong> on 15 Jan 2007 8:16 PM:</p><div style="margin-left: 1em"><p>Any insight into why the limit is 4097? That seems like a strange value. I would have expected a power of two minus one, but what's with the power of two plus one?</p></div>
+<p><a id="1475327" href="#1475327">#</a> <strong>Michael S. Kaplan</strong> on 15 Jan 2007 11:02 PM:</p><div style="margin-left: 1em"><p>If I had to guess, it would be that since the strings needed to be word aligned and the resource format has them as counted strings (length prepended) that this is the only way to make them 4k and avoid wasting a byte?</p>
+</div>
+<p><a id="1475438" href="#1475438">#</a> <strong>Dean Harding</strong> on 15 Jan 2007 11:57 PM:</p><div style="margin-left: 1em"><p>Actually, strings in resource files are not null-terminated (they're length-prefixed), so my guess is that it's 4096 + null-terminator.</p>
+</div>
+<p><a id="1475456" href="#1475456">#</a> <strong>Michael S. Kaplan</strong> on 16 Jan 2007 12:05 AM:</p><div style="margin-left: 1em"><p>They AREN'T null teriminated, so it would be LENGTH + string and they want the max to be aligned.</p>
+</div>
+<p><a id="1475520" href="#1475520">#</a> <strong>Dean Harding</strong> on 16 Jan 2007 12:28 AM:</p><div style="margin-left: 1em"><p>What I mean is that since they're not null-terminated in the file, and they ARE null-terminated when you get them back (in code), you have a maximum size of 4096 in the file, but 4097 in code...</p>
+<p>But then, since the length-prefix essentially takes up the first character (WORD) in the string, it would be the same as if it was null-terminated (except length-prefixes make parsing the file simpler).</p>
+<p>It doesn't really mention null-termination in that article, so it's kind of hard to say. Anyway, hopefully there isn't much code that is QUITE pushing that particular limit :-)</p>
+</div>
+<p><a id="1475733" href="#1475733">#</a> <strong>Michael S. Kaplan</strong> on 16 Jan 2007 1:30 AM:</p><div style="margin-left: 1em"><p>They aren't null terminated in the resource format -- they add that later....</p>
+</div>
+<hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2007/01/15/1469885.html" title="With SQL Server (and SQL itself) comes the illogic of &#39;trailing spaces&#39; (and the myth of fixed width)">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2007/01/14/1464038.html" title="&#39;Where is the dictionary?&#39; you might ask">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2007-01">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2007-01-15">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2007/01/15/1466291.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:38 GMT -->
+</html>

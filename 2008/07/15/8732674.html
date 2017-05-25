@@ -1,0 +1,52 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2008/07/15/8732674.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:36 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>On installing and removing fonts, Part 6: That's your name? What's your real name? Nah. What was it before you changed it?</title></head><body>
+<h1>On installing and removing fonts, Part 6: That's your name? What's your real name? Nah. What was it before you changed it?</h1>
+<p><em>by Michael S. Kaplan, published on 2008/07/15 10:01 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2008/07/15/8732674.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+The blogs that came before: 
+<UL>
+<LI><A class="" href="http://archives.miloush.net/michkap/archive/2008/07/02/8681646.html" mce_href="http://archives.miloush.net/michkap/archive/2008/07/02/8681646.html"><STRONG>0: A long journey begins with the zeroeth step</STRONG></A> 
+<LI><A class="" href="http://archives.miloush.net/michkap/archive/2008/07/03/8682763.html" mce_href="http://archives.miloush.net/michkap/archive/2008/07/03/8682763.html"><STRONG>1: Do I know you, or some version of you at least?</STRONG></A> 
+<LI><A class="" href="http://archives.miloush.net/michkap/archive/2008/07/07/8699735.html" mce_href="http://archives.miloush.net/michkap/archive/2008/07/07/8699735.html"><STRONG>2: Are you done using me yet?</STRONG></A> 
+<LI><A class="" href="http://archives.miloush.net/michkap/archive/2008/07/08/8706789.html" mce_href="http://archives.miloush.net/michkap/archive/2008/07/08/8706789.html"><STRONG>3: I'll love you forever, or at least for this session.</STRONG></A> 
+<LI><A class="" href="http://archives.miloush.net/michkap/archive/2008/07/11/8720555.html" mce_href="http://archives.miloush.net/michkap/archive/2008/07/11/8720555.html"><STRONG>4: The easiest part is the addition!</STRONG></A></LI>
+<LI><A class="" href="http://archives.miloush.net/michkap/archive/2008/07/14/8730741.html" mce_href="http://archives.miloush.net/michkap/archive/2008/07/14/8730741.html"><STRONG>5: The takeaway from that is...</STRONG></A></LI></UL>
+<P>Now last time I hinted that there was yet another problem related to font removal that has to be considered.</P>
+<P>But let me back up for a moment.</P>
+<P>It is a problem I hinted at in <A class="" href="http://archives.miloush.net/michkap/archive/2008/07/03/8682763.html" mce_href="http://archives.miloush.net/michkap/archive/2008/07/03/8682763.html"><STRONG>Part 1</STRONG></A>&nbsp;when I mentioned in passing:</P>
+<BLOCKQUOTE>
+<P><EM><FONT face="times new roman,times">Hell, two different fonts from two different places can have the same name and the first of many comparisons you might do is with the name and the version. </FONT></EM></P></BLOCKQUOTE>
+<P>I should watch the cussing with all of the minors lurking about, but ignoring that for a damn moment, the implication (or maybe it is more of an imputation)&nbsp;is obvious.</P>
+<P>Behind each font is a filename. </P>
+<P>A filename that might be the same as some identically named file. </P>
+<P>As long as the "get rid of file extension" zealots keep not getting their way you can have some confidence that identically named file is also a font, but the facts remain the same -- someone might be squatting on your turf with their own file that callously&nbsp;has the same name as yours and which obnoxiously happened to be installed first. Bastards that these people were, they probably also killed Kenny...</P>
+<P>But the problem remains -- when you install you have to deal with the fact that some other font file name is the same.</P>
+<P>Now <A class="" href="http://msdn.microsoft.com/library/ms534231.aspx" mce_href="http://msdn.microsoft.com/library/ms534231.aspx">AddFontResource</A> only takes a filename, but the font itself can have all sort of names in it -- the names that will be "registered" for the font so that it can be found later.</P>
+<P>Aha, so if the file is already there and you determine that it is not some earlier version of yours to be replaced (see <A class="" href="http://archives.miloush.net/michkap/archive/2008/07/03/8682763.html" mce_href="http://archives.miloush.net/michkap/archive/2008/07/03/8682763.html"><STRONG>Part 1</STRONG></A>&nbsp;for more information on that) then all your setup program has to do is rename the file and then you have none of the problems with someone who happens to have the same name.</P>
+<P>So everything is good, right?</P>
+<P>Well, kind of. With the system trying to maximize the chances of a font trying to get installed. Everything is good....</P>
+<P>Until problems happen. </P>
+<P>I return once again to Paul Linnerud, and an&nbsp;example explained by him:</P>
+<BLOCKQUOTE>
+<P><FONT face="times new roman,times">...the system has Palatino installed as palatino.ttf. The user drags Palatino Linotype with file name palatino.ttf into the fonts folder. The fonts folder will determine that palatino.ttf is already used by a font and rename the Palatino Linotype file as pala001.ttf. Later if the installation program wishes to install Palatino Linotype with palatino.ttf it will really replace Palatino and we will end up with two Palatino Linotype fonts installed with different file names.</FONT></P></BLOCKQUOTE>
+<P>And yes, the font folder of some versions of Windows has that renaming code -- and this problem really can happen. Even if it didn't, a font installer can do the very same thing. What will your installer/uninstaller do if if finds that the file it is trying to remove/replace is not the file it is meant to touch but someone else's?</P>
+<P>Go on, guess.</P>
+<P>If your guess is anything along the lines of "not what you want it to" then you get a gold star. Since most won't....</P>
+<P>The name of the file and the name(s) of the font itself are just entirely separate beasts -- even the updating operation can be dicey and you will want to really make sure it is your font.</P>
+<P>So <STRONG>How can all of these problems be solved?</STRONG>, you may be asking.</P>
+<P>Or <STRONG>Can these problems be solved?</STRONG> might be the question on the tip of your tongue.</P>
+<P>Stay tuned and we'll start talking solutions, next time....</P>
+<P mce_keep="true">&nbsp;</P>
+<P><FONT color=#ff00ff><EM>This blog brought to you by</EM><FONT size=5> Ϥ </FONT><EM>(<A class="" href="http://www.fileformat.info/info/unicode/char/03e4" mce_href="http://www.fileformat.info/info/unicode/char/03e4">U+03e4</A>, aka COPTIC CAPITAL LETTER FEI)</EM></FONT></P>
+<hr/><p><strong>Rex Sutton</strong> on 26 Jul 2008 1:50 PM:</p><div style="margin-left: 1em"><P>Yeah found your blog looking for How the Hell to handle 2 fonts that share the same system name and even the same screen name in some cases. Kind of a weird identity theft thing. Is it pronounced tomato or tomato? </P>
+<P>The fonts Athletic and Athletic Supporter are both called Athletic.ttf</P>
+<P>The fonts Blackjack and well Blackjack do the same thing... this one was a Real pain in the neck because the system pretty well preferred the scripty version of Blackjack to the urban techno version and I didn't have any way of seperating them.. Even double clicking the name from the .zip file displayed the scripty version.. Had to rename all instances (font Navigator finds fonts anywhere, I like to save a copy of the font with the project because I work in more than one place) then restart to be able to use the Techno version.</P>
+<P>All because some ankle biter didn't convert the fonts to outlines.</P></div>
+<p><strong>Michael S. Kaplan</strong> on 26 Jul 2008 5:01 PM:</p><div style="margin-left: 1em"><p>You might be interested in the last few posts in this series, which talk about solutions that can apply to some off the situation you are talking about....</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 26 Jul 2008 5:05 PM:</p><div style="margin-left: 1em"><p>(the last few blogs are coming up soon)</p>
+</div>
+<hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2008/09/08 <a href="http://archives.miloush.net/michkap/archive/2008/09/08/8932366.html">On installing and removing fonts, Part 8: Sometimes being selfish makes you more trustworthy</a></p><p>2008/07/30 <a href="http://archives.miloush.net/michkap/archive/2008/07/30/8791285.html">On installing and removing fonts, Part 7: What was the question, exactly?</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2008/07/16/8736898.html" title="The situation was quite grave when I realized how &quot;tepid&quot; those hot keys were">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2008/07/15/8730381.html" title="The keys are so hot, they&#39;re smoking!">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2008-07">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2008-07-15">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2008/07/15/8732674.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:36 GMT -->
+</html>

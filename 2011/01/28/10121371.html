@@ -1,0 +1,56 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2011/01/28/10121371.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Punishing a locale for its language's letter choices is just unseemly</title></head><body>
+<h1>Punishing a locale for its language's letter choices is just unseemly</h1>
+<p><em>by Michael S. Kaplan, published on 2011/01/28 07:01 -05:00, original URI: http://blogs.msdn.com/b/michkap/archive/2011/01/28/10121371.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<p>So, every now and again we have a bug in a function that is part of Windows.</p>
+<p>You may have run across this sort of thing in the past.</p>
+<p>Now there are times that one can't convince people that the scenario that causes the bug is reasonable, so that even if they acknowledge that the problem exists, they don't feel it makes sense to fix.</p>
+<p>The bugs in Excel and .Net described in <a href="http://archives.miloush.net/michkap/archive/2010/03/02/9971296.html" title="Seeing double? You're not drunk; you're just running pseudo! (aka Announcement: Pseudo Day!)"><strong>Seeing double? You're not drunk; you're just running pseudo! (aka Announcement: Pseudo Day!)</strong></a>&nbsp;are an example of this kind of problem. The fact that a particular locale (pseudo, in fact!) hits problems that any user can repro by customizing some of the Regional and Language Options settings doesn't bother the appropriate owners of Excel or .Net.</p>
+<p>That bug is not the subject of today's blog.</p>
+<p>Today I'm going to talk about another bug, one found in <a href="http://msdn.microsoft.com/library/dd318130.aspx">GetTimeFormat</a> and <a href="http://msdn.microsoft.com/library/dd318131.aspx">GetTimeFormatEx</a>. One&nbsp;which has existed in Windows for over a decade. And one that you can see with an existing locale, in a very visible part of the user interface.</p>
+<p>To see the bug, just switch to any one of the German locales, and change your time formats to one of the optional formats that includes a <strong>' Uhr'</strong> literal in it:</p>
+<p><img height="391" width="348" src="http://blogs.msdn.com/cfs-file.ashx/__key/CommunityServer-Blogs-Components-WeblogFiles/00-00-00-33-81/6862.german01.jpg" />&nbsp;&nbsp;&nbsp; <img height="391" width="348" src="http://blogs.msdn.com/cfs-file.ashx/__key/CommunityServer-Blogs-Components-WeblogFiles/00-00-00-33-81/1663.german02.jpg" /></p>
+<p><em>The approved syntax for a string literal within a format string is to enclose the string in single quotes -- which is how these formats are designed, for German. my German is pretty rusty but I think Uhr means "time" or maybe "clock" or something like that -- the way in English we might say "O'Clock". A German speaker whose knowledge is not based on Yiddish (which is really just 16th century German with Hebrew letters) should feel free to correct/clarify that point!</em></p>
+<p>Any call to <a href="http://msdn.microsoft.com/library/dd318130.aspx">GetTimeFormat</a>&nbsp;or <a href="http://msdn.microsoft.com/library/dd318131.aspx">GetTimeFormatEx</a>&nbsp;with the TIME_NOSECONDS or TIME_NOMINUTESORSECONDS flags.</p>
+<p>While the straight time format will be something like</p>
+<p style="padding-left: 60px;"><strong><span style="font-size: large;">11:04:27 Uhr</span></strong></p>
+<p>the format with TIME_NOMINUTESORSECONDS will be</p>
+<p style="padding-left: 60px;"><span style="font-size: large;"><strong>11 11r</strong></span></p>
+<p>and the format with TIME_NOSECONDS will be</p>
+<p style="padding-left: 60px;"><span style="font-size: large;"><strong>11:04 11r</strong></span></p>
+<p>Now it is pretty easy to see what is going on here -- the fact that <strong>' Uhr'</strong> is a literal is ignored, and the fact that the 'h' when not treated as part of a literal has a specific meaning in the format string causes the hour to be inserted.Of course the time in the system notification area (aka the 'system tray") goes through this code path, as do other fun spots like the time in the CMD 'dir" command.</p>
+<p><em>Related bugs can be found with custom formats involving literals containing <strong>m</strong> or <strong>s</strong> as well as <strong>h</strong>, but given the issues raised in </em><a href="http://archives.miloush.net/michkap/archive/2010/03/02/9971296.html" title="Seeing double? You're not drunk; you're just running pseudo! (aka Announcement: Pseudo Day!)"><strong><em>Seeing double? You're not drunk; you're just running pseudo! (aka Announcement: Pseudo Day!)</em></strong></a><em>&nbsp;I'm going to focus on the time fomats in actual shippingt locales....</em></p>
+<p>And they can all show this terrible, weirdly formatted time string that has no excuse for the poor parsing job that it does, and has been doing for over ten years now.</p>
+<p>Even after the refactoring work they did in the most recent version, described in <a href="http://archives.miloush.net/michkap/archive/2010/01/27/9953946.html" title="We do seem to be short on time... (Windows 7 edition)"><strong>We do seem to be short on time... (Windows 7 edition)</strong></a>.</p>
+<p>Okay, it is technically not a regression.</p>
+<p>I would hardly recommend fixing it in a hotfix, or a GDR, or a service pack.</p>
+<p>But I would never leave it broken this way in any function I owned for a major version....</p>
+<p><strong>Would you?</strong></p>
+<p>If not, then at a minimum the documentation should clearly warn against TIME_NOSECONDS&nbsp;and TIME_NOMINUTESORSECONDS since they do not work properly with string literals that contain format picture inserts. Punishing a locale for its letter choices is just unseemly....</p>
+<hr/><p><strong>John Cowan</strong> on 28 Jan 2011 7:43 AM:</p><div style="margin-left: 1em"><p>But can you be SUUUUUURE that no customers are depending on this exact bug?</p>
+<p>After all, the Billster himself said that Microsoft only issues new versions for new features (right back to MS-DOS itself), not to fix bugs.</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 28 Jan 2011 8:08 AM:</p><div style="margin-left: 1em"><p>Thus my minimal suggested fallback position -- owning up to the bad behavior.</p>
+<p>Or perhaps a new flag that doesnot subvert the right of the German format string to be properly expressed? :-)</p>
+</div>
+<p><strong>Jeremy Drake</strong> on 28 Jan 2011 10:31 AM:</p><div style="margin-left: 1em"><p>My recollection from high school German class is that you are correct. &nbsp;&quot;Uhr&quot; literally means clock, but when used in this context you can think of it more as &quot;O&#39;Clock&quot;.</p>
+<p>However, my recollection also tells me that the proper way to express a time is hours(0-23) &#39;Uhr&#39; minutes, not hours minutes &#39;Uhr&#39;. &nbsp;For example, &quot;zehn Uhr neunundzwanzig&quot;. &nbsp;This page seems to confirm that: <a target="_new" rel="nofollow" href="http://german.about.com/library/blht_telltime.htm">german.about.com/.../blht_telltime.htm</a></p>
+<p>&quot;8.For precise times, you say Uhr between the hour and the minutes: &quot;zehn Uhr zw&ouml;lf&quot; = 10:12.&quot;</p></div>
+<p><strong>Michael S. Kaplan</strong> on 28 Jan 2011 11:50 AM:</p><div style="margin-left: 1em"><p>Yea, this is not the default format for them (the defult is the 24-hour clock!). But the non-default shouldn&#39;t fail....</p></div>
+<p><strong>Aaron.E</strong> on 28 Jan 2011 11:51 AM:</p><div style="margin-left: 1em"><p>Do you get a steady stream of bug reports from German users about this issue? &nbsp;I don&#39;t know how something like this could have gone ten years without getting any attention, unless no one is using that time format. &nbsp;Has there ever been an investigation into whether that format is used enough to justify the expense of addressing the bug? &nbsp;If it&#39;s not, maybe the easiest solution is hiding that format from the UI. &nbsp;</p>
+<p>Of course, if this is a common format or if there are many time formats with a similar problem, then adding a new flag in a major version is probably the only safe &#39;fix&#39;. &nbsp;Though I would think the documentation should be ammended to include this caveat rather sooner than that.</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 28 Jan 2011 12:46 PM:</p><div style="margin-left: 1em"><p>AFAIK it has only been reported one time so far, which seems unlikely to me but I lack proof to the contrary.</p>
+</div>
+<p><strong>Random832</strong> on 31 Jan 2011 9:16 AM:</p><div style="margin-left: 1em"><p>The bigger question is why &quot; &#39;U&quot; is getting removed at all - it&#39;s like it thinks that text that follows the seconds bit is supposed to be removed, and it&#39;s merely failing to remove _all_ of it because it thinks it sees another hour bit. So, in other words, if this bug were fixed, it would turn it into &quot;11&quot; or &quot;11:04&quot; respectively when it [to my uninformed eye] ought to be &quot;11 Uhr&quot; and &quot;11:04 Uhr&quot;, since the &#39;Uhr&#39; text isn&#39;t associated with the minutes and seconds that are being removed.</p>
+<p>Why was this done rather than to define a LOCALE_SSHORTESTTIME for the hours-only case, with its own text box in the control panel, and make all the locale data owners define it? And what exactly does TIME_NOSECONDS do that LOCALE_SSHORTTIME [which ought not to contain seconds] doesn&#39;t?</p>
+<p>Also, where do the alternate choices in the dropdowns come from? I can&#39;t see the &#39;Uhr&#39; in CultureInfo(&quot;de-DE&quot;).DateTimeFormat - are these not exposed in .NET? are they exposed anywhere?</p>
+<p>&quot;(the defult is the 24-hour clock!)&quot; You say that as if to imply &quot;HH:mm:ss &#39;Uhr&#39;&quot; isn&#39;t a 24-hour clock format.</p></div>
+<p><strong>Michael S. Kaplan</strong> on 31 Jan 2011 11:16 AM:</p><div style="margin-left: 1em"><p>Obviously if they fix the parse bug they have to look at all of that....</p>
+<p>TIME_NOSECONDS and TIME_NOMINUTESORSECONDS have existed in windows for over 10 years, and short time is new in the latest version, for .Net compatibility. Editing every locale to add new alternate formats is probably not the most effective use of resources. :-)</p>
+</div>
+<hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2011/01/29/10121823.html" title="Kyrgyzstan, not Kazakhstan! (the &quot;Penn -- Not Penn State&#39; of Central Asia)">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2011/01/27/10120308.html" title="{recycled joke here} It could have been called LOCALE_SSINGLESERVINGDAYNAME*">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2011-01">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2011-01-28">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2011/01/28/10121371.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+</html>

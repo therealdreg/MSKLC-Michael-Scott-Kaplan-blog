@@ -1,0 +1,57 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2010/11/03/10085336.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Y can't Z Undo, exactly?</title></head><body>
+<h1>Y can't Z Undo, exactly?</h1>
+<p><em>by Michael S. Kaplan, published on 2010/11/03 07:01 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2010/11/03/10085336.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<p>People sometimes ask me how many languages I speak, since I seem to talk about so many different languages all the time.</p>
+<p>Given my incomplete knowledge of&nbsp;so many languages (including English!) I usually answer 0.6 languages.</p>
+<p>But in truth between the smattering of so many languages I have learned bits and pieces of over the years, I find myself able to read a lot more mail than I ever would have thought possible.</p>
+<p>So&nbsp;last night when Dimiter forwarded a mail to me accidentally, and it was entirely in Bulgarian, I took it in stride:</p>
+<p style="padding-left: 60px;"><span style="font-family: times new roman,times;">Subject: bug<br /><br />Когато си пусне човек кирилицата на Bulgarian Phonetic (не Bulgarian Phonetic Traditional, а новата подредба дето предложиха БАН и която идваше по default с<br />Vista) ctrl+z спира да работи във всички програми от Notepad до Office. Много досадно. Reproduce-ва се на всички компютри 100% и не става на другите клавиатурни подредби като en, bds и phonetic traditional.<br /><br />Айде ако ти пука report-вай го. Аз мисля, че достатъчно опити направих.</span></p>
+<p>It took nearly four minutes before he sent another mail with the translation, apologizing for having had me on the mail (he was just looking for my email address and did not mean to have me on the reply!), I had already checked out the mail.</p>
+<p>Actually, there were enough terms I knew and English terms (like the names of keyboard layouts on Windows) that I had already translated&nbsp;the mail in my head, and knew what the problem was!</p>
+<p>Dimiter provided a confirmation that I was right, four minutes later as I mentioned:</p>
+<p style="padding-left: 30px;"><span style="font-family: times new roman,times;"><em>apparently CTRL+Z doesn't work on Bulgarian (Phonetic). It doesn't repro with any other layout (including Phonetic Traditional), so it's a specific bug</em>.</span></p>
+<p>This is technically not a bug, actually.</p>
+<p>But I should explain what is going on here.</p>
+<p>First let's load up the <strong>Bulgarian Phonetic keyboard layout</strong> </p>
+<p style="padding-left: 30px;"><img src="http://trigeminal.fmsinc.com/images/Bulgarian01.png" border="0" /></p>
+<p>in that tool of 1000 uses, MSKLC (Microsoft Keyboard Layout Creator):</p>
+<p><img src="http://trigeminal.fmsinc.com/images/Bulgarian02.png" border="0" /></p>
+<p>Now of course one knows where the "Z" key is on the keyboard, it is on the key that in MSKLC is just above the <strong>Left Alt </strong>key (the one just to the right of it is the "102" key not present on some keyboards).</p>
+<p>You know, this key:</p>
+<p><img src="http://trigeminal.fmsinc.com/images/Bulgarian03.png" /></p>
+<p>Though if you hover over that key, you will see that the key is not what you think it is!</p>
+<p>Try it!</p>
+<p><img src="http://trigeminal.fmsinc.com/images/Bulgarian05.png" border="0" /></p>
+<p>VK_Y?</p>
+<p>What's that doing way over there?</p>
+<p>Thank goodness for a hidden feature in MSKLC that will make finding VK_Z much easier.</p>
+<p>Just hit the "Z" key on your keyboard and MSKLC will&nbsp;select the key, which turns out to be this one:</p>
+<p><img src="http://trigeminal.fmsinc.com/images/Bulgarian04.png" border="0" /></p>
+<p>The one under the 6.</p>
+<p>Hover over to confirm:</p>
+<p><img src="http://trigeminal.fmsinc.com/images/Bulgarian06.png" border="0" /></p>
+<p>Wow, weird.</p>
+<p>So, the "Y" and "Z" seem reversed.</p>
+<p>Where have I seen that before?</p>
+<p>Oh yeah, I remember.</p>
+<p>On the <strong>German keyboard layout</strong>:</p>
+<p><img src="http://trigeminal.fmsinc.com/images/Bulgarian07.png" border="0" /></p>
+<p>Whoever put together the <strong>Bulgarian Phonetic keyboard layout</strong> must have started from the <strong>German keyboard layout</strong> to get its slightly different view of the mapping between scan codes and virtual keys.</p>
+<p>This kinda of takes us full circle to Raymond Chen's <a href="http://blogs.msdn.com/b/oldnewthing/archive/2010/10/12/10074411.aspx" title="Why are the keyboard scan codes for digits off by one?">Why are the keyboard scan codes for digits off by one?</a> (which was in turn as riff off my <a href="http://archives.miloush.net/michkap/archive/2010/10/08/10073124.html" title="Off by one what, exactly?"><strong>Off by one <em>what</em>, exactly?</strong></a>):</p>
+<p style="padding-left: 60px;">Of course, if the original keyboard designers had <a href="http://blogs.msdn.com/b/oldnewthing/archive/2010/10/04/10070943.aspx"><span style="color: #770000;">started counting from the lower left corner, like all right-thinking mathematically-inclined people</span></a>, then this sort-of-coincidence would never have happened. The scan codes for the digits would have been 2E through 37, and nobody would have thought anything of it. </p>
+<p>Further to this point about if we had gotten a different design of these key assignments, had the Virtual Key values not been based on the letters in the US keyboard, then languages that used the same Latin Script letters (e.g. French and Spanish and Portuguese and <strong>German</strong>) would not have felt compelled to&nbsp;move the&nbsp;VK values around when letters moved around. This movement is something that keyboards that use other scripts generally leave in the basic US keyboard positions and do not get in the habit of doing, so the only people who run into problems are:</p>
+<ul>
+<li>Anyone who tries to use a software keyboard layout for a different Latin script language that doesn't match the letters printed on the hardware faces, and</li>
+<li>Anyone who tries to use a software keyboard layout whose scan code to virtual key mapping is based on one of those other keyboards.</li>
+</ul>
+<p>Obviously a program could figure out the exact letter on the key and tell you what is for these cases, but almost no programs do.</p>
+<p>And we can't change the layout now that it has shipped this way. The only way it could ever be "fixed" is to deprecate the old layout and add yet another Bulgarian layout -- one with identical behavior in the letters it types for most users since the keyboard&nbsp;shortcuts apparently are not that commonly used&nbsp;in Bulgarian&nbsp;(which is why Microsoft had never heard this bug report previously despite the keyboard layout having existed since Vista was in beta, and called Longhorn).</p>
+<p>If I still owned MSKLC (or if the current owners ever planned to ship a version again, a concept that seems less and less likely all the time!)&nbsp;then I'd also suggest detecting this as a validation issue for all non-Latin script keyboard layouts (and perhaps a separate rule for Latin script lanhguage keyboards to match the VK values for roughly the same reason). But that is just something I think about in idle moments.</p>
+<p>This kind of&nbsp;issue with the keyboard layout itself&nbsp;may well just be a permanent small confusion for the <strong>Bulgarian Phonetic keyboard layout</strong>, with just this blog (and perhaps a future KB article?)&nbsp;describing the full story....</p>
+<hr/><p><strong>Michael S. Kaplan</strong> on 4 Nov 2010 8:35 AM:</p><div style="margin-left: 1em"><p>And now there is a Bulgarian pointer to this blog, <a href="http://blog.doncho.net/?p=1180"><strong>here</strong></a>. Thanks, Doncho! :-)</p></div>
+<hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2011/01/07 <a href="http://archives.miloush.net/michkap/archive/2011/01/07/10112915.html">Had I known that my last release would be *the* last release..., aka hindsight is 2020</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2010/11/04/10085887.html" title="It may not be the best idea to think of Luxembourgish as &quot;German with an army&quot;. :-)">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2010/11/02/10084569.html" title="iOS &lt;= 4.1: ±1 hour from savoir faire?">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2010-11">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2010-11-03">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2010/11/03/10085336.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+</html>

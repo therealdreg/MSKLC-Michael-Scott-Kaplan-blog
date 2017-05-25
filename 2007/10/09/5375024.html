@@ -1,0 +1,40 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2007/10/09/5375024.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:37 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>If you are going to take it so literally, you may want to give 'em a quote or two</title></head><body>
+<h1>If you are going to take it so literally, you may want to give 'em a quote or two</h1>
+<p><em>by Michael S. Kaplan, published on 2007/10/09 10:31 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2007/10/09/5375024.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P><EM>NOTE: In addition to the wonderful&nbsp;lesson in this post,&nbsp;please keep in mind the lesson from <A class="" href="http://archives.miloush.net/michkap/archive/2007/02/20/1724946.html" mce_href="http://archives.miloush.net/michkap/archive/2007/02/20/1724946.html"><STRONG>Dumb quotes... or maybe they are just smart-ass quotes</STRONG></A> when you are applying the solution discussed below....</EM></P>
+<P>The other day, Michel asked me via email:</P>
+<BLOCKQUOTE>
+<P><EM><FONT face="times new roman,times">Hi Michael,<BR><BR>Would you know how I can escape the "h" character in order to display it without being interpreted?<BR><BR>To get for instance a more natural "9 h 58" rather than electronic clock-like "09:58" for French?<BR><BR>This is the natural format .... for French content, but I find the time is used so frequently in software sentences that it is less shocking displayed as "Hhmm".<BR><BR>I could not find this information in the help. I tried backslashing it, to no avail.<BR><BR>Thanks,<BR>Michel.</FONT></EM></P></BLOCKQUOTE>
+<P>I too had real problems trying to find the information in help or documentation or other resources. The question is not just how to handle the situation of ambiguous literals in a format string; even unambiguous literals are disallowed, as my attempt to add an "ABC " prefix to the long date format below:</P>
+<P><IMG src="http://trigeminal.fmsinc.com/images/literal01.png" mce_src="http://trigeminal.fmsinc.com/images/literal01.png"></P>
+<P>The trick here is to always quote literals with single quotes, like this:</P>
+<P><IMG src="http://trigeminal.fmsinc.com/images/literal02.png" mce_src="http://trigeminal.fmsinc.com/images/literal02.png"></P>
+<P>That was easy, right? You can then even see it show up in the user interface:</P>
+<P><IMG src="http://trigeminal.fmsinc.com/images/literal03.png" mce_src="http://trigeminal.fmsinc.com/images/literal03.png"></P>
+<P>Looks like I should update my Defender signatures, now that I look a little closer at the tray, too. :-)</P>
+<P>Okay, let's go back to Michel's original question and apply the same solution:</P>
+<P><IMG src="http://trigeminal.fmsinc.com/images/literal04.png" mce_src="http://trigeminal.fmsinc.com/images/literal04.png"></P>
+<P>There we go. Just what the doctor ordered.</P>
+<P>Note that this does not apply in the .NET Framework, which can run the following code with no problem, testing&nbsp;both ways:</P>
+<BLOCKQUOTE><FONT face="Consolas,Lucida Console,Courier New,Courier"><B>
+<P>CultureInfo ci = new CultureInfo("en-US");<BR>DateTimeFormatInfo dtfi = ci.DateTimeFormat;<BR>dtfi.LongDatePattern = "'QQQQ' " + dtfi.LongDatePattern;<BR>Console.WriteLine(DateTime.Now.ToString("D", dtfi));<BR>dtfi.LongDatePattern = "RRRR " + dtfi.LongDatePattern;<BR>Console.WriteLine(DateTime.Now.ToString("D", dtfi));</P></B></FONT></BLOCKQUOTE>
+<P>and it will return:</P>
+<BLOCKQUOTE><FONT face="Consolas,Lucida Console,Courier New,Courier"><B>
+<P>QQQQ Monday, October 08, 2007<BR>RRRR&nbsp;QQQQ Monday, October 08, 2007&nbsp;</P></B></FONT></BLOCKQUOTE>
+<P>Now for the record, the rule in unmanaged code is not always applicable, 100% of the time. Clearly there are no problems with the punctuation in the format string, for example.</P>
+<P>And people running in managed code might think they don't need to bother with the quoting, but you never know when you will have a component that does a bit of unmanaged work as&nbsp;well, so the quotes that won't ever hurt and may save you from unintended failure.</P>
+<P>So&nbsp;to be safe, it is always better to quote literals because you never know when the code that parses and/or validates the format string will (in managed or unmanaged environments)&nbsp;try to take your string at its word, a bit too literally!</P>
+<P mce_keep="true">&nbsp;</P>
+<P><FONT color=#ff00ff><EM>This post brought to you by</EM> <FONT size=5>'</FONT> <EM>(<A class="" href="http://www.fileformat.info/info/unicode/char/0027" mce_href="http://www.fileformat.info/info/unicode/char/0027">U+0027</A>, a.k.a. APOSTROPHE)</EM></FONT></P>
+<hr/><p><strong>Ben Cooke</strong> on 9 Oct 2007 1:03 PM:</p><div style="margin-left: 1em"><p>*pssst*</p>
+<p>Don't call it &quot;the tray&quot;, or Raymond might get upset!</p>
+<p>:)</p></div>
+<p><strong>Björn</strong> on 10 Oct 2007 3:01 PM:</p><div style="margin-left: 1em"><p>Yeah, you do not want Raymond to call you wrong [1], do you? :]</p>
+<p>[1] <a rel="nofollow" target="_new" href="http://blogs.msdn.com/oldnewthing/archive/2003/09/10/54831.aspx">http://blogs.msdn.com/oldnewthing/archive/2003/09/10/54831.aspx</a></p>
+</div>
+<hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2013/04/03 <a href="http://archives.miloush.net/michkap/archive/2013/04/03/10407114.html">“The ‘Smart Quotes’ are leaking all over the Internet!”</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2007/10/09/5375754.html" title="A&amp;P of Sort Keys, part 13 (About the function that is too lazy to get it right every time)">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2007/10/09/5372681.html" title="It looks like you are using Google anyway....">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2007-10">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2007-10-09">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2007/10/09/5375024.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:37 GMT -->
+</html>

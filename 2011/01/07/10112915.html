@@ -1,0 +1,219 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2011/01/07/10112915.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Had I known that my last release would be *the* last release..., aka hindsight is 2020</title></head><body>
+<h1>Had I known that my last release would be *the* last release..., aka hindsight is 2020</h1>
+<p><em>by Michael S. Kaplan, published on 2011/01/07 07:01 -05:00, original URI: http://blogs.msdn.com/b/michkap/archive/2011/01/07/10112915.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<p>It all starts with the Win32 <a href="http://msdn.microsoft.com/library/ms724336.aspx">GetKeyboardType function</a>. If you look at the MSDN topic, it gives the following possible keyboard types:</p>
+<p>&nbsp;</p>
+<table cellpadding="5" cellspacing="5" border="1" style="width: 579px;">
+<tbody>
+<tr>
+<td width="200" valign="top"><strong>Value</strong></td>
+<td width="362" valign="top"><strong>Meaning</strong></td>
+</tr>
+<tr>
+<td width="200" valign="top">1</td>
+<td width="362" valign="top">IBM PC/XT or compatible (83-key) keyboard</td>
+</tr>
+<tr>
+<td width="200" valign="top">2</td>
+<td width="362" valign="top">Olivetti "ICO" (102-key) keyboard</td>
+</tr>
+<tr>
+<td width="200" valign="top">3</td>
+<td width="362" valign="top">IBM PC/AT (84-key) or similar keyboard</td>
+</tr>
+<tr>
+<td width="200" valign="top">4</td>
+<td width="362" valign="top">IBM enhanced (101- or 102-key) keyboard</td>
+</tr>
+<tr>
+<td width="200" valign="top">5</td>
+<td width="362" valign="top">Nokia 1050 and similar keyboards</td>
+</tr>
+<tr>
+<td width="200" valign="top">6</td>
+<td width="362" valign="top">Nokia 9140 and similar keyboards</td>
+</tr>
+<tr>
+<td width="200" valign="top">7</td>
+<td width="362" valign="top">Japanese keyboard</td>
+</tr>
+</tbody>
+</table>
+<p>If you look in the WDK&rsquo;s kbd.h it tells a slightly fuller story, though:</p>
+<table cellpadding="5" cellspacing="5" border="1" style="width: 714px;">
+<tbody>
+<tr>
+<td width="200" valign="top"><strong>Value</strong></td>
+<td width="497" valign="top"><strong>Meaning</strong></td>
+</tr>
+<tr>
+<td width="200" valign="top">1</td>
+<td width="497" valign="top">AT&amp;T '301' &amp; '302'; Olivetti 83-key; PC-XT 84-key; etc.</td>
+</tr>
+<tr>
+<td width="200" valign="top">2</td>
+<td width="497" valign="top">Olivetti M24 102-key</td>
+</tr>
+<tr>
+<td width="200" valign="top">3</td>
+<td width="497" valign="top">HP Vectra (DIN); Olivetti 86-key; etc.</td>
+</tr>
+<tr>
+<td width="200" valign="top">4</td>
+<td width="497" valign="top">Enhanced 101/102-key; Olivetti A; etc.</td>
+</tr>
+<tr>
+<td width="200" valign="top">5</td>
+<td width="497" valign="top">Nokia (Ericsson) type 5 (1050, etc.)</td>
+</tr>
+<tr>
+<td width="200" valign="top">6</td>
+<td width="497" valign="top">Nokia (Ericsson) type 6 (9140)</td>
+</tr>
+<tr>
+<td width="200" valign="top">7</td>
+<td width="497" valign="top">Japanese IBM type 002 keyboard.</td>
+</tr>
+<tr>
+<td width="200" valign="top">8</td>
+<td width="497" valign="top">Japanese OADG (106) keyboard.</td>
+</tr>
+<tr>
+<td width="200" valign="top">10</td>
+<td width="497" valign="top">Korean 101 (type A) keyboard.</td>
+</tr>
+<tr>
+<td width="200" valign="top">11</td>
+<td width="497" valign="top">Korean 101 (type B) keyboard.</td>
+</tr>
+<tr>
+<td width="200" valign="top">12</td>
+<td width="497" valign="top">Korean 101 (type C) keyboard.</td>
+</tr>
+<tr>
+<td width="200" valign="top">13</td>
+<td width="497" valign="top">Korean 103 keyboard.</td>
+</tr>
+<tr>
+<td width="200" valign="top">16</td>
+<td width="497" valign="top">Japanese AX keyboard.</td>
+</tr>
+<tr>
+<td width="200" valign="top">20</td>
+<td width="497" valign="top">Fujitsu FMR JIS keyboard.</td>
+</tr>
+<tr>
+<td width="200" valign="top">21</td>
+<td width="497" valign="top">Fujitsu FMR OYAYUBI keyboard.</td>
+</tr>
+<tr>
+<td width="200" valign="top">22</td>
+<td width="497" valign="top">Fujitsu FMV OYAYUBI keyboard.</td>
+</tr>
+<tr>
+<td width="200" valign="top">30</td>
+<td width="497" valign="top">NEC PC-9800 Normal Keyboard.</td>
+</tr>
+<tr>
+<td width="200" valign="top">31</td>
+<td width="497" valign="top">NEC PC-9800 Document processor Keyboard.&nbsp; - not supported on NT5</td>
+</tr>
+<tr>
+<td width="200" valign="top">32</td>
+<td width="497" valign="top">NEC PC-9800 106 Keyboard. - same as KBD_TYPE 8</td>
+</tr>
+<tr>
+<td width="200" valign="top">33</td>
+<td width="497" valign="top">NEC PC-9800 for Hydra: PC-9800 Keyboard on Windows NT 5.0. <br />NEC PC-98NX for Hydra: PC-9800 Keyboard on Windows 95/NT.</td>
+</tr>
+<tr>
+<td width="200" valign="top">34</td>
+<td width="497" valign="top">NEC PC-9800 for Hydra: PC-9800 Keyboard on Windows NT 3.51/4.0.</td>
+</tr>
+<tr>
+<td width="200" valign="top">37</td>
+<td width="497" valign="top">NEC PC-9800 for Hydra: PC-9800 Keyboard on Windows 95.</td>
+</tr>
+<tr>
+<td width="200" valign="top">40</td>
+<td width="497" valign="top">DEC LK411-JJ (JIS&nbsp; layout) keyboard</td>
+</tr>
+<tr>
+<td width="200" valign="top">41</td>
+<td width="497" valign="top">DEC LK411-AJ (ANSI layout) keyboard</td>
+</tr>
+</tbody>
+</table>
+<p>Now the primary &ldquo;feature&rdquo; that kbd.h provides is a Scan Code to VK mapping for each of these keyboards. The mapping is basically the same for most of VK_A to VK_Z but all over the place on the various VK_OEM_* entries.</p>
+<p>These keyboard types are referring to hardware and nominally represent the way actual keys are laid out.</p>
+<p><em>Note that they do not handle all of the alternate layout information when language keyboards are in other languages even when they do handle the VK_OEM_* keys properly.</em></p>
+<p>Of course I have written many times in the past in this Blog about how the keyboard layout DLLs map hardware scan codes to VK (virtual key) values.</p>
+<p>Some of it happens to match in these two very different mappings for individual languages, but mostly they are a huge non-overlapping mess.</p>
+<p>And this is where MSKLC comes in.</p>
+<p>At its basic fundamental level, it is a fancy GUI wrapper around KBDUTOOL.EXE, which is itself a Unicode port of the KBDTOOL.EXE that is used by Windows itself to create keyboard layouts.</p>
+<p>When it is building layouts, it is making use of KBD.H and thus has some interesting dependencies on one of these scan code/VK mappings even though its only real purpose is to build a DLL that supports the other mapping. And a KBD_TYPE is set by KBDUTOOL.EXE, even though one is never specified in the keyboard source files.</p>
+<p>This strange combination of an incomplete attempt to capture keyboard hardware and inept way to build the layouts that sit atop them seems far less than ideal.</p>
+<p>And this is where the problems can start.</p>
+<p>It was not too long ago that ML posted a question over in the Suggestion Box (a few others have sent me mail about this before but this was the most recent one):</p>
+<blockquote>
+<p><span style="font-family: Times New Roman; font-size: xx-small;">Hello Michael! </span></p>
+<p><span style="font-family: Times New Roman; font-size: xx-small;">I'm a beginner when it comes to the complexities behind MSKLC, so if you are able to respond to this problem, I hope that you can keep your answer relatively straightforward. All that I understand so far about keyboards is that the physical keys themselves on the keyboard have codes called "scan codes". The symbol on the surface of the key, or the code for whatever appears on the screen when you press the key, is the "virtual code".</span></p>
+<p><span style="font-family: Times New Roman; font-size: xx-small;">I've created my own phonetic keyboards for some different languages with MSKLC. Now I'm trying to create my own phonetic Lao keyboard, and this is the first time I've encountered this problem. The keyboard is validated, but directly thereafter I get an Error 2020 window. For example:</span></p>
+<p><span style="font-family: Times New Roman; font-size: xx-small;">Error 2020 (..\.\tmpLaoPhon1.txt, line 67): <br />VK_OEM_1 (ba) found at scancodes 1a and 27.</span></p>
+<p><span style="font-family: Times New Roman; font-size: xx-small;">Because I have a German keyboard, I then went to <a href="http://msdn.microsoft.com/en-us/library/ms892159.aspx">this page</a></span><span style="font-family: Times New Roman; font-size: xx-small;"> where I saw that scancodes 1a and 27 are VK_OEM_1 and VK_OEM_3. Then I looked back at those virtual key locations on the keyboard layout I was creating by clicking on those keys and selecting "All...". I couldn't figure out what could be wrong, so I just deleted everything located at those virtual keys.</span></p>
+<p><span style="font-family: Times New Roman; font-size: xx-small;">When I tried to build the setup package again, I got more Error 2020's for all virtual keys VK_OEM_1 through VK_OEM_7 and the VK_OEM_PLUS and VK_OEM_MINUS keys. </span></p>
+<p><span style="font-family: Times New Roman; font-size: xx-small;">These are the symbols that had been entered at those keys:</span></p>
+<p><span style="font-family: Times New Roman; font-size: xx-small;">VK_OEM_1 <br />&nbsp;&nbsp;&nbsp; &lt;Key&gt; U+0eb6 <br />&nbsp;&nbsp;&nbsp; shift+&lt;Key&gt; U+0eb7</span></p>
+<p><span style="font-family: Times New Roman; font-size: xx-small;">VK_OEM_PLUS <br />&nbsp;&nbsp;&nbsp; &lt;Key&gt; U+002b <br />&nbsp;&nbsp;&nbsp; shift+&lt;Key&gt; U+002a</span></p>
+<p><span style="font-family: Times New Roman; font-size: xx-small;">VK_OEM_2 <br />&nbsp;&nbsp;&nbsp; shift+&lt;Key&gt; U+005f</span></p>
+<p><span style="font-family: Times New Roman; font-size: xx-small;">VK_OEM_3 <br />&nbsp;&nbsp;&nbsp; Nothing</span></p>
+<p><span style="font-family: Times New Roman; font-size: xx-small;">VK_OEM_4 <br />&nbsp;&nbsp;&nbsp; shift+&lt;Key&gt; U+003f <br />&nbsp;&nbsp;&nbsp; ctrl+Alt+&lt;Key&gt; U+005c</span></p>
+<p><span style="font-family: Times New Roman; font-size: xx-small;">VK_OEM_6 <br />&nbsp;&nbsp;&nbsp; Nothing</span></p>
+<p><span style="font-family: Times New Roman; font-size: xx-small;">VK_OEM_7 <br />&nbsp;&nbsp;&nbsp; &lt;Key&gt; U+0023 <br />&nbsp;&nbsp;&nbsp; shift+&lt;Key&gt; U+0027</span></p>
+<p><span style="font-family: Times New Roman; font-size: xx-small;">VK_OEM_MINUS <br />&nbsp;&nbsp;&nbsp; &lt;Key&gt; U+002d <br />&nbsp;&nbsp;&nbsp; shift+&lt;Key&gt; U+005f</span></p>
+<p><span style="font-family: Times New Roman; font-size: xx-small;">I continued to delete all symbols that I had entered for the virtual keys mentioned in the error windows. I was only able to build the setup package when I had deleted all key symbols for VK_OEM_1 through VK_OEM_7 and the VK_OEM_PLUS and VK_OEM_MINUS keys.</span></p>
+<p><span style="font-family: Times New Roman; font-size: xx-small;">The really weird thing is that if I copy all of the symbols for these keys into a MSKLC keyboard I created for Thai, there are no Error 2020's. </span></p>
+<p><span style="font-family: Times New Roman; font-size: xx-small;">I found a similar blog entry of yours called "The advanced feature in MSKLC doesn't really scan", but it doesn't seem to be exactly the same problem, and there was also no solution presented that I could find.</span></p>
+<p><span style="font-family: Times New Roman; font-size: xx-small;">I've just tried creating new keyboard layouts altogether, and I've found that I now get these errors for the VK_OEM keys consistently, no matter what language or symbol type I enter on these keys /:-.</span></p>
+<p><span style="font-family: Times New Roman; font-size: xx-small;">I'd be grateful if you have any ideas to what is going on.</span></p>
+<p><span style="font-family: Times New Roman; font-size: xx-small;">Thanks! <br />ML</span></p>
+</blockquote>
+<p>Ah, the famous error 2020.</p>
+<p>The internal constant for the error code is KBDTOOL_ERROR_DUPLICATE_SCANCODE, and the error text:</p>
+<blockquote>
+<p><span style="font-family: Times New Roman; font-size: xx-small;">Error 2020 (..\.\tmpLaoPhon1.txt, line 67): <br />VK_OEM_1 (ba) found at scancodes 1a and 27.</span></p>
+</blockquote>
+<p>lists what the duplicates were.</p>
+<p>Note that you will get the same error if your .KLC file has two duplicate scan code entries; KBDUTOOL does not distinguish between a file having duplicates and a file duplicating its assumptions.</p>
+<p>Now as luck (for lack of another word) would have it, the first scan code is pretty much invariably the one in the header file, and the second scan code is the one found in the .KLC file.</p>
+<p>So if you find yourself in this state, one way to fix it would be to:</p>
+<ol>
+<li>Open up the .KLC file in Notepad.</li>
+<li>Change the VK_* value cited in the error to use the first scan code rather than the second.</li>
+<li>Save the .KLC file.</li>
+<li>Open the newly changed .KLC file in MSKLC.</li>
+<li>Rebuild the keyboard in MSKLC.</li>
+<li>If you get another error 2020, repeat steps 1-5 again until the build is successful.</li>
+</ol>
+<p>Now although this solves the problem of the keyboard not building, it may leave you with either </p>
+<ul>
+<li>some punctuation being in the wrong place (an obvious potential problem with the moving around being done here), or</li>
+<li>some punctuation having an unexpected VK value associated with it (causing similar problem to the one I described in <a href="http://archives.miloush.net/michkap/archive/2010/11/03/10085336.html"><strong>Y can't Z Undo, exactly?</strong></a>, albeit for different reasons and more likely involving punctuation than letters in most cases).</li>
+</ul>
+<p>Both of those issues kind of suck, though they are fixable.</p>
+<p>A less satisfying solution is to start over from as keyboard that does work (you can load an existing keyboard and save it, for example &ndash; it will build) and then make the keyboard be the way you want it to be. On the whole I prefer the first solution to the second, because fixing up a limited number of keys is always going to be easier than starting over.</p>
+<p>In the long run, I would rather see this fixed in a new version of MSKLC and its KBDUTOOL, with the following changes:</p>
+<ol>
+<li>Fix the bizarre keyboard type guessing behavior in KBDUTOOL that assumes the .KLC file is wrong and is duplicating scan codes just because the source does not match the [flawed] expectations of the tool;</li>
+<li>Expose the keyboard type/subtype as settable options in MSKLC/KBDUTOOL;</li>
+<li>Perform explicit punctuation &ldquo;switching&rdquo; based on keyboard type to better support one language&rsquo;s keyboard against expected punctuation;</li>
+</ol>
+<p>Note that will fix many problems noted previously in blogs like <a href="http://archives.miloush.net/michkap/archive/2006/03/08/546197.html"><strong>Ideas about loading existing keyboards in MSKLC</strong></a> and <a href="http://archives.miloush.net/michkap/archive/2006/03/07/545115.html"><strong>The real problems with keyboard switching</strong></a> and <a href="http://archives.miloush.net/michkap/archive/2008/10/23/9013000.html"><strong>Does MS just make up these punctuation-challenged keyboards to piss people off?</strong></a> (not to mention the other blogs the latter points to!).</p>
+<p>However, I do not own MSKLC anymore and since the team that does own it has never shipped an update, this seems unlikely to be a future change in the tool. </p>
+<p>I should have done more when I did own it; had I known that my last release would be <strong>the</strong> last release, I migt have done things differently....</p>
+<hr/><div style="margin-left: 1em"><em>no comments</em></div><hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2011/04/09 <a href="http://archives.miloush.net/michkap/archive/2011/04/09/10151666.html">[Keyboard ]Solution Unsatisfactory</a></p><p>2011/03/24 <a href="http://archives.miloush.net/michkap/archive/2011/03/24/10145161.html">Knowing the layout doesn't mean knowing how to lay it out....</a></p><p>2011/01/08 <a href="http://archives.miloush.net/michkap/archive/2011/01/08/10113236.html">ARM port of Windows? No comment. Followed by a comment....</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2011/01/08/10113236.html" title="ARM port of Windows? No comment. Followed by a comment....">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2011/01/06/10111881.html" title="Short-sighted text processing #6: OpenType and Apple and OpenType">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2011-01">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2011-01-07">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2011/01/07/10112915.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+</html>

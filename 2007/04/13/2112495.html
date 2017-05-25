@@ -1,0 +1,33 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2007/04/13/2112495.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:38 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>ESE is still not so easy for me!</title></head><body>
+<h1>ESE is still not so easy for me!</h1>
+<p><em>by Michael S. Kaplan, published on 2007/04/13 05:47 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2007/04/13/2112495.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P>Koushal asks via the contact link:</P>
+<BLOCKQUOTE><FONT size=2>
+<P>Hi Michael,</P>
+<P><FONT face="times new roman,times"><EM>How you doin? I found your reply to a post regarding the steps to be followed and APIs to be used to get a list of tables in a .edb file using ESE APIs. You've written that you are not providing the sample source code because it was way long back when you had written and tested it and now, it may not work.<BR><BR>But I'll be very much grateful to you if you can give me the source code. Presently, I dont have any source of reference so as to use the ESE APIs. I dont have the ESENT.H file and the ESENT.LIB file either. I didnt find the mentioned files in the Exchange SDK and I'm just referring to sample codes on the internet to get the constants and datatypes which any ESE programmer is supposed to collect from the ESENT.H file.<BR><BR>So, can you please send to me your source code (no matter if it doesnt work) ? Also, if you could send me the header and lib files, it will help me in getting things going the right way. Presently, I have to load the ESE.DLL library and call GetProcAddress() for every function I have to use. If I had the LIB, I could had saved 1 function call with every step I had to perform and eventually lessen the size of my source code.<BR><BR>Hoping to get your help at the soonest,<BR><BR>Thanks in advance,<BR><BR>Koushal</EM></FONT></P></FONT></BLOCKQUOTE>
+<P>I have actually checked with folks here (like <A class="" href="http://blogs.msdn.com/brettsh/" mce_href="http://blogs.msdn.com/brettsh/">Brett</A>!)&nbsp;and although I was able to repro the problem of not having esent.h/esent.lib in some versions of the Platform SDK/Windows SDK,&nbsp;all versions of the Core SDK from Window Server 2003 SP1 has the files -- so all you have to do is install the core SDK and you will have them installed. </P>
+<P>Contrasted with code calling Jet Red which I cannot give any headers or lib files for, which are not in the Platform SDK, and whose functions are exported without even having names, and trust me when I say that trying to learn about ESE through them is like trying to learn about driving by reading a comic book!</P>
+<P>The source code I had can occasionally give insights into using ESE,&nbsp;but more often&nbsp;it does not and occasionally it can be downright misleading&nbsp;(their functionality has never matched and their respective APIs&nbsp;have diverged over the years). And as I pointed out in <A class="" href="http://archives.miloush.net/michkap/archive/2007/03/04/1806607.html" mce_href="http://archives.miloush.net/michkap/archive/2007/03/04/1806607.html"><STRONG>this post</STRONG></A>, I won't usually know the answer.&nbsp;On top of everything,&nbsp;it is pretty off-topic here at SIAO!</P>
+<P>You may have better luck asking <A class="" href="http://blogs.msdn.com/brettsh/" mce_href="http://blogs.msdn.com/brettsh/">Brett</A>&nbsp;or the <A class="" href="http://msexchangeteam.com/default.aspx" mce_href="http://msexchangeteam.com/default.aspx">Exchange Team Blog</A> which has links to several other Exchange blogs....</P>
+<hr/><p><a id="2116491" href="#2116491">#</a> <strong>Mihai</strong> on 13 Apr 2007 12:23 PM:</p><div style="margin-left: 1em"><P>It is also easy to generate your own .lib from a .dll</P>
+<P>&nbsp;dumpbin /exports user32.dll &gt; user32.def</P>
+<P>Open in a text editor, and look for the list of exported funcitons:</P>
+<P>...</P>
+<P><FONT face="consolas,lucida console,console,courier new,courier">&nbsp; &nbsp;ordinal hint RVA &nbsp; &nbsp; &nbsp;name<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1 &nbsp; &nbsp;0 0001D32A ActivateKeyboardLayout<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2 &nbsp; &nbsp;1 00021100 AdjustWindowRect<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3 &nbsp; &nbsp;2 00010272 AdjustWindowRectEx<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;4 &nbsp; &nbsp;3 0005D2A6 AlignRects</FONT></P>
+<P>Remove everything before and after that list, change the "title" to EXPORTS.</P>
+<P>Remove the columns ordinal, hint, and RVA.</P>
+<P><FONT face="consolas,lucida console,console,courier new,courier">EXPORTS<BR>&nbsp;&nbsp;&nbsp;ActivateKeyboardLayout<BR>&nbsp;&nbsp;&nbsp;AdjustWindowRect<BR>&nbsp;&nbsp;&nbsp;AdjustWindowRectEx<BR>&nbsp;&nbsp;&nbsp;AlignRects</FONT></P>
+<P>And now generate the .lib:</P>
+<P>lib /machine:ix86 /def:user32.def /out:user32.lib</P></div>
+<p><a id="2117333" href="#2117333">#</a> <strong>Michael S. Kaplan</strong> on 13 Apr 2007 1:25 PM:</p><div style="margin-left: 1em"><p>Well, be careful -- that will only work for .lib files with no code in them. :-)</p>
+</div>
+<p><strong>Yuhong Bao</strong> on 15 Feb 2009 3:20 AM:</p><div style="margin-left: 1em"><p>&quot;Contrasted with code calling Jet Red which I cannot give any headers or lib files for, which are not in the Platform SDK, and whose functions are exported without even having names&quot;</p>
+<p>Now, Jet Red since 4.0 have symbols on the MS symbol server, which make exporting functions ordinal-only useless.</p></div>
+<p><strong>Michael S. Kaplan</strong> on 15 Feb 2009 10:59 AM:</p><div style="margin-left: 1em"><p>Um, huh? Without a .LIB file containing the names, you still can't hook up to the functions by name unless you build your own .LIB file. Oh, and the header files are also not around, either. Am I missing something here?</p>
+</div>
+<hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2007/04/13/2113001.html" title="The three stages of grief^H^H^H^H^Hcollation">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2007/04/12/2098786.html" title="The seven is not being crossed out">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2007-04">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2007-04-13">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2007/04/13/2112495.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:38 GMT -->
+</html>

@@ -1,0 +1,51 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2006/03/25/560416.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:40 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>I need my SPACE, symbolically speaking</title></head><body>
+<h1>I need my SPACE, symbolically speaking</h1>
+<p><em>by Michael S. Kaplan, published on 2006/03/25 03:01 -05:00, original URI: http://blogs.msdn.com/b/michkap/archive/2006/03/25/560416.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P><FONT face=Tahoma><EM>(No, this is not a post about anyone breaking up with me and telling me that they need their space)</EM></FONT></P>
+<P><FONT face=Tahoma>In Microsoft's implementation of collation, we have several different categories of characters, and rules for dealing with each category.</FONT></P>
+<P><FONT face=Tahoma>One of the interesting categories is the SYMBOL category. All of the miscellaneous odd symbols show up here. And they all come before the various letters and numbers.</FONT></P>
+<P><FONT face=Tahoma>Of course, as a feature most of the symbols do not really have any linguistic meaning that would foster a set of rules for how to sort them. So as I pointed out in <STRONG><A HREF="http://archives.miloush.net/michkap/archive/2005/01/19/356280.html">Not all characters are created equal: take SYMBOLS, for example</A></STRONG>, there must be some order within the symbols "block"</FONT><FONT face=Tahoma>, and the order is usually arbitrary.</FONT></P>
+<P><FONT face=Tahoma>And&nbsp;that gets us back on topic, to U+0020&nbsp;(a.k.a. SPACE). It is a symbol, too.</FONT></P>
+<P><FONT face=Tahoma>"But wait,Michael!" you may be crying now. "The space actually represents an absence of symbols, or numbers, or letters, or anything. So it should not be a symbol!"</FONT></P>
+<P><FONT face=Tahoma>Well, this gets us kind of existential, which collation usually tries to avoid. It is based on expected behavior. So let's try some thought experiments to see where expected behavior leads us.</FONT></P>
+<P><FONT face=Tahoma>If you were comparing the strings "Microsoft" and "Micro soft", would you expect them to be equal?</FONT></P>
+<P><FONT face=Tahoma>Probably not.</FONT></P>
+<P><FONT face=Tahoma>But if&nbsp;SPACE were given <A HREF="http://archives.miloush.net/michkap/archive/2005/01/18/355210.html">no weight in collation</A>, then they would always be identical. And what is more, the name Ray Mond would show up in the Exchange global address book after Raye. And all kinds of other weirdnesses.</FONT></P>
+<P><FONT face=Tahoma>So, it has to have some weight.</FONT></P>
+<P><FONT face=Tahoma>As perhaps a psychic nod to those who are&nbsp;philosophically against treating SPACE as a symbol, <STRONG>it is the very lightest of the true symbols</STRONG>. And from a behavior standpoint everything works, as long as you do not pass that NORM_IGNORESYMBOLS flag to <A href="http://msdn.microsoft.com/library/en-us/winui/winui/windowsuserinterface/resources/strings/stringreference/stringfunctions/comparestring.asp">CompareString</A> and <A href="http://msdn.microsoft.com/library/en-us/intl/nls_5s2v.asp">LCMapString</A>.</FONT></P>
+<P><FONT face=Tahoma>This last paragraph may make some people wonder what I meant when I mentioned "true symbols" -- what are the symbols that are not true to us? Am I actually talking about relationships at this point, even though I said I was not?</FONT></P>
+<P><FONT face=Tahoma>I did not change my mind on the subject, I promise. :-) &nbsp;I am simply talking about a subcategory of symbols that are treated specially which weigh even less than the space -- the punctuation. They are the ones affected by word sort vs. string sort decisions (as I discuss <A HREF="http://archives.miloush.net/michkap/archive/2005/01/19/356280.html">here</A>), and&nbsp;will weigh either less than the regular symbols (in the case of string sort) or less than even the difference between uppercase and lowercase letters (in the case of word sort).</FONT></P>
+<P><FONT face=Tahoma>Let's see some of this in action. </FONT><FONT face=Tahoma>If we look at the sort keys for several of these situations, what is happening underneath becomes more obvious:</FONT></P>
+<P><STRONG><FONT face=Tahoma>Microsoft</FONT></STRONG></P>
+<BLOCKQUOTE dir=ltr style="MARGIN-RIGHT: 0px">
+<P><FONT face="Courier New" size=2><STRONG>0E 51 0E 32 0E 0A 0E 8A 0E 7C 0E 91 0E 7C 0E 23 0E 99 01 01 12 01 01 00</STRONG></FONT></P></BLOCKQUOTE>
+<P><FONT face=Tahoma><STRONG>Micro-soft </STRONG>(word sort)</FONT></P>
+<BLOCKQUOTE dir=ltr style="MARGIN-RIGHT: 0px">
+<P><STRONG><FONT face="Courier New" size=2>0E 51 0E 32 0E 0A 0E 8A 0E 7C 0E 91 0E 7C 0E 23 0E 99 01 01 12 01 01 <FONT color=#ff0000>80 1B 06 82</FONT> 00</FONT></STRONG></P></BLOCKQUOTE>
+<P><FONT face=Tahoma><STRONG>Micro-soft</STRONG> (string sort)</FONT></P>
+<BLOCKQUOTE dir=ltr style="MARGIN-RIGHT: 0px">
+<P><FONT face="Courier New" size=2><STRONG>0E 51 0E 32 0E 0A 0E 8A 0E 7C <FONT color=#ff0000>06 82</FONT> 0E 91 0E 7C 0E 23 0E 99 01 01 12 01 01 00</STRONG></FONT></P></BLOCKQUOTE>
+<P><STRONG><FONT face=Tahoma>Micro soft</FONT></STRONG></P>
+<BLOCKQUOTE dir=ltr style="MARGIN-RIGHT: 0px">
+<P><FONT face="Courier New" size=2><STRONG>0E 51 0E 32 0E 0A 0E 8A 0E 7C <FONT color=#ff0000>07 02</FONT> 0E 91 0E 7C 0E 23 0E 99 01 01 12 01 01 00</STRONG></FONT></P></BLOCKQUOTE>
+<P><FONT face=Tahoma><STRONG>Microsoft</STRONG> / <STRONG>Micro-soft</STRONG> / <STRONG>Micro soft</STRONG> (NORM_IGNORESYMBOLS)</FONT></P>
+<BLOCKQUOTE dir=ltr style="MARGIN-RIGHT: 0px">
+<P><STRONG><FONT face="Courier New" size=2>0E 51 0E 32 0E 0A 0E 8A 0E 7C 0E 91 0E 7C 0E 23 0E 99 01 01 12 01 01 00</FONT></STRONG></P></BLOCKQUOTE>
+<P><FONT face=Tahoma>If you ignore symbols, they are all the same, otherwise the specific issues with the space, the hyphen, and word/string sort come into play.</FONT></P>
+<P><FONT face=Tahoma>Perhaps SPACE could have been a part of some bold new category that is not a symbol, but things are as they are -- and as it stands this returns intuitive results in most cases....</FONT></P>
+<P><FONT face=Tahoma></FONT>&nbsp;</P>
+<P><FONT face=Tahoma color=#ff1493><EM>This post brought to you by</EM> " " <EM>(<A href="http://www.fileformat.info/info/unicode/char/0020">U+0020</A>, a.k.a. SPACE)</EM></FONT></P>
+<P><FONT face=Tahoma></FONT>&nbsp;</P>
+<P><FONT face=Tahoma></FONT>&nbsp;</P>
+<P><FONT face=Tahoma></FONT>&nbsp;</P>
+<hr/><p><a id="561181" href="#561181">#</a> <strong>Maurits [MSFT]</strong> on 26 Mar 2006 1:47 AM:</p><div style="margin-left: 1em">&gt; some bold new category that is not a symbol<br><br>&quot;whitespace,&quot; perhaps ;-)</div>
+<p><a id="561184" href="#561184">#</a> <strong>Michael S. Kaplan</strong> on 26 Mar 2006 1:54 AM:</p><div style="margin-left: 1em">Ah, but that gets us into a whole new thing -- how do you describe the expectations of collation of text with &quot;whitespace&quot; as opposed to text with &quot;symbols&quot;, really?<br><br>In the end, there is not all that much that is different. What was that expression? &quot;A difference that makes no difference, make no difference?&quot; :-)</div>
+<p><a id="562080" href="#562080">#</a> <strong>Mihai</strong> on 27 Mar 2006 12:29 PM:</p><div style="margin-left: 1em">Some guys in marketing should be reading this post.<br>Then we might stop seeing products called &quot;C#&quot; and &quot;.NET&quot; that messed-up all the search engines :-)<br></div>
+<p><a id="562204" href="#562204">#</a> <strong>Michael S. Kaplan</strong> on 27 Mar 2006 2:19 PM:</p><div style="margin-left: 1em">The person who I believe came up with both of those things is no longer at Microsoft (he left shortly after the new names were announced). The previous name (NGWS) was not so much better, though at least more searchable!</div>
+<p><a id="8563744" href="#8563744">#</a> <strong>Susan Morehouse</strong> on 30 May 2008 1:26 PM:</p><div style="margin-left: 1em"><P>I am trying to set up "myspace.com" and the program continually tells me that the password does'nt match.</P></div>
+<hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2012/07/16 <a href="http://archives.miloush.net/michkap/archive/2012/07/16/10330046.html">if you see a ZWNBSP in the Release Preview, don't be insensitive and comment it hasn't been eating enough lately!</a></p><p>2008/01/25 <a href="http://archives.miloush.net/michkap/archive/2008/01/25/7228941.html">On reversing the irreversible (grabbing the data, part I)</a></p><p>2007/05/17 <a href="http://archives.miloush.net/michkap/archive/2007/05/17/2692362.html">If a bunch of specific Unicode characters can no longer live in the same apartment together, can they really claim that they needed their space?</a></p><p>2006/11/01 <a href="http://archives.miloush.net/michkap/archive/2006/11/01/916477.html">If you add enough characters to a sort, intuitive distinction can suffer</a></p><p>2006/10/31 <a href="http://archives.miloush.net/michkap/archive/2006/10/31/906323.html">"àèìòù" < "äëïöü" but "àèìòù " > "äëïöü"</a></p><p>2006/10/01 <a href="http://archives.miloush.net/michkap/archive/2006/10/01/778990.html">Logical StrCmpLogicalW changes in Vista</a></p><p>2006/04/21 <a href="http://archives.miloush.net/michkap/archive/2006/04/21/580316.html">'universal-character-name encountered in source'</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2006/03/25/560838.html" title="Enumerating available localized language resources in .NET">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2006/03/24/559169.html" title="Getting all you can out of a keyboard layout, Part #3">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2006-03">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2006-03-25">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2006/03/25/560416.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:40 GMT -->
+</html>

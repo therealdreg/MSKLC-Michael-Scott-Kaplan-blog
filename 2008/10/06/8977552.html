@@ -1,0 +1,80 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2008/10/06/8977552.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:35 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>UCS-2 to UTF-16, Part 4: Talking about the ask</title></head><body>
+<h1>UCS-2 to UTF-16, Part 4: Talking about the ask</h1>
+<p><em>by Michael S. Kaplan, published on 2008/10/06 10:01 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2008/10/06/8977552.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<p>Previous blogs in this series of blogs on this Blog:</p>
+
+<ul>
+<li><b><a href="http://archives.miloush.net/michkap/archive/2008/08/30/8907667.html" mce_href="http://archives.miloush.net/michkap/archive/2008/08/30/8907667.html">Part 0: The intro, sans content</a></b> </li>
+
+<li><b><a href="http://archives.miloush.net/michkap/archive/2008/09/08/8931641.html" mce_href="http://archives.miloush.net/michkap/archive/2008/09/08/8931641.html">Part 1: Getting the obvious out of the way</a></b> </li>
+
+<li><b><a href="http://archives.miloush.net/michkap/archive/2008/09/15/8952073.html" mce_href="http://archives.miloush.net/michkap/archive/2008/09/15/8952073.html">Part 2: A&amp;P of a 'linguistic character'</a></b></li>
+
+<li><b><a href="http://archives.miloush.net/michkap/archive/2008/09/18/8956650.html" mce_href="http://archives.miloush.net/michkap/archive/2008/09/18/8956650.html">Part 3: It starts with cursor movement (where MS simultaneously gets better and worse)</a></b></li>
+</ul>
+
+<p>If you have been following this series, you might be wondering what comes next.</p>
+
+<p>Perhaps it would be about selection and all of the interesting issues there (especially the weirdnesses with selecting partial elements in some cases and more interestingly the way we would think it weird if partial elements were not selected in other cases. It may be impossible to separate our intuitive expectations coming fresh into computers from our intuitive behavior based on generations of typewriters and then computers.</p>
+
+<p>But it is really kind of old hat, minus an issue or two like the ones summarized in <b><a href="http://archives.miloush.net/michkap/archive/2006/01/10/511194.html" mce_href="http://archives.miloush.net/michkap/archive/2006/01/10/511194.html">More on cursor support: the rest of the answer</a></b> and the earlier blogs it references, plus a blog or two where I mention how weird it is to select half a surrogate pair or half a composite (decomposed) character -- like the cases I mention in <b><a href="http://archives.miloush.net/michkap/archive/2005/12/30/508157.html" mce_href="http://archives.miloush.net/michkap/archive/2005/12/30/508157.html">More on cursor movement</a></b>.<br></p>
+
+<p>And when you get down to it these issues really are a natural extension of the ones involving cursor movement -- since selection is often just moving the cursor with shift key held down (and has top behave the same way even when it's not).<br></p>
+
+<p>Or I could go down the road of how the more destructive operations (e.g. the BACKSPACE key and the DELETE key) come into play here, though they are two just natural extensions of cursor movement and selection (the one major difference being the exception I describe in <b><a href="http://archives.miloush.net/michkap/archive/2005/12/21/506248.html" mce_href="http://archives.miloush.net/michkap/archive/2005/12/21/506248.html">BACKSPACE vs. DELETE</a></b> and <b><a href="http://archives.miloush.net/michkap/archive/2006/02/17/533929.html" mce_href="http://archives.miloush.net/michkap/archive/2006/02/17/533929.html">What do you get when you combine a base character with a buttload of diacritics?</a></b> and really I think the behavior difference between BACKSPACE and DELETE is pretty sensible, and pretty defensible.</p>
+
+<p>If you want to get into the one that is harder to suss out, I would say it is probably easier to get confused about the difference between the BACKSPACE key and the BACK ARROW key. The fact that these two do not behave the same way <i>is</i> explainable but may be even less intuitive....</p>
+
+<p><i>And of course none of it should happen for surrogate pairs in any case -- thy should always be whole units and never split out, as the blogs above mention.</i></p>
+
+<p>But in the end what is left to talk about?</p>
+
+<p>The main thing that is left to describe in this series is explaining what support a product should add to a product if it is Unicode but thoroughly "USC-2" based using the definitions in this series, and one wants to move it up to be "UTF-16" based.</p>
+
+<p>In other words, the obvious remaining practical question is <b>what work needs to be done?</b></p>
+
+<p>And that is a very good question.</p>
+
+<p>Now for my example I will use a product that simultaneously </p>
+
+<ol>
+<li>much more UCS-2 based than any product ought to be, and</li>
+
+<li>knows much more about this whole idea of clusters of characters than most products ever might,</li>
+</ol>
+
+<p>And that product type is <b>databases</b>.</p>
+
+<p>The first criteria is met by the fact that they have a firm base in the middle of allocation issues -- whether it is column lengths or whatever -- and also "character" based parameters/syntax in SQL.</p>
+
+<p>And the second is met by the fact that if you look at the categories from earlier in this series the second and third categories (and if you include SQL Server 2008, the first category as well) is well handled by the collation support used by the engine for almost all of its comparison operations, even the ones it should not!</p>
+
+<p>This schizophrenic behavior is one I have mentioned in the past in blogs like <b><a href="http://archives.miloush.net/michkap/archive/2006/10/04/788429.html" mce_href="http://archives.miloush.net/michkap/archive/2006/10/04/788429.html">Wild[card] thing, You make my CHAR sing</a></b> and <b><a href="http://archives.miloush.net/michkap/archive/2006/11/27/1160195.html" mce_href="http://archives.miloush.net/michkap/archive/2006/11/27/1160195.html">the follow-up to it</a></b>, with the other side of the equation somewhere in the realm of blogs like the Freudianly-themed <b><a href="http://archives.miloush.net/michkap/archive/2007/01/24/1520227.html" mce_href="http://archives.miloush.net/michkap/archive/2007/01/24/1520227.html">Sometimes a WCHAR really *is* just a character....</a></b>.</p>
+
+<p>Perhaps with <b><a href="http://archives.miloush.net/michkap/archive/2007/01/15/1469885.html" mce_href="http://archives.miloush.net/michkap/archive/2007/01/15/1469885.html">With SQL Server (and SQL itself) comes the illogic of 'trailing spaces' (and the myth of fixed width)</a></b> thrown in for good measure....</p>
+
+<p>But here and now we run into a bigger problem --to do a full job here, up to three things would be needed:</p>
+
+<ul>
+<li>For functions and such that currently take one Unicode character, a way to pass more than one would be needed -- somewhat like the way .NET took the <a href="http://msdn.microsoft.com/library/system.char.isletter.aspx" mce_href="http://msdn.microsoft.com/library/system.char.isletter.aspx">Char.IsLetter method</a> and its one <a href="http://msdn.microsoft.com/library/yyxz6h5w.aspx" mce_href="http://msdn.microsoft.com/library/yyxz6h5w.aspx">IsLetter(Char)</a> signature and added an <a href="http://msdn.microsoft.com/library/zff1at55.aspx" mce_href="http://msdn.microsoft.com/library/zff1at55.aspx">IsLetter(String, Int32)</a> overload;</li>
+
+<li>For things like wildcards (as discussed in <b><a href="http://archives.miloush.net/michkap/archive/2006/10/04/788429.html" mce_href="http://archives.miloush.net/michkap/archive/2006/10/04/788429.html">Wild[card] thing, You make my CHAR sing</a></b>), a new wildcard would be needed to specify as linguistic character; something like the <a href="http://msdn.microsoft.com/library/system.globalization.stringinfo.aspx" mce_href="http://msdn.microsoft.com/library/system.globalization.stringinfo.aspx">StringInfo class</a> would be needed.<br></li>
+
+<li>For things like linguistic string lengths<br></li>
+</ul>
+
+<p>Now obviously these three items while being simple enough conceptually could lead to a ton of actual work, so how much would actually be needed would have to be triaged.</p>
+
+<p>And ideally, if one can get away with just extending existing support, that would be much better (as would handling all three categories of linguistic character) rather than just some if them).</p>
+
+<p>Next time, I'll talk about some of the triage rules.</p>
+
+<p mce_keep="true">&nbsp;</p>
+
+<p><font color="#ff00ff"><i>This blog brought to you by</i><font size="6"> ດ </font><i>(<a href="http://www.fileformat.info/info/unicode/char/0e94" mce_href="http://www.fileformat.info/info/unicode/char/0e94">U+0e94</a>, aka LAO LETTER DO)</i></font> <br></p>
+<hr/><div style="margin-left: 1em"><em>no comments</em></div><hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2009/06/29 <a href="http://archives.miloush.net/michkap/archive/2009/06/29/9800913.html">UCS-2 to UTF-16, Part 11: Turning it up to Eleven!</a></p><p>2009/06/10 <a href="http://archives.miloush.net/michkap/archive/2009/06/10/9723321.html">UCS-2 to UTF-16, Part 10: Variation[ Selector] on a theme...</a></p><p>2008/12/16 <a href="http://archives.miloush.net/michkap/archive/2008/12/16/9223301.html">UCS-2 to UTF-16, Part 9: The torrents of breaking CharNext/CharPrev</a></p><p>2008/12/09 <a href="http://archives.miloush.net/michkap/archive/2008/12/09/9187379.html">UCS-2 to UTF-16, Part 8: It's the end of the string as we know it (and I feel ellipses)</a></p><p>2008/12/04 <a href="http://archives.miloush.net/michkap/archive/2008/12/04/9173687.html">UCS-2 to UTF-16, Part 7: If it makes the SQL Server columns too small then it made the Oracle columns either too smallER or too smallEST</a></p><p>2008/11/24 <a href="http://archives.miloush.net/michkap/archive/2008/11/24/9134826.html">UCS-2 to UTF-16, Part 6: An exercise left for whoever needs some exercise</a></p><p>2008/10/15 <a href="http://archives.miloush.net/michkap/archive/2008/10/15/9000371.html">UCS-2 to UTF-16, Part 5: What's on the Next Level?</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2008/10/07/8981958.html" title="Even the prisoners of the motherland use cp1252 (though they escaped 037)">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2008/10/06/8977235.html" title="Voting &amp; Registration, aka I am hoping EVERYONE who can BREATHE is Alive!">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2008-10">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2008-10-06">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2008/10/06/8977552.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:35 GMT -->
+</html>

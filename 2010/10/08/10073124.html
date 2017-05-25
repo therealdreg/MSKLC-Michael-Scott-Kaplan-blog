@@ -1,0 +1,39 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2010/10/08/10073124.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Off by one what, exactly?</title></head><body>
+<h1>Off by one what, exactly?</h1>
+<p><em>by Michael S. Kaplan, published on 2010/10/08 07:01 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2010/10/08/10073124.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<p>It's a funny thing about off-by-one errors, you know.</p>
+<p>Looking at <a href="http://en.wikipedia.org/wiki/Off-by-one_error">the subject in Wikipedia</a>:</p>
+<p style="padding-left: 60px;"><span style="font-family: times new roman,times;">An off-by-one error (OBOE) is a logical error involving the discrete equivalent of a boundary condition. It often occurs in computer programming when an iterative loop iterates one time too many or too few. Usually this problem arises when a programmer fails to take into account that a sequence starts at zero rather than one (as with array indices in many languages), or makes mistakes such as using "is less than or equal to" where "is less than" should have been used in a comparison.</span></p>
+<p>I found another case yesterday.</p>
+<p>By which I mean today, since it is today that I am writing it, but by the time you read it then either you hacked my account on the blog server, or it is tomorrow. Or later still.</p>
+<p>Anyway, the error.</p>
+<p>So if you look at keyboard hardware, each key has a scan code that it sends to the computer when you hit it.</p>
+<p>Here is&nbsp;a typical layout, shown via MSKLC:</p>
+<p><img src="http://trigeminal.fmsinc.com/images/scancodes.png" border="0" /></p>
+<p>Now the key with the tilde on it has a scan code of <strong>29</strong>.</p>
+<p>And then the numbers 1234567890 have the scan codes of <strong>02</strong> to <strong>0b</strong>.</p>
+<p>You may know where I am going with this one....</p>
+<p>If you look at the <strong>keyboards of India </strong>that ship on Windows, most of them have one thing in common: they put U+200d (ZERO WIDTH JOINER) and U+200c (ZERO WIDTH NON-JOINER) in the CRTL+SHIFT shft state.</p>
+<p><em>This was very important at the time when Windows 2000 was being developed, back when Unicode had the grand plan for how to use these two characters I showed in <a href="http://archives.miloush.net/michkap/archive/2006/09/25/768715.html" title="Why don't all the half forms sort right?"><strong>Why don't all the half forms sort right?</strong></a> -- before fonts started widely doing something different as I discussed in <a href="http://archives.miloush.net/michkap/archive/2010/07/16/10038421.html" title="Which form to use if the form keeps changing?"><strong>Which form to use if the form keeps changing?</strong></a>.</em></p>
+<p>So because of this fact, they were put on most of the keyboards.</p>
+<p>Here we come to the problem, though.</p>
+<p>You see, while all the keyboard layouts we ship (e.g. the Hindi Traditional keyboard) put these two control characters on the CTRL+SHIFT+1 and CTRL+SHIFT+2 keys:</p>
+<p><img src="http://trigeminal.fmsinc.com/images/scancodes02.png" border="0" /></p>
+<p>but a colleague of mine who had created some updated versions of some of the layouts had put them instead on the CTRL+SHIFT+2 and CTRL+SHIFT+3 keys.</p>
+<p>I pointed this out to her, and she admitted she did the work in the .KLC file rather that MSKLC itself. And when looking at the following rows in the file:</p>
+<p><span style="font-family: courier new,courier;"><strong><span style="font-size: small;">02&nbsp; 1&nbsp;&nbsp; 0 &nbsp;09e7 &nbsp; 0021 &nbsp;-1&nbsp;&nbsp; -1<br />03 &nbsp;2&nbsp; &nbsp;0&nbsp; 09e8&nbsp; &nbsp;0040&nbsp; -1&nbsp;&nbsp; 200d<br />04&nbsp; 3 &nbsp;&nbsp;0&nbsp; 09e9 &nbsp; %%&nbsp;&nbsp;&nbsp; -1&nbsp;&nbsp; 200c</span></strong></span></p>
+<p>The confusion of the scan codes (02, 03, 04) right next to the VK_* values (1, 2, 3) and her knowledge that the scan codes were one off from the numbers caused her to put them in the wrong spot.</p>
+<p>And thus the decision long ago that caused the scan codes to not line up for these digits when they could have, combined with an incorrect compensation for that of-by-one assignment by intentionally being one off from the scan codes, led the characters to be in the wrong slot.</p>
+<p>Clearly this was not due to the traditional "off-by-one" error due to 0-based vs. 1-based counting that the Wikipedia article was referring to. </p>
+<p>But the fact that the scan codes were off-by-one from the numbers atop them due to the way they were assigned&nbsp;and the potential confusion thereof made it easy for her to introduce an off-by-one error of her own!</p>
+<p>The story has a happy ending, though. Her keyboards will now be correct when she uses them, and she was only a little embarrassed by the fact that I told her I'd be writing this blog you are reading (though she admitted that it wouldn't make sense to not do!). She even bought me a beer for looking at her layouts. And thus everybody wins....</p>
+<hr/><p><strong>Random832</strong> on 12 Oct 2010 8:53 AM:</p><div style="margin-left: 1em"><p>Why doesn&#39;t a trackback show up here from <a rel="nofollow" target="_new" href="http://blogs.msdn.com/b/oldnewthing/archive/2010/10/12/10074411.aspx">blogs.msdn.com/.../10074411.aspx</a> ?</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 12 Oct 2010 9:06 AM:</p><div style="margin-left: 1em"><p>Tracbacks are broken at the moment due to a bug.</p>
+</div>
+<hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2010/11/03 <a href="http://archives.miloush.net/michkap/archive/2010/11/03/10085336.html">Y can't Z Undo, exactly?</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2010/10/09/10073622.html" title="The exciting nature of being ordinary">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2010/10/07/10072032.html" title="Myth busting in the console">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2010-10">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2010-10-08">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2010/10/08/10073124.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+</html>

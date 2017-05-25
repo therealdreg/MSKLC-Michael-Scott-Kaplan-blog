@@ -1,0 +1,38 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2010/03/11/9976639.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:35 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>It's Iñupiaq, not Inupiaq! Could you stop removing those diacritics, please?</title></head><body>
+<h1>It's Iñupiaq, not Inupiaq! Could you stop removing those diacritics, please?</h1>
+<p><em>by Michael S. Kaplan, published on 2010/03/11 07:01 -05:00, original URI: http://blogs.msdn.com/b/michkap/archive/2010/03/11/9976639.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P>Over in the Suggestion Box, Gene Sorensen asked:</P>
+<BLOCKQUOTE>
+<P><FONT face="times new roman,times">Hi Michael,</FONT></P>
+<P><FONT face="times new roman,times">I have created a keyboard for the Iñupiaq language using MKLC. In the properties I named it Iñupiaq, not Inupiaq. If I hover my mouse over the .dll the context menu says it is the "Iñupiaq US Keyboard Layout," etc. However, when I install it in the US version of Vista or XP the Language Bar displays its name as "Inupiaq," without the ñ. If I go into "Add or Remove Programs" in Control Panel it is correctly listed as "Iñupiaq". It appears the system will use the ñ in some places, but not in others. Is there a way to get the Language Bar to show the ñ?</FONT></P>
+<P><FONT face="times new roman,times">Thanks,</FONT></P>
+<P><FONT face="times new roman,times">Gene</FONT></P></BLOCKQUOTE>
+<P>Ah, interesting!</P>
+<P>Now some of this is tied up the issues of how MSKLC 1.4 shipped with so much more Unicode support - like the updated kbdutool.exe that builds the keyboard layout DLLs understanding Unicode, which means that the resource properties that Explorer gets that description string from when you hover over the file, and the <STRONG>Add/Remove Programs</STRONG> entry which is stored and entered in a way that retains the Unicode-ness of the property.</P>
+<P>Unfortunately, the entry that ends up in the <STRONG>Language Bar</STRONG> (which supports Unicode) is written via registry calls in a setup DLL's custom action (which also support Unicode) but that custom action get the name to use from properties within the MSI file (which does not support Unicode, as I mentioned in <A href="http://archives.miloush.net/michkap/archive/2005/10/08/478479.html" mce_href="http://archives.miloush.net/michkap/archive/2005/10/08/478479.html"><STRONG>MSI Databases and Unicode?</STRONG></A>).</P>
+<P>You can see the DLL entry as follows:&nbsp;open up the keyboard layout DLLs in a resource editor and see resource 1000 for the keyboard name and 1100 for the language - they should be correct. But going through the MSI property interface appears to do so through a code page that best-fit maps the name in a way to strip the diacritic.</P>
+<P>Unfortunately, <STRONG>there is no good workaround</STRONG> for this since the code page that the MSI file uses for storage has to be chosen before you add any data, and can't be chosen after the fact. So you can't make it use UTF-8 (which would allow this scenario to work) before it becomes too late to make it work. :-(</P>
+<P>Even if and when MSI supports Unicode, this could only be fixed by an MSKLC update after that which took advantage of that knowledge, though I am not really in the loop on MSKLC updates these days (I periodically hear about ideas and plans that never seem to happen and no one tells me why they didn't and/or what changed).</P>
+<hr/><p><strong>Gene Sorensen</strong> on 11 Mar 2010 12:57 PM:</p><div style="margin-left: 1em"><P>Hi Michael,</P>
+<P>Thanks very much for the clear explanation. I am just grateful for the great tool (MSKLC), which has been very helpful. It is sooooo much easier than the way we used to create keyboards.</P>
+<P>You say you are not in the MSKLC loop; is there a blog somewhere I should be following to keep informed about it? And should I write to someone else in the future if I have a MSKLC-related question?</P>
+<P>Thanks again for your valuable blog.</P>
+<P>Kind regards,</P>
+<P>Gene</P></div>
+<p><strong>Mihai</strong> on 11 Mar 2010 3:26 PM:</p><div style="margin-left: 1em"><p>Then maybe the msi team should finally learn that is it 2010 and do something about it?</p>
+<p>Not only for MSKLC, but for all the people out there.</p>
+<p>It does not sound like a huge change to store the strings as utf-8 and put the code page as 65001.</p>
+<p>Ok, as a developer I know that most changes are bigger than they appear, but still, it is the 21st century.</p>
+<p>If I write a non-Unicode application, my application is crippled. But if msi is not Unicode, it is crippling everybody, internal and external.</p></div>
+<p><strong>Michael S. Kaplan</strong> on 11 Mar 2010 4:10 PM:</p><div style="margin-left: 1em"><p>Hey Gene - as far as I know, this is still the place to ask, and I will forward info on (often they tell me stuff, especially when I ask and when I have topical/relevant customer feedback!).</p>
+<p>Hey Mihai - I agree. UTF-8 often (by Windows 7, usually) works but there is some testing and bug fixing required to make that official - the key would be for someone to assign the resources....</p>
+</div>
+<p><strong>Random832</strong> on 12 Mar 2010 4:03 PM:</p><div style="margin-left: 1em"><p>This leaves the question [particularly since the character in question is present in 1252, which was my first and only guess] of just what codepage it actually is using. Also, isn't MSKLC creating an MSI from scratch? Why can't it simply set the codepage to one that will work before adding any data? There certainly may be names that (assuming 65001 won't work) aren't representable in any codepage, but this isn't one of them. Or is it tied to the system locale? [he did say US version of windows, though, right?]</p></div>
+<p><strong>Michael S. Kaplan</strong> on 13 Mar 2010 11:46 AM:</p><div style="margin-left: 1em"><p>The code page selection is based on the default system locale of the locale chosen in the UI....</p>
+</div>
+<hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2010/03/12/9977329.html" title="The first cut may be the deepest, but in this case the first failure was the worst">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2010/03/10/9976075.html" title="They pushed out of the formatt[ing|er]">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2010-03">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2010-03-11">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2010/03/11/9976639.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:35 GMT -->
+</html>

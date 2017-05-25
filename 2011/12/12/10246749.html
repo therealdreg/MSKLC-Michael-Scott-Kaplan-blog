@@ -1,0 +1,40 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2011/12/12/10246749.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>SharePoint and CJK Extensions A, B, C, D, and even E?</title></head><body>
+<h1>SharePoint and CJK Extensions A, B, C, D, and even E?</h1>
+<p><em>by Michael S. Kaplan, published on 2011/12/12 07:01 -05:00, original URI: http://blogs.msdn.com/b/michkap/archive/2011/12/12/10246749.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<p>So, the question I got the other day was:</p>
+<p style="padding-left: 60px;"><em><span style="font-family: times new roman,times; font-size: medium;">We are setting up SharePoint and want to know what collation to use. What support does SQL Server have for CJK Extensions A/B/C/D?</span></em></p>
+<p>Now that's an interesting question.</p>
+<p>If you think of SQL Server 2000 as the first version to support the current architecture of collation in SQL Server, it is fair to say that SQL Server 2000 did not support any&nbsp;of those four CJK extension ranges.</p>
+<p>Similarly, Windows 2000 didn't support any of them either.</p>
+<p>Then,starting in XP and continuing in Windows Server 2003, something interesting happened.</p>
+<p>Basically, support was added for&nbsp;<a href="http://www.unicode.org/charts/PDF/U3400.pdf">CJK&nbsp;Extension A</a>&nbsp;that&nbsp;placed&nbsp;all of Extension A at the end of the list in the default table.</p>
+<p>And also support was added for all of the high&nbsp;and&nbsp;low surrogates in planes 1, 2, 15, and 16.</p>
+<p>This was done using the same info i added to <strong><a title="The basics of supplementary" href="http://archives.miloush.net/michkap/archive/2005/09/24/472543.html">The basics of supplementary</a></strong>&nbsp;for those four planes, by assigning weights to:</p>
+<ul>
+<li>All of the low surrogates, U+dc00 to U+dfff;</li>
+<li>U+d800 - U+d83f (Plane 1, Supplementary Multilingual Plane);</li>
+<li>U+d840 - U+d87f (Plane 2, Supplementary Ideographic Plane);</li>
+<li>U+db80 - U+dbbf (Plane 15, Supplementary Private Use Area A);</li>
+<li>U+dbc0 - U+dbff (Plane 16, Supplementary Private Use Area B).</li>
+</ul>
+<p><em>Two interesting side effects here -- first, the non char acer sentinels in each plane were given weight, and two every character in Planes 1 and 2 whether they had characters assigned yet or not, were given some weight.</em></p>
+<p>Now note that Extension B, Extension C, and Extension D are all located in Plane 2 -- which means that every single ideograph in <a href="http://www.unicode.org/charts/PDF/U20000.pdf">CJK Extension B</a>&nbsp;that was assigned at the time, the <a href="http://www.unicode.org/charts/PDF/U2A700.pdf">CJK Extension C</a>&nbsp;and <a href="http://www.unicode.org/charts/PDF/U2B740.pdf">CJK Extension D</a>&nbsp;that were assigned later, and all of the not yet assigned space including the part roadmap'ed as being CJK Extension E were all given weight.</p>
+<p>Code point order, of course. But some order is better than giving them <strong><a title="The jury will give this string no weight" href="http://archives.miloush.net/michkap/archive/2005/01/18/355210.html">no weight</a></strong>, right? :-)</p>
+<p>SQL Server 2005 basically picked up these additions, but only for&nbsp;a few of the newly added collations.</p>
+<p>They thus introduced the notion of having code points that have weight in some collations but not others.</p>
+<p>But again just code point order within the ranges (and Extension A after Plane 2).</p>
+<p>now enter Vista and Windows Server 2008 and Windows 7 and Windows Server 2008 R2 and SQL Server 2008 and SQL Server 2008 R2, which all added sorts with linguistic relevance to (depending on the collation) some or all of the ideographs in CJK Extensions A&nbsp;and&nbsp;B.</p>
+<p>And every ideograph not included there keeps those same default weights&nbsp;that stick them at the end (though at least we put Extension A before its later counterparts!).</p>
+<p>Note that no linguistically relevant info is used for CJK Extensions C and D....</p>
+<p>Anyway, that answers the question about SharePoint, I think. :-)</p>
+<hr/><p><strong>John Cowan</strong> on 12 Dec 2011 8:37 AM:</p><div style="margin-left: 1em"><p>(Crap, your comment system threw away my comment again. &nbsp;Gotta remember to *always* save it to the clipboard before clicking &quot;Post&quot;.)</p>
+<p>I personally think that the powers that be (the IRG, the UTC, Microsoft) fell down on the job here. &nbsp;As new extensions were added to CJK, the URO should have been properly extended so that the default collation table correctly interfiled the new characters into a single overall radical-stroke order. &nbsp;Or if not the default table (as that would make it very large), at least a defined alternative table.</p>
+<p>The job would have been (would be) very messy and error-prone due to its size, as well as somewhat arbitrary, given that the rarer a hanzi is, the harder it is to answer the persistent question &quot;What is the radical?&quot; &nbsp;Still, I think it ought to have been (should be) attempted.</p></div>
+<p><strong>Michael S. Kaplan</strong> on 12 Dec 2011 9:49 AM:</p><div style="margin-left: 1em"><p>Well, the sitution is made more complex for other reasons -- some technical, some political. Probably it would make for a nice future blog!</p>
+</div>
+<hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2011/12/13/10247214.html" title="These aren&#39;t the MONTHS you&#39;re looking for (aka You&#39;ll never get to the 13th month *that* way)">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2011/12/09/10246051.html" title="The evolving Story of Locale Support, part 12: Logic dictates that we keep a sense of proportion about the RATIO">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2011-12">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2011-12-12">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2011/12/12/10246749.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+</html>

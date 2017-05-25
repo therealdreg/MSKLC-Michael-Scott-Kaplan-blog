@@ -1,0 +1,66 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2007/06/22/3466480.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:38 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Your VC++ files don't support Unicode identifers? Drop a BOM on them!</title></head><body>
+<h1>Your VC++ files don't support Unicode identifers? Drop a BOM on them!</h1>
+<p><em>by Michael S. Kaplan, published on 2007/06/22 15:10 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2007/06/22/3466480.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P>What with Unicode being the default way that things are compiled in Visual Studio, the fact that identifiers were limited to ANSI has really been a sore point for a lot of people.</P>
+<P>Including me. :-)</P>
+<P>Thankfully, VC++ Architect Mark Hall helped set me straight on a not-entirely-well documented feature in the latest version of Visual C++.</P>
+<P>If you don't like the lack of Unicode identifiers, then all you have to do is drop a BOM on your UTF-8 source!</P>
+<P>You can read more about it in the topic <A class="" href="http://msdn2.microsoft.com/en-us/library/xwy0e8f2(VS.80).aspx" mce_href="http://msdn2.microsoft.com/en-us/library/xwy0e8f2(VS.80).aspx">Unicode Support in the Compiler and Linker</A>.</P>
+<P>And you do need the BOM for UTF-8 in this case (no matter how controversial that requirement may be). As one of the cool test leads over there pointed out:</P>
+<BLOCKQUOTE>
+<P><EM>...we don’t support UTF8 w/o BOM, since it’s pretty much indistinguishable from ANSI</EM></P></BLOCKQUOTE>
+<P>Note that you do not need a BOM for UTF-16LE or UTF16-BE. </P>
+<P>In theory the BOM probably shouldn't be needed for UTF-8 given how easy UTF-8 detection is, but since NLS didn't provide a function I can hardly blame them for not wanting to go off and write their own (note that it *should* in my opinion be a part of <A class="" href="http://msdn2.microsoft.com/library/ms776445.aspx" mce_href="http://msdn2.microsoft.com/library/ms776445.aspx">IsTextUnicode</A>, as I have pointed out <STRONG><A class="" href="http://archives.miloush.net/michkap/archive/2005/01/30/363308.html" mce_href="http://archives.miloush.net/michkap/archive/2005/01/30/363308.html">before</A></STRONG>. But I don't know when (or even if) that might be happening.</P>
+<P>Maybe I'll just post a little IsTextUtf8 function in the meantime. :-)</P>
+<P>The other problem would be that all of the important docs that refer to things like identifiers are still making ASCII assumptions in <A class="" href="http://msdn2.microsoft.com/en-us/library/565w213d(VS.71).aspx" mce_href="http://msdn2.microsoft.com/en-us/library/565w213d(VS.71).aspx">7.1</A>, <A class="" href="http://msdn2.microsoft.com/en-us/library/565w213d(vs.80).aspx" mce_href="http://msdn2.microsoft.com/en-us/library/565w213d(vs.80).aspx">8.0</A>, <A class="" href="http://msdn2.microsoft.com/en-us/library/565w213d.aspx" mce_href="http://msdn2.microsoft.com/en-us/library/565w213d.aspx">8.5</A>, and even current (preliminary) <A class="" href="http://msdn2.microsoft.com/en-us/library/565w213d(vs.90).aspx" mce_href="http://msdn2.microsoft.com/en-us/library/565w213d(vs.90).aspx">9.0</A> docs.</P>
+<P>So one should not assume that the full support of <A class="" href="http://www.unicode.org/reports/tr31" mce_href="http://www.unicode.org/reports/tr31">Unicode Standard Annex #31 (Identifier and Pattern Syntax)</A> is being implemented, but hopefully some not entirely incompatible subset is what would turn out to be available....</P>
+<P>I'll say more on this soon, both as soon as I find out what the answers are and as soon as I get the doc story to be updated (I assume the former will happen prior to the latter).</P>
+<P mce_keep="true">&nbsp;</P>
+<P><EM><FONT color=#ff00ff>This post is sponsored by </FONT></EM><A href="http://www.fileformat.info/info/unicode/char/feff/index.htm"><EM><FONT color=#ff00ff>U+feff</FONT></EM></A><EM><FONT color=#ff00ff>&nbsp;(ZERO WIDTH NO-BREAK SPACE, a.k.a. "Da BOM")</FONT></EM></P>
+<hr/><p><a id="3467769" href="#3467769">#</a> <strong>Mihai</strong> on 22 Jun 2007 5:16 PM:</p><div style="margin-left: 1em"><p>Maybe fixing rc handling would be higher priority?</p>
+<p><a rel="nofollow" target="_new" href="https://connect.microsoft.com/VisualStudio/feedback/ViewFeedback.aspx?FeedbackID=276954">https://connect.microsoft.com/VisualStudio/feedback/ViewFeedback.aspx?FeedbackID=276954</a></p>
+<p>I mean, resources are created to store international text.</p></div>
+<p><a id="3468237" href="#3468237">#</a> <strong>Stuart Dootson</strong> on 22 Jun 2007 5:46 PM:</p><div style="margin-left: 1em"><p>re: C/C++ identifiers - I think the C and C++ standards probably bear some of the responsibility for ASCII identifiers - don't be *too* hard on the C++ compiler team :-)</p></div>
+<p><a id="3468295" href="#3468295">#</a> <strong>Michael S. Kaplan</strong> on 22 Jun 2007 5:50 PM:</p><div style="margin-left: 1em"><p>Actually, the compiler team did a bunch of work here -- but somewhere between them and MSDN the communication of that work hit a snag or six.</p>
+<p>But I am being given the rules and will be able to blog about them this weekend.... :-)</p>
+<p>I agree that the RC and RichEdit stuff needs a high priority.Luckily the folks who have to do work here are all on different teams....</p>
+</div>
+<p><a id="3470158" href="#3470158">#</a> <strong>Mihai</strong> on 22 Jun 2007 7:52 PM:</p><div style="margin-left: 1em"><p>&quot;I agree that the RC and RichEdit stuff needs a high priority.</p>
+<p>Luckily the folks who have to do work here are all on different teams....&quot;</p>
+<p>In order to fix it, the bug should first be accepted as bug.</p>
+<p>Which is not, in this case.</p></div>
+<p><a id="3470255" href="#3470255">#</a> <strong>Michael S. Kaplan</strong> on 22 Jun 2007 7:57 PM:</p><div style="margin-left: 1em"><p>You have to have more faith in me, Mihai. :-)</p>
+<p>RC.EXE/RCDLL.DLL are actually OS-provided components that VC/VS pick up from the OS. I'm on it....</p>
+</div>
+<p><a id="3486272" href="#3486272">#</a> <strong>Mihai</strong> on 23 Jun 2007 2:45 PM:</p><div style="margin-left: 1em"><p>&quot;RC.EXE/RCDLL.DLL are actually OS-provided components that VC/VS pick up from the OS. I'm on it....&quot;</p>
+<p>Good to know. </p>
+<p>I just did not have any idea that RCDLL.DLL also saves the files from the resource editor. And I did not imagine that RCDLL.DLL is that one that puts a warning message dialog if characters are lost. Maybe RCDLL.DLL returns an error and the UI part (Res Editor?) ignores it.</p>
+<p>OK, I will wait and I will test the next release :-)</p></div>
+<p><a id="3486390" href="#3486390">#</a> <strong>Mihai</strong> on 23 Jun 2007 2:50 PM:</p><div style="margin-left: 1em"><p>On another note, it would be really-really nice to have some public interface to RCDLL.DLL. It would save so much grief to all the localization/validation tools vendors that have to create proprietary RC parsers (most of the times buggy).</p>
+<p>It might alleviate the problem with the Resource Editor not exposing any kind of automation, events, extensibility, like the rest of the IDE.</p>
+<p>(although the right thing would still be to become part of the IDE Automation Model)</p></div>
+<p><a id="3509179" href="#3509179">#</a> <strong>John Bates</strong> on 24 Jun 2007 10:20 PM:</p><div style="margin-left: 1em"><p>Mihai,</p>
+<p>RC.exe can properly compile .rc files saved as UTF-16LE (strangely not UTF8-with-BOM though), but VS just can't edit them. I found this out while writing a database-to-.rc localization tool.</p>
+<p>Remember to take out the &quot;#pragma code_page(..)&quot; bit.</p></div>
+<p><a id="3522689" href="#3522689">#</a> <strong>Mihai</strong> on 25 Jun 2007 12:35 PM:</p><div style="margin-left: 1em"><p>@John: I know, rc can compile utf-16 files since (at least) VS6.</p>
+<p>But the bug reported is about the VS 2005 (and Orca) resource editor, which can edit utf-16 files.</p>
+<p>Read the bug description.</p></div>
+<p><a id="3524083" href="#3524083">#</a> <strong>Michael S. Kaplan</strong> on 25 Jun 2007 1:35 PM:</p><div style="margin-left: 1em"><p>Perhaps it is just me, but I rate the bug that Mihai is referring to as being a much lower priority given that for most developers the localization process happens outside of Visual Studio.</p>
+<p>In the scheme of things, I give UTF-8 support with rc.exe/rcdll.dll a *much* higher priority since it is much more likely to impact real users. </p>
+<p>The &quot;not automatically noticing the file format is insufficient&quot; is a minor issue, and the &quot;choice of default file format&quot; is also much less crucial.</p>
+<p>Just my opinion, of course....</p>
+</div>
+<p><a id="3533627" href="#3533627">#</a> <strong>Mihai</strong> on 25 Jun 2007 9:21 PM:</p><div style="margin-left: 1em"><p>About priority: Both of them we have workarounds.</p>
+<p>It depends how you look at it.</p>
+<p>Not supporting UTF-8 is just ugly. Saving as ANSI a file that contains text outside ANSI (without a warning) results in data loss. Notepad does better.</p>
+<p>Personally I don't really care if a file is UTF-16 or UTF-8, as long as my data does not get corrupted and the final application works (I have a much worse bug filed against DLGINIT).</p>
+<p>And providing workarounds for VS bugs keeps my web site interesting ;-)</p></div>
+<p><a id="3533694" href="#3533694">#</a> <strong>Michael S. Kaplan</strong> on 25 Jun 2007 9:30 PM:</p><div style="margin-left: 1em"><p>Yes, but using VS as the localization TOOL is much less common. So yes it can corrupt, but no it is not corrupting in the most common scenarios....</p>
+</div>
+<p><strong>neenu.p</strong> on 22 Jan 2011 4:05 PM:</p><div style="margin-left: 1em"><p>thank u............................</p></div>
+<hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2007/06/26 <a href="http://archives.miloush.net/michkap/archive/2007/06/26/3558548.html">The MB_PRECOMPOSED flag is stupid, and the MB_COMPOSITE ain't no genius either</a></p><p>2007/06/25 <a href="http://archives.miloush.net/michkap/archive/2007/06/25/3537065.html">Sometimes you drop the BOM, and sometimes the BOM drops you!</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2007/06/22/3468109.html" title="Same time, bigger station">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2007/06/22/3465654.html" title="Liaison may not be the best role any more (for me)">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2007-06">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2007-06-22">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2007/06/22/3466480.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:38 GMT -->
+</html>

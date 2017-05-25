@@ -1,0 +1,138 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2011/02/14/10128621.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>There's no "I" in IDN, part 1: If you're not Unicode, you're just wrong!</title></head><body>
+<h1>There's no "I" in IDN, part 1: If you're not Unicode, you're just wrong!</h1>
+<p><em>by Michael S. Kaplan, published on 2011/02/14 07:01 -05:00, original URI: http://blogs.msdn.com/b/michkap/archive/2011/02/14/10128621.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<p>International domain names -- one of those times that we really are all in this together, a time that "I don't have time to fix this" really isn't a good answer.</p>
+<p>I figured I should talk about that for a bit....</p>
+<p>So anyway, the question I got from a rather anxious developer via email the other day was:</p>
+<p style="padding-left: 30px;"><span style="font-family: times new roman,times;">I have a lot of code that depends on functions like getaddrinfo, getnameinfo, gethostbyname, and gethostbyaddr. How do I get them to support internationalized domain names?</span></p>
+<p>The answer is both simple and complicated.</p>
+<p>Complicated because the answer&nbsp;could (in theory)&nbsp;very different depending on whether the server is on the intranet (where&nbsp;one would use UTF-8)&nbsp;or the Internet (where one would use Punycode).</p>
+<p>And complicated because there isn't a whole lot of infrastructure to have the system figure out which is which and which to use in native code (the managed story is a little better here but it has its own pitfalls; I will cover those another day).</p>
+<p>For now I'll just talk about the intranet story (the Internet story will be for another another day).</p>
+<p>The most important step, one that is pretty much universally a good design practice for many&nbsp;reasons but especially here&nbsp;is to move off the non-Unicode functions like the ones our anxious developer named. If one has anything outside of ANSI (or even ASCII in some cases), the Unicode (or UTF-8) version are required here, as the following table points out:</p>
+<table cellpadding="3" cellspacing="3" border="1">
+<tbody>
+<tr>
+<td><strong>Function you shouldn't use</strong></td>
+<td>
+<p><strong>Function you should be using instead</strong></p>
+</td>
+</tr>
+<tr>
+<td><a href="http://msdn.microsoft.com/library/ms682016.aspx">DnsQuery_A</a></td>
+<td>
+<p><a href="http://msdn.microsoft.com/library/ms682016.aspx">DnsQuery_W</a> (or <a href="http://msdn.microsoft.com/library/ms682016.aspx">DnsQuery_UTF8</a>)</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="http://msdn.microsoft.com/library/ms682032.aspx">DnsValidateName_A</a></p>
+</td>
+<td>
+<p><a href="http://msdn.microsoft.com/library/ms682032.aspx">DnsValidateName_W</a> (or <a href="http://msdn.microsoft.com/library/ms682032.aspx">DnsValidateName_UTF8</a>)</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="http://msdn.microsoft.com/library/ms682014.aspx">DnsNameCompare_A</a></p>
+</td>
+<td>
+<p><a href="http://msdn.microsoft.com/library/ms682014.aspx">DnsNameCompare_W</a> (or <a href="http://msdn.microsoft.com/library/ms682014.aspx">DnsNameCompare_UTF8</a>)</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="http://msdn.microsoft.com/library/ms724244.aspx">DnsHostnameToComputerNameA</a></p>
+</td>
+<td>
+<p><a href="http://msdn.microsoft.com/library/ms724244.aspx">DnsHostnameToComputerNameW</a></p>
+</td>
+</tr>
+<tr>
+<td><a href="http://msdn.microsoft.com/library/ms738520.aspx">getaddrinfo</a></td>
+<td><a href="http://msdn.microsoft.com/library/ms738519.aspx">GetAddrInfoW</a></td>
+</tr>
+<tr>
+<td>
+<p><a href="http://msdn.microsoft.com/library/ms738520.aspx">GetAddrInfoA</a></p>
+</td>
+<td><a href="http://msdn.microsoft.com/library/ms738519.aspx">GetAddrInfoW</a></td>
+</tr>
+<tr>
+<td>
+<p><a href="http://msdn.microsoft.com/library/ms738532.aspx">getnameinfo</a></p>
+</td>
+<td>
+<p><a href="http://msdn.microsoft.com/library/ms738531.aspx">GetNameInfoW</a></p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="http://msdn.microsoft.com/library/ms738532.aspx">GetNameInfoA</a></p>
+</td>
+<td>
+<p><a href="http://msdn.microsoft.com/library/ms738531.aspx">GetNameInfoW</a></p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="http://msdn.microsoft.com/library/ms738518.aspx">GetAddrInfoExA</a></p>
+</td>
+<td>
+<p><a href="http://msdn.microsoft.com/library/ms738518.aspx">GetAddrInfoExW</a></p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="http://msdn.microsoft.com/library/ms738524.aspx">gethostbyname</a></p>
+</td>
+<td>
+<p><a href="http://msdn.microsoft.com/library/ms738519.aspx">GetAddrInfoW</a></p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="http://msdn.microsoft.com/library/ms738521.aspx">gethostbyaddr</a></p>
+</td>
+<td>
+<p><a href="http://msdn.microsoft.com/library/ms738531.aspx">GetNameInfoW</a></p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="http://msdn.microsoft.com/library/ms741522.aspx">WSAAsyncGetHostByName</a></p>
+</td>
+<td>
+<p><a href="http://msdn.microsoft.com/library/ms738519.aspx">GetAddrInfoW</a></p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="http://msdn.microsoft.com/library/ms741519.aspx">WSAAsyncGetHostByAddr</a></p>
+</td>
+<td>
+<p><a href="http://msdn.microsoft.com/library/ms738531.aspx">GetNameInfoW</a></p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="http://msdn.microsoft.com/library/ms741633.aspx">WSALookupServiceBeginA</a></p>
+</td>
+<td><a href="http://msdn.microsoft.com/library/ms741633.aspx">WSALookupServiceBeginW</a></td>
+</tr>
+</tbody>
+</table>
+<p>Now as luck would have it, deciding whether to use the "W" version of the function or the UTF-8 version (for the functions that support both) is pretty&nbsp;simple -- just use whichever format you have the text in already.</p>
+<p>And as further luck would have it, for just about all of the functions on this list, the replacement is easy and straightforward for the call itself. Of course you may need to move the code to use Unicode, and it's important to not just convert it from the CP_ACP or whatnot (otherwise you haven't really fixed anything!, but that's not too bad.</p>
+<p>You can think of this first step as the most obvious part of all of the work. I'll get into some of the more complicated aspects in the future, with maybe some additional fun details related to Active Directory to make things <strong>really </strong>interesting (that&nbsp;will be on yet another another day -- or with a topic like AD more than one other day!).</p>
+<p>Now once you start getting into the EAI side (i.e. the email side) it gets both insanely simple and insanely complicated too. But eventually, on some other another other day (once again multiple other days, most likely), I'll hit that topic too.</p>
+<hr/><p><strong>Alex Cohn</strong> on 19 Feb 2011 2:29 PM:</p><div style="margin-left: 1em"><p>Waiting impatiently for the internet part of the story (and, as the proverb goes, for the wisdom to know which to use in real life situation).</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 19 Feb 2011 2:35 PM:</p><div style="margin-left: 1em"><p>It&#39;ll get there, don&#39;t worry. This one is gonna cover a lot of ground. It&#39;ll take a bit of time....</p>
+</div>
+<hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2013/10/17 <a href="http://archives.miloush.net/michkap/archive/2013/10/17/10453790.html">There's no "I" in IDN, part 19: There's no "I" in IPv6, either!</a></p><p>2013/10/08 <a href="http://archives.miloush.net/michkap/archive/2013/10/08/10454553.html">There's no "I" in IDN, part 18: There isn't even an "I" in John C. Klensin's name!</a></p><p>2013/09/13 <a href="http://archives.miloush.net/michkap/archive/2013/09/13/10448110.html">There's no "I" in IDN, part 17: EAI made it to China, and everybody knows it!</a></p><p>2013/04/19 <a href="http://archives.miloush.net/michkap/archive/2013/04/19/10412471.html">There's no "I" in IDN, part 16: It's a good thing they decided to call it EAI!</a></p><p>2012/10/12 <a href="http://archives.miloush.net/michkap/archive/2012/10/12/10359120.html">There's no "I" in IDN, part 15: Still no 'I' in EAI.... but we could use an US sometime soon!</a></p><p>2012/08/08 <a href="http://archives.miloush.net/michkap/archive/2012/08/08/10337799.html">There's no "I" in IDN, part 14: It turns out there's no "I" in IE, either</a></p><p>2012/05/18 <a href="http://archives.miloush.net/michkap/archive/2012/05/18/10305223.html">There's no "I" in IDN, part 13: Desktop and Managed and Metro; oh my!</a></p><p>2012/02/27 <a href="http://archives.miloush.net/michkap/archive/2012/02/27/10273315.html">There's no "I" in IDN, part 12: Emoji + IDN == U+1F4A9 (PILE OF POO)</a></p><p>2011/10/25 <a href="http://archives.miloush.net/michkap/archive/2011/10/25/10229790.html">There's no "I" in IDN, part 11: There's no place like ::1, not even 127.0.0.1!</a></p><p>2011/09/21 <a href="http://archives.miloush.net/michkap/archive/2011/09/21/10214081.html">There's no "I" in IDN, part 10: Who needs IDN support? How much? When? (Part 2)</a></p><p>2011/09/16 <a href="http://archives.miloush.net/michkap/archive/2011/09/16/10212216.html">There's no "I" in IDN, part 9: Who needs IDN support? How much? When? (Part 1)</a></p><p>2011/08/12 <a href="http://archives.miloush.net/michkap/archive/2011/08/12/10195062.html">There's no "I" in IDN part 8: Punycode don't do the PUA</a></p><p>2011/07/28 <a href="http://archives.miloush.net/michkap/archive/2011/07/28/10190701.html">There's no "I" in IDN, part 7: IDN comes to AdWords</a></p><p>2011/07/14 <a href="http://archives.miloush.net/michkap/archive/2011/07/14/10186414.html">There's no "I" in IDN, part 6: It isn't like there's an "I" in EAI, either!</a></p><p>2011/06/29 <a href="http://archives.miloush.net/michkap/archive/2011/06/29/10181212.html">There's no "I" in IDN, part 5: Stephen Colbert's job is not in any jeopardy</a></p><p>2011/06/17 <a href="http://archives.miloush.net/michkap/archive/2011/06/17/10173790.html">There's no "I" in IDN, part 4: the 'path' to Hell is paved with IDN bugs</a></p><p>2011/05/25 <a href="http://archives.miloush.net/michkap/archive/2011/05/25/10168228.html">There's no "I" in IDN, part 3: There's no "I" in DIY, either!</a></p><p>2011/04/02 <a href="http://archives.miloush.net/michkap/archive/2011/04/02/10149149.html">There's no "I" in IDN, part 2: Try not to use the wrong functions!</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2011/02/15/10129419.html" title="UTF-8 default isn&#39;t in the latest Notepad, either">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2011/02/12/10128490.html" title="What do Frank Burns from M*A*S*H and Windows Server 2008 R2 have in common?">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2011-02">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2011-02-14">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2011/02/14/10128621.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+</html>

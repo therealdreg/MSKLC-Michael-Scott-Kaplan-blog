@@ -1,0 +1,38 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2005/11/25/494976.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:40 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Getting all of the alternate sorts for a locale</title></head><body>
+<h1>Getting all of the alternate sorts for a locale</h1>
+<p><em>by Michael S. Kaplan, published on 2005/11/25 04:01 -05:00, original URI: http://blogs.msdn.com/b/michkap/archive/2005/11/25/494976.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P><FONT face=Tahoma>Recently, Eman asked in the newsgroups:</FONT></P>
+<BLOCKQUOTE dir=ltr style="MARGIN-RIGHT: 0px">
+<P><EM><FONT size=2>Please help me clear up general LCID logic.</FONT></EM></P>
+<P><EM><FONT size=2>As far as i understand the SORT_xx values make sense in a pair with PrimaryLanguage only. In other words, a Sort ID has the same meaning for a set of LCIDs where PrimaryLanguage is the same but SubLanguages differ. Is this correct?</FONT></EM></P></BLOCKQUOTE>
+<P><FONT face=Tahoma>I had to be the bearer of bad news, unfortunately:</FONT></P>
+<BLOCKQUOTE dir=ltr style="MARGIN-RIGHT: 0px">
+<P><EM><FONT size=2>No, that is not the case.</FONT></EM></P>
+<P><EM><FONT size=2>Sort ID's mske sense with specific LANGID values for which there are supported sorts. It has nothing to do with primary language ID alone.</FONT></EM></P></BLOCKQUOTE>
+<P><FONT face=Tahoma>And this is an important distinction -- for example, 0x0407 is German - Germany, and 0x0807 is German - Switzerland. You can get them by using:</FONT></P>
+<P><FONT face="Courier New"><STRONG>MAKELANGID(LANG_GERMAN, SUBLANG_GERMAN)</STRONG></FONT></P>
+<P><FONT face="Courier New"><STRONG>MAKELANGID(LANG_GERMAN, SUBLANG_GERMAN_SWISS)</STRONG></FONT></P>
+<P><FONT face=Tahoma>but if you wanted to use German phone book alternate sort, then only the following will work:</FONT></P>
+<P><STRONG><FONT face="Courier New">MAKELCID(MAKELANGID(LANG_GERMAN, SUBLANG_GERMAN), SORT_GERMAN_PHONE_BOOK)</FONT></STRONG></P>
+<P><FONT face=Tahoma>because it is not defined for any of the other German language locales.</FONT></P>
+<P><FONT face=Tahoma>Eman then asked a follow-up question:</FONT></P>
+<BLOCKQUOTE dir=ltr style="MARGIN-RIGHT: 0px">
+<P><EM><FONT size=2>Thank you for answer.</FONT></EM></P>
+<P><EM><FONT size=2>So, to let the user choose a sort within specific LangID i can EnumSystemLocales with LCID_INSTALLED | LCID_ALTERNATE_SORTS, filtering out items with the LangID.</FONT></EM></P>
+<P><EM><FONT size=2>Please correct if i am wrong again.</FONT></EM></P></BLOCKQUOTE>
+<P><FONT face=Tahoma>Now this answer is not wrong, but it is a lot more work than is needed. To get the list of alternate sorts available within a specific LANGID there are two methods:</FONT></P>
+<OL>
+<LI><FONT face=Tahoma>Call <A href="http://msdn.microsoft.com/library/en-us/intl/nls_9qk3.asp">EnumSystemLocales</A> with the LCID_ALTERNATE_SORTS flag, and then filter for all of the ones where LANGIDFROMLCID returns the LANGID you are looking for.</FONT> 
+<LI><FONT face=Tahoma>Call <A href="http://msdn.microsoft.com/library/en-us/intl/nls_74dh.asp">IsValidLocale</A> for every LCID value of MAKLCID(langid, <EM><STRONG>n</STRONG></EM>) where <STRONG><EM>n</EM></STRONG>&nbsp;is from 0x1 to 0xf, and wny time it is valid then you know you have found an alternate sort for the langid.</FONT></LI></OL>
+<P><FONT face=Tahoma>Which method to choose?&nbsp;Well at the moment method #1&nbsp;may perhaps seem faster since there are way fewer than 15 alternate sorts across all locales, but&nbsp;method #1&nbsp;returns strings and converting all of those strings to numbers so you can compare them in the locale macros may be more expensive than comparing 15 numbers. Both operations are fast enough that it is one of those silly interview questions to make a candidate&nbsp;answer as to&nbsp;which method is better.</FONT></P>
+<P><FONT face=Tahoma>Personally, I would choose method #2 since the future could have more alternate sorts in it (one never knows!) and I like to avoid dealing with strings when I can. But if that were an interview question I were given, I would be sure not to take that particular job.... :-)</FONT></P>
+<P><FONT face=Tahoma></FONT>&nbsp;</P>
+<P><FONT face=Tahoma color=#ff1493><EM>This post brought to you by</EM> "<FONT face="Segoe UI" size=6>Ɣ</FONT>" <EM>(<A href="http://www.fileformat.info/info/unicode/char/0194">U+0194</A>, a.k.a. LATIN CAPITAL LETTER GAMMA)</EM></FONT></P>
+<hr/><p><a id="498304" href="#498304">#</a> <strong>Richard</strong> on 30 Nov 2005 7:23 AM:</p><div style="margin-left: 1em">&gt; This post brought to you by<br><br>I don't have (not being from Microsoft) the Segoe UI typeface, therefore the Gamma does not show up (in IE, does in FF, so looks like FF is doing some additional defaulting here if none of the fonts specified are available).</div>
+<p><a id="8422112" href="#8422112">#</a> <strong>Tatiana Racheva</strong> on 24 Apr 2008 12:41 PM:</p><div style="margin-left: 1em"><p>So for Vista &amp; later, sounds like one should use EnumSystemLocalesEx, because it will also include Traditional Spanish sort when you use LOCALE_ALTERNATE_SORTS. It seems like you still have to make a special case for it, because you can't derive the same language ID from the two LCIDs...</p></div>
+<hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2005/11/26 <a href="http://archives.miloush.net/michkap/archive/2005/11/26/495072.html">Technically it *is* a hungarian sort</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2005/11/26/495072.html" title="Technically it *is* a hungarian sort">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2005/11/24/496528.html" title="CultureInfo thoughts">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2005-11">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2005-11-25">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2005/11/25/494976.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:40 GMT -->
+</html>

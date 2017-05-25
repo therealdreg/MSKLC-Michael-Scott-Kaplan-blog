@@ -1,0 +1,280 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2008/04/18/8403631.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:36 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>The importance of Tagalog to Burmese, aka "Of course I'd lie to you, I'm a font!"</title></head><body>
+<h1>The importance of Tagalog to Burmese, aka "Of course I'd lie to you, I'm a font!"</h1>
+<p><em>by Michael S. Kaplan, published on 2008/04/18 03:01 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2008/04/18/8403631.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P><EM><FONT color=#ff0000 size=1>Content of </FONT></EM><A class="" href="http://blogs.msdn.com/michkap" mce_href="http://blogs.msdn.com/michkap"><FONT color=#0000cc size=1><EM>Michael Kaplan's personal blog</EM></FONT></A><FONT color=#ff0000 size=1><EM> not approved by Microsoft (see </EM></FONT><A class="" href="http://archives.miloush.net/michkap/archive/2008/02/28/7934999.html" mce_href="http://archives.miloush.net/michkap/archive/2008/02/28/7934999.html"><FONT color=#0000cc size=1><EM>disclaimer</EM></FONT></A><FONT color=#ff0000 size=1><EM>)!<BR>Regular readers should keep in mind that all I said in <A class="" href="http://archives.miloush.net/michkap/archive/2008/03/30/8340299.html" mce_href="http://archives.miloush.net/michkap/archive/2008/03/30/8340299.html"><STRONG><FONT color=#0000cc>The End?</FONT></STRONG></A> still applies; the allusion to the X-Files continues for people who understand such references....<BR></EM></FONT></P>
+<P>This is not&nbsp;a post discussing some kind of geopolitical issue involving Myanmar (Burma) and the Philipines.</P>
+<P>You see&nbsp;the other day, regular reader Andrew West, in a comment to my <A class="" href="http://archives.miloush.net/michkap/archive/2008/04/15/8396470.html" mce_href="http://archives.miloush.net/michkap/archive/2008/04/15/8396470.html"><STRONG>Who forgot the culture?</STRONG></A>, <A class="" href="http://archives.miloush.net/michkap/archive/2008/04/15/8396470.html#8397836" mce_href="http://archives.miloush.net/michkap/archive/2008/04/15/8396470.html#8397836">asked</A>:</P>
+<BLOCKQUOTE>
+<P><FONT face="times new roman,times"><EM>Completely off-topic, but I notice that you embed the sponsoring character (U+1831, MONGOLIAN LETTER SHA) in an html font tag specifying "Mongolian Baiti" as the font face. It drives me crazy that IE7 (like IE6 before it) lists Mongolian as a "language script" that you can configure the font for, but it will not populate the font lists with any fonts regardless of how many fonts you have on the system that support Mongolian (including Mongolian Baiti), so it is impossible to actually configure what Mongolian font to use! The good news is that it does display Mongolian using Mongolian Baiti without explicitly specifying the font in the html, but the bad news is that I can't get it to use a Mongolian font other Mongolian Baiti without messing with the html. I just wish someone would fix IE ... or is this one of those Kafkaesque examples like Uyghur where Microsoft can't fix something, however broken, in case it breaks user expectations?</EM></FONT></P></BLOCKQUOTE>
+<P>I suspected that I knew what was going on here, but it was really worthy of its own blog and I wasn't sure how quickly I'd get to it so I recommended he put a note in the Suggestion Box just in case it wasn't going to be quick....</P>
+<P>Which he did:</P>
+<BLOCKQUOTE>
+<P><EM><FONT face="times new roman,times">I know I'm not going to like the answer, but can you explain how the font configuration dialog in Internet Explorer works, in particular the behaviour for Mongolian (font list is never populated) and Myanmar (font list is populated with fonts that cover Tagalog, but none that cover Myanmar)?</FONT></EM></P></BLOCKQUOTE>
+<P>Then I had to cancel the blog that was happening for this slot and I ended&nbsp;up deciding to do it right away instead....</P>
+<P>Andrew is right that he probably won't like the answer, but it is something that is fixable, an even technically work-aroundable if a font&nbsp;author is willing to do something that hr or she would ordinarily consider to be very stupid. :-)</P>
+<P>Perhaps I should explain.</P>
+<P>We'll start in the <STRONG>Tools|Internet Options...</STRONG> <STRONG>Fonts...</STRONG> dialog:</P>
+<P><IMG src="http://trigeminal.fmsinc.com/images/mlangie01.png"></P>
+<P>(I guess I have no Tagalog fonts!)</P>
+<P><IMG src="http://trigeminal.fmsinc.com/images/mlangie02.png"></P>
+<P>and for good measure we'll include one that has some fonts in it:</P>
+<P><IMG src="http://trigeminal.fmsinc.com/images/mlangie03.png"></P>
+<P>Now in the end the information on actual selections is stored in the registry, under </P>
+<P><STRONG>&nbsp;&nbsp;&nbsp; HKCU\Software\Microsoft\Internet Explorer\International\Scripts</STRONG></P>
+<P>which is clearly an Internet Explorer settings key with SCRIPT ID values 36 (Myanmar) and 39 (Mongolian):</P>
+<P><IMG height=698 src="http://trigeminal.fmsinc.com/images/mlangie04.png" width=1075></P>
+<P><IMG src="http://trigeminal.fmsinc.com/images/mlangie05.png"></P>
+<P>But for the list of potential fonts, that is not IE at all; that is MLang.</P>
+<P>Now I&nbsp;blogged this&nbsp;a bit over two years ago in <A class="" href="http://archives.miloush.net/michkap/archive/2006/02/19/535046.html" mce_href="http://archives.miloush.net/michkap/archive/2006/02/19/535046.html"><STRONG>Where are the IE plain text fonts?</STRONG></A>, and in that blog I mentioned:</P>
+<BLOCKQUOTE>
+<P><FONT face="times new roman,times">Now the actual population of the two lists is happening via MLang, and as Paul points out you could think of the list on the left as being for proportional fonts and the list on the right as being for fixed&nbsp;pitch (monowidth)&nbsp;fonts.<BR><BR>MLang goes through a two step process that I will get into in another post, coming soon. :-)</FONT></P></BLOCKQUOTE>
+<P>And since I never did get back to it, I guess Andrew has proof that things often get lost if they aren't put in one of those lists like the Suggestion Box! I am actually happy to have the proof because otherwise I look kind of petty or something with my request....</P>
+<P>Anyway, I'll explain it now -- it all works via&nbsp;a <STRONG>Trust; But Verify!</STRONG> mechanism.</P>
+<P>The <STRONG>Trust</STRONG> part is where it trusts the font to describe its own Unicode ranges in its own internal <A class="" href="http://msdn2.microsoft.com/library/ms776424.aspx" mce_href="http://msdn2.microsoft.com/library/ms776424.aspx">FONTSIGNATURE.fsUsb</A> bits, the <A class="" href="http://msdn2.microsoft.com/library/ms776439.aspx" mce_href="http://msdn2.microsoft.com/library/ms776439.aspx">Unicode Subset bits</A>. That is step one.</P>
+<P>The <STRONG>Verify</STRONG> part is where it does a spot check on a specific Unicode code point in th script range, to make sure that the <A class="" href="http://msdn2.microsoft.com/library/ms776424.aspx" mce_href="http://msdn2.microsoft.com/library/ms776424.aspx">FONTSIGNATURE</A>&nbsp;is not lying. Because <A class="" href="http://msdn2.microsoft.com/library/ms776424.aspx" mce_href="http://msdn2.microsoft.com/library/ms776424.aspx">FONTSIGNATURE</A>s, like men, lie. Like that bit from the movie <STRONG>Up the Creek</STRONG> an it's fictional typographical version <STRONG>Up&nbsp;the Foundry</STRONG>&nbsp;between Tim Matheson (as the font)&nbsp;and Jennifer Runyon (as the user):</P>
+<BLOCKQUOTE>
+<P><STRONG>Font</STRONG>: I will&nbsp;tell you about my coverage.<BR><STRONG>User</STRONG>: You wouldn't lie to me?<BR><STRONG>Font</STRONG>: Of course I'd lie to you, I'm a font. But I'm not lying now....</P></BLOCKQUOTE>
+<P mce_keep="true">In fact, it really relies on that <STRONG>Verify</STRONG> step and perhaps even skips the <STRONG>Trust</STRONG> step a bit, sometimes?</P>
+<P mce_keep="true">And&nbsp;it spot checks the font CMAP to make sure a specific candidate character is in it.</P>
+<P mce_keep="true">I mentioned there was as problem here, didn't I?</P>
+<P mce_keep="true">Here is where the problem sits.</P>
+<P mce_keep="true">Deep in the heart of MLang, in its mlflink.cpp source file, it has:</P>
+<UL>
+<LI>
+<DIV mce_keep="true">Myanmar with a candidate character of U+1700 (ᜀ, aka TAGALOG LETTER A)</DIV></LI>
+<LI>
+<DIV mce_keep="true">Mongolian with no candidate character given at all.</DIV></LI></UL>
+<P mce_keep="true">And this is why Mongolian never shows up (since it has no explicit character to check for)&nbsp;and Myanmar shows up when your font has Tagalog (since that is the character it looks for).</P>
+<P mce_keep="true">Which is the essential workaround for Myanmar -- add that one specific Tagalog character to your Burmese font? Totally obnoxious, but until/unless someone fixes MLang....</P>
+<P mce_keep="true">Let's put all the values in a table so you can see them:</P>
+<TABLE class="" border=1>
+<TBODY>
+<TR>
+<TD class="">Script</TD>
+<TD class="">Script Id</TD>
+<TD class="">Code point</TD>
+<TD class="">Character</TD>
+<TD class="">Character Name</TD></TR>
+<TR>
+<TD class="">Greek</TD>
+<TD class="">5</TD>
+<TD class="">U+03ac</TD>
+<TD class="">ά</TD>
+<TD class="">GREEK SMALL LETTER ALPHA WITH TONOS</TD></TR>
+<TR>
+<TD class="">Cyrillic</TD>
+<TD class="">6</TD>
+<TD class="">U+0401</TD>
+<TD class="">Ё</TD>
+<TD class="">CYRILLIC CAPITAL LETTER IO</TD></TR>
+<TR>
+<TD class="">Armenian</TD>
+<TD class="">7</TD>
+<TD class="">U+0531</TD>
+<TD class="">Ա</TD>
+<TD class="">ARMENIAN CAPITAL LETTER AYB</TD></TR>
+<TR>
+<TD class="">Hebrew</TD>
+<TD class="">8</TD>
+<TD class="">U+05d4</TD>
+<TD class="">ה</TD>
+<TD class="">HEBREW LETTER HE</TD></TR>
+<TR>
+<TD class="">Arabic</TD>
+<TD class="">9</TD>
+<TD class="">U+0627</TD>
+<TD class="">ا</TD>
+<TD class="">ARABIC LETTER ALEF</TD></TR>
+<TR>
+<TD class="">Devanagari</TD>
+<TD class="">10</TD>
+<TD class="">U+0905</TD>
+<TD class="">अ</TD>
+<TD class="">DEVANAGARI LETTER A</TD></TR>
+<TR>
+<TD class="">Bengali</TD>
+<TD class="">11</TD>
+<TD class="">U+0985</TD>
+<TD class="">অ</TD>
+<TD class="">BENGALI LETTER A</TD></TR>
+<TR>
+<TD class="">Gurmukhi</TD>
+<TD class="">12</TD>
+<TD class="">U+0a05</TD>
+<TD class="">ਅ</TD>
+<TD class="">GURMUKHI LETTER A</TD></TR>
+<TR>
+<TD class="">Gujarati</TD>
+<TD class="">13</TD>
+<TD class="">U+0a85</TD>
+<TD class="">અ</TD>
+<TD class="">GUJARATI LETTER A</TD></TR>
+<TR>
+<TD class="">Oriya</TD>
+<TD class="">14</TD>
+<TD class="">U+0b05</TD>
+<TD class="">ଅ</TD>
+<TD class="">ORIYA LETTER A</TD></TR>
+<TR>
+<TD class="">Tamil</TD>
+<TD class="">15</TD>
+<TD class="">U+0b85</TD>
+<TD class="">அ</TD>
+<TD class="">TAMIL LETTER A</TD></TR>
+<TR>
+<TD class="">Telugu</TD>
+<TD class="">16</TD>
+<TD class="">U+0c05</TD>
+<TD class="">అ</TD>
+<TD class="">TELUGU LETTER A</TD></TR>
+<TR>
+<TD class="">Kannada</TD>
+<TD class="">17</TD>
+<TD class="">U+0c85</TD>
+<TD class="">ಅ</TD>
+<TD class="">KANNADA LETTER A</TD></TR>
+<TR>
+<TD class="">Malayalam</TD>
+<TD class="">18</TD>
+<TD class="">U+0d05</TD>
+<TD class="">അ</TD>
+<TD class="">MALAYALAM LETTER A</TD></TR>
+<TR>
+<TD class="">Thai</TD>
+<TD class="">19</TD>
+<TD class="">U+0e01</TD>
+<TD class="">ก</TD>
+<TD class="">THAI CHARACTER KO KAI</TD></TR>
+<TR>
+<TD class="">Lao</TD>
+<TD class="">20</TD>
+<TD class="">U+0e81</TD>
+<TD class="">ກ</TD>
+<TD class="">LAO LETTER KO</TD></TR>
+<TR>
+<TD class="">Tibetan</TD>
+<TD class="">21</TD>
+<TD class="">U+0f40</TD>
+<TD class="">ཀ</TD>
+<TD class="">TIBETAN LETTER KA</TD></TR>
+<TR>
+<TD class="">Georgian</TD>
+<TD class="">22</TD>
+<TD class="">U+10d0</TD>
+<TD class="">ა</TD>
+<TD class="">GEORGIAN LETTER AN</TD></TR>
+<TR>
+<TD class="">Ethiopic</TD>
+<TD class="">27</TD>
+<TD class="">U+1300</TD>
+<TD class="">ጀ</TD>
+<TD class="">ETHIOPIC SYLLABLE JA</TD></TR>
+<TR>
+<TD class="">Canadian Syllabics</TD>
+<TD class="">28</TD>
+<TD class="">U+1401</TD>
+<TD class="">ᐁ</TD>
+<TD class="">CANADIAN SYLLBICS E</TD></TR>
+<TR>
+<TD class="">Cherokee</TD>
+<TD class="">29</TD>
+<TD class="">U+13a0</TD>
+<TD class="">Ꭰ</TD>
+<TD class="">CHEROKEE LETTER A</TD></TR>
+<TR>
+<TD class="">Yi</TD>
+<TD class="">30</TD>
+<TD class="">U+a000</TD>
+<TD class="">ꀀ</TD>
+<TD class="">YI SYLLABLE IT</TD></TR>
+<TR>
+<TD class="">Braille</TD>
+<TD class="">31</TD>
+<TD class="">U+2800</TD>
+<TD class="">⠀</TD>
+<TD class="">BRAILLE PATTERN BLANK</TD></TR>
+<TR>
+<TD class="">Runic</TD>
+<TD class="">32</TD>
+<TD class="">U+16a0</TD>
+<TD class="">ᚠ</TD>
+<TD class="">RUNIC LETTER FEHU FEOH FE F</TD></TR>
+<TR>
+<TD class="">Ogham</TD>
+<TD class="">33</TD>
+<TD class="">U+1680</TD>
+<TD class=""> </TD>
+<TD class="">OGHAM SPACE MARK</TD></TR>
+<TR>
+<TD class="">Sinhala</TD>
+<TD class="">34</TD>
+<TD class="">U+0d85</TD>
+<TD class="">අ</TD>
+<TD class="">SINHALA LETTER AYANNA</TD></TR>
+<TR>
+<TD class="">Syriac</TD>
+<TD class="">35</TD>
+<TD class="">U+0710</TD>
+<TD class="">ܐ</TD>
+<TD class="">SYRIAC LETTER ALAPH</TD></TR>
+<TR>
+<TD class=""><FONT color=#ff0000>Myanmar</FONT></TD>
+<TD class=""><FONT color=#ff0000>36</FONT></TD>
+<TD class=""><FONT color=#ff0000>U+1700</FONT></TD>
+<TD class=""><FONT color=#ff0000>ᜀ</FONT></TD>
+<TD class=""><FONT color=#ff0000>TAGALOG LETTER A</FONT></TD></TR>
+<TR>
+<TD class="">Khmer</TD>
+<TD class="">37</TD>
+<TD class="">U+1780</TD>
+<TD class="">ក</TD>
+<TD class="">KHMER LETTER KA</TD></TR>
+<TR>
+<TD class="">Thanna</TD>
+<TD class="">38</TD>
+<TD class="">U+0780</TD>
+<TD class="">ހ</TD>
+<TD class="">THAANA LETTER HAA</TD></TR>
+<TR>
+<TD class=""><FONT color=#ff0000>Mongolain</FONT></TD>
+<TD class=""><FONT color=#ff0000>39</FONT></TD>
+<TD class=""><FONT color=#ff0000>-0-</FONT></TD>
+<TD class=""><FONT color=#ff0000></FONT></TD>
+<TD class=""><FONT color=#ff0000>&nbsp;</FONT></TD></TR></TBODY></TABLE>
+<P mce_keep="true">You can probably see the other problem here -- all of the scripts that are missing; perhaps the fix needs to be a bit more than just the two broken ones, in the long run....</P>
+<P mce_keep="true">Speaking of which -- any NLS testers stirring about who'd like to enter a bug on this small bundle of MLang issues that will also affect IE8 on the next version of Windows if it isn't fixed? :-)</P>
+<P mce_keep="true">&nbsp;</P>
+<P mce_keep="true"><FONT color=#ff00ff><EM>This blog brought to you by</EM><FONT size=5> ᜀ </FONT><EM>(<A class="" href="http://www.fileformat.info/info/unicode/char/1700" mce_href="http://www.fileformat.info/info/unicode/char/1700">U+1700</A>, aka TAGALOG LETTER A)</EM></FONT></P>
+<hr/><p><a id="8407155" href="#8407155">#</a> <strong>Andrew West</strong> on 18 Apr 2008 5:17 AM:</p><div style="margin-left: 1em"><p>Many thanks for the explanation -- it now all makes sense, though as you say it really would be nice to see everything thoroughly updated to cover all the scripts that have since been encoded (at the very least, please add Phags-pa).</p>
+<p>Perhaps you will be able to explain the Myanmar font hack to Martin Hosken if you are at the WG2 meeting next week -- he has a wonderful Myanmar font that supports Unicode 5.1 (<a rel="nofollow" target="_new" href="http://scripts.sil.org/Padauk">http://scripts.sil.org/Padauk</a>), and I would love to be able to set it as my preferred Myanmar font rather than &quot;Tagalog Doctrina 1593&quot; (you can download all the Tagalog fonts you need from <a rel="nofollow" target="_new" href="http://www.mts.net/~pmorrow/fonts.htm">http://www.mts.net/~pmorrow/fonts.htm</a>).</p>
+<p>No hack for Mongolian though :-(</p></div>
+<p><a id="8407226" href="#8407226">#</a> <strong>Andrew West</strong> on 18 Apr 2008 5:39 AM:</p><div style="margin-left: 1em"><p>And why U+1700 TAGALOG LETTER A ?</p>
+<p>If you read &lt;<a rel="nofollow" target="_new" href="http://std.dkuug.dk/JTC1/SC2/wg2/docs/n1883R2-1998.pdf>">http://std.dkuug.dk/JTC1/SC2/wg2/docs/n1883R2-1998.pdf&gt;</a> page 4 &quot;Encoding Position for Myanmar Script&quot; you'll see that Myanmar was originally located at 1700..177F in the Amd.26 PDAM text, but was moved to its current location at the next stage in the ballot process. Looks like someone at Microsoft jumped the gun and coded U+1700 as the character to check before Myanmar had been finalised -- tut tut.</p></div>
+<p><a id="8407240" href="#8407240">#</a> <strong>Michael S. Kaplan</strong> on 18 Apr 2008 5:43 AM:</p><div style="margin-left: 1em"><p>This might even give you a hint as to who actually did in fact jump the gun (the person's email alias is in a comment so I already knew, though I might have guessed had I known about this doc!).</p>
+</div>
+<p><a id="8407328" href="#8407328">#</a> <strong>Andrew West</strong> on 18 Apr 2008 6:12 AM:</p><div style="margin-left: 1em"><p>It doesn't, but there is only one person I can think of who might be responsible, and their name is mentioned in this post.</p></div>
+<p><a id="8407639" href="#8407639">#</a> <strong>Michael S. Kaplan</strong> on 18 Apr 2008 7:41 AM:</p><div style="margin-left: 1em"><P>:-)</P>
+<P>No, the responsible party is not mentioned in the post....</P></div>
+<p><a id="8408443" href="#8408443">#</a> <strong>John Cowan</strong> on 18 Apr 2008 1:17 PM:</p><div style="margin-left: 1em"><p>Would a Mongolian font be detected if it contained a glyph for U+0000?</p></div>
+<p><a id="8408473" href="#8408473">#</a> <strong>Michael S. Kaplan</strong> on 18 Apr 2008 1:26 PM:</p><div style="margin-left: 1em"><p>Good question!</p>
+<p>Of course the code might treat -0- as uninitialized. Don't all fonts have a glyph for 0x0000 in the CMAP?</p>
+</div>
+<p><a id="8408989" href="#8408989">#</a> <strong>Andrew West</strong> on 18 Apr 2008 4:28 PM:</p><div style="margin-left: 1em"><p>Yes, good idea. Fonts don't normally have a glyph for U+0000, so as a test I added a glyph mapped to U+0000 to one of my fonts that has partial coverage of Mongolian ... and I'm afraid it still didn't show up in the list, even after rebooting :-(</p></div>
+<p><a id="8408997" href="#8408997">#</a> <strong>Michael S. Kaplan</strong> on 18 Apr 2008 4:31 PM:</p><div style="margin-left: 1em"><p>Well, at lest there is the workaround for Myanmar, one that might help foster relationships between the Philippines and Burma! :-)</p>
+</div>
+<p><a id="8409013" href="#8409013">#</a> <strong>Andrew West</strong> on 18 Apr 2008 4:40 PM:</p><div style="margin-left: 1em"><p>Of course the flip side is that I cannot see the sponsoring character of this post in IE, even though I have five Tagalog fonts installed (yet another frowny omitted).</p></div>
+<p><a id="8915569" href="#8915569">#</a> <strong>Okisan</strong> on 1 Sep 2008 1:50 AM:</p><div style="margin-left: 1em"><p>Thanks for the post. </p>
+<p>For those who wanna to read in Burmese translation of this post, please see <a rel="nofollow" target="_new" href="http://myanmaritpros.com/profiles/blog/show?id=1445004%3ABlogPost%3A44910">http://myanmaritpros.com/profiles/blog/show?id=1445004%3ABlogPost%3A44910</a></p>
+<p>But note, we use de fecto standard UTF-8 font (Zawgyi). :)</p>
+<p>Best,</p>
+<p>Okisan</p>
+<p>Myanmar IT Professionals</p></div>
+<p><a id="9901024" href="#9901024">#</a> <strong>Auto</strong> on 29 Sep 2009 5:55 PM:</p><div style="margin-left: 1em"><p>If you install the right font, firefox 3.5.3 will be able to use it without do anything else. On the contrary, if you use IE8 you won't see nothing yet. I must confess that firefox is ahead in this respect to IE8.</p>
+<p>Please Michael Kaplan, find a fix for this !!!</p>
+<p>I red your book about Internationalization of VB6: great book !!!</p></div>
+<hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2010/03/24 <a href="http://archives.miloush.net/michkap/archive/2010/03/24/9982503.html">The fonts are there, but IE can't see 'em?</a></p><p>2010/01/20 <a href="http://archives.miloush.net/michkap/archive/2010/01/20/9950694.html">It isn't always Internet Explorer's fault, dammit!</a></p><p>2008/12/22 <a href="http://archives.miloush.net/michkap/archive/2008/12/22/9246308.html">Internet Explorer and Windows might not be optimized for this Blog</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2008/04/18/8405696.html" title="The mythical nature of bidirectional support, and where the wheels come off the wagon">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2008/04/17/8401722.html" title="Not an International GFE and not providing an International GFE, sorry!">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2008-04">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2008-04-18">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2008/04/18/8403631.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:36 GMT -->
+</html>

@@ -1,0 +1,40 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2011/04/01/10148569.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>One developer's supported scenario is another's awful bolt-on job...</title></head><body>
+<h1>One developer's supported scenario is another's awful bolt-on job...</h1>
+<p><em>by Michael S. Kaplan, published on 2011/04/01 07:01 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2011/04/01/10148569.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<p>The other day one of those questions that tends to catch my eye kind of caught my eye:</p>
+<p style="padding-left: 60px;"><span style="font-family: times new roman,times;"><em>I've been trying to find a way of displaying currencies that is independent of the language set at the time.<br />The way described normally (ToString("C") or Format("{0:C}") doesn't work for us.</em></span></p>
+<p style="padding-left: 60px;"><span style="font-family: times new roman,times;"><em>Scenario: we're serving web pages that carry price information.<br />Say the backend tells us a price is 25 dollars.<br />In en-US, we would display $25.<br />But if we changed the browser's language to Japanese, we'd see 25 JPY. Not acceptable.</em></span></p>
+<p style="padding-left: 60px;"><span style="font-family: times new roman,times;"><em>The numeric price should come together with the ISO code for its currency.<br />When displaying the price, we should get the numeric format as specified in the NumberFormatInfo, but the currency symbol that corresponds to the data's ISO code.</em></span></p>
+<p style="padding-left: 60px;"><span style="font-family: times new roman,times;"><em>I haven't been able to find infrastructure for this, so I'm writing my own, but this involves cloning NumberFormatInfo's, and building a Dictionary to get the currency symbol from the ISO code.</em></span></p>
+<p style="padding-left: 60px;"><span style="font-family: times new roman,times;"><em>Is there currency display infrastructure that is language-independent?</em></span></p>
+<p>Sometimes a scenario is one that functionality was simply not designed for.</p>
+<p>When that happens, you are on your own a little bit, though of course sometimes you can weave the support together from the pieces that were implemented.</p>
+<p>Different like the way <a href="http://archives.miloush.net/michkap/archive/2010/05/03/10002241.html"><strong>One product's (or person's) intended design is another product's (or person's) bug. And vice versa</strong></a> talks about a case that is different. But different from that, in a different way.</p>
+<p>In this case, there is no way to look up currency information by currency symbol.</p>
+<p>But let's see what we do have: </p>
+<ol>
+<li>You can enumerate every <a href="http://msdn.microsoft.com/library/system.globalization.regioninfo.aspx">RegionInfo</a> by using <a href="http://msdn.microsoft.com/library/atwc2921.aspx">this constructor</a> and <a href="http://msdn.microsoft.com/library/system.globalization.cultureinfo.getcultures.aspx">CultureInfo.GetCultures</a>;</li>
+<li>Each <a href="http://msdn.microsoft.com/library/system.globalization.regioninfo.aspx">RegionInfo</a> has both a <a href="http://msdn.microsoft.com/library/system.globalization.regioninfo.currencysymbol.aspx">CurrencySymbol</a> and an <a href="http://msdn.microsoft.com/library/system.globalization.regioninfo.isocurrencysymbol.aspx">ISOCurrencySymbol</a>&nbsp;-- you can index by <a href="http://msdn.microsoft.com/library/system.globalization.regioninfo.isocurrencysymbol.aspx">ISOCurrencySymbol</a>&nbsp;and ignore ones already indexed (hash tables can be great for that sort of thing but use whatever datas structure you like);</li>
+<li>You can use built-in methods to create a new [not read only]&nbsp;culture based on the browser language or perhaps settings chosen some other way, and then you can change the currency symbol to match.</li>
+</ol>
+<p>Now this system lives up to our "spec" --&nbsp;it is designed to combine a user's preferences with a different currency symbol.</p>
+<p>But it is not perfect, since the spec doesn't take some things into account -- like the fact that the per locale preferences tend to be based on the currencies preferred by that locale. thus (for example) ja-JP (Japanese) will use the Yen&nbsp;(JPY) and have <strong>no currency decimal places</strong> -- an attribute that most other locales do not share. </p>
+<p>Which means the expected format for a given locale doesn't always give the information you would need for every sigle currency type!</p>
+<p>Now native code makes a partial effort to support this, via <a href="http://msdn.microsoft.com/library/dd318103.aspx">GetLocaleInfoEx</a>'s <a href="http://msdn.microsoft.com/library/dd373778.aspx">LOCALE_IINTLCURRDIGITS</a>, though this is far from perfect and to be honest if it were me I'd try to build something slightly more sophisticated using the curency decimal places of both the user's settings and of the settings of the currency. You know, to find the happy medium.</p>
+<p>Or maybe I'd always use the number of currency decimal places of the currency, while leaving grouping and currency decimal/grouping separators to the user preferences. That feels lik it would be a bit more homey for me.</p>
+<p>Though it would require one to get some more data between steps 1 and 2 from a <a href="http://msdn.microsoft.com/library/system.globalization.cultureinfo.numberformat.aspx">CultureInfo.NumberFormat</a>&nbsp;that corresponds to each <a href="http://msdn.microsoft.com/library/system.globalization.regioninfo.aspx">RegionInfo</a>.</p>
+<p>Perhaps the fact that System.Globalization was not designed with this not entirely uncommon ASP.NET/Internet commerce scenario in mind is becoming more painfully obvious as we progress?&nbsp;:-)</p>
+<p>If I were in charge of ASP.Net, I'd probably be fighting for a better slice of the data here, one more suited to me than the current classes are. </p>
+<p>Maybe someone thinking about this scenario will notice and think of ways to do all that. Because most of the pieces are there, if they can only be sliced up the right way....</p>
+<hr/><p><strong>Jan Kučera</strong> on 16 Apr 2011 4:43 AM:</p><div style="margin-left: 1em"><p>What is the issue in using something like this?</p>
+<p>NumberFormatInfo nfi = Thread.CurrentThread.CurrentCulture.NumberFormat;</p>
+<p>return price.ToString(&quot;C&quot;, nfi).Replace(nfi.CurrencySymbol, &quot; &quot; + currency + &quot; &quot;).Trim();</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 16 Apr 2011 6:48 AM:</p><div style="margin-left: 1em"><p>Well, the above gives some of the problems - like number of decimal digits. Plus figuring out where &quot;currency&quot; comes from....</p>
+</div>
+<hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2011/04/02/10149149.html" title="There&#39;s no &quot;I&quot; in IDN, part 2: Try not to use the wrong functions!">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2011/03/31/10148063.html" title="&quot;Digit substitution is maybe a tolerable hack for displaying UI, but it’s definitely bad if you’re creating content.&quot;">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2011-04">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2011-04-01">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2011/04/01/10148569.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+</html>

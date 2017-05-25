@@ -1,0 +1,56 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2006/06/02/615509.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:39 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>It is only of SECONDARY importance</title></head><body>
+<h1>It is only of SECONDARY importance</h1>
+<p><em>by Michael S. Kaplan, published on 2006/06/02 21:44 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2006/06/02/615509.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P><FONT face=Tahoma>Since the time I posted <STRONG><A HREF="http://archives.miloush.net/michkap/archive/2006/04/25/583307.html">Why do we call w 'double u' -- doesn't it look more like a 'double v'?</A></STRONG>, I have had several people ask me about what is difference between <STRONG>v</STRONG> and <STRONG>w</STRONG> in Swedish/Finnish, or more specifically about how Microsoft implements it.</FONT></P>
+<P><FONT face=Tahoma>Now I have talked in the past about how distinctions work, in posts such as <A HREF="http://archives.miloush.net/michkap/archive/2004/12/30/344389.html">this one</A>.</FONT></P>
+<P><FONT face=Tahoma>As always, we will head back to the sort keys for our answer!</FONT></P><FONT face=Tahoma>
+<BLOCKQUOTE dir=ltr style="MARGIN-RIGHT: 0px">
+<P><FONT face="Courier New"><STRONG>v&nbsp;&nbsp;&nbsp;U+0076&nbsp;&nbsp;&nbsp;0e a2 01&nbsp;&nbsp;&nbsp; 01 01 01 00</STRONG></FONT></P>
+<P><FONT face="Courier New"><STRONG>w&nbsp;&nbsp;&nbsp;U+0077&nbsp;&nbsp;&nbsp;0e a2 01 <FONT color=#ff0000>03</FONT> 01 01 01 00</STRONG></FONT></P></BLOCKQUOTE></FONT>
+<P><FONT face=Tahoma>Let's compare that to how things are in the US:</FONT></P><FONT face=Tahoma>
+<BLOCKQUOTE dir=ltr style="MARGIN-RIGHT: 0px">
+<P><FONT face="Courier New"><STRONG>v&nbsp;&nbsp;&nbsp;U+0076&nbsp;&nbsp;&nbsp;0e <FONT color=#ff0000>a2</FONT> 01&nbsp;&nbsp;&nbsp; 01 01 01 00</STRONG></FONT></P>
+<P><FONT face="Courier New"><STRONG>w&nbsp;&nbsp;&nbsp;U+0077&nbsp;&nbsp;&nbsp;0e <FONT color=#ff0000>a4</FONT> 01&nbsp;&nbsp; &nbsp;01 01 01 00</STRONG></FONT></P></BLOCKQUOTE></FONT>
+<P><FONT face=Tahoma>So, in English there is a primary distinction between the two letters, while in Swedish/Finnish there is a secondary difference -- what is often called a diacritic difference and that can be ignored with the NORM_IGNORENONSPACE flag to CompareString, etc. In that case, the two letters would be considered equal....</FONT></P>
+<P><FONT face=Tahoma>Now note what this "almost equal" thing does to a list, e.g. the following list (in English):</FONT></P>
+<UL>
+<LI><FONT face=Tahoma>Val</FONT></LI><FONT face=Tahoma>
+<LI><FONT face=Tahoma>Vel</FONT></LI>
+<LI>Wal</FONT></LI>
+<LI><FONT face=Tahoma>Wel</FONT></LI></UL>
+<P><FONT face=Tahoma>becomes in Swedish and Finnish:</FONT></P><FONT face=Tahoma>
+<UL>
+<LI><FONT face=Tahoma>Val</FONT></LI>
+<LI><FONT face=Tahoma>Wal</FONT></LI>
+<LI><FONT face=Tahoma>Vel</FONT></LI>
+<LI><FONT face=Tahoma>Wel</FONT></LI></UL></FONT>
+<P><FONT face=Tahoma>Ok, so the above is all very known and straightforward.</FONT></P>
+<P><FONT face=Tahoma>Let's talk about some bugs now. :-)</FONT></P>
+<P><FONT face=Tahoma>First we will look at another letter in the Swedish/Finnish table&nbsp;-- <STRONG>ŵ</STRONG>, a.k.a. LATIN SMALL LETTER W WITH CIRCUMFLEX. Let's look at the two normalization forms and see what we get:</FONT></P>
+<BLOCKQUOTE dir=ltr style="MARGIN-RIGHT: 0px">
+<P><FONT face="Courier New"><STRONG>ŵ&nbsp;&nbsp;&nbsp;U+0175<BR>0e a2 01 <FONT color=#ff0000>12</FONT> 01 01 01 00</STRONG></FONT></P>
+<P><FONT face="Courier New"><STRONG>ŵ&nbsp;&nbsp;&nbsp;U+0077 U+0302<BR>0e a2 01 <FONT color=#ff0000>13</FONT> 01 01 01 00</STRONG></FONT></P></BLOCKQUOTE>
+<P><FONT face=Tahoma>Ok, looks like a small mismatch there (luckily fixed in Vista when all the work to line up both normalization forms was done).</FONT></P>
+<P><FONT face=Tahoma>But now let's look at a grey area -- other W-like things that are not seen in Swedish or Finnish often enough to have been suggested in the language-specific tables:</FONT></P>
+<BLOCKQUOTE dir=ltr style="MARGIN-RIGHT: 0px">
+<P><FONT face="Courier New"><STRONG><FONT face=Tahoma>ẘ</FONT>&nbsp;&nbsp;&nbsp;U+1e98<BR>0e <FONT color=#ff0000>a4</FONT> 01 <FONT color=#000000>1a</FONT> 01 01 01 00</STRONG></FONT></P>
+<P><FONT face="Courier New"><STRONG><FONT face=Tahoma>ẘ</FONT>&nbsp;&nbsp;&nbsp;U+0077 U+030a<BR>0e <FONT color=#ff0000>a2</FONT> 01 <FONT color=#000000>1b</FONT> 01 01 01 00</STRONG></FONT></P></BLOCKQUOTE>
+<P><FONT face=Tahoma>It makes sense, though. We did move the <STRONG>w</STRONG> which is a piece of the Form D character, but not the&nbsp;<STRONG>ẘ</STRONG> which was not actually moved anywhere.</FONT></P>
+<P><FONT face=Tahoma>Do we fare better in Vista?</FONT></P><FONT face=Tahoma>
+<BLOCKQUOTE dir=ltr style="MARGIN-RIGHT: 0px">
+<P><FONT face="Courier New"><STRONG><FONT face=Tahoma>ẘ</FONT>&nbsp;&nbsp;&nbsp;U+1e98<BR>0e <FONT color=#ff0000>a4</FONT> 01 <FONT color=#000000>1a</FONT> 01 01 01 00</STRONG></FONT></P>
+<P><FONT face="Courier New"><STRONG><FONT face=Tahoma>ẘ</FONT>&nbsp;&nbsp;&nbsp;U+0077 U+030a<BR>0e <FONT color=#ff0000>a2</FONT> 01 <FONT color=#000000>1b</FONT> 01 01 01 00</STRONG></FONT></P></BLOCKQUOTE></FONT>
+<P><FONT face=Tahoma>Not at present, it looks like (Beta 2).</FONT></P>
+<P><FONT face=Tahoma>But if you think about it, this perhaps makes some sense, especially if the character itself is not used even in loan words. Trying to take <STRONG>every W-ish thing</STRONG> and move it, even if it is not used in the language. Spreading this across all letters and all languages, it could become a pretty huge issue in rather short order -- there are a <STRONG>lot</STRONG> of letters.</FONT></P>
+<P><FONT face=Tahoma>Graham Asher talks about this issue in his&nbsp;document entitled <A href="http://www.advogato.org/article/872.html">Better Collation Rule Markup: a critique of Locale Definition Markup Language</A>&nbsp;(he points it out for Turkic languages), though he actually does suggest a very different scheme to attempt to address this sort of problem, one that he is clearly in favoring of seeing addressed.</FONT></P>
+<P><FONT face=Tahoma>Personally, I tend to fall back on the "pass appropriate strings" argument, myself. People who feel very strongly about this sort of thing can normalize their text....</FONT></P>
+<P><FONT face=Tahoma>In other words, this other issue is also only of secondary importance, in the non-"collation pun" sense. :-)</FONT></P>
+<P><FONT face=Tahoma></FONT>&nbsp;</P>
+<P><FONT face=Tahoma color=#ff1493><EM>This post brought to you by</EM> <STRONG>ẘ</STRONG> <EM>(<A href="http://www.fileformat.info/info/unicode/char/1e98">U+1e98</A>, a.k.a. LATIN SMALL LETTER W WITH RING ABOVE)</EM></FONT></P>
+<hr/><p><a id="616304" href="#616304">#</a> <strong>Serge Wautier</strong> on 3 Jun 2006 5:59 PM:</p><div style="margin-left: 1em">FWIW, it is called 'double-v' in french (and pronounced as a v).<br><br>We, French speaking Belgians, are somewhat inconsistent: We call it double-v but pronounce it the English way, which sounds more like like 2 u's than 2 v's.</div>
+<hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2006/10/29 <a href="http://archives.miloush.net/michkap/archive/2006/10/29/897317.html">SQL Server: compatibility collations vs. Window collations</a></p><p>2006/06/02 <a href="http://archives.miloush.net/michkap/archive/2006/06/02/615536.html">Je, for sure, from Sweden.</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2006/06/02/615536.html" title="Je, for sure, from Sweden.">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2006/06/01/613641.html" title="Presentation forms in Microsoft keyboards?">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2006-06">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2006-06-02">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2006/06/02/615509.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:39 GMT -->
+</html>

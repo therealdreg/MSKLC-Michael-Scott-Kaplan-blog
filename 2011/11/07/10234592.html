@@ -1,0 +1,38 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2011/11/07/10234592.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Unicode in the console (including STDIN)?</title></head><body>
+<h1>Unicode in the console (including STDIN)?</h1>
+<p><em>by Michael S. Kaplan, published on 2011/11/07 07:01 -05:00, original URI: http://blogs.msdn.com/b/michkap/archive/2011/11/07/10234592.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<p>Over in the Suggestion box, Alf P. Steinbach&nbsp;asked:</p>
+<p style="padding-left: 60px;"><em><span style="font-family: times new roman,times; font-size: medium;">In an earlier topic you discussed how to do Unicode output to a console window at the C library level, by using _setmode.</span></em></p>
+<p style="padding-left: 60px;"><em><span style="font-family: times new roman,times; font-size: medium;">It would be nice with a discussion also of input at the C level (which does not seem to work).</span></em></p>
+<p style="padding-left: 60px;"><em><span style="font-family: times new roman,times; font-size: medium;">And then, how to do this at the C++ level, using C++ iostreams?</span></em></p>
+<p>Most of the console samples I have given here use ReadConsoleW and WriteConsoleW. Because as "Myth #8" in <strong><a title="Myth busting in the console " href="http://archives.miloush.net/michkap/archive/2010/10/07/10072032.html">this blog</a></strong>&nbsp;points out, the CRT has had some problems in some versions for both STDIN and STDOUT and STDERR.</p>
+<p>There is just a bug or two way from the CRT working here, with input being the final frontier.</p>
+<p>At this point, assuming you want code that works in any circumstance (in any version), then I highly recommend you move to ReadConsoleW.</p>
+<p>As for C++, I don't trust it in this case.</p>
+<p>There are just too many times that streams will "helpfully" convert text to some code page because it thinks it would be best to do.</p>
+<p>Truth be told, it's why I don't trust the CRT here, either.</p>
+<p>Better to use the method that's been working since NT 3.1 than to use something that has had a variety of problems since then that are only now being totally eradicated....</p>
+<p><em>Links from other 'myths' in <a title="Myth busting in the console " href="http://archives.miloush.net/michkap/archive/2010/10/07/10072032.html"><strong>this blog</strong></a>&nbsp;will get you the "if something is redirected" code, which is the principal nominal benefit of using things like the CRT. And I love the work of colleagues like Philip Lucido (former CRT owner used to be incredibly helpful to me!), but this one area simply has passed the mark of trust, for me....</em></p>
+<hr/><p><strong>Simon Buchan</strong> on 7 Nov 2011 2:19 PM:</p><div style="margin-left: 1em"><p>And to think that all user-side complexity/brokenness could have been avoided if Microsoft had a time machine when they created NT, so they could use UTF-8 for everything. :(</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 7 Nov 2011 3:52 PM:</p><div style="margin-left: 1em"><p>Our Flux Capacitor is in beta during FY12 Q1, so maybe we can take care of that? :-)</p>
+</div>
+<p><strong>Yuhong Bao</strong> on 7 Nov 2011 6:03 PM:</p><div style="margin-left: 1em"><p>Well, UTF-8 was invented in year 1992.</p>
+</div>
+<p><strong>Simon Buchan</strong> on 7 Nov 2011 6:59 PM:</p><div style="margin-left: 1em"><p>@Yuhong: They&#39;re much closer than I thought, actually: according to Wikipedia, UTF-8 started development early &#39;92 was publicly announced January &#39;93, while NT 3.1 was in development from &#39;88 and released July &#39;93 - which perhaps just makes it more disappointing that we were perhaps a couple of years off significantly less complex text handling in C on Windows :(.</p></div>
+<p><strong>Michael S. Kaplan</strong> on 7 Nov 2011 7:44 PM:</p><div style="margin-left: 1em"><p>NT wasn&#39;t going to take further delays to either gut existing &quot;W&quot; functions, or add a third set of functions for UTF-8 (I shudder at trying to convince DaveC of either choice there!). This new encoding as not an official part of the Unicode standard then, and we were implementing Unicode -- not potentially interesting RFCs....</p>
+</div>
+<p><strong>Yuhong Bao</strong> on 8 Nov 2011 7:13 PM:</p><div style="margin-left: 1em"><p>What about allowing UTF-8 to be the ACP/OEMCP?</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 8 Nov 2011 10:27 PM:</p><div style="margin-left: 1em"><p>Asked and answered many times.By you, even....</p>
+</div>
+<p><strong>Yuhong Bao</strong> on 9 Nov 2011 10:06 AM:</p><div style="margin-left: 1em"><p>I mean back in year 1993.</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 9 Nov 2011 10:24 AM:</p><div style="margin-left: 1em"><p>Again, asked and answered -- we were Unicode focused, not RFC focused....</p>
+</div>
+<hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2011/11/08/10234995.html" title="The evolving Story of Locale Support, part 5 (...until the decision was made to not refuse to add it)">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2011/11/04/10233999.html" title="The evolving Story of Locale Support, part 4 (working beyond one&#39;s bugs, and the case for an MSKLC update)">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2011-11">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2011-11-07">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2011/11/07/10234592.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+</html>

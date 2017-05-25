@@ -1,0 +1,53 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2012/12/20/10379645.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:24 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>The Cherokee LIP on Windows 8, part 2: Let's talk about the keyboards!</title></head><body>
+<h1>The Cherokee LIP on Windows 8, part 2: Let's talk about the keyboards!</h1>
+<p><em>by Michael S. Kaplan, published on 2012/12/20 07:01 -05:00, original URI: http://blogs.msdn.com/b/michkap/archive/2012/12/20/10379645.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<p>Previous parts in the series:</p>
+<ul>
+<li><strong><a title="The Cherokee LIP on Windows 8, part 1: Working Together on Gadugi" href="../19/10379263.html">part 1: Working Together on Gadugi</a></strong></li>
+</ul>
+<p><strong>We have some important rules regarding keyboard layout coverage of fonts we ship with Windows.</strong></p>
+<p>Now the rules were&nbsp;not broadly applied when locale coverage was not impacted until Windows 8/Server 2012 - discussed further in <strong><a title="The evolving Story of Locale Support, part 2 (raising the roof on keyboards)" href="../../../2011/11/02/10232468.html">The evolving Story of Locale Support, part 2 (raising the roof on keyboards)</a></strong>,&nbsp;though we did the best we could.</p>
+<p>But we had no way to cover <strong>Plantaganet Cherokee</strong> (added in&nbsp;Vista) without a Cherokee locale.</p>
+<p>Since we planned to add both a locale and a LIP, the&nbsp;new method of covering fonts in keyboards without related locales was not needed for Wndows 8.</p>
+<p>Though had we had this trick to use as a backup if the locale and LIP didn't work out....</p>
+<p><strong>And we have some important rules regarding keyboard layout coverage of locales we ship with Windows.</strong></p>
+<p>The crux of these rules? That the orthography of the language used for the native strings in the locale are fully covered by at least one keyboard layout.</p>
+<p>Now enforcement of this rule could often be problematic since the source of locale data was under no compunction to use our keyboard, and it could occasionally be hard to verify coverage. But we always did our best.</p>
+<p><strong>And we have some important rules regarding keyboard layout coverage of user interface languages we ship with Windows.</strong></p>
+<p>The crux of these rules? That the orthography of the language used for the native strings in the localization effort are fully covered by at least one keyboard layout</p>
+<p>There are two separate but related reasons for this policy:</p>
+<ol>
+<li>We can make the keyboard layout available to the localization vendors if they wish to use it, and</li>
+<li>Users who want to communicate about our localization have a reasonable way to do it.</li>
+</ol>
+<p>Since every user interface language has a locale, we have an easy way to add support, at least.</p>
+<p>All we need is a standard, or at least a de facto standard.</p>
+<p>For Cherokee, we have one: the <strong>Cherokee Nation</strong> layout, created by and supported by <strong>Cherokee Nation</strong>, (<strong>ᏣᎳᎩᎯ ᎠᏰᎵ</strong>),&nbsp;one of the thee federally recognized Cherokee tribes and of our two localization partners - the other being the Eastern Band of Cherokee Indians (EBCI or <strong>ᏣᎳᎩᏱ ᏕᏣᏓᏂᎸᎩ</strong>), which has no separately defined keyboard layout.</p>
+<p>\That layout is defined as follows.</p>
+<p>In the BASE state:</p>
+<p><a href="http://msdnshared.blob.core.windows.net/media/MSDNBlogsFS/prod.evol.blogs.msdn.com/CommunityServer.Blogs.Components.WeblogFiles/00/00/00/33/81/1258.cher01.jpg"><img style="max-width: 550px;" src="http://msdnshared.blob.core.windows.net/media/MSDNBlogsFS/prod.evol.blogs.msdn.com/CommunityServer.Blogs.Components.WeblogFiles/00/00/00/33/81/1258.cher01.jpg" alt="" border="0" /></a></p>
+<p>The SHIFT state:</p>
+<p><a href="http://msdnshared.blob.core.windows.net/media/MSDNBlogsFS/prod.evol.blogs.msdn.com/CommunityServer.Blogs.Components.WeblogFiles/00/00/00/33/81/3426.cher02.jpg"><img style="max-width: 550px;" src="http://msdnshared.blob.core.windows.net/media/MSDNBlogsFS/prod.evol.blogs.msdn.com/CommunityServer.Blogs.Components.WeblogFiles/00/00/00/33/81/3426.cher02.jpg" alt="" border="0" /></a></p>
+<p>The ALTGR state:</p>
+<p><a href="http://msdnshared.blob.core.windows.net/media/MSDNBlogsFS/prod.evol.blogs.msdn.com/CommunityServer.Blogs.Components.WeblogFiles/00/00/00/33/81/2072.cher03.jpg"><img style="max-width: 550px;" src="http://msdnshared.blob.core.windows.net/media/MSDNBlogsFS/prod.evol.blogs.msdn.com/CommunityServer.Blogs.Components.WeblogFiles/00/00/00/33/81/2072.cher03.jpg" alt="" border="0" /></a></p>
+<p>and the SHIFT&nbsp;+ ALTGR state:</p>
+<p><a href="http://msdnshared.blob.core.windows.net/media/MSDNBlogsFS/prod.evol.blogs.msdn.com/CommunityServer.Blogs.Components.WeblogFiles/00/00/00/33/81/0878.cher04.jpg"><img style="max-width: 550px;" src="http://msdnshared.blob.core.windows.net/media/MSDNBlogsFS/prod.evol.blogs.msdn.com/CommunityServer.Blogs.Components.WeblogFiles/00/00/00/33/81/0878.cher04.jpg" alt="" border="0" /></a></p>
+<p>Now as I said there is no specific EBCI keyboard layout.</p>
+<p>But we also added a phonetic layout, taking into account both ᏣᎳᎩᎯ ᎠᏰᎵ and ᏣᎳᎩᏱ ᏕᏣᏓᏂᎸᎩ phonetic preferences.</p>
+<p>In the BASE state:</p>
+<p><a href="http://msdnshared.blob.core.windows.net/media/MSDNBlogsFS/prod.evol.blogs.msdn.com/CommunityServer.Blogs.Components.WeblogFiles/00/00/00/33/81/6763.cher05.jpg"><img style="max-width: 550px;" src="http://msdnshared.blob.core.windows.net/media/MSDNBlogsFS/prod.evol.blogs.msdn.com/CommunityServer.Blogs.Components.WeblogFiles/00/00/00/33/81/6763.cher05.jpg" alt="" border="0" /></a></p>
+<p>The SHIFT state:</p>
+<p><a href="http://msdnshared.blob.core.windows.net/media/MSDNBlogsFS/prod.evol.blogs.msdn.com/CommunityServer.Blogs.Components.WeblogFiles/00/00/00/33/81/6076.cher06.jpg"><img style="max-width: 550px;" src="http://msdnshared.blob.core.windows.net/media/MSDNBlogsFS/prod.evol.blogs.msdn.com/CommunityServer.Blogs.Components.WeblogFiles/00/00/00/33/81/6076.cher06.jpg" alt="" border="0" /></a></p>
+<p>The CAPS OCK state:</p>
+<p><a href="http://msdnshared.blob.core.windows.net/media/MSDNBlogsFS/prod.evol.blogs.msdn.com/CommunityServer.Blogs.Components.WeblogFiles/00/00/00/33/81/5428.cher07.jpg"><img style="max-width: 550px;" src="http://msdnshared.blob.core.windows.net/media/MSDNBlogsFS/prod.evol.blogs.msdn.com/CommunityServer.Blogs.Components.WeblogFiles/00/00/00/33/81/5428.cher07.jpg" alt="" border="0" /></a></p>
+<p>and the SHIFT + CAPS LOCK state:</p>
+<p><a href="http://msdnshared.blob.core.windows.net/media/MSDNBlogsFS/prod.evol.blogs.msdn.com/CommunityServer.Blogs.Components.WeblogFiles/00/00/00/33/81/7217.cher08.jpg"><img style="max-width: 550px;" src="http://msdnshared.blob.core.windows.net/media/MSDNBlogsFS/prod.evol.blogs.msdn.com/CommunityServer.Blogs.Components.WeblogFiles/00/00/00/33/81/7217.cher08.jpg" alt="" border="0" /></a></p>
+<p>Now I discussed the principles of and the heavy use of chained dead keys in the layout in <strong><a title="The evolving Story of Locale Support, part 6: Behind the Cherokee Phonetic layout in Windows 8" href="../../../2011/11/09/10235391.html">The evolving Story of Locale Support, part 6: Behind the Cherokee Phonetic layout in Windows 8</a></strong>.</p>
+<p>The biggest problem now is that there is no way to get the phonetic layout for prior versions of Windows.</p>
+<p>We really need o make the phonetic layout available in prior versions!</p>
+<hr/><div style="margin-left: 1em"><em>no comments</em></div><hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2013/01/24 <a href="../../../2013/01/24/10387957.html">The Cherokee LIP on Windows 8, part 3:The Language Interface Pack, released!</a></p></div><p><em>go to <a id="newer" href="../../../2013/01/21/10386721.html" title="It&#39;s not how long it is, it&#39;s how you describe it when it&#39;s long!">newer</a> or <a id="older" href="../19/10379263.html" title="The Cherokee LIP on Windows 8, part 1: Working Together on Gadugi">older</a> post, or back to <a href="../../../index-2.html">index</a> or <a href="../../../index-2.html#2012-12">month</a> or <a href="../../../index-2.html#2012-12-20">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2012/12/20/10379645.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:24 GMT -->
+</html>

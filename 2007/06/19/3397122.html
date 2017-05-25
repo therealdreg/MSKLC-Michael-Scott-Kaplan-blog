@@ -1,0 +1,76 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2007/06/19/3397122.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:38 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Why is the NULL GLYPH not the glyph representing NULL?</title></head><body>
+<h1>Why is the NULL GLYPH not the glyph representing NULL?</h1>
+<p><em>by Michael S. Kaplan, published on 2007/06/19 03:31 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2007/06/19/3397122.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P>So yesterday Judy and I were talking about the 'NULL GLYPH', which is what&nbsp;several&nbsp;of the&nbsp;typography folks I have known over the years use as shorthand for the glyph to show when the requested glyph is not available.</P>
+<P>Though technically, that is not the actual glyph used when one puts a NULL (<A class="" href="http://www.fileformat.info/info/unicode/char/0000" mce_href="http://www.fileformat.info/info/unicode/char/0000">U+0000</A>)&nbsp;into a text stream.</P>
+<P>Which is another interesting point, because the glyph that is in the font for <A class="" href="http://www.fileformat.info/info/unicode/char/0000" mce_href="http://www.fileformat.info/info/unicode/char/0000">U+0000</A>&nbsp;usually isn't shown either -- it is usually stripped out (occasionally it is treated as the end of the string and it truncates the text, too!).</P>
+<P>But anyway, the thing that many people (myself included) often call the 'NULL GLYPH' is actually the NOTDEF glyph.</P>
+<P>Looking at Microsoft's Recommendations for OpenType Fonts for more info:</P>
+<BLOCKQUOTE>
+<BLOCKQUOTE>
+<BLOCKQUOTE>
+<P><STRONG>First Four Glyphs in Fonts</STRONG> </P>
+<P>TrueType outline fonts should have the following four glyphs at the glyph ID indicated. These were listed in Apple's original TrueType specification. These glyphs are recommended to allow for the same version of the font to work on both Windows and Macintosh. 
+<TABLE class="" width=460 bgColor=#f0f0f0>
+<TBODY>
+<TR>
+<TD class=tab width="30%" bgColor=#c0c0c0 class="tab">Glyph ID</TD>
+<TD class=tab width="40%" bgColor=#c0c0c0 class="tab">Glyph name</TD>
+<TD class=tab width="30%" bgColor=#c0c0c0 class="tab">Unicode value</TD></TR>
+<TR>
+<TD class=tab class="tab">0</TD>
+<TD class=tab class="tab">.notdef</TD>
+<TD class=tab class="tab">undefined</TD></TR>
+<TR>
+<TD class=tab class="tab">1</TD>
+<TD class=tab class="tab">.null</TD>
+<TD class=tab class="tab">U+0000</TD></TR>
+<TR>
+<TD class=tab class="tab">2</TD>
+<TD class=tab class="tab">CR</TD>
+<TD class=tab class="tab">U+000D</TD></TR>
+<TR>
+<TD class=tab class="tab">3</TD>
+<TD class=tab class="tab">space</TD>
+<TD class=tab class="tab">U+0020</TD></TR></TBODY></TABLE>
+<P><BR><B>Shape of .notdef glyph</B> 
+<P>The .notdef glyph is very important for providing the user feedback that a glyph is not found in the font. This glyph should not be left without an outline as the user will only see what looks like a space if a glyph is missing and not be aware of the active font's limitation.</P>
+<P>It is recommended that the shape of the .notdef glyph be either an empty rectangle, a rectangle with a question mark inside of it, or a rectangle with an "X". Creative shapes, like swirls or other symbols, may not be recognized by users as indicating that a glyph is missing from the font and is not being displayed at that location.</P>
+<P><IMG alt="Suggested shapes of .notdef glyph" src="http://www.microsoft.com/typography/otspec/notdef.gif" width=480></P></BLOCKQUOTE></BLOCKQUOTE></BLOCKQUOTE>
+<P mce_keep="true">Note that <A class="" href="http://www.fileformat.info/info/unicode/char/000d" mce_href="http://www.fileformat.info/info/unicode/char/000d">U+000d</A> isn't really seen all that much, either. </P>
+<P mce_keep="true">And <A class="" href="http://www.fileformat.info/info/unicode/char/0020" mce_href="http://www.fileformat.info/info/unicode/char/0020">U+0020</A> is not the kind of thing you can really see (which was the whole reason that the MSKLC font that shows characters with no visible representation that I mentioned <STRONG><A class="" href="http://archives.miloush.net/michkap/archive/2005/11/20/494829.html" mce_href="http://archives.miloush.net/michkap/archive/2005/11/20/494829.html">before</A></STRONG>&nbsp;proved to be so useful!).</P>
+<P mce_keep="true">Kind of ironic (in the&nbsp;Alanis or&nbsp;perhaps&nbsp;the Katie sense)&nbsp;that to technically be a valid TrueType font,&nbsp;a font&nbsp;is expected to include four specific&nbsp;glyphs, three of which are never actually going to be shown to users as the glyph in the font and the fourth of which is always shown any time another glyph can't be found.</P>
+<P mce_keep="true">But anyway, it is not the 'NULL GLYPH', it is the 'NOTDEF GLYPH'. I'll try to remember that going forward.</P>
+<P mce_keep="true">Otherwise, it reminds me a bit of <A class="" href="http://blogs.msdn.com/oldnewthing" mce_href="http://blogs.msdn.com/oldnewthing">Raymond Chen</A>'s classic <A class="" href="http://blogs.msdn.com/oldnewthing/archive/2003/09/10/54831.aspx" mce_href="http://blogs.msdn.com/oldnewthing/archive/2003/09/10/54831.aspx">Why do some people call the taskbar the "tray"?</A>.</P>
+<P mce_keep="true">And I don't want to be wrong! :-)</P>
+<P mce_keep="true">&nbsp;</P>
+<P mce_keep="true"><FONT color=#ff00ff><EM>This post brought to you by <A class="" href="http://www.fileformat.info/info/unicode/char/000d" mce_href="http://www.fileformat.info/info/unicode/char/000d">U+000d</A>, a.k.a. CARRIAGE RETURN</EM></FONT></P>
+<hr/><p><a id="3407429" href="#3407429">#</a> <strong>ph_arnaud</strong> on 19 Jun 2007 11:35 AM:</p><div style="margin-left: 1em"><p>Hi,</p>
+<p>Any chance in that the 'NOTDEF GLYPH' would be a truly last resort glyph, and the normally displayed one for such a situation would actually be a dynamically generated glyph in the future - for example a box with numbers where the contents indicate the Unicode codepoint requested but not found?</p>
+<p>I don't think it is an original idea, I'm sure I saw this already on some other platform and thought it was very informative.</p>
+<p>thanks,</p></div>
+<p><a id="3407611" href="#3407611">#</a> <strong>Roie</strong> on 19 Jun 2007 11:50 AM:</p><div style="margin-left: 1em"><p>Wasn't U+0000 always called NUL (only one L), at least in ASCII? I vaguely remember being corrected over that once.</p></div>
+<p><a id="3409796" href="#3409796">#</a> <strong>Michael S. Kaplan</strong> on 19 Jun 2007 3:11 PM:</p><div style="margin-left: 1em"><p>The notdef with the code point value is I think on Mac OS X, right now? It is an idea that I think has come up before....</p>
+</div>
+<p><a id="3409801" href="#3409801">#</a> <strong>Michael S. Kaplan</strong> on 19 Jun 2007 3:13 PM:</p><div style="margin-left: 1em"><p>The standard that gave three letter &quot;names&quot; to the C0 snd C1 control chars cetainly looked at it that way, though I doubt programmers ever did, really.</p>
+</div>
+<p><a id="3416649" href="#3416649">#</a> <strong>Greg_H</strong> on 20 Jun 2007 12:06 AM:</p><div style="margin-left: 1em"><p>I would argue that there is a conceptual difference between the NULL glyph and a NULL character. From TrueType's point of view, the NULL glyph is the glyph that gets mapped if a cmap lookup fails. A NULL character has what ever meaning the character set defines. </p>
+<p>.notdef is PostScript's nomenclature, NULL glyph is TrueType's nomenclature.</p>
+<p>Greg</p>
+<p>P.S. Personally I like more interesting NULL glyphs.</p>
+</div>
+<p><a id="3416763" href="#3416763">#</a> <strong>Michael S. Kaplan</strong> on 20 Jun 2007 12:21 AM:</p><div style="margin-left: 1em"><p>Hey Greg, </p>
+<p>Well, that both explains the way people have been referring to it and also makes the title more fun, to boot! </p>
+<p>I agree with you and think the Easter Egg ones are much more fun, the TrueType info is pretty stodgy, IMO. Not everything has to be boring.</p>
+</div>
+<p><a id="3441264" href="#3441264">#</a> <strong>Nick Lamb</strong> on 21 Jun 2007 5:43 AM:</p><div style="margin-left: 1em"><p>“I don't think it is an original idea, I'm sure I saw this already on some other platform and thought it was very informative.”</p>
+<p>Most Pango backends do this, with a simple outline box and four or six digits of hexadecimal to indicate which code point is unavailable. For tiny font sizes the box is wide and the code point written horizontally, for medium and large sizes it's arranged to be closer to the normal aspect ratio of a character. Because Pango has comprehensive fallback by default it will only show this when you have no fonts installed that supply a suitable glyph. Unlike a generic null glyph this is usually enough for technical support (or geekier users) to figure out which font is needed.</p>
+<p>OS X does something pretty nice here too, it creates a glyph containing a sample symbol (one representative symbol from each major Unicode range is included in OS X for this purpose) in a rounded box with the code point written along the edge of the box in tiny text. This means users can see at a glance that the unreadable text is Han characters or Greek or fancy Mathematical symbols or whatever and if they zoom the text they can read which particular code point is missing.</p>
+<p>The simple dotted box is OK for 8x11 pixel terminal character sets or embedded applications with very limited resources, but Pango and OS X have a clearly superior solution for typical applications like reading web pages, email or spreadsheets.</p>
+<p>Anyway the boxed ? mentioned in the article seems worth deprecating in the Unicode era because we use a somewhat similar glyph (the diamond question mark) for the Unicode replacement character U+FFFD. It needs to be clear that /those/ characters are broken and can't be fixed by installing a different font.</p></div>
+<hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2008/03/19 <a href="http://archives.miloush.net/michkap/archive/2008/03/19/8323216.html">The forensic typographers found no link to Lucida Console, and the D.A. had nothing to fallback to</a></p><p>2007/12/12 <a href="http://archives.miloush.net/michkap/archive/2007/12/12/6742301.html">SiaO as The Red Carpet (aka Characters just want to be seen)</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2007/06/20/3417608.html" title="Tell the meeting organizer that she is going to be a little late, please">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2007/06/19/3396819.html" title="IsCharSomethingOrOther?">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2007-06">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2007-06-19">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2007/06/19/3397122.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:38 GMT -->
+</html>

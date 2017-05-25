@@ -1,0 +1,52 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2007/11/28/6567810.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:37 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Tracking down problems with the 102 key on an Acer Tablet with the UK Extended keyboard layout?</title></head><body>
+<h1>Tracking down problems with the 102 key on an Acer Tablet with the UK Extended keyboard layout?</h1>
+<p><em>by Michael S. Kaplan, published on 2007/11/28 03:01 -05:00, original URI: http://blogs.msdn.com/b/michkap/archive/2007/11/28/6567810.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P>I wish I was given the hardware budget so that every time a&nbsp;bug was reported in some hardware, I could get it, bring it in house, and figure out the bug.</P>
+<P>I think that would be very cool. :-)</P>
+<P>Over in the Suggestion Box, Mike asks:</P>
+<BLOCKQUOTE>
+<P><FONT face="times new roman,times">For some months, the \ key on my Acer Tablet's UK-keyboard has not worked (it's between left shift and z, as expected). At first I thought the keypad was broken, but I had that replaced. It still doesn't work. So I tried to remap the keyboard using tools like MSKLC or KeyTweak. Interestingly when I test that key in these apps, it works perfectly.<BR><BR>I loaded the UK-Extended Keyboard layout into MSKLC, noting the following:</FONT></P>
+<OL>
+<LI><FONT face="times new roman,times">even though the \ registers when I tapped it without a layout loaded,now it fails when I do have a UK (extended or not) layout loaded</FONT></LI>
+<LI><FONT face="times new roman,times">if I "Test Keyboard Layout" with UK-Extended then the key works (in both shift states)</FONT></LI>
+<LI><FONT face="times new roman,times">The Validate Layout log says : " &nbsp; &nbsp;WARNING: '\' defined on OEM_5 (Base) but not defined elsewhere. This key may not be present on all keyboards."</FONT></LI></OL>
+<P><FONT face="times new roman,times">I'm stumped. Why isn't Windows (XP SP2) paying attention to this key? For now I have remapped my F9 key to act as my \ using KeyTweak.</FONT></P></BLOCKQUOTE>
+<P>Now I will start by saying that I cannot reproduce the bug in question on any of my hardware running XP SP2 or Server 2003 or XP x64 or Server 2003 x64 or Vistas.</P>
+<P>(Though both #2 and #3 above are by design and expected!)</P>
+<P>But I believe there is a genuine issue here, and the fact that I have no Acer Tablet with a UK keyboard layout to verify anything on is not going to dissuade me from taking about the issue a bit here, in the hopes that either Mike or someone else with an XP SP2 on an Acer Laptop with a UK keyboard layout (one containing a 102 key between the Left Shift and the Z) could maybe try out....</P>
+<P>First we'll look at the key in MSKLC with that layout loaded up:</P>
+<P><IMG height=424 src="http://trigeminal.fmsinc.com/images/ukextended01.png" width=832></P>
+<P>and then we will look at the key in the "All Shift States" view:</P>
+<P><IMG src="http://trigeminal.fmsinc.com/images/ukextended02.png"></P>
+<P>Now MSKLC is very scan-code anchored, pretty much relying on that good old SCAN CODE 56 to identify where the 102 key is (by using the map inside the layout to map the scan code to the virtual key), and the VK value to identify the keystroke being hit.</P>
+<P><EM>And don't ask me why this keyboard decided not to use VK_OEM_102 for the freaking key, that just seems wrong to me.</EM></P>
+<P>So the first and most important thing to do is to see what happens when you use the key outside of MSKLC.</P>
+<P>Maybe we could&nbsp;take the code from <A class="" href="http://archives.miloush.net/michkap/archive/2005/12/15/504092.html" mce_href="http://archives.miloush.net/michkap/archive/2005/12/15/504092.html"><STRONG>Handling [Unicode] input in the console</STRONG></A> and use it to type that 102 key and see what the results are -- both scan code and virtual key. Make sure you have the UK extended keyboard selected when you try it.</P>
+<P>Because it seems like there&nbsp;might be some kind of hardware issue, with the key on this particular keyboard not always consistently working as one would expect, if the key does not appear to work correctly.</P>
+<P>Taking a step back and looking at all of the keyboards built into Windows, the only ones that do not use VK_OEM_102 here are the UK Extended keyboard and the three Inuktitut keyboards. Makes me wonder if that is connected to the problem, too....</P>
+<P>So&nbsp;maybe it is the fact that the key is not mapped to the VK_OEM_102 key -- perhaps the answer is to save the file to a .KLC file,and change the following line:</P>
+<BLOCKQUOTE>
+<P><FONT face="courier new,courier"><STRONG>56&nbsp;OEM_5&nbsp;&nbsp;0&nbsp;005c&nbsp;007c&nbsp;-1&nbsp;-1&nbsp;-1&nbsp;&nbsp;// REVERSE SOLIDUS, VERTICAL LINE, &lt;none&gt;, &lt;none&gt;, &lt;none&gt;</STRONG></FONT></P></BLOCKQUOTE>
+<P>to</P>
+<BLOCKQUOTE>
+<P><FONT face="courier new,courier"><STRONG>56&nbsp;OEM_102&nbsp;&nbsp;0&nbsp;005c&nbsp;007c&nbsp;-1&nbsp;-1&nbsp;-1&nbsp;&nbsp;// REVERSE SOLIDUS, VERTICAL LINE, &lt;none&gt;, &lt;none&gt;, &lt;none&gt;</STRONG></FONT></P></BLOCKQUOTE>
+<P>and build that one and install it to see if that makes a difference....</P>
+<P>Anyone able to repro the bug on their hardware want to give this&nbsp;a try? I am very curious about this, and wishing there was an easy way to find out who within Microsoft might have this hardware to try things out!</P>
+<P mce_keep="true">&nbsp;</P>
+<P><FONT color=#ff00ff><EM>This post brought to you by</EM><FONT size=5> | </FONT><EM>(<A class="" href="http://www.fileformat.info/info/unicode/char/007c" mce_href="http://www.fileformat.info/info/unicode/char/007c">U+007c</A>, a.k.a. VERTICAL LINE)</EM></FONT></P>
+<hr/><p><strong>Jonathan Wilson</strong> on 28 Nov 2007 6:25 AM:</p><div style="margin-left: 1em"><p>A program that lets you press a key and displays the raw scan code or VK_xxx code for it would help in this situation IMO.</p>
+<p>Perhaps for the next version of MSKLC it can be added :)</p></div>
+<p><strong>Michael S. Kaplan</strong> on 28 Nov 2007 10:27 AM:</p><div style="margin-left: 1em"><p>Of course that is what the code in that other article provides. :-)</p>
+</div>
+<p><strong>Jeroen Ruigrok van der Werven</strong> on 29 Nov 2007 9:58 AM:</p><div style="margin-left: 1em"><p>I am surprised your hardware quality assurance labs do not have any configuration management database(s) for registering specific hardware for the developers to track bugs against.</p></div>
+<p><strong>richardfen</strong> on 11 Aug 2008 2:45 PM:</p><div style="margin-left: 1em"><p>I have the same exact problem with the same exact key when using the Microsoft keyboard lahout creator 1.4. &nbsp;Furthermore, it seems that all the bottom row keys have been shifted left one into the &quot;z&quot; position (when I press &quot;z&quot; I get &quot;x&quot;. &nbsp;Has anyone resolved this? &nbsp;Thanks for your help.</p></div>
+<p><strong>Michael S. Kaplan</strong> on 11 Aug 2008 3:37 PM:</p><div style="margin-left: 1em"><p>That sounds like the keyboard layout you are using does match --either the one on your hardware or the one you are trying to build.</p>
+</div>
+<p><strong>richardfen</strong> on 11 Aug 2008 6:46 PM:</p><div style="margin-left: 1em"><p>I solved this problem in the following manner:</p>
+<p>I noticed that the layout on the third row as shown by the MS Keyboard Creator had a blank key on the far right. &nbsp; I therefore re-defined all keys on the third row so that they were shifted to the right one key. &nbsp;This worked.</p></div>
+<hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2008/06/27 <a href="http://archives.miloush.net/michkap/archive/2008/06/27/8660309.html">Adding keys to your layout when you don't know what they are (aka Life with a 108-key keyboard layout)</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2007/11/28/6568455.html" title="There is more to being an OEM for Windows than having the coolest hardware">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2007/11/27/6544551.html" title="How many versions does a bug have to exist before backporting the fix can&#39;t be successfully argued?">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2007-11">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2007-11-28">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2007/11/28/6567810.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:37 GMT -->
+</html>

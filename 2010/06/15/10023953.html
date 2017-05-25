@@ -1,0 +1,77 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2010/06/15/10023953.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:35 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>HyperV + AltGr + Linux + MS SDEs + MSKB == ䷅</title></head><body>
+<h1>HyperV + AltGr + Linux + MS SDEs + MSKB == ䷅</h1>
+<p><em>by Michael S. Kaplan, published on 2010/06/15 07:01 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2010/06/15/10023953.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<p><span style="color: #ff0000;">For those who don't know that symbol or lack the font to see it: it is <span style="font-size: xx-large;">䷅</span> (U+4DC5, aka HEXAGRAM FOR CONFLICT).</span></p>
+<p>Whenever you talk about virtual machines, there is one piece that will never fail to be incredibly complicated.</p>
+<p>Input.</p>
+<p>You know, keyboards.</p>
+<p>Just the other day someone was asking:</p>
+<p style="padding-left: 90px;">Hi,</p>
+<p style="padding-left: 90px;">In the following KB, it mentioned that the issue occurred in Windows Server 2008 based Hyper-V computer and there is a hotfix, however, one of my customer encountered this issue on a Windows Server 2008 R2 based Hyper-V computer.</p>
+<p style="padding-left: 90px;"><a href="http://support.microsoft.com/kb/963709">http://support.microsoft.com/kb/963709</a></p>
+<p style="padding-left: 90px;">Best Regards,</p>
+<p>This is one of those cases where you have to read the whole article, though. It won't give you the answer but it will help you through the problem, and suggest a solution.</p>
+<p>The article, <a href="http://support.microsoft.com/kb/963709" title="The AltGr key does not work on a Linux virtual machine on a Windows Server 2008-based server that has the Hyper-V role enabled">The AltGr key does not work on a Linux virtual machine on a Windows Server 2008-based server that has the Hyper-V role enabled</a>, has a few facets. It:</p>
+<ul>
+<li>describes a bug;</li>
+<li>explains the need to download a hotfix;</li>
+<li>documents the registry key you need to set after installing the hotfix.</li>
+</ul>
+<p>Now obviously a future service pack&nbsp;is expected&nbsp;include the hotfix, and just as obviously the next version is expected to contain the fix, too.</p>
+<p>But that changes the landscape only a little bit. The Server 2008 R2-directed article needs to do a little less. It would:</p>
+<ul>
+<li>describe a bug;</li>
+<li><span style="text-decoration: line-through;"><span style="color: #c0c0c0;">explain the need to download a hotfix;</span></span></li>
+<li>document the registry key you need to set.</li>
+</ul>
+<p>Now the information, buried in the bottom of the KB article due to all the text related to the hotfix is:</p>
+<p style="padding-left: 90px;"><span style="font-family: times new roman,times;">Under the following registry key, add a registry entry named "KeyboardWorkaroundEnabled," set the type to REG_DWORD, and then set the value to <strong>1</strong>:<br /><br /></span><span style="font-family: times new roman,times;"><strong>HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Virtualization\Worker</strong></span></p>
+<p>This was not a new problem even when the article first came out (ref: <a href="http://support.microsoft.com/kb/899474/" title="The ALTGR and ALT+CTRL key combinations do not work in Virtual PC 2004 with Service Pack 1">The ALTGR and ALT+CTRL key combinations do not work in Virtual PC 2004 with Service Pack 1</a>).</p>
+<p>Now regular readers will know I have a history of disliking the way international keyboards are handled by various technologies.</p>
+<p>I mean look at the symptoms described in the article:</p>
+<p style="padding-left: 60px;">Consider the following scenario: </p>
+<ul style="padding-left: 60px;">
+<li>The Hyper-V role is enabled on a Windows Server 2008-based system. </li>
+<li>The default input language on the computer is set to German. </li>
+<li>A Linux virtual machine is installed on this computer.</li>
+</ul>
+<p style="padding-left: 60px;">In this scenario, the AltGr key does not work on the Linux virtual machine. As a result, you cannot type the following characters: </p>
+<ul style="padding-left: 60px;">
+<li>&sup2; </li>
+<li>&sup3; </li>
+<li>{ </li>
+<li>[ </li>
+<li>] </li>
+<li>} </li>
+<li>\ </li>
+<li>@ </li>
+<li>&euro; </li>
+<li>&micro; </li>
+<li>~</li>
+</ul>
+<p style="padding-left: 60px;"><b>Note</b>The AltGr key is the right ALT key on the German keyboard.</p>
+<p>Either the person does not know what AltGr is (in which case they are not looking at the article in the first place), or they do know and they will feel like this is the most ridiculous description one could possibly imagine for a key used on so many keyboards.</p>
+<p>But we'll set that aside for now, and&nbsp;think about this for a minute.</p>
+<p>The problem, as the KB article explains quite accurately, is:</p>
+<p style="padding-left: 30px;"><span style="font-family: times new roman,times;"><em>Windows systems use the left CTRL scan code together with the right ALT scan code to indicate the AltGr key on a German keyboard. However, the Linux virtual machine expects to receive the right ALT scan code only. When Windows sends the left CTRL scan code together with the right ALT scan code, the Linux virtual machine does not interpret these scan codes as the AltGr key.</em></span></p>
+<p>And then, also buried in the text lower down related to after the fix, is:</p>
+<p style="padding-left: 30px;"><strong>Note:</strong>After you install the hotfix and then create the new registry entry, the Windows Server 2008-based system removes the left CTRL scan code when it is followed by a right ALT scan code. However, this may affect intentional left CTRL + right ALT key combinations. To work around this issue, hold down the left CTRL key for a few seconds before you hold down the right ALT key.</p>
+<p>This seems fairly ugly as shortcuts go -- kind of removes the usefulness of a shortcut if you have to type the keys slower to make it work.</p>
+<p>Of course, the fact that the registry value added is begging to be thought of as a hack, what with a name like <strong>KeyboardWorkaroundEnabled</strong>, seems like a problem too. Like they think there will never be another keyboard handling bug in a virtual machine? The odds of that are&nbsp;almost on the same order of magnitude as the odds for Eric Cartman of South Park being asked to step in to fill Robbie Bach's E&amp;D President role.</p>
+<p>From a technical side, maybe this is the only way to fix the problem. But there probably still would have been better ways to handle the execution!</p>
+<p>So a part of me is happy that the KB article is so unwieldy&nbsp;and hard to get information out of&nbsp;because it hides the hack. It is not a committment or anything but I really like to encourage people to not design things that make the company look dumb technically. It is just the other part (the&nbsp;part that likes to help people!) would prefer that things are documented in a way that would make them more useful for users....</p>
+<hr/><p><strong>Yuhong Bao</strong> on 15 Jun 2010 11:47 AM:</p><div style="margin-left: 1em"><p>Maybe patch Linux?</p>
+</div>
+<p><strong>Random832</strong> on 15 Jun 2010 4:28 PM:</p><div style="margin-left: 1em"><p>So - what&#39;s the history here? Why is windows generating an extra scan code, when it clearly can tell the left and right alt scan codes apart at all stages (since it&#39;s relying on this distinct scan code to tell the difference between altgr and an actual ctrl-alt [with, i suppose, a right ctrl or left alt])? What benefited from this? I don&#39;t know much about the keyboard handling &#39;stack&#39; on either Linux or Windows to figure anything out here.</p>
+<p>I mean, I know this is something that would require Raymond Chen&#39;s time machine to change at this point, but I would like to understand the thought process as to why that ctrl is in there in the first place.</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 15 Jun 2010 5:02 PM:</p><div style="margin-left: 1em"><p>We have always treated ALTGR as right alt + ctrl, so that people who lack an altgr key can still get to those letters on the keyboard (and also so that times that the &quot;right alt&quot; is harder to hit in touch typing has a &quot;left alt&quot; solution). This is something I have written about often in the past....</p>
+</div>
+<p><strong>NLE</strong> on 27 Aug 2010 7:39 AM:</p><div style="margin-left: 1em"><p>Indeed, I didn&#39;t understand what to do before reading your post. Unfortunately, adding the registry key didn&#39;t solve anything (Windows Server 2008 R2 French / French keyboard and Linux / CentOS 5.5)</p>
+</div>
+<hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2010/06/16/10025478.html" title="JavaScript&#39;s got a whole new ultimate globalization hero">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2010/06/14/10024181.html" title="World-Ready Input, a presentation today (Monday)">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2010-06">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2010-06-15">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2010/06/15/10023953.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:35 GMT -->
+</html>

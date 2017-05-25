@@ -1,0 +1,36 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2006/11/30/1178347.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:39 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>So when is Esperanto coming? (short version)</title></head><body>
+<h1>So when is Esperanto coming? (short version)</h1>
+<p><em>by Michael S. Kaplan, published on 2006/11/30 10:32 -05:00, original URI: http://blogs.msdn.com/b/michkap/archive/2006/11/30/1178347.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<FONT face="Segoe UI,Tahoma">
+<P>Well, depends on how fast you can create it with the <A class="" href="http://www.microsoft.com/downloads/details.aspx?FamilyID=12adffc8-a4da-424b-8d62-17c1e0ffc116&amp;DisplayLang=en" mce_href="http://www.microsoft.com/downloads/details.aspx?FamilyID=12adffc8-a4da-424b-8d62-17c1e0ffc116&amp;DisplayLang=en">Microsoft Locale Builder</A>! </P>
+<P>But do be sure to let us know that work is proceeding. We're kind of tired of waiting, too!</P>
+<P>(longer version <A class="" href="http://archives.miloush.net/michkap/archive/2006/11/30/1177646.html" mce_href="http://archives.miloush.net/michkap/archive/2006/11/30/1177646.html"><STRONG>here</STRONG></A>)</P>
+<P><FONT color=#ff00ff><EM>This post brought to you by</EM>&nbsp;<FONT size=4>䷲</FONT> <EM>(<A class="" href="http://www.fileformat.info/info/unicode/char/4df2" mce_href="http://www.fileformat.info/info/unicode/char/4df2">U+4df2</A>, a.k.a. HEXAGRAM FOR THE AROUSING THUNDER)</EM></FONT></P></FONT>
+<hr/><p><a id="1178590" href="#1178590">#</a> <strong>Adam</strong> on 30 Nov 2006 10:58 AM:</p><div style="margin-left: 1em"><p>But what LCID to give it? The biggest problem with working with languages that aren't defined under Windows is that there are so few LCIDs defined.</p>
+<p>It's generally easier to reference languages/locales/etc... by rfc-3066 style identifiers (iso-3166/iso-639 pairs) as those lists are very complete and appear to be updated frequently.</p>
+<p>Unfortunately, most Windows software (including some which I'm currently working on) uses LCIDs to identify languages. So, if I (or the users of the software I'm working on) need to work with a language that doesn't have an LCID, I need to make one up. Which is clearly going to cause trouble at some point down the line. :(</p>
+<p>Do you know if MS have some plans to define LCIDs for languages they don't actually support? Just put them in a &quot;reserved&quot; category or something? Or are you only going to define LCIDs as they become supported?</p></div>
+<p><a id="1178602" href="#1178602">#</a> <strong>Michael S. Kaplan</strong> on 30 Nov 2006 11:01 AM:</p><div style="margin-left: 1em"><p>Hi Adam,</p>
+<p>Micrsosoft is moving away from LCIDs and towards the RFC names (using the update to 3066). LCIDs have their days numbered....</p>
+</div>
+<p><a id="1178606" href="#1178606">#</a> <strong>ReallyEvilCanine</strong> on 30 Nov 2006 11:03 AM:</p><div style="margin-left: 1em"><p>Lemme guess. There's as much a chance of this being back-ported to earlier systems as there is of back-ported Unicode support for Win3.11, right?</p>
+<p>I'll definitely be giving this it a try. Maybe I can Tom Sawyer a few of my cow-orkers into doing the legwork so I can build special German locales like Platt and Bavarian.</p>
+<p>Of course, as soon as customers get used to this availability they're going to demand it of us, too, and our I18N team is &lt;i&gt;still&lt;/i&gt; fighting with Eng because there are &lt;i&gt;still&lt;/i&gt; hard-coded strings in DLLs.</p></div>
+<p><a id="1178620" href="#1178620">#</a> <strong>Michael S. Kaplan</strong> on 30 Nov 2006 11:14 AM:</p><div style="margin-left: 1em"><p>For managed applications, the support will actually work, all you need is for it to be a 2.0 app.</p>
+<p>For unmanaged apps, the backport is highly unlikely. It took an amazing effort to get that support in, and there is no wayto mask that as a bug fix; it is new functionality, which is a hard sell for a service pack....</p>
+</div>
+<p><a id="1178903" href="#1178903">#</a> <strong>Adam</strong> on 30 Nov 2006 12:50 PM:</p><div style="margin-left: 1em"><p>LCIDs might have their days numbered, but that doesn't help me supporting the ad-hoc private ones in an unmanaged legacy app. :(</p>
+<p>(But it's not your job to help me with mine, so ignore me, I'm just moaning :)</p>
+<p>However, is there an official page somewhere that mentions the deprecation of LCIDs for .NET 2.0+? I could use the ammo to bolster my case for getting us to move towards rfc-3066 locale identifiers for future development. The old hats have been using LCIDs for years, are used to them, don't want to take the perf/bloat hit (ints are generally quicker and smaller as database keys than strings) of real names, are more numerous, and generally have more weight in discussions than me...</p></div>
+<p><a id="1179164" href="#1179164">#</a> <strong>Michael S. Kaplan</strong> on 30 Nov 2006 2:08 PM:</p><div style="margin-left: 1em"><p>Well, the fact that custom cultures do not work with LCIDs is a pretty compelling issue. </p>
+<p>I don't know about &quot;official sites&quot; beyond the fact that new features are only being put on the name-based Win32 NLS API functions and such, does that count?</p>
+</div>
+<p><a id="1204546" href="#1204546">#</a> <strong>Charles Bocock</strong> on 4 Dec 2006 7:22 AM:</p><div style="margin-left: 1em"><p>OK, so just to check. Can I use this to create an English version of Vista and finally get rid of &quot;favorites&quot;? :)</p></div>
+<p><a id="1207679" href="#1207679">#</a> <strong>Michael S. Kaplan</strong> on 4 Dec 2006 4:29 PM:</p><div style="margin-left: 1em"><p>Um, huh? We're talking about adding a custom locale, which does nothing like this?</p>
+</div>
+<hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2006/11/30/1179268.html" title="Keyboards under LUA (the MSKLC 1.3 workaround!)">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2006/11/30/1177646.html" title="So when is Esperanto coming?">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2006-11">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2006-11-30">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2006/11/30/1178347.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:39 GMT -->
+</html>

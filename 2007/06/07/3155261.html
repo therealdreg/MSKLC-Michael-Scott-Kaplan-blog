@@ -1,0 +1,34 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2007/06/07/3155261.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:38 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>The consequences of picking the wrong font #2</title></head><body>
+<h1>The consequences of picking the wrong font #2</h1>
+<p><em>by Michael S. Kaplan, published on 2007/06/08 01:14 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2007/06/07/3155261.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P>(I&nbsp;am abandoning the&nbsp;previous attempt to use a volleyball metaphor, started in <STRONG><A class="" href="http://archives.miloush.net/michkap/archive/2007/06/05/3098947.html" mce_href="http://archives.miloush.net/michkap/archive/2007/06/05/3098947.html">this post</A></STRONG>!)</P>
+<P>So now, as part of the set, I'll bring up another problem along the same lines. The recent question was:</P>
+<BLOCKQUOTE>
+<P><EM>Hi,<BR><BR>We have a service which runs in the context of the network service. It calls GDI functions to render a text into a bitmap (by calling DrawText). In Vista, if the text contains Chinese characters, I am getting squares in the rendered bitmap. In W2K3, it works fine. There has been no change in the service as such.<BR><BR>Looks like the network service cannot access the code pages required. I found an option in Vista to “copy the language packs to system accounts like network service”. Even “copying” that does not help.</EM></P></BLOCKQUOTE>
+<P>It is not a code page problem, nor is it a language pack problem. And all language support is always installed in Vista....</P>
+<P>In the end it turned out to be due to the fact that the font that was being used was <STRONG><FONT face=arial,helvetica,sans-serif>Arial</FONT></STRONG>. after switching to one of the UI fonts like <STRONG><FONT face=tahoma,arial,helvetica,sans-serif>Tahoma</FONT></STRONG> or <STRONG><FONT face="Microsoft Sans Serif,times">Microsoft Sans Serif</FONT></STRONG> or <STRONG><FONT face="Segoe UI">Segoe UI</FONT></STRONG> or whatever, then everything worked.</P>
+<P>Any thoughts on this one? :-)</P>
+<P mce_keep="true">&nbsp;</P>
+<P><FONT color=#ff00ff><EM>This post brought to you by</EM> <FONT size=5>倔</FONT> <EM>(<A class="" href="http://www.fileformat.info/info/unicode/char/5014" mce_href="http://www.fileformat.info/info/unicode/char/5014">U+5014</A>, a CJK Ideograph)</EM></FONT></P>
+<hr/><p><a id="3158847" href="#3158847">#</a> <strong>Mike Dimmick</strong> on 8 Jun 2007 5:48 AM:</p><div style="margin-left: 1em"><p>In one case I had, some other application had dumped its own copy of whatever font I was having the trouble with into the fonts folder, which was hugely out-of-date and missing a great deal of the glyphs and layout tables from the version of the font that came with the OS.</p>
+<p>Using the Font Properties extension from <a rel="nofollow" target="_new" href="http://www.microsoft.com/typography/TrueTypeProperty21.mspx">http://www.microsoft.com/typography/TrueTypeProperty21.mspx</a> (sadly not supported on Windows Vista as far as I can see) you can see the font version information - the version of Arial on my Windows XP machine is version 3.00, modified 18 October 2002. According to the CharSet/Unicode tab it supports:</p>
+<p>Basic Latin</p>
+<p>Latin-1 Supplement</p>
+<p>Latin Extended A</p>
+<p>Greek</p>
+<p>Cyrillic</p>
+<p>Hebrew</p>
+<p>Hebrew Extended</p>
+<p>Arabic</p>
+<p>Arabic Extended</p>
+<p>Arabic Presentation Forms-A</p>
+<p>Arabic Presentation Forms-B</p>
+<p>Chinese is not on that list. That said, Tahoma and Microsoft Sans Serif don't contain CJK glyphs either.</p>
+<p>I'd immediately question what's going on if you've got a service using GDI, although I suppose it could be generating bitmaps for a client rather than showing them on the display! Services with UI are BAD (and very limited in Windows Vista and later).</p>
+<p>DrawText doesn't do font linking on its own, does it?</p></div>
+<hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2007/06/09 <a href="http://archives.miloush.net/michkap/archive/2007/06/09/3174676.html">Guilt by [font ]association (aka The consequences of picking the wrong font #3)</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2007/06/08/3162451.html" title="año del ano, a.k.a. This sentence has several non-skarklish Spanish flutzpahs....">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2007/06/07/3146122.html" title="Putting the camel&#39;s nose in Building 24">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2007-06">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2007-06-07">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2007/06/07/3155261.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:38 GMT -->
+</html>

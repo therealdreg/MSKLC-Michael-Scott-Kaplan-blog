@@ -1,0 +1,59 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2006/09/03/738032.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:39 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>On building a list of keyboards</title></head><body>
+<h1>On building a list of keyboards</h1>
+<p><em>by Michael S. Kaplan, published on 2006/09/03 15:01 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2006/09/03/738032.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<FONT face=Tahoma>
+<P>Lots of the changes in Regional and Language Options in Vista are specifically there to address known usability problems. Looking at the tab that handles adding new keyboards, for example, looking at XP: </P>
+<P><IMG height=478 src="http://trigeminal.fmsinc.com/images/langbar-xp-00.png" width=404></P>
+<P>versus Vista: </P>
+<P><IMG src="http://trigeminal.fmsinc.com/images/langbar-vista-00.png"></P>
+<P>In both cases, the button on the top is used to add or remove keyboards. Which do you think is the most intuitive, between the name of the tab and the text? For that mater, how much easier is it to update keyboards in the logon list if you don't read this blog and see posts like <STRONG><A href="http://archives.miloush.net/michkap/archive/2005/01/07/348944.html">this one</A></STRONG>? And which one is easier to understand how to install additional UI languages? :-)</P>
+<P>And I have actually received thank you notes via email for the removal of those two checkboxes for complex script and East Asian support (although we are not the ones who did the actual work, both Cathy and I championed this change strongly since it came up sdso often in customer feedback).</P>
+<P>Anyway, back to that button -- let's press it and see what the view looks like, in XP:</P>
+<P><IMG src="http://trigeminal.fmsinc.com/images/langbar-xp-01.png"></P>
+<P>versus Vista:</P>
+<P><IMG src="http://trigeminal.fmsinc.com/images/langbar-vista-01.png"></P>
+<P>Mostly the same, though even here in Text Services Framework (a.k.a. Cicero) team did some minor changes to help with usability. </P>
+<P>The major changes come when you hit the "Add..." button, though. The XP dialog had a whole bunch of problems:</P>
+<P><IMG src="http://trigeminal.fmsinc.com/images/langbar-xp-02.png"></P>
+<P>Selecting the keyboard checkbox would get you to a list of keyboards, sorted alphabetically, sometimes starting at a keyboard that would be a reasonabkly intuitive next choice to add, but often not. Like if you choose <STRONG>Chinese (Taiwan)</STRONG> from that first list:</P>
+<P><IMG src="http://trigeminal.fmsinc.com/images/langbar-xp-03.png"></P>
+<P>If you drop down the keyboard list, you'll see that this IME name has, alphabetically speaking, put you nowhere near the other IMEs:</P>
+<P><IMG src="http://trigeminal.fmsinc.com/images/langbar-xp-04.png"></P>
+<P>With hundreds of keyboards and IMEs on the list, this is obviously pretty unwieldy. And this has been a huge pain point with customers. So let's see what they did for Vista:</P>
+<P><IMG src="http://trigeminal.fmsinc.com/images/langbar-vista-02.png"></P>
+<P>Wow, a very filtered list, but with a clear option to show more. Cool!</P>
+<P>Now it is not always obvious how the list is built, so I will explain what is going on. Let's look at Chinese (Taiwan) again:</P>
+<P><IMG src="http://trigeminal.fmsinc.com/images/langbar-vista-03.png"></P>
+<P>Wow, definite benefits here -- and no weird scroilling issues to get to the other IMEs based on the keyboard names!</P>
+<P>The actual list is basically constructed from three sources:</P>
+<OL>
+<LI>Any input methods that are based on a LANGID value that matches the locale's LANGID;</LI>
+<LI>Any input methods that have specifically been associated with the locale;</LI>
+<LI>Any items from the 'global list' the potentially applies to&nbsp;all locales;</LI>
+<LI>The 'Show More...' item that gets you the full list.</LI></OL>
+<P>Now&nbsp;#4 is kind of obvious and I will talk about #3 another day soon. And #1 is also mildly obvious, I think, and allows Vista to be sure and add keyboards (even legacy ones) to this list without requiring an additional association with a locale. So let's focus on #2....</P>
+<P>If you open up intl.inf in your \WINDOWS\INF directory in XP, you will see a huge list like the following (sampled at random):</P>
+<BLOCKQUOTE dir=ltr style="MARGIN-RIGHT: 0px">
+<P><B><FONT face="Consolas,Courier New" size=2>;<BR>; List of locales.<BR>; &lt;LCID&gt; = &lt;Description&gt;,&lt;OEMCP&gt;,&lt;Language Group&gt;,&lt;langID:HKL pair&gt;,&lt;langID:HKL pair&gt;,.....<BR>;<BR>[Locales]<BR>00000404 = %Chinese_Taiwan%&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ,950&nbsp;&nbsp;&nbsp;&nbsp; ,9,,0404:00000404,0404:e0080404,0404:E0010404<BR>00000409 = %English_United_States%&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ,437&nbsp;&nbsp;&nbsp;&nbsp; ,1,,0409:00000409<BR>00000437 = %Georgian%&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ,437&nbsp;&nbsp;&nbsp;&nbsp; ,16,5,0437:00000437,0409:00000409,0419:00000419<BR></FONT></B></P></BLOCKQUOTE>
+<P>And those numbers at the end are a list of input methods. This is the source of #2.</P>
+<P>Now ths list is mostly useless in XP, as #2 is not used for the list in Cicero, and only the first item on the list is added when you switch to any of the non-CJK locales (switching to Georgian, for example, will only add the Georgian keyboard, and not the US or Russian keyboards that are also on that list).</P>
+<P>This is mainly as bug, and mainly our fault -- we were parsing the list and only giving the first one as the one to add; had we passed all of them, then they would all have been added.</P>
+<P>Of course, in Vista the whole intl.inf file goes away. Now what do we do?</P>
+<P>Well, if you call <A href="http://msdn.microsoft.com/library/en-us/intl/nls_34rz.asp">GetLocaleInfo</A> with the new <A href="http://msdn.microsoft.com/library/en-us/intl/nls_8rse.asp">LCTYPE</A>&nbsp;in Vista LOCALE_SKEYBOARDSTOINSTALL, documented as follows:</P>
+<BLOCKQUOTE dir=ltr style="MARGIN-RIGHT: 0px"><FONT face="Times New Roman" size=2>
+<DT>LOCALE_SKEYBOARDSTOINSTALL 
+<DD><B>Windows Vista and later:</B> A semicolon-delimited list of keyboards to potentially install for the locale and to be used internally by Windows. There is no limit on the number of characters allowed for this string. To retrieve the name of the active input locale identifier (formerly called the keyboard layout), your application can call the <A href="http://msdn.microsoft.com/library/en-us/winui/winui/windowsuserinterface/userinput/keyboardinput/keyboardinputreference/keyboardinputfunctions/getkeyboardlayoutname.asp"><B>GetKeyboardLayoutName</B></A> function. </DD></FONT></BLOCKQUOTE>
+<P><EM><FONT size=2>Trivia -- I originally checked this in myself with a small typo, and the constant name was briefly LOCALE_SKEYBOARDSTOINSTALLL (note the extra trailing 'L' there!). It was caught pretty quickly though, thankfully!</FONT></EM></P>
+<P>So now in Vista, all of the keyboards and IMEs on this per-locale list will be added to the list of keyboards&nbsp;in the UI above, and all of them will be added when you change your locale. </P>
+<P>In fact the only downside of the 'fix' to our aggressive parsing that was ignoring most of the list is that <A href="http://msmvps.com/blogs/thinice/default.aspx">Mike Williams</A> will be seeing the US keyboard in a whole bunch more cases since the subsidiary PMs wanted the US keyboard on their lists in so many cases....</P>
+<P>Sorry Mike, it wasn't aimed at you and it is wasn't our idea either (the SPMs are the ones who wanted it on their lists!).</P>
+<P>In any case, all of the UI in Vista that I covered above&nbsp;is&nbsp;<STRONG>lots</STRONG> more intuitive, and directly addresses many longstanding complaints from customers about usability.</P>
+<P>And I'll talk more about LOCALE_SKEYBOARDSTOINSTALL<FONT color=#808080><STRIKE>L</STRIKE></FONT> another day, as well as the keyboard list, and what happens with custom locales....</P>
+<P>&nbsp;</P>
+<P><FONT color=#ff1493><EM>This post brought to you by</EM> <FONT size=6><STRONG>ლ</STRONG></FONT> <EM>(<A href="http://www.fileformat.info/info/unicode/char/10da">U+10da</A>, a.k.a. GEORGIAN LETTER LAS)</EM></FONT></P></FONT>
+<hr/><div style="margin-left: 1em"><em>no comments</em></div><hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2007/12/01 <a href="http://archives.miloush.net/michkap/archive/2007/12/01/6631463.html">Cutting the cord, revisited -- and documenting how to get the job done!</a></p><p>2007/06/17 <a href="http://archives.miloush.net/michkap/archive/2007/06/17/3354902.html">The built-in attempt to support multi-monolingual keyboards is kinda broken</a></p><p>2007/01/04 <a href="http://archives.miloush.net/michkap/archive/2007/01/04/1392691.html">Whither intl.inf in Vista?</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2006/09/04/738263.html" title="Every character has a story #24: U+0308 (COMBINING DIAERESIS)">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2006/09/03/737553.html" title="Is Vista Leaving on a Jet Plane [1]?">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2006-09">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2006-09-03">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2006/09/03/738032.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:39 GMT -->
+</html>

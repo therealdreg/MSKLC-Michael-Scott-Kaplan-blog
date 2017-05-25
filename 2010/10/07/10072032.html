@@ -1,0 +1,126 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2010/10/07/10072032.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Myth busting in the console</title></head><body>
+<h1>Myth busting in the console</h1>
+<p><em>by Michael S. Kaplan, published on 2010/10/07 07:01 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2010/10/07/10072032.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<p>I have been writing about internationalization and the console off and on for over five years now, and this fact highlights two problems with blogs:</p>
+<ul>
+<li>Since a blog is a slice in time, it does not account for the fact that like most intelligent human beings, I have learned things and gotten smarter over the last five years. Earlier blogs can be less correct or even incorrect compared to later blogs because of this;</li>
+<li>Finding all of the information ytou need requires a lot of reading; it is easy to miss some crucial detail buried in some particular blog.</li>
+</ul>
+<p>Because of this, I thought I would take a little time to really summarize the current state of affairs, with examples in-line for shorter stuff and with links for the longer stuff. So you can just look here to get the full story in one place.</p>
+<p>Random people trying to improve their console application story can use this blog to find out about everything they need to know. They are perhaps not in the ideal order here either, but at least they are all here. In a "myth-busting" format.</p>
+<p>You're welcome.</p>
+<p>So, without further introduction, let me proceed....</p>
+<p><strong><span style="font-size: medium;">Myth #1:&nbsp;You can not detect within a console application whether&nbsp;a console handle&nbsp;has been&nbsp;redirected to a file.</span></strong></p>
+<p>Given some of the central differences between applications that are principally used within the console and ones that expect to spend the bulk of their time redirected, this is a pretty important issue, especially given other myths related to the "least common denominator" of each when it comes to Unicode support.</p>
+<p>This myth, however,&nbsp;is demonstratably false. You can (for example) check out the <strong>IsConsoleRedirected</strong> function from <a href="http://archives.miloush.net/michkap/archive/2010/05/07/10008232.html" title="Cunningly conquering communicated console caveats. Comprende, mon Capit&aacute;n?"><strong>this blog</strong></a> to see how easy this is to do. There are many other examples but this seemed like the most contained.</p>
+<p><span style="font-size: medium;"><strong>Myth #2: You cannot detect whether a console handle that has been redirected to a file is appending to an existing file or is creating a new file of its own.</strong></span></p>
+<p>Another myth to bust -- this one is trivial to detect, as I point out in the section entitled "First if all" in&nbsp;<a href="http://archives.miloush.net/michkap/archive/2010/06/27/10028282.html" title="Bugs hidden in plain sight, and commented that way too ANSWERS"><strong>this blog</strong></a>:</p>
+<p style="padding-left: 60px;">A simple call to <a href="http://msdn.microsoft.com/library/aa364957.aspx"><strong><span style="color: #006bad;">GetFileSizeEx</span></strong></a>&nbsp;will tell you that, immediately! Just pass in that stdout pointer that you have already determined is a redirected file, and then you will know by the size of the file if they redirected with a <strong>&gt;</strong> or a <strong>&gt;&gt;</strong>.</p>
+<p>Sometimes the simplest answers are the hardest ones to figure out!</p>
+<p><strong><span style="font-size: medium;">Myth #3: You should never add a BOM (byte order mark) to console application output.</span></strong></p>
+<p>Given the truths behind <strong>Myth #1</strong> and&nbsp;<strong>Myth #2</strong>, this one obviously is weird. If you </p>
+<ul>
+<li>detect that you are redirected to a file and </li>
+<li>detect that you are creating the file, and</li>
+<li>are writing any kind of Unicode</li>
+</ul>
+<p>then you can write U+FEFF, the Unicode Byte Order Mark. Let the underlying encoding do its thing with the BOM and you don't need to worry about anything.</p>
+<p><strong><span style="font-size: medium;">Myth #4: When appending console output to an existing file you don't/can't know what the encoding is.</span></strong></p>
+<p>Now this myth causes all kinds of problems because one can easily talk oneself into being unable to safely support anything beyond ASCII -- and I have seen people do this very thing.</p>
+<p>But untrue is untrue, and in Orwellian terms this one is perhaps even doubleplusuntrue.</p>
+<p>As <a href="http://archives.miloush.net/michkap/archive/2010/06/27/10028282.html" title="Bugs hidden in plain sight, and commented that way too ANSWERS"><strong>this blog</strong></a> points out, in its section entitled "Second of all":</p>
+<p style="padding-left: 60px;">A quick call to&nbsp;<a href="http://msdn.microsoft.com/library/aa364962.aspx"><strong><span style="color: #006bad;">GetFinalPathNameByHandle</span></strong></a>&nbsp;to get the path and you can look at the contents and see what is in there and make the appropriate decision (if you&nbsp;need it to be pre-Vista you can use code <a href="http://msdn.microsoft.com/library/aa366789.aspx"><strong><span style="color: #006bad;">like this</span></strong></a>).</p>
+<p style="padding-left: 60px;">Remember that the file is guaranteed to be opened to you or else all of your write operations would fail. So you are the one person with access.</p>
+<p>By combining the knowledge of <strong>Myth #3</strong> and <strong>Myth #4</strong> with&nbsp;the general truth that people who "redirect append" do so to files created by applications that use similar techniques or by the very same application you can look at the first few bytes in most cases to do rather precise detection verifying whether it is Unicode.</p>
+<p><strong><span style="font-size: medium;">Myth #5: The console does not support Unicode.</span></strong></p>
+<p>This is a pretty weird one, and between all of mystery surrounding the default use of CP_OEMCP in the console and the longstanding poor documentation and bugs surrounding the console in general and the CRT in particular it has been one of the most enduring myths of all time.</p>
+<p>But when you use the knowledge behind <strong>Myth #1</strong>'s debunking to determine you are in the console, the <strong>WriteConsoleW</strong> and <strong>ReadConsoleW</strong> Win32 API functions have supported Unicode for not quite as long as CMD.EXE has existed, but certainly on any version of Windows you are likely to see.</p>
+<p><strong><span style="font-size: medium;">Myth #6: The console is <em>able</em> to support Unicode, but sometimes it doesn't work and for some characters it doesn't work -- and you can't ever tell what's what.</span></strong></p>
+<p>Thank goodness the myth was worded this way, so I can once again say it is wrong. Wrong, wrong, WRONG.</p>
+<p>By using the knowledge of <a href="http://archives.miloush.net/michkap/archive/2010/05/07/10008232.html" title="Cunningly conquering communicated console caveats. Comprende, mon Capit&aacute;n?"><strong>this blog</strong></a>, one can detect both</p>
+<ul>
+<li>the cases when one is running in Powershell ISE (the Graphical Powershell), in which case all of Unicode including complex scripts is supported -- via its <strong>IsPowerShellIse</strong> function;</li>
+<li>the cases when one is running in CMD.EXE but a TrueType font is selected, in which case&nbsp;the bulk&nbsp;of the "non-complex" Unicode is supported -- via its <strong>IsConsoleFontTrueType</strong> function.</li>
+</ul>
+<p>By the use of those two functions, you can know exactly what is supportable/supported. From there you can choose (if you so wish) to make intelligent decisions on how to proceed, even perhaps going so far as to warn people what they ought to be doing instead if they are likely to be unable to support the text your console application might want to output.</p>
+<p><strong><span style="font-size: medium;">Myth #7: The Microsoft Visual C Run-time library (mvcrt*) doesn't support Unicode output&nbsp;to&nbsp;a Unicode console.</span></strong></p>
+<p>This myth was proven to be wrong back in <a href="http://archives.miloush.net/michkap/archive/2008/03/18/8306597.html" title="Conventional wisdom is retarded, aka What the @#%&amp;* is _O_U16TEXT?"><strong>this blog</strong></a>.</p>
+<p>A simple:</p>
+<blockquote><span style="font-family: Consolas,Lucida Console,Courier New,Courier,fixed,Fixed;"><b>
+<p>&nbsp;&nbsp;&nbsp; _setmode(_fileno(stdout), _O_U16TEXT);<br />&nbsp;&nbsp;&nbsp; _setmode(_fileno(stderr), _O_U16TEXT);</p>
+</b></span></blockquote>
+<p>before calling Unicode console functions like wprintf and getting back error text&nbsp;is all you need to have the CRT do all the work behind <strong>Myth #1</strong> and properly handle console output. This has been true since Visual Studio 2005 (VC++ 8.0).</p>
+<p>There are several such modes:</p>
+<ul>
+<li>
+<div>_O_U16TEXT</div>
+</li>
+<li>
+<div>_O_U8TEXT</div>
+</li>
+<li>
+<div>_O_WTEXT</div>
+</li>
+</ul>
+<p>that will do much wonderfuler things for Unicode text in the console using the CRT.</p>
+<p><strong><span style="font-size: medium;">Myth #8: </span><span style="font-size: medium;">The Microsoft Visual C Run-time library (mvcrt*)&nbsp;completely supports Unicode text processing in&nbsp;a Unicode console.</span></strong></p>
+<p>Ah, I must have lulled you into complacency after <strong>Myth #7</strong> was proven wrong, and you took it too far.</p>
+<p>Because the truth is that there is a bug that has existed in one form or another in every version of the CRT since 2005 that makes it so that even though <strong>stdout</strong> and <strong>stderr</strong> can handle Unicode, <strong>stdin</strong> cannot.</p>
+<p>I discuss the issue in <a href="http://archives.miloush.net/michkap/archive/2010/09/23/10066660.html" title="A confluence of circumstances leaves a stone unturned..."><strong>this blog</strong></a>, if you are interested in details. It is one of my most fervent hopes that this bug is fixed at the next available opportunity in every place it can be fixed.</p>
+<p>And since one cannot count on either hopes or prayers to make such things happen, I am trying to make sure that the fix is made by more conventional means within my job....</p>
+<p><strong><span style="font-size: medium;">Myth #9: You should really use resource fallback to handle the scenario of a console that cannot fully support the text.</span></strong></p>
+<p>Once again, the myth is wrong.</p>
+<p>As <a href="http://archives.miloush.net/michkap/archive/2010/02/15/9963784.html" title="The real problem(s) with all of these console &quot;fallback&quot; discussions"><strong>this blog</strong></a> discusses at length, the claim that blogs like <a href="http://blogs.msdn.com/vsarabic/archive/2010/01/31/console-doesn-t-display-arabic.aspx" title="Console doesn&rsquo;t display Arabic">this one</a> make about the need to force the resource loader to do fallback in order to avoid problems in the console has many flaws in it.</p>
+<p>There are scenario based flaws (e.g. that the world is teeming with people writing console applications that output Arabic text), implementation flaws (e.g. the ridiculous fallback to en-us for most complex script locales guarantees that a lot of text such as that used by many European languages that might have succeeded will fail due to the en-us use of a 437 CP_OEMCP), conceptual flaws (e.g. fixing teh UI language does nothing for text created by the user locale like date formats which will have the same problem and no ready sensible solution).</p>
+<p>As&nbsp;I exaplained in the debunking of&nbsp;<strong>Myth #6</strong>, the answer if you detect a case where the application may not fully support the text is at best to detect and warn the person, at worst output the junk but make sure that the right documentation or KB articles are available to tell people what is going on, so they can address the problem.</p>
+<p>Now since </p>
+<ul>
+<li>a properly written Unicode console app (even one written&nbsp;long before before Powershell ISE first existed) can fully support all text in Unicode when run within Powershell ISE, and</li>
+<li>such an app&nbsp;that is pretty much always intended to be redirected could have handled all of Unicode back in 1998</li>
+</ul>
+<p>your console application does itself and its users a tremendous disservice by unconditionally falling back.</p>
+<p>Now the world of MUI_CONSOLE_FILTER isn't the worst thing you can do to users, since it is not legally assault by a software developer. But it is still pretty bad....</p>
+<p><strong><span style="font-size: medium;">Myth #10: Okay, I am convinced. You can support Unicode in pretty much all of the console.</span></strong></p>
+<p>Wow, that is incorrect. I'm sorry I lulled you into thinking everything works. Across all of the built in commands in&nbsp;CMD.EXE itself and all of the common binaries that extend the console, many support Unicode but not all of them do. </p>
+<p>No list of what commands and executables fall in each category exists, and the rules about each one (for example <strong>find.exe</strong> never supports Unicode, while as I discussed in <a href="http://archives.miloush.net/michkap/archive/2008/03/18/8306597.html" title="Conventional wisdom is retarded, aka What the @#%&amp;* is _O_U16TEXT?"><strong>this blog</strong></a> the <strong>type</strong> intrinsic completely supports Unicode but the file must have a BOM in front of it). Such a list would be really cool, but it does not currently exist and no one seems to want to take the time to create it....</p>
+<p>Plus occasionally other long-standing issues can exist like the one I talked about in <a href="http://archives.miloush.net/michkap/archive/2006/01/30/519760.html" title="Ā was unexpected at this time."><strong>this blog</strong></a>, a bug that none other than Mark Zbikowski ended up fixing for me in the Vista cmd.exe. The effort was truly appreciated.</p>
+<p><strong><span style="font-size: medium;">Myth #11: All of the defaults in CMD.EXE like whether you are using a TrueType font are out of your control.</span></strong></p>
+<p>This particular myth is al so wrong. Surprised?</p>
+<p>You can change this setting in any CMD.EXE shortcut -- <em>something that every single VS, SDK, and WDK console shortcut should be doing!!!</em></p>
+<p>I am totally serious here. I can understand why people would be afraid to change the defaults in CMD.EXE itself for back-compat reasons of changing behavior in legacy console apps, but the shortcuts? Seriously, these should get updated.</p>
+<p><strong><span style="font-size: medium;">Myth #12: You can't change the setting of whether a console window is using a TrueType font.</span></strong></p>
+<p>This myth too is quite&nbsp;untrue.</p>
+<p>I have used a few console API functions and that&nbsp;<strong>IsConsoleFontTrueType</strong> function from <a href="http://archives.miloush.net/michkap/archive/2010/05/07/10008232.html" title="Cunningly conquering communicated console caveats. Comprende, mon Capit&aacute;n?"><strong>this blog</strong></a>&nbsp;to change the font within a console window&nbsp;to a TrueType font, from code running in the console window.</p>
+<p>This&nbsp;is something I would never recommend in production code, mind you; I only did it because someone told me it wasn't possible and I was sure she was mistaken.</p>
+<p>The impact of the accomplishment was interesting, mind you; she&nbsp;and I&nbsp;dated for about a month after that. ;-)</p>
+<p>And the story there may be worthy of its own dedicated myth-busting blog, along with the code itself. If people are interested, I mean. Let me know....</p>
+<p><strong><span style="font-size: medium;">Myth #13: There are thirteen incorrect myths about support of Unicode text within the console that this blog will talk about.</span></strong></p>
+<p>Crap. You foxed me.</p>
+<p>If I say you are wrog and that there are only 12 myths, then this is s genuine myth. Which means there are 13 myths.</p>
+<p>But if there are 13 myths then you are right and this isn't a myth, it's just a fact. In which case there are just 12.</p>
+<p>Dammit.</p>
+<p>Maybe you should go shave a Spanish barber or something! :-)</p>
+<hr/><p><strong>mike good</strong> on 7 Oct 2010 9:54 AM:</p><div style="margin-left: 1em"><p>This is fantastic post, and damned funny. &nbsp;Nice job.</p>
+</div>
+<p><strong>Emperor XLII</strong> on 10 Oct 2010 4:14 PM:</p><div style="margin-left: 1em"><p>This post reminded me of an issue I had with Unicode output in the post build event of a Visual Studio project. &nbsp;When you build the one-line program below and run it from a new cmd or PowerShell window, I get the expected output of &quot;&#39;\u202F&#39; is &#39; &#39;&quot;. &nbsp;However, when I call it from a project&#39;s post build event, the VS output window shows &quot;&#39;\u202F&#39; is &#39;?&#39;&quot;.</p>
+<p>class Program { static void Main() { System.Console.WriteLine(&quot;&#39;\\u202F&#39; is &#39;\u202F&#39;&quot;); } }</p>
+<p>I&#39;ve messed with System.Console.OutputEncoding and chcp, but can&#39;t get the issue to reproduce outside of VS, or get VS to behave nicely (I did find that calling &quot;chcp 65001&quot; first produces the interesting output &quot;&#39;\u202F&#39; is &#39;ΓÇ»&#39;&quot;, which seems to be the interpretation of 0x202F under the US codepage :).</p>
+<p>Just curious if you had any insight into what VS is up to!</p>
+</div>
+<p><strong>Yuhong Bao</strong> on 13 Oct 2010 9:53 AM:</p><div style="margin-left: 1em"><p>Don&#39;t forget about the fact that CJK can&#39;t be displayed in the console without the console codepage be set to the needed codepage, and that requires that the OEMCP be set to the same codepage too.</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 13 Oct 2010 10:13 AM:</p><div style="margin-left: 1em"><p>Actually, that is not true (yet another myth!). Using the rules I have given and Unicode input/output:</p>
+<p>1) Redirection works with no help needed;</p>
+<p>2) Console display will show square boxes in CMD that you can copy/paste to show valid text;</p>
+<p>3) PowerShell ISE console display is perfect.</p>
+</div>
+<p><strong>Yuhong Bao</strong> on 13 Oct 2010 6:18 PM:</p><div style="margin-left: 1em"><p>Indeed, I was not referring to redirection or PowerShell ISE (which is completely different).</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 13 Oct 2010 9:26 PM:</p><div style="margin-left: 1em"><p>The console is a complex beast, for whom all of these points are relevant.</p>
+</div>
+<hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2011/11/07 <a href="http://archives.miloush.net/michkap/archive/2011/11/07/10234592.html">Unicode in the console (including STDIN)?</a></p><p>2011/09/22 <a href="http://archives.miloush.net/michkap/archive/2011/09/22/10215125.html">Consoling oneself with TrueType</a></p><p>2011/06/08 <a href="http://archives.miloush.net/michkap/archive/2011/06/08/10172411.html">Why it may be best to avoid the CRT, in the console at least</a></p><p>2010/12/03 <a href="http://archives.miloush.net/michkap/archive/2010/12/03/10099877.html">Code as though the Console is as it should be, to show everyone what it can be</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2010/10/08/10073124.html" title="Off by one what, exactly?">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2010/10/06/10071517.html" title="...and the keyboard layouts attached to them in particular">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2010-10">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2010-10-07">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2010/10/07/10072032.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+</html>

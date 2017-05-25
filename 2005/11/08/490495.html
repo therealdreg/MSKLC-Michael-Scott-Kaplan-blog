@@ -1,0 +1,36 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2005/11/08/490495.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:40 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>More than you ever wanted to know about CP_SYMBOL</title></head><body>
+<h1>More than you ever wanted to know about CP_SYMBOL</h1>
+<p><em>by Michael S. Kaplan, published on 2005/11/08 15:23 -05:00, original URI: http://blogs.msdn.com/b/michkap/archive/2005/11/08/490495.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P><FONT face=Tahoma>If you look at the Platform SDK topics for both <A href="http://msdn.microsoft.com/library/en-us/intl/unicode_2bj9.asp">WideCharToMultiByte</A>&nbsp;and <A href="http://msdn.microsoft.com/library/en-us/intl/unicode_17si.asp">MultiByteToWideChar</A>, you will notice one very interesting code page entry:</FONT></P>
+<P><FONT face=Tahoma>
+<TABLE border=1>
+<TBODY>
+<TR vAlign=top>
+<TD width="30%">CP_SYMBOL</TD>
+<TD width="70%"><B>Windows 2000/XP:</B> Symbol code page (42)</TD></TR></TBODY></TABLE></FONT></P>
+<P><FONT face=Tahoma>Of course if you go up to the reference information on the various <A href="http://www.microsoft.com/globaldev/reference/cphome.mspx">Windows code pages</A> you will not see this code page defined, so how is one to know what it is converting to and from?</FONT></P>
+<P><FONT face=Tahoma>Well, I'll tell you....</FONT></P>
+<P><FONT face=Tahoma>Basically, everything from 0x00&nbsp;- 0x1f maps to <A href="http://www.fileformat.info/info/unicode/char/0000">U+0000</A> - <A href="http://www.fileformat.info/info/unicode/char/001f">U+001f</A>.</FONT></P>
+<P><FONT face=Tahoma>Then, everything from 0x20 - 0xff maps to <A href="http://www.fileformat.info/info/unicode/char/f020">U+f020</A> - <A href="http://www.fileformat.info/info/unicode/char/f0ff">U+f0ff</A> (in the Unicode private use area).</FONT></P>
+<P><FONT face=Tahoma>And if you pass anything outside of those ranges to <A href="http://msdn.microsoft.com/library/en-us/intl/unicode_2bj9.asp">WideCharToMultiByte</A>, the conversion fails and <A href="http://msdn.microsoft.com/library/en-us/debug/base/getlasterror.asp">GetLastError</A> will return ERROR_NO_UNICODE_TRANSLATION.</FONT></P>
+<P><FONT face=Tahoma>Now the original goal of this pseudo-codepage was to work with GDI's ExtTextOut and symbol fonts, but unfortunately GDI maps by&nbsp;a different scheme and will accept U+0020 - U+00ff. Which means in practice that the two technologies simply do not work well together. There was even a bug or two related to processes that innocently assumed that symbol fonts and symbol code pages worked together properly and would end up with bad records in EMF/WMF files.</FONT></P>
+<P><FONT face=Tahoma>It is too late to change the code page, and might be too late to change the core GDI behavior, so this&nbsp;CP_SYMBOL code page remains as a monument to features that no one can use, but it is not worth taking out just in case someone <EM>is</EM> using it....</FONT></P>
+<P><FONT face=Tahoma></FONT>&nbsp;</P>
+<P><FONT face=Tahoma color=#ff1493><EM>This post brought to you by</EM> "<FONT face=Arial size=6></FONT>" (<A href="http://www.fileformat.info/info/unicode/char/f0ff">U+f0ff</A>, a.k.a. one of the many &lt;Private Use&gt; characters in Unicode)</FONT></P>
+<hr/><p><a id="490601" href="#490601">#</a> <strong>Robert</strong> on 8 Nov 2005 7:28 PM:</p><div style="margin-left: 1em">In Windows XP it seems that GDI accepts character codes from both ranges 0x20-0xff and 0xf020-0xf0ff for symbol fonts.</div>
+<p><a id="490605" href="#490605">#</a> <strong>Michael S. Kaplan</strong> on 8 Nov 2005 7:41 PM:</p><div style="margin-left: 1em">You are correct Robert (I am sorry I implied otherwise). The problem is that we could not do that in code pages; we have to choose one or the other?</div>
+<p><a id="490669" href="#490669">#</a> <strong>Vorn</strong> on 8 Nov 2005 11:13 PM:</p><div style="margin-left: 1em">Linked image shows the two symbols available in 0xf0ff on my Mac.  The first is from Webdings, the second is from Wingdings.  Note the little TM in the bottom right of the latter. :)<br><br>Vorn</div>
+<p><a id="490781" href="#490781">#</a> <strong>Michael S. Kaplan</strong> on 9 Nov 2005 8:00 AM:</p><div style="margin-left: 1em">Of course, Vorn! Those are symbol fonts. not everything on the font side behaves differently (and its not like NLS just made up the idea of this pseudo code page)....</div>
+<p><a id="492073" href="#492073">#</a> <strong>Vorn</strong> on 12 Nov 2005 7:43 AM:</p><div style="margin-left: 1em">Yeah, I know.  But I showed it because I found it funny that my Mac has a font with the Windows symbol in it. :)<br><br>Vorn</div>
+<p><a id="492089" href="#492089">#</a> <strong>Michael S. Kaplan</strong> on 12 Nov 2005 9:27 AM:</p><div style="margin-left: 1em">Heh, that is ironic.<br><br>Or maybe not. MS and Apple were once very involved on even more fronts than today in regard to fonts and TrueType....</div>
+<p><strong>Phil Harvey</strong> on 21 Jan 2010 5:07 AM:</p><div style="margin-left: 1em"><p>Thank you very much for posting this!!!</p>
+<p>I search everywhere and couldn't find a table anywhere else to convert symbol characters to Unicode.</p></div>
+<p><strong>Yuhong Bao</strong> on 9 Feb 2010 12:43 AM:</p><div style="margin-left: 1em"><p>&quot;Or maybe not. MS and Apple were once very involved on even more fronts than today in regard to fonts and TrueType.... &quot;</p>
+<p>Yep, they for example developed TrueType together.</p>
+</div>
+<hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2008/09/14 <a href="http://archives.miloush.net/michkap/archive/2008/09/14/8950506.html">Johab to be kidding me!</a></p><p>2007/08/30 <a href="http://archives.miloush.net/michkap/archive/2007/08/30/4641553.html">The main criteria in determing whether a code page sucks? Suckage, of course!</a></p><p>2007/03/21 <a href="http://archives.miloush.net/michkap/archive/2007/03/21/1924167.html">Warning: when private is used in public, it can really suck</a></p><p>2006/12/03 <a href="http://archives.miloush.net/michkap/archive/2006/12/03/1196177.html">Strangely Symbolic font issues</a></p><p>2006/04/27 <a href="http://archives.miloush.net/michkap/archive/2006/04/27/584859.html">'Doctor, it hurts when I do this.' Well, don't do that!</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2005/11/09/490791.html" title="Getting around the default system locale">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2005/11/08/490305.html" title="SQL Compatibility collations are a bit too retro for me">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2005-11">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2005-11-08">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2005/11/08/490495.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:40 GMT -->
+</html>

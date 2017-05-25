@@ -1,0 +1,96 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2007/02/17/1701561.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:38 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Why I think System.String.IndexOf(Char) sucks</title></head><body>
+<h1>Why I think System.String.IndexOf(Char) sucks</h1>
+<p><em>by Michael S. Kaplan, published on 2007/02/18 01:27 -05:00, original URI: http://blogs.msdn.com/b/michkap/archive/2007/02/17/1701561.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P>Earlier I posted about <A class="" href="http://archives.miloush.net/michkap/archive/2007/02/17/1698307.html" mce_href="http://archives.miloush.net/michkap/archive/2007/02/17/1698307.html"><STRONG>Giving a character a new identity (by giving it some secondary weight)</STRONG></A>.</P>
+<P>Now that post, while true, only tells part of the story.</P>
+<P>Now I am going to tell the other part....</P>
+<P>Take the following code and you&nbsp;may be able to see where I am going before you even look at the results:</P>
+<BLOCKQUOTE><FONT face="Consolas,Lucida Console,Courier New,Courier" size=2><B>
+<P>CompareInfo ci = CompareInfo.GetCompareInfo("ja-JP");<BR>string st1 = "ﾜﾞ";<BR><BR>Thread.CurrentThread.CurrentCulture = new CultureInfo("ja-JP");<BR>Console.WriteLine(ci.IndexOf(st1, "ﾜ"));<BR>Console.WriteLine(ci.IndexOf(st1, 'ﾜ'));<BR>Console.WriteLine(st1.IndexOf("ﾜ"));<BR>Console.WriteLine(st1.IndexOf('ﾜ'));<BR><BR>string st2 = "\u0061\u030a";<BR>Console.WriteLine(ci.IndexOf(st2, "a"));<BR>Console.WriteLine(ci.IndexOf(st2, 'a'));<BR>Console.WriteLine(st2.IndexOf("a"));<BR>Console.WriteLine(st2.IndexOf('a'));</P></B></FONT></BLOCKQUOTE>
+<P>The results? They will be:</P>
+<BLOCKQUOTE><FONT face="Consolas,Lucida Console,Courier New,Courier" size=2><B>
+<P>-1<BR>-1<BR>-1<BR>0<BR>-1<BR>-1<BR>-1<BR>0</P></B></FONT></BLOCKQUOTE>
+<P>So what's the problem? Why does <A class="" href="http://msdn2.microsoft.com/library/kwb0bwyd.aspx" mce_href="http://msdn2.microsoft.com/library/kwb0bwyd.aspx">System.String.IndexOf(Char)</A> behave differently than <A class="" href="http://msdn2.microsoft.com/library/k8b1470s.aspx" mce_href="http://msdn2.microsoft.com/library/k8b1470s.aspx">System.String.IndexOf(String)</A>, <A class="" href="http://msdn2.microsoft.com/library/wadk4d6s.aspx" mce_href="http://msdn2.microsoft.com/library/wadk4d6s.aspx">System.Globalization.CompareInfo.IndexOf(String, Char)</A>, and <A class="" href="http://msdn2.microsoft.com/library/cy0ww96e.aspx" mce_href="http://msdn2.microsoft.com/library/cy0ww96e.aspx">System.Globalization.CompareInfo.IndexOf(String, String)</A>, anyway?</P>
+<P mce_keep="true">Well, setting aside my disdain for all of the System.String shortcuts to globalization functionality that makes the real linguistics features of the <A class="" href="http://msdn2.microsoft.com/library/system.globalization.aspx" mce_href="http://msdn2.microsoft.com/library/system.globalization.aspx">System.Globalization namespace</A> that much harder for developers both inside and outside of Microsoft to find (never mind the additional confusion about the confusing and incomplete flags they add), there is the fact that the System.String "shortcut" methods often contain actual shortcuts to try to be more performant, to try to keep from calling the "slower" globalization methods.</P>
+<P mce_keep="true">So this particular issue can be looked at as an over-optimization, a case where developers assumed that they would not need to call the "slower" method in this situation.</P>
+<P mce_keep="true">Were they wrong?</P>
+<P mce_keep="true">Well, in my view, yes. All of these shortcut methods are just plain bad if they ever do anything other than call the real methods in the <A class="" href="http://msdn2.microsoft.com/library/system.globalization.aspx" mce_href="http://msdn2.microsoft.com/library/system.globalization.aspx">System.Globalization namespace</A>. Anything else makes for less maintainable code that requires modifying multiple bits if there are ever changes or problems to fix, and it is harder for testers to track all of these different places to verify correct behavior in.</P>
+<P mce_keep="true">Of course now I suppose it would be in some people's minds a breaking change to fix the errant method.</P>
+<P mce_keep="true">So let's make it more interesting and raise the stakes:</P>
+<BLOCKQUOTE><FONT face="Consolas,Lucida Console,Courier New,Courier" size=2><B>
+<P mce_keep="true">CompareInfo ci = CompareInfo.GetCompareInfo("sv-SE");<BR>string st1 = "\u00e5";<BR><BR>Thread.CurrentThread.CurrentCulture = new CultureInfo("sv-SE");<BR>Console.WriteLine(ci.IndexOf(st1, "a"));<BR>Console.WriteLine(ci.IndexOf(st1, 'a'));<BR>Console.WriteLine(st1.IndexOf("a"));<BR>Console.WriteLine(st1.IndexOf('a'));<BR><BR>string st2 = "\u0061\u030a";<BR>Console.WriteLine(ci.IndexOf(st2, "a"));<BR>Console.WriteLine(ci.IndexOf(st2, 'a'));<BR>Console.WriteLine(st2.IndexOf("a"));<BR>Console.WriteLine(st2.IndexOf('a'));</P></B></FONT></BLOCKQUOTE>
+<P mce_keep="true">The results here? You know in this "Swedish "A-Ring" case?</P>
+<BLOCKQUOTE><FONT face="Consolas,Lucida Console,Courier New,Courier" size=2><B>
+<P mce_keep="true">-1<BR>-1<BR>-1<BR>-1<BR>-1<BR>-1<BR>-1<BR>0</P></B></FONT></BLOCKQUOTE>
+<P mce_keep="true">So, that over-optimization is causing behavior differences in strings that are canonically equivalent in Unicode, to wit LATIN SMALL LETTER A WITH RING ABOVE versus LATIN SMALL LETTER A + COMBINING RING ABOVE.</P>
+<P mce_keep="true">And that is a bug, suggesting that just taking out this over-optimization case might be in everyone's best interests....</P>
+<P mce_keep="true"><EM>(Using the Swedish or Japanese results above is not required; it just makes the weirdness look worse. The bug is there either way)</EM></P>
+<P mce_keep="true">&nbsp;</P>
+<P mce_keep="true"><FONT color=#ff00ff><EM>This post brought to you by</EM>&nbsp;<FONT size=5>å</FONT> <EM>(<A class="" href="http://www.fileformat.info/info/unicode/char/00e5" mce_href="http://www.fileformat.info/info/unicode/char/00e5">U+00e5</A>, a.k.a. LATIN SMALL LETTER A WITH RING ABOVE)</EM></FONT></P>
+<hr/><p><a id="1703382" href="#1703382">#</a> <strong>Dean Harding</strong> on 18 Feb 2007 5:56 AM:</p><div style="margin-left: 1em"><p>Actually, my opinion goes the other way: the System.String &quot;shortcuts&quot; should never have called the System.Globalisation methods.</p>
+<p>It's not really a matter of &quot;optimization&quot; vs. &quot;user expectations&quot; because there really ARE some cases where you want the code-point behaviour.</p>
+<p>Doing it that way would make System.String a simple &quot;array of code-points&quot; and the methods on it work that way. The System.Globalization methods are the actual lingustics methods.</p>
+<p>Ah well, too late for all this anyway :-)</p></div>
+<p><a id="1705727" href="#1705727">#</a> <strong>Michael S. Kaplan</strong> on 18 Feb 2007 11:03 AM:</p><div style="margin-left: 1em"><P>Hello Dean, </P>
+<P>If people want the code point behavior, then the ORDINAL methodology is available. These shortcuts are actually designed to work linguistically, they just don't always do so....</P></div>
+<p><a id="1706808" href="#1706808">#</a> <strong>Mihai</strong> on 18 Feb 2007 1:27 PM:</p><div style="margin-left: 1em"><p>&lt;&lt;make System.String a simple &quot;array of code-points&quot;&gt;&gt;</p>
+<p>Two opinions on this kind of things:</p>
+<p> 1. All functions handling one character should be removed. Completely. From .NET, Win32 API, C++. Because doing anything on one character is a problem: search, compare, changing case, you name it. Everything should be done on strings, return strings, and so on.</p>
+<p>It is the only way to get correct linguistic results.</p>
+<p> 2. The storage should be separated from the string itself. You need access to the code points, you access the storage explicitly.</p>
+<p>Then you will be able to do stuff like this:</p>
+<p> &nbsp; string str = &quot;\u0061\u030a&quot;;</p>
+<p> &nbsp; str.length(); // gives you linguistic info</p>
+<p> &nbsp; str.storage.length(); // gives you storage info (code points)</p>
+<p>The storage is locale-independent, the string is not. And the intention is always clear.</p>
+<p>Ok, some more thinking on what can go wrong is needed, but these are the general ideas.</p></div>
+<p><a id="1707411" href="#1707411">#</a> <strong>Michael S. Kaplan</strong> on 18 Feb 2007 2:41 PM:</p><div style="margin-left: 1em"><p>Well, actually, we use a hybrid approach:</p>
+<p>1) For most purposes we use your #1</p>
+<p>2) For NLS collation functions that take an LCID, we do #2 plus (we include other constructs like sort elements).</p>
+</div>
+<p><a id="1709201" href="#1709201">#</a> <strong>Dean Harding</strong> on 18 Feb 2007 7:11 PM:</p><div style="margin-left: 1em"><p>Mihai: I don't think I disagree, specifically. My suggestion would just have been that the System.String class be your &quot;string.storage&quot; and SOMETHING ELSE be the linguistic stuff.</p>
+<p>I guess that's just a product of where I usually work, though. Most of my string manipulation stuff (in my day job) come from manipulating email and SMS messages, both of which are predominately ASCII-based (at least, at the level I work on - the raw protocols). If most of my work was on web pages, or a text editor or something then I suppose I'd go with your suggestion...</p>
+<p>You can't please everybody :-)</p>
+</div>
+<p><a id="1711502" href="#1711502">#</a> <strong>Michael S. Kaplan</strong> on 19 Feb 2007 12:44 AM:</p><div style="margin-left: 1em"><p>The only problem with THAT idea (which by the way there are people on the BCL team who would have preferred that approach in retrospect) is that there would be no linguistic support in the vast majority of apps. </p>
+<p>And I just can't be a complerte fan of that sort of approach.... :-)</p>
+</div>
+<p><a id="1717628" href="#1717628">#</a> <strong>Mihai</strong> on 19 Feb 2007 1:00 PM:</p><div style="margin-left: 1em"><p>&lt;&lt;My suggestion would just have been that the System.String class be your &quot;string.storage&quot; and SOMETHING ELSE be the linguistic stuff.&gt;&gt;</p>
+<p>Technically, it does not matter how you call things.</p>
+<p>But for the perception of the one reading the code, it does (think #define BOOL int, before bool was standard).</p>
+<p>A string is something containing text, and text is associated with linguistic properties in one's mind. </p>
+<p>And since System.String has stuff like ToUpper, it is already &quot;too dirty&quot; to be a plain storage (because ToUpper is a locale-sensitive operation).</p>
+<p>So I really think that String *is* the right thing for linguistic behavior.</p></div>
+<p><a id="1717646" href="#1717646">#</a> <strong>Mihai</strong> on 19 Feb 2007 1:06 PM:</p><div style="margin-left: 1em"><p>&lt;&lt;Well, actually, we use a hybrid approach&gt;&gt;</p>
+<p>Maybe in the implementation. But the idea was to make this explicit, for all programmers to see, not just an internal representation thing.</p>
+<p>When I see str.length() and str.storage.length(), the intention becomes instantly clear, without even reading the doc.</p>
+<p>It is probably too late to do this, without breaking backward compatibility. And I was also talking about C++, which is outside MS control :-)</p>
+<p>And the idea was philosophical anyway. I don't really expect that &lt;&lt;All functions handling one character should be removed. Completely. From .NET, Win32 API, C++.&gt;&gt;</p>
+<p>Who am I, who's going to listen to me? :-D</p></div>
+<p><a id="1717831" href="#1717831">#</a> <strong>Michael S. Kaplan</strong> on 19 Feb 2007 1:43 PM:</p><div style="margin-left: 1em"><p>So I can't tell whether you think the anomaly I mentioned in this post about System.String.IndexOf(Char) is a bug to be fixed or a backcompat issue to be left alone? :-)</p>
+</div>
+<p><a id="1717905" href="#1717905">#</a> <strong>Mihai</strong> on 19 Feb 2007 1:56 PM:</p><div style="margin-left: 1em"><p>Bug :-)</p>
+<p>Since String is a linguistic thing, I would expect linguistic behavior.</p>
+<p>If you ever expose something like System.String.Storage.IndexOf(Char), then that should work on coding units.</p></div>
+<p><a id="1717936" href="#1717936">#</a> <strong>Mihai</strong> on 19 Feb 2007 2:04 PM:</p><div style="margin-left: 1em"><P>What I think would make sense (at least for me :-)</P>
+<P>&nbsp;string st2 = "\u0061\u030a";</P>
+<P>&nbsp;// Linguistic behavior<BR>&nbsp;ci.IndexOf(st2, "a"); // -1</P>
+<P>&nbsp;// Remove as per rule #1<BR>&nbsp;ci.IndexOf(st2, 'a'); // undefined API error</P>
+<P>&nbsp;// Linguistic behavior<BR>&nbsp;st2.IndexOf("a"); // -1</P>
+<P>&nbsp;// Remove as per rule #1<BR>&nbsp;st2.IndexOf('a'); // undefined API error</P>
+<P>&nbsp;// Add this API, with non-linguistic behavior<BR>&nbsp;// and not affected by CultureInfo<BR>&nbsp;// working on coding units<BR>&nbsp;st2.Storage.IndexOf("a"); // 0</P>
+<P>&nbsp;// DO NOT add this API,<BR>&nbsp;// because non-linguistic behavior<BR>&nbsp;// in a CultureInfo context is dumb<BR>&nbsp;ci.Storage.IndexOf("a"); // undefined API error</P></div>
+<p><a id="1717942" href="#1717942">#</a> <strong>Mihai</strong> on 19 Feb 2007 2:07 PM:</p><div style="margin-left: 1em"><p>&lt;&lt;System.String.IndexOf(Char) is a bug to be fixed or a backcompat issue to be left alone?&gt;&gt;</p>
+<p>I think I did not answer the question.</p>
+<p>It is clear it is a bug, but to fix, or not to fix, this is the question? Sounds like you are trying to push me in a corner :-)</p>
+<p>Well, if it can be fixed without breaking compatibility, then yes, fix it :-)</p>
+<p>Check with Raymond Chen :-D</p></div>
+<p><a id="8769245" href="#8769245">#</a> <strong>anupam</strong> on 24 Jul 2008 8:33 AM:</p><div style="margin-left: 1em"><P>Sting str="C:\Documents and Settings\asriv5\Desktop\Login.jsp";<BR>index i=str.lastIndexOf("\"); // not working why ???</P>
+<P>plz give me the sol...</P>
+<P>anupam </P></div>
+<hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2007/02/18/1709479.html" title="He had the strength of an OX[IA], I tell you">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2007/02/17/1698307.html" title="Giving a character a new identity (by giving it some secondary weight)">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2007-02">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2007-02-17">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2007/02/17/1701561.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:38 GMT -->
+</html>

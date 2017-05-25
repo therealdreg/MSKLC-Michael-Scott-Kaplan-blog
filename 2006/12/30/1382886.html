@@ -1,0 +1,102 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2006/12/30/1382886.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:38 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Converting a project to Unicode: Part 3 (Can I quote you on that?)</title></head><body>
+<h1>Converting a project to Unicode: Part 3 (Can I quote you on that?)</h1>
+<p><em>by Michael S. Kaplan, published on 2006/12/30 06:01 -05:00, original URI: http://blogs.msdn.com/b/michkap/archive/2006/12/30/1382886.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P>Previous posts in this series (including today's!): 
+<UL>
+<LI><A href="http://archives.miloush.net/michkap/archive/2006/12/27/1368334.html" mce_href="http://archives.miloush.net/michkap/archive/2006/12/27/1368334.html">Part 0 (The introduction)</A> 
+<LI><A href="http://archives.miloush.net/michkap/archive/2006/12/28/1372747.html" mce_href="http://archives.miloush.net/michkap/archive/2006/12/28/1372747.html">Part 1 (Business before pleasure)</A> 
+<LI><A class="" href="http://archives.miloush.net/michkap/archive/2006/12/29/1377788.html" mce_href="http://archives.miloush.net/michkap/archive/2006/12/29/1377788.html">Part 2 ('Sorry, you're not my type.' 'Um,&nbsp;maybe&nbsp;I could change that?)</A></LI>
+<LI><A class="" href="http://archives.miloush.net/michkap/archive/2006/12/30/1382886.html" mce_href="http://archives.miloush.net/michkap/archive/2006/12/30/1382886.html">Part 3 (Can I quote you on that?)</A></LI></UL>
+<P>(If you are&nbsp;just tuning&nbsp;in and want to start&nbsp;now you can grab the current source from <A class="" href="http://www.trigeminal.com/samples/SETUP_SOURCE/part03.zip" mce_href="http://www.trigeminal.com/samples/SETUP_SOURCE/part03.zip">here</A>.)&nbsp;</P>
+<P>The biggest source of actual changes in most conversions of legacy projects to Unicode is handling hard-coded strings. The simple fact is that what you might have in your code as</P>
+<BLOCKQUOTE><FONT face="consolas,lucida console,courier new,courier"><STRONG>
+<P>"This is a string"</P></STRONG></FONT></BLOCKQUOTE>
+<P>and which in a purely&nbsp;Unicode application would be</P>
+<BLOCKQUOTE><FONT face="consolas,lucida console,courier new,courier"><STRONG>
+<P>L"This is a string"</P></STRONG></FONT></BLOCKQUOTE>
+<P>now will have to be either</P>
+<BLOCKQUOTE><FONT face="consolas,lucida console,courier new,courier"><STRONG>
+<P>1)&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; TEXT("This is a string")</P></STRONG></FONT></BLOCKQUOTE>
+<P>or</P>
+<BLOCKQUOTE><FONT face="consolas,lucida console,courier new,courier"><STRONG>
+<P>2)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; _TEXT("This is a string")</P></STRONG></FONT></BLOCKQUOTE>
+<P>or</P>
+<BLOCKQUOTE><FONT face="consolas,lucida console,courier new,courier"><STRONG>
+<P>3)&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; _T("This is a string")</P></STRONG></FONT></BLOCKQUOTE>
+<P>I myself prefer the&nbsp;third one&nbsp;but many people like the first or the second. You can look at the MSDN topic <A class="" href="http://msdn2.microsoft.com/library/7dzey6h6(VS.80).aspx" mce_href="http://msdn2.microsoft.com/library/7dzey6h6(VS.80).aspx">Using Generic-Text Mappings</A>&nbsp;to get more information on <STRONG>_T</STRONG> and <STRONG>_TEXT</STRONG>; the one with no underscore prefix is actually defined in the Platform SDK header file winnt.h and this is the reason why it is used by Windows header files that do not want to include tchar.h in their source files.</P>
+<P>(If you are bored, the section of winnt.h with the <STRONG>// Neutral ANSI/UNICODE types and macros</STRONG> comment is where these all are.)</P>
+<P>Since we will need tchar.h for a few CRT&nbsp;functions you can pretty much take your pick -- the other reason some people prefer the shorter one is that they consider it less distracting (I consider them all to be about the same in that respect).</P>
+<P>I am going to use TEXT() for reasons I will point out shortly.</P>
+<P>There are several different ways to approach this kind of change:</P>
+<OL>
+<LI>Compile the program with UNICODE/_UNICODE tags and catch all of the compile errors that yesterday's changes will cause due to the mismatch between Unicode types and non-Unicode strings</LI>
+<LI>Simply&nbsp;find every occurrence of <STRONG>"</STRONG> (U+0022, a.k.a. QUOTATION MARK) and <STRONG>'</STRONG> (U+0027, a.k.a. APOSTROPHE) and each time it is appropriate, surround the quoted string with TEXT() or _T()</LI>
+<LI>Use regular expressions to do the&nbsp;find and replace, either using the VS <STRONG>:q</STRONG> (quoted string) or its equivalent in your tool, e.g. <STRONG>(("[^"]*")|('[^']*'))</STRONG></LI></OL>
+<P>If you prefer #1, then you may&nbsp;want to skip tody's post and&nbsp;wait for Part 4, tomorrow (which is when we will be doing that). Today is dedicated to taking care of over 100 cases without the complie-time checking....</P>
+<P>I tend to prefer the #3 myself, so your find/replace box in VS will look something like this:</P>
+<P><IMG src="http://trigeminal.fmsinc.com/images/cptu04.png"></P>
+<P>The most important things to note are the syntax for tagging an expression (in VS, surround it in curly braces) and then use the tagged expression in the replaced string (in VS, the \# where # is 1-9 which tagged expression to use).</P>
+<P>There are many strings you won't want to affect, including obvious ones like </P>
+<BLOCKQUOTE><FONT face="consolas,lucida console,courier new,courier"><STRONG>
+<P>#include "common.h"</P></STRONG></FONT></BLOCKQUOTE>
+<P>and there are even a few "already done" strings like this one from common.h in the source:</P>
+<BLOCKQUOTE><FONT face="consolas,lucida console,courier new,courier"><STRONG>
+<P>#define ISETUPPROPNAME_BASEURL&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; TEXT("BASEURL")</P></STRONG></FONT></BLOCKQUOTE>
+<P>Note that this code is&nbsp;probably shared with other Windows&nbsp;Installer source code projects (like maybe msistuff.exe's?), which would be why&nbsp;it is written with Unicode in mind even though most of the rest of the project is not. And why it would have a name like <STRONG>common.h</STRONG>.</P>
+<P>If this convinces you that you would rather use TEXT() to be able to use the same thing in the rest of the project then like I said you can use whatever you like&nbsp; (it is what I chose here!).</P>
+<P>The other bonus is that it will keep us from having to&nbsp;include tchar.h to files for just this definiton (if you have been trying it you will see that the source is still compiling right now, before e move it to Unicode).</P>
+<P>Of course&nbsp;function names are another case where you do not want to wrap them in TEXT macros since the function names will go to <A class="" href="http://msdn2.microsoft.com/library/ms683212.aspx" mce_href="http://msdn2.microsoft.com/library/ms683212.aspx">GetProcAddress</A> calls. So you would wrap "advapi32.dll" but you would not wrap "CheckTokenMembership" (a function inside advapi32.dll). Though if you mess this up don't worry, it will be a simple compile error later, very easy to fix....</P>
+<P>One other interesting string that needs special handling:</P>
+<BLOCKQUOTE><FONT face="consolas,lucida console,courier new,courier"><STRONG>
+<P mce_keep="true">"\""</P></STRONG></FONT></BLOCKQUOTE>
+<P>Which we want to become:</P>
+<BLOCKQUOTE><FONT face="consolas,lucida console,courier new,courier"><STRONG>
+<P mce_keep="true">TEXT("\"")</P></STRONG></FONT></BLOCKQUOTE>
+<P>and not</P>
+<BLOCKQUOTE><FONT face="consolas,lucida console,courier new,courier"><STRONG>
+<P mce_keep="true">TEXT("\")"</P></STRONG></FONT></BLOCKQUOTE>
+<P>obviously. The simple regular expression is not quite smart enough for the&nbsp;escaped quote case (there are like five of these). if you want to try and create a more complex regular expression you are welcome to!</P>
+<P>In any case, hopefully I have convinced&nbsp;you that&nbsp;you&nbsp;will definitely want to be careful about your use of <STRONG>Find Next</STRONG> vs. <STRONG>Replace</STRONG> -- and definitely not be tempted by <STRONG>Replace All</STRONG>. :-)</P>
+<P mce_keep="true">Other things you do not need to "fix" are pretty much anything in the makefile, or anything in a comment (unless you want to amuse future code reviewers).</P>
+<P mce_keep="true">Now after you go through all of these, you will have noticed that 56 of the strings to edited were calling one of the three overloads of the <STRONG>DebugMsg</STRONG> function found in utils.cpp. I would recommend you go ahead fix them up too, since (a) you have already changed their datatypes anyway, (b) they all call <A class="" href="http://msdn2.microsoft.com/library/aa363362.aspx" mce_href="http://msdn2.microsoft.com/library/aa363362.aspx">OutputDebugString</A> which will map to OutputDebugStringW after we compile UNICODE, and (c) there is no harm in seeing Unicode text if you run a debugger that supports Unicode. :-)</P>
+<P mce_keep="true">Amazingly, we are much, much closer now!</P>
+<P mce_keep="true">We'll do one more big find/replace in today's post. There are&nbsp;several places in the source code where <A class="" href="http://msdn2.microsoft.com/library/ms683212.aspx" mce_href="http://msdn2.microsoft.com/library/ms683212.aspx">GetProcAddress</A> is being called&nbsp;to get the address of a ANSI function rather than a Unicode one. Let's fix those up right now.&nbsp;You could&nbsp;search for <A class="" href="http://msdn2.microsoft.com/library/ms683212.aspx" mce_href="http://msdn2.microsoft.com/library/ms683212.aspx">GetProcAddress</A>, but in this project (as in most other projects) it just goes to constants. Just remember (like I said before)&nbsp;-- you always want to make sure that you do not put the TEXT() macro wrapper around&nbsp;funtion names&nbsp;since <A class="" href="http://msdn2.microsoft.com/library/ms683212.aspx" mce_href="http://msdn2.microsoft.com/library/ms683212.aspx">GetProcAddress</A>'s second parameter never expects a Unicode string. You DO weant them around library names and just about everything else.</P>
+<P mce_keep="true">The easiest way to find all of the occurrences&nbsp;is the following search:</P>
+<P mce_keep="true"><IMG src="http://trigeminal.fmsinc.com/images/cptu05.png"></P>
+<P mce_keep="true">It is pretty rare to ever have a string that ends with a capital A that you wouldn't want to become a capital W, so although you will want to check each one, you are unlikely to have a ton of noise in the results....</P>
+<P mce_keep="true">Believe it or not we are getting rather close now (tomorrow we're going to take the next step to find major things to look at).</P>
+<P mce_keep="true">Stay tuned....</P>
+<P mce_keep="true">&nbsp;</P>
+<P mce_keep="true"><FONT color=#ff00ff><EM>This post brought to you by</EM> <FONT face=Lashio size=6>ဃ</FONT> <EM>(<A class="" href="http://www.fileformat.info/info/unicode/char/1003" mce_href="http://www.fileformat.info/info/unicode/char/1003">U+1003</A>, a.k.a. MYANMAR LETTER GHA)</EM></FONT></P>
+<hr/><p><strong>Mihai</strong> on 30 Dec 2006 5:28 PM:</p><div style="margin-left: 1em"><p>In the second post you had this:</p>
+<p>&lt;&lt;First and foremost, I will not be turning an &quot;A&quot; binary into a &quot;W&quot; binary; the plan is to turn it into a &quot;T&quot; binary a-la TCHAR.H and so on. When I am done I want something that I could compile either way without requiring further code change, if for no other reason than if it did prove to be too difficult and the idea got postponed, I wouldn't have to throw away my changes. :-)&gt;&gt;</p>
+<p>So I would not change the names of the GetProcAddress retrieved APIs from A to W, but go with a condition.</p>
+<p>Example:</p>
+<p> &nbsp;#ifdef UNICODE</p>
+<p> &nbsp;#define MSIAPI_MsiInstallProduct &quot;MsiInstallProductA&quot;</p>
+<p> &nbsp;#else</p>
+<p> &nbsp;#define MSIAPI_MsiInstallProduct &quot;MsiInstallProductW&quot;</p>
+<p> &nbsp;#endif // UNICODE</p></div>
+<p><strong>Mihai</strong> on 30 Dec 2006 5:35 PM:</p><div style="margin-left: 1em"><p>&lt;&lt;three overloads of the DebugMsg function found in utils.cpp. I would recommend you go ahead fix them up too&gt;&gt;</p>
+<p>Reason (d): some calls have Unicode strings as parameters:</p>
+<p> &nbsp;DebugMsg(TEXT(&quot;[Info] Downloading msi file %s for WinVerifyTrust check\n&quot;), szInstallPath);</p>
+<p>So if the szFormat is not Unicode, but a parameter is, in DebugMsg itself you will either have to convert szFormat to Unicode (allocating memory, and such), or convert the Unicode parameter to ANSI, really not an option.</p>
+<p>Having szFormat Unicode to begin with is definitely cleaner.</p></div>
+<p><strong>Michael S. Kaplan</strong> on 30 Dec 2006 5:50 PM:</p><div style="margin-left: 1em"><p>Ah, good point on the function names, I will fix up the code right now. :-)</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 30 Dec 2006 7:39 PM:</p><div style="margin-left: 1em"><P>(For what its worth, the particular issue that led to the problem was going to come up in Part 6, and I will still leave the discussion about it in then. The example was less impressive than this one, but a better example never hurts an argument!)</P></div>
+<p><strong>Mike Dimmick</strong> on 3 Jan 2007 12:26 PM:</p><div style="margin-left: 1em"><p>Re: DebugMsg - I haven't downloaded the source and checked, but if it's calling a sprintf()-like function, it's useful to know that:</p>
+<p>%s matches string-of-TCHAR</p>
+<p>%hs always matches string-of-char</p>
+<p>%ls always matches string-of-WCHAR</p>
+<p>%hs and %ls will do any necessary conversions for you, albeit using the thread's current default ANSI code page. I believe these are MS CRT extensions.</p>
+<p>About 90% of my C++ coding is for Windows CE, which has only ever been UCS-2/UTF-16, but I still code almost all of it using TCHAR and the corresponding pointer types and functions. There are a few places which still use char-based functions, for example the socket functions gethostbyname, inet_addr and inet_ntoa, and of course you regularly have to deal with source data in byte-oriented character sets.</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 4 Jan 2007 2:36 PM:</p><div style="margin-left: 1em"><P>Hey Mike!</P>
+<P>All of the strings passed to DebugMsg that have string inserts use %s for the strings, so I think we are okay here (the ones that need inserts use StringCchPrintf).</P></div>
+<hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2007/12/24 <a href="http://archives.miloush.net/michkap/archive/2007/12/24/6843995.html">VS just got served!, aka The ??? Shift, aka 'Converting a project to Unicode???' No, it's 'Converting a project??? ToUnicode!!!'</a></p><p>2007/01/05 <a href="http://archives.miloush.net/michkap/archive/2007/01/05/1413001.html">Converting a project to Unicode: Part 9 (The project's postpartum postmortem)</a></p><p>2007/01/04 <a href="http://archives.miloush.net/michkap/archive/2007/01/04/1409380.html">Converting a project to Unicode: Part 8 (Fitting MSLU into the mix)</a></p><p>2007/01/03 <a href="http://archives.miloush.net/michkap/archive/2007/01/03/1395788.html">Converting a Project to Unicode: Part 7 (What does it mean to fit things to a 'T', anyway?)</a></p><p>2007/01/02 <a href="http://archives.miloush.net/michkap/archive/2007/01/02/1395703.html">Converting a Project to Unicode: Part 6 (Upon the road not traveled)</a></p><p>2007/01/01 <a href="http://archives.miloush.net/michkap/archive/2007/01/01/1391798.html">Converting a Project to Unicode: Part 5 (Are we there yet? Well, not *just* yet)</a></p><p>2006/12/31 <a href="http://archives.miloush.net/michkap/archive/2006/12/31/1386486.html">Converting a Project to Unicode: Part 4 (It's /Delightful, it's /Delicious, it's /DUnicode!)</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2006/12/30/1383684.html" title="The candidates might have two dimensions (at least!)">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2006/12/29/1383078.html" title="My New Year&#39;s Resolutions">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2006-12">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2006-12-30">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2006/12/30/1382886.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:38 GMT -->
+</html>

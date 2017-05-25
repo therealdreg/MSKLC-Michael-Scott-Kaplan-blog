@@ -1,0 +1,51 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2007/09/05/4756822.070100.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:37 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Head checks containing either comparison or case validation BITE</title></head><body>
+<h1>Head checks containing either comparison or case validation BITE</h1>
+<p><em>by Michael S. Kaplan, published on 2007/09/05 07:01 +00:00, original URI: http://blogs.msdn.com/michkap/archive/2007/09/05/4756822.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostGoogleFeed -->
+<p>I have no creativity in my negative assessments of technical issues.</p>
+<p>This does not refer to constructive criticism, this is more of the venting phase when something really bad is going on, or about the theoretical implications of a poor decision decision that may not even be implemented yet....</p>
+<p>In essence, everything that it bad gets categorized in one of three buckets, either it (a) <strong>sucks</strong>, (b) <strong>bites</strong>, or (c) <strong>blows</strong>, and creativity is either non-existent or occasionally applied any associated adverbs or direct objects.</p>
+<p><em>(At some point during the early 90's I did add the term <strong>wingnut</strong> but that was about people, not technical issues!)</em></p>
+<p>Now when it comes to positive terms, I do get creative and my opinions can vary quite a bit and be quite individualized and include praise when appropriate.</p>
+<p>But when something is bad I don't want to dwell too much on it -- better to put it in a category and move on toward something that will actually work.</p>
+<p>As you can guess probably, this is not something I would apply to whole products; even the worst of products is a collection of both good and bad ideas, designs, implementations, and verifications. </p>
+<p>My categories are lower level than full products for this reason. :-)</p>
+<p>Anyway, all of the above was a mildly pointless segue to explain the title. You can probably ignore all the text above the break below this line, unless you are trying to gain insight into why some people think I should be in therapy, as the above probably provides several clues....</p>
+<hr>
+
+<p>So putting aside the irrelevant question of what I believed said head checks bite, precisely, let&#39;s get to the important questions:</p>
+<ol>
+<li>
+<div>What do I mean by head checks?</div></li>
+<li>
+<div>Why do said head checks bite?</div></li></ol>
+<p>To answer the first question, when I talk about "head checks" I am referring to the validation done at the very beginning of a function before it gets into doing anything that would impact performance. </p>
+<p>This is the perfect place to check for missing or NULL or invalid parameters -- before you crash or give wrong results based on the caller violating the contract of what the function expects.</p>
+<p>But as a place to do string comparisons, especially involving case-insensitive whether ordinal or linguistic comparisons?</p>
+<p>It truly BITES for those.</p>
+<p>Which takes us into the second question, now doesn't it?</p>
+<p>I could probably find it easiest to explain why such head checks bite by example. And one need look no further than posts in this blog such as <strong><a href="http://archives.miloush.net/michkap/archive/2005/09/28/474756.html">FAT/FAT32 oddness on Win2000</a></strong>, which was a bug in Windows 2000 due to just such a head check (this problem was fixed in XP).</p>
+<p>Or I could ignore my embarrassment and point toward <strong><a href="http://archives.miloush.net/michkap/archive/2006/03/09/546882.html">Don't forget to test the demos</a></strong>, which was actually mentioned in first draft of the next review as an example of me being sloppy until I pointed out the work I was doing at the time that led top having insufficient time to test the demo! This bug (which still exists in SQL Server) is due to an optimization in SQLS that does its own internal validation of the user name as a head check prior to the slower operation of validating the name in n integrated login scenario. Which may or may not be using either Windows or Active Directory, as I pointed out in <strong><a href="http://archives.miloush.net/michkap/archive/2005/07/05/435709.html">'Need more input, Stephanie!'</a></strong>, which makes my whole point about the problem with the head check, which will not match the semantics of <strong>either</strong> type of comparison and thus it is an inaccurate head check.</p>
+<p>Which bites.</p>
+<p>But the problem with these examples which you may have even seen before is that they seem too obscure, too easy to dismiss.</p>
+<p>Do the examples listed in Michael Kaplan's <strong>random stuff of dubious value</strong> amount to a reason to possibly impact performance or to change code that has been there for a long time that no one has complained about?</p>
+<p>Is it in fact okay to BITE here?</p>
+<p>Well, no, it isn't. :-)</p>
+<p>So let's take some other scenarios, like accessing network shares where the casing table is different (remember that it is 5.0 in Vista as I mentioned e.g. <strong><a href="http://archives.miloush.net/michkap/archive/2006/06/04/616904.html">here</a></strong> and that the share could be pointing to a UNIX box or a LINUX box or a Mac (any version for any of those, too!). Any validation ones does with the casing table via an OrdinalIgnoreCase or ComapreStringOrdinal type comparison may be completely invalid in the context of the data for that share.</p>
+<p>Or imagine a jump drive  formatted on one system containing data valid by its rules, read by another machine with different rules? Somewhere in the myriad of differences between platforms and versions of those platforms, there is plenty of room to screw things up, badly.</p>
+<p>If you make a mistake, there are two possibilities:</p>
+<ul>
+<li>
+<div>At best, your validation succeeds but the later code fails (assuming your code handles the error, things are still okay but maybe not with your fancy message);</div></li>
+<li>
+<div>At worst, your validation fails even though the later code would have succeeded (which means your code did not allow something valid to happen)</div></li></ul>
+<p>There are more complicated examples too if you actually try to do things like convert the case as a form of &quot;easier case insensitive comparison) involving issues with case preservation (hinted at <strong><a href="http://archives.miloush.net/michkap/archive/2007/06/18/3374502.html">here</a></strong> and <strong><a href="http://archives.miloush.net/michkap/archive/2007/06/13/3280569.html">here</a></strong>). What happens if you move or copy or worst of all delete the wrong file? When was the last time the backup was run before your function was?</p>
+<p>The best answer here is DON'T DO THE HEAD CHECKS whose results are variable depending on the target.</p>
+<p>Because any other answer is a bug -- if not now, then one day. At which point your head check will bite.</p>
+<p> </p>
+<p><font color="#ff00ff"><em>This post brought to you by</em> <font size="5">⻭</font>, <font size="5">⻮</font>, <em>and</em> <font size="5">⿒</font> <em>(<a href="http://www.fileformat.info/info/unicode/char/2eed">U+2eed</a>, <a href="http://www.fileformat.info/info/unicode/char/2eee">U+2eee</a>, and <a href="http://www.fileformat.info/info/unicode/char/2fd2">U+2fd2</a>, a.k.a. CJK RADICAL J-SIMPLIFIED TOOTH, CJK RADICAL C-SIMPLIFIED TOOTH, and KANGXI RADICAL TOOTH)</em></font></p>
+<hr/><div style="margin-left: 1em"><em>comments not archived</em></div><hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2009/08/20 <a href="http://archives.miloush.net/michkap/archive/2009/08/20/9876922.html">When you're in the red, you don't have a lot of choices</a></p><p>2007/09/14 <a href="http://archives.miloush.net/michkap/archive/2007/09/14/4900107.html">How do I feel about lstrcmpi? I think it blows....</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2007/09/05/4756822.html" title="Head checks containing either comparison or case validation BITE">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2007/09/04/4734456.html" title="I am not a nudist, but I do support stripping when it is appropriate, part 1">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2007-09">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2007-09-05">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2007/09/05/4756822.070100.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:37 GMT -->
+</html>

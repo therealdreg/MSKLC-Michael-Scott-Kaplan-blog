@@ -1,0 +1,27 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2010/01/04/9943362.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:35 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Two different (but related) questions often have the same answer</title></head><body>
+<h1>Two different (but related) questions often have the same answer</h1>
+<p><em>by Michael S. Kaplan, published on 2010/01/04 07:01 -05:00, original URI: http://blogs.msdn.com/b/michkap/archive/2010/01/04/9943362.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P>Sometimes even when&nbsp;two problems&nbsp;are different, there are very strong similarities -- and the answer is still the same.</P>
+<P>Like the other day, when Jacques asked:</P>
+<BLOCKQUOTE>
+<P><FONT face="times new roman,times"><EM>Is there a standard way to determine if a given locale orders the firstname/surname as "First Last" or "Last, First"? I have looked through the Globalization namespace but haven't found anything useful. Is there a built-in way to do this or do I need to implement my own?</EM></FONT></P>
+<P><FONT face="times new roman,times"><EM>Thanks.</EM></FONT></P></BLOCKQUOTE>
+<P>Now this may remind some regular readers of <A href="http://archives.miloush.net/michkap/archive/2008/08/08/8842654.html" mce_href="http://archives.miloush.net/michkap/archive/2008/08/08/8842654.html"><STRONG>What's in a name?</STRONG></A> from way back when, though it was really more talking about parsing names in general (in order to find the last name), rather than the display order of names in general.</P>
+<P>However, the two problems are obviously related, and share a common heritage of the overall complexity of names - a complexity that doesn't ever seem to get any easier.</P>
+<P>So the quick answer for Jacques is that there is no such beast in the Globalization namespace.</P>
+<P>And the long answer is that not only is there no such thing but one should not try to write it oneself, for the very same reason that there is no built-in solution in the .NET Framework. Because any such solution will be incomplete across the huge&nbsp;variety of issues in names!</P>
+<P>Now in a way, the two problems are converse issues (one is given a display name how to parse out the constituent parts, while the other is given the constituent parts how to construct the full form of the name for display) so perhaps one could think of the problems as being merely on the other end of the telescope (pardon the oblique musical reference!).</P>
+<P>This is&nbsp;the kind of&nbsp;problem that apps like Outlook Express/Windows Mail/Windows Live Mail have had lame solutions for all along, a lameness that is pretty much mitigated by the easy way users have to notice the problems when they occur and override the program's guesses</P>
+<P>But one could take a step back and ask WHY the question is being answered in each case - what scenario leads one to have just one kind of information while needing the other - in order to come to the ideal solution for the problem.</P>
+<P>It may involve creating a localizable solution so that a localizer (someone meant to be the most knowledgeable person about users expectations in a given culture) can give the user sensible defaults that the user can then override when the code falls short.</P>
+<P>Or it may involve just making sure to ask for the information, <STRONG>all of the information</STRONG>, explicitly. And not try to be too clever in the code.</P>
+<P>If you look in not just <A href="http://archives.miloush.net/michkap/archive/2008/08/08/8842654.html" mce_href="http://archives.miloush.net/michkap/archive/2008/08/08/8842654.html"><STRONG>What's in a name?</STRONG></A> but in the comments to it, there are countless examples that should tend to dissuade even the most eager developer hoping to try to add this particular feature as a pure code solution meant to solve the problem, since you can't. :-)</P>
+<hr/><p><strong>John Cowan</strong> on 4 Jan 2010 6:45 PM:</p><div style="margin-left: 1em"><p>My screed &quot;Against Structured Names And Telephone Numbers&quot; can be found at <a rel="nofollow" target="_new" href="http://docs.google.com/Doc?docid=0Ab8UUpsyGZ0wZGM0NnFyZGZfMTN6M3F0N2dq&amp;hl=en">http://docs.google.com/Doc?docid=0Ab8UUpsyGZ0wZGM0NnFyZGZfMTN6M3F0N2dq&amp;hl=en</a> .</p></div>
+<p><strong>Michael S. Kaplan</strong> on 5 Jan 2010 11:04 AM:</p><div style="margin-left: 1em"><p>Yep, that lays it out nicely....</p>
+</div>
+<hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2010/01/06/9944611.html" title="Her IM said &quot;you have officially won our bet&quot;">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2010/01/03/9943204.html" title="I only live thrice">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2010-01">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2010-01-04">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2010/01/04/9943362.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:35 GMT -->
+</html>

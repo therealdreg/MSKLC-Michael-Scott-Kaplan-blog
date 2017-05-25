@@ -1,0 +1,160 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2011/01/27/10120308.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>{recycled joke here} It could have been called LOCALE_SSINGLESERVINGDAYNAME*</title></head><body>
+<h1>{recycled joke here} It could have been called LOCALE_SSINGLESERVINGDAYNAME*</h1>
+<p><em>by Michael S. Kaplan, published on 2011/01/27 07:01 -05:00, original URI: http://blogs.msdn.com/b/michkap/archive/2011/01/27/10120308.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<p>The other day, colleague Gwyneth asked:</p>
+<p style="padding-left: 60px;"><span style="font-family: times new roman,times;">Is there a date mask for SSUPERSHORTDAYNAMES?<br />&nbsp;<br />NLS Name&nbsp;Date Mask Value<br />SDAYNAMES&nbsp;dddd<br />SABBREVDAYNAMES&nbsp;ddd<br />SSUPERSHORTDAYNAMES&nbsp;?<br />&nbsp;<br />Thanks,<br />Gwyneth</span></p>
+<p>The quick answer here is simple.</p>
+<p><strong>No</strong>.</p>
+<p>And the slightly longer answer is also pretty straightforward:</p>
+<p><strong>No, there is no date mask that will make use of the </strong><a href="http://msdn.microsoft.com/library/dd373890.aspx"><strong>LOCALE_SSHORTESTDAYNAME* Constants</strong></a>.</p>
+<p>Of course the slightly longer answer is kind of candy-ass, and on top of it there is a prescriptivist passive/aggressive style correction on the field in question.</p>
+<p>Kind of obnoxious of me, I'm sorry about that.</p>
+<p>How about I give the full answer now?</p>
+<p><strong>Background</strong>:</p>
+<p>Sometimes it can be hard to remember the original reasons that a feature was&nbsp;implemented in Windows, even though those very reasons may have guided the way that the feature was designed and any limitations thereof.</p>
+<p>Now we don't make the situation any easier by not really documenting any of this, either. In essence we leave the average developer to look at the design and guess what we had in mind.</p>
+<p>And as a special non-bonus, if a developer wants to design something that the implementation doesn't allow, they get to be really frustrated at being left out of the "blessed locus of supported scenarios."</p>
+<p>For the less snarky answer, you can look to blogs of mine like <a href="http://archives.miloush.net/michkap/archive/2006/06/13/629804.html" title="Size matters (when it comes to day names, at least)"><strong>Size matters (when it comes to day names, at least)</strong></a>,</p>
+<p><strong>The full answer</strong>:</p>
+<p>By most any honest, objective measure, the attempt to take the <a href="http://msdn.microsoft.com/library/dd373856.aspx">LOCALE_SMONTHNAME* Constants</a>&nbsp;and the <a href="http://msdn.microsoft.com/library/dd373839.aspx">LOCALE_SDAYNAME* Constants</a> and provide shortened versions of them via the respective&nbsp;<a href="http://msdn.microsoft.com/library/dd373831.aspx">LOCALE_SABBREV* Constants</a>&nbsp;was and is an unmitigated disaster.</p>
+<p>Because there are a number of languages that do not tend to, as a matter of course, abbreviate such words. Thus many of the providers of locale data for those specific locales returned the same values for the abbreviated month and day names as they did for their full brethren and said <strong>we do not abbreviate those terms</strong>.</p>
+<p>But just because of this situation does not mean there was no scenario in mind -- there is!</p>
+<p>I mean if you are building a little calendar, for example:</p>
+<p><img src="http://blogs.msdn.com/cfs-file.ashx/__key/CommunityServer-Blogs-Components-WeblogFiles/00-00-00-33-81/1777.calendar.jpg" /></p>
+<p>then you must have a shorter name for the days is you want them to fit in this kind of grid.</p>
+<p>So we had&nbsp;some meetings.</p>
+<p>And in those meetings we had&nbsp;some conversations.</p>
+<p>Out of those conversations we had a spec for seven new <a href="http://msdn.microsoft.com/library/dd464799.aspx">LCType values</a>, whose original spec'ed names were the LOCALE_SONELETTERDAYNAME* constants.</p>
+<p>We were sending a firm message to everyone providing locale data that these fields were gonna be small.</p>
+<p>If languages like Hebrew wanted to have day names like יום&nbsp;א and יום&nbsp;ב (compared to their full day names like יום&nbsp;ראשון&nbsp;and יום&nbsp;שני), they were going to see us truncate their day names and each of them would look identical. And they would look really dumb.</p>
+<p>And it was by this kind and gentle method of brute force persuasion that we forced everyone to consider this bold new scenario of the calendar view when they came up with a very very very short day name.</p>
+<p>Eventually we started calling them two-letter day names because lots of people didn't like even like</p>
+<p><strong><span style="font-size: large;">S&nbsp; M&nbsp; T&nbsp; W&nbsp; T&nbsp; F&nbsp; S</span></strong></p>
+<p>for English due to the potential Saturday/Sunday and Tuesday/Thursday confusion.</p>
+<p>These people who were complaining were forgetting about the scenario though -- no one would confuse the meanings in the context of a calendar!</p>
+<p>But we gave in -- first calling them LOCALE_STWOLETTERDAYNAME* constants and then finally the <a href="http://msdn.microsoft.com/library/dd373890.aspx">LOCALE_SSHORTESTDAYNAME* Constants</a>.</p>
+<p>For some locales a few of them are even three letters, like Hungarian's </p>
+<p><strong><span style="font-size: large;">H&nbsp; K&nbsp; Sze&nbsp; Cs&nbsp; P&nbsp; Szo&nbsp; V</span></strong></p>
+<p>Though it is of note that both <strong>Cs</strong> and <strong>Sz</strong> are unique sort elements in Hungarian, so these were being used more because that is how Hungarian users think of letters than for disambiguation as was the case in English.</p>
+<p>As an interesting corollary, a part of our hardcore sell and push where we pointed out that we <em>wanted</em> to use the <a href="http://msdn.microsoft.com/library/dd373831.aspx">LOCALE_SABBREV* Constants</a>&nbsp;for this purpose but too many locales weren't cooperating. At this point, LOCALE_SABBREVDAYNAME1 had an implied meaning of "abbreviate if you ordinarily would" that no one wanted to change. Many locale data owners actually ignored that implied meaning and updated their abbrevidated day names to match their shortest day names!</p>
+<p>For the record, we neither encouraged nor supported such a change since whn it aws done it amounted to a change in the semantic of the LCType, which is why we wereaddiong a whole new type in order to avoid anyway. Though some locales did it anyway (like Hebrew).</p>
+<p><em>I described this phenomenon previously in <a href="http://archives.miloush.net/michkap/archive/2010/03/10/9976075.html" title="They pushed out of the formatt[ing|er]"><strong>They pushed out of the formatt[ing|er]</strong></a>.</em></p>
+<p>Eventually,&nbsp;all of this&nbsp;led to an important question that the original spec did not address because we were all so focused on our bloodthirety imperalistic scenario that no one thought of it:</p>
+<p><strong>What token should we use if we want to put these "one letter day names" in date format strings?</strong></p>
+<p>We had a bunch of rules for how dates and months were grabbed already, as in this table:</p>
+<table cellpadding="3" cellspacing="3" border="1">
+<tbody>
+<tr>
+<th>
+<p><b>Symbol</b></p>
+</th><th>
+<p><b>Description</b></p>
+</th><th>
+<p><b>Example</b></p>
+</th>
+</tr>
+<tr>
+<td>
+<p>M</p>
+</td>
+<td>
+<p>Displays month with no leading zeros.</p>
+</td>
+<td>
+<p><b>1</b>/1/06</p>
+</td>
+</tr>
+<tr>
+<td>
+<p>MM</p>
+</td>
+<td>
+<p>Displays month with leading zeros.</p>
+</td>
+<td>
+<p><b>01</b>/1/06</p>
+</td>
+</tr>
+<tr>
+<td>
+<p>MMM</p>
+</td>
+<td>
+<p>Displays month abbreviation.</p>
+</td>
+<td>
+<p>Jan</p>
+</td>
+</tr>
+<tr>
+<td>
+<p>MMMM</p>
+</td>
+<td>
+<p>Displays full month name.</p>
+</td>
+<td>
+<p>January</p>
+</td>
+</tr>
+<tr>
+<td>
+<p>d</p>
+</td>
+<td>
+<p>Displays day of month with no leading zeros.</p>
+</td>
+<td>
+<p>1/<b>1</b>/06</p>
+</td>
+</tr>
+<tr>
+<td>
+<p>dd</p>
+</td>
+<td>
+<p>Displays day of month with leading zeros.</p>
+</td>
+<td>
+<p>01/<b>01</b>/06</p>
+</td>
+</tr>
+<tr>
+<td>
+<p>ddd</p>
+</td>
+<td>
+<p>Displays abbreviation of the day of the week.</p>
+</td>
+<td>
+<p>Sun</p>
+</td>
+</tr>
+<tr>
+<td>
+<p>dddd</p>
+</td>
+<td>
+<p>Displays full name of the day of the week.</p>
+</td>
+<td>
+<p>Sunday</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p>We were clearly making use of items that mapped to LOCALE_SDAYNAME1 and LOCALE_SABBREVDAYNAME1 with dddd and ddd, respectively.</p>
+<p>The program manager who owned the spec rattled off ideas we quickly shot down, from <strong>ddddd</strong> to changing the meaning of <strong>d</strong> or <strong>dd</strong>, before we went back to the original scenario and said <strong>these are for calendars, notr for date formats</strong>.</p>
+<p>This time, lacking an elegant technical solution (everyone hated the alternatives), this firm line in the sand stuck.</p>
+<p>And now we are here, with no way to represent the shortest day names in format strings....</p>
+<p><em>I'll bet you many of you are wishing you had just taken the short answer now!</em></p>
+<hr/><p><strong>Cheong</strong> on 27 Jan 2011 5:26 PM:</p><div style="margin-left: 1em"><p>I&#39;d think that add another format string for date will do. For example, using &quot;w&quot; for &quot;day of week&quot; could be a candidate.</p>
+<p>Say &quot;w&quot; for &quot;Mo&quot;, &quot;ww&quot; for &quot;Mon&quot; and &quot;www&quot; for &quot;Monday&quot;. Just make sure the functions still keep &quot;ddd&quot; and &quot;dddd&quot; for backward compatibility purpose.</p>
+<p>Afterall, I&#39;d think &quot;day of week&quot; is a different &quot;time component&quot; than &quot;day of month&quot;.</p>
+</div>
+<hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2012/02/08 <a href="http://archives.miloush.net/michkap/archive/2012/02/08/10265404.html">The awkward insert of shortest day names...</a></p><p>2011/12/30 <a href="http://archives.miloush.net/michkap/archive/2011/12/30/10251957.html">We call 'em ShortestDayNames for a reason; they're as short as they're EVER gonna be!</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2011/01/28/10121371.html" title="Punishing a locale for its language&#39;s letter choices is just unseemly">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2011/01/26/10120273.html" title="Māori is a language from one of my favorite places in the world!">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2011-01">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2011-01-27">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2011/01/27/10120308.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+</html>

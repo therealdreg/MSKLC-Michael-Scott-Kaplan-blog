@@ -1,0 +1,41 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2009/07/13/9831700.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:35 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Anything still wrong is probably wrong for good....</title></head><body>
+<h1>Anything still wrong is probably wrong for good....</h1>
+<p><em>by Michael S. Kaplan, published on 2009/07/13 10:16 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2009/07/13/9831700.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<p>Some complaints people have had about the doc story on some international issues have been around for a long time.</p>
+
+<p>Longer than this Blog in some cases.<br></p>
+
+<p>Now this Blog (and the constituent blogs thereof) has been around since the end of 2004. So if I point an issue that was first mentioned by readers here in a blog like <b><a href="http://archives.miloush.net/michkap/archive/2005/02/01/364707.html" mce_href="http://archives.miloush.net/michkap/archive/2005/02/01/364707.html">What is my locale? Well, which locale do you mean?</a></b> that was first published on February 1, 2005, then it is clear that this is an issue that been around for a bit.</p>
+
+<p>Maybe a whole byte's worth of bits. Or more.... </p>
+
+<p>The simple truth:</p>
+
+<p>setlocale(LC_ALL, "")</p>
+
+<p>will set all aspects of the default CRT locale to be the same as the user default locale, aka LOCALE_USER_DEFAULT.</p>
+
+<p>You can tell me if that sounds confusing or not.</p>
+
+<p>I'm pretty sure it is less confusing than phrases like you can find in the various versions of the MSDN docs about <a href="http://msdn.microsoft.com/library/x99tb11d.aspx" mce_href="http://msdn.microsoft.com/library/x99tb11d.aspx">setlocale, _wsetlocale</a>.</p>
+
+<p>Generally, no one gets it right. </p>
+
+<p>Ben Bryant pointed out in a <b><a href="http://archives.miloush.net/michkap/archive/2005/02/01/364707.html#365001" mce_href="http://archives.miloush.net/michkap/archive/2005/02/01/364707.html#365001">comment</a></b> to that very blog about how the Delphi 7 SysUtils got this one wrong; not sure if they managed to fix this up or not.</p>
+
+<p>Now in theory you can try to make clever use of ".ACP" or ".OCP" to try and <font color="#999999"><strike>fix^H^H^H</strike></font>work around this, but if you want to be sure to completely get the correct locale, code like this will show you a properly set CRT locale:</p>
+
+<blockquote><font face="consolas,lucida console,courier new,courier"><b>
+<p>#define _UNICODE<br>#define UNICODE<br>#include &lt;tchar.h&gt;<br>#include &lt;stdio.h&gt;<br>#include &lt;locale.h&gt;<br>#include &lt;windows.h&gt;<br><br>#define SIZE(x) (sizeof(x) / sizeof(x[0]))<br><br>void _tmain() {<br>&nbsp;&nbsp;&nbsp; TCHAR language[80] = {0};<br>&nbsp;&nbsp;&nbsp; TCHAR country[80] = {0};<br>&nbsp;&nbsp;&nbsp; TCHAR codepage[5] = {0};<br>&nbsp;&nbsp;&nbsp; TCHAR localestring[167] = {0};<br><br>&nbsp;&nbsp;&nbsp; if( <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; GetLocaleInfo(LOCALE_SYSTEM_DEFAULT, LOCALE_SENGLANGUAGE, language, SIZE(language)) &amp;&amp; <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; GetLocaleInfo(LOCALE_SYSTEM_DEFAULT, LOCALE_SENGCOUNTRY, country, SIZE(country)) &amp;&amp; <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; GetLocaleInfo(LOCALE_SYSTEM_DEFAULT, LOCALE_IDEFAULTANSICODEPAGE, codepage, SIZE(codepage)) &amp;&amp; // use LOCALE_IDEFAULTCODEPAGE for console apps<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (_stprintf_s(localestring, SIZE(localestring), _T("%s_%s.%s"), language, country, codepage) &gt;= 0)<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ) {<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; _tprintf(_T("NULL&nbsp;&nbsp;&nbsp;&nbsp; --&gt; %s\n"), _tsetlocale(LC_ALL, NULL));<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; _tprintf(_T("To set&nbsp;&nbsp; --&gt; %s\n"), localestring);<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; _tprintf(_T("Set \"\"&nbsp;&nbsp; --&gt; %s\n"), _tsetlocale(LC_ALL, _T("")));<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; _tprintf(_T("Set sys&nbsp; --&gt; %s\n"), _tsetlocale(LC_CTYPE, localestring));<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; _tprintf(_T("NULL&nbsp;&nbsp;&nbsp;&nbsp; --&gt; %s\n"), _tsetlocale(LC_ALL, NULL));<br>&nbsp;&nbsp;&nbsp; } else {<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; _tprintf(_T("%s\n"), _T("Error!"));<br>&nbsp;&nbsp;&nbsp; }<br>}<br></p>
+</b></font></blockquote>
+
+<p>Note it also handles a few other problems like the fact that the <a href="http://msdn.microsoft.com/library/x99tb11d.aspx" mce_href="http://msdn.microsoft.com/library/x99tb11d.aspx">setlocale, _wsetlocale</a> docs make no mention to the _tsetlocale function that works quite well, thank you.</p>
+<p>The code basically sets the user locale for everything, then sets the system locale for LC_CTYPE -- which handles the character property stuff (that is actually locale independent, ref: ) and the codepage stuff so that all non-Unicode operations will use the same default that the system does.</p>
+<p>And although using ".ACP" or ".OCP" will return comparable results, any querying of the LC_CTYPE locale won't match the system, which is why I like this code better -- it gives correct answers. :-)</p><p>Anyway, I have given up on trying to see this topic fixed in MSDN. It has slowly been getting better but to be honest way too slowly to be helpful. And no one wants to "fix" the function since people will have behavior differences to deal with if "" wrre to suddenly really mean "act like the system does", which is what the above settings would do.</p><p>So I thought I'd write this blog.... <br></p>
+<hr/><p><strong>Tyler</strong> on 14 Jul 2009 7:05 PM:</p><div style="margin-left: 1em"><p>the setlocale stuff is terrifying enough that I have stopped using the CRT for anything remotely locale sensitive.</p></div>
+<hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2010/01/19 <a href="http://archives.miloush.net/michkap/archive/2010/01/19/9950377.html">You down with .OCP (Yeah you know me!)</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2009/07/20/9840848.html" title="Garbage in, garbage out -- and this means Ü!">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2009/07/09/9827062.html" title="Atlas? Jove? Where&#39;s my Wubi? (The latter shrugged, the former nodded)">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2009-07">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2009-07-13">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2009/07/13/9831700.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:35 GMT -->
+</html>

@@ -1,0 +1,44 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2005/10/05/477190.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:41 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>AD, and a little KB confusion</title></head><body>
+<h1>AD, and a little KB confusion</h1>
+<p><em>by Michael S. Kaplan, published on 2005/10/05 03:31 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2005/10/05/477190.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P><FONT face=Tahoma>Recently someone asked:</FONT><FONT face=Tahoma> 
+<P class=MsoNormal><FONT size=2><SPAN lang=EN-US style="FONT-SIZE: 10pt; mso-ansi-language: EN-US"><EM><FONT face="Times New Roman"><?xml:namespace prefix = o ns = "urn:schemas-microsoft-com:office:office" /><o:p></o:p></FONT></EM></SPAN></FONT></P></FONT><FONT face=Tahoma></FONT>
+<P></P>
+<BLOCKQUOTE dir=ltr style="MARGIN-RIGHT: 0px">
+<P><FONT size=2><EM>Can anyone point me to the document with list of allowed characters for AD username (W2K and W2K3)?</EM></FONT></P>
+<P><FONT size=2><EM>I am also looking for document which describes behavior that some characters are replaced during logon process.</EM></FONT></P>
+<P><FONT size=2><EM>Example:</EM></FONT></P>
+<P><FONT size=2><EM>If my username is ddomjanovic I am also able to login with username ddomjanović. So it looks like ć (codepage 1250, E6 = U+0107 : LATIN SMALL LETTER C WITH ACUTE) is replaced with c (63 = U+0063 : LATIN SMALL LETTER C) during logon process.</EM></FONT></P>
+<P><FONT size=2><EM>Can this behavior be disabled?</EM></FONT></P></BLOCKQUOTE>
+<P><FONT face=Tahoma>I sort of answered that question in <a href="http://archives.miloush.net/michkap/archive/2005/07/05/435709.html">this</A> post, but in a roundabout way. The short answer is <STRONG>No, there is no way to disable that behavior</STRONG>. The reason is that Active Directory passes the following flags:</FONT></P>
+<BLOCKQUOTE dir=ltr style="MARGIN-RIGHT: 0px">
+<P><FONT face="Courier New"><STRONG>NORM_IGNORECASE | NORM_IGNORENONSPACE | NORM_IGNOREWIDTH | NORM_IGNOREKANA</STRONG></FONT></P></BLOCKQUOTE>
+<P><FONT face=Tahoma>which means that there are many distinctions like this that are folded together.</FONT></P>
+<P><FONT face=Tahoma>Now as that other post stated, local accounts do not work through AD, so they take a more literal stand on things. You know, that whole "UpCase and Binary" thing that not only consider&nbsp;<STRONG>c</STRONG> (<A href="http://www.fileformat.info/info/unicode/char/0063/index.htm">U+0063</A>) and <STRONG>ć</STRONG>&nbsp;(<A href="http://www.fileformat.info/info/unicode/char/0107/index.htm">U+0107</A>) to be different letters, but which also considers <STRONG>ć</STRONG>&nbsp;(<A href="http://www.fileformat.info/info/unicode/char/0107/index.htm">U+0107</A>) and <STRONG>ć</STRONG>&nbsp;(<A href="http://www.fileformat.info/info/unicode/char/0063/index.htm">U+0063</A> <A href="http://www.fileformat.info/info/unicode/char/0301/index.htm">U+0301</A>) to be different ones, too. Since the latter pair looks alike, it is obviously a solution that to&nbsp;a lot of people will be worse than the original problem!</FONT></P>
+<P><FONT face=Tahoma>Now he did actually find the answer in the MS Knowledge Base (<A href="http://support.microsoft.com/kb/839515">Windows logon behavior if your user name contains characters that have accents or other diacritical marks</A>).</FONT></P>
+<P><FONT face=Tahoma>This article mentions an interesting factoid about the issue, however:</FONT></P>
+<BLOCKQUOTE dir=ltr style="MARGIN-RIGHT: 0px">
+<P><EM><FONT size=2>The USERNAME variable in Windows is set to use the exact user name that you type in the User name box in the Log on to Windows dialog box. If you log on and you do not type the diacritical marks that are contained in your user name, the USERNAME variable also does not contain the diacritical marks in your user name. Therefore, the value of the USERNAME variable is different from the user name that is stored in Active Directory. To work around this behavior, log on to Windows by typing your user name in user principal name (UPN) format. To do this, type the following in the User name box, where UserName is your user name and DomainName is the name of the domain:</FONT></EM></P>
+<BLOCKQUOTE dir=ltr style="MARGIN-RIGHT: 0px">
+<P><A href="mailto:UserName@DomainName.com"><EM><FONT size=2>UserName@DomainName.com</FONT></EM></A><EM><FONT size=2> </FONT></EM></P></BLOCKQUOTE></BLOCKQUOTE>
+<P><FONT face=Tahoma>It then references another article that talks about the issue further (<A href="http://support.microsoft.com/kb/273633/">USERNAME environment variable may differ from actual user name</A>):</FONT></P>
+<BLOCKQUOTE dir=ltr style="MARGIN-RIGHT: 0px">
+<P><FONT size=2><STRONG>SYMPTOMS</STRONG></FONT></P>
+<P><FONT size=2>When you log on to a Windows 2000-based domain, it is possible to use a logon name that is similar to the one that is stored in Active Directory. This may cause problems because the USERNAME environment variable is set to the user name that you typed in the logon dialog box, not to the user name that is stored in Active Directory. If any logon scripts relying on this variable, they may run up with unpredictable results. </FONT></P>
+<P><FONT size=2><STRONG>RESOLUTION</STRONG></FONT></P>
+<P><FONT size=2>A possible workaround to avoid this problem is to log on by using the user principal name (UPN) format. Instead of typing the user name, password, and domain on separate lines, type the UPN logon string in the User Name box. The UPN format is: </FONT></P>
+<BLOCKQUOTE dir=ltr style="MARGIN-RIGHT: 0px">
+<P><A href="mailto:username@domain.com"><FONT size=2>username@domain.com</FONT></A><FONT size=2> </FONT></P></BLOCKQUOTE>
+<P><FONT size=2>Or, you can write a small program or batch file that resets the USERNAME environment variable to the value you need (you can get the actual user name with the Whoami utility) and add it in the Startup group. </FONT></P>
+<P><FONT size=2><STRONG>STATUS</STRONG></FONT></P>
+<P><FONT size=2>Microsoft has confirmed that this is a problem in the Microsoft products that are listed at the beginning of this article. </FONT><FONT face=Tahoma></P></BLOCKQUOTE></FONT>
+<P><FONT face=Tahoma>Of course, the second article only claims to be a problem in Windows 2000 while the first claims to also be a problem in XP and Server 2003. But it is not clear from the article whether it is really referring to the two different issues and the USERNAME text in the first article was just a long digression. It would probably be better to leave in the reference and take out the extra text, to avoid the confusion about what is fixed and what is not....</FONT></P>
+<P><FONT face=Tahoma>Such issues&nbsp;are commonplace in the KB, an issue I'll talk about further another day.</FONT></P>
+<P><FONT face=Tahoma></FONT>&nbsp;</P>
+<P><FONT face=Tahoma color=#ff1493><EM>This post brought to you by</EM> "Ć" <EM>(<A href="http://www.fileformat.info/info/unicode/char/0106/index.htm">U+0106</A>, LATIN CAPITAL LETTER C WITH ACUTE)</EM></FONT></P>
+<hr/><div style="margin-left: 1em"><em>no comments</em></div><hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2005/10/06/477786.html" title="I ask the cat-goddess Bubastis...">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2005/10/05/477108.html" title="How to track down collation bugs">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2005-10">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2005-10-05">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2005/10/05/477190.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:41 GMT -->
+</html>

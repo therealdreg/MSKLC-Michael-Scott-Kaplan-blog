@@ -1,0 +1,53 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2013/03/28/10405914.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:21 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>You call it GB18030, I call it UTF-GBK...</title></head><body>
+<h1>You call it GB18030, I call it UTF-GBK...</h1>
+<p><em>by Michael S. Kaplan, published on 2013/03/28 07:01 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2013/03/28/10405914.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<p>'Michael, how do I support GB 18030 ?!?'</p>
+<p>This is a problem that has been played over email messages to me many times since 2005 (when GB18030 was first released).</p>
+<p>Someone (in this case a developer named Carla) has been given the assignment to support the standard, due to plans to start shipping to China.</p>
+<p>The name is easy. It starts with GB. <em>GB</em> stands for <em>Guobiao</em> (<a title="Simplified Chinese characters" href="http://en.wikipedia.org/wiki/Simplified_Chinese_characters">simplified Chinese</a>: <span lang="zh-Hans" xml:lang="zh-Hans">国标</span>; <a title="Traditional Chinese characters" href="http://en.wikipedia.org/wiki/Traditional_Chinese_characters">traditional Chinese</a>: <span lang="zh-Hant" xml:lang="zh-Hant">國標</span>; <a title="Pinyin" href="http://en.wikipedia.org/wiki/Pinyin">pinyin</a>: <em>Gu&oacute;biāo</em>), Chinese for <em>national standard</em>.</p>
+<p>You can see a bunch of them in the <a href="http://en.wikipedia.org/wiki/GB_standards">GB standards</a> Wikipedia page.</p>
+<p>There are many more than this, believe me.</p>
+<p>Some of them are simply Chinese translations with no substantive changes&nbsp;of standards created elsewhere that China wants people using.</p>
+<p>GB18030 is not one of those standards.</p>
+<p>You can see a pretty good description of it in the Wikipedia article <a href="http://en.wikipedia.org/wiki/GB18030">here</a>. They cover many of the problems people found trying to work with it since 2005.</p>
+<p>And there is now a formal process that allows China to review "GB18030 compliance".</p>
+<p>This is important because officially, GB18030 is not defined as one that has to be completely followed -- only a subset is mandatory.</p>
+<p>One does not have to assume that one&nbsp;must support every language Unicode does just because&nbsp;GB18030 maps to all of Unicode.</p>
+<p>Because testing that is done centers on support of languages and scripts&nbsp;that are relevant, interesting, and/or important to China.</p>
+<p>Currently, the tests principally focus on the way text is input, displayed, stored, sent, and retrieved for:</p>
+<ul>
+<li>Chinese Han</li>
+<li>Other Han like&nbsp;Kanji, Hanja, and HKSCS defined ideographs&nbsp;(less important, but still looked at)</li>
+<li>Tibetan</li>
+<li>Mongolian</li>
+<li>Yi</li>
+<li>Uyghur</li>
+<li>Phags Pa</li>
+<li>Tai Le</li>
+<li>New Tai Lue</li>
+<li>Lisu</li>
+</ul>
+<p>and so on. Microsoft has font support for most of them (and for all of the required ones), and keyboard support for most of them as well.</p>
+<p>Now one <strong>really</strong>&nbsp;important aspect of how standards work in China is how they refer to each other.</p>
+<p>So for example&nbsp;Uyghur support and its bidirectional requirements don't have to be spelled out in detail in GB18030; it can point to another standard that includes the information.</p>
+<p>There isn't always uniform effort to make sure standards written before GB18030 was born explicitly spell out what GB18030 support means for it.</p>
+<p>But they are not shy about explaining how it all has to work.</p>
+<p>Ken Whistler once famously explained how things would be okay after China locked in 1-to-1 mappings between GB18080 and Unicode:</p>
+<p><span style="font-size: xx-large;"><em>Think of it as UTF-GBK</em>.</span></p>
+<p>Which kind of sums it up. :-)</p>
+<p>Mostly, you just need two things to support it:</p>
+<ul>
+<li>Good support of Unicode, especially parts interesting/relevant/important to China, and</li>
+<li>Good conversion back and forth between GB18030 and Unicode.</li>
+</ul>
+<p>And that's really it!</p>
+<p>Now note that platform pieces do most of the work here; if you run on Windows (for example), you don't have to make every font and keyboard and rendering engine.</p>
+<p>A lot of the time, we (and others) have you covered when you use our (or their) stuff.</p>
+<p>You can just focus on the hardest part: make sure you are using it correctly!</p>
+<p>Now for the rest -- the registration and such -- that's for the lawyers to jump on, not you....</p>
+<hr/><div style="margin-left: 1em"><em>no comments</em></div><hr/><p><em>go to <a id="newer" href="../29/10406219.html" title="Instead of ₺₺₺₺₺₺, we see ??????">newer</a> or <a id="older" href="../27/10405277.html" title="Microsoft Word: 15 --- Microsoft Windows: 15">older</a> post, or back to <a href="../../../index-2.html">index</a> or <a href="../../../index-2.html#2013-03">month</a> or <a href="../../../index-2.html#2013-03-28">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2013/03/28/10405914.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:21 GMT -->
+</html>

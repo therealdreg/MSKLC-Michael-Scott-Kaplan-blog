@@ -1,0 +1,30 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2005/10/25/484436.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:40 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Getting currency names</title></head><body>
+<h1>Getting currency names</h1>
+<p><em>by Michael S. Kaplan, published on 2005/10/25 03:01 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2005/10/25/484436.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P><FONT face=Tahoma>Warren asked me (via the contact link):</FONT></P><FONT face=Tahoma><FONT size=2>
+<BLOCKQUOTE dir=ltr style="MARGIN-RIGHT: 0px">
+<P><EM><FONT face="Times New Roman">First, I'd like to say I enjoy reading your blog. Second, I've got a question about retrieving currency names. I'd like it if you could answer my question (if the solution is even possible). If it's not possible, maybe you could add a blog entry as to why it was decided not to have this available.</FONT></EM></P>
+<P><EM><FONT face="Times New Roman">I'm trying to enumerate all of the currency names for a system (I'm using MFC C++), like the second table in the following MSDN page:</FONT></EM></P></FONT><FONT size=2>
+<P></FONT><A href="http://msdn.microsoft.com/library/en-us/cpref/html/frlrfsystemglobalizationregioninfoclasstopic.asp"><U><FONT color=#0000ff size=2><EM><FONT face="Times New Roman">http://msdn.microsoft.com/library/en-us/cpref/html/frlrfsystemglobalizationregioninfoclasstopic.asp</FONT></EM></U></FONT></A></P><FONT size=2>
+<P><EM><FONT face="Times New Roman">e.g. I would like to programmatically retrieve "Canadian Dollar" from the system. I have no problem getting the ISO symbols, country name, three letter codes (etc) but I can't find a way to get the currency name. It seems like a common thing to list for a country (or it wouldn't be listed in the table on that MSDN page ?!?)</FONT></EM></P>
+<P><EM><FONT face="Times New Roman">Thanks</FONT></EM></P>
+<P><EM><FONT face="Times New Roman">Warren</FONT></EM></P></BLOCKQUOTE></FONT></FONT>
+<P><FONT face=Tahoma>Well, first I would like to day thank you very much. :-)</FONT></P>
+<P><FONT face=Tahoma>Second, I have some bad news. There is no currency object that can be used to enumerate currency names. However,&nbsp;currency information can be returned for every locale in Windows, by calling the</FONT><FONT face=Tahoma>&nbsp;<A href="http://msdn.microsoft.com/library/en-us/intl/nls_34rz.asp">GetLocaleInfo</A>&nbsp;function with either the LOCALE_SENGCURRNAME or LOCALE_SNATIVECURRNAME <A href="http://msdn.microsoft.com/library/en-us/intl/nls_8rse.asp">LCType</A> values.</FONT></P>
+<P><FONT face=Tahoma></FONT>&nbsp;</P>
+<P><FONT face=Tahoma color=#ff1493><EM>This post brought to you by</EM> "₯" <EM>(<A href="http://www.fileformat.info/info/unicode/char/20af">U+20af</A>, a.k.a. DRACHMA SIGN)</EM></FONT></P>
+<hr/><p><a id="484651" href="#484651">#</a> <strong>Mihai</strong> on 25 Oct 2005 11:23 AM:</p><div style="margin-left: 1em">The solution is good enough if you need the currency name in the language matching the currency, or English.<br>If you need more, you can take a look (and download) the Unicode Common Locale Data Repository (www.unicode.org/cldr).<br>This will allow one to retrieve the name of the Romanian &quot;Lei&quot; translated into Chinese, for instance.</div>
+<p><a id="484664" href="#484664">#</a> <strong>Michael S. Kaplan</strong> on 25 Oct 2005 11:40 AM:</p><div style="margin-left: 1em">Of course, I have to shudder a little bit as the lines between internationalization and localization are blurred. :-)</div>
+<p><a id="485466" href="#485466">#</a> <strong>Maurits [MSFT]</strong> on 27 Oct 2005 12:07 AM:</p><div style="margin-left: 1em">Opposite sides of the same coin...<br><br>Think globally, act locally.</div>
+<p><a id="485469" href="#485469">#</a> <strong>Michael S. Kaplan</strong> on 27 Oct 2005 12:16 AM:</p><div style="margin-left: 1em">I would respectfully disagree.<br><br>LOCALIZABILITY and internationalization coexist in people who are good at the job, but localization is an entirely different and specialized knowledge of source and target languages and cultures.<br><br>They are opposite sides of two different coins that you would want to have in your collection. But they are also entirely different skill sets that you can be totally awesome in one while knowing a little bit in the other and still be an excellent professional person....</div>
+<p><a id="9019967" href="#9019967">#</a> <strong>danah</strong> on 28 Oct 2008 5:42 AM:</p><div style="margin-left: 1em"><p>I would respectfully disagree. </p>
+<p>LOCALIZABILITY and internationalization coexist in people who are good at the job, but localization is an entirely different and specialized knowledge of source and target languages and cultures. </p>
+<p>They are opposite sides of two different coins that you would want to have in your collection. But they are also entirely different skill sets that you can be totally awesome in one while knowing a little bit in the other and still be an excellent professional person.... </p></div>
+<p><a id="9022820" href="#9022820">#</a> <strong>Michael S. Kaplan</strong> on 29 Oct 2008 3:02 PM:</p><div style="margin-left: 1em"><p>&lt;echo&gt; &lt;echo&gt; &lt;echo&gt; &lt;echo&gt; </p>
+</div>
+<hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2005/10/26/484481.html" title="U+0080 is not the Euro!">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2005/10/25/484430.html" title="For those who enjoy mathematics (or, &#39;Also new in Vista&#39;)">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2005-10">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2005-10-25">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2005/10/25/484436.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:40 GMT -->
+</html>

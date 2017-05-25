@@ -1,0 +1,43 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2008/07/28/8782341.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:36 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>"I literally mean a format specifier" causes a parse error for me</title></head><body>
+<h1>"I literally mean a format specifier" causes a parse error for me</h1>
+<p><em>by Michael S. Kaplan, published on 2008/07/28 05:01 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2008/07/28/8782341.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P>I was asked the other day for some help understanding why the letters used in C# to determine different kinds of literals were not the same as the letters used for format specifiers.</P>
+<P>Hmmmmm, interesting. First let's look at what they are.</P>
+<P>For format specifiers (from the <A class="" href="http://msdn.microsoft.com/library/dwhawy9k.aspx" mce_href="http://msdn.microsoft.com/library/dwhawy9k.aspx">Standard Numeric Format Strings</A>&nbsp;topic):</P>
+<UL>
+<LI><STRONG><FONT face="courier new,courier">C/c&nbsp;&nbsp;&nbsp; Currency</FONT></STRONG></LI>
+<LI><STRONG><FONT face="courier new,courier">D/d&nbsp;&nbsp;&nbsp; Decimal</FONT></STRONG></LI>
+<LI><STRONG><FONT face="courier new,courier">E/e&nbsp;&nbsp;&nbsp; Scientific (exponential)</FONT></STRONG></LI>
+<LI><STRONG><FONT face="courier new,courier">F/f&nbsp;&nbsp;&nbsp; Fixed-point</FONT></STRONG></LI>
+<LI><STRONG><FONT face="courier new,courier">G/g&nbsp;&nbsp;&nbsp; General</FONT></STRONG></LI>
+<LI><STRONG><FONT face="courier new,courier">N/n&nbsp;&nbsp;&nbsp; Number</FONT></STRONG></LI>
+<LI><STRONG><FONT face="courier new,courier">P/p&nbsp;&nbsp;&nbsp; Percent</FONT></STRONG></LI>
+<LI><STRONG><FONT face="courier new,courier">R/r&nbsp;&nbsp;&nbsp; Round-trip</FONT></STRONG></LI>
+<LI><STRONG><FONT face="courier new,courier">X/x&nbsp;&nbsp;&nbsp; Hexadecimal</FONT></STRONG></LI></UL>
+<P>Now the important note here is that we are looking at hints for how to deal with numbers that are contained within strings -- like the character to use in a ToString() call. </P>
+<P>The type of the number being converted to a string is not needed here -- it is implicit in the type it is already in! After all, if I call <A class="" href="http://msdn.microsoft.com/library/fzeeb5cd.aspx" mce_href="http://msdn.microsoft.com/library/fzeeb5cd.aspx">Decimal.ToString()</A> then I know the type is Decimal.</P>
+<P>Also, if you look at the topic you will see that each of these types has a specific meaning. One could argue that the definition of the "Decimal" format specifier might lead to confusion given the Decimal type, but that is a separate issue. :-)</P>
+<P>In the end, this is a hint to a way to format a string at runtime.</P>
+<P>Now the literal specifier is for a different purpose.</P>
+<P>Its intention is to give a hint on how to treat a literal number o how it is represented in the compiled code is what would be expected. The number will always have a specific representation in the code, and the suffixes can be used to override that default. The suffixes are similar to generally but quite different from specifically in their values, e.g.:</P>
+<UL>
+<LI>C/c&nbsp;&nbsp;&nbsp; Currency</LI>
+<LI>D/d&nbsp;&nbsp;&nbsp; Double</LI>
+<LI>E/e&nbsp;&nbsp;&nbsp; Scientific (exponential)</LI>
+<LI>F/f&nbsp;&nbsp;&nbsp; Float</LI>
+<LI>L/l&nbsp;&nbsp;&nbsp; Long</LI>
+<LI>M/m&nbsp;&nbsp;&nbsp; Decimal (money, or according to some decimmmmmal!)</LI>
+<LI>U/u&nbsp;&nbsp;&nbsp; Uint</LI></UL>
+<P>and so on. </P>
+<P>Something very different is being done with these suffixes, which is why the two groups are slightly different anyway -- they don't really overlap, and the meanings change like in the <STRONG>Decimal</STRONG> example I mentioned above.</P>
+<P>A little confusing, perhaps. But when one really thinks about the whole situation, it all kind of makes sense....</P>
+<P>Now when you add on the concept of localization (you knew I'd be doing that eventually!), neither of these are localized, but obviously the descriptions will be.</P>
+<P>Thus if you look at the French equivalent of the English <A class="" href="http://msdn.microsoft.com/en-us/library/dwhawy9k.aspx" mce_href="http://msdn.microsoft.com/en-us/library/dwhawy9k.aspx">Standard Numeric Format Strings</A>&nbsp;and find in <A class="" href="http://msdn.microsoft.com/fr-fr/library/dwhawy9k.aspx" mce_href="http://msdn.microsoft.com/fr-fr/library/dwhawy9k.aspx">Chaînes de format numériques standard</A> the fact that the format specifier stays the same&nbsp;as even the name changes is obvious....</P>
+<P mce_keep="true">&nbsp;</P>
+<P><FONT color=#ff00ff><EM>This blog brought to you by</EM><FONT size=5> m </FONT><EM>(<A class="" href="http://www.fileformat.info/info/unicode/char/006d" mce_href="http://www.fileformat.info/info/unicode/char/006d">U+006d</A>, aka LATIN SMALL LETTER M)</EM></FONT></P>
+<hr/><div style="margin-left: 1em"><em>no comments</em></div><hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2008/07/29/8786813.html" title="The SiaO Dead Letter Office">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2008/07/27/8781762.html" title="And you think finding presidential candidates is hard? Try getting the Vista IME candidate list!">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2008-07">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2008-07-28">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2008/07/28/8782341.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:36 GMT -->
+</html>

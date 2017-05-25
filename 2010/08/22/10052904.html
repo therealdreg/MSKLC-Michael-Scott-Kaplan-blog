@@ -1,0 +1,36 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2010/08/22/10052904.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:35 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>...from the Microsoft point of view</title></head><body>
+<h1>...from the Microsoft point of view</h1>
+<p><em>by Michael S. Kaplan, published on 2010/08/22 07:01 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2010/08/22/10052904.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<p>Sometimes it depends on your point of view.</p>
+<p>Gaurav's question was:</p>
+<p style="padding-left: 60px;"><span style="font-family: times new roman,times;"><em>Hi,</em></span></p>
+<p style="padding-left: 60px;"><span style="font-family: times new roman,times;"><em>We have a question related to System.Text.Encoding.GetEncoding() API. Encoding.GetEncoding().WebName returns following values:</em></span></p>
+<p style="padding-left: 60px;"><span style="font-family: times new roman,times;"><em>Encoding.GetEncoding(1200).WebName&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // 1200 represents UTF16 Little Endian<br />"utf-16"<br />Encoding.GetEncoding(1201).WebName&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // 1201 represents UTF16 Big Endian<br />"utf-16BE"</em></span></p>
+<p style="padding-left: 60px;"><span style="font-family: times new roman,times;"><em>Thus unmarked representation (&ldquo;utf-16&rdquo;) is interpreted as Little Endian.<br />But according to <a href="http://tools.ietf.org/html/rfc2781">RFC#2781</a>, and below pasted excerpt, it looks like unmarked representation should be interpreted as Big Endian in the absence of BOM. <br /></em>4.3 Interpreting text labelled as UTF-16<br />&nbsp;&nbsp; Text labelled with the "UTF-16" charset might be serialized in either<br />&nbsp;&nbsp; big-endian or little-endian order. If the first two octets of the<br />&nbsp;&nbsp; text is 0xFE followed by 0xFF, then the text can be interpreted as<br />&nbsp;&nbsp; being big-endian. If the first two octets of the text is 0xFF<br />&nbsp;&nbsp; followed by 0xFE, then the text can be interpreted as being little-<br />&nbsp;&nbsp; endian. If the first two octets of the text is not 0xFE followed by<br />&nbsp;&nbsp; 0xFF, and is not 0xFF followed by 0xFE, then the text SHOULD be<br />&nbsp;&nbsp; interpreted as being big-endian.</span></p>
+<p style="padding-left: 60px;"><span style="font-family: times new roman,times;"><em>Is there a bug in the API or our understanding is wrong?</em></span></p>
+<p style="padding-left: 60px;"><span style="font-family: times new roman,times;"><em>Thanks,<br />Gaurav</em></span></p>
+<p>As I said, it really depends on your point of view.</p>
+<p>The word SHOULD in standards is an interesting one though.</p>
+<p>In truth, the implied text when you see SHOULD is SHOULD, UNLESS YOU HAVE A REALLY, REALLY, REALLY GOOD REASON NOT TO.</p>
+<p>Now in the case of Microsoft, which really is a Little Endian UTF-16 shop through and through. So much so that you get other weird stuff happening like I mentioned in <a href="http://archives.miloush.net/michkap/archive/2005/09/11/463444.html" title="unicodeFFFE... is Microsoft off its rocker?"><strong>unicodeFFFE... is Microsoft off its rocker?</strong></a>.</p>
+<p>In fact, it only gets truly weird in cases when the cases pop up where .Net is on a platform where UTF-16 little endian may not be a sensible assumption, but thankfully such cases are mercifully few.</p>
+<p>Or maybe you have such a case in front of you? :-)</p>
+<hr/><p><strong>Karellen</strong> on 22 Aug 2010 8:37 AM:</p><div style="margin-left: 1em"><p>&quot;Microsoft, which really is a Little Endian UTF-16 shop through and through.&quot;</p>
+<p>Yes, and that&#39;s fine &lt;em&gt;if&lt;/em&gt; you assume that Microsoft products only talk to other Microsoft products. Wow, it&#39;s a good job that Microsoft products don&#39;t have to talk to any other products, from any other vendors, on any other OSs, on any other architectures, on some kind of vast, global, heterogeneous internetwork of computers, isn&#39;t it.</p>
+<p>Wait, what? Is MS still living in 1990 or something? Seriously?</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 22 Aug 2010 4:51 PM:</p><div style="margin-left: 1em"><p>Microsoft includes ways to talk and interoperate with those other products and platforms -- and a huge user base that has neither the interest nor the need for the additional complication....</p>
+</div>
+<p><strong>Cheong</strong> on 22 Aug 2010 6:38 PM:</p><div style="margin-left: 1em"><p>Btw, on platform such as Linux, the Unicode they usually use is UTF-8 (with doesn&#39;t have LE/BE issue), so just translate your &quot;text to send to interop&quot; to UTF-8 first and you&#39;ll be fine.</p>
+<p>I&#39;d think the same goes for BSD, Mac or other *nix systems.</p>
+</div>
+<p><strong>Dan Bishop</strong> on 23 Aug 2010 5:27 PM:</p><div style="margin-left: 1em"><p>Why not just name cp1200 &quot;utf-16LE&quot; and remove any doubt about the byte order?</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 23 Aug 2010 11:40 PM:</p><div style="margin-left: 1em"><p>You mean change it and break anyone relying on the old result? I think the answer is in the question.</p>
+</div>
+<hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2010/08/23/10053047.html" title="On Feedback (some positive, and some the other kind)">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2010/08/21/10052532.html" title="That Effing font is Not Safe For Work">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2010-08">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2010-08-22">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2010/08/22/10052904.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:35 GMT -->
+</html>

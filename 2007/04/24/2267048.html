@@ -1,0 +1,33 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2007/04/24/2267048.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:38 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Don't forget to reboot, please</title></head><body>
+<h1>Don't forget to reboot, please</h1>
+<p><em>by Michael S. Kaplan, published on 2007/04/24 22:10 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2007/04/24/2267048.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P>I was told about the cause behind an interesting bug a few hours ago.</P>
+<P>The behavior:</P>
+<P>A crash in managed code running on Server 2003 with the following call stack:</P>
+<BLOCKQUOTE>
+<P><FONT size=1>System.ArgumentException: Culture ID 2155 (0x086B) is not a supported culture.<BR>Parameter name: culture<BR>&nbsp;&nbsp; at System.Globalization.CultureTableRecord.GetCultureTableRecord(Int32 cultureId, Boolean useUserOverride)<BR>&nbsp;&nbsp; at System.Globalization.CultureInfo..ctor(Int32 culture, Boolean useUserOverride)<BR>&nbsp;&nbsp; at System.Globalization.CultureInfo..ctor(Int32 culture)<BR>&nbsp;&nbsp; at System.Globalization.CultureTable.GetCultures(CultureTypes types)<BR>&nbsp;&nbsp; at Microsoft.Exchange.Setup.Common.SetupContext.GetExchangeCulture()<BR>&nbsp;&nbsp; at Microsoft.Exchange.Setup.Common.SetupContext.GetSetupContext(PropertyBag parsedArguments)<BR>&nbsp;&nbsp; at Microsoft.Exchange.Setup.Common.RootDataHandler.OnReadData()<BR>&nbsp;&nbsp; at Microsoft.Exchange.Management.SystemManager.WinForms.SingleTaskDataHandler.OnReadData(CommandInteractionHandler interactionHandler)<BR>&nbsp;&nbsp; at Microsoft.Exchange.Management.SystemManager.WinForms.DataHandler.Read(CommandInteractionHandler interactionHandler)<BR>&nbsp;&nbsp; at Microsoft.Exchange.Setup.Common.LauncherBase.Run(String[] args)<BR>&nbsp;&nbsp; at Microsoft.Exchange.Setup.Common.LauncherBase.MainCore[T](String[] args)<BR>&nbsp;&nbsp; at Microsoft.Exchange.Management.ExSetupUI.ExSetupUI.Main(String[] args)</FONT></P></BLOCKQUOTE>
+<P>What is happening?</P>
+<P>Well, I guess you could blame it on Service Pack 1 of Server 2003....</P>
+<P>Remember <A class="" href="http://archives.miloush.net/michkap/archive/2005/12/17/504924.html" mce_href="http://archives.miloush.net/michkap/archive/2005/12/17/504924.html"><STRONG>ELKs aren't roaming where the servers are</STRONG></A>?</P>
+<P>Well, they fixed that and added a whole bunch of ELKs to Server 2003.</P>
+<P>That means they added a whole bunch of registry keys saying that these locales were present and an updated locale.nls that contains the data for those locales.</P>
+<P>Unfortunately, locale.nls is one of those files that cannot be replaced without a reboot. So after the service pack is installed, the machine is not rebooted.</P>
+<P>Then the machine&nbsp;starts running some managed code that is enumerating all of the locales, including the Windows-only ones that everyone wanted working on Server 2003.</P>
+<P>So <A class="" href="http://msdn2.microsoft.com/library/ms776334.aspx" mce_href="http://msdn2.microsoft.com/library/ms776334.aspx">EnumSystemLocales</A> is claiming a bunch of locales exist which won't really exist until after the reboot that the person installing the service pack decided not to do yet. And the .NET Framework trusts those results and crashes since it was unable to get the data.</P>
+<P>SUMMARY: the .NET Framework trusts Windows, Windows trusts the user, and the user&nbsp;trusts reboots after service packs are optional. Or at least optional so that other things can be installed first.</P>
+<P>I am not sure how to respond exactly....</P>
+<P>Well, other than to suggest that people please reboot after service packs and security updates and such, I mean.</P>
+<P mce_keep="true">&nbsp;</P>
+<P><FONT color=#ff00ff><EM>This post brought to you by</EM> <FONT size=5>⅛</FONT> <EM>(<A class="" href="http://www.fileformat.info/info/unicode/char/215b" mce_href="http://www.fileformat.info/info/unicode/char/215b">U+215b</A>, a.k.a. VULGAR FRACTION ONE EIGHTH)</EM></FONT></P>
+<hr/><p><a id="2267187" href="#2267187">#</a> <strong>Thomas</strong> on 24 Apr 2007 10:22 PM:</p><div style="margin-left: 1em"><p>Wow. That one must've been fun to track down :)</p></div>
+<p><a id="2267847" href="#2267847">#</a> <strong>Michael S. Kaplan</strong> on 25 Apr 2007 12:06 AM:</p><div style="margin-left: 1em"><p>I was told it was an interesting little adventure. :-)</p>
+</div>
+<p><a id="2268087" href="#2268087">#</a> <strong>Michael S. Kaplan</strong> on 25 Apr 2007 12:41 AM:</p><div style="margin-left: 1em"><p>One additional note -- the underlying issue -- attempting to enumerate a locale when the underlying locale turns out to not be valid was addressed in Vista -- so in the future this particular bug won't be possible to hit, even if you don't reboot when you should.</p>
+<p>Just think of it as Microsoft enabling bad behavior. :-)</p>
+</div>
+<hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2008/05/10 <a href="http://archives.miloush.net/michkap/archive/2008/05/10/8484238.html">Why Bengali keyboards can't be found on XP 64 bit</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2007/04/25/2268251.html" title="Maybe it was registry rumination">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2007/04/24/2256377.html" title="Popping the stack on the problem with using ordinal type comparisons?">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2007-04">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2007-04-24">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2007/04/24/2267048.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:38 GMT -->
+</html>

@@ -1,0 +1,52 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2007/03/05/1807683.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:38 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>You're not the one out of sequence, and that's the Word</title></head><body>
+<h1>You're not the one out of sequence, and that's the Word</h1>
+<p><em>by Michael S. Kaplan, published on 2007/03/05 03:01 -05:00, original URI: http://blogs.msdn.com/b/michkap/archive/2007/03/05/1807683.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P><EM>(Apologies for the Colbert reference!)&nbsp;</EM></P>
+<P>It all started with a post from Pavanaja U B over in the microsoft.public.word.international.features newsgroup:</P>
+<BLOCKQUOTE>
+<P><EM>I am facing this peculiar problem in Word 2007 and Vista. When I use the <BR>built-in Kannada keyboard layout of Vista in Word 2007, the Ctrl-Shift-1 <BR>and Ctrl-Shift-2 keys which are used for ZWJ and ZWNJ are not working. <BR>But the same keys are working fine when I use with Notepad or Wordpad in <BR>Vista. What is happening?</EM></P></BLOCKQUOTE>
+<P mce_keep="true">Now you all know how often <STRONG><A class="" href="http://archives.miloush.net/michkap/archive/2004/12/28/333168.html" mce_href="http://archives.miloush.net/michkap/archive/2004/12/28/333168.html">I</A></STRONG> <A class="" href="http://archives.miloush.net/michkap/archive/2005/04/21/410305.html" mce_href="http://archives.miloush.net/michkap/archive/2005/04/21/410305.html"><STRONG>like</STRONG></A> <STRONG><A class="" href="http://archives.miloush.net/michkap/archive/2006/03/15/552031.html" mce_href="http://archives.miloush.net/michkap/archive/2006/03/15/552031.html">to</A></STRONG> <A class="" href="http://archives.miloush.net/michkap/archive/2006/04/17/577196.html" mce_href="http://archives.miloush.net/michkap/archive/2006/04/17/577196.html"><STRONG>complain</STRONG></A> about that Word bug that causes it to override important letters with its "helpful" shortcuts, right?</P>
+<P mce_keep="true">Well, that is not the cause of this particular bug. </P>
+<P mce_keep="true">Though it is my automatic answer in such cases since is the cause of most similar bugs.</P>
+<P mce_keep="true">In any case, I momentarily felt bad, having blamed Word for a bug that was not their fault.</P>
+<P mce_keep="true">I needn't have worried though, it is still Word's fault, just for&nbsp;a different reason. :-(</P>
+<P mce_keep="true">This one is caused by a little-known "feature" in Word known as <STRONG>sequence checking</STRONG>. Although intended to provide additional validation of character sequences, it apparently is considering some completely legal and desirable sequences to be invalid....</P>
+<P mce_keep="true">According to Help,&nbsp;the feature&nbsp;is described as (along with the related "Type and Replace" feature):</P>
+<BLOCKQUOTE>
+<BLOCKQUOTE>
+<P mce_keep="true"><STRONG>Use sequence checking&nbsp;</STRONG> Select this option to validate whether a newly typed character occurs in the correct sequence to be used as a tone mark, diacritic, or vowel to be placed above, below, in front of, or behind the consonant it goes with.<BR><BR><EM>Note&nbsp;&nbsp; This option is available only if a complex script language is enabled for editing text.</EM><BR><BR><STRONG>Type and replace</STRONG> Select this option to replace the previously typed character with the newly typed character if the two characters cannot coexist in the same text cluster. </P></BLOCKQUOTE></BLOCKQUOTE>
+<P mce_keep="true">Now to me, at this point, the most important thing about this feature is turning it off. In Word 2007, it is at:</P>
+<P mce_keep="true"><STRONG>&nbsp;&nbsp;&nbsp; Office Button | Word Options | Advanced | Editing Options | Use Sequence Checking - off</STRONG>&nbsp;</P>
+<P mce_keep="true">Here is what the dialog looks like:</P>
+<P mce_keep="true"><IMG src="http://trigeminal.fmsinc.com/images/SequenceChecking.png"></P>
+<P mce_keep="true">and if you don't see it, that means you have to turn on a complex script language in the&nbsp;Office Language Settings Tool (a language&nbsp;such as Kannada will do the trick):</P>
+<P mce_keep="true"><IMG src="http://trigeminal.fmsinc.com/images/KannadaOn.png"></P>
+<P mce_keep="true">And please don't get me started about how this means that even though Complex Scripts are on by default in Vista, they are not on in Office unless you go through a bunch of not entirely intuitive steps. </P>
+<P mce_keep="true">I am&nbsp;at least 27%&nbsp;convinced Office won't meddle so much if you <STRONG>don't</STRONG> turn on that editing in Office! :-(</P>
+<P mce_keep="true">&nbsp;</P>
+<P mce_keep="true"><EM><FONT color=#ff00ff>This post brought to you by <A class="" href="http://www.fileformat.info/info/unicode/char/200d" mce_href="http://www.fileformat.info/info/unicode/char/200d">U+200d</A>, a.k.a. ZERO WIDTH JOINER</FONT></EM></P>
+<hr/><p><a id="1810120" href="#1810120">#</a> <strong>Pavanaja U B</strong> on 5 Mar 2007 9:31 AM:</p><div style="margin-left: 1em"><p>Oh! I have been MichKapped :), if at all there is anything like that :)</p>
+<p>Regards,</p>
+<p>Pavanaja</p></div>
+<p><a id="1810158" href="#1810158">#</a> <strong>Pavanaja U B</strong> on 5 Mar 2007 9:36 AM:</p><div style="margin-left: 1em"><p>Interestingly, the Crtl-Shift-1 and 2 keys for ZWJ and ZWNJ do work properly for Hindi even if the sequence checking setting is checked on. &nbsp;Why the behaviour should be different for Hindi and Kannada? The very prupose of PR-37 of Unicode consortium was to make the behaviour of ZWJ and ZWNJ same (similar) across all Indic scripts. Now the behaviour of IMEs are (made) different!</p>
+<p>Regards,</p>
+<p>Pavanaja</p></div>
+<p><a id="1810324" href="#1810324">#</a> <strong>Michael S. Kaplan</strong> on 5 Mar 2007 10:09 AM:</p><div style="margin-left: 1em"><p>Well, it is not technically an IME, it's just a boring old keyboard -- and this is 100% pure Word bug with the app doing special handling of input -- and doing it badly....</p>
+<p>If you're bored, you can really play with it -- do things like putting the Hindi keyboard under the Kannada language to see if it messes that up to. Or you can do what I did and turn off the sequence checking. :-)</p>
+</div>
+<p><a id="1810630" href="#1810630">#</a> <strong>Michael Dunn_</strong> on 5 Mar 2007 11:21 AM:</p><div style="margin-left: 1em"><p>You should never apologize for referencing the great Dr. Stephen T. Colbert D.F.A. :)</p>
+</div>
+<p><a id="1810726" href="#1810726">#</a> <strong>Michael S. Kaplan</strong> on 5 Mar 2007 11:27 AM:</p><div style="margin-left: 1em"><P>But Mike, would he agree? I mean, since I used it for a cheap pun? :-)</P></div>
+<p><a id="1811676" href="#1811676">#</a> <strong>Rosyna</strong> on 5 Mar 2007 2:14 PM:</p><div style="margin-left: 1em"><p>What decides the mnemonics used for the various checkboxes? Like Alt+E for &quot;Use smart cursoring&quot; (What is cursoring, is that a word?) But how does it come to take the &quot;e&quot; from &quot;Use&quot;?</p>
+<p>Also, &quot;Languages labeled with limited support require additional support.&quot; That's a funny phrase.</p>
+</div>
+<p><a id="1841532" href="#1841532">#</a> <strong>Shelby Eaton</strong> on 8 Mar 2007 10:39 PM:</p><div style="margin-left: 1em"><p>So is this setting why my &quot;smart quotes&quot; turn into Unicode characters when I type in Outlook? I tried a bunch of stuff (like removing auto-detection of language as I type) but finally just gave up and turned off smart quotes. :-) </p></div>
+<p><a id="1841637" href="#1841637">#</a> <strong>Michael S. Kaplan</strong> on 8 Mar 2007 11:08 PM:</p><div style="margin-left: 1em"><P>Yep, <A class="" href="http://archives.miloush.net/michkap/archive/2007/02/20/1724946.html"><STRONG>this</STRONG></A> is the one.</P>
+<P>I think we'll have to wait for "Smarter Quotes" to turn it back on again....</P></div>
+<p><strong>sisigi</strong> on 20 Aug 2008 1:48 PM:</p><div style="margin-left: 1em"><p>it makes trouble only</p></div>
+<hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2013/03/27 <a href="http://archives.miloush.net/michkap/archive/2013/03/27/10405277.html">Microsoft Word: 15 --- Microsoft Windows: 15</a></p><p>2010/12/20 <a href="http://archives.miloush.net/michkap/archive/2010/12/20/10107008.html">Short-sighted text processing #2: Getting hurt while playing on the bleeding edge</a></p><p>2010/05/19 <a href="http://archives.miloush.net/michkap/archive/2010/05/19/10009920.html">What's the Word on interference in typing from Word?</a></p><p>2009/07/22 <a href="http://archives.miloush.net/michkap/archive/2009/07/22/9844827.html">The Letter Police can EAT MY SHORTS!</a></p><p>2008/11/06 <a href="http://archives.miloush.net/michkap/archive/2008/11/06/9046784.html">Being smart, by not trying to be clever</a></p><p>2007/03/09 <a href="http://archives.miloush.net/michkap/archive/2007/03/09/1842581.html">But is it mnemonical?</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2007/03/05/1810677.html" title="It&#39;s not just returning 1; it&#39;s returning -1">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2007/03/04/1806607.html" title="Questions about ESE may not always be EASY for me">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2007-03">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2007-03-05">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2007/03/05/1807683.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:38 GMT -->
+</html>

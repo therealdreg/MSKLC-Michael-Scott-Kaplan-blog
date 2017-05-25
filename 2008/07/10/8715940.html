@@ -1,0 +1,44 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2008/07/10/8715940.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:36 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>What's the sharp and nasty, smooth and greasy, barbed and two-pronged f***ing point of SetCalendarInfo?</title></head><body>
+<h1>What's the sharp and nasty, smooth and greasy, barbed and two-pronged f***ing point of SetCalendarInfo?</h1>
+<p><em>by Michael S. Kaplan, published on 2008/07/10 10:01 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2008/07/10/8715940.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P>The question I got the other day was:</P>
+<BLOCKQUOTE>
+<P><EM><FONT face="times new roman,times">I am using GetCalendarInfo on Windows 2008 Server to get the CAL_SSHORTDATE and the format that it returns is not the format I set using intl.cpl-&gt;”Customize this format”-&gt;”Date Tab”-&gt;”Short Date:”. It always returns the default format, irrespective of what I set it to. When using GetLocaleInfo to get LOCALE_SSHORTDATE, I get the correct value. For the comparison purposes I made sure that the calendar ID that I pass to GetCalendarInfo is the ID of the calendar type that I set in intl.cpl. Is this a known issue with GetCalendarInfo or am I missing something? I couldn’t find much information about retrieving customized data in MSDN. I see this issue not for a specific case, but all the times when I invoke GetCalendarInfo. I do not set the CAL_NOUSEROVERRIDE flag. I have tried it for different LCIDs and for CAL_SLONGDATE too. It always returns the default date format. I am running Windows server 2008 on ia 64. This issue was first seen when the user locale was set to Japanese(Japan) and when I queried for the CAL_SSHORTDATE format of the calendar with id 1 and the lcid 1041. <BR><BR>But as I have mentioned, it happens for other calid, lcid and caltype combinations too. Please let me know if anything else is needed.</FONT></EM></P></BLOCKQUOTE>
+<P>I honestly had no ideas, what was going on. So my response indicated as much:</P>
+<BLOCKQUOTE>
+<P><FONT face="times new roman,times">Looking at the docs,&nbsp;<A class="" href="http://msdn.microsoft.com/library/ms776276.aspx" mce_href="http://msdn.microsoft.com/library/ms776276.aspx">GetCalendarInfo</A> will in theory care about where or not the CAL_NOUSEROVERRIDE was set -- and thus (again, in theory) would care about the custom calendar setting. But I don't know what actually happens here in practice....</FONT></P></BLOCKQUOTE>
+<P>But I was sure to include Shelby on the mail, since she does tend to know as lot about calendar support than me. :-)</P>
+<P>Her response made me realize I was giving <A class="" href="http://msdn.microsoft.com/library/ms776276.aspx" mce_href="http://msdn.microsoft.com/library/ms776276.aspx">GetCalendarInfo</A> too much credit here:</P>
+<BLOCKQUOTE>
+<P><FONT face="times new roman,times"><EM>The short answer – the behavior that you are seeing is by design. <BR><BR>Instead, use GetLocaleInfo to get the date format picture (e.g. dd/MM/yyyy), or GetDateFormat to get a formatted date string (e.g. 07/09/2008). Even better – you should use the name-based APIs: GetLocaleInfoEx and GetDateFormatEx because they support custom locales. <BR><BR>More Details: </EM></FONT></P>
+<UL>
+<LI><FONT face="times new roman,times"><EM>CAL_SSHORTDATE is not a user-overridable value, and therefore, GetCalendarInfo returns the DEFAULT date format for each valid LCID/Calendar combination. For the purposes of GetCalendarInfo, the only user-overridable item is CAL_ITWODIGITYEARMAX. </EM></FONT></LI>
+<LI><FONT face="times new roman,times"><EM>When changing date formats in intl.cpl, you are really changing the LOCALE settings, not the CALENDAR settings. This is not at all intuitive, and our docs are definitely lacking on this point. I’ll remind myself to follow up on this with the doc team. </EM></FONT></LI></UL></BLOCKQUOTE>
+<P>Well, if it is the design then I guess it is the design.</P>
+<P>But in that case I do think it is a design flaw.</P>
+<P>I mean after all (as I have discussed before in blogs like <A class="" href="http://archives.miloush.net/michkap/archive/2005/04/23/411074.html" mce_href="http://archives.miloush.net/michkap/archive/2005/04/23/411074.html"><STRONG>SetLocaleInfo really stinks</STRONG></A>), SetLocaleInfo is lame because (among other reasons) it takes a locale, validates it, and then if it is not the current user default, it ignores the locale you pass.</P>
+<P>And have no doubt, that behavior is LAME.</P>
+<P>But then take <A class="" href="http://msdn.microsoft.com/library/ms776325.aspx" mce_href="http://msdn.microsoft.com/library/ms776325.aspx">SetCalendarInfo</A>, which is even worse since it is just as bad with the additional problem that it won't even affect the current user default locale's settings!</P>
+<P>That is turning the lame up to ELEVEN, if you know what I mean.</P>
+<P>Hell, the documentation goes on about all of the valid locales -- including a nice blurb about custom locales --&nbsp;which are basically ignored anyway.</P>
+<P>And as a bonus it explains how you can pass CAL_USE_CP_ACP, which is useless in <A class="" href="http://msdn.microsoft.com/library/ms776325.aspx" mce_href="http://msdn.microsoft.com/library/ms776325.aspx">SetCalendarInfo</A>&nbsp;anyway....</P>
+<P>Not that <A class="" href="http://msdn.microsoft.com/library/ms776276.aspx" mce_href="http://msdn.microsoft.com/library/ms776276.aspx">GetCalendarInfo</A> is much better -- as the original question and answer make clear.</P>
+<P>Need more proof?</P>
+<P>Well, the CAL_TWODIGITYEARMAX flag, the only useful flag you can really pass since CAL_USE_CP_ACP is crap here?</P>
+<P>It has nothing to do with calendars or locales at all -- the CALID and CALTYPE parameters&nbsp;are also in there for lame duck purposes only (in Win9x they had extra validation steps but served no functional purpose).</P>
+<P>And even though you are passing a number, no CAL_SET_NUMBER flag exists -- so according to the documentation you have to convert your number to a string first, for no useful purpose.</P>
+<P>Thus the title (a slight misquote from Gorky Park).</P>
+<P>and Kirwill's answer to the detective is applicable here too: <STRONG>no point, that's the point</STRONG>.</P>
+<P>The functionality to set this one attribute could have been one function with one&nbsp;INT parameter to&nbsp;set the value, rather than what was used instead.</P>
+<P>Talk about a function that's looking kinda dumb with its finger and its thumb in the shape of an <STRONG>L</STRONG> on it's forehead!</P>
+<P mce_keep="true">&nbsp;</P>
+<P><FONT color=#ff00ff><EM>This blog brought to you by</EM><FONT size=6> L </FONT><EM>(<A class="" href="http://www.fileformat.info/info/unicode/char/004c" mce_href="http://www.fileformat.info/info/unicode/char/004c">U+004c</A>, aka LATIN CAPITAL LETTER L)</EM></FONT></P>
+<hr/><p><strong>Clarks</strong> on 10 Jul 2008 10:11 AM:</p><div style="margin-left: 1em"><p>For the comparison purposes I made sure that the calendar ID that I pass to GetCalendarInfo is the ID of the calendar type that I set in intl.cpl. Is this a known issue with GetCalendarInfo or am I missing something? I couldn’t find much information about retrieving customized data in MSDN</p></div>
+<p><strong>Michael S. Kaplan</strong> on 10 Jul 2008 12:01 PM:</p><div style="margin-left: 1em"><p>You have to avoid GetCalendarInfo to get customizations -- it does not support them, by and large. You aren't missing anything, but the function is. :-)</p>
+</div>
+<hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2008/07/11/8720420.html" title="What kind of English were you looking for? We only seem to have one in stock....">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2008/07/10/8715748.html" title="GoGlobal NOW!">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2008-07">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2008-07-10">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2008/07/10/8715940.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:36 GMT -->
+</html>

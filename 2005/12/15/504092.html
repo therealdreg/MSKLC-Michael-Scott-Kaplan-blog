@@ -1,0 +1,82 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2005/12/15/504092.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:40 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Handling [Unicode] input in the console</title></head><body>
+<h1>Handling [Unicode] input in the console</h1>
+<p><em>by Michael S. Kaplan, published on 2005/12/15 12:01 -05:00, original URI: http://blogs.msdn.com/b/michkap/archive/2005/12/15/504092.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P><FONT face=Tahoma>It was about&nbsp;seven months ago when I pointed out a method for <a href="http://archives.miloush.net/michkap/archive/2005/05/18/419117.html"><STRONG>typing in random Unicode code points</STRONG></A> using the Unicode IME.</FONT></P>
+<P><FONT face=Tahoma>And then it was about&nbsp;five months ago that I revisited&nbsp;the issue&nbsp;in <a href="http://archives.miloush.net/michkap/archive/2005/07/18/439946.html"><STRONG>typing in random Unicode code points redux</STRONG></A>.</FONT></P>
+<P><FONT face=Tahoma>In the latter post, I talked about a cool utility that Andrew put together, and I pointed out how on his web site (<A href="http://www.fileformat.info/">fileformat.info</A>) he did a nice review of the various ways to enter Unicode text. The title of the page is <A href="http://www.fileformat.info/tip/microsoft/enter_unicode.htm">How to enter Unicode characters in Microsoft Windows</A>.</FONT></P>
+<P><FONT face=Tahoma>This&nbsp;may be&nbsp;a site worth watching, since I swear he has added to it in these last few months!</FONT></P>
+<P><FONT face=Tahoma>I was actually playing around with the console keyboard functions (you know, like <A href="http://msdn.microsoft.com/library/en-us/dllproc/base/readconsoleinput.asp">ReadConsoleInput</A>) trying to look at how a developer who had to deal with text input without the miracle of <A href="http://msdn.microsoft.com/library/en-us/winui/winui/windowsuserinterface/userinput/keyboardinput/keyboardinputreference/keyboardinputmessages/wm_char.asp">WM_CHAR</A> and <A href="http://msdn.microsoft.com/library/en-us/intl/ime_1diq.asp">WM_IME_CHAR</A> and <A href="http://msdn.microsoft.com/library/en-us/winui/winui/windowsuserinterface/userinput/keyboardinput/keyboardinputreference/keyboardinputmessages/wm_unichar.asp">WM_UNICHAR</A> might get their work done. Here is the program:</FONT></P>
+<BLOCKQUOTE dir=ltr style="MARGIN-RIGHT: 0px">
+<P><FONT face="Courier New"><STRONG>#include &lt;windows.h&gt;<BR>#include &lt;wincon.h&gt;<BR>#include &lt;stdio.h&gt;<BR>&nbsp;<BR>int main()<BR>{<BR>&nbsp; puts("ReadConsoleInput test");<BR>&nbsp; puts("Ctrl-D to quit.\n");</STRONG></FONT></P>
+<P><FONT face="Courier New"><STRONG>&nbsp; HANDLE in = GetStdHandle(STD_INPUT_HANDLE);<BR>&nbsp; int n = 0;<BR>&nbsp; puts("#&nbsp;&nbsp;&nbsp; UC&nbsp; u/d&nbsp; VK&nbsp;&nbsp; SC&nbsp; State\n\n");<BR>&nbsp; for (;;) {<BR>&nbsp;&nbsp;&nbsp; INPUT_RECORD ir[1];<BR>&nbsp;&nbsp;&nbsp; DWORD cEventsRead;<BR>&nbsp;&nbsp;&nbsp; if (! ReadConsoleInputW(in, ir, 1, &amp;cEventsRead)) {<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; puts("ReadConsoleInput failed!");<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; return 0;<BR>&nbsp;&nbsp;&nbsp; }<BR>&nbsp;&nbsp;&nbsp; for (DWORD i = 0; i &lt; cEventsRead; ++i, ++n) {<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; if (ir[i].EventType &amp; KEY_EVENT) {<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; KEY_EVENT_RECORD ker = ir[i].Event.KeyEvent;<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; printf("%3d: U+%04x %s %04x %04x %04x\n",<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; n, <BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (WORD)ker.uChar.UnicodeChar,<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ker.bKeyDown ? "down" : " up ", <BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ker.wVirtualKeyCode, <BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ker.wVirtualScanCode, <BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ker.dwControlKeyState);</STRONG></FONT></P>
+<P><FONT face="Courier New"><STRONG>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; if (!ker.bKeyDown &amp;&amp; ker.uChar.AsciiChar == ('D' - </STRONG></FONT><A href="mailto:'@'"><FONT face="Courier New"><STRONG>'@'</STRONG></FONT></A><FONT face="Courier New"><STRONG>))<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; return 0;<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }<BR>&nbsp;&nbsp;&nbsp; }<BR>&nbsp; }<BR>&nbsp; return 0;<BR>}</STRONG></FONT></P></BLOCKQUOTE>
+<P><FONT face=Tahoma>Now for predictable things like typing&nbsp;the keys "ABCDEF"&nbsp;with the US English keyboard the output is predictable:</FONT></P>
+<BLOCKQUOTE dir=ltr style="MARGIN-RIGHT: 0px">
+<P><FONT face="Courier New"><STRONG>ReadConsoleInput test<BR>Ctrl-D to quit.</STRONG></FONT></P>
+<P><FONT face="Courier New"><STRONG>#&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; UC&nbsp;&nbsp;&nbsp; u/d&nbsp; VK&nbsp;&nbsp; SC&nbsp; State</STRONG></FONT></P>
+<P><FONT face="Courier New"><STRONG><BR>&nbsp; 0: U+0061 down 0041 001e 0000<BR>&nbsp; 1: U+0061&nbsp; up&nbsp; 0041 001e 0000<BR>&nbsp; 2: U+0062 down 0042 0030 0000<BR>&nbsp; 3: U+0062&nbsp; up&nbsp; 0042 0030 0000<BR>&nbsp; 4: U+0063 down 0043 002e 0000<BR>&nbsp; 5: U+0063&nbsp; up&nbsp; 0043 002e 0000<BR>&nbsp; 6: U+0064 down 0044 0020 0000<BR>&nbsp; 7: U+0064&nbsp; up&nbsp; 0044 0020 0000<BR>&nbsp; 8: U+0065 down 0045 0012 0000<BR>&nbsp; 9: U+0065&nbsp; up&nbsp; 0045 0012 0000<BR>&nbsp;10: U+0066 down 0046 0021 0000<BR>&nbsp;11: U+0066&nbsp; up&nbsp; 0046 0021 0000<BR>&nbsp;12: U+0000 down 0011 001d 0008<BR>&nbsp;13: U+0004 down 0044 0020 0008<BR>&nbsp;14: U+0004&nbsp; up&nbsp; 0044 0020 0008</STRONG></FONT></P></BLOCKQUOTE>
+<P><FONT face=Tahoma>and the same keystrokes with the Russian keyboard are also fairly predictable:</FONT></P>
+<BLOCKQUOTE dir=ltr style="MARGIN-RIGHT: 0px">
+<P><FONT face="Courier New"><STRONG>ReadConsoleInput test<BR>Ctrl-D to quit.</STRONG></FONT></P>
+<P><FONT face="Courier New"><STRONG>#&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; UC&nbsp;&nbsp;&nbsp; u/d&nbsp; VK&nbsp;&nbsp; SC&nbsp; State</STRONG></FONT></P>
+<P><BR><FONT face="Courier New"><STRONG>&nbsp; 0: U+0444 down 0041 001e 0000<BR>&nbsp; 1: U+0444&nbsp; up&nbsp; 0041 001e 0000<BR>&nbsp; 2: U+0438 down 0042 0030 0000<BR>&nbsp; 3: U+0438&nbsp; up&nbsp; 0042 0030 0000<BR>&nbsp; 4: U+0441 down 0043 002e 0000<BR>&nbsp; 5: U+0441&nbsp; up&nbsp; 0043 002e 0000<BR>&nbsp; 6: U+0432 down 0044 0020 0000<BR>&nbsp; 7: U+0432&nbsp; up&nbsp; 0044 0020 0000<BR>&nbsp; 8: U+0443 down 0045 0012 0000<BR>&nbsp; 9: U+0443&nbsp; up&nbsp; 0045 0012 0000<BR>&nbsp;10: U+0430 down 0046 0021 0000<BR>&nbsp;11: U+0430&nbsp; up&nbsp; 0046 0021 0000<BR>&nbsp;12: U+0000 down 0011 001d 0008<BR>&nbsp;13: U+0004 down 0044 0020 0008<BR>&nbsp;14: U+0004&nbsp; up&nbsp; 0044 0020 0008</STRONG></FONT></P></BLOCKQUOTE>
+<P><FONT face=Tahoma>Once you get into the &lt;ALT&gt;+Numpad stuff, things become harder to figure. Typing &lt;ALT&gt;65:</FONT></P>
+<BLOCKQUOTE dir=ltr style="MARGIN-RIGHT: 0px">
+<P><FONT face="Courier New"><STRONG>ReadConsoleInput test<BR>Ctrl-D to quit.</STRONG></FONT></P>
+<P><FONT face="Courier New"><STRONG>#&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; UC&nbsp;&nbsp;&nbsp; u/d&nbsp; VK&nbsp;&nbsp; SC&nbsp; State</STRONG></FONT></P>
+<P><BR><FONT face="Courier New"><STRONG>&nbsp; 0: U+0000 down 0012 0038 0121<BR>&nbsp; 1: U+0000 down 0066 004d 0021<BR>&nbsp; 2: U+0000&nbsp; up&nbsp; 0066 004d 0021<BR>&nbsp; 3: U+0000 down 0065 004c 0021<BR>&nbsp; 4: U+0000&nbsp; up&nbsp; 0065 004c 0021<BR>&nbsp; 5: U+0041&nbsp; up&nbsp; 0012 0038 <FONT color=#ff0000>4000120</FONT><BR>&nbsp; 6: U+0000 down 0011 001d 0028<BR>&nbsp; 7: U+0004 down 0044 0020 0028<BR>&nbsp; 8: U+0004&nbsp; up&nbsp; 0044 0020 0028</STRONG></FONT></P></BLOCKQUOTE>
+<P><FONT face=Tahoma>Now I do not know what to make of that weird dwControlKeyState value that came out when I released the &lt;ALT&gt; key and U+0041 was output. Especially since <A href="http://msdn.microsoft.com/library/en-us/dllproc/base/readconsoleinput.asp">ReadConsoleInput</A> claims that&nbsp;it can be one or more&nbsp;of the following will be output:</FONT></P>
+<BLOCKQUOTE dir=ltr style="MARGIN-RIGHT: 0px">
+<P>
+<TABLE width="50%" border=1>
+<TBODY>
+<TR>
+<TH>Value</TH>
+<TH>Meaning</TH></TR>
+<TR>
+<TD width="40%">CAPSLOCK_ON<BR>0x0080</TD>
+<TD width="60%">The CAPS LOCK light is on.</TD></TR>
+<TR>
+<TD width="40%">ENHANCED_KEY<BR>0x0100</TD>
+<TD width="60%">The key is enhanced.</TD></TR>
+<TR>
+<TD width="40%">LEFT_ALT_PRESSED<BR>0x0002</TD>
+<TD width="60%">The left ALT key is pressed.</TD></TR>
+<TR>
+<TD width="40%">LEFT_CTRL_PRESSED<BR>0x0008</TD>
+<TD width="60%">The left CTRL key is pressed.</TD></TR>
+<TR>
+<TD width="40%">NUMLOCK_ON<BR>0x0020</TD>
+<TD width="60%">The NUM LOCK light is on.</TD></TR>
+<TR>
+<TD width="40%">RIGHT_ALT_PRESSED<BR>0x0001</TD>
+<TD width="60%">The right ALT key is pressed.</TD></TR>
+<TR>
+<TD width="40%">RIGHT_CTRL_PRESSED<BR>0x0004</TD>
+<TD width="60%">The right CTRL key is pressed.</TD></TR>
+<TR>
+<TD width="40%">SCROLLLOCK_ON<BR>0x0040</TD>
+<TD width="60%">The SCROLL LOCK light is on.</TD></TR>
+<TR>
+<TD width="40%">SHIFT_PRESSED<BR>0x0010</TD>
+<TD width="60%">The SHIFT key is pressed.</TD></TR></TBODY></TABLE></P></BLOCKQUOTE>
+<P><FONT face=Tahoma>Kind of makes you wonder what 0x4000120&nbsp;is supposed to mean, doesn't it? :-)</FONT></P>
+<P><FONT face=Tahoma>It does not happen if you type &lt;ALT&gt;0065:</FONT></P>
+<BLOCKQUOTE dir=ltr style="MARGIN-RIGHT: 0px">
+<P><FONT face="Courier New"><STRONG>ReadConsoleInput test<BR>Ctrl-D to quit.</STRONG></FONT></P>
+<P><FONT face="Courier New"><STRONG>#&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; UC&nbsp;&nbsp;&nbsp; u/d&nbsp; VK&nbsp;&nbsp; SC&nbsp; State</STRONG></FONT></P>
+<P><BR><FONT face="Courier New"><STRONG>&nbsp; 0: U+0000 down 0012 0038 0121<BR>&nbsp; 1: U+0000 down 0060 0052 0021<BR>&nbsp; 2: U+0000&nbsp; up&nbsp; 0060 0052 0021<BR>&nbsp; 3: U+0000 down 0060 0052 0021<BR>&nbsp; 4: U+0000&nbsp; up&nbsp; 0060 0052 0021<BR>&nbsp; 5: U+0000 down 0066 004d 0021<BR>&nbsp; 6: U+0000&nbsp; up&nbsp; 0066 004d 0021<BR>&nbsp; 7: U+0000 down 0065 004c 0021<BR>&nbsp; 8: U+0000&nbsp; up&nbsp; 0065 004c 0021<BR>&nbsp; 9: U+0041&nbsp; up&nbsp; 0012 0038 <FONT color=#ff0000>0120</FONT><BR>&nbsp;10: U+0000 down 0011 001d 0028<BR>&nbsp;11: U+0004 down 0044 0020 0028<BR>&nbsp;12: U+0004&nbsp; up&nbsp; 0044 0020 0028</STRONG></FONT></P></BLOCKQUOTE>
+<P><FONT face=Tahoma>I'll have to dig into the source at some point to figure out what the extra 0x4000000 is supposed to mean. :-)</FONT></P>
+<P><FONT face=Tahoma>Now I should point out something that you may find out yourself if you take that sample code and compile it, which is the complication of trying to type with the &lt;ALT&gt; key held down and typing the numbers since unless you are used to doing this very fast you will get the "held down" key as additional down key event records.</FONT></P>
+<P><FONT face=Tahoma>And the managed version of this code (easily found in the new <A href="http://msdn2.microsoft.com/en-us/library/system.console.readkey.aspx">Console.ReadKey</A> method that returns a <A href="http://msdn2.microsoft.com/en-us/library/system.consolekeyinfo.aspx">ConsoleKeyInfo</A> object) has the same issue with the repeats.</FONT></P>
+<P><FONT face=Tahoma>Of course on one level makes sense since it is happening but on another makes it harder to know what is being typed, but on another level the cooler separation between <A href="http://msdn.microsoft.com/library/en-us/winui/winui/windowsuserinterface/userinput/keyboardinput/keyboardinputreference/keyboardinputmessages/wm_keydown.asp">WM_KEYDOWN</A>/<A href="http://msdn.microsoft.com/library/en-us/winui/winui/windowsuserinterface/userinput/keyboardinput/keyboardinputreference/keyboardinputmessages/wm_keyup.asp">WM_KEYUP</A> and the various character messages is actually much easier to handle on the programming side for cases like the &lt;ALT&gt;+Numpad entry method....</FONT></P>
+<P><FONT face=Tahoma>It is clear to me that it is more complicated to try and read this information in the console than it is with Windows applications and the messages that are sent.</FONT></P>
+<P><FONT face=Tahoma></FONT>&nbsp;</P>
+<P><FONT face=Tahoma color=#ff1493><EM>This post brought to you by</EM> "<FONT size=6>р</FONT>" <EM>(<A href="http://www.fileformat.info/info/unicode/char/0440">U+0440</A>, a.k.a. CYRILLIC SMALL LETTER ER)</EM></FONT></P>
+<hr/><p><a id="504175" href="#504175">#</a> <strong>Michael S. Kaplan</strong> on 15 Dec 2005 12:03 PM:</p><div style="margin-left: 1em">By the way, thanks to Ravi for the original inspiration on this one. :-)</div>
+<hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2008/06/27 <a href="http://archives.miloush.net/michkap/archive/2008/06/27/8661641.html">How does it work? It cheats, that's how!</a></p><p>2008/06/27 <a href="http://archives.miloush.net/michkap/archive/2008/06/27/8660309.html">Adding keys to your layout when you don't know what they are (aka Life with a 108-key keyboard layout)</a></p><p>2008/01/11 <a href="http://archives.miloush.net/michkap/archive/2008/01/11/7009288.html">Getting your Control to Function, and putting your Function in Control</a></p><p>2007/11/28 <a href="http://archives.miloush.net/michkap/archive/2007/11/28/6567810.html">Tracking down problems with the 102 key on an Acer Tablet with the UK Extended keyboard layout?</a></p><p>2006/09/26 <a href="http://archives.miloush.net/michkap/archive/2006/09/26/771554.html">In case you have a yen to extend your keyboard (or at least want a yen?)</a></p><p>2005/12/16 <a href="http://archives.miloush.net/michkap/archive/2005/12/16/504511.html">More on handling [Unicode] input in the console</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2005/12/16/504511.html" title="More on handling [Unicode] input in the console">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2005/12/15/503493.html" title="The bug you wish you&#39;d caught?">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2005-12">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2005-12-15">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2005/12/15/504092.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:40 GMT -->
+</html>

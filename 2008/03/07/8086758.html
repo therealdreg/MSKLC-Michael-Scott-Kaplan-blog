@@ -1,0 +1,66 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2008/03/07/8086758.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:36 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Some armchair root cause analysis of the suckage of lstrcmpi</title></head><body>
+<h1>Some armchair root cause analysis of the suckage of lstrcmpi</h1>
+<p><em>by Michael S. Kaplan, published on 2008/03/07 08:16 -05:00, original URI: http://blogs.msdn.com/b/michkap/archive/2008/03/07/8086758.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P><FONT color=#ff0000 size=1><EM>Please read the </EM></FONT><A class="" href="http://archives.miloush.net/michkap/archive/2008/02/28/7934999.html" mce_href="http://archives.miloush.net/michkap/archive/2008/02/28/7934999.html"><EM><FONT size=1>disclaimer</FONT></EM></A><EM><FONT color=#ff0000 size=1>; content of <A class="" href="http://blogs.msdn.com/michkap" mce_href="http://blogs.msdn.com/michkap">Michael Kaplan's blog</A> not approved by Microsoft!</FONT></EM></P>
+<P>So the other day <A class="" href="http://blogs.msdn.com/vcblog/archive/2007/02/26.aspx" mce_href="http://blogs.msdn.com/vcblog/archive/2007/02/26.aspx">Stephan T. Lavavej</A> (also known by his initials, <A class="" href="http://nuwen.net/stl.html" mce_href="http://nuwen.net/stl.html">STL</A>, which also happens to be what he works on!) came by and we chatted for a&nbsp;bit about&nbsp;development stuff.&nbsp;</P>
+<P>It was I think a pretty fascinating conversation, you know the kind where&nbsp;two people don't know each other (except&nbsp;crossing&nbsp;paths in emails&nbsp;to distribution lists), where each person knows a bit about something that the other person knows a lot about, but we walk into the conversation knowing that so there is no weirdness or&nbsp;competitive stuff about it....</P>
+<P>Anyway, at one point I was talking about that whole issue with <A class="" href="http://msdn2.microsoft.com/library/ms647489.aspx" mce_href="http://msdn2.microsoft.com/library/ms647489.aspx">lstrcmpi</A>, the one I talked about in <A class="" href="http://archives.miloush.net/michkap/archive/2007/09/14/4900107.html" mce_href="http://archives.miloush.net/michkap/archive/2007/09/14/4900107.html"><STRONG>How do I feel about lstrcmpi? I think it blows....</STRONG></A> and elsewhere.</P>
+<P>And I pointed out that people almost universally tend to use the function incorrectly.</P>
+<P>"Why?" he asked, genuinely curious. </P>
+<P>The question stopped me short. </P>
+<P>That kind of consistency is pretty rare, after all. </P>
+<P>Why is it so easy to get wrong?</P>
+<P>Hmmmm. I hadn't thought about it too much, really.</P>
+<P>After he left I thought about it a bit. And then it occurred to me....</P>
+<P>If you look at the <A class="" href="http://msdn2.microsoft.com/library/ms674678.aspx" mce_href="http://msdn2.microsoft.com/library/ms674678.aspx">string functions</A> topic in the Platform SDK, there are six functions that have that naming pattern:</P>
+<TABLE class="" width="90%" border=1>
+<TBODY>
+<TR>
+<TD class="" width="10%"><STRONG>Function</STRONG></TD>
+<TD class=""><STRONG>Purpose</STRONG></TD>
+<TD class="" width="10%"><STRONG>kinda&nbsp;like CRT's</STRONG></TD></TR>
+<TR>
+<TD class=""><A class="" href="http://msdn2.microsoft.com/library/ms647487.aspx" mce_href="http://msdn2.microsoft.com/library/ms647487.aspx">lstrcat</A></TD>
+<TD class="">This function appends one null-terminated string to another null-terminated string.</TD>
+<TD class="">&nbsp;<A class="" href="http://msdn2.microsoft.com/library/h1x0y282.aspx" mce_href="http://msdn2.microsoft.com/library/h1x0y282.aspx">strcat</A>?</TD></TR>
+<TR>
+<TD class=""><A class="" href="http://msdn2.microsoft.com/library/ms647492.aspx" mce_href="http://msdn2.microsoft.com/library/ms647492.aspx">lstrlen</A></TD>
+<TD class="">&nbsp;This function returns the length in bytes (ANSI version) or WCHAR values (Unicode version) of the specified null-terminated string (not including the terminating null character).</TD>
+<TD class="">&nbsp;<A class="" href="http://msdn2.microsoft.com/library/78zh94ax.aspx" mce_href="http://msdn2.microsoft.com/library/78zh94ax.aspx">strlen</A>?</TD></TR>
+<TR>
+<TD class=""><A class="" href="http://msdn2.microsoft.com/library/ms647490.aspx" mce_href="http://msdn2.microsoft.com/library/ms647490.aspx">lstrcpy</A></TD>
+<TD class="">&nbsp;This function copies a null-terminated string to a buffer, including&nbsp;the terminating null character.</TD>
+<TD class="">&nbsp;<A class="" href="http://msdn2.microsoft.com/library/kk6xf663.aspx" mce_href="http://msdn2.microsoft.com/library/kk6xf663.aspx">strcpy</A>?</TD></TR>
+<TR>
+<TD class=""><A class="" href="http://msdn2.microsoft.com/library/ms647491.aspx" mce_href="http://msdn2.microsoft.com/library/ms647491.aspx">lstrcpyn</A></TD>
+<TD class="">&nbsp;This function copies a specified number of bytes (ANSI version) or WCHAR values (Unicode version) from a source string null-terminated&nbsp;into a buffer. </TD>
+<TD class="">&nbsp;<A class="" href="http://msdn2.microsoft.com/library/xdsywd25.aspx" mce_href="http://msdn2.microsoft.com/library/xdsywd25.aspx">strncpy</A>?</TD></TR>
+<TR>
+<TD class=""><A class="" href="http://msdn2.microsoft.com/library/ms647488.aspx" mce_href="http://msdn2.microsoft.com/library/ms647488.aspx">lstrcmp</A></TD>
+<TD class="">&nbsp;This function compares two character strings. The comparison is case-sensitive.</TD>
+<TD class="">&nbsp;<A class="" href="http://msdn2.microsoft.com/library/e0z9k731.aspx" mce_href="http://msdn2.microsoft.com/library/e0z9k731.aspx">strcmp</A>?</TD></TR>
+<TR>
+<TD class=""><A class="" href="http://msdn2.microsoft.com/library/ms647489.aspx" mce_href="http://msdn2.microsoft.com/library/ms647489.aspx">lstrcmpi</A></TD>
+<TD class="">&nbsp;This function compares two character strings. The comparison is not case-sensitive.</TD>
+<TD class="">&nbsp;<A class="" href="http://msdn2.microsoft.com/library/ms235392.aspx" mce_href="http://msdn2.microsoft.com/library/ms235392.aspx">strcmpi</A>?</TD></TR></TBODY></TABLE></TABLE>
+<P mce_keep="true">Given that first four functions have such similar behavior to their C runtime&nbsp;counterparts, the similarly named last two can reasonably expected to do the same thing, right?</P>
+<P mce_keep="true">The fact that they don't is obviously the source of a lot of problems here.</P>
+<P mce_keep="true">Now if the functions were named <STRONG>lstrcoll</STRONG> and <STRONG>lstrcolli</STRONG> then perhaps the function would not be so commonly misused.</P>
+<P mce_keep="true">Nobody just ever gave these functions a chance -- it is like giving a child a terrible name that gets them beaten up in school or something!</P>
+<P mce_keep="true">Nobody I talked to could recall what the <STRONG>lowercase L prefix</STRONG>&nbsp;was intended to mean, either. And now as the CRT deprecates most of these functions&nbsp;in favor&nbsp;of&nbsp;names that fit the ISO standard rather than the POSIX one, the Win32 functions will become even further removed from understanding.</P>
+<P mce_keep="true">Makes me wonder if Microsoft just ought to deprecate&nbsp;its "L" prefixed&nbsp;family,&nbsp;too!</P>
+<P mce_keep="true">&nbsp;</P>
+<P mce_keep="true"><FONT color=#ff00ff><EM>This&nbsp;blog brought to you by</EM><FONT size=5> l </FONT><EM>(<A class="" href="http://www.fileformat.info/info/unicode/char/006c" mce_href="http://www.fileformat.info/info/unicode/char/006c">U+006c</A>, aka LATIN SMALL LETTER L)</EM></FONT></P>
+<hr/><p><strong>Mike Dimmick</strong> on 7 Mar 2008 10:46 AM:</p><div style="margin-left: 1em"><p>I suspect the l prefix is from 16-bit Windows, where the C runtime might be 'near' and these routines were 'far'. So if you had a 'far' string, pointed to by a 'far' pointer, you needed to use lstrxxx rather than strxxx.</p>
+<p>Visual C++ 1.52 documents _fstrcat (etc) in the runtime and that even goes back to C/C++ 6.0, but other compiler vendors may not have supported it.</p>
+<p>lstrcmp was added in Windows 3.0 according to the 3.1 SDK help file I have.</p>
+<p>The lstrxxx family are also useful for ATL developers who don't want to link to the CRT!</p></div>
+<p><strong>Michael S. Kaplan</strong> on 7 Mar 2008 10:53 AM:</p><div style="margin-left: 1em"><p>But they have to stay away from lstrcmp and lstrcmpi, though. :-)</p>
+<p>Plus, no one gets away from the CRT these days....</p>
+</div>
+<hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2008/03/18 <a href="http://archives.miloush.net/michkap/archive/2008/03/18/8306597.html">Conventional wisdom is retarded, aka What the @#%&* is _O_U16TEXT?</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2008/03/08/8113913.html" title="Influence vs. Impact: the scooter metaphor">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2008/03/07/7994143.html" title="Requirements first, criticism of attempted solutions second!">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2008-03">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2008-03-07">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2008/03/07/8086758.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:36 GMT -->
+</html>

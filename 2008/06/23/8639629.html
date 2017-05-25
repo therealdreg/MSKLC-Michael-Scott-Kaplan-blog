@@ -1,0 +1,30 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2008/06/23/8639629.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:36 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>The hazards of appropriate cleanup</title></head><body>
+<h1>The hazards of appropriate cleanup</h1>
+<p><em>by Michael S. Kaplan, published on 2008/06/23 03:46 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2008/06/23/8639629.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P>There was a mail thread that happened recently on one of those "if you aren't a fulltime employee then why the hell are you here?" kind of aliases, one that I belong to because by following along the problems (and occasionally looking at the remotes) I became much better at debugging.</P>
+<P>Plus sometimes I even have unique information about a problem (since my areas of expertise occasionally come up!). A few times I even ended up with International Fundamentals consulting&nbsp;work, helping people out with issues that I noticed. It isn't <EM>really</EM>&nbsp;ambulance chasing, but it is being somewhat near the ambulances in case the patients happen to need my help. :-)</P>
+<P>Anyway,&nbsp;they were talking about one of those interesting kind of bugs that pop up from time to time where somebody was delay loading a library during process exit and of course this was leading to other interesting problems.</P>
+<P>That horror story Raymond covered in <A class="" href="http://blogs.msdn.com/oldnewthing/archive/2007/05/03/2383346.aspx" mce_href="http://blogs.msdn.com/oldnewthing/archive/2007/05/03/2383346.aspx">Quick overview of how processes exit on Windows XP</A>? That came up at one point, kind of a reminder about all the things that happened on thread tear-down that you just didn't want to bother with on process tear-down. Because they take too much time and may deadlock (plus in the case of this bug, actually did).</P>
+<P>And then someone asked me if I had this problem with the MSLU (Microsoft Layer for Unicode on Win9x Systems). He knew that we did some unload work....</P>
+<P>Actually, we don't do much here. </P>
+<P>What we almost did, that is the interesting part....</P>
+<P>We added a function to UNICOWS.LIB that you can find if you spelunk through the symbols (which some folks have) named:</P>
+<BLOCKQUOTE>
+<P><STRONG>___FreeAllLibrariesInMsluLoader</STRONG></P></BLOCKQUOTE>
+<P>And a sister function exported from the UNICOWS.DLL called:</P>
+<BLOCKQUOTE>
+<P><STRONG>__FreeAllLibrariesInMsluDll</STRONG></P></BLOCKQUOTE>
+<P>These functions take no parameters and need none, either&nbsp;-- the former&nbsp;calls FreeLibrary on everything it called LoadLibrary on in the code inside the .LIB that is compiled into the application, and the latter does the same with all of the libraries loaded by the DLL, and clears all the function pointers.</P>
+<P>Technically, these actions are useful in the case of MSLU being completely unloaded, which is why they exist. There was even some discussion at the time about putting it in the DLL_PROCESS_DETACH code in MSLU's DllMain, which at the time just had TLS cleanup code and such.</P>
+<P>But in the end, the decision was to leave the call out, since most people did not need&nbsp;function pointers&nbsp;private to MSLU&nbsp;to be so religiously unloaded -- given that once MSLU is unloaded no one could be calling them anyway.</P>
+<P>In fact, the main benefit of them is for when the thing that loaded MSLU may have leaked out function pointers to MSLU functions -- which means someone else may try to call the DLL. If it still happens to be in memory but its TLS information is gone, trying to call into it can cause it to use random memory information as if it was valid handles and function pointers. And in such cases it is much better for the code to crash immediately (which it will when all the pointers have been changed to NULL).</P>
+<P>A rare scenario, obviously. But one that is important every once in a great&nbsp;while.</P>
+<P>And&nbsp;people have found these functions in the past;&nbsp;there are even components and applications that use them due to their wholesome, cleanupy sound. </P>
+<P>So I figure they at least deserve a mention, now.... :-)<BR></P>
+<P><FONT color=#ff00ff><EM>This blog brought to you by</EM><FONT size=7> ᠃ </FONT><EM>(<A class="" href="http://www.fileformat.info/info/unicode/char/1803" mce_href="http://www.fileformat.info/info/unicode/char/1803">U+1803</A>, a.k.a. MONGOLIAN FULL STOP)</EM></FONT></P>
+<hr/><div style="margin-left: 1em"><em>no comments</em></div><hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2008/06/23/8640907.html" title="&quot;It makes total sense when you explain that the Turks have four eyes&quot;, aka Transcripts are hard, let&#39;s go shopping!">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2008/06/22/8639173.html" title="The oversimplified world of facebook">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2008-06">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2008-06-23">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2008/06/23/8639629.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:36 GMT -->
+</html>

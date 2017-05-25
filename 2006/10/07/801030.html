@@ -1,0 +1,211 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2006/10/07/801030.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:39 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>GetStringTypeW almost understands the Bidirectional Algorithm</title></head><body>
+<h1>GetStringTypeW almost understands the Bidirectional Algorithm</h1>
+<p><em>by Michael S. Kaplan, published on 2006/10/07 12:51 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2006/10/07/801030.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<FONT face=Tahoma size=3>
+<P>Since we're gonna talk about bidirectional text, it makes sense to start with <A href="http://www.unicode.org/reports/tr9/" mce_href="http://www.unicode.org/reports/tr9/">UAX #9 (The Bidirectional Algorithm)</A>. Specifically, there is a table in there that has all of the <A href="http://www.unicode.org/reports/tr9/#Bidirectional_Character_Types" mce_href="http://www.unicode.org/reports/tr9/#Bidirectional_Character_Types">bidirectional character types</A>: </P>
+<BLOCKQUOTE>
+<DIV align=center>
+<CENTER>
+<TABLE class=noBorder cellSpacing=0 cellPadding=2 border=0 class="noBorder">
+<TBODY>
+<TR>
+<TD class=noborder class="noborder">
+<P align=center><B>Table 3-7. Bidirectional Character Types</B></P></TD></TR>
+<TR>
+<TD class=noborder align=middle class="noborder">
+<TABLE class="" cellSpacing=1 cellPadding=2 border=1>
+<TBODY>
+<TR>
+<TH class="" vAlign=top align=left>
+<P align=left>Category</P></TH>
+<TH class="" vAlign=top align=left>
+<P align=left>Type</P></TH>
+<TH class="" vAlign=top align=left>
+<P align=left>Description</P></TH>
+<TH class="" vAlign=top align=left>
+<P align=left>General Scope</P></TH></TR>
+<TR>
+<TH class="" align=left rowSpan=7>
+<P align=left>Strong</P></TH>
+<TD class="" vAlign=top align=left><B>L</B></TD>
+<TD class="" vAlign=top align=left>Left-to-Right</TD>
+<TD class="" vAlign=top align=left>LRM, Most alphabetic, syllabic, Han ideographic characters, digits that are neither European nor Arabic, ...</TD></TR>
+<TR>
+<TD class="" vAlign=top align=left><B>LRE</B></TD>
+<TD class="" vAlign=top align=left>Left-to-Right Embedding</TD>
+<TD class="" vAlign=top align=left>LRE</TD></TR>
+<TR>
+<TD class="" vAlign=top align=left><B>LRO</B></TD>
+<TD class="" vAlign=top align=left>Left-to-Right Override</TD>
+<TD class="" vAlign=top align=left>LRO</TD></TR>
+<TR>
+<TD class="" vAlign=top align=left><B>R</B></TD>
+<TD class="" vAlign=top align=left>Right-to-Left</TD>
+<TD class="" vAlign=top align=left>RLM, Hebrew alphabet, most punctuation specific to that script, ...</TD></TR>
+<TR>
+<TD class="" vAlign=top align=left><B>AL</B></TD>
+<TD class="" vAlign=top align=left>Right-to-Left Arabic</TD>
+<TD class="" vAlign=top align=left>Arabic, Thaana, and Syriac alphabets, most punctuation specific to those scripts, ...</TD></TR>
+<TR>
+<TD class="" vAlign=top align=left><B>RLE</B></TD>
+<TD class="" vAlign=top align=left>Right-to-Left Embedding</TD>
+<TD class="" vAlign=top align=left>RLE</TD></TR>
+<TR>
+<TD class="" vAlign=top align=left><B>RLO</B></TD>
+<TD class="" vAlign=top align=left>Right-to-Left Override</TD>
+<TD class="" vAlign=top align=left>RLO</TD></TR>
+<TR>
+<TH class="" align=left rowSpan=8>
+<P align=left>Weak</P></TH>
+<TD class="" vAlign=top align=left><B>PDF</B></TD>
+<TD class="" vAlign=top align=left>Pop Directional Format</TD>
+<TD class="" vAlign=top align=left>PDF</TD></TR>
+<TR>
+<TD class="" vAlign=top align=left><B>EN</B></TD>
+<TD class="" vAlign=top align=left>European Number</TD>
+<TD class="" vAlign=top align=left>European digits, Eastern Arabic-Indic digits, ...</TD></TR>
+<TR>
+<TD class="" vAlign=top align=left><B>ES</B></TD>
+<TD class="" vAlign=top align=left>European Number Separator</TD>
+<TD class="" vAlign=top align=left>Plus Sign, Minus Sign</TD></TR>
+<TR>
+<TD class="" vAlign=top align=left><B>ET</B></TD>
+<TD class="" vAlign=top align=left>European Number Terminator</TD>
+<TD class="" vAlign=top align=left>Degree, Currency symbols, ...</TD></TR>
+<TR>
+<TD class="" vAlign=top align=left><B>AN</B></TD>
+<TD class="" vAlign=top align=left>Arabic Number</TD>
+<TD class="" vAlign=top align=left>Arabic-Indic digits, Arabic decimal &amp; thousands separators, ...</TD></TR>
+<TR>
+<TD class="" vAlign=top align=left><B>CS</B></TD>
+<TD class="" vAlign=top align=left>Common Number Separator</TD>
+<TD class="" vAlign=top align=left>Colon, Comma, Full Stop (Period), Non-breaking space, ...</TD></TR>
+<TR>
+<TD class="" vAlign=top align=left><B>NSM</B></TD>
+<TD class="" vAlign=top align=left>Non-Spacing Mark</TD>
+<TD class="" vAlign=top align=left>Characters marked Mn (Non-Spacing Mark) and Me (Enclosing Mark) in the Unicode Character Database.</TD></TR>
+<TR>
+<TD class="" vAlign=top align=left><B>BN</B></TD>
+<TD class="" vAlign=top align=left>Boundary Neutral</TD>
+<TD class="" vAlign=top align=left>Most formatting and control characters, other than those explicitly given types above.</TD></TR>
+<TR>
+<TH class="" align=left rowSpan=4>
+<P align=left>Neutral</P></TH>
+<TD class="" vAlign=top align=left><B>B</B></TD>
+<TD class="" vAlign=top align=left>Paragraph Separator</TD>
+<TD class="" vAlign=top align=left>Paragraph Separator, appropriate Newline Functions, higher-protocol paragraph determination.</TD></TR>
+<TR>
+<TD class="" vAlign=top align=left><B>S</B></TD>
+<TD class="" vAlign=top align=left>Segment Separator</TD>
+<TD class="" vAlign=top align=left>Tab</TD></TR>
+<TR>
+<TD class="" vAlign=top align=left><B>WS</B></TD>
+<TD class="" vAlign=top align=left>Whitespace</TD>
+<TD class="" vAlign=top align=left>Space, Figure Space, Line Separator, Form Feed, General Punctuation Spaces, ...</TD></TR>
+<TR>
+<TD class="" vAlign=top align=left><B>ON</B></TD>
+<TD class="" vAlign=top align=left>Other Neutrals</TD>
+<TD class="" vAlign=top align=left>All other characters, including OBJECT REPLACEMENT CHARACTER.</TD></TR></TBODY></TABLE></TD></TR></TBODY></TABLE></CENTER></DIV></BLOCKQUOTE>
+<P>&nbsp;Now one of the&nbsp;interesting parts about this table&nbsp;is how there are specific types listed that only contain a single control character in them, basically LRE/LRO/RLE/RLO/PDF. Now let's compare the items in this table to the CT_CTYPE2 information in the <A href="http://msdn.microsoft.com/library/en-us/winui/winui/windowsuserinterface/resources/strings/stringreference/stringfunctions/getstringtypew.asp" mce_href="http://msdn.microsoft.com/library/en-us/winui/winui/windowsuserinterface/resources/strings/stringreference/stringfunctions/getstringtypew.asp">GetStringTypeW</A> function (which, as I have stated <A href="http://archives.miloush.net/michkap/archive/2005/10/31/486870.html" mce_href="http://archives.miloush.net/michkap/archive/2005/10/31/486870.html"><STRONG>previously</STRONG></A>, is the best version of the function to call, no matter what the documentation may say!): </P>
+<BLOCKQUOTE>
+<P mce_keep="true">&nbsp;</P>
+<P>Ctype 2 
+<P>These types support proper layout of Unicode text. The direction attributes are assigned so that the bi-directional layout algorithm standardized by Unicode produces accurate results. These types are mutually exclusive. For more information about the use of these attributes, see <I>The Unicode Standard: Worldwide Character Encoding, Volumes 1 and 2</I>, Addison Wesley Publishing Company: 1991, 1992, ISBN 0201567881.<BR>
+<TABLE class="" border=1>
+<TBODY>
+<TR>
+<TD class=""><STRONG>Name</STRONG></TD>
+<TD class=""><STRONG>Value</STRONG></TD>
+<TD class=""><STRONG>Meaning</STRONG></TD></TR>
+<TR>
+<TD class=""><STRONG>Strong</STRONG></TD>
+<TD class="">&nbsp;</TD>
+<TD class="">&nbsp;</TD></TR>
+<TR>
+<TD class="">C2_LEFTTORIGHT</TD>
+<TD class="">0x0001</TD>
+<TD class="">Left to right </TD></TR>
+<TR>
+<TD class="">C2_RIGHTTOLEFT</TD>
+<TD class="">0x0002</TD>
+<TD class="">Right to left </TD></TR>
+<TR>
+<TD class=""><B>Weak</B></TD>
+<TD class="">&nbsp;</TD>
+<TD class="">&nbsp;</TD></TR>
+<TR>
+<TD class="">C2_EUROPENUMBER</TD>
+<TD class="">0x0003</TD>
+<TD class="">European number, European digit </TD></TR>
+<TR>
+<TD class="">C2_EUROPESEPARATOR</TD>
+<TD class="">0x0004</TD>
+<TD class="">European numeric separator </TD></TR>
+<TR>
+<TD class="">C2_EUROPETERMINATOR</TD>
+<TD class="">0x0005</TD>
+<TD class="">European numeric terminator</TD></TR>
+<TR>
+<TD class="">C2_ARABICNUMBER</TD>
+<TD class="">0x0006</TD>
+<TD class="">Arabic number </TD></TR>
+<TR>
+<TD class="">C2_COMMONSEPARATOR</TD>
+<TD class="">0x0007</TD>
+<TD class="">Common numeric separator </TD></TR>
+<TR>
+<TD class=""><B>Neutral</B></TD>
+<TD class="">&nbsp;</TD>
+<TD class="">&nbsp;</TD></TR>
+<TR>
+<TD class="">C2_BLOCKSEPARATOR</TD>
+<TD class="">0x0008</TD>
+<TD class="">Block separator </TD></TR>
+<TR>
+<TD class="">C2_SEGMENTSEPARATOR</TD>
+<TD class="">0x0009</TD>
+<TD class="">Segment separator </TD></TR>
+<TR>
+<TD class="">C2_WHITESPACE</TD>
+<TD class="">0x000A</TD>
+<TD class="">White space </TD></TR>
+<TR>
+<TD class="">C2_OTHERNEUTRAL</TD>
+<TD class="">0x000B</TD>
+<TD class="">Other neutrals </TD></TR>
+<TR>
+<TD class=""><B>Not applicable</B></TD>
+<TD class="">&nbsp;</TD>
+<TD class="">&nbsp;</TD></TR>
+<TR>
+<TD class="">C2_NOTAPPLICABLE</TD>
+<TD class="">0x0000</TD>
+<TD class="">No implicit directionality (for example, control codes)</TD></TR>
+<BLOCKQUOTE></BLOCKQUOTE>
+<P mce_keep="true">&nbsp;</P></TBODY>
+<P mce_keep="true">&nbsp;
+<DIV>&nbsp;</DIV></P></TABLE></P></BLOCKQUOTE>
+<P>Now obviously the bit with pointing to version 1.0 of the Unicode Standard, ISBN and all, is something of an issue -- in XP and Server 2003 it should be talking about Unicode 3.0 (ISBN 0201616335) and in Vista it should be talking about Unicode 5.0 (ISBN 0321480910) and to be frank it should just be pointing to the online version and its data files anyway. :-)</P>
+<P>Now obviously if one is using a character that is newer that the version of the OS it will also show up in C2_NOTAPPLICABLE and thus it is obvious that the documentation should point out that this category includes characters that the function does not know about. But that is a minor doc issue that can be fixed whenever.</P>
+<P>But look at the other problem -- that C2_NOTAPPLICABLE category actually contains those control characters with <STRONG>strong directionality</STRONG> (LRE/LRO/RLE/RLO) and the one with <STRONG>weak directionality</STRONG>&nbsp;(PDF), even though it claims everything in that category has no implicit directionality. </P>
+<P>Luckily,&nbsp;the code in GDI carries around its own tables so it is not making decisions based on this, though it is interesting to argue about whether this should be fixed or not. Yes, someone may be depending on the old values, but the whole point of the function is to provide information supplied on the Unicode Standard!</P>
+<P>Wouldn't it be better to add some new values&nbsp;and update the value for these five characters? I mean, we do not hesitate to add new values, and if something changes within the Unicode Standard (not often, but it can happen) then we update. So we know where the bar is set.</P>
+<P>If we can update due to external changes, doesn't that mean we should also be updating due to internal bugs? </P>
+<P>Or should this case, on the assumption that any working implementation&nbsp;using CT_CTYPE2 values is already handling this case,&nbsp;be treated as a documentation issue for anyone else stumbling onto the function and wanting to use it?</P>
+<P mce_keep="true">&nbsp;</P>
+<P><FONT color=#ff0080><EM>This post brought to you by <A href="http://www.fileformat.info/info/unicode/char/202c" mce_href="http://www.fileformat.info/info/unicode/char/202c">U+202c</A>, a.k.a. PDF, a.k.a. POP DIRECTIONAL FORMATTING)</EM></FONT></P></FONT>
+<hr/><p><a id="801280" href="#801280">#</a> <strong>Simon Montagu</strong> on 7 Oct 2006 2:47 PM:</p><div style="margin-left: 1em"><P>"<EM>Now obviously if one is using a character that is newer that the version of the OS it will also show up in C2_NOTAPPLICABLE.</EM>"<BR><BR>That's not obvious to me, in fact I would say it's a bug. The second bullet point below that table in the UBA says "Unassigned characters are given strong types in the algorithm. This is an explicit exception to the general Unicode conformance requirements with respect to unassigned characters."</P></div>
+<p><a id="801302" href="#801302">#</a> <strong>Michael S. Kaplan</strong> on 7 Oct 2006 3:06 PM:</p><div style="margin-left: 1em"><p>Hi Simon, </p>
+<p>Well, since they have also included the strong Cf characters, perhaps the function is on the right track and you could just consider that a doc bug? </p>
+<p>Though that still leaves one not know what to do with the Cf characters with different strong directionality than the block would give them by default....</p>
+</div>
+<p><a id="803516" href="#803516">#</a> <strong>Nick Lamb</strong> on 8 Oct 2006 4:25 AM:</p><div style="margin-left: 1em">The control characters you mentioned don't have implicit directionality, they have explicit directionality. And Simon is correct to tell you that unassigned characters have strong types.<br/><br/>As far as I can see these features are necessary to a useful implementation of UAX#9. but as you've explained previously you prefer Microsoft's implementation which e.g. always ignores P2 and P3. The Unicode tables as provided aren't necessary for such a weak or incomplete implementation, so presumably Microsoft should be maintaining their own tables for this purpose (certainly some other users of the tables think so...)</div>
+<p><a id="803525" href="#803525">#</a> <strong>Michael S. Kaplan</strong> on 8 Oct 2006 4:47 AM:</p><div style="margin-left: 1em"><P>Huh? Nick, I do not have a clue what you are talking about, as usual.<BR><BR>I was making the point that grouping:<BR><BR>* ON<BR>* Unassigned<BR>* Cf characters of strong and weak directionality<BR><BR>In one category is a bad thing in this function. Are you disagreeing with that or agreeing with that?<BR><BR>I also pointed out that the MS implementations are not using this function's data, they are doing their own thing. Do you disagree with that?<BR><BR>I understand you like to disagree, and I understand that every time I talk about Bidi you plan to make sure to point out that Microsoft does not handle Bidi correctly according to you and that the only person who knows less than Microsoft about Bidi is me. But could you at least address the points I am raising rather than your own agenda? I mean, really!</P></div>
+<p><a id="804628" href="#804628">#</a> <strong>Nick Lamb</strong> on 8 Oct 2006 7:01 AM:</p><div style="margin-left: 1em"><P>Hmm, point by point...<BR><BR>* It is a bug to disobey the clear instruction in UAX#9 to include directionality for unassigned characters, and that bug should be fixed (but we won't hold our breath as usual)<BR><BR>* Other neutrals and explicit control characters belong together for the purpose of UAX#9 paragraph level direction. You could give them separate CT_TYPE2 values but it seems like unnecessary clutter which also might interfere with any currently functional applications using this API.<BR><BR>* Microsoft should implement UAX #9 as completely as possible, because it's what users prefer (as at least one other user has pointed out to you before) and therefore this table and API call would be useful once the unassigned characters are fixed, although any implementation is acceptable if it produces the correct results.<BR><BR>* Currently Windows doesn't provide any equivalent to the paragraph order P2 and P3 stages of UAX#9 even when it has no meaningful higher protocol. Instead paragraph level is always overridden.<BR><BR>* It's pretty easy to find or write regression tests for UAX #9 (you can't directly use the tests in the document itself because they've been transformed into ASCII for readability) and see whether you get P2 and P3 right, so that isn't a matter of opinion.<BR><BR>This is a marginal case for me, users frustrated by Microsoft's BiDi implementation don't lose data but they may create documents with redundant control codes, or require a higher level protocol to be used because the rendering in Windows is incorrect with plain text. As it is, it's hard even to be convinced that this is deliberate rather than, as I originally suggested so long ago, just another bug.</P></div>
+<p><a id="804685" href="#804685">#</a> <strong>Michael S. Kaplan</strong> on 8 Oct 2006 7:22 AM:</p><div style="margin-left: 1em"><P>Sigh....<BR><BR>So, the only real problem that has anything to do with this post is the second one.<BR><BR>Every other bullet point is unrelated to this post, which FWIW makes me wonder how you feel about how so many of the changes in UAX #9 over the last few years have been to bring it more in line with Microsoft's implementation. Though not enough to want to bother listen to you rant again, of course. :-)<BR><BR>Per your second point everything is actually fine as it is in this function other than various doc issues, such as , the doc. description of C2_OTHERNOTAPPLICABLE. By your estimation, not even a code change would be required to take care of the issues IN THIS POST.<BR><BR>Please do not take every time I mention Bidi as your chance to get on your soapbox about Microsoft's evil implementation. It's old, it's tired, it's offtopic. And from now on the editing scissors will be applied as needed to keep your Bidi frothing on-topic....<BR><BR>Though I look forward to your own "Microsoft's raping and pillaging of Bidi prove it is an evil company" blog and will happily subscribe to it as soon as it has been set up. I'll even link to it, if you promise to make it entertaining.</P></div>
+<hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2008/02/24 <a href="http://archives.miloush.net/michkap/archive/2008/02/24/7876678.html">How to get it done if Microsoft does not do it?</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2006/10/08/803384.html" title="Stuffing the ballot box?">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2006/10/07/799605.html" title="Pimping your Brazilian keyboard">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2006-10">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2006-10-07">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2006/10/07/801030.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:39 GMT -->
+</html>

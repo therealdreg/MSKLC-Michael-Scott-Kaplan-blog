@@ -1,0 +1,462 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2012/10/27/10362603.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:47 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>The evolving Story of Locale Support, part 28: We finally fixed that 'Install New Languages' thing!</title></head><body>
+<h1>The evolving Story of Locale Support, part 28: We finally fixed that 'Install New Languages' thing!</h1>
+<p><em>by Michael S. Kaplan, published on 2012/10/26 07:01 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2012/10/26/10362603.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<p>Previous blogs from this series:</p>
+<ul>
+<li><strong><a title="part 27 (No, the T and the H aren't silent...)" href="http://archives.miloush.net/michkap/archive/2012/10/02/10354988.html">part 27 (No, the T and the H aren't silent...)</a></strong></li>
+<li><strong><a title="part 26 (Hey Windows 8, there's someone on the phone for you.)" href="http://archives.miloush.net/michkap/archive/2012/08/20/10341516.html">part 26 (Hey Windows 8, there's someone on the phone for you.)</a></strong></li>
+<li><strong><a title="part 25 (Something old, something new, something repurposed, and something...)" href="http://archives.miloush.net/michkap/archive/2012/07/11/10327775.html">part 25 (Something old, something new, something repurposed, and something...)</a></strong></li>
+<li><strong><a title="part 24 (I Adar you! Hell, I Double Adar you! - Windows 8 ed.)" href="http://archives.miloush.net/michkap/archive/2012/06/07/10316511.html">part 24 (I Adar you! Hell, I Double Adar you! - Windows 8 ed.)</a></strong></li>
+<li><strong><a title="part 23 (Tamazight? Outta sight!)" href="http://archives.miloush.net/michkap/archive/2012/06/05/10315033.html">part 23 (Tamazight? Outta sight!)</a></strong></li>
+<li><strong><a title="part 22 (Digit Substitution 2.0)" href="http://archives.miloush.net/michkap/archive/2012/04/12/10292952.html">part 22 (Digit Substitution 2.0)</a></strong></li>
+<li><strong><a title="part 21 (The Windows 8 Hijripalooza extraordinaire!)" href="http://archives.miloush.net/michkap/archive/2012/03/08/10278921.html">part 21 (The Windows 8 Cripples extraordinary!)</a></strong></li>
+<li><strong><a title="part 20 (Yes, it's Bangla. Not Bengali!)" href="http://archives.miloush.net/michkap/archive/2012/03/02/10276258.html">part 20 (Yes, it's Bangla. Not Bengali!)</a></strong></li>
+<li><strong><a title="part 19 (In honor of International Mother Language Day...)" href="http://archives.miloush.net/michkap/archive/2012/02/21/10270502.html">part 19 (In honor of International Mother Language Day...)</a></strong></li>
+<li><strong><a title="part 18 (Two scripts that share ten digits can be trouble)" href="http://archives.miloush.net/michkap/archive/2012/02/15/10268235.html">part 18 (Two scripts that share ten digits can be trouble)</a></strong></li>
+<li><strong><a title="part 17 (Today I feel like translating you more than before)" href="http://archives.miloush.net/michkap/archive/2012/02/02/10263136.html">part 17 (Today I feel like translating you more than before)</a></strong></li>
+<li><strong><a title="part 16 (We can't scale to a Xishuangbanna Dai locale, but&hellip;)" href="http://archives.miloush.net/michkap/archive/2012/01/24/10259941.html">part 16 (We can't scale to a Xishuangbanna Dai locale, but&hellip;)</a></strong></li>
+<li><strong><a title="part 15 (Fixing our listings up in Windows 8!)" href="http://archives.miloush.net/michkap/archive/2012/01/17/10256884.html">part 15 (Fixing our listings up in Windows 8!)</a></strong></li>
+<li><strong><a title="part 14 (Tifinagh, Tamazight, and Berber? Oh my!)" href="http://archives.miloush.net/michkap/archive/2011/12/22/10250349.html">part 14 (Tifinagh, Tamazight, and Berber? Oh my!)</a></strong></li>
+<li><strong><a title="part 13 (Divvying up locales, yet again!)" href="http://archives.miloush.net/michkap/archive/2011/12/21/10249983.html">part 13 (Divvying up locales, yet again!)</a></strong></li>
+<li><strong><a title="part 12 (Logic dictates that we keep a sense of proportion about the RATIO)" href="http://archives.miloush.net/michkap/archive/2011/12/09/10246051.html">part 12 (Logic dictates that we keep a sense of proportion about the RATIO)</a></strong></li>
+<li><strong><a title="part 11: What language is that keyboard for?)" href="http://archives.miloush.net/michkap/archive/2011/11/23/10240896.html">part 11 (What language is that keyboard for?)</a></strong></li>
+<li><strong><a title="part 10 (Perhaps it is best to think of it as unintelligent design?)" href="http://archives.miloush.net/michkap/archive/2011/11/22/10239572.html">part 10 (Perhaps it is best to think of it as unintelligent design?</a></strong></li>
+<li><strong><a title="part 9 (Nastaleeq vs. Nastaliq? Either way, Windows 8 has got it!)" href="http://archives.miloush.net/michkap/archive/2011/11/16/10237715.html">part 9 (Nastaleeq vs. Nastaliq? Either way, Windows 8 has got it!</a></strong></li>
+<li><strong><a title="part 8 ([Finally] taking care of some [more] languages in Pakistan)" href="http://archives.miloush.net/michkap/archive/2011/11/15/10237317.html">part 8 ([Finally] taking care of some [more] languages in Pakistan</a></strong></li>
+<li><strong><a title="part 7 (That would be a 'call and a raise' for Hawaiian" href="http://archives.miloush.net/michkap/archive/2011/11/11/10236194.html">part 7 (That would be a 'call and a raise' for Hawaiian)</a></strong></li>
+<li><strong><a title="part 6 (Behind the Cherokee Phonetic layout in Windows 8)" href="http://archives.miloush.net/michkap/archive/2011/11/09/10235391.html">part 6 (Behind the Cherokee Phonetic layout in Windows 8)</a></strong></li>
+<li><strong><a title="part 5 (...until the decision was made to not refuse to add it)" href="http://archives.miloush.net/michkap/archive/2011/11/08/10234995.html">part 5 (...until the decision was made to not refuse to add it)</a></strong></li>
+<li><strong><a title="part 4 (working beyond one's bugs, and the case for an MSKLC update)" href="http://archives.miloush.net/michkap/archive/2011/11/04/10233999.html">part 4 (working beyond one's bugs, and the case for an MSKLC update)</a></strong></li>
+<li><strong><a title="part 3 (working beyond one's bugs, the setup)" href="http://archives.miloush.net/michkap/archive/2011/11/03/10233591.html">part 3 (working beyond one's bugs, the setup)</a> </strong></li>
+<li><strong><a title="part 2 (raising the roof on keyboards)" href="http://archives.miloush.net/michkap/archive/2011/11/02/10232468.html">part 2 (raising the roof on keyboards)</a></strong></li>
+<li><strong><a title="part 1 (Some people don't want to double-d's)" href="http://archives.miloush.net/michkap/archive/2011/11/01/10232070.html">part 1 (Some people don't want to double-d's)</a></strong></li>
+<li><strong><a title="part 0 (The introduction)" href="http://archives.miloush.net/michkap/archive/2011/10/31/10231661.html">part 0 (The introduction)</a></strong></li>
+</ul>
+<p>Amazing!</p>
+<p>Windows 8 is out now, and generally available!</p>
+<p>And now, just 12 years after shipping MUI Language Packs only for Universal, Language Packs are now directly available to any legal copy of Windows 8!</p>
+<p>RTM Language Packs:</p>
+<table dir="ltr" border="1" cellspacing="3" cellpadding="3">
+<tbody>
+<tr>
+<td>LCID</td>
+<td>Name</td>
+<td>Display Name</td>
+<td>Native Name</td>
+</tr>
+<tr>
+<td>0401</td>
+<td>ar-SA</td>
+<td>Arabic (Saudi Arabia)</td>
+<td dir="rtl">العربية (المملكة العربية السعودية)</td>
+</tr>
+<tr>
+<td>0402</td>
+<td>bg-BG</td>
+<td>Bulgarian (Bulgaria)</td>
+<td>български (България)</td>
+</tr>
+<tr>
+<td>0804</td>
+<td>zh-CN</td>
+<td>Chinese (People's Republic of China)</td>
+<td>中文(中华人民共和国)</td>
+</tr>
+<tr>
+<td>0404</td>
+<td>zh-TW</td>
+<td>Chinese (Taiwan)</td>
+<td>中文(台灣)</td>
+</tr>
+<tr>
+<td>041a</td>
+<td>hr-HR</td>
+<td>Croatian (Croatia)</td>
+<td>hrvatski (Hrvatska)</td>
+</tr>
+<tr>
+<td>0405</td>
+<td>cs-CZ</td>
+<td>Czech (Czech Republic)</td>
+<td>če&scaron;tina (Česk&aacute;&nbsp;republika)</td>
+</tr>
+<tr>
+<td>0406</td>
+<td>da-DK</td>
+<td>Danish (Denmark)</td>
+<td>dansk (Danmark)</td>
+</tr>
+<tr>
+<td>0413</td>
+<td>nl-NL</td>
+<td>Dutch (Netherlands)</td>
+<td>Nederlands (Nederland)</td>
+</tr>
+<tr>
+<td>0409</td>
+<td>en-US</td>
+<td>English (United States)</td>
+<td>English (United States)</td>
+</tr>
+<tr>
+<td>0425</td>
+<td>et-EE</td>
+<td>Estonian (Estonia)</td>
+<td>eesti (Eesti)</td>
+</tr>
+<tr>
+<td>040b</td>
+<td>fi-FI</td>
+<td>Finnish (Finland)</td>
+<td>suomi (Suomi)</td>
+</tr>
+<tr>
+<td>040c</td>
+<td>fr-FR</td>
+<td>French (France)</td>
+<td>fran&ccedil;ais (France)</td>
+</tr>
+<tr>
+<td>0407</td>
+<td>de-DE</td>
+<td>German (Germany)</td>
+<td>Deutsch (Deutschland)</td>
+</tr>
+<tr>
+<td>0408</td>
+<td>el-GR</td>
+<td>Greek (Greece)</td>
+<td>&epsilon;&lambda;&lambda;&eta;&nu;&iota;&kappa;ά (&Epsilon;&lambda;&lambda;ά&delta;&alpha;)</td>
+</tr>
+<tr>
+<td>040d</td>
+<td>he-IL</td>
+<td>Hebrew (Israel)</td>
+<td dir="rtl">עברית (ישראל)</td>
+</tr>
+<tr>
+<td>040e</td>
+<td>hu-HU</td>
+<td>Hungarian (Hungary)</td>
+<td>magyar (Magyarorsz&aacute;g)</td>
+</tr>
+<tr>
+<td>0410</td>
+<td>it-IT</td>
+<td>Italian (Italy)</td>
+<td>italiano (Italia)</td>
+</tr>
+<tr>
+<td>0411</td>
+<td>ja-JP</td>
+<td>Japanese (Japan)</td>
+<td>日本語 (日本)</td>
+</tr>
+<tr>
+<td>0412</td>
+<td>ko-KR</td>
+<td>Korean (Korea)</td>
+<td>한국어 (대한민국)</td>
+</tr>
+<tr>
+<td>0426</td>
+<td>lv-LV</td>
+<td>Latvian (Latvia)</td>
+<td>latvie&scaron;u (Latvija)</td>
+</tr>
+<tr>
+<td>0427</td>
+<td>lt-LT</td>
+<td>Lithuanian (Lithuania)</td>
+<td>lietuvių (Lietuva)</td>
+</tr>
+<tr>
+<td>0414</td>
+<td>nb-NO</td>
+<td>Norwegian, Bokm&aring;l (Norway)</td>
+<td>norsk, bokm&aring;l (Norge)</td>
+</tr>
+<tr>
+<td>0415</td>
+<td>pl-PL</td>
+<td>Polish (Poland)</td>
+<td>polski (Polska)</td>
+</tr>
+<tr>
+<td>0416</td>
+<td>pt-BR</td>
+<td>Portuguese (Brazil)</td>
+<td>Portugu&ecirc;s (Brasil)</td>
+</tr>
+<tr>
+<td>0816</td>
+<td>pt-PT</td>
+<td>Portuguese (Portugal)</td>
+<td>portugu&ecirc;s (Portugal)</td>
+</tr>
+<tr>
+<td>0418</td>
+<td>ro-RO</td>
+<td>Romanian (Romania)</td>
+<td>rom&acirc;nă (Rom&acirc;nia)</td>
+</tr>
+<tr>
+<td>0419</td>
+<td>ru-RU</td>
+<td>Russian (Russia)</td>
+<td>русский (Россия)</td>
+</tr>
+<tr>
+<td>081a</td>
+<td>sr-Latn-CS</td>
+<td>Serbian (Latin, Serbia and Montenegro (Former))</td>
+<td>srpski (Srbija i Crna Gora (Prethodno))</td>
+</tr>
+<tr>
+<td>041b</td>
+<td>sk-SK</td>
+<td>Slovak (Slovakia)</td>
+<td>slovenčina (Slovensk&aacute; republika)</td>
+</tr>
+<tr>
+<td>0424</td>
+<td>sl-SI</td>
+<td>Slovenian (Slovenia)</td>
+<td>slovenski (Slovenija)</td>
+</tr>
+<tr>
+<td>0c0a</td>
+<td>es-ES</td>
+<td>Spanish (Spain)</td>
+<td>espa&ntilde;ol (Espa&ntilde;a)</td>
+</tr>
+<tr>
+<td>041d</td>
+<td>sv-SE</td>
+<td>Swedish (Sweden)</td>
+<td>svenska (Sverige)</td>
+</tr>
+<tr>
+<td>041e</td>
+<td>th-TH</td>
+<td>Thai (Thailand)</td>
+<td>ไทย (ไทย)</td>
+</tr>
+<tr>
+<td>041f</td>
+<td>tr-TR</td>
+<td>Turkish (Turkey)</td>
+<td>T&uuml;rk&ccedil;e (T&uuml;rkiye)</td>
+</tr>
+<tr>
+<td>0422</td>
+<td>uk-UA</td>
+<td>Ukrainian (Ukraine)</td>
+<td>україньска (Україна)</td>
+</tr>
+</tbody>
+</table>
+<p>&nbsp;Wave 0 Language Interface Packs (also available at RTM):</p>
+<table border="1" cellspacing="3" cellpadding="3">
+<tbody>
+<tr>
+<td>042d</td>
+<td>eu-ES</td>
+<td>Basque (Basque)</td>
+<td>euskara (euskara)</td>
+</tr>
+<tr>
+<td>
+<p>0403</p>
+</td>
+<td>ca-ES</td>
+<td>Catalan (Catalan)</td>
+<td>catal&agrave; (catal&agrave;)</td>
+</tr>
+<tr>
+<td>0456</td>
+<td>gl-ES</td>
+<td>Galician (Galician)</td>
+<td>galego (galego)</td>
+</tr>
+</tbody>
+</table>
+<p>Wave 1 Language Interface packs (available now, at Windows 8 GA):</p>
+<table style="width: 668px; height: 547px;" border="1" cellspacing="3" cellpadding="3">
+<tbody>
+<tr>
+<td>042c</td>
+<td>az-Latn-AZ</td>
+<td>Azerbaijani (Latin, Azerbaijan)</td>
+<td>Azərbaycan&shy;ılı (Azərbaycanca)</td>
+</tr>
+<tr>
+<td>141a</td>
+<td>sq-AL</td>
+<td>Albanian (Albania)</td>
+<td>
+<p>shqipe (Shqip&euml;ria)</p>
+</td>
+</tr>
+<tr>
+<td>041c</td>
+<td>bs-Latn-BA</td>
+<td>
+<p>Bosnian (Latin, Bosnia and Herzegovina)</p>
+</td>
+<td>
+<p>bosanski (Bosna i Hercegovina)</p>
+</td>
+</tr>
+<tr>
+<td>0437</td>
+<td>ka-GE</td>
+<td>
+<p>Georgian (Georgia)</p>
+</td>
+<td>
+<p>&nbsp;ქართული (საქართველო)</p>
+</td>
+</tr>
+<tr>
+<td>0439</td>
+<td>hi-iN</td>
+<td>Hindi (India)</td>
+<td>
+<p>हिंदी (भारत)</p>
+</td>
+</tr>
+<tr>
+<td>040f</td>
+<td>is-IS</td>
+<td>Icelandic (Iceland)</td>
+<td>&iacute;slenska (&Iacute;sland)</td>
+</tr>
+<tr>
+<td>0421</td>
+<td>id-ID</td>
+<td>Indonesian (Indonesia)</td>
+<td>Bahasa Indonesia (Indonesia)</td>
+</tr>
+<tr>
+<td>043f</td>
+<td>kk-KZ</td>
+<td>Kazakh (Kazakhstan)</td>
+<td>Қазақ (Қазақстан)</td>
+</tr>
+<tr>
+<td>042f</td>
+<td>mk-MK</td>
+<td>Macedonian (Former Yugoslav Republic of Macedonia)</td>
+<td>македонски јазик (Македонија)</td>
+</tr>
+<tr>
+<td>043e</td>
+<td>ms-mY</td>
+<td>Malay (Malaysia)</td>
+<td>Bahasa Malaysia (Malaysia)</td>
+</tr>
+<tr>
+<td>044c</td>
+<td>ml-IN</td>
+<td>Malayalam (India)</td>
+<td>മലയാളം (ഭാരതം)</td>
+</tr>
+<tr>
+<td>0814</td>
+<td>nn-NO</td>
+<td>Norwegian, Nynorsk (Norway)</td>
+<td>norsk, nynorsk (Noreg)</td>
+</tr>
+<tr>
+<td>0429</td>
+<td>fa-IR</td>
+<td>Persian (Iran)</td>
+<td style="text-align: right;">فارسى (ايران)</td>
+</tr>
+<tr>
+<td>0c1a</td>
+<td>sr-Cyrl-CS</td>
+<td>Serbian (Cyrillic, Serbia)</td>
+<td>
+<p>српски (Србија)</p>
+</td>
+</tr>
+<tr>
+<td>045b</td>
+<td>si-LK</td>
+<td>Sinhala (Sri Lanka)</td>
+<td>සිංහ (ශ්&zwj;රී ලංකා)</td>
+</tr>
+<tr>
+<td>044a</td>
+<td>te-IN</td>
+<td>Telugu (India)</td>
+<td>తెలుగు (భారత దేశం)</td>
+</tr>
+<tr>
+<td>0803</td>
+<td>ca-ES-valencia</td>
+<td>Valencian (Spain)</td>
+<td>Valenci&agrave; (Espanya)</td>
+</tr>
+<tr>
+<td>042a</td>
+<td>vi-VN</td>
+<td>Vietnamese (Vietnam)</td>
+<td>Ti&ecirc;́ng Vi&ecirc;̣t (Vi&ecirc;̣t Nam)</td>
+</tr>
+<tr>
+<td>0452</td>
+<td>cy-GB</td>
+<td>
+<p>Welsh - United Kingdom</p>
+</td>
+<td>
+<div>Cymraeg (Y Deyrnas Unedig)</div>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Every single one of these languauges is now available to the world!</p>
+<p>Let's grab Icelandic!</p>
+<p><img title="Pick Icelandic!" border="0" alt="Pick Icelandic!" src="http://msdnshared.blob.core.windows.net/media/MSDNBlogsFS/prod.evol.blogs.msdn.com/CommunityServer.Blogs.Components.WeblogFiles/00/00/00/33/81/8865.ice01.jpg" />&nbsp;&nbsp;&nbsp;</p>
+<p><img title="Windows Display Language Available" border="0" alt="Windows Display Language Available" src="http://msdnshared.blob.core.windows.net/media/MSDNBlogsFS/prod.evol.blogs.msdn.com/CommunityServer.Blogs.Components.WeblogFiles/00/00/00/33/81/6864.ice02.jpg" />&nbsp;&nbsp;&nbsp;</p>
+<p>I</p>
+<p><img title="Download and Install Language Pack" border="0" alt="Download and Install Language Pack" src="http://msdnshared.blob.core.windows.net/media/MSDNBlogsFS/prod.evol.blogs.msdn.com/CommunityServer.Blogs.Components.WeblogFiles/00/00/00/33/81/1651.ice03.jpg" />&nbsp;&nbsp;&nbsp;</p>
+<p><img title="Install Icelandic!" border="0" alt="Install Icelandic!" src="http://msdnshared.blob.core.windows.net/media/MSDNBlogsFS/prod.evol.blogs.msdn.com/CommunityServer.Blogs.Components.WeblogFiles/00/00/00/33/81/7418.ice04.jpg" />&nbsp;]&nbsp;&nbsp;</p>
+<p><img title="Upphafsskj&aacute;r!" border="0" alt="Upphafsskj&aacute;r!" src="http://msdnshared.blob.core.windows.net/media/MSDNBlogsFS/prod.evol.blogs.msdn.com/CommunityServer.Blogs.Components.WeblogFiles/00/00/00/33/81/0537.ice05.jpg" /></p>
+<p>You can now do this with any language!</p>
+<p>even the full Language Packs.</p>
+<p>Woo hoo!</p>
+<p>Now how's that for a great Windows 8 international language feature no one else has mentioned?!? :-)</p>
+<hr/><p><strong>metathinker</strong> on 26 Oct 2012 8:14 AM:</p><div style="margin-left: 1em"><p>I was *so* excited about the Icelandic localization...</p>
+<p>until I opened classic Control Panel and saw these strings:</p>
+<p>- Save backup copies of your files with File History</p>
+<p>- Find and fix problems</p>
+<p>- View network status and tasks</p>
+<p>- Choose homegroup and sharing options</p>
+<p>- Adjust commonly used mobility settings</p>
+<p>Well, at least the Windows feature I work on had all its UI text translated...</p>
+</div>
+<p><strong>Alex Cohn</strong> on 26 Oct 2012 11:36 AM:</p><div style="margin-left: 1em"><p>Hey-ho! That&#39;s great, and a nice followup to the good news of your return from the hospital!</p>
+</div>
+<p><strong>Jan Kučera</strong> on 27 Oct 2012 11:26 AM:</p><div style="margin-left: 1em"><p>Woo hoo!</p>
+<p>Yet how can it be Malayalam but not Tamil? :)</p>
+</div>
+<p><strong>Mihai</strong> on 27 Oct 2012 6:50 PM:</p><div style="margin-left: 1em"><p>This is wonderfull, about time!</p>
+<p>Although MacOS X shipped with (free) localized UI for along time now, Windows has now way more languages available.</p>
+</div>
+<p><strong>contextfree</strong> on 27 Oct 2012 7:05 PM:</p><div style="margin-left: 1em"><p>Here&#39;s a scenario I wish were supported:</p>
+<p>I can read English and Japanese. English is my native language, but there are some apps in the store for which Japanese is really the &quot;native language&quot; of the app itself (and its authors), but there&#39;s also a sloppily translated (maybe machine translated) English version in the store. In these cases I&#39;d much prefer to see the Japanese version by default. I wish there were a way (maybe there is?) for app authors to specify preferred languages for an app and have those languages be used by default in some cases even when it&#39;s not my #1 preferred language in general, but is somewhere else on my list of languages.</p>
+</div>
+<p><strong>Random guy</strong> on 28 Oct 2012 9:36 PM:</p><div style="margin-left: 1em"><p>sq-AL = Albanian (Albania)</p>
+</div>
+<p><strong>Doug Ewell</strong> on 29 Oct 2012 10:41 AM:</p><div style="margin-left: 1em"><p>@contextfree: Devil&#39;s advocate: what if the English translation were excellent? Would you still want the Japanese version? If you wanted the English instead, how would the OS know?</p>
+</div>
+<hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2012/10/29 <a href="http://archives.miloush.net/michkap/archive/2012/10/29/10363500.html">Change can be a good thing, especially when everyone's happier!</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2012/10/29/10363500.html" title="Change can be a good thing, especially when everyone&#39;s happier!">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2012/10/26/10362603.html" title="The evolving Story of Locale Support, part 28: We finally fixed that &#39;Install New Languages&#39; thing!">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2012-10">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2012-10-26">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2012/10/27/10362603.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:47 GMT -->
+</html>

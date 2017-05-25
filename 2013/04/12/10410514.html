@@ -1,0 +1,30 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2013/04/12/10410514.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:19 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>'Lucida Sans Typewriter Bold Oblique' is not really such a great name for a font</title></head><body>
+<h1>'Lucida Sans Typewriter Bold Oblique' is not really such a great name for a font</h1>
+<p><em>by Michael S. Kaplan, published on 2013/04/12 07:01 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2013/04/12/10410514.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<p>Over in the Suggestion Box, Mike asked:</p>
+<p style="padding-left: 60px;"><em><span style="font-family: times new roman,times; font-size: large;">LOGFONT LF_FACESIZE potential buffer overrun?</span></em></p>
+<p style="padding-left: 60px;"><em><span style="font-family: times new roman,times; font-size: large;">LOGFONT LF_FACESIZE is only 32 characters, but I found a font name (I assume installed by Windows) that was greater than 32 characters:</span></em></p>
+<p style="padding-left: 60px;"><em><span style="font-family: times new roman,times; font-size: large;">Lucida Sans Typewriter Bold Oblique</span></em></p>
+<p style="padding-left: 60px;"><em><span style="font-family: times new roman,times; font-size: large;">Sure enough it crashes at least two programs I tried just by picking it. &nbsp;Bad limitation or just poorly written code?</span></em></p>
+<p>Well, on the whole I would tend to blame the crashing programs.</p>
+<p>It is their bug, after all!</p>
+<p>I am of two minds on this issue.</p>
+<p>On the one hand, the name of the font is its least important attribute -- the <strong>font file name</strong> is what's important.</p>
+<p>Most of the filenames fit 8.3 naming rules.</p>
+<p>But on the other hand, the name of the font is its most important attribute -- the font author has their ego and their creative spirit tied up in it.</p>
+<p>We are, however, confusing other attributes of the font here.</p>
+<p>The font's core identity is <strong>Lucida Sans Typewriter</strong>; the fact that it may choose to be bold or oblique is kind of besides the point, isn't it?</p>
+<p>So in this case the bug is in the program trying to cram other attributes into the name that are better served by other members of the <a href="http://msdn.microsoft.com/en-us/library/windows/desktop/dd145037(v=vs.85).aspx">LOGFONT</a>.</p>
+<p>This neatly sidesteps the entire issue, since <strong>Lucida Sans Typewriter</strong> fits well within the limit! :-)</p>
+<p>If you want me to tackle the larger issue, you'll have to come up with a longer core font name.</p>
+<p>If you can!</p>
+<hr/><p><strong>John Cowan</strong> on 12 Apr 2013 9:19 AM:</p><div style="margin-left: 1em"><p>Perhaps &quot;Typewriter&quot; could be abbreviated in the metadata, leaving us with the 31-character &quot;Lucida Sans Typwrt Bold Oblique&quot;?</p>
+</div>
+<p><strong>ErikF</strong> on 12 Apr 2013 10:46 AM:</p><div style="margin-left: 1em"><p>The original bad font name was &quot;Lucida Sans Unicode&quot; in Windows 3.1/95, which many people interpreted as meaning &quot;the Lucida font that didn&#39;t have any Unicode&quot; but of course was one of the few fonts that had Unicode support!</p>
+</div>
+<hr/><p><em>go to <a id="newer" href="../15/10411052.html" title="And at least 38.2% of Montenegrins can proudly cry &quot;the version after next of Windows was my idea, and it&#39;s all about ME!&quot;">newer</a> or <a id="older" href="../11/10410235.html" title="&quot;My old group? I couldn&#39;t really reach them anymore, so I talked to my people and had them 86&#39;d...&quot;">older</a> post, or back to <a href="../../../index-2.html">index</a> or <a href="../../../index-2.html#2013-04">month</a> or <a href="../../../index-2.html#2013-04-12">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2013/04/12/10410514.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:19 GMT -->
+</html>

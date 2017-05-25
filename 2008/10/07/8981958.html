@@ -1,0 +1,32 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2008/10/07/8981958.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:35 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Even the prisoners of the motherland use cp1252 (though they escaped 037)</title></head><body>
+<h1>Even the prisoners of the motherland use cp1252 (though they escaped 037)</h1>
+<p><em>by Michael S. Kaplan, published on 2008/10/07 03:01 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2008/10/07/8981958.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<p><span style="color: rgb(255, 0, 0); font-style: italic;">This blog dedicated to six weeks I almost got to spend in Australia nearly 15 years ago, and a Kinks song named </span><span style="font-weight: bold; color: rgb(255, 0, 0); font-style: italic;">Long Distance</span><span style="color: rgb(255, 0, 0); font-style: italic;"> that still reminds of me of the late night phone conversations I had with the girl who was able to make the trip...</span><br></p>
+<p>In response to <b><a href="http://archives.miloush.net/michkap/archive/2006/03/06/544251.html" mce_href="http://archives.miloush.net/michkap/archive/2006/03/06/544251.html">chcp can't do everything</a></b>, rbouman <a href="http://archives.miloush.net/michkap/archive/2006/03/06/544251.html#8977470" mce_href="http://archives.miloush.net/michkap/archive/2006/03/06/544251.html#8977470">commented</a>:</p>
+<blockquote>
+<p><font face="times new roman,times">interesting reading here, thank you.<br><br>I've had an occurrance of the path variable on xp pro being displayed correctly once only as human readable then as ascii chars only.<br><br>turned out the codepage for this machine was set to 850, if I then manually set the codepage to 437, the path variable remains human readable [that is; from a command prompt screen output].<br><br>the mystery is ; the machine is set to australian english in regional settings; there's no multi linguallity [is that a word?] other than that.<br><br>what else could possibly cause the path variable [and it's the only environment variable to be affected] to display ascii chars?<br><br>I'm also making the assumption that the ascii chars may cause some apps. to not read the path var. properly, right?</font><br></p></blockquote>
+<p>Of course the value that <b>chcp</b> returns when you run just it from the command line with no parameters (assuming you haven't modified it) is the default OEM code page, aka the OEMCP, aka the LOCALE_IDEFAULTCODEPAGE of the default system locale.</p>
+<p>Which kind of indirectly explains why rbouman is seeing code page 850 -- because the OEMCP for 0x0c09 is indeed 850.</p>
+<p><i>Incidentally, the default EBCDIC code page for 0x0c09 is 500 rather than 037 like it is for US English. I have no idea why this is the case.</i></p>
+<p>If one wants to change it on a total machine wide basis, one can just change the default system locale and reboot.</p>
+<p><i>Unfortunately, even on Vista the reboot would be required since the OEMCP would be changing. So you don't get any of those <b><a href="http://archives.miloush.net/michkap/archive/2006/09/19/761547.html" mce_href="http://archives.miloush.net/michkap/archive/2006/09/19/761547.html">Ready... set... Don't Reboot!</a></b> benefits...</i></p>
+<p>For the rest of rbouman's question related to what the path might look like in the console, although I don't know for sure what we're talking about, there are no worries about the path variable changing here based on the codepage -- this is just an illusion of the display, one that does not really change just because the code page does.</p>
+<p>Though one should be careful copying it out of the console, like into Notepad or other Windows applications that either use Unicode or use the ACP (which even down under is still 1252).</p>
+<p>Code page <a href="http://www.microsoft.com/globaldev/reference/oem/850.mspx" mce_href="http://www.microsoft.com/globaldev/reference/oem/850.mspx">850</a>, aka Multilingual Latin 1, is very popular for a lot of Western Europe, and also apparently Australia. Perhaps they will be joining the EU sometime soon? :-)</p>
+<p mce_keep="true">&nbsp;</p>
+<p><font color="#ff00ff"><i>This blog brought to you by</i><font size="6"> ╚ </font><i>(<a href="http://www.fileformat.info/info/unicode/char/255a" mce_href="http://www.fileformat.info/info/unicode/char/255a">U+255a</a>, aka BOX DRAWINGS DOUBLE UP AND RIGHT, which is inexplicably part of both code pages --&nbsp;850 and 037)</i></font> <br></p>
+<hr/><p><strong>jmdesp</strong> on 7 Oct 2008 6:30 AM:</p><div style="margin-left: 1em"><p>I just saw the other comment about &quot;chcp 65001&quot;, I'd never have thought chcp can do that, it's already a *lot* for me. I don't care so much that it kills batch files, it will be useful some day.</p></div>
+<p><strong>Yuhong Bao</strong> on 23 Jul 2011 1:33 PM:</p><div style="margin-left: 1em"><p>On the other hand, locales like English (India) uses codepage 437 as the OEMCP. I wonder how this was determined.</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 25 Jul 2011 12:29 PM:</p><div style="margin-left: 1em"><p>en-IN was based on en-US, unfortunately (that&#39;s what most people were using on machines). So it got many en-US traits -- like this one.</p>
+</div>
+<p><strong>Yuhong Bao</strong> on 25 Jul 2011 2:51 PM:</p><div style="margin-left: 1em"><p>I was wondering how the OEMCP of each English locale was picked in general.</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 25 Jul 2011 3:00 PM:</p><div style="margin-left: 1em"><p>Arbitrarily, without much thought. Period.</p>
+</div>
+<hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2008/10/07/8982161.html" title="How many electoral votes does the state of implementation have?">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2008/10/06/8977552.html" title="UCS-2 to UTF-16, Part 4: Talking about the ask">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2008-10">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2008-10-07">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2008/10/07/8981958.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:35 GMT -->
+</html>

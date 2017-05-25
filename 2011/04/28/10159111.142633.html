@@ -1,0 +1,49 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2011/04/28/10159111.142633.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>The Sally Kellerman Addition To The Dead Keys Conundrum: An Encyclopedia Brown Mystery</title></head><body>
+<h1>The Sally Kellerman Addition To The Dead Keys Conundrum: An Encyclopedia Brown Mystery</h1>
+<p><em>by Michael S. Kaplan, published on 2011/04/28 16:26 +02:00, original URI: http://blogs.msdn.com/b/michkap/archive/2011/04/28/10159111.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostMail -->
+<p>The Sally Kellerman Addition To The Dead Keys Conundrum: An Encyclopedia Brown Mystery </p>
+ <p>After I wrote up <a href="http://archives.miloush.net/michkap/archive/2011/04/22/10157095.html" title="The Dead Keys Conundrum: An Encyclopedia Brown Mystery"><strong>The Dead Keys Conundrum: An Encyclopedia Brown Mystery</strong></a>&nbsp;and <a href="http://archives.miloush.net/michkap/archive/2011/04/25/10157359.html" title="Solution: The Dead Keys Conundrum: An Encyclopedia Brown Mystery"><strong>Solution: The Dead Keys Conundrum: An Encyclopedia Brown Mystery</strong></a>&nbsp;(in response to issues first raised in <a href="http://archives.miloush.net/michkap/archive/2011/04/16/10154700.html" title="Chain Chain Chain, Chain of Dead Keys"><strong>Chain Chain Chain, Chain of Dead Keys</strong></a>), then in most cases in the world of Encyclopedia Brown the mystery would be solved and it would be on to the next mystery, in the next chapter&nbsp;(they usually seemed to come bundled in tens, if memory serves).</p>
+ <p>However, in at least one case, Sally Kellerman, would actually outsmart Encyclopedia Brown&nbsp;occasionally, and be able to shed a bit of additional light when he was stumped by something.</p>
+ <p>He never minded this, since they were friends. She had already beaten up the bully who tried to beat Encyclopedia Brown up (Bugs Meaney), so if she occasionally proved herself to also be smart then he didn't mind.</p>
+ <p>In this particular mystery, <strong>The Dead Keys Conundrum</strong>, Van Anderson has (perhaps unintentionally) filled the Sally Kellerman role in the mystery, in a comment to the "solution" blog:</p>
+ <p style="padding-left: 60px;"><span style="font-family: times new roman,times;">You say the only option you don't have is to throw away the keystroke itself, but would it not work to define all of your garbage sequences to NULL? I may be wrong - it wouldn't be the first time - but defining all your composites as U+0000 should leave no mark in the text stream, right?</span></p>
+ <p>I was initially skeptical -- not because it was a bad idea (since after all it wasn't), but due to fear of the undocumented and the fact that perhaps it would be a bad idea to depend on the behavior if it were to change (as undocumented behavior is occasionally wont to do).</p>
+ <p>But that answer feels a little unsatisfying. So I decided to dig a little.</p>
+ <p>I was doing a build of a depot and I was only 6% through refreshing my publics, ao any developer from Microsoft could tell you had a few moments.</p>
+ <p>First step was to create a keyboard with some NULL (U+0000) characters defined -- both as regular keys and as dead key results.</p>
+ <p>When I did this and tested out the keyboard, I found that in both cases:</p>
+ <ul>
+ <li>Nothing was inserted, and</li>
+ <li>A beep was heard.</li>
+ </ul>
+ <p>Sound familiar, doesn't it? :-)</p>
+ <p>I'll give you a hint -- take a look at <a href="http://archives.miloush.net/michkap/archive/2010/12/18/10106789.html" title="Short-sighted text processing #1: Uniscribe filters nothing."><strong>Short-sighted text processing #1: Uniscribe filters nothing</strong></a>.</p>
+ <p>This behavior of inserting nothing and beeping is how the behavior incorrectly attributed to Uniscribe is accomplished -- the EDIT control code replaces the text in the stream with a U+0000, which the underlying system refuses to insert, and beeps.</p>
+ <p><em>To be strictly accurate, the valid text is always null terminated, and thus in this case what is seen&nbsp;is a string of zero length which is ordinarily not expected. But the behavior is the same so that detail is not strictly necessary here. :-)</em></p>
+ <p>Changing this behavior would be a significant potential backcompat problem, and although the literal cause of&nbsp;the behavior (inserting a NULL into the input text stack) is not specifically documented, there is at a minimum some behavior that is using this undocumented underlying&nbsp;implementation detail&nbsp;to support a documented feature.</p>
+ <p>Supporting the documented behavior while changing the details of the undocumented behavior is problematic and likely not feasible. Plus you could unintentionallky break someone else's assumptions.</p>
+ <p>All of my prior, other&nbsp;complaints about the behavior I described in <a href="http://archives.miloush.net/michkap/archive/2010/12/18/10106789.html" title="Short-sighted text processing #1: Uniscribe filters nothing."><strong>Short-sighted text processing #1: Uniscribe filters nothing</strong></a>&nbsp;(e.g. that text you display but didn't type that does show up) would not apply here -- we are talking only of keyboards.</p>
+ <p>It is true that MSKLC has problems with loading the keyboard I created in MSKLC to test the behavior above:</p>
+ <p><img src="http://blogs.msdn.com/cfs-file.ashx/__key/CommunityServer-Blogs-Components-WeblogFiles/00-00-00-33-81/4010.problemloading.jpg" /></p>
+ <p>but this makes sense -- I had no idea about the behavior and so the code was never expecting this thing that I had no reason to expect. Had I known it then I probably would have not only recalled it when the mystery blogs unfolded but I would likely have written the behavior up years ago.</p>
+ <p>I never knew about it.</p>
+ <p>Now in the case of invalid dead keys, it is (admittedly) slightly unwieldy (as I mentioned in <a href="http://archives.miloush.net/michkap/archive/2011/04/25/10157359.html" title="Solution: The Dead Keys Conundrum: An Encyclopedia Brown Mystery"><strong>Solution: The Dead Keys Conundrum: An Encyclopedia Brown Mystery</strong></a>, you would have to define every type-able character on the keyboard in each dead key table), but the behavior of beeping and typing nothing is infinitely preferable to inserting the wrong character (or even worse two wrong characters) into text, when the user has no way to connect what they typed with what was inserted.</p>
+ <p>If anyone ever did their own input stack and they didn't handle the NULL the same way, then it is possible that they will break many keyboards beyond the fancy chained dead key one -- like the four Thai keyboards, for example. I'd be curious what WPF controls hosted in WinForms using Uniscribe do, for example. I assume they aren't screwing up the text or inserting random NULLs or someone would have reported that bug by now. :-)</p>
+ <p>Perhaps some future version of MSKLC could perhaps&nbsp;fix all of these problems/limitations/bugs):</p>
+ <ul>
+ <li>unable to understand chained dead keys;</li>
+ <li>unable to understand NULL characters as composites in dead key definitions;</li>
+ <li>unable to create chained dead keys;</li>
+ <li>automatically creating these big dead key tables to cover hiding pseudo characters needed in the interim state for chained dead keys (who better to build this than the code that knows everything defined?);</li>
+ <li>able to insert any character as a dead key (there is a bug in kbdutool.exe that limits the range of what characters can be added -- more on this some other day).</li>
+ </ul>
+ <p>Mentally I have halfway worked through how I might approach all of the above; if I thought there was a chance any of it would happen I'd write it up for either me to do or someone else to do. But that seems pretty unlikely (chained dead keys are just pretty esoteric, so even if there were MSKLC plans I'd imagine these to not be seriously considered).</p>
+ <p>Perhaps they could put&nbsp;MSKLC on <a href="http://www.codeplex.com/">CodePlex</a> (something I had several people suggest to me last week) -- I'd likely contribute, in that case. I doubt they'd mind. :-)</p>
+ <p>In any case, I hope Van is not too offended by my analogy, since I really did appreciate his "Sally Kellerman" role here that pushed me to give the better answer. </p>
+ <p>Which I think this often can be!</p>
+<hr/><div style="margin-left: 1em"><em>comments not archived</em></div><hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2011/11/09 <a href="http://archives.miloush.net/michkap/archive/2011/11/09/10235391.html">The evolving Story of Locale Support, part 6: Behind the Cherokee Phonetic layout in Windows 8</a></p><p>2011/08/15 <a href="http://archives.miloush.net/michkap/archive/2011/08/15/10195601.html">If you change the behavior of typing sequences you should never type, is it a bug?</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2011/04/28/10159111.html" title="The Sally Kimball Addition To The Dead Keys Conundrum: An Encyclopedia Brown Mystery">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2011/04/27/10158626.html" title="Moldavia isn&#39;t Moldova with a silent &quot;i&quot;">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2011-04">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2011-04-28">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2011/04/28/10159111.142633.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+</html>

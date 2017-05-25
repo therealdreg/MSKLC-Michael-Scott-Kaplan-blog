@@ -1,0 +1,30 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2006/11/03/939272.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:39 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Concatenating display names correctly?</title></head><body>
+<h1>Concatenating display names correctly?</h1>
+<p><em>by Michael S. Kaplan, published on 2006/11/03 03:01 -05:00, original URI: http://blogs.msdn.com/b/michkap/archive/2006/11/03/939272.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<FONT face=Tahoma size=3>
+<P>Paul's question to the alias: </P><FONT face="Times New Roman,Times" size=2>
+<BLOCKQUOTE>
+<P>Personal names in Chinese, unlike Western names, present the family/clan name first. Unlike other instances where this occurs, it is standard practice in English to also present the family name first (for example, Mao Zedong, Deng Xiaoping) [Wikipedia: Naming conventions (Chinese)].<BR><BR>While asking to enter first name and last name separately, I need to display name (first name + last name) in one line with proper concatenation rules (based on locale). Is there an API that will help with this, or does .NET have any way of doing that? Didn’t see anything that resembles naming concatenation rules in .NET among locale based classes like NumberFormatInfo, DateTimeFormatInfo, CompareInfo, TextInfo, CultureInfo, etc.&nbsp;</P></BLOCKQUOTE></FONT>
+<P>There is no built-in functionality in Windows or the .NET Framework for concatenation of name pieces. </P>
+<P>The traditional way of dealing with it is to not concatenate at all -- simply have separate controls and then simply make sure the control positions are available to localizers to change the order as appropriate. </P>
+<P>But if you have to have a display name, what would you imagine would be the easiest engineering solution to building up the string? In a situation where your program has clear access in a dialog to the relative positions of all of the controls, it is easy to write a bit of code that concatenates the data in the controls in the same order that the localizers put the controls in, right? :-)</P>
+<P mce_keep="true">&nbsp;</P>
+<P><FONT color=#ff00ff><EM>This post brought to you by</EM> <FONT size=6>ᖎ</FONT> <EM>(<A class="" href="http://www.fileformat.info/info/unicode/char/158e" mce_href="http://www.fileformat.info/info/unicode/char/158e">U+158e</A>, a.k.a. CANADIAN SYLLABICS NGAAI)</EM></FONT></P></FONT>
+<hr/><p><a id="951131" href="#951131">#</a> <strong>josh</strong> on 4 Nov 2006 1:03 AM:</p><div style="margin-left: 1em"><p>How about using FormatMessage and letting the localizers provide the format string?</p></div>
+<p><a id="951999" href="#951999">#</a> <strong>Dean Harding</strong> on 4 Nov 2006 2:54 AM:</p><div style="margin-left: 1em"><p>I don't think it's as easy as all that anyway. What happens if the locale is English (US) and you try to enter a Korean name in (for example). So you type:</p>
+<p>First Name: Jong-Il</p>
+<p>Last Name: Kim</p>
+<p>vs.</p>
+<p>First Name: Dean</p>
+<p>Last Name: Harding</p>
+<p>How's it supposed to tell that case #1 should written as &quot;Kim Jong-Il&quot; and the second as &quot;Dean Harding&quot;? Even a localizer can't help you, because they could both be using the same UI language.</p>
+<p>I think the only real solution is a per-entry &quot;Display As&quot; control, a la the &quot;Contacts&quot; page in Outlook, which lets you choose:</p>
+<p>Display As: &quot;First Last&quot; or &quot;Last, First&quot; or &quot;Last First&quot; etc...</p>
+<p>Then it's a per-person option.</p>
+</div>
+<hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2006/11/03/941420.html" title="Identifying illegal characters before they cross the border?">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2006/11/02/929063.html" title="MFC + Spanish version of Windows = Oops!">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2006-11">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2006-11-03">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2006/11/03/939272.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:39 GMT -->
+</html>

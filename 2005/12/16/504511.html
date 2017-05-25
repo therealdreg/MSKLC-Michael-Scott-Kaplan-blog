@@ -1,0 +1,39 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2005/12/16/504511.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:40 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>More on handling [Unicode] input in the console</title></head><body>
+<h1>More on handling [Unicode] input in the console</h1>
+<p><em>by Michael S. Kaplan, published on 2005/12/16 05:01 -05:00, original URI: http://blogs.msdn.com/b/michkap/archive/2005/12/16/504511.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P><FONT face=Tahoma>Yesterday, I talked a little about <STRONG><A href="http://archives.miloush.net/michkap/archive/2005/12/15/504092.html">handling [Unicode] input in the console</A></STRONG>, although I did fail to talk about one interesting/important case -- the Input Method Editor (IME).</FONT></P>
+<P><FONT face=Tahoma>Now not all IMEs seem to work in the console (more likely I just do not know all the tricks on this!). I decided to stick with the one I know, the Unicode IME (the one I talked about in <A href="http://archives.miloush.net/michkap/archive/2005/05/18/419117.html">this post</A>).</FONT></P>
+<P><FONT face=Tahoma>It does indeed work in the console, though it does seem to require a default system locale of 950 (kind of ironic given what this IME is, though we will talk about it another time maybe).</FONT></P>
+<P><FONT face=Tahoma>Here is my console running that code I posted yesterday, note the bottom left hand corner:</FONT></P>
+<P><FONT face=Tahoma><IMG src="http://trigeminal.fmsinc.com/images/imeconsole1.jpg"></FONT></P>
+<P><FONT face=Tahoma>I will try to type the Unicode code unit U+AC00 (Hangul Syllable Kiyeok A). We will look at the keyboard event records the whole way through.</FONT></P>
+<P><FONT face=Tahoma>First the <STRONG>A</STRONG>:</FONT></P>
+<P><FONT face=Tahoma><IMG src="http://trigeminal.fmsinc.com/images/imeconsole2.jpg"></FONT></P>
+<P><FONT face=Tahoma>Then the <STRONG>C</STRONG>:</FONT></P>
+<P><FONT face=Tahoma><IMG src="http://trigeminal.fmsinc.com/images/imeconsole3.jpg"></FONT></P>
+<P><FONT face=Tahoma>The pattern is becoming clear now, isn't it? :-)</FONT></P>
+<P><FONT face=Tahoma>Next comes the first <STRONG>0 (zero)</STRONG>.</FONT></P>
+<P><FONT face=Tahoma><IMG src="http://trigeminal.fmsinc.com/images/imeconsole4.jpg"></FONT></P>
+<P><FONT face=Tahoma>And now the final <STRONG>0 (zero)</STRONG>:</FONT></P>
+<P><FONT face=Tahoma><IMG src="http://trigeminal.fmsinc.com/images/imeconsole5.jpg"></FONT></P>
+<P><FONT face=Tahoma>So, we have a few things to note here:</FONT></P>
+<UL>
+<LI><FONT face=Tahoma>There is yet another undocumented state being returned -- in this case 0x840000. I have no clue what this state means.</FONT> 
+<LI><FONT face=Tahoma>The IME is not forwarding the&nbsp;KeyDown information, though it is forwarding the KeyUp info, until it has the actual character to insert.</FONT> 
+<LI><FONT face=Tahoma>There are other events happening here that are not type KEY_EVENT (since we are checking for that).</FONT> 
+<LI><FONT face=Tahoma>Since the other choices are FOCUS_EVENT, MENU_EVENT, MOUSE_EVENT, and WINDOW_BUFFER_SIZE_EVENT, none of which seem appropriate, at some point I am going to alter the sample to figure out just what kind of event it is.</FONT> 
+<LI><FONT face=Tahoma>The previous point is just a matter of intellectual curiousity since I have a clear way to proceed in regard to getting the keyboard input from the IME.</FONT> 
+<LI><FONT face=Tahoma>There is a small point of contrast to the &lt;ALT&gt;+NUMPAD case I talked about yesterday -- in that case the KeyDown and KeyUp events were both happening, but no character was being returned until the end (in the case of the IME, only KeyUp events were retrieved until the end).</FONT> 
+<LI><FONT face=Tahoma>It is possible to decipher both kinds of information, though it could get pretty complicated trying to do so.</FONT> 
+<LI><FONT face=Tahoma>I hope that other IMEs that work in the console doing things in a similar or identical way!</FONT></LI></UL>
+<P><FONT face=Tahoma>There is the interim report, I am sure I'll say more after I have had some time to do a fuller investigation....</FONT></P>
+<P><FONT face=Tahoma></FONT>&nbsp;</P>
+<P><FONT face=Tahoma color=#ff1493><EM>This post brought to you by</EM> "<FONT size=6>가</FONT>" <EM>(<A href="http://www.fileformat.info/info/unicode/char/ac00">U+ac00</A>, a.k.a. Hangul Syllable Kiyeok A)</EM></FONT></P>
+<hr/><p><a id="504639" href="#504639">#</a> <strong>Martin Bohring</strong> on 16 Dec 2005 8:49 AM:</p><div style="margin-left: 1em">Hello Michael<br><br>&quot;I hope that other IMEs that work in the console doing things in a similar or identical way!&quot;<br><br>I would not count on that. Judging IME behaviour in general seems to require a grade in forensic analysis</div>
+<p><a id="504687" href="#504687">#</a> <strong>Michael S. Kaplan</strong> on 16 Dec 2005 11:39 AM:</p><div style="margin-left: 1em">Hi Martin,<br><br>You are probably right. It is definitely what I saw when I could not get some to work at all.<br><br>I am hoping though that the event behavior will be similar since in that case the variable nature of the IMEs is forced into behaving in some way to work within the IMM interface....</div>
+<hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2006/07/20 <a href="http://archives.miloush.net/michkap/archive/2006/07/20/671835.html">Return of the Unicode IME</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2005/12/16/504851.html" title="Every character has a story #16: U+0084">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2005/12/15/504092.html" title="Handling [Unicode] input in the console">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2005-12">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2005-12-16">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2005/12/16/504511.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:40 GMT -->
+</html>

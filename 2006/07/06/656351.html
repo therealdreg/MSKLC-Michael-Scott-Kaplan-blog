@@ -1,0 +1,26 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2006/07/06/656351.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:39 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Not technically wrong</title></head><body>
+<h1>Not technically wrong</h1>
+<p><em>by Michael S. Kaplan, published on 2006/07/06 03:01 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2006/07/06/656351.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P><FONT face=Tahoma>Sergei asks via the <A href="http://archives.miloush.net/michkap/archive/2004/11/01/280092.html">Contacting Michael...</A> link:</FONT></P>
+<BLOCKQUOTE dir=ltr style="MARGIN-RIGHT: 0px">
+<P><FONT face="Times New Roman" size=2>Hello, Michael!<BR><BR>I have a question for you about Unicode.<BR><BR>The MSDN article <STRONG><A href="http://msdn.microsoft.com/library/en-us/intl/unicode_192r.asp">Surrogates and Supplementary Characters</A></STRONG> contains some (I think) inaccurate information:</FONT></P>
+<BLOCKQUOTE dir=ltr style="MARGIN-RIGHT: 0px">
+<P><FONT face="Times New Roman" size=2>Naturally, most code points beyond the BMP do not yet have characters assigned to them, but this gives Unicode the potential to define 1,114,112 characters (that is, 216 * 17 characters) within the code point ranges U+0000 to U+10FFFF.<BR><BR>...<BR><BR>Using the surrogate mechanism, UTF-16 can support all 1,114,112 potential Unicode characters.</FONT></P></BLOCKQUOTE>
+<P><FONT face="Times New Roman" size=2>It is not possible to define 1,114,112 characters because of the values like D800-DFFF, FFFE, FFFF. (Maybe some others?)<BR><BR>And is U+0000 a character?<BR><BR>Thank you for your blog<BR><BR>Sergei</FONT></P></BLOCKQUOTE>
+<P><FONT face=Tahoma>Well, this is one of those weird areas, I guess. :-)</FONT></P>
+<P><FONT face=Tahoma>I mean, U+0000 is NULL, and even if it is not literally defined by Uniocde it is obviously defined in the world of software will NULL terminated strings. :-)</FONT></P>
+<P><FONT face=Tahoma>And in all 17 planes U+[[#]#]fffe and U+[[#]#]ffff are reserved to allow (among other things) for them to be used internally by software as a sentinel of some sort.</FONT></P>
+<P><FONT face=Tahoma>And high surrogate code units have a clear semantic, as do the low surrogate ones.</FONT></P>
+<P><FONT face=Tahoma>Now these purposes may be (in fact, in my mind they <STRONG>are</STRONG>) less noble than an assignment that serves a useful linguistic purpose like a letter in an alphabet. </FONT></P>
+<P><FONT face=Tahoma>They may even be less noble than the vast array of symbols that exist in Unicode (though this point is perhaps more debatable!).</FONT></P>
+<P><FONT face=Tahoma>But either way, it is clear that the mechanism of surrogate pairs to represent supplementary characters provides a mechanism that allows assignments that are repesentable within UTF-16 of 1,114,112 different characters. </FONT></P>
+<P><FONT face=Tahoma>What other things Unicode does with them later to whittle down availability within this huge collection is another matter entirely. :-)</FONT></P>
+<P><FONT face=Tahoma></FONT>&nbsp;</P>
+<P><FONT face=Tahoma color=#ff1493><EM>This post brought to you by</EM> <FONT size=6><STRONG>𐄓</STRONG></FONT> <EM>(<A href="http://www.fileformat.info/info/unicode/char/10113">U+10113</A>, a.k.a. AEGEAN NUMBER FORTY)</EM></FONT></P>
+<hr/><p><strong>Adam</strong> on 6 Jul 2006 8:34 AM:</p><div style="margin-left: 1em">s/NULL/NUL/<br></div>
+<hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2006/07/06/656384.html" title="Don&#39;t send me the layout that can launch 1000 ships">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2006/07/05/656283.html" title="Custom code pages?">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2006-07">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2006-07-06">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2006/07/06/656351.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:39 GMT -->
+</html>

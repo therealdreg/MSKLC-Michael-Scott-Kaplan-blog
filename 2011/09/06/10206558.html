@@ -1,0 +1,48 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2011/09/06/10206558.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>My advice: Just remove 'em all, then later only add the ones you actually need</title></head><body>
+<h1>My advice: Just remove 'em all, then later only add the ones you actually need</h1>
+<p><em>by Michael S. Kaplan, published on 2011/09/06 07:01 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2011/09/06/10206558.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<p>You may remember when I wrote <strong><a title="Lack of confidence in a feature can keep me from installng it. Oh yeah, a BSOD can, too" href="http://archives.miloush.net/michkap/archive/2011/03/19/10142458.html">Lack of confidence in a feature can keep me from installing it. Oh yeah, a BSOD can, too</a></strong>.</p>
+<p>And the other day, I saw the problem come home to roost, when the following question came in:</p>
+<p style="padding-left: 60px;"><span style="font-family: times new roman,times;"><em>A customer installed every single Language Pack (LP) on W2K8 R2 RTM.</em></span><br /><span style="font-family: times new roman,times;"><em>Now when he tries to install SP1 they are running into delays/failures.</em></span></p>
+<p style="padding-left: 60px;"><span style="font-family: times new roman,times;"><em>So the recommendation was to uninstall the un-used LP&rsquo;s but the customer wants to find which ones are not being used.</em></span></p>
+<p style="padding-left: 60px;"><span style="font-family: times new roman,times;"><em>What&rsquo;s the easiest way of accomplishing this?</em></span></p>
+<p style="padding-left: 60px;"><span style="font-family: times new roman,times;"><em>I was thinking of going thru the user profile hive and see what the end-users were using.&nbsp; But trying to see if there is a better method.</em></span></p>
+<p>You can glean a few facts from the question:</p>
+<ol>
+<li>They didn't fix the windows 7 bug in Server 2008 R2 -- this is not surprising, since it is an architectural setup issue and it's hard to expect different results when two products share the same setup architecture;</li>
+<li>Some&nbsp;folks were able to glean the advice from the various references out there, to uninstall unused language packs;</li>
+<li>They hit a brick wall trying to discern which language packs were actually not in use.</li>
+</ol>
+<p>In the end, there really isn't a good way to do this.</p>
+<p>You can look at every user hive on the machine and pick up the most recently used UI language when the hive info is available.</p>
+<p>Also, under HKCU\Control Panel\Desktop\MuiCached,MachinePreferredUILanguages there is some promising info. Though without info on what it means it may not be the "list of UI languages" this user has logged in with that its name perhaps suggests.</p>
+<p>Semi-cryptic registry info being what it usually tends to be and all....</p>
+<p>I suppose that's basically the answer for the foreseeable future. That, or do what I did (the advice in the title). Probably easier to manage in the long run.</p>
+<hr/><p><strong>Joel C</strong> on 6 Sep 2011 12:12 PM:</p><div style="margin-left: 1em"><p>Well, going through the link you linked from that other page, apparently there is now a kernel update that fixes the problem for &quot;good&quot;: <a rel="nofollow" target="_new" href="http://support.microsoft.com/kb/2534366">support.microsoft.com/.../2534366</a> . (It was supposedly caused by 16-bit-era Registry handle limits in the kernel.) But you still have to use system restore to uninstall SP1. </p>
+<p>So I guess there is a third, and much better, answer here...</p>
+</div>
+<p><strong>Simon Buchan</strong> on 6 Sep 2011 4:19 PM:</p><div style="margin-left: 1em"><p>Wow - I&#39;m not at all surprised that someone thought &quot;There&#39;s no way someone will open 64k subkeys with the same name, that&#39;s crazy!&quot;. I would very easily write this bug :(. I do wonder how that many handles are open at once, though - are they something like &quot;Value&quot; or &quot;Translation&quot;?</p></div>
+<p><strong>Rich Prescott</strong> on 6 Sep 2011 7:15 PM:</p><div style="margin-left: 1em"><p>Here is a Powershell script that can pull the information he requested. &nbsp;Copy/paste it into notepad and save it as a .ps1 file.</p>
+<p>$users = get-childitem &#39;c:\users&#39; | ?{$_.psiscontainer -AND $_.Name -ne $Env:Username -AND $_.Name -ne &#39;Public&#39;}</p>
+<p>$users | %{</p>
+<p>$userDAT = Join-Path $_.fullname &quot;ntuser.dat&quot;</p>
+<p>reg load HKLM\TempHive $userDAT &nbsp;| Out-Null</p>
+<p>Start-Sleep -Seconds 1</p>
+<p>$info = ((reg query &#39;HKEY_CURRENT_USER\Control Panel\Desktop\MuiCached&#39; /v MachinePreferredUILanguages) -split &#39;\s+\b&#39;)[-2]</p>
+<p>New-Object PSObject -Property @{</p>
+<p> &nbsp; &nbsp;User = $_.Name</p>
+<p> &nbsp; &nbsp;MUI = $Info</p>
+<p> &nbsp; &nbsp;}</p>
+<p>Start-Sleep -Seconds 1</p>
+<p>Reg unload HKLM\TempHive | Out-Null</p>
+<p>$info = &quot;&quot;</p>
+<p>}</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 7 Sep 2011 8:19 AM:</p><div style="margin-left: 1em"><p>Joel, I&#39;m not 100% convinced that everything is fixed here, but it is a step in the right direction....</p>
+</div>
+<hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2011/09/07/10207073.html" title="It&#39;s a good thing the UTC has access to a thesaurus!">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2011/09/04/10205857.html" title="Microsoft corporate matching? It&#39;s time to raise the roof....">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2011-09">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2011-09-06">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2011/09/06/10206558.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+</html>

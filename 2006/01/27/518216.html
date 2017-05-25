@@ -1,0 +1,37 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2006/01/27/518216.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:40 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Some scenarios are too big to cover</title></head><body>
+<h1>Some scenarios are too big to cover</h1>
+<p><em>by Michael S. Kaplan, published on 2006/01/27 10:01 -05:00, original URI: http://blogs.msdn.com/b/michkap/archive/2006/01/27/518216.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P><FONT face=Tahoma>As you might imagine, these days I get a lot of email from people in different groups at Microsoft about all kinds of internationalization issues.</FONT></P>
+<P><FONT face=Tahoma>Usually they are polite, but some of them can be demanding at times!</FONT></P>
+<P><FONT face=Tahoma>Now </FONT><FONT face=Tahoma>while it is true that I have a lot of different things that I know something about, it is not like I know everything about every single issue.</FONT></P>
+<P><FONT face=Tahoma>Unfortunately, I usually do know the answer often enough that people keep on asking. :-)</FONT></P>
+<P><FONT face=Tahoma>Anyway, yesterday someone was looking for a way to convert between Locale Identifiers (</FONT><FONT face=Tahoma>LCIDs) and culture names.</FONT></P>
+<P><FONT face=Tahoma>So I immediately suggested the NLS API functions <A href="http://msdn.microsoft.com/library/en-us/intl/nls_LocaleNameToLCID.asp">LocaleNameToLCID</A> and <A href="http://msdn.microsoft.com/library/en-us/intl/nls_LCIDToLocaleName.asp">LCIDToLocaleName</A>.</FONT></P>
+<P><FONT face=Tahoma>"I'm sorry," they said. "We need something that works in managed code."</FONT></P>
+<P><FONT face=Tahoma>Ah, that is even easier since the <A href="http://msdn.microsoft.com/library/en-us/cpref/html/frlrfSystemGlobalizationCultureInfoClassTopic.asp">CultureInfo class</A> has&nbsp;both <A href="http://msdn.microsoft.com/library/en-us/cpref/html/frlrfsystemglobalizationcultureinfoclassnametopic.asp">Name</A> and <A href="http://msdn.microsoft.com/library/en-us/cpref/html/frlrfsystemglobalizationcultureinfoclasslcidtopic.asp">LCID</A> properties.</FONT></P>
+<P><FONT face=Tahoma>"Hmmm," they said. "We need something that will work downlevel."</FONT></P>
+<P><FONT face=Tahoma>No problem,&nbsp;since the .NET Framework can run as far downlevel as Windows 98 if needed.</FONT></P>
+<P><FONT face=Tahoma>"Ah, but we have to handle custom locales, too," they offered.</FONT></P>
+<P><FONT face=Tahoma>As you can imagine, I was getting a little exasperated by then. I pointed out that custom locales are a new feature in Vista, so there was no downlevel requiremnt for them.</FONT></P>
+<P><FONT face=Tahoma>"No, we need to support all of these scenarios" was the response.</FONT></P>
+<P><FONT face=Tahoma>Hmmm.... so basically they need:</FONT></P>
+<UL>
+<LI><FONT face=Tahoma>both names and LCIDs</FONT> 
+<LI><FONT face=Tahoma>in both managed and unmanaged code</FONT> 
+<LI><FONT face=Tahoma>on Both Vista and downlevel</FONT> 
+<LI><FONT face=Tahoma>for both built-in and custom locales</FONT></LI></UL>
+<P><FONT face=Tahoma>But they wanted to be "good citizens" and start using names and getting rid of their LCID dependency.</FONT></P>
+<P><FONT face=Tahoma><EM>(of course in most societies the good citiziens would not be expected to be quite this demanding, but that is another story!)</EM></FONT></P>
+<P><FONT face=Tahoma><STRONG>Well, I told them, they will probably need to store both names and LCIDs.</STRONG></FONT></P>
+<P><FONT face=Tahoma>We simply were not able to know through special psychic powers that all these things would be needed to build such functionality into prior versions. Not that I would complain if I had this ability, but for the present it is simply beyond my power....</FONT></P>
+<P><FONT face=Tahoma>Anyway, I think when the extreme nature of their request was so baldly laid out, they kind of understood they were looking for a bit more than was possible. Which is not to say they won't be emailing me tomorrow to ask another question. :-)</FONT></P>
+<P><FONT face=Tahoma></FONT>&nbsp;</P>
+<P><FONT face=Tahoma color=#ff1493><EM>This post brought to you by</EM> "<FONT face=Nyala size=6>ፏ</FONT>" <EM>(<A href="http://www.fileformat.info/info/unicode/char/134f">U+134f</A>, a.k.a. ETHIOPIC SYLLABLE FWA)</EM></FONT></P>
+<hr/><p><a id="518425" href="#518425">#</a> <strong>Jerry Pisk</strong> on 27 Jan 2006 1:41 PM:</p><div style="margin-left: 1em">But if they do store the mapping themselves they would not support custom locales or any locales they missed when they released their code :) There is a way to do it, combination of on-demand loaded code and static code with some decent version and feature checking would do but it'd be pain to manage, mean a lot of duplicated code, probably not work correctly as the logic would be hard to get right and it would still not support anything new added in post-vista world.<br><br>To add my own rant - my managers still require me to write code that will work on Win95, even though about 0.3% of our users still use that. Welcome to corporate america.</div>
+<p><a id="518430" href="#518430">#</a> <strong>Michael S. Kaplan</strong> on 27 Jan 2006 1:43 PM:</p><div style="margin-left: 1em">Hi Jerry --<br><br>If they store both items any time something is created, then they never need to convert. If they areabale to create then the locale works on the machine, so they can grab the two properties and store them.<br><br>And then everybody wins. :-)</div>
+<hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2006/01/28/518643.html" title="Approaching linguiticalishnessality?">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2006/01/27/518198.html" title="The font known as &#39;MS Sans Serif&#39;">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2006-01">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2006-01-27">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2006/01/27/518216.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:40 GMT -->
+</html>

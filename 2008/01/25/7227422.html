@@ -1,0 +1,63 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2008/01/25/7227422.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:36 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Behold the Table Driven Text Service, Part 4 (Specifying when to modify, if not how)</title></head><body>
+<h1>Behold the Table Driven Text Service, Part 4 (Specifying when to modify, if not how)</h1>
+<p><em>by Michael S. Kaplan, published on 2008/01/25 08:01 -05:00, original URI: http://blogs.msdn.com/b/michkap/archive/2008/01/25/7227422.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P>Prior posts in the series:</P>
+<UL>
+<LI><A class="" href="http://archives.miloush.net/michkap/archive/2008/01/21/7178421.html" mce_href="http://archives.miloush.net/michkap/archive/2008/01/21/7178421.html"><STRONG>0 (You have to start somewhere)</STRONG></A> 
+<LI><A class="" href="http://archives.miloush.net/michkap/archive/2008/01/22/7179223.html" mce_href="http://archives.miloush.net/michkap/archive/2008/01/22/7179223.html"><STRONG>1 (Starting with a dictionary simple in every way)</STRONG></A> 
+<LI><A class="" href="http://archives.miloush.net/michkap/archive/2008/01/23/7179692.html" mce_href="http://archives.miloush.net/michkap/archive/2008/01/23/7179692.html"><STRONG>2 (Three ways to convert!)</STRONG></A></LI>
+<LI><A class="" href="http://archives.miloush.net/michkap/archive/2008/01/24/7180212.html" mce_href="http://archives.miloush.net/michkap/archive/2008/01/24/7180212.html"><STRONG>3 (Where do keystrokes come in?)</STRONG></A></LI></UL>
+<P>Now at this point some of the basic ideas are here as well as three kind of illustrative but not terribly useful samples, and the obvious question to ask is what gets covered next.</P>
+<P>To start, I'll clear up some of the mystery from Part 3:</P>
+<BLOCKQUOTE>
+<P><EM><FONT face="times new roman,times">At this point, you may be wondering about two more things -- the meaning of the <STRONG>INPUT</STRONG> keyword here, and the meaning of the number 0. The fact that every single text file on Vista includes these very same entries is just a special bonus to people trying to figure out the meaning without assistance or documentation....</FONT></EM></P></BLOCKQUOTE>
+<P>The <STRONG>INPUT</STRONG> thing describes the functionality to use and I'll get to that eventually describing other options here.</P>
+<P>And that <STRONG>0</STRONG> thing? The meaning is "handle all shift states". You can replace it with flags that can be added together (literally added, with a PLUS sign and everything). The full list of them is:</P>
+<UL>
+<LI>TF_MOD_ALT</LI>
+<LI>TF_MOD_CONTROL</LI>
+<LI>TF_MOD_SHIFT</LI>
+<LI>TF_MOD_RALT</LI>
+<LI>TF_MOD_RCONTROL</LI>
+<LI>TF_MOD_RSHIFT</LI>
+<LI>TF_MOD_LALT</LI>
+<LI>TF_MOD_LCONTROL</LI>
+<LI>TF_MOD_LSHIFT</LI>
+<LI>TF_MOD_ON_KEYUP</LI>
+<LI>TF_MOD_IGNORE_ALL_MODIFIER</LI>
+<LI>TF_MOD_ON_KEYUP_SHIFT_ONLY</LI>
+<LI>TF_MOD_ON_KEYUP_CONTROL_ONLY&nbsp;&nbsp;&nbsp;</LI>
+<LI>TF_MOD_ON_KEYUP_ALT_ONLY</LI></UL>
+<P>If you ever&nbsp;had to deal with keystroke events, you might see where some or all of this is coming from. Essentially you can use these flags to limit when the TABLE DRIVEN TEXT SERVICE will be handling specific key strokes and when it will ignore them and let them get passed through to the underlying keyboard.</P>
+<P>Unfortunately, the TEXT section does not give you a way to distinguish between what shift state(s) are being depressed - which means if you add entries for both <STRONG>a</STRONG> and <STRONG>A</STRONG> then you will get two items in the candidate list to choose from, rather than just one. The good news is that the presence of these modifier flags mean that a future release can fix this limitation since the DLL really is paying attention to what modifier key(s) are being pressed for filtering purposes and they are positioned to extend that code to modify potential candidates in the future.</P>
+<P>So for now when I&nbsp;am building these text files, I simply act like the case does make a difference so that when/if they fix this bug everything will work, and in the meantime everything&nbsp;will still work (albeit more slowly since a candidate list will exist).</P>
+<P>This "workaround" only affects the "case" distinction; there is currently no way to specify the other modifier states and there is no way to know what this syntax will look like when/if that limitation is addressed.</P>
+<P>But&nbsp;if I ever do find out you&nbsp;(as my loyal readers) would be the first to know....</P>
+<P>An interesting consequence is that you can literally add duplicates if you want to -- and they will just show up in the candidate list. Since filtering is done&nbsp;based on really any of the modifiers you&nbsp;specify (or no filtering if you use that <STRONG>0</STRONG> that the built-in ones seem to use), you can add the ALTGR choice in with the same candidate&nbsp;characters as the non-ALTGR version,&nbsp;and for now it will just be on the candidate list.</P>
+<P>Easy!</P>
+<P>You can also simply add&nbsp;pure duplicates with no plans to ever&nbsp;distinguish them further, giving people two options....</P>
+<P>But whenever there is more than one option in a candidate list, the order of the list can be very important (for obvious reasons). This is specifiable in the [Configuration] section of the text file, with one of the following options:</P>
+<P><STRONG>Keystroke sort</STRONG></P>
+<BLOCKQUOTE>
+<P>Text candidate list item should sort by keystroke order.</P>
+<P>Form of keystroke sort is:</P>
+<P>KeystrokeSort = integer value</P>
+<P>Where:&nbsp;&nbsp;&nbsp;&nbsp; 0&nbsp;&nbsp;&nbsp;&nbsp; - turn off keystroke sort (default)</P>
+<P>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Not 0 – turn on keystroke sort</P></BLOCKQUOTE>
+<P><STRONG>Text sort</STRONG></P>
+<BLOCKQUOTE>
+<P>Text candidate list item should sort by text string order.</P>
+<P>Form of text sort is:</P>
+<P>TextSort = integer value</P>
+<P>Where:&nbsp;&nbsp;&nbsp;&nbsp; 0&nbsp;&nbsp;&nbsp;&nbsp; - turn off text sort (default)</P>
+<P>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Not 0 – turn on text sort</P></BLOCKQUOTE>
+<P>When you have pure duplicate entries, neither option will help much since <STRONG>KeyStrokeSort</STRONG> will not distinguish so should keep them in the order of the text file, while <STRONG>TextSort</STRONG> will also not distinguish and should also order them by the order they are in the file. But when the entries are not duplicates you can see different results and it is worth trying both to see which order you prefer.</P>
+<P><EM>Next up, I'll cover some of the other settings in the [Configuration] section, or I might cover the language settings. Whichever one I don't do next will be done the time after....</EM></P>
+<P mce_keep="true">&nbsp;</P>
+<P><FONT color=#ff00ff><EM>This post brought to you by</EM><FONT size=5> ④ </FONT></FONT><EM><FONT color=#ff00ff>(</FONT><A class="" href="http://www.fileformat.info/info/unicode/char/2463" mce_href="http://www.fileformat.info/info/unicode/char/2463">U+2463</A><FONT color=#ff00ff>, aka CIRCLED DIGIT FOUR)</FONT></EM></P>
+<hr/><div style="margin-left: 1em"><em>no comments</em></div><hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2008/10/21 <a href="http://archives.miloush.net/michkap/archive/2008/10/21/9009276.html">Behond the Table Driven Text Service, Part 14 (Don't expect too much from numbers)</a></p><p>2008/07/25 <a href="http://archives.miloush.net/michkap/archive/2008/07/25/8771255.html">Behold the Table Driven Text Service, Part 13 (Sinhalification proclamation!)</a></p><p>2008/06/30 <a href="http://archives.miloush.net/michkap/archive/2008/06/30/8669123.html">Behold the Table Driven Text Service, Part 12 (The knights who say நீ, redux, #2)</a></p><p>2008/06/21 <a href="http://archives.miloush.net/michkap/archive/2008/06/21/8632391.html">Back to Sri Lanka (conceptually)</a></p><p>2008/02/25 <a href="http://archives.miloush.net/michkap/archive/2008/02/25/7884260.html">Behold the Table Driven Text Service, Part 11 (The knights who say நீ, redux, #1)</a></p><p>2008/02/15 <a href="http://archives.miloush.net/michkap/archive/2008/02/15/7713553.html">Behold the Table Driven Text Service, Part 10 ("Even Jove nods," Atlas shrugged, "so we'll convert their old files, now.")</a></p><p>2008/02/12 <a href="http://archives.miloush.net/michkap/archive/2008/02/12/7632387.html">Behold the Table Driven Text Service, Part 9 (Will you be content if I tell you how some content can be defined?)</a></p><p>2008/02/11 <a href="http://archives.miloush.net/michkap/archive/2008/02/11/7588649.html">Behold the Table Driven Text Service, Part 8 (Configuration 'junk in the trunk', part 2)</a></p><p>2008/01/30 <a href="http://archives.miloush.net/michkap/archive/2008/01/30/7321697.html">Behold the Table Driven Text Service, Part 7 (Configuration 'junk in the trunk', part 1)</a></p><p>2008/01/29 <a href="http://archives.miloush.net/michkap/archive/2008/01/29/7297793.html">Behold the Table Driven Text Service, Part 6 (it is sufficient to be iconic, aka DaYi, DaYi Aynu!)</a></p><p>2008/01/28 <a href="http://archives.miloush.net/michkap/archive/2008/01/28/7287476.html">Behold the Table Driven Text Service, Part 5 (All about the language, baby!)</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2008/01/25/7228941.html" title="On reversing the irreversible (grabbing the data, part I)">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2008/01/24/7181052.html" title="We could just treat every day like the weekend and see what that does to the software people?">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2008-01">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2008-01-25">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2008/01/25/7227422.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:36 GMT -->
+</html>

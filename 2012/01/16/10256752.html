@@ -1,0 +1,130 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2012/01/16/10256752.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>I'm reasonably certain that those who disagree with me here are wrong!</title></head><body>
+<h1>I'm reasonably certain that those who disagree with me here are wrong!</h1>
+<p><em>by Michael S. Kaplan, published on 2012/01/16 07:01 -05:00, original URI: http://blogs.msdn.com/b/michkap/archive/2012/01/16/10256752.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<p>So, the other day, I wrote <strong><a title="How to detect if a locale is Bidi, Windows 7/8 edition" href="http://archives.miloush.net/michkap/archive/2012/01/13/10256391.html">How to detect if a locale is Bidi, Windows 7/8 edition</a></strong>.</p>
+<p>This is a topic I had covered a bunch of times over the years, in many prior blogs, from <strong><a title="How To [NOT] detect that a locale is bidi" href="http://archives.miloush.net/michkap/archive/2006/03/03/542963.html">How To [NOT] detect that a locale is bidi</a></strong>&nbsp;to <strong><a title="How To detect that a culture is bidi" href="http://archives.miloush.net/michkap/archive/2006/07/12/663013.html">How To detect that a culture is bidi</a></strong> to <strong><a title="Cue the smarter version of GetDateFormat... ok, it's a wrap!" href="http://archives.miloush.net/michkap/archive/2006/09/01/735817.html">Cue the smarter version of GetDateFormat... ok, it's a wrap!</a></strong> and so on.</p>
+<p>Most of the Win32 answer prior to the introduction of <a href="http://msdn.microsoft.com/en-us/library/windows/desktop/dd373806(v=vs.85).aspx">LOCALE_IREADINGLAYOUT</a> was using the <a href="http://msdn.microsoft.com/en-us/library/windows/desktop/dd318714(v=vs.85).aspx">LOCALESIGNATURE</a>.</p>
+<p>More specifically, bits 123, 124, and 125 of the <a href="http://msdn.microsoft.com/en-us/library/windows/desktop/dd374090(v=vs.85).aspx">Unicode Subset Bitfields</a>:</p>
+<table border="1" cellspacing="2" cellpadding="2">
+<tbody>
+<tr>
+<td>&nbsp;Bit</td>
+<td>&nbsp;Meaning</td>
+</tr>
+<tr>
+<td>&nbsp;123</td>
+<td>&nbsp;<strong>Windows 2000 and later:</strong> Layout progress, horizontal from right to left</td>
+</tr>
+<tr>
+<td>&nbsp;124</td>
+<td>&nbsp;<strong>Windows 2000 and later:</strong> Layout progress, vertical before horizontal</td>
+</tr>
+<tr>
+<td>&nbsp;125</td>
+<td>&nbsp;<strong>Windows 2000 and later:</strong> Layout progress, vertical bottom to top</td>
+</tr>
+</tbody>
+</table>
+<p>The combinations of different values of these three bits make the description of almost any text directionality outside of Boustrophedon (<strong><a title="When will we support Rongo-Rongo?" href="http://archives.miloush.net/michkap/archive/2006/07/27/680232.html">or Rongo-Rongo</a></strong>)&nbsp;possible:</p>
+<table border="1" cellspacing="2" cellpadding="2">
+<tbody>
+<tr>
+<td style="text-align: center;">&nbsp;Bit 123</td>
+<td style="text-align: center;">&nbsp;Bit 124</td>
+<td style="text-align: center;">&nbsp;Bit 125</td>
+<td>Text Rendering Direction</td>
+<td>IREADINGLAYOUT equivalent</td>
+</tr>
+<tr>
+<td style="text-align: center;">0</td>
+<td style="text-align: center;">0</td>
+<td style="text-align: center;">0</td>
+<td>&nbsp;LeftToRight, then TopToBottom</td>
+<td style="text-align: center;"><strong>0</strong></td>
+</tr>
+<tr>
+<td style="text-align: center;">1</td>
+<td style="text-align: center;">0</td>
+<td style="text-align: center;">0</td>
+<td>&nbsp;RightToLeft, then TopToBottom</td>
+<td style="text-align: center;"><strong>1</strong></td>
+</tr>
+<tr>
+<td style="text-align: center;">1</td>
+<td style="text-align: center;">1</td>
+<td style="text-align: center;">0</td>
+<td>&nbsp;TopToBottom, then RightToLeft&nbsp;</td>
+<td style="text-align: center;"><strong>2</strong></td>
+</tr>
+<tr>
+<td style="text-align: center;">0</td>
+<td style="text-align: center;">1</td>
+<td style="text-align: center;">0</td>
+<td>&nbsp;TopToBottom, then LeftToRight</td>
+<td style="text-align: center;"><strong>3</strong></td>
+</tr>
+<tr>
+<td style="text-align: center;">0</td>
+<td style="text-align: center;">0</td>
+<td style="text-align: center;">1</td>
+<td>&nbsp;LeftToRight, then BottomToTop</td>
+<td style="text-align: center;">n/a</td>
+</tr>
+<tr>
+<td style="text-align: center;">1</td>
+<td style="text-align: center;">0</td>
+<td style="text-align: center;">1</td>
+<td>&nbsp;RightToLeft, then BottomToTop</td>
+<td style="text-align: center;">n/a</td>
+</tr>
+<tr>
+<td style="text-align: center;">0</td>
+<td style="text-align: center;">1</td>
+<td style="text-align: center;">1</td>
+<td>&nbsp;BottomToTop, then LeftToRight</td>
+<td style="text-align: center;">n/a</td>
+</tr>
+<tr>
+<td style="text-align: center;">1</td>
+<td style="text-align: center;">1</td>
+<td style="text-align: center;">1</td>
+<td>&nbsp;BottomToTop, then RightToLeft</td>
+<td style="text-align: center;">n/a</td>
+</tr>
+</tbody>
+</table>
+<p>Now as the last column hints at, the four reading layout choices we support are all completely able to be&nbsp;derived from the LOCALESIGNATURE bits.</p>
+<p>The additional four rendering options theoretically able to be captured by these bits but not available to the new flag are not used as as primary rendering for any language we support.</p>
+<p>A part of me wishes both</p>
+<ul>
+<li>the <a href="http://msdn.microsoft.com/en-us/library/windows/desktop/dd373806(v=vs.85).aspx">LOCALE_IREADINGLAYOUT flag</a> in native Win32, and</li>
+<li>the <a href="http://msdn.microsoft.com/en-us/library/system.globalization.textinfo.isrighttoleft.aspx">TextInfo.IsRightToLeft Property</a> in managed code</li>
+</ul>
+<p>were&nbsp;entirely derived from these three bits, since doing that directly only satisfies my inner database developer that hates storing repetitive data in multiple places.</p>
+<p>Of course in a mature society, there is room for disagreement, but in this case <span style="font-size: medium;"><span style="font-size: large;">I'm reasonably certain that those who disagree with me here are wrong</span>.</span> :-)</p>
+<p>Since&nbsp;had we done&nbsp;it sooner,&nbsp;it might have prevented us from shipping managed code bugs like the one described in <a title="It's not right when IsRightToLeft is wrong" href="http://archives.miloush.net/michkap/archive/2006/12/21/1331650.html">I<strong>t's not right when IsRightToLeft is wrong</strong></a>, and native code bugs like the one described in <strong><a title="Double Secret ANSI, part 2 (the brokenest one yet, sorry 'bout that!)" href="http://archives.miloush.net/michkap/archive/2007/03/20/1917161.html">Double Secret ANSI, part 2 (the brokenest one yet, sorry 'bout that!)</a></strong>.</p>
+<p><span style="font-size: large;">Because the best way to make sure the data&nbsp;is correct is to <strong>use the data</strong>.</span></p>
+<p>Early and often, as both those bugs that made it to shipping products prove quite effectively (to our detriment at the time).</p>
+<p>To be perfectly honest, I wish we would make this change even now, because we will always consider any differences between these three different items as a bug, as the best way to make sure that they don't fall out of sync is to use one source for all of them.</p>
+<p>We could in theory make this change later this week to the data behind the properties.</p>
+<p>Now&nbsp;I am an&nbsp;owner of the data,&nbsp;but this would also be code to change (in multiple products across multiple divisions).&nbsp;I <strong>can</strong> appeal to the owners to fix the long-term problem sync though.</p>
+<p>Before that, we we can even fix the problem I mentioned the other day in&nbsp;<strong><a title="How to detect if a locale is Bidi, Windows 7/8 edition" href="http://archives.miloush.net/michkap/archive/2012/01/13/10256391.html">How to detect if a locale is Bidi, Windows 7/8 edition</a></strong>, where we stop returning results that are incorrect 99% of the time (claiming verticality for CJK and Mongolian), by default...</p>
+<p><em>Technically, I could have used that idea and made this&nbsp;another&nbsp;part of the&nbsp;"The evolving Story of Locale Support" series, but I'm not confident that everyone will agree, so who knws whether we'll evolve that way, yet!</em></p>
+<hr/><p><strong>John Cowan</strong> on 16 Jan 2012 10:59 AM:</p><div style="margin-left: 1em"><p>It&#39;s interesting that people don&#39;t seem to have adopted bottom-to-top writing anywhere. &nbsp;Even Ogham is only a marginal case: it&#39;s true that inscriptions are often written up the edge of a stone, but longer ones go up the stone, then left-to-right, then down another edge, much the way Latin script is written on an archway. &nbsp;Manuscript (or printed) Ogham is always left to right, top to bottom.</p>
+</div>
+<p><strong>Van</strong> on 16 Jan 2012 5:58 PM:</p><div style="margin-left: 1em"><p>John, if I remember correctly, Uighur Arabic is sometimes (more often historically) written vertically bottom-to-top, like a standard Arabic text turned 90 degrees clockwise. It was essentially a way of setting it in Chinese style columns while keeping the Arabic-form words looking right. That&#39;s the only example I can think of other than the marginal Ogham.</p>
+</div>
+<p><strong>John Cowan</strong> on 23 Jan 2012 7:57 AM:</p><div style="margin-left: 1em"><p>Van: Yes, I&#39;ve seen examples of that. &nbsp;There is also the fact that titles on the spines of German and French (but not English) books run bottom to top. &nbsp;But these are all marginal cases, rotations of the basic direction to fit vertical columns of space. &nbsp;The basic four directions are:</p>
+<p>Left to right text, top to bottom line progression (e.g. Latin)</p>
+<p>Right to left text, top to bottom line progression (e.g. Arabic)</p>
+<p>Top to bottom text, right to left line progression (e.g. vertical CJK)</p>
+<p>Top to bottom text, left to right line progression (e.g. Mongolian)</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 23 Jan 2012 8:22 AM:</p><div style="margin-left: 1em"><p>The last two simply aren&#39;t the default for computers on any platform, unfortunately. :-(</p>
+</div>
+<hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2012/09/07 <a href="http://archives.miloush.net/michkap/archive/2012/09/07/10347167.html">Let's stand up a moment. You know, Vertically...</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2012/01/17/10256884.html" title="The evolving Story of Locale Support, part 15: Fixing our listings up in Windows 8!">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2012/01/13/10256391.html" title="How to detect if a locale is Bidi, Windows 7/8 edition">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2012-01">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2012-01-16">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2012/01/16/10256752.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+</html>

@@ -1,0 +1,30 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2008/05/27/8556091.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:36 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>SQL and the CLR? (2008 edition!)</title></head><body>
+<h1>SQL and the CLR? (2008 edition!)</h1>
+<p><em>by Michael S. Kaplan, published on 2008/05/28 02:06 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2008/05/27/8556091.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P>Self-identifying software developer and SQL Server database administrator&nbsp;Julia asked via the Contact link:</P>
+<BLOCKQUOTE>
+<P><EM><FONT face="times new roman,times">Last November you talked about Windows only cultures providing a potential solution for the collation differences between SQL Server and the .NET Runtime. Do you know whether this solution will be used&nbsp;in the upcoming version of SQL?</FONT></EM></P></BLOCKQUOTE>
+<P>Fascinating question, Julia!</P>
+<P>The blog she is referring to is <A class="" href="http://archives.miloush.net/michkap/archive/2007/11/26/6527833.html" mce_href="http://archives.miloush.net/michkap/archive/2007/11/26/6527833.html"><STRONG>When yesterday's workaround becomes tomorrow's potential solution...</STRONG></A> from the end of November of last year.</P>
+<P>In it I pointed out how Windows-only CultureInfo objects, where .NET's CultureInfo is synthesized via Win32 NLS API function calls, open a fascinating conceptual door.</P>
+<P>Because all SQL Server would have to do is re-expose their own internal collation functions to the CLR, and this would allow some future version of .NET to support "SQL-only CultureInfo objects", for lack of a better term.</P>
+<P>And this design would solve the current problem where .NET's collation behavior does not match SQL Server's, even when one is including managed code in one's stored procedures. </P>
+<P>Conceptually, this seemed to me&nbsp;like the geek equivalent of what basketball fans might think of as a&nbsp;<STRONG>three-pointer</STRONG>. If you know what I mean....</P>
+<P>Alas, as any people playing with the SQL Server 2008 CTPs (including me, as I pointed out in <A class="" href="http://archives.miloush.net/michkap/archive/2008/03/16/8238240.html" mce_href="http://archives.miloush.net/michkap/archive/2008/03/16/8238240.html"><STRONG>On changing the world, or at least the way people order things in it</STRONG></A>) can testify, this is really not what is happening in SQL Server 2008, mostly.</P>
+<P>The "mostly" refers to an interesting exception -- if one is </P>
+<UL>
+<LI>running on Vista or on Windows Server 2008, and </LI>
+<LI>making use of a Windows-only CultureInfo object's CompareInfo,&nbsp;and</LI>
+<LI>using one of the newer 10.0 collations on the SQL Server that corresponds to that CompareInfo</LI></UL>
+<P>then one can actually get comparable results in their managed code running in their stored procedures.</P>
+<P>I don't think there was specific intent behind this, though -- it looks more like a bunch of components behaving as they are designed to running into a somewhat fortuitous circumstance.</P>
+<P>It would take a bit more overt work, in future versions of both SQL Server and the .NET CLR's Base Class Libraries, to completely "hook up" this solution and allow the results to be not just comparable but truly equivalent....</P>
+<P>Now I have no idea if this is planned for the future or not, though I do know that until and unless that happens, in the meantime all of the built-in .NET CultureInfo objects and there CompareInfo objects will be much further away from the new 10.0 collations in SQL Server 2008.</P>
+<P>I'll be talking more about this topic another day....</P>
+<P><FONT color=#ff00ff><EM>This post sponsored by</EM><FONT size=7>&nbsp;ག </FONT><EM>(<A class="" href="http://www.fileformat.info/info/unicode/char/0f42" mce_href="http://www.fileformat.info/info/unicode/char/0f42">U+0f42</A> a.k.a. TIBETAN LETTER GA)</EM></FONT></P>
+<hr/><div style="margin-left: 1em"><em>no comments</em></div><hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2008/09/25 <a href="http://archives.miloush.net/michkap/archive/2008/09/25/8964291.html">You're not my type if you have no culture</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2008/05/28/8556794.html" title="Summer vacation, the 2nd">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2008/05/26/8554142.html" title="You want to know what&#39;s weak? Strong password rules, that&#39;s what&#39;s weak!">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2008-05">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2008-05-27">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2008/05/27/8556091.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:36 GMT -->
+</html>

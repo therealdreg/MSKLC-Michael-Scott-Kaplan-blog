@@ -1,0 +1,99 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2008/07/16/8736898.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:36 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>The situation was quite grave when I realized how "tepid" those hot keys were</title></head><body>
+<h1>The situation was quite grave when I realized how "tepid" those hot keys were</h1>
+<p><em>by Michael S. Kaplan, published on 2008/07/16 10:01 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2008/07/16/8736898.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P>Yesterday in <A class="" href="http://archives.miloush.net/michkap/archive/2008/07/15/8730381.html" mce_href="http://archives.miloush.net/michkap/archive/2008/07/15/8730381.html"><STRONG>The keys are so hot, they're smoking!</STRONG></A>, I did something that you won't see me doing very often.</P>
+<P>I waxed on at length about a feature as a really exciting thing for people to use.</P>
+<P>I'll now admit that when I did that, it was mostly a setup.</P>
+<P>Because today I am going to prove that:</P>
+<UL>
+<LI>I wouldn't make the worst tester in the world</LI>
+<LI>Even Vista&nbsp;has a bug or two in it</LI>
+<LI>The "Hot keys for input languages" feature has&nbsp;weird bugs&nbsp;in it</LI></UL>
+<P>So we will start by adding three keyboards under three different languages to my usual setup -- in this case Latvian, Lithuanian, and Luxembourgish (<STRONG>The "L" Word</STRONG>&nbsp;languages in Europe):</P>
+<P><IMG height=514 src="http://trigeminal.fmsinc.com/images/thelword01.png" width=426></P>
+<P>This will give us the following view in that <STRONG>Advanced Key Settings</STRONG> tab:</P>
+<P><IMG src="http://trigeminal.fmsinc.com/images/thelword02.png"></P>
+<P>Because this is Vista we will get the three shift states and twelve character choices:</P>
+<P><IMG src="http://trigeminal.fmsinc.com/images/thelword03.png">&nbsp;&nbsp; <IMG src="http://trigeminal.fmsinc.com/images/thelword04.png"></P>
+<P>The two characters at the end are <STRONG>~</STRONG> (U+0073, aka TILDE) and&nbsp;<STRONG>`</STRONG> (U+0060, aka GRAVE ACCENT).</P>
+<P>We're gonna need a few more keyboards here for what&nbsp;I want to do. Let's go back and add three more, under those same languages (just for fun):</P>
+<P><IMG src="http://trigeminal.fmsinc.com/images/thelword06.png"></P>
+<P>Okay, this will give us the list to die for:</P>
+<P><IMG src="http://trigeminal.fmsinc.com/images/thelword07.png"></P>
+<P>Six entries plus the English I started with.</P>
+<P>Okay now, to quote Antonio Banderas from Desperado right before he started shooting up the bar, <STRONG>Let's Play</STRONG>.</P>
+<P>Among these six keyboards, let's use that <STRONG><U>C</U>hange Key Sequence...</STRONG> dialog, to add hot keys to each of them:</P>
+<P><IMG src="http://trigeminal.fmsinc.com/images/thelword09.png"></P>
+<P>Okay, do you see What we have here?</P>
+<UL>
+<LI>Ctrl + ~</LI>
+<LI>Ctrl + `</LI>
+<LI>Ctrl + Shift ~</LI>
+<LI>Ctrl + Shift + `</LI>
+<LI>Left Alt&nbsp;+ Shift ~</LI>
+<LI>Left Alt&nbsp;+ Shift + `</LI></UL>
+<P>Now if you have a US keyboard you might notice the problem here.</P>
+<P><IMG src="http://trigeminal.fmsinc.com/images/gravetilde.png"></P>
+<P>Yes, that is right -- <STRONG>the tilde is the shift state to the grave's base state</STRONG>.</P>
+<P>In other words, there are not six unique states here at all -- the user interface just thinks there is. All of the TILDE entries without a SHIFT in them have an implicit one built in, and all of the GRAVE entries with a SHIFT do not exist since the SHIFT changes the characters.</P>
+<P>Oops!</P>
+<P>Let's hit the <STRONG><U>A</U>pply</STRONG> button now and see what happens:</P>
+<P><IMG src="http://trigeminal.fmsinc.com/images/thelword11.png"></P>
+<P>Uh oh! Somebody silently removed our CTRL + GRAVE ACCENT that was on the Latvian keyboard.</P>
+<P>But the rest were left.</P>
+<P>Let's fix it and try again:</P>
+<P><IMG src="http://trigeminal.fmsinc.com/images/thelword12.png"></P>
+<P>Okay, that one stayed fixed but now two others are gone.</P>
+<P>Third time, will it be a charm? Let's see:</P>
+<P><IMG src="http://trigeminal.fmsinc.com/images/thelword13.png"></P>
+<P>Um, not exactly -- not only is one missing, but another one is now duplicated on the list but without the hot key. And we can't add it back either as it is no longer on the list:</P>
+<P><IMG src="http://trigeminal.fmsinc.com/images/thelword14.png"></P>
+<P>Weird.</P>
+<P>And kind of broken, given that we have now broken the UI and half of the ones that are there are not going to work the way we want them to anyway.</P>
+<P>If you keep doing this, eventually you hit a non-steady steady state of something like this:</P>
+<P><IMG src="http://trigeminal.fmsinc.com/images/thelword15.png"></P>
+<P>Ick.</P>
+<P>But let's pretend that this is not a problem for a moment.</P>
+<P>And we'll look at some keyboard layouts:</P>
+<P><IMG src="http://trigeminal.fmsinc.com/images/thelword16.png">&nbsp;<IMG src="http://trigeminal.fmsinc.com/images/thelword17.png">&nbsp;<IMG src="http://trigeminal.fmsinc.com/images/thelword18.png"><IMG src="http://trigeminal.fmsinc.com/images/thelword19.png"></P>
+<P><IMG src="http://trigeminal.fmsinc.com/images/thelword20.png">&nbsp;<IMG src="http://trigeminal.fmsinc.com/images/thelword21.png"></P>
+<P>All of this kind of underscores the point from <A class="" href="http://archives.miloush.net/michkap/archive/2006/04/02/567003.html" mce_href="http://archives.miloush.net/michkap/archive/2006/04/02/567003.html"><STRONG>Punctuation keys can make lousy shortcuts</STRONG></A>, because even if we do not know whether these hot keys are CHARACTER based or VIRTUAL KEY based, we know that neither the characters nor the virtual keys can be relied on for being in all keyboards or in the same positions even when the are present.</P>
+<P>Sometimes they are there&nbsp; but the VK values are different, sometimes they are on other keys, sometimes they are actually dead keys (and believe me the interaction when they are dead keys almost deserve their own bug report!).</P>
+<P>So basically between half and all of these entries are going to be kind of broken, depending on the layout you choose.</P>
+<P>And of course there are those duplicated entries to help us keep it all in perspective:</P>
+<P><IMG src="http://trigeminal.fmsinc.com/images/thelword22.png"></P>
+<P>Then we can try <STRONG>Estonian</STRONG> instead since both the character and the VK are different there:</P>
+<P><IMG src="http://trigeminal.fmsinc.com/images/thelword23.png"></P>
+<P>As this will give us more somewhat broken entries for hot keys, unless you do them this way:</P>
+<P><IMG src="http://trigeminal.fmsinc.com/images/thelword24.png"></P>
+<P>Though even if you do them right for the English keyboard&nbsp;(to switch to Estonian), you may not have them right for the Estonian keyboard (to switch to English) which does not have them both there.</P>
+<P>Not much room for gray area here -- there are just a whole heap of bugs here that have as far as I know never been reported and&nbsp;some of which have existed for any versions.</P>
+<P>Ick.</P>
+<P>Kind of provides a possible answer to Centaur's <A class="" href="http://archives.miloush.net/michkap/archive/2008/07/15/8730381.html#8734061" mce_href="http://archives.miloush.net/michkap/archive/2008/07/15/8730381.html#8734061">wondering</A>:</P>
+<BLOCKQUOTE>
+<P><EM><FONT face="times new roman,times">I wonder what is the target audience for these hot keys.</FONT></EM></P></BLOCKQUOTE>
+<P>Fictional users? :-)</P>
+<P>I'll talk about the next problem tomorrow....</P>
+<P><EM>(Keep in mind we are keeping away from the IME topic, for now!)</EM></P>
+<P mce_keep="true">&nbsp;</P>
+<P><FONT color=#ff00ff><EM>This blog brought to you by</EM><FONT size=5> ` </FONT>and<FONT size=5> ~ </FONT>(<A class="" href="http://www.fileformat.info/info/unicode/char/0060" mce_href="http://www.fileformat.info/info/unicode/char/0060">U+0060</A> and <A class="" href="http://www.fileformat.info/info/unicode/char/007e" mce_href="http://www.fileformat.info/info/unicode/char/007e">U+007e</A>, aka GRAVE ACCENT and TILDE)</FONT></P>
+<hr/><p><strong>Asztal</strong> on 16 Jul 2008 4:19 PM:</p><div style="margin-left: 1em"><p>I tried to abuse this oddness to some effect, assigning Alt-Shift-0 to switch to English and Alt-Shift-` to switch to Hungarian (effectively creating a single shortcut to switch between the most common two, since the Hungarian layout's 0 is in the same place as the UK layout's `), and 1-3 to switch to other, less common, specific layouts. </p>
+<p>Unfortunately it didn't work, as the dialog simply deleted Alt-Shift-0 most of the time (it seems to like doing that). When I got it to not delete either of them, Alt-Shift-0 worked, but Alt-Shift-` didn't do anything :(</p>
+<p>Doesn't work with Ctrl-`, either. I'm slightly confused.</p></div>
+<p><strong>Oli</strong> on 17 Jul 2008 8:35 AM:</p><div style="margin-left: 1em"><p>I use Left Alt+Shift+0 to switch to &quot;English (United States) - US&quot; and Left Alt+Shift+1 to switch to &quot;French (Canada) - Canadian French&quot; all the time in Windows XP and Windows 2003 (I haven't owned a Windows Vista machine yet).</p>
+<p>Sometimes I'll notice that the &quot;Switch between input languages&quot; has been somehow reset to Left Alt+Shift (I haven't determined what causes this), but other than that, I haven't had problems with this feature. &nbsp;(please don't take it away!)</p>
+<p>Mode isn't a problem because I keep the language bar on my desktop in semi-transparency mode near the top-right corner (very few windows have titles that long) and so I can always give a quick glance in that direction, although it's fairly obvious when I'm in the wrong mode and it takes 0.2 seconds to switch. :)</p>
+<p>C'est aussi simple que &#231;a!</p>
+<p>- Oli</p></div>
+<p><strong>Frode A.</strong> on 17 Jul 2008 10:07 AM:</p><div style="margin-left: 1em"><p>I used to use this feature back on XP when I first moved to Canada so I could write Norwegian characters to my friends and family back home on emails and MSN.</p>
+<p>Although I can't really remember exactly why, I eventually stopped using it and started replacing the characters with their combination &nbsp;counterparts (aa, ae, oe) due to the flaky nature of the hot keys feature.</p>
+<p>I tried it again on Vista, although being about two years at the time since I moved (and last used a NO keyboard), I ran into a slight snag of mixing the location of the three extra letters. Hence I turned it off and didn't really get to try it out that much.</p>
+<p>I do like the feature however. Maybe I could put little stickers on my keys so I'd know where they are when I'd need them. Anyway, hopefully it can get a little more attention next time around to weed out these kind of problems.</p></div>
+<p><strong>Mihai</strong> on 18 Jul 2008 1:28 PM:</p><div style="margin-left: 1em"><p>This is what happens when one tries to replace a standard control (in this case the HotKey control) with some improvised &quot;better&quot; solution (in this case two comboboxes).</p>
+<p>Custom controls/solutions are hard to get right, because many many many hours went into designing/implementing the standard controls. The chances I can come up with something better for some stand-alone project are very slim.</p></div>
+<hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2008/07/17 <a href="http://archives.miloush.net/michkap/archive/2008/07/17/8742348.html">The difference between only being allowed to set 32 of something versus only being given 32 options to choose from</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2008/07/16/8737061.html" title="Google as the window, Windows as the door, the Doors as (never mind, this could take a while)">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2008/07/15/8732674.html" title="On installing and removing fonts, Part 6: That&#39;s your name? What&#39;s your real name? Nah. What was it before you changed it?">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2008-07">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2008-07-16">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2008/07/16/8736898.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:36 GMT -->
+</html>

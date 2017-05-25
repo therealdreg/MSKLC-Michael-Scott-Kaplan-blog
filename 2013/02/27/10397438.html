@@ -1,0 +1,48 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2013/02/27/10397438.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:21 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>All of Japan would prefer that you fix your code, to allow for the Emperor of Japan to be alive!</title></head><body>
+<h1>All of Japan would prefer that you fix your code, to allow for the Emperor of Japan to be alive!</h1>
+<p><em>by Michael S. Kaplan, published on 2013/02/27 07:01 -05:00, original URI: http://blogs.msdn.com/b/michkap/archive/2013/02/27/10397438.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<p>This was going to be the month.</p>
+<p>The month to break the six year streak.</p>
+<p>The streak where every month at least one person sent me email about a particular issue.</p>
+<p>And then, a few hours ago, Marcus messed that up.</p>
+<p>His email in part read:</p>
+<p style="padding-left: 30px;"><span style="font-family: times new roman,times; font-size: large;"><em>My code for dealing with the Japanese calendar has run into a .NET Framework bug. How do you successfully get the end date of the fourth era?</em></span></p>
+<p>I have to assume that Marcus isn't Japanese, and has never been to Japan, has never loved Japan.</p>
+<p>Such a person probably wouldn't ever have asked how to "successfully get the end date of the 4th era", since the answer involves an inquest after the demise of the Emperor of Japan.</p>
+<p>This is knowledge that no one that I know of has, and that I certainly wouldn't want Microsoft to have any special insight about or into, even if they do&nbsp;maintain Microsoft HealthVault!</p>
+<p>The answer to Marcus: <span style="font-size: medium;"><strong>fix your code, to allow for the Emperor of Japan to be alive</strong>!</span></p>
+<p>And then I pointed him to some blogs from Shawn that talk about the issue (<strong><a title="Japanese Calendars, How do I Test Support for Additional Eras?" href="http://blogs.msdn.com/b/shawnste/archive/2009/09/24/japanese-calendars-how-do-i-test-support-for-additional-eras.aspx">Japanese Calendars, How do I Test Support for Additional Eras?</a></strong> and <strong><a title="Extending the Windows Japanese Calendar Era information" href="http://blogs.msdn.com/b/shawnste/archive/2011/11/15/extending-the-windows-japanese-calendar-era-information.aspx">Extending the Windows Japanese Calendar Era information</a></strong>), so he could test out his code after he fixed it.</p>
+<p>Now I wouldn't usually feel very comfortable speaking on behalf an entire country.</p>
+<p>But I'll make an exception in this case! :-)</p>
+<p>Now for the record, I've spent some time on a machine with the entire list from Wikipedia's <a href="http://en.wikipedia.org/wiki/List_of_Japanese_era_names">List of Japaese Era Names</a> on it, and ran into no significant problems with them.</p>
+<p>Converting to and from the lunar calendar isn't <em>that </em>hard, Shawn! :-)</p>
+<p>I've actually talked to some people about this in the past, and a few years ago (during a health scare about the Emperor), the CTO of Microsoft Japan sent&nbsp;a woman he trusted from MSKK&nbsp;to Redmond to discuss the unthinkable, something no one who is from Japan and who loves Japan would really want to think about: what happens when there is a new Emperor? But she did the job remarkably well, and helped everyone understand the impact on our products. I won't call her out by name because she is modest, but she was somewhat unwillingly drafted into the army of "<strong>People Who Know Things No One&nbsp;Is Allowed to Know</strong>", and she performed the job beautifully.</p>
+<p>I doubt I would have fared as well stepping outside of my own comfort zone, my own conventions....</p>
+<hr/><p><strong>John Cowan</strong> on 27 Feb 2013 9:59 AM:</p><div style="margin-left: 1em"><p>A similar question is &quot;When is the C.E. era going to be over?&quot; &nbsp;Nobody seems to ask that one!</p>
+<p>Technically, the Emperor could proclaim a new era whenever he feels like it. &nbsp;Past Emps have done so as often as they changed underwear, it seems. &nbsp;It doesn&#39;t actually have to wait for a new Emperor.</p>
+</div>
+<p><strong>Random832</strong> on 27 Feb 2013 11:18 AM:</p><div style="margin-left: 1em"><p>Maybe there should be support for converting a date that is outside the range of an era, so if (for example) someone, in 1988, had written the future date [gregorian]2012-12-21 in a file as 昭和87年12月21日, that could properly be parsed and yield the same result as 平成24年12月21日.</p>
+</div>
+<p><strong>Joshua</strong> on 27 Feb 2013 11:54 AM:</p><div style="margin-left: 1em"><p>And how do you write a date 100 years in the future in the Japanese calender?</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 27 Feb 2013 12:12 PM:</p><div style="margin-left: 1em"><p>Easy!</p>
+<p>Just assume the Emperor will be alive then still, and add 100 to the date!</p>
+</div>
+<p><strong>kaorun</strong> on 28 Feb 2013 11:16 PM:</p><div style="margin-left: 1em"><p>Japanese version of Word has Gengo date formatting in Field function, like { DATE \@ &quot;ggg E年O月A日&quot; } =&gt; 平成 二十五年三月一日. But, .net date formatter output ggg to 西暦. I think this is wrong implementation. They should be contact to Office team.</p>
+</div>
+<p><strong>Random832</strong> on 1 Mar 2013 11:34 AM:</p><div style="margin-left: 1em"><p>And what happens 100 years from now when I want to parse it? Assuming he will be alive is less appealing if it means my program fails if he&#39;s not.</p>
+</div>
+<p><strong>Joshua</strong> on 6 Mar 2013 9:51 AM:</p><div style="margin-left: 1em"><p>Random832 caught on to the real meaning of my question. As it happens (something I suspected but did not know), future dates are invalidated whenever an emperor dies. I picked 100 years for the question so that nobody would seriously believe he&#39;d still be alive.</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 6 Mar 2013 6:56 PM:</p><div style="margin-left: 1em"><p>It is a matter of faith to believe he will live forever. :-)</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 6 Mar 2013 6:58 PM:</p><div style="margin-left: 1em"><p>If Random832 were Japanese, he would know this!</p>
+</div>
+<p><strong>Well, that's not so bad</strong> on 6 Mar 2013 11:12 PM:</p><div style="margin-left: 1em"><p>After all, uture times are invalidated every time governments change time zones or summer-time rules. &nbsp;The only safe approach (which is used to say when stock options expire) is to say &quot;5 PM New York time&quot;, and that means whatever instant of Universal Time winds up corresponding to 5 PM New York time on the date specified.</p>
+</div>
+<hr/><p><em>go to <a id="newer" href="../28/10398041.html" title="Why aren&#39;t there any Cherokee keyboard layouts on Windows Phone 8?">newer</a> or <a id="older" href="../26/10396499.html" title="Having an iBOT is not the same thing as needing an iBOT">older</a> post, or back to <a href="../../../index-2.html">index</a> or <a href="../../../index-2.html#2013-02">month</a> or <a href="../../../index-2.html#2013-02-27">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2013/02/27/10397438.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:21 GMT -->
+</html>

@@ -1,0 +1,18 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2004/11/13/257049.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:42 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Using MSLU with ATL/WTL</title></head><body>
+<h1>Using MSLU with ATL/WTL</h1>
+<p><em>by Michael S. Kaplan, published on 2004/11/13 17:29 -05:00, original URI: http://blogs.msdn.com/b/michkap/archive/2004/11/13/257049.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P>If you are using the Microsoft Layer for Unicode on Windows 95/98/Me Systems in a project that uses ATL or WTL, there are some things you need to do to make it work.</P>
+<UL>
+<LI>
+<P>Avoid the <B>_ATL_MIN_CRT</B> macro -- this macro appears to be incompatible with MSLU.</P>
+<LI>
+<P>Problems with garbage text in window title bars -- It is a problem with the usage of <B>::DefWindowProc</B> and <B>::CallWindowProc</B> in ATL and WTL.&nbsp; The way to correct this problem is to at the very start of your program add the following code: <PRE>// Resolve UNICOWS's thunk (required) <BR>::DefWindowProc (NULL, 0, 0, 0); </PRE>
+<LI>Tim Smith explained it best: <BR>"The problem is that if you create an ATL window prior to <B>::DefWindowProc</B> being called, then <B>m_pfnSuperWindowProc</B> points to the thunk [in the loader] and not the resolved address.&nbsp; Then when ATL passes <B>m_pfnSuperWindowProc</B> into <B>::CallWindowProc</B> as part of the <B>WM_SETTEXT</B> message, MSLU doesn't realize that it is being passed [its own] <B>::DefWindowProc</B> and thus does an extra level of text conversion.&nbsp; By invoking <B>::DefWindowProc</B> at the start of the program, then when ATL creates a window and stores the address of <B>::DefWindowProc</B> in <B>m_pfnSuperWindowProc</B>, it is storing the address of the MSLU routine that the MSLU <B>::CallWindowProc</B> realizes does not need conversion.&nbsp; In general, if you are using ATL/WTL, just add that line of code at the start of your program and be done with it.&nbsp; It also should be added to any DLL that uses ATL windows [which have the same issue]. 
+<P></P>
+<P>Please note that the abvove issue has been addressed in <A>WTL 7.0</A> and thus only applies to earlier versions of WTL. </P></LI></UL>
+<hr/><div style="margin-left: 1em"><em>no comments</em></div><hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2004/11/26/270769.html" title="&#39;Evil date parsing&#39;, Parse, and ParseExact">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2004/11/13/257048.html" title="If you are using MFC 6.0 or 7.0 and you want to use MSLU...">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2004-11">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2004-11-13">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2004/11/13/257049.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:42 GMT -->
+</html>

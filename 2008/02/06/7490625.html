@@ -1,0 +1,83 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2008/02/06/7490625.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:36 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>The utility of a feature like font fallback in Uniscribe can often be somewhat obviated by its design flaw</title></head><body>
+<h1>The utility of a feature like font fallback in Uniscribe can often be somewhat obviated by its design flaw</h1>
+<p><em>by Michael S. Kaplan, published on 2008/02/06 09:16 -05:00, original URI: http://blogs.msdn.com/b/michkap/archive/2008/02/06/7490625.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P><EM><FONT color=#ff0000>(This is information I talked a bit about at Microsoft Research India when I was in Bangalore)</FONT></EM></P>
+<P>Now there have been many times that I have talked about&nbsp;the wonderful feature that Uniscribe's font fallback provides for us (ref: <A class="" href="http://archives.miloush.net/michkap/search.aspx?q=%22font+fallback%22+AND+Uniscribe&amp;p=1" mce_href="../../../../search.aspx?q=%22font+fallback%22+AND+Uniscribe&amp;p=1">these</A> blogs).</P>
+<P>Of course there is one thing I forgot to mention about it.</P>
+<P>And that is that it has a pretty fundamental flaw that comes up quite easily in the most common scenario under which it is used....</P>
+<P>You see, one of the main goals of this default built-in fallback behavior is to allow you to keep your fonts as they are and then any time your fonts don't have a glyph for the text you are showing, it finds one from its own little list of fonts that ought to work.</P>
+<P>As an example, we'll take our poetic word from <A class="" href="http://archives.miloush.net/michkap/archive/2007/12/02/6639141.html" mce_href="http://archives.miloush.net/michkap/archive/2007/12/02/6639141.html"><STRONG>Learning to spell in Bengali (when one doesn't know the language)</STRONG></A> and intersperse it&nbsp;inside the English, making the string something like:</P>
+<BLOCKQUOTE>
+<P>Godhuli গোধূলি Godhuli গোধূলি Godhuli </P></BLOCKQUOTE>
+<P>Now I am going to take that string and shove it over in Notepad, where my default font is usually Consolas 8 pt. Here is what it looks like:</P>
+<P><IMG src="http://trigeminal.fmsinc.com/images/godhuli_consolas8.png"></P>
+<P>OMG that is awful - take a poetic word and turn it into an ink smudgy looking kind of&nbsp;thing. I guess we have to make it bigger and try 10pt:</P>
+<P><IMG src="http://trigeminal.fmsinc.com/images/godhuli_consolas10.png"></P>
+<P>That still looks pretty awful, maybe 12pt will be better?</P>
+<P><IMG src="http://trigeminal.fmsinc.com/images/godhuli_consolas12.png"></P>
+<P>Okay, it is less of a smudge now -- I can actually tell it is Bengali. But I am struggling to read it. I guess we have to move to 14pt:</P>
+<P><IMG src="http://trigeminal.fmsinc.com/images/godhuli_consolas14.png"></P>
+<P>Okay, now <STRONG>that</STRONG> text I can read. For completeness we'll look at 16pt too:</P>
+<P><IMG src="http://trigeminal.fmsinc.com/images/godhuli_consolas16.png"></P>
+<P>Maybe you can see the problem when you look at these last two ones. The trick is not look at the Bengali so much and instead look at the English. </P>
+<P>Do you see it?</P>
+<P>Yes, that's the problem -- you have the choice of either illegibly small Bengali or obnoxiously large Latin text.</P>
+<P>Kind of the same problems&nbsp;that came up&nbsp;in <A class="" href="http://archives.miloush.net/michkap/archive/2007/03/30/1995343.html" mce_href="http://archives.miloush.net/michkap/archive/2007/03/30/1995343.html"><STRONG>When a font looks like crap....</STRONG></A> and&nbsp;<A class="" href="http://archives.miloush.net/michkap/archive/2007/11/15/6264439.html" mce_href="http://archives.miloush.net/michkap/archive/2007/11/15/6264439.html"><STRONG>'But there's no Latins in our Divehi font, Duckman.' 'Well, they don't *speak* Latin in the Maldives, do they?'</STRONG></A>, come to think of it.</P>
+<P>But wait a minute, why should that be? I mean even in XP, the Vrinda font does have those Latins in it. So why should this be a problem if the font used for Bengali has the Latins?</P>
+<P>Think about it -- the way font fallback works, you are combining your original font for the Latins with the fallback font for the non-Latins!</P>
+<P>In other words, Microsoft paid someone to build a font that might have done extensive work to make sure that the scripts within the font are&nbsp;scaled together quite well, and the most common way that people will use the feature will never benefit from the work!</P>
+<P>Let's test the theory and look at with Vrinda as the font for all of the text, explicitly. First at 16pt:</P>
+<P><IMG src="http://trigeminal.fmsinc.com/images/godhuli_vrinda16.png"></P>
+<P>Wow that looks better! Let's see 14pt:</P>
+<P><IMG src="http://trigeminal.fmsinc.com/images/godhuli_vrinda14.png"></P>
+<P>Also really attractive. How about 12pt?</P>
+<P><IMG src="http://trigeminal.fmsinc.com/images/godhuli_vrinda12.png"></P>
+<P>Still looking good! If we move much further down we'll run into problems again, as you can see with 10pt:</P>
+<P><IMG src="http://trigeminal.fmsinc.com/images/godhuli_vrinda10.png"></P>
+<P>Well, let's also look at some of these in Vista. Like here is 8pt an 14pt Consolas:</P>
+<P><IMG src="http://trigeminal.fmsinc.com/images/godhuli_consolas8_vista.png"></P>
+<P><IMG src="http://trigeminal.fmsinc.com/images/godhuli_consolas14_vista.png"></P>
+<P>Looks like the same problems are there, and we'll verify with 8pt, 10,pt, and 12pt Vrinda:</P>
+<P><IMG src="http://trigeminal.fmsinc.com/images/godhuli_vrinda8.png"></P>
+<P><IMG src="http://trigeminal.fmsinc.com/images/godhuli_vrinda10_vista.png"></P>
+<P><IMG src="http://trigeminal.fmsinc.com/images/godhuli_vrinda12_vista.png"></P>
+<P>Wow, Vista even looks pretty good at the 10pt size!</P>
+<P>And the main point, that the effort to scale the two scripts such that they look good together is a very powerful way to support better looking text.</P>
+<P>Now the only problem is that the principal goal of Uniscribe font fallback (to not require one to explicitly choose the best font) is kind of subverted by requiring that explicit choice to be made, now isn't it?</P>
+<P>Now as I pointed out in <A class="" href="http://archives.miloush.net/michkap/archive/2007/11/15/6264439.html" mce_href="http://archives.miloush.net/michkap/archive/2007/11/15/6264439.html"><STRONG>'But there's no Latins in our Divehi font, Duckman.' 'Well, they don't *speak* Latin in the Maldives, do they?'</STRONG></A>, there is clearly an effort to include the Latins in the fonts used for fallback, but that ah not completely happened yet, and even if was there of course the problem for all the other characters in Unicode exists -- the hard work of typographers to do the best scaling should indeed be leveraged, but a reasonable automatic scaling should exist for the less than ideal case where not all of the needed characters are provided.</P>
+<P>But what would be needed is an effort for Uniscribe to take a more holistic approach to font choices that works beyond the individual run when adjacent runs cross script boundaries, so that the right font will be selected in such cases.</P>
+<P>This is a reasonable approach used for the analogous problem of handling combining diacritic placement -- ideally you should provide precomposed glyphs for the font to use, but if not then information about attachment points can do a less than awful job for fallback?</P>
+<P>Of&nbsp;course it would require some work to do that scaling between different fonts.</P>
+<P><EM>We will assume that the attempt to scale different scripts within the same font when the font foundry did not do the work to make them look good together -- case in point Arial Unicode MS -- is completely out of scope and thus will continue to look as bad as it always has looked; perhaps they wanted it this way!</EM></P>
+<P>Now some people might look at this blog oddly since I seem to be providing not just workaround but suggestions on how the product itself could work to fix the problem. But the issues in providing that scaling are quite complex, to which I'll add the discussion from the <STRONG>crap cartoon font</STRONG> blogs (<A class="" href="http://archives.miloush.net/michkap/archive/2007/08/11/4317850.html" mce_href="http://archives.miloush.net/michkap/archive/2007/08/11/4317850.html"><STRONG>Part 1</STRONG></A> and <A class="" href="http://archives.miloush.net/michkap/archive/2007/08/16/4416440.html" mce_href="http://archives.miloush.net/michkap/archive/2007/08/16/4416440.html"><STRONG>Part 2</STRONG></A>) that talk about other issues that complicate the problem further....</P>
+<P mce_keep="true">&nbsp;</P>
+<P><FONT color=#ff00ff><EM>This post brought to you by</EM><FONT size=5> গ </FONT><EM>(<A class="" href="http://www.fileformat.info/info/unicode/char/0997" mce_href="http://www.fileformat.info/info/unicode/char/0997">U+0997</A>, aka BENGALI LETTER GA)</EM></FONT></P>
+<hr/><p><a id="7500407" href="#7500407">#</a> <strong>Zooba</strong> on 6 Feb 2008 5:53 PM:</p><div style="margin-left: 1em"><p>I thought a point was a fixed size?</p>
+<p>Given the same point setting, the size of the glyphs (excluding overhang?) should be the same for both fonts. Obviously Vrinda's glyphs are smaller than Consolas's, so has the foundry misinterpreted the sizing? Or is there some more subtle point here that I've missed?</p></div>
+<p><a id="7501090" href="#7501090">#</a> <strong>Michael S. Kaplan</strong> on 6 Feb 2008 6:32 PM:</p><div style="margin-left: 1em"><p>Every font has different metrics and always has, so if one is flawed, they all are. The point size has very little to do with what each font chooses to do with it....</p>
+</div>
+<p><a id="7501171" href="#7501171">#</a> <strong>Michael S. Kaplan</strong> on 6 Feb 2008 6:39 PM:</p><div style="margin-left: 1em"><P>Put another way -- compare <FONT face=arial,helvetica,sans-serif><STRONG>Arial</STRONG></FONT>&nbsp;and <FONT face="times new roman,times"><STRONG>Times New Roman</STRONG></FONT>, and then tell me again if you think it is reasonable to expect letters to be the same size. :-)</P></div>
+<p><a id="7502055" href="#7502055">#</a> <strong>Zooba</strong> on 6 Feb 2008 7:34 PM:</p><div style="margin-left: 1em"><p>Yes, I do think it's reasonable (in terms of height anyway - width is a different matter) but not for each letter/character, but the font as a whole.</p>
+<p>The problem with the Latin/Bengali fonts in the main post is that the Bengali characters are all noticeably shorter than the Latin characters. Comparing W to ো is obviously unfair, but in terms Godhuli and গোধূলি, it is obvious that every Bengali character is shorter than the Latin characters.</p>
+<p>To (attempt to) draw an analogy, the Replay Gain functionality of some media players (Winamp calls it that, others have different names) doesn't make every single audio sample the same volume - it works on the entire collection of audio samples.</p></div>
+<p><a id="7507942" href="#7507942">#</a> <strong>Michael S. Kaplan</strong> on 7 Feb 2008 1:56 AM:</p><div style="margin-left: 1em"><p>And automatic scaling would try to do the same, maybe?</p>
+<p>As far as hight of those two LATIN fonts go, try creating a 1mb document in Word with each, the Times one will be hugely shorter. Try it if you don't believe me!</p>
+</div>
+<p><a id="7528636" href="#7528636">#</a> <strong>Zooba</strong> on 7 Feb 2008 6:13 PM:</p><div style="margin-left: 1em"><p>Interesting that you suggest a file size rather than a line count... I'm sensing a trick here.</p>
+<p>It's reasonably obvious in the font previewer that Vrinda is much shorter than Times New Roman with bigger gaps between the lines, which I am assuming is related to the font rather than the previewer.</p>
+<p>If I were to attempt to come up with an automatic scaling algorithm, it would be based on some 'standard' (which points are supposed to be...) and would be map (again) desired font size/height to a point value that will give that height. For example, Vrinda 72 is about the same height as Times New Roman 48. So transparently, taking TNR as the standard, 48pt would have Vrinda drawn using 72pt.</p>
+<p>I'm sure there's some flaw here (besides the obvious backwards compatibility issues), but I haven't spotted it yet. :-)</p></div>
+<p><a id="7530248" href="#7530248">#</a> <strong>Michael S. Kaplan</strong> on 7 Feb 2008 7:47 PM:</p><div style="margin-left: 1em"><p>No trick, the line count is also different. But in large documents the page count disparity is more impressive.</p>
+<p>Conceptually he scaling is that simple, but in practice the scaling ends up being much more complicated than this (I'll talk about this in a future blog).</p>
+</div>
+<p><a id="7548006" href="#7548006">#</a> <strong>Zooba</strong> on 8 Feb 2008 6:27 PM:</p><div style="margin-left: 1em"><p>If the line count is different it means the width of the font is also different, hence it is not a valid comparison of height (alone).</p>
+<p>I'll hang out for the scaling discussion when you blog about it :-)</p></div>
+<p><a id="7556381" href="#7556381">#</a> <strong>Michael S. Kaplan</strong> on 9 Feb 2008 3:07 AM:</p><div style="margin-left: 1em"><p>The width is different on the characters, too. :-)</p>
+<p>The height can affect the page count, independent of lines. Bottom line -- different fonts take up different amounts of space....</p>
+</div>
+<hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2010/12/14 <a href="http://archives.miloush.net/michkap/archive/2010/12/14/10104459.html">Falling back shouldn't mean falling over (though perhaps it does, a bit)</a></p><p>2008/12/03 <a href="http://archives.miloush.net/michkap/archive/2008/12/03/9168086.html">Want to hear about a cool new typographic convention? Khmer, and I'll tell you about it...</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2008/02/06/7490841.html" title="Funny thing about a reputation (aka It takes quite a character...)">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2008/02/05/7457411.html" title="Attention PARENT [windows] -- You aren&#39;t me and you don&#39;t own me, so I&#39;m not going to tell you about all of the characters that visit me here">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2008-02">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2008-02-06">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2008/02/06/7490625.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:36 GMT -->
+</html>

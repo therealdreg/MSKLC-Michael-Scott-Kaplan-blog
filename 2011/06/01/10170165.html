@@ -1,0 +1,33 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2011/06/01/10170165.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>One man's intentional design is another man's heinous bug: GDI+ edition</title></head><body>
+<h1>One man's intentional design is another man's heinous bug: GDI+ edition</h1>
+<p><em>by Michael S. Kaplan, published on 2011/06/01 07:01 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2011/06/01/10170165.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<p><span style="font-size: large;"><strong>Font installation is a complex and oftentimes touchy issue with a lot of people both inside and outside of Microsoft.</strong></span></p>
+<p>Maybe I should explain why I am making such bold statements. :-)</p>
+<p>It started with a question that was asked nearly five years ago:</p>
+<p style="padding-left: 90px;"><span style="font-family: times new roman,times; font-size: small;">The customer is finding that after he temporarily installs fonts using AddFontResource (which only adds the font for the current session), then his .Net application (which, of course, is using GDI+) does not detect this newly installed font.</span></p>
+<p style="padding-left: 90px;"><span style="font-family: times new roman,times; font-size: small;">This is expected behavior, and the reason is twofold&hellip;</span></p>
+<p style="padding-left: 90px;"><span style="font-family: times new roman,times; font-size: small;">1 &ndash; The font is not permanently installed by AddFontResource unless you also add the font to the registry.&nbsp; This is well documented.</span></p>
+<p style="padding-left: 90px;"><span style="font-family: times new roman,times; font-size: small;">2 &ndash; GDI+ (and thus System.Drawing) does not dynamically recognize fonts that are installed while the app is running (even if they *are* permanently installed).&nbsp; Furthermore, there is no way for a running GDI+ application to force the InstalledFontsCollection to refresh itself.&nbsp; The only solution is to restart the app, or, to add the desired font to a PrivateFontCollection instead (if the program can &ldquo;know&rdquo; that the font is available).</span></p>
+<p>Now in this case, the customer strongly felt that #2 is a pretty bad bug.</p>
+<p>Though the truth is that it is by design -- and something that both GDI and GDI+ have in common.</p>
+<p>First the GDI side, explained by Michael Warning, long-time virtual demigod of GDI knowledge who helped me tremendously back in the MSLU days with GDI issues:</p>
+<p style="padding-left: 90px;"><em><span style="font-family: times new roman,times; font-size: small;">Just to be clear, as far as GDI is concerned &ldquo;installing&rdquo; fonts via registry updates and &ldquo;registering&rdquo; fonts via AddFontResource are logically separate operations.&nbsp; Unfortunately many people think of these as one operation.</span></em></p>
+<p style="padding-left: 90px;"><em><span style="font-family: times new roman,times; font-size: small;">GDI will pick up dynamic font registrations and once AddFontResource returns those fonts will be available for use immediately session-wide.&nbsp; GDI does not however watch for registry changes and do anything when the registry is updated.&nbsp; If only the registry is updated there will be no effect until the session gets restarted.&nbsp; </span></em></p>
+<p style="padding-left: 90px;"><em><span style="font-family: times new roman,times; font-size: small;">Actually to be overly detailed, GDI never scans the fonts key in the registry.&nbsp; Other pieces of the system do that and (essentially) call AddFontResource on the user&rsquo;s behalf.&nbsp; In this way you could technically argue that there is no such thing as font installation in a pure GDI sense.</span></em></p>
+<p>Now GDI+ has a different design, but it shares with GDI one thing -- the fact that its recognition of installed fonts is done by a process that happens only at initialization time (in the case of GDI that other process never checks the registry again, in the casse of GDI+ the initialization code never runs again).</p>
+<p>Workarounds are where the similarity seems to break down a little, though.</p>
+<p>GDI's workaround is that anyone can can call <a href="http://msdn.microsoft.com/library/dd183326.aspx">AddFontResource</a>&nbsp;and then the font is available session-wide.</p>
+<p>But for GDI+ there is no way to add yourself to the universe of the <a href="http://msdn.microsoft.com/en-us/library/system.drawing.text.installedfontcollection.aspx">InstalledFontCollection</a>; if you want to use the font post-init, you have to treat it as a private font within the session via the <a href="http://msdn.microsoft.com/en-us/library/system.drawing.text.privatefontcollection.aspx">PrivateFontCollection</a>.</p>
+<p>I suppose one can find enough similarities and differences in the two processes to either fully support the notion that the GDI+ behavior is by design or the notion that it is a terrible bug.</p>
+<p>But for me, the fact that GDi+ is in maintenance mode means there can't be a very good chance of either changing the design or fixing core bugs that would have such sweeping effect.</p>
+<p>I don't use GDI+ anyway; it doesn't have the script support I need. So I think we can probably declare this issue done at this point....</p>
+<hr/><p><strong>RandomReader</strong> on 1 Jun 2011 11:19 AM:</p><div style="margin-left: 1em"><p>Isn&#39;t that what the WM_FONTCHANGE message is there for?</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 1 Jun 2011 11:59 AM:</p><div style="margin-left: 1em"><p>GDI+ has no window message loop, and GDI font management works at lower level than the Windows Manager....the message is so apps can do things.</p>
+</div>
+<hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2011/06/02/10170605.html" title="One of the coolest parts of my job is when I don&#39;t have to do it">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2011/05/31/10169732.html" title="f y cn rd ths, thn cd tht strps yr vwls my nt bther y s mch....">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2011-06">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2011-06-01">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2011/06/01/10170165.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+</html>

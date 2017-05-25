@@ -1,0 +1,46 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2012/06/08/10317145.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:33 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>If SHIFTLOCK doesn't work for you, it's probably YOUR fault...</title></head><body>
+<h1>If SHIFTLOCK doesn't work for you, it's probably YOUR fault...</h1>
+<p><em>by Michael S. Kaplan, published on 2012/06/08 07:01 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2012/06/08/10317145.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<p>The SHIFTLOCK&nbsp;attribute of MSKLC is an interesting feature.</p>
+<p>You can see it in the UI right here, second CheckBox from the bottom:</p>
+<p><a href="http://msdnshared.blob.core.windows.net/media/MSDNBlogsFS/prod.evol.blogs.msdn.com/CommunityServer.Blogs.Components.WeblogFiles/00/00/00/33/81/0312.ShiftLock01.jpg"><img title="ShiftLock for everyone!" border="0" alt="ShiftLock for everyone!" src="http://msdnshared.blob.core.windows.net/media/MSDNBlogsFS/prod.evol.blogs.msdn.com/CommunityServer.Blogs.Components.WeblogFiles/00/00/00/33/81/0312.ShiftLock01.jpg" /></a></p>
+<p>In MSKLC's help file, it is documented on the <strong>Properties Dialog</strong> information page whatsetting it does:</p>
+<p style="padding-left: 60px;"><span style="font-family: times new roman,times; font-size: medium;">CapsLock turned off when Shift is depressed - Selecting this option imitates traditional typewriter behavior where depressing the SHIFT key turns off CAPS LOCK if it is active, something many users are accustomed to.</span></p>
+<p>Now I remember an old typewriter when I was growing up that used to do this.</p>
+<p>And on my Osborne 1, as I mentioned <strong><a href="../../../2007/12/15/6730847.html">here</a></strong>.</p>
+<p><a href="http://www.trigeminal.com/images/osborne_kbd.png"><img title="Even the Osborne 1 had it!" border="0" alt="Even the Osborne 1 had it!" src="http://trigeminal.fmsinc.com/images/osborne_kbd.png" /></a></p>
+<p>So I understood the idea, even though I hadn't seen such a keyboard in years and years.</p>
+<p>I even thought I knew of a&nbsp;couple of&nbsp;keyboard layouts that used this feature:</p>
+<p><a href="http://msdnshared.blob.core.windows.net/media/MSDNBlogsFS/prod.evol.blogs.msdn.com/CommunityServer.Blogs.Components.WeblogFiles/00/00/00/33/81/3463.ShiftLock02.jpg"><img title="Thai me up!" border="0" alt="Thai me up!" src="http://msdnshared.blob.core.windows.net/media/MSDNBlogsFS/prod.evol.blogs.msdn.com/CommunityServer.Blogs.Components.WeblogFiles/00/00/00/33/81/3463.ShiftLock02.jpg" /></a>&nbsp;&nbsp; <a href="http://msdnshared.blob.core.windows.net/media/MSDNBlogsFS/prod.evol.blogs.msdn.com/CommunityServer.Blogs.Components.WeblogFiles/00/00/00/33/81/1205.ShiftLock03.jpg"><img title="Thai me up!" border="0" alt="Thai me up!" src="http://msdnshared.blob.core.windows.net/media/MSDNBlogsFS/prod.evol.blogs.msdn.com/CommunityServer.Blogs.Components.WeblogFiles/00/00/00/33/81/1205.ShiftLock03.jpg" /></a></p>
+<p><a href="http://msdnshared.blob.core.windows.net/media/MSDNBlogsFS/prod.evol.blogs.msdn.com/CommunityServer.Blogs.Components.WeblogFiles/00/00/00/33/81/8562.ShiftLock04.jpg"><img title="Thai me up!" border="0" alt="Thai me up!" src="http://msdnshared.blob.core.windows.net/media/MSDNBlogsFS/prod.evol.blogs.msdn.com/CommunityServer.Blogs.Components.WeblogFiles/00/00/00/33/81/8562.ShiftLock04.jpg" /></a>&nbsp; <a href="http://msdnshared.blob.core.windows.net/media/MSDNBlogsFS/prod.evol.blogs.msdn.com/CommunityServer.Blogs.Components.WeblogFiles/00/00/00/33/81/3225.ShiftLock05.jpg"><img title="Thai me up!" border="0" alt="Thai me up!" src="http://msdnshared.blob.core.windows.net/media/MSDNBlogsFS/prod.evol.blogs.msdn.com/CommunityServer.Blogs.Components.WeblogFiles/00/00/00/33/81/3225.ShiftLock05.jpg" /></a></p>
+<p>I mean, say what you want about the <strong>Thai Kedmanee</strong> and <strong>Thai Pattachote</strong> keyboards.</p>
+<p>But the ones that have the names with <strong>(non-Shiftlock)</strong> appended to their names clearly imply that the first two <em>are</em> of the <strong>ShiftLock</strong> variety, right? :-)</p>
+<p>Anyway,&nbsp;from time to time&nbsp;I have gotten complaints that the attribute doesn't work for them.</p>
+<p>In looking into the matter, I discovered a couple of things.</p>
+<p><strong>First</strong> of all, the <strong>Thai Kedmanee</strong> and <strong>Thai Pattachote</strong> keyboards do not enable <strong>ShiftLock</strong>.</p>
+<p>Not a lie technically, though probably kind of a bug of sort since calling one <strong>(non-Shiftlock</strong>) implies that the other is....</p>
+<p>The actual difference between them is slightly different -- the CAPSLOCK relationship is defined between the BASE state and the SHIFT state, so that CAPS LOCK actually <em>does something</em>! The SHIFT key undoes the CAPSLOCK while it is pressed, but it does not unset the CAPSLOCK key press. Just like kbdus and other keyboards.</p>
+<p>So, close but not the same, exactly.</p>
+<p>Because of this fact, I'm not tempted to add the SHIFTLOCK attribute to the first two keyboards, but maybe the name should be changed for the other two.</p>
+<p><em>Any thoughts on what a better suffix might be?</em> :-)</p>
+<p>Okay, in any case, that's our bug. It's been there for a while, and the difference between what <strong>ShiftLock</strong> does and what those two keyboards do is sufficiently abstruse that I wouldn't be surprised if no one else ever noticed it.</p>
+<p><strong>Second</strong> of all, people who click that <strong>ShiftLock</strong> CheckBox who complain it doesn't work haven't actually clicked the <strong>caps = shift</strong> CheckBox&nbsp; on any key.</p>
+<p>Well....</p>
+<p>How can you expect CAPSLOCK to do anything that might involve <strong>ShiftLock</strong> functionality if you never asked CAPS LOCK to <strong>do</strong> anything?!?</p>
+<p>Now in retrospect, this would have made a great validation rule in MSKLC, to detect when you ask for a feature that you never bother to use.</p>
+<p>But the fact that it doesn't do that can't keep this from being caused by the keyboard author; <strong>most</strong> validation rules are just as "obvious" and any rule we missed is not MSKLC's fault.</p>
+<p>The whole <strong>ShiftLock</strong> feature falls in that list of things like dead keys and SGCAPS and ALTGR that if you (a) don't expect it, and (b) don't understand it, you are sure to be unhappy with the results....</p>
+<hr/><p><strong>John Cowan</strong> on 8 Jun 2012 10:32 AM:</p><div style="margin-left: 1em"><p>Well, on *real* typewriters, Shift Lock is a persistent Shift, so if you leave it on and type digits you get symbols. &nbsp;AFAIK no computer keyboard does this, though it&#39;s easy to see how to do it if you want it.</p>
+</div>
+<p><strong>Azarien</strong> on 9 Jun 2012 11:21 AM:</p><div style="margin-left: 1em"><p>I don&#39;t understand this post.</p>
+<p>What do Shift and Caps Lock do on Thai non-non-Shiftlock keyboards, and how does it differ from Thai non-Shiftlock and from kbdus?</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 9 Jun 2012 8:16 PM:</p><div style="margin-left: 1em"><p>All four keyboards use SHIFT the same way even the US English keyboard does. The two that don&#39;t say &quot;non-shiftlock&quot; se the CAPS key to give shift privileges, also like the US keyboard (even though Thai has no case).</p>
+<p>None of the four use shiftlock, so in truth all four are technically non-shiftlock.</p>
+</div>
+<hr/><p><em>go to <a id="newer" href="../11/10314191.html" title="Uighur, GB1030, and Arabic compatibility characters">newer</a> or <a id="older" href="../07/10316511.html" title="The evolving Story of Locale Support, part 24: I Adar you! Hell, I Double Adar you! (Windows 8 ed.)">older</a> post, or back to <a href="../../../index-2.html">index</a> or <a href="../../../index-2.html#2012-06">month</a> or <a href="../../../index-2.html#2012-06-08">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2012/06/08/10317145.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:33 GMT -->
+</html>

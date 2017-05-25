@@ -1,0 +1,65 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2006/12/10/1252776.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:39 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Don't want to convert all at once? Well, maybe you could just nibble?</title></head><body>
+<h1>Don't want to convert all at once? Well, maybe you could just nibble?</h1>
+<p><em>by Michael S. Kaplan, published on 2006/12/10 12:30 -05:00, original URI: http://blogs.msdn.com/b/michkap/archive/2006/12/10/1252776.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P>So the other day, Snaury asked me: </P>
+<BLOCKQUOTE><FONT face="Times New Roman,Times"><I>
+<P>Hi Michael,<BR><BR>I found your blog while searching for information on converting between code pages, and thought, maybe you could answer the question I have for a very long time?<BR><BR>Today was my first attempt of programming with .NET, and the first application I did was a small character sets conversion application. And while reading documentation I suddenly found that .NET Encoder/Decoder classes can encode/decode incomplete streams (i.e. those that have incomplete characters, like in the example showing teared apart UTF-8 character). I thought: wow!!! The question that worries me for a very long time is, however, if it is possible to do the same without using .NET? For example, imagine I have a 1GB file in some encoding (that has heavy MBCS), and I want to reencode it into some other encoding. With MultiByteToWideChar/WideCharToMultiByte I would need to read the whole file (1GB!) in memory, then allocate buffer for unicode version (2GBs!), convert it to unicode, then convert it to another codepage, and finally save. What I basically want is a way to load a portion of a file (like 1MB for instance), try to convert all complete characters, then load another 1MB, &nbsp;and continue convertion from the incomplete character I had in previous call. With MultiByteToWideChar/WideCharToMultiByte calls if I don't load 1MB chunk carefully I might either end up with a default character at the end, or the whole conversion fail, without even a chance to know where exactly conversion failed, and to get what converted successfully. So, I wonder if it is possible to do without .NET and using Win32 API only? Is there any functions that could tell me how much characters it converted, and where conversion stopped in the source string?<BR><BR>Thanks in advance,<BR>Snaury.</P></I></FONT></BLOCKQUOTE>
+<P>Kind of similar to Doug Cook's question I covered in <STRONG><A class="" href="http://archives.miloush.net/michkap/archive/2006/09/12/750218.html" mce_href="http://archives.miloush.net/michkap/archive/2006/09/12/750218.html">Converting, but not all at once?</A></STRONG>. In that post I pointed out the MLang solution to the problem, but several people in the comments pointed out that they have had problems with this approach.</P>
+<P>So I thought maybe I'd suggest an easier way, fraught with fewer dependencies and less peril. :-)</P>
+<P>We'll start with the information in <STRONG><A class="" href="http://archives.miloush.net/michkap/archive/2005/05/21/420708.html" mce_href="http://archives.miloush.net/michkap/archive/2005/05/21/420708.html">Getting exactly ONE Unicode code point out of UTF-8</A></STRONG>. Not the actual problem that was solved there, but the&nbsp;table that had the&nbsp;distribution of bits within the bytes of legal, valid UTF-8:</P>
+<BLOCKQUOTE>
+<P>
+<TABLE class="" cellSpacing=1 cellPadding=1 align=center border=1>
+<TBODY>
+<TR>
+<TD class=""><FONT face="Courier New" size=2>1st Byte</FONT></TD>
+<TD class=""><FONT face="Courier New" size=2>2nd Byte</FONT></TD>
+<TD class=""><FONT face="Courier New" size=2>3rd Byte</FONT></TD>
+<TD class=""><FONT face="Courier New" size=2>4th Byte</FONT></TD></TR>
+<TR>
+<TD class=""><FONT face="Courier New" size=2>0xxxxxxx&nbsp;&nbsp;&nbsp; </FONT></TD>
+<TD class=""><FONT face="Courier New" size=2>-</FONT></TD>
+<TD class=""><FONT face="Courier New" size=2>-</FONT></TD>
+<TD class=""><FONT face="Courier New" size=2>-</FONT></TD></TR>
+<TR>
+<TD class=""><FONT face="Courier New" size=2>110yyyyy&nbsp;&nbsp;&nbsp; </FONT></TD>
+<TD class=""><FONT face="Courier New" size=2>10xxxxxx&nbsp;&nbsp;&nbsp; </FONT></TD>
+<TD class=""><FONT face="Courier New" size=2>-</FONT></TD>
+<TD class=""><FONT face="Courier New" size=2>-</FONT></TD></TR>
+<TR>
+<TD class=""><FONT face="Courier New" size=2>1110zzzz&nbsp;&nbsp;&nbsp; </FONT></TD>
+<TD class=""><FONT face="Courier New" size=2>10yyyyyy&nbsp;&nbsp;&nbsp; </FONT></TD>
+<TD class=""><FONT face="Courier New" size=2>10xxxxxx&nbsp;&nbsp;&nbsp; </FONT></TD>
+<TD class=""><FONT face="Courier New" size=2>-</FONT></TD></TR>
+<TR>
+<TD class=""><FONT face="Courier New" size=2>11110uuu&nbsp;&nbsp;&nbsp; </FONT></TD>
+<TD class=""><FONT face="Courier New" size=2>10uuzzzz&nbsp;&nbsp;&nbsp; </FONT></TD>
+<TD class=""><FONT face="Courier New" size=2>10yyyyyy&nbsp;&nbsp;&nbsp; </FONT></TD>
+<TD class=""><FONT face="Courier New" size=2>10xxxxxx&nbsp;&nbsp;&nbsp; </FONT></TD></TR></TBODY></TABLE></P></BLOCKQUOTE>
+<P mce_keep="true">So it seems pretty easy to just plunk into the byte stream at whatever point you want, then perhaps look at some of the surrounding bytes and then either add or subtract from 0-3 bytes based on what you see, and then call <A class="" href="http://msdn.microsoft.com/library/en-us/intl/unicode_17si.asp" mce_href="http://msdn.microsoft.com/library/en-us/intl/unicode_17si.asp">MultiByteToWideChar</A> with that adjusted value.</P>
+<P mce_keep="true">Anyone want to take a stab at the nibble function one would write here to call before the call to <A class="" href="http://msdn.microsoft.com/library/en-us/intl/unicode_17si.asp" mce_href="http://msdn.microsoft.com/library/en-us/intl/unicode_17si.asp">MultiByteToWideChar</A>?</P>
+<P mce_keep="true">Now obviously this gets a little bit more complicated if one is also dealing with DBCS code pages, but there is a function that will actually return the lead byte ranges (<A class="" href="http://msdn.microsoft.com/library/en-us/intl/nls_0ctr.asp" mce_href="http://msdn.microsoft.com/library/en-us/intl/nls_0ctr.asp">GetCPInfo</A>). Anyone want to take a stab at that one, too? :-)</P>
+<P mce_keep="true">&nbsp;</P>
+<P mce_keep="true"><FONT color=#ff00ff><EM>This post brought to you by</EM>&nbsp;<FONT size=5>𐌐</FONT> <EM>(<A class="" href="http://www.fileformat.info/info/unicode/char/10310" mce_href="http://www.fileformat.info/info/unicode/char/10310">U+10310</A>, a.k.a. OLD ITALIC LETTER PE(</EM></FONT></P>
+<hr/><p><strong>Igor Tandetnik</strong> on 10 Dec 2006 1:47 PM:</p><div style="margin-left: 1em"><p>&gt; Now obviously this gets a little bit more complicated if one is also dealing with DBCS code pages, but there is a function that will actually return the lead byte ranges.</p>
+<p>Is it true for any DBCS encoding (as it is for UTF-8) that a trailing byte of a pair cannot be in the leading byte range? In other words, does there exist a DBCS encoding that represents at least one character as a pair &quot;XX YY&quot; where both XX and YY are leading bytes?</p>
+<p>I was under impression that such encodings do exist (e.g. Shift-JIS), and this property makes it rather challenging to walk back in the stream to find a character boundary. In the worst case, one has to walk all the way to the beginning of the stream to find out which byte is which.</p></div>
+<p><strong>Michael S. Kaplan</strong> on 10 Dec 2006 2:30 PM:</p><div style="margin-left: 1em"><P>Acually, it is not quite as bad as that, I believe (statistically speaking). The theoretical string made up entirely of lead bytes and trail bytes that are also able to act as lead bytes is quite unlikely in practice....</P></div>
+<p><strong>Michael S. Kaplan</strong> on 10 Dec 2006 2:35 PM:</p><div style="margin-left: 1em"><P>And of course the question is then -- what is the best/easiest way to detect where one is? :-)</P></div>
+<p><strong>Erzengel</strong> on 10 Dec 2006 6:28 PM:</p><div style="margin-left: 1em"><P>Well, a function for UTF8:</P>
+<P>[code]</P>
+<P>//Returns the number of bytes in the string that are complete unicode characters<BR>//Warning: This is for partial loading where only the end is cut off. Do not use this for any sort of UTF8 validation or on inconsistent data.</P>
+<P>unsigned int UTF8_CompleteLength(const char* UTF8_String, unsigned int IncompleteLength)<BR>{<BR>&nbsp; const char UTF8_MultiByte_Mask = 0x3 &lt;&lt; 6;<BR>&nbsp; const char UTF8_MultiByte_Control = 0x2 &lt;&lt; 6;<BR>&nbsp; const char UTF8_SingleByte_Mask = 0x1 &lt;&lt; 7;<BR>&nbsp; const char UTF8_SingleByte_Control = 0;<BR>&nbsp; unsigned int pos = IncompleteLength - 1;<BR><BR>&nbsp; if((UTF8_String[pos] &amp; UTF8_SingleByte_Mask) == UTF8_SingleByte_Control)<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return IncompleteLength;<BR><BR>&nbsp; for(; pos &gt;= 0; --pos)<BR>&nbsp; {<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if((UTF8_String[pos] &amp; UTF8_MultiByte_Mask) != UTF8_MultiByte_Control)<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; if((UTF8_String[pos] &amp; UTF8_SingleByte_Mask) != UTF8_SingleByte_Control)<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return pos + 1;<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; else<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;throw std::exception("Reached a single unicode character without completing unicode character");<BR><BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; //TODO: Additional error checking to ensure that we don't go past the maximum number of characters for the control bits. Note: You can go UNDER.<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<BR>&nbsp; }<BR><BR>&nbsp; throw std::exception("No complete unicode characters were found");<BR>}[/code]</P>
+<P>But they want a standard function that would work with all code pages. Which is why we like .net, yes? :)</P></div>
+<p><strong>Mihai</strong> on 11 Dec 2006 1:14 AM:</p><div style="margin-left: 1em"><p>&lt;&lt;Acually, it is not quite as bad as that, I believe (statistically speaking). The theoretical string made up entirely of lead bytes and trail bytes that are also able to act as lead bytes is quite unlikely in practice....&gt;&gt;</p>
+<p>Although unlikely, a function cannot really work based on statistics (unless is called IsStringUnicode :-)</p>
+<p>So one will have to iterate the whole buffer (not so nice, but is the only way).</p>
+<p>Then you should make sure you don't deal with GB-18030, where GetCPInfo is not enough :-)</p></div>
+<p><strong>Michael S. Kaplan</strong> on 11 Dec 2006 1:48 AM:</p><div style="margin-left: 1em"><p>Well, call that the worst case. What would the function look like?</p>
+</div>
+<hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2007/10/23 <a href="http://archives.miloush.net/michkap/archive/2007/10/23/5617352.html">If working above U+FFFF is a problem n your program, then so is the basic stuff, too</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2006/12/11/1259767.html" title="The Romanian keyboard layout on XP is the brokenest layout of all">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2006/12/09/1246712.html" title="On being consistently consistent, while still managing to be dead wrong">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2006-12">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2006-12-10">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2006/12/10/1252776.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:39 GMT -->
+</html>

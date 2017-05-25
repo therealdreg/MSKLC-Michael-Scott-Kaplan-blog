@@ -1,0 +1,37 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2011/04/09/10151666.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>[Keyboard ]Solution Unsatisfactory</title></head><body>
+<h1>[Keyboard ]Solution Unsatisfactory</h1>
+<p><em>by Michael S. Kaplan, published on 2011/04/09, original URI: http://blogs.msdn.com/b/michkap/archive/2011/04/09/10151666.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNewMonth -->
+<p>The other day, someone asked me for my thoughts on <a href="http://colemak.com/forum/viewtopic.php?id=870">'hacked' MSKLC to enable remapping CAPSLOCK</a>. </p>
+<p>This is the article over on the Colemak Forum from last year about the method they describe to perform the task of remapping the CAPSLOCK key in MSKLC-created keyboard layouts.</p>
+<p>The method doesn't use <strong>hidden command line switches</strong> to MSKLC.EXE (there aren't tons of these there anyway).</p>
+<p>It doesn't use <strong>hidden command line switches</strong> to KBDUTOOL.EXE (something several customizations I have mentioned in the past do).</p>
+<p>It doesn't use <strong>special modifications to the .KLC file</strong> (something several other customizations I have mentioned in the past do), either.</p>
+<p>What it does is give instructions to make specific modifications to the KBD.H header file (basically scrolling to a certain part of the file, the part for the "Type 4" keyboards,&nbsp;and replacing the word <strong>CAPITAL</strong> with the word <strong>BACK</strong>).</p>
+<p>In case you ever wanted proof that a little knowledge is a dangerous thing, now you have it!</p>
+<p>Allow me to explain.... :-)</p>
+<p>I have talked about <strong>Keyboard Types</strong> before, in blogs like <a href="http://archives.miloush.net/michkap/archive/tags/keyboards/" title="Knowing the layout doesn't mean knowing how to lay it out...."><strong>Knowing the layout doesn't mean knowing how to lay it out....</strong></a> and the difficulties MSKLC and kbdutool have with it in particular in <a href="http://archives.miloush.net/michkap/archive/2011/01/07/10112915.html" title="Had I known that my last release would be *the* last release..., aka hindsight is 2020"><strong>Had I known that my last release would be *the* last release..., aka hindsight is 2020</strong></a>.</p>
+<p>As I mentioned in the latter blog, there is no direct way to control what keyboard type one will get when one creates a keyboard layout. So while type "4" -- IBM enhanced (101- or 102-key) keyboard -- is common, it is not the only one. </p>
+<p>There are going to be times that this particular hack won't work at all (basically any time KBDUTOOL.EXE thinks it is another keyboard type that it is building)</p>
+<p>And of course not all the hack's suggestions work, by the report of people there. For example, in looking specifically at the behavior of the special new CAPSLOCK that is now a backspace, Anders notes:</p>
+<p style="padding-left: 60px;"><em>I tried this, while it does work... when you use the Caps Lock key repeatedly it only registers the backspace every second time.</em></p>
+<p>Yes, this makes sense -- since the logic behind the key is not in the keyboard layout DLL itself; it is partly in the system's knowledge of the scan code that thinks of this key as a toggle switch (something the BACKSPACE definitely is not).</p>
+<p>There are very few keys, in fact, that will seem like they behave properly when they have some of the "toggle key" semantic injected into their behavior. Unless they too are being used as a toggle of some sort.</p>
+<p>Plus, I really like to avoid updating both SDK and WDK header files (KBD.H is a part of the WDK), because there can be unexpected consequences even beyond the ones I mention here if you try to build keyboards using the file.</p>
+<p>One could use one's imagination and perhaps see programs that make CAPSLOCK/toggle key assumptions could themselves show errors, fail, or crash when they are given&nbsp;results that most closely resemble a Rubik's Cube that has been taken apart/had one side piece rotated 180&deg;/put back together. You know, when you modify the cube so it can't ever be solved?</p>
+<p>It believe it is even technically be a EULA violation, though I can't imagine it ever being enforced in this case, I mean unless someone tried to sue Microsoft for negative consequences of using a keyboard created by this means. In which case the use of the hack would be a pretty reasonable indemnification of Microsoft here, since someone delved into the land of the specifically unsupported....</p>
+<p>So, my thoughts on <a href="http://colemak.com/forum/viewtopic.php?id=870">'hacked' MSKLC to enable remapping CAPSLOCK</a>?</p>
+<p>Clever idea, but it doesn't really solve the actual problem people want solved, which is that the CAPSLOCK key is sending information to the machine and keyboard layout DLLs are not designed to remap behavior fully (especially for the many keys that other parts of the system and other apps might try to make their own use of).</p>
+<p><em>Similar problems can be seen in other keys as well, basically any key with special behavior beyond typing characters can have this kind of "baggage", and one key that just types a character yet still has special meaning (the VK_DECIMAL key, an issue I discussed previously in <a href="http://archives.miloush.net/michkap/archive/2006/09/13/752377.html" title="Who would win in a fight between VK_DECIMAL and LOCALE_SDECIMAL?"><strong>Who would win in a fight between VK_DECIMAL and LOCALE_SDECIMAL?</strong></a>.</em></p>
+<p>To <strong>truly</strong> solve the full problem:</p>
+<ul>
+<li>specific custom hardware that never sends the CAPSLOCK signal, or </li>
+<li>a hardware device driver that modifies the signal sent, orr</li>
+<li>a key remapper that changes the signal when it is sent</li>
+</ul>
+<p>is required. A keyboard layout solution will always be incomplete since it cannot modify the scan code being sent....</p>
+<hr/><div style="margin-left: 1em"><em>comments not archived</em></div><hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2011/04/11/10152035.html" title="One of my colleagues is the &quot;Pseudo Man&quot; (a rich source of puns in conversation!)">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2011/04/08/10151381.html" title="An unexpected period can even make a disaster even worse">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2011-04">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2011-04-09">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2011/04/09/10151666.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+</html>

@@ -1,0 +1,33 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2007/06/13/3280569.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:38 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>In any CASE, it is somewhat INSENSITIVE to point out to someone how well PRESERVED they are</title></head><body>
+<h1>In any CASE, it is somewhat INSENSITIVE to point out to someone how well PRESERVED they are</h1>
+<p><em>by Michael S. Kaplan, published on 2007/06/13 21:56 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2007/06/13/3280569.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P>There are two concepts that, while related, are not completely equivalent.</P>
+<P>In fact, one could not even technically be considered a subset of the other (although in fairness I will point out that&nbsp;some of the&nbsp;times where&nbsp;one is not a subset of the other, it tends to point to either a bug or more likely a design flaw!).</P>
+<P>The concepts are simple: <STRONG>case preserving</STRONG> vs. <STRONG>case sensitive</STRONG>, as applies to software components (and the applications/platforms that use them).</P>
+<P>A component can be said to be <STRONG>case preserving</STRONG> if it remembers the distinctive nature of the data it is given, specifically in the case used.</P>
+<P>A component can be said to be <STRONG>case sensitive</STRONG> if it considers the two case variants of letters to be separate letters (and contrariwise can be said to <STRONG>case insensitive</STRONG> if those two case variants of letters are treated as if they were the same).</P>
+<P>Now Windows, in its object namespaces and its NTFS file system and other places, can be said to be <STRONG>case insensitive</STRONG> and <STRONG>case preserving</STRONG>, because it will remember that you saved the filename as AbCdEfGhIjKlMnOpQrStUvWxYz.txt, even thought it will not allow aBcDeFgHiJkLmNoPqRsTuVwXyZ.txt to be saved in the same directory.</P>
+<P>So, the way it breaks down in the real world....</P>
+<P>If you are&nbsp;<STRONG>case sensitive</STRONG>&nbsp;then you really have to be&nbsp;<STRONG>case preserving</STRONG> -- otherwise you claim the distinction is important even though you don't always remember the distinction. That is kind of the world where components that are case sensitive mix with the ones that are case insensitive -- like C++ COM components dealing with VB.</P>
+<P>If you are <STRONG>case insensitive</STRONG> then you don't <EM>have</EM> to be <STRONG>case preserving</STRONG>, but it is probably better if you were (otherwise a user could be kind of annoyed to see the case switched on them in some way). This is (to use a VBA/VB example again) the kind of problem that happens where something like&nbsp;a name map is kept that forces all variants of&nbsp; string ti be cased only one way, even if they are not in any kind of conflict with each other. Another bad user experience.</P>
+<P>A good rules summary: </P>
+<P>1) you <STRONG>should</STRONG> always preserve.</P>
+<P>2)&nbsp;In fact you&nbsp;<STRONG>must</STRONG> preserve if you are sensitive.</P>
+<P>3) You should never assume that someone else will follow any of these rules. Because people suck at rules.</P>
+<P>Simple, right? :-)</P>
+<P>you may see some good and bad examples of this in upcoming posts. Or feel free to share your own here....</P>
+<P mce_keep="true">&nbsp;</P>
+<P><FONT color=#ff00ff><EM>This post brought to you by</EM> <FONT size=5>ڡ</FONT> <EM>(<A class="" href="http://www.fileformat.info/info/unicode/char/06a1" mce_href="http://www.fileformat.info/info/unicode/char/06a1">U+06a1</A>, a.k.a. ARABIC LETTER DOTLESS FEH)</EM></FONT></P>
+<hr/><p><a id="3283003" href="#3283003">#</a> <strong>Wilhelm Svenselius</strong> on 14 Jun 2007 1:27 AM:</p><div style="margin-left: 1em"><p>Sorry to nitpick, but you spelled INSENSITIVE wrong in the title.</p></div>
+<p><a id="3283615" href="#3283615">#</a> <strong>Michael S. Kaplan</strong> on 14 Jun 2007 2:23 AM:</p><div style="margin-left: 1em"><p>Oops! Sorry 'bout that. :-)</p>
+</div>
+<p><a id="3293348" href="#3293348">#</a> <strong>Mike</strong> on 14 Jun 2007 12:46 PM:</p><div style="margin-left: 1em"><p>Wasn't DOS case insensitive but not case preserving? &nbsp;I seem to remember it always saved filenames as upper case.</p></div>
+<p><a id="3293732" href="#3293732">#</a> <strong>Michael S. Kaplan</strong> on 14 Jun 2007 1:08 PM:</p><div style="margin-left: 1em"><p>Indeed it was! And in fact short names still are (well, sometimes). I should probably blog about that, too!</p>
+</div>
+<p><a id="3314324" href="#3314324">#</a> <strong>Mike</strong> on 15 Jun 2007 10:58 AM:</p><div style="margin-left: 1em"><p>I have a little peeve about Microsoft apps that uppercase file extensions when they interact with your files.</p></div>
+<hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2007/10/24 <a href="http://archives.miloush.net/michkap/archive/2007/10/24/5647711.html">Getting the preserved case of a file wHeN tHe uSeRs tYpE wHaTeVeR tHe hElL tHeY wAnT tO</a></p><p>2007/10/24 <a href="http://archives.miloush.net/michkap/archive/2007/10/24/5641619.html">In Case you have problems that you might think are ǸȦȘȚȲ</a></p><p>2007/10/02 <a href="http://archives.miloush.net/michkap/archive/2007/10/02/5236576.html">What happens when people don't consistently preserve case? They cause bugs!</a></p><p>2007/09/05 <a href="http://archives.miloush.net/michkap/archive/2007/09/05/4756822.html">Head checks containing either comparison or case validation BITE</a></p><p>2007/08/21 <a href="http://archives.miloush.net/michkap/archive/2007/08/21/4489089.html">In Case there is a bug....</a></p><p>2007/06/18 <a href="http://archives.miloush.net/michkap/archive/2007/06/18/3374502.html">If you don't always preserve case, you don't always preserve meaning</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2007/06/14/3283519.html" title="SIAO -- Upcoming live appearance">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2007/06/12/3261440.html" title="I&#39;ve got a fever, and the only prescription is more cowbell....">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2007-06">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2007-06-13">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2007/06/13/3280569.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:38 GMT -->
+</html>

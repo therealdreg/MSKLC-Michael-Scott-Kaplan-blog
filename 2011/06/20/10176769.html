@@ -1,0 +1,74 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2011/06/20/10176769.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>There's a ™ joke in here somewhere, I just don't know what is (aka And if a 't' turned out to be 'm'…)</title></head><body>
+<h1>There's a ™ joke in here somewhere, I just don't know what is (aka And if a 't' turned out to be 'm'…)</h1>
+<p><em>by Michael S. Kaplan, published on 2011/06/20 07:01 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2011/06/20/10176769.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<p>It isn't always true, but it often is -- the issue, when it came up, was brought up by a tester.</p>
+<p>This makes sense, really.</p>
+<p>No matter how much self hosting people like me might do, by the very nature of the job they do, most of the day of the tester is&nbsp;a mix of&nbsp;random ad-hoc, directed ad-hoc, and other testing....</p>
+<p>Now do you remember when I talked about pseudo-localization, back in <strong><a title="../../../2011/04/11/10152035.html" href="http://archives.miloush.net/michkap/archive/2011/04/11/10152035.htmlOne of my colleagues is the "Pseudo Man" (a rich source of puns in conversation!)">One of my colleagues is the "Pseudo Man" (a rich source of puns in conversation!)</a></strong>?</p>
+<p>Well, a tester noticed that in the pseudo build a bunch of strings that were supposed to have "<strong>t</strong>" in them seemed to have "<strong>m</strong>" in them, instead -- in the pseudo build.</p>
+<p>A shaping problem? A font problem? A pseudo problem? No one was sure.</p>
+<p>Well, I did know there was no shaping involved. A font problem seemed unlikely, and a pseudo issue seemed far-fetched.</p>
+<p>The mail thread had some perplexed folks on it, let me tell you.</p>
+<p>Now the way pseudo works, each letter has a set of various "replacement" characters that look like them. So take, for example:</p>
+<p style="padding-left: 30px;"><span style="font-size: large;">t</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; U+0074&nbsp;&nbsp;&nbsp; LATIN SMALL LETTER T</p>
+<p>For this letter, there are several potential&nbsp;"alternates":</p>
+<table border="1" cellspacing="5" cellpadding="5">
+<tbody>
+<tr>
+<td>Letter</td>
+<td>Codepoint</td>
+<td>Name</td>
+</tr>
+<tr>
+<td><span style="font-size: large;">ţ</span></td>
+<td>U+0163</td>
+<td>LATIN SMALL LETTER T WITH CEDILLA</td>
+</tr>
+<tr>
+<td><span style="font-size: large;">ť</span></td>
+<td>U+0165</td>
+<td>LATIN SMALL LETTER T WITH CARON</td>
+</tr>
+<tr>
+<td><span style="font-size: large;">ŧ</span></td>
+<td>U+0167</td>
+<td>LATIN SMALL LETTER T WITH STROKE</td>
+</tr>
+<tr>
+<td><span style="font-size: large;">&tau;</span></td>
+<td>U+03c4</td>
+<td>GREEK SMALL LETTER TAU</td>
+</tr>
+<tr>
+<td><span style="font-size: large;">т</span></td>
+<td>U+0442</td>
+<td>CYRILLIC SMALL LETTER TE</td>
+</tr>
+<tr>
+<td><span style="font-size: large;">ｔ</span></td>
+<td>U+ff54</td>
+<td>FULLWIDTH LATIN SMALL LETTER T</td>
+</tr>
+</tbody>
+</table>
+<p><em>There was a part of me that was sad that the Tenge was not on the "Capital T alternatives", especially after I wrote <strong><a title="It is with a tenge of sorrow that I say this" href="http://archives.miloush.net/michkap/archive/2010/06/01/10017368.html">It is with a tenge of sorrow that I say this</a></strong>. I mean, I'm over it now. But I was sad for a little while....</em></p>
+<p>Anyway, back to the <strong>t</strong> that becomes an <strong>m</strong>, do you know what's going on?</p>
+<p>Just think of it as yet another flavor of the issue i talked about in blogs like <strong><a title="Small case is not just tinier capitals; italics are not merely slanted letters" href="http://archives.miloush.net/michkap/archive/2007/08/27/4587546.html">Small case is not just tinier capitals; italics are not merely slanted letters</a></strong>&nbsp;and <strong><a title="You say ĭtalics, I say ītalics. It is much more complicated in Cyrillic...." href="http://archives.miloush.net/michkap/archive/2006/08/06/690214.html">You say ĭtalics, I say ītalics. It is much more complicated in Cyrillic....</a></strong>, previously.</p>
+<p>Judy pointed out some of the form issues, with art:</p>
+<p><img src="http://msdnshared.blob.core.windows.net/media/MSDNBlogsFS/prod.evol.blogs.msdn.com/CommunityServer.Blogs.Components.WeblogFiles/00/00/00/33/81/0081.italic01.jpg" width="445" height="424" /><br />This fact interested me for many different reasons.</p>
+<p>So I went off and looked at what various fonts did.</p>
+<p>I am pretty sure something in here might be weird. Probably not bugs though:</p>
+<p><img src="http://msdnshared.blob.core.windows.net/media/MSDNBlogsFS/prod.evol.blogs.msdn.com/CommunityServer.Blogs.Components.WeblogFiles/00/00/00/33/81/6607.italic02.jpg" width="531" height="661" /></p>
+<p>Sometimes your&nbsp;<strong><span style="font-size: x-large;">t</span></strong> is gonna look like an <span style="font-size: x-large;"><strong>m</strong></span>; deal with it!</p>
+<hr/><p><strong>andreas</strong> on 20 Jun 2011 9:55 PM:</p><div style="margin-left: 1em"><p>back in 2000 I stayed a week in Sofia (BG). was invited one evening for dinner by local friends. tried to decipher the (cyrillic) menu. asked if &quot;salama&quot; was sausage. big laughter: no, that&#39;s salad! :-))</p>
+</div>
+<p><strong>M W Lees-Grossmann</strong> on 21 Jun 2011 5:48 AM:</p><div style="margin-left: 1em"><p>That last graphic with the various fonts is almost entirely 8859P15/MSWin1252 fonts. What happens with Arial Unicode MS and Mincho? This looks like a straightforward substitution problem similar to something weird I ran into some years ago with the Cyrillic &quot;page&quot; (Unicode vs. cp1251 vs. 8859-5).</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 21 Jun 2011 6:51 AM:</p><div style="margin-left: 1em"><p>Not sure what you mean, they are all *Unicode* fonts.</p>
+</div>
+<hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2011/06/21/10177222.html" title="The downside of managing to go native...">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2011/06/17/10173790.html" title="There&#39;s no &quot;I&quot; in IDN, part 4: the &#39;path&#39; to Hell is paved with IDN bugs">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2011-06">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2011-06-20">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2011/06/20/10176769.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+</html>

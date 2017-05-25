@@ -1,0 +1,37 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2010/05/18/9997861.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:35 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>All right, guys, uh, listen. This is a locale in Windows, watch me for the changes, and try and keep up, okay?</title></head><body>
+<h1>All right, guys, uh, listen. This is a locale in Windows, watch me for the changes, and try and keep up, okay?</h1>
+<p><em>by Michael S. Kaplan, published on 2010/05/18 07:01 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2010/05/18/9997861.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P><FONT color=#ff0000><EM>Please&nbsp;forgive the Marty McFly allusion in the title!</EM></FONT></P>
+<P>When I wrote <A href="http://archives.miloush.net/michkap/archive/2010/04/16/9997102.html" mce_href="http://archives.miloush.net/michkap/archive/2010/04/16/9997102.html"><STRONG>Capitalized tag != capitalized month</STRONG></A> (not for nothing, but it was the least-read blog of mine in recent memory!), I only had half the&nbsp;question there.</P>
+<P>It was a side question the support person asked as they were looking at the actual question.</P>
+<P>The actual question was about the fact that between XP and Windows 7, there was a change.</P>
+<P>You can see it right here:</P>
+<P><A href="http://www.trigeminal.com/images/upperlower02.jpg" mce_href="http://www.trigeminal.com/images/upperlower02.jpg"><IMG style="WIDTH: 273px; HEIGHT: 320px" border=0 src="http://trigeminal.fmsinc.com/images/upperlower02.jpg" width=273 height=320 mce_src="http://trigeminal.fmsinc.com/images/upperlower02.jpg"></A>&nbsp;&nbsp; &nbsp;<A href="http://www.trigeminal.com/images/upperlower.jpg" mce_href="http://www.trigeminal.com/images/upperlower.jpg"><IMG style="WIDTH: 289px; HEIGHT: 322px" border=0 src="http://trigeminal.fmsinc.com/images/upperlower.jpg" width=289 height=322 mce_src="http://trigeminal.fmsinc.com/images/upperlower.jpg"></A></P>
+<P>The month name used to be capitalized.</P>
+<P>And now in Windows 7 it isn't, apparently:</P>
+<P><IMG style="WIDTH: 531px; HEIGHT: 96px" border=0 src="http://trigeminal.fmsinc.com/images/upperlower02_closeup.jpg" width=531 height=96 mce_src="http://trigeminal.fmsinc.com/images/upperlower02_closeup.jpg"></P>
+<P><IMG style="WIDTH: 639px; HEIGHT: 81px" border=0 src="http://trigeminal.fmsinc.com/images/upperlower_closeup.jpg" width=639 height=81 mce_src="http://trigeminal.fmsinc.com/images/upperlower_closeup.jpg"></P>
+<P>This underscores a particular reality about our locale data:&nbsp;the fact that it is constantly changing.</P>
+<P>Changing due to new preferences.</P>
+<P>Changing due to new&nbsp;standards.</P>
+<P>Sometimes even changing due to bugs.</P>
+<P>In this case, it looks like a change due to standards, as one of the developers noticed:</P>
+<BLOCKQUOTE>
+<P><FONT face="times new roman,times">Having the month in lower case is the right thing to do for Spanish.<BR><BR>Your customer can refer to the following official document, published by the RAE (Royal Academy of the Spanish Language): <BR><BR>&nbsp;&nbsp;&nbsp;&nbsp; </FONT><A href="http://www.rae.es/rae/gestores/gespub000015.nsf/(voanexos)/arch7E8694F9D6446133C12571640039A189/$FILE/Ortografia.pdf"><FONT face="times new roman,times">http://www.rae.es/rae/gestores/gespub000015.nsf/(voanexos)/arch7E8694F9D6446133C12571640039A189/$FILE/Ortografia.pdf</FONT></A><FONT face="times new roman,times"> , especially section 3.4.<BR><BR>Also, the AML (Mexican Academy of Language) has the same document:&nbsp;<BR><BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</FONT><A href="http://www.academia.org.mx/pdfs/ortografia.zip"><FONT face="times new roman,times">http://www.academia.org.mx/pdfs/ortografia.zip</FONT></A></P></BLOCKQUOTE>
+<P>This kind of thing happens often, and of course if the information is received in reasonable time to take the update then the next version will see that update happening.</P>
+<P>Of course if the source needs to be verified that can take more time but the advantage of it being based on a standard is that the source is usually quite quick/easy to verify.</P>
+<P><EM>Microsoft gets a non-trivial amount of direct feedback suggesting direct changes being needed in a market without any validation that turn out to be incorrect for the majority of people using the locale. Not for mean-spirited reasons, just for the simple fact that not everyone knows what the "official" way is just because it is the way that seems most natural to them.</EM></P>
+<P><EM>But that occasionally leads to bugs, like in <A href="http://archives.miloush.net/michkap/archive/2008/04/04/8355413.html" mce_href="http://archives.miloush.net/michkap/archive/2008/04/04/8355413.html"><STRONG>this</STRONG></A> case, for example - a bit of well-intended feedback from one group of native speakers of a language leading to a major bug in the opinion of another group of native speakers....</EM></P>
+<P>The big question that comes up is what to do about the down-level versions of Windows, all of which contain the "best known data" from when they were shipped but after that could be "wrong" for any of the three reasons given above or any combination thereof.</P>
+<P>The policy, almost without exception, is to change nothing. </P>
+<P>Upgrade is the way to get the latest.</P>
+<P>In fact, the only time you see exceptions would be very extreme cases, such as&nbsp;new countries moving to use the Euro, and even in that case they are "fixed" by using the built-in "current locale modification" rather than by updating the underlying binary.</P>
+<P>Of course within a country it is unlikely to every single person following such standards so readily that a change leads to instant 100% adoption, so there are always going to be people who will consider such changes to be bugs, by default.</P>
+<P>Given the potential impact on parsing and formatting, it is quite possible it can look that way in some cases.</P>
+<P>All of which is a good reason to not be so completely proactive that the second a standard comes out Windows gets it -- since it can be years or even never before a standard is widely adopted in some cases....</P>
+<hr/><div style="margin-left: 1em"><em>no comments</em></div><hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2010/05/19/10009920.html" title="What&#39;s the Word on interference in typing from Word?">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2010/05/17/10013731.html" title="The problem with maximizing the minimizing issues (by which I mean minimizing the maximizing ones)">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2010-05">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2010-05-18">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2010/05/18/9997861.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:35 GMT -->
+</html>

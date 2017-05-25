@@ -1,0 +1,78 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2011/03/22/10144474.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Rupee! Rupee! Let down your CHAR!</title></head><body>
+<h1>Rupee! Rupee! Let down your CHAR!</h1>
+<p><em>by Michael S. Kaplan, published on 2011/03/22 11:54 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2011/03/22/10144474.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<p><em><span style="color: #ff0000;"><strong>Today's late blog posting was to wait for the actual release. The Rapunzelian pun in the title wll only be completely effective if you pronounce CHAR as "care" (ref <a href="http://archives.miloush.net/michkap/archive/2006/07/18/669277.html" title="How is that pronounced, exactly?">How is that pronounced, exactly?</a>)</strong></span></em></p>
+<p>Perhaps, like me, you have some interest in the languages of India.</p>
+<p>Perhaps you have visited.</p>
+<p>Perhaps you were born there, or your family was.</p>
+<p>Or perhaps you live there right now.</p>
+<p>Either way, if you read my <a href="http://archives.miloush.net/michkap/archive/2010/07/15/10038526.html" title="If it was me, I'd say &quot;I love the Rupee, and it was my idea!&quot;"><strong>If it was me, I'd say "I love the Rupee, and it was my idea!"</strong></a> last July or <a href="http://archives.miloush.net/michkap/archive/2010/10/12/10074534.html" title="Unicode 6.0.0 is [virtually] released!"><strong>Unicode 6.0.0 is [virtually] released!</strong></a>&nbsp;last October or <a href="http://archives.miloush.net/michkap/archive/2011/02/21/10132187.html" title="Unicode 6.0.0 is [actually] released!"><strong>Unicode 6.0.0 is [actually] released!</strong></a> last month, you may have been eagerly waiting to find out when Microsoft would be responding to and providing for support of the new Rupee symbol.</p>
+<p>Well, I can tell you now, it is available for download, right now!</p>
+<p>The details on how to get it for the various 32-bit and 64-bit versions on the x86, x64, and IA64 architectures can be found in </p>
+<p><a href="http://support.microsoft.com/kb/2496898">KB 2496898: An update to support the new currency symbol for the Indian Rupee in Windows Vista, in Windows Server 2008, in Windows 7 and in Windows Server 2008 R2</a></p>
+<p>and you can install it now from the Download Center!</p>
+<p><em>Anticipating a question: there is no update for Windows 2000, XP, or Server 2003, as all are out of support now. If you are running one of them you are on your own for rupee support....</em></p>
+<p>The update includes several important pieces:</p>
+<ul>
+<li>Additions of the new rupee&nbsp;to many of the core fonts;</li>
+<li>Updates to the many locales of India to have the new rupee as the currency symbol;</li>
+<li>Updates to many of the keyboards used by the locales of India to add the rupee to them;</li>
+<li>Addition of a new "English - India" keyboard that is like the regular keyboard used by the en-IN locale but with the addition of the rupee</li>
+</ul>
+<p>And in addition to telling you all of that, I thought I'd point out some interesting info about the package as well!</p>
+<p>Some people may be surprised that the locale data was updated, as this is typically not something that has been done in the past. But there are two reasons that the update was done:</p>
+<ol>
+<li>There is a very different group of people in charge of the decision making process now, and</li>
+<li>Due to the bug I mentioned in <a href="http://archives.miloush.net/michkap/archive/2011/02/09/10125506.html" title="Win 7 RTM &amp;amp; Arabic: &quot;We can fix up August and April. But it'll cost you July to do it&amp;hellip;&quot;"><strong>Win 7 RTM &amp; Arabic: "We can fix up August and April. But it'll cost you July to do it&hellip;"</strong></a>, the locale.nls file was already being updated in the WINSE tree, so the traditional concerns about the size addition to future service packs that has often blocked such updates doesn't apply for Windows 7 and Windows Server 2008 R2.</li>
+</ol>
+<p>There may be a few folks who had to deal with Euro updates from years ago that didn't have this capability. I guess all I can say is that <strong>With massive bugs come huge opportunities</strong>. :-)</p>
+<p>The updated fonts are limited to:</p>
+<ul>
+<li>Microsoft Sans Serif</li>
+<li>Times New Roman</li>
+<li>Arial</li>
+<li>Segoe UI</li>
+<li>Tahoma</li>
+</ul>
+<p>because these fonts are so often the fallbacks and they so often include currency symbols -- discussed before in my <a href="http://archives.miloush.net/michkap/archive/2010/12/14/10104459.html" title="Falling back shouldn't mean falling over (though perhaps it does, a bit)"><strong>Falling back shouldn't mean falling over (though perhaps it does, a bit)</strong></a> -- this saves the&nbsp;patch from having to include hundreds of fonts that might have to see updates in a major release (this way they got away with just 17 files).</p>
+<p>And finally there is the fascinating story of the keyboards.</p>
+<p>The new en-IN keyboard has the rupee right at <strong>ALTGr+4</strong>, as people might want, though that comes at a price: on the English keyboard one can use either ALT key to get to the ALT shift state and to accelerator keys, but on this keyboard the right ALT key is no longer an ALT key: it's ALTGr. I spent a little time using it and it tripped me up, so it is just something to keep in mind....</p>
+<p>Also, for the other keyboards, many of them already had assignments to the ALTGr+4 key (basically all of the numbers were in the ALTGr state), so the rupee could not be added there.</p>
+<p>After a lot of discussion, the consistent placement at CTRL+SHIFT+4 was chosen (CTRL+SHIFT+1 and CTRL+SHIFT+2 already have ZERO WIDTH JOINER and&nbsp;ZERO WIDTH NON-JOINER). And that same key combination was added to the en-IN keyboard just to have that one point in consistency (though that led to six separate emails to me asking about why the rupee was in two places on the new keyboard layout; I suppose I should be happy people were looking!).</p>
+<p>Now there are a few things that weren't updated -- like the data behind GetStringTypeW, the collation data, the name that would show up in Character Map, and so forth -- there is really only so much that can be done in between releases, so there are a few things that will stay missing for the time being....</p>
+<p>But there you have it -- the Rupee support has finally arrived!</p>
+<p>When I think about the fact that symbol was chosen just eight months ago, the fact that it has made it through the addition/update processes of Unicode, an ISO standard, and four versions of Windows -- all of which can often take years to see changes more typical or ordinary -- is nothing short of amazing....</p>
+<hr/><p><strong>Anonymous</strong> on 22 Mar 2011 2:21 PM:</p><div style="margin-left: 1em"><p>&quot;Anticipating a question: there is no update for Windows 2000, XP, or Server 2003, as all are out of support now.&quot;</p>
+<p>Wow, 2014 came quickly! &nbsp;I know, you meant out of *mainstream* support, and 2014 is the *extended* support date. &nbsp;Now you just need to figure out how to sell this as a *security* update so XP and 2003 can get it too :)</p></div>
+<p><strong>Michael S. Kaplan</strong> on 22 Mar 2011 4:02 PM:</p><div style="margin-left: 1em"><p>The rupee sign is many things, but it is not a security fix....</p>
+</div>
+<p><strong>Ottmar Freudenberger</strong> on 22 Mar 2011 10:05 PM:</p><div style="margin-left: 1em"><p>Michael, could you please enlight me on why the relevant update for Windows 7/Server 2008 R2 contains not only the fonts and keyboard layouts (etc) but also obviously a whole new version of DISM etc.?</p>
+</div>
+<p><strong>Yuhong Bao</strong> on 22 Mar 2011 10:30 PM:</p><div style="margin-left: 1em"><p>The funny thing is when people were complaining about IE9 not supporting XP, it was mentioned that XP still had about 50% market share.</p>
+</div>
+<p><strong>Yuhong Bao</strong> on 22 Mar 2011 10:36 PM:</p><div style="margin-left: 1em"><p>I wonder why the Windows 7 update includes updates to DLLs that seems unrelated, such as MSXML6.DLL.</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 22 Mar 2011 10:53 PM:</p><div style="margin-left: 1em"><p>@Ottmar -- my guess [uneducated, and only based on other DISM fixes I know of] is that in the course of building the update they found a problem in one or more the offline install/modified install cases when one of the other changes is added (e.g. say they found in verification testing that the new file for the keyboard caused the offline setup to fail) and the fix is just to make sure it works.</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 22 Mar 2011 10:55 PM:</p><div style="margin-left: 1em"><p>@Yuhong -- see my response to Ottmar. Seemingly unrelated files often turn out to have some marginal/unexpected marginal relationship found during verification of the patch....</p>
+</div>
+<p><strong>anonymous</strong> on 23 Mar 2011 12:55 AM:</p><div style="margin-left: 1em"><p>XP update please!!!!!!!! It&#39;s in extended support.</p>
+</div>
+<p><strong>anonymous</strong> on 23 Mar 2011 12:58 AM:</p><div style="margin-left: 1em"><p>MS India created the Indic language input tool for XP too. Please ship XP update.</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 23 Mar 2011 4:18 AM:</p><div style="margin-left: 1em"><p>It&#39;s not up to me, but if I were you I wouldn&#39;t hold my breath waiting...</p>
+</div>
+<p><strong>Klimax</strong> on 23 Mar 2011 6:04 AM:</p><div style="margin-left: 1em"><p>@anonymous:</p>
+<p>Precisely, because:</p>
+<p>Extended support == only security patches</p>
+</div>
+<p><strong>anonymous</strong> on 23 Mar 2011 11:06 AM:</p><div style="margin-left: 1em"><p>@Klimax. Of course not. Nothing like that in extended support. Visual Studio 2010 runs on XP. Office 2010 runs on XP. IIS Express 7.5 runs on XP. Silverlight runs on XP. A rupee symbol update doesn&#39;t run?</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 23 Mar 2011 3:28 PM:</p><div style="margin-left: 1em"><p>The rupee update is mondo Windows SETUP changes -- and setup is completely different.</p>
+</div>
+<hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2012/05/09 <a href="http://archives.miloush.net/michkap/archive/2012/05/09/10302596.html">Every character has a story #39: U+20ba, aka TURKISH LIRA SIGN (coming soon to Turkey near you!)</a></p><p>2011/04/18 <a href="http://archives.miloush.net/michkap/archive/2011/04/18/10155176.html">We are missing the Naira, not the Narnia, though technically we are missing the Narnia too</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2011/03/23/10144161.html" title="When your Clipboard isn&#39;t their Clipboard. Or my Clipboard...">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2011/03/21/10143659.html" title="See Kim. See Kim run. See Kim run setup and find a bug!">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2011-03">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2011-03-22">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2011/03/22/10144474.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+</html>

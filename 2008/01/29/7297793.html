@@ -1,0 +1,58 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2008/01/29/7297793.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:36 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Behold the Table Driven Text Service, Part 6 (it is sufficient to be iconic, aka DaYi, DaYi Aynu!)</title></head><body>
+<h1>Behold the Table Driven Text Service, Part 6 (it is sufficient to be iconic, aka DaYi, DaYi Aynu!)</h1>
+<p><em>by Michael S. Kaplan, published on 2008/01/29 09:16 -05:00, original URI: http://blogs.msdn.com/b/michkap/archive/2008/01/29/7297793.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P>Prior posts in the series:</P>
+<UL>
+<LI><A class="" href="http://archives.miloush.net/michkap/archive/2008/01/21/7178421.html" mce_href="http://archives.miloush.net/michkap/archive/2008/01/21/7178421.html"><STRONG>0 (You have to start somewhere)</STRONG></A> 
+<LI><A class="" href="http://archives.miloush.net/michkap/archive/2008/01/22/7179223.html" mce_href="http://archives.miloush.net/michkap/archive/2008/01/22/7179223.html"><STRONG>1 (Starting with a dictionary simple in every way)</STRONG></A> 
+<LI><A class="" href="http://archives.miloush.net/michkap/archive/2008/01/23/7179692.html" mce_href="http://archives.miloush.net/michkap/archive/2008/01/23/7179692.html"><STRONG>2 (Three ways to convert!)</STRONG></A> 
+<LI><A class="" href="http://archives.miloush.net/michkap/archive/2008/01/24/7180212.html" mce_href="http://archives.miloush.net/michkap/archive/2008/01/24/7180212.html"><STRONG>3 (Where do keystrokes come in?)</STRONG></A> 
+<LI><A class="" href="http://archives.miloush.net/michkap/archive/2008/01/25/7227422.html" mce_href="http://archives.miloush.net/michkap/archive/2008/01/25/7227422.html"><STRONG>4 (Specifying when to modify, if not how)</STRONG></A></LI>
+<LI><A class="" href="http://archives.miloush.net/michkap/archive/2008/01/28/7287476.html" mce_href="http://archives.miloush.net/michkap/archive/2008/01/28/7287476.html"><STRONG>5 (All about the language, baby!)</STRONG></A></LI></UL>
+<P>In some of the prior posts in this series, I have shown various screen shots of the Table Driven Text Service input methods, and they all had a particular icon that they used.</P>
+<P>Like in <A class="" href="http://archives.miloush.net/michkap/archive/2008/01/22/7179223.html" mce_href="http://archives.miloush.net/michkap/archive/2008/01/22/7179223.html"><STRONG>Part 1</STRONG></A>, where the TIP had nothing to do with ideographs really, yet had kind of an ideographic icon next to it. I mean this one:</P>
+<P><IMG src="http://trigeminal.fmsinc.com/images/tdts06.png"></P>
+<P>So, the obvious question is <STRONG>where the hell is that coming from?</STRONG> :-)</P>
+<P>The answer is simple enough, though. In the <STRONG>[System]</STRONG> section of the file, there is a setting there called the IconIndex, set like so:</P>
+<BLOCKQUOTE>
+<P><STRONG>IconIndex =</STRONG> <EM>&lt;predefined value or integer&gt;</EM></P></BLOCKQUOTE>
+<P>The index value is for an image built into TableTextService.dll. If you don't specify one, it takes the first one by default (which happens to also be the one for the DaYi IME. The full table of possible entries is:</P>
+<P><IMG src="http://trigeminal.fmsinc.com/images/tdts14.png"></P>
+<P>Note that:</P>
+<UL>
+<LI>Some of them are for other features I will probably cover another time but could be used here as well&nbsp;(like ICON_PUNCTUATION_ON might be great for "Billy Joe Jim Bob's Comma Chameleon Input Method" for example;</LI>
+<LI>The Yi input method has an ideograph looking thing for itself, which suggests that it was not created by a native Yi informant;</LI>
+<LI>People writing specs (which is where I culled the list from) were too lazy to do all of them in the same format;</LI>
+<LI>I myself was too lazy to redo the table to make them all match;</LI>
+<LI>The list is quite limited considering how many possible languages people might want to use the technology for!</LI></UL>
+<P>Now that last point is an important one, luckily there is a happy response.</P>
+<P>In addition to the <STRONG>IconIndex</STRONG> entry, there is an <STRONG>Icon</STRONG> entry, which takes the path and file pointing to an icon file. So you can&nbsp;make your own icon (though you will not be likely to find someone as cool as my colleague <A class="" href="http://imdb.com/name/nm1508995/" mce_href="http://imdb.com/name/nm1508995/"><FONT color=#0000cc>Jennifer Shepherd</FONT></A> to create it for you!). It goes in that same <STRONG>[System]</STRONG> section and looks something like:</P>
+<BLOCKQUOTE>
+<P><STRONG>Icon = C:\path\file\colliconthoughnotascoolasonefromjenny.ico</STRONG></P></BLOCKQUOTE>
+<P>and there you go!</P>
+<P>Now as you can see a lot of the built-in IMEs use other resources in TableTextService.dll like their names; in all cases you can point to your own DLL instead, and still do right by other user interface languages in Windows.</P>
+<P>And then you too can be iconic -- without being required to sing DaYi, DaYi Aynu and wonder whether it would be sufficient. :-)</P>
+<P mce_keep="true">&nbsp;</P>
+<P><FONT color=#ff00ff><EM>This post brought to you by</EM><FONT size=5> ⑥ </FONT></FONT><EM><FONT color=#ff00ff>(</FONT><A class="" href="http://www.fileformat.info/info/unicode/char/2465" mce_href="http://www.fileformat.info/info/unicode/char/2465"><FONT color=#0000cc>U+2465</FONT></A><FONT color=#ff00ff>, aka CIRCLED DIGIT SIX)</FONT></EM></P>
+<hr/><p><a id="7306634" href="#7306634">#</a> <strong>Andrew West</strong> on 29 Jan 2008 9:45 AM:</p><div style="margin-left: 1em"><p>&quot;The Yi input method has an ideograph looking thing for itself&quot;</p>
+<p>Yeah, that is really bad. Using the Chinese character 彝 Yi to represent an input method for the Yi script is lazy and culturally insensitive. For my Yi input method I use an icon based on the first character of ꆈꌠ &quot;nuosu&quot;, which is the name of the people/language in the Nuosu/Yi language -- it also has the advantage of being a lot easier to read than the complicated Chinese character 彝.</p>
+<p>BTW, great series -- I can't wait to get a Vista machine to experiment with.</p></div>
+<p><a id="7308487" href="#7308487">#</a> <strong>jonlfh</strong> on 29 Jan 2008 12:11 PM:</p><div style="margin-left: 1em"><p>The ideograph in question is pronounced y&#236; and refers to the Yi people and their language.</p>
+<p>see <a rel="nofollow" target="_new" href="http://en.wikipedia.org/wiki/Yi_people">http://en.wikipedia.org/wiki/Yi_people</a></p>
+<p>and <a rel="nofollow" target="_new" href="http://en.wiktionary.org/wiki/彝">http://en.wiktionary.org/wiki/%E5%BD%9D</a></p>
+<p>I agree, though, that one of their pictogram would likely be more appropriate (and more legible too, at that size)</p></div>
+<p><a id="7312391" href="#7312391">#</a> <strong>Michael S. Kaplan</strong> on 29 Jan 2008 3:42 PM:</p><div style="margin-left: 1em"><p>Yeah, we seem to be doing that a lot these days. :-(</p>
+<p>I suppose we are lucky that Pinyin uses English letters so that the input method won't look completely Chinese (though the icon is hard to ignore, either way).</p>
+</div>
+<p><a id="7326720" href="#7326720">#</a> <strong>Andrew West</strong> on 30 Jan 2008 8:48 AM:</p><div style="margin-left: 1em"><p>For the Amharic icon I wonder if there was any particular reason for choosing what I guess is U+1208 ለ ETHIOPIC SYLLABLE LA. To my mind it looks too much like a Greek lambda, and not distinctly Ethiopic enough.</p>
+<p>I suppose there is something to be said for having standard script icons that users would be able to identify across different platforms and different products, such as was proposed in PRI #69, but it would be difficult to get a consensus on what the best icon for any given script should be. And then for some scripts you might want to have more than one icon (e.g. separate icons for Simplified and Traditional Chinese, or separate icons for Mongolian and Manchu sub-scripts).</p></div>
+<p><a id="7332781" href="#7332781">#</a> <strong>Michael S. Kaplan</strong> on 30 Jan 2008 2:39 PM:</p><div style="margin-left: 1em"><p>Honestly, it was by taking the first letter of the locale name, that's all. :-)</p>
+</div>
+<p><a id="7363511" href="#7363511">#</a> <strong>28481k</strong> on 31 Jan 2008 8:35 PM:</p><div style="margin-left: 1em"><p>Shouldn't the locale be አ as in አማርኛ (Amharic) for Amharic?</p>
+<p>Yi just looks ungainly for such a small icon even for this Chinese. :) &nbsp;But I guess it has an advantage of everyone in China knows what it is used for. :)</p></div>
+<hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2008/10/21 <a href="http://archives.miloush.net/michkap/archive/2008/10/21/9009276.html">Behond the Table Driven Text Service, Part 14 (Don't expect too much from numbers)</a></p><p>2008/07/25 <a href="http://archives.miloush.net/michkap/archive/2008/07/25/8771255.html">Behold the Table Driven Text Service, Part 13 (Sinhalification proclamation!)</a></p><p>2008/06/30 <a href="http://archives.miloush.net/michkap/archive/2008/06/30/8669123.html">Behold the Table Driven Text Service, Part 12 (The knights who say நீ, redux, #2)</a></p><p>2008/06/21 <a href="http://archives.miloush.net/michkap/archive/2008/06/21/8632391.html">Back to Sri Lanka (conceptually)</a></p><p>2008/02/25 <a href="http://archives.miloush.net/michkap/archive/2008/02/25/7884260.html">Behold the Table Driven Text Service, Part 11 (The knights who say நீ, redux, #1)</a></p><p>2008/02/15 <a href="http://archives.miloush.net/michkap/archive/2008/02/15/7713553.html">Behold the Table Driven Text Service, Part 10 ("Even Jove nods," Atlas shrugged, "so we'll convert their old files, now.")</a></p><p>2008/02/12 <a href="http://archives.miloush.net/michkap/archive/2008/02/12/7632387.html">Behold the Table Driven Text Service, Part 9 (Will you be content if I tell you how some content can be defined?)</a></p><p>2008/02/11 <a href="http://archives.miloush.net/michkap/archive/2008/02/11/7588649.html">Behold the Table Driven Text Service, Part 8 (Configuration 'junk in the trunk', part 2)</a></p><p>2008/01/31 <a href="http://archives.miloush.net/michkap/archive/2008/01/31/7324643.html">All the icons, at the same [incorrect] size</a></p><p>2008/01/30 <a href="http://archives.miloush.net/michkap/archive/2008/01/30/7321697.html">Behold the Table Driven Text Service, Part 7 (Configuration 'junk in the trunk', part 1)</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2008/01/29/7304132.html" title="What&#39;s in store for Bangalore? A guy who&#39;s not a beauter but he has his scooter!">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2008/01/28/7287476.html" title="Behold the Table Driven Text Service, Part 5 (All about the language, baby!)">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2008-01">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2008-01-29">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2008/01/29/7297793.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:36 GMT -->
+</html>

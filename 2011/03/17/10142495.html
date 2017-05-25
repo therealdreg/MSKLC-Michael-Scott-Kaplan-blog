@@ -1,0 +1,29 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2011/03/17/10142495.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Even when everything is in Unicode, some things won't be in Unicode</title></head><body>
+<h1>Even when everything is in Unicode, some things won't be in Unicode</h1>
+<p><em>by Michael S. Kaplan, published on 2011/03/17 07:01 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2011/03/17/10142495.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<p>So a question came up the other day.</p>
+<p>Someone was wondering why The following two functions:</p>
+<ul>
+<li><a href="http://msdn.microsoft.com/library/ff561941.aspx">RtlIntegerToUnicodeString</a></li>
+<li><a href="http://msdn.microsoft.com/library/ff562973.aspx">RtlUnicodeStringToInteger</a></li>
+</ul>
+<p>both list an IRQL level in the docs of PASSIVE_LEVEL.</p>
+<p>Now I've randomly talked about IRQL from time to time in blogs like <a href="http://archives.miloush.net/michkap/archive/2007/07/29/4117994.html" title="A difference that makes no difference, makes no difference (aka IRQL &amp;lt;= APC_LEVEL vs IRQL &amp;lt; DISPATCH_LEVEL)"><strong>A difference that makes no difference, makes no difference (aka IRQL &lt;= APC_LEVEL vs IRQL &lt; DISPATCH_LEVEL)</strong></a> but these days I don't have much that I need to do down there so I don't talk about it much.</p>
+<p>Now you could think of these functions as the Rtl* versions of <a href="http://msdn.microsoft.com/en-us/library/yakksftt(v=VS.100).aspx">_itow</a> and <a href="http://msdn.microsoft.com/en-us/library/yd5xkb5c(v=VS.100).aspx">_wtoi</a>. Since that's all they really are.</p>
+<p>And in fact that is kind of tied up in why they cannot run at DISPATCH_LEVEL. Because at one time (back when those CRT functions were first done), they both moved stuff in and out of their non-Unicode counterpart functions. <a href="http://msdn.microsoft.com/library/ff561941.aspx">RtlIntegerToUnicodeString</a>&nbsp;and <a href="http://msdn.microsoft.com/library/ff562973.aspx">RtlUnicodeStringToInteger</a>&nbsp;simply inherited this implementation (which may no longer be there in the CRT now?), and they depend on <a href="http://msdn.microsoft.com/en-us/library/ff561729.aspx">RtlAnsiStringToUnicodeString</a> and <a href="http://msdn.microsoft.com/en-us/library/ff562969.aspx">RtlUnicodeStringToAnsiString</a>, neither of which can be run at DISPATCH_LEVEL since either the code or the tables the code uses may not be paged in at the time.</p>
+<p><em>The other, related functions that do the same conversions to IntPtr and such have the same issue.</em></p>
+<p>Now strictly speaking, this could be fixed.</p>
+<p>Neither <a href="http://msdn.microsoft.com/library/ff561941.aspx">RtlIntegerToUnicodeString</a>&nbsp;nor <a href="http://msdn.microsoft.com/library/ff562973.aspx">RtlUnicodeStringToInteger</a>&nbsp;are doing anything all that complicated such that implementing them straight in Unicode would be a terrible speed or size burden.</p>
+<p>Though since drivers often have to target multiple versions and it would be weird to have IRQL info documented as being different in different versions, no one is really clamoring to fix the issue in the more conventional way (create new functions). </p>
+<p>To be honest I would put both in a header file under a special define so the fix would optionally be available in any version of Windows. And just fix it for once and all.</p>
+<p>But again that lack of clamor would hardly make people want to run out and do a bunch of work here.</p>
+<p>Maybe in the scheme of things, these small "corruptions" in the model don't really matter.</p>
+<p>Perhaps kernel level and device driver level engineers don't think of functions that only run at PASSIVE_LEVEL as being flawed, even if (in cases like this one) they could be, if they were only designed to do so. Designed better. </p>
+<p>Maybe they wouldn't even judge this in terms of better or not better (though the purely Unicode function would be both safer and faster, which makes it likely that all things being equal they would pick the purely Unicode function if they had the choice).</p>
+<p>The impact with all these kinds of examples (and many others&nbsp;like them!)&nbsp;is little pockets of non-Unicode that will forever hold us back from being fully Unicode, even if you the third party developer moves completely to Unicode....</p>
+<hr/><div style="margin-left: 1em"><em>no comments</em></div><hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2011/03/18/10142935.html" title="It is totally awesome if they yell &quot;Løp av sted!&quot; in the Norwegian dub of Monty Python and the Holy Grail">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2011/03/16/10141835.html" title="Reporting one casualty in the operation; luckily it was the stupidest member of the unit">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2011-03">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2011-03-17">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2011/03/17/10142495.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+</html>

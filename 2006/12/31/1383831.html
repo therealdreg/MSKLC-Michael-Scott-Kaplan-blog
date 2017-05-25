@@ -1,0 +1,40 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2006/12/31/1383831.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:38 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>More on our non-Unicode heritage</title></head><body>
+<h1>More on our non-Unicode heritage</h1>
+<p><em>by Michael S. Kaplan, published on 2006/12/31 03:01 -05:00, original URI: http://blogs.msdn.com/b/michkap/archive/2006/12/31/1383831.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P>As the year 2006 draws to a close and as I set my sites on what applications I need to try to get on the ball about Unicode support over the next two to five years, I realized a major impediment to this goal.</P>
+<P>I'll blame&nbsp;a fellow Technical Lead who shall remain nameless, for pointing out (in response to an unrelated question) the logo requirements documentation for <A class="" href="http://www.microsoft.com/winlogo/software/default.mspx" mce_href="http://www.microsoft.com/winlogo/software/default.mspx">XP</A> and for <A class="" href="http://microsoft.mrmpslc.com/InnovateOnWindowsVista/" mce_href="http://microsoft.mrmpslc.com/InnovateOnWindowsVista/">Vista</A>.</P>
+<P>With a sense of dread I read through both of them, and neither one contains references to either requirements or recommendations that have anything to with international support of software on Windows.</P>
+<P>(ref: <A class="" href="http://archives.miloush.net/michkap/archive/2006/07/25/676295.html" mce_href="http://archives.miloush.net/michkap/archive/2006/07/25/676295.html"><STRONG>Our non-Unicode heritage</STRONG></A>, with the George Carlin riff that could act as a call to arms if we could get the full bit written and recorded!).</P>
+<P>I guess getting international features to start getting at least optional bullet item status might be the first step to being taken seriously in this space....</P>
+<P><FONT color=#ff1493><FONT face=Tahoma><EM>This post brought to you by</EM> </FONT><STRONG><FONT face="Iskoola Pota" size=6>ඤ</FONT></STRONG><FONT face=Tahoma> </FONT></FONT><EM><FONT face=Tahoma color=#ff1493>(</FONT><A href="http://www.fileformat.info/info/unicode/char/0da4"><FONT face=Tahoma>U+0da4</FONT></A><FONT face=Tahoma color=#ff1493>, a.k.a. SINHALA LETTER TAALUJA NAASIKYAYA)</FONT></EM></P>
+<hr/><p><strong>Mihai</strong> on 31 Dec 2006 2:44 PM:</p><div style="margin-left: 1em"><p>&lt;&lt;set my sites on what applications I need to try to get on the ball about Unicode support over the next two to five years&gt;&gt;</p>
+<p>1. The CAB and MSI file formats</p>
+<p>Right now is &quot;bunch of bytes + code page tag&quot;. Even if they start accepting UTF-8 and it is already a step forward.</p>
+<p>2. The VS IDE &amp; MFC</p>
+<p>Now, that the MUI API is public, it would be nice to have MFC using it, and some support in the VS IDE itself, similar to what we have in .NET projects (add languages to the project and have it build the resource only DLLs in the proper places).</p>
+<p>But not quite identical to the .NET way, because tagging each dialog/form as localizable and adding languages for each one is a pain (just imagine adding 20 language for an application with 300 dialogs).</p></div>
+<p><strong>orcmid</strong> on 31 Dec 2006 3:57 PM:</p><div style="margin-left: 1em"><p>Down here in the trenches, I keep throwing my hands up in the air. &nbsp;</p>
+<p>We need more like your Converting to Unicode series. &nbsp;We also need way more on living with code pages and moving between that world and Unicode (e.g., between native code-paged Windows and .NET, between native code-paged Windows and Java, between native code-paged applications/resources and any Unicode representations.)</p>
+<p>I watched a high-schooler in Japan struggle with getting shift-JIS through his keyboard into an application developed in pure C++ using VC++ 2005 Express Edition and the whole thing is not pretty. &nbsp;</p>
+<p>This is way short of localization and internationalization of an application -- it is about interchange and communication within the desktop environment. </p>
+<p>At the moment, it all appears to be magic, chewing gum, and lots of duct tape, with plenty of fragility and failure cases. &nbsp;</p>
+<p>Let's make it a New Year. &nbsp;Happy, Happy.</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 31 Dec 2006 5:46 PM:</p><div style="margin-left: 1em"><p>Hi Dennis, </p>
+<p>Well, I do plan to keep blogging, so I guess that is a start. :-)</p>
+<p>But in this post I was actually thinking more about the products themselves and how to make sure they are doing the right thing to support the languages and scripts that are already in the &quot;supported&quot; column from our point of view but due to the fact that non-Unicode apps are still so widespread, the languages/scripts aren't supported in those products.</p>
+<p>In other words, the guidelines (and the fact that they mention none of this) are a symptom of the problem I was thinking about here. </p>
+<p>Making internationalization easier is an important goal that I think we have to live up to in the long run (hell, it is why I blog and I why I agree that features have to be easier!). But telling people it is important to do is the first step; if we are not telling them that, then it does not matter how easy we make it....</p>
+</div>
+<p><strong>orcmid</strong> on 1 Jan 2007 12:32 PM:</p><div style="margin-left: 1em"><p>Happy New Year, Michael!</p>
+<p>I agree about emphasis on the products and especially the guidelines and qualification requirements (e.g., Works on Vista, designed for Vista, etc.)</p>
+<p>I certainly want to see more about all of this from you (and maybe a guide to older posts too, because it can be difficult to find older posts by search.</p>
+<p>Thinking about the general problem of codes, characters, languages, etc., -- not nearly so deeply as you do -- it strikes me that one of the most difficult challenges is making what is done in this area explainable. &nbsp; It also seems that product teams forget that sometime too (or have an implementation explanation that has a really contorted use case at a practical level). &nbsp;Some of the disconnects you report strike me like that.</p>
+<p>I guess I wouldn't be so grouchy about this except I'm working on some bridge code that needs to produce Unicode from interfaces that deliver non-UTF8 char[] data. &nbsp;I am anxious about being able to mind-read the implementations of those interfaces with regard to the code page I should assume. &nbsp;I don't know if the obvious choice will work because I have my doubts about the variety of implementations that deliver the char[]. &nbsp;I get to try it and pray that it works most of the time. &nbsp;When it doesn't, users will see it and have no way to remedy it. &nbsp;Arghh.</p>
+</div>
+<hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2006/12/31/1386486.html" title="Converting a Project to Unicode: Part 4 (It&#39;s /Delightful, it&#39;s /Delicious, it&#39;s /DUnicode!)">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2006/12/30/1387611.html" title="PM agrees -- &#39;supporting Aero&#39; does not mean we have to start flying (or get high by any other means)">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2006-12">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2006-12-31">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2006/12/31/1383831.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:38 GMT -->
+</html>

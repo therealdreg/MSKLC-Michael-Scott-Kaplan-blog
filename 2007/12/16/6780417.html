@@ -1,0 +1,39 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2007/12/16/6780417.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:36 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>How best to keep the font switcheroo from happening?</title></head><body>
+<h1>How best to keep the font switcheroo from happening?</h1>
+<p><em>by Michael S. Kaplan, published on 2007/12/16 10:16 -05:00, original URI: http://blogs.msdn.com/b/michkap/archive/2007/12/16/6780417.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P>Another recent mail coming to me via the Contact link:</P>
+<BLOCKQUOTE>
+<P><EM><FONT face="times new roman,times">Suppose i create my LOGFONT structure with a fontname(say 'Arial') with style Italic/Bold set.In this case,i do have "Arial Bold Italic(True Type)" in my window's font's folder so i should effectively be using this font rather than arial font with bold/italic behaviour synthesized to render my text as it would have been in most cases(say MS Mincho,no corresponding MS Mincho Italic font) when there is no corresponding font present with style.<BR><BR>As an input i have glyphs(ExtTextOut call in emf file),my logfont structure(which I get from CreateFontIndirect call in emf) and I want to know whether I should use "Arial Bold Italic" OR "Arial" font with bold/italic behaviour synthesis. I would like to do synthesis only when the corresponding italic/bold font is not present.Is there any way to correctly know which font to use exactly?<BR><BR>Further,i was also having some issues using some glyphs like \uFE97\uFE99,when i pass Arial in my LOGFONT structure,it fails and returns Arial Unicode MS as the linked font though the glyph is present in Arial.GlyphIndices corresponding to both the fonts are different hence leading to change in glyphs.<BR><BR>Thanks in advance.</FONT></EM></P></BLOCKQUOTE>
+<P>You actually don't have a whole lot choice here, actually. Any GDI or GDI+ or WPF call to create a font is a request based on the attributes you send.</P>
+<P>So while one could theorize about the differences between:</P>
+<BLOCKQUOTE>
+<P>LOGFONT.lfFaceName = "Arial Bold Italic"</P></BLOCKQUOTE>
+<P>and</P>
+<BLOCKQUOTE>
+<P>LOGFONT.lfFaceName = "Arial"<BR>LOGFONT.Weight = FW_BOLD<BR>LOGFONT.fItalic == TRUE</P></BLOCKQUOTE>
+<P mce_keep="true">when the font exists are really nil, other than poor and variable&nbsp;localizability story on the former, which makes the latter probably be better choice.</P>
+<P mce_keep="true">When the font does not exist, it is definitely better to use the latter method because the name doesn't exist.</P>
+<P mce_keep="true">But either way, synthesis always happens --&nbsp;as the font mapper&nbsp;to map all of these attributes to a font, from size to precision and so on. Font objects are always "synthesized" in that sense, and the system always prefer to not "fake" attributes when there is a file containing the actual request. All of that will happen automatically if you allow it....</P>
+<P mce_keep="true">For that last point about </P>
+<BLOCKQUOTE>
+<P mce_keep="true"><FONT size=6>ﺗ</FONT></P></BLOCKQUOTE>
+<P mce_keep="true">(<A class="" href="http://www.fileformat.info/info/unicode/char/fe97" mce_href="http://www.fileformat.info/info/unicode/char/fe97">U+fe97</A>, aka ARABIC LETTER TEH INITIAL FORM) and </P>
+<BLOCKQUOTE>
+<P mce_keep="true"><FONT size=6>ﺙ</FONT></P></BLOCKQUOTE>
+<P mce_keep="true">(<A class="" href="http://www.fileformat.info/info/unicode/char/fe99" mce_href="http://www.fileformat.info/info/unicode/char/fe99">U+fe99</A>, aka ARABIC LETTER THEH ISOLATED FORM), the glyphs won't ever come from <STRONG>Arial Unicode MS</STRONG> just because Arial was the font you started with -- because <STRONG>Arial Unicode MS</STRONG> doesn't ship with the&nbsp;Windows, and Uniscribe does not use it for font fallback (and this is font fallback through Uniscribe, not font linking through GDI).</P>
+<P mce_keep="true">And that kind of font switching behavior will tend to happen by default when the technology for rendering that you use (Uniscribe, GDI+, WPF) has such a capability, unless you go to extreme lengths to disallow it </P>
+<P mce_keep="true">A good example of the disallowing is something I talked about in <A class="" href="http://archives.miloush.net/michkap/archive/2006/02/13/531110.html" mce_href="http://archives.miloush.net/michkap/archive/2006/02/13/531110.html"><STRONG>Don't change the font, dammit!</STRONG></A>.</P>
+<P mce_keep="true"><EM>Though of course by using Arabic script from the compatibility zone the lines of how much&nbsp;extra work is done in the way of complex scripts is not as well documented, there is still some work that happens irregardless given issues like directionality.</EM></P>
+<P mce_keep="true">The question then started talking about Arial.GlyphIndices which made this sound like it might be more of a WPF-like question but not exactly,&nbsp;or some other technology, that was not specified. Which doesn't change the general answer but could in theory change the specifics.</P>
+<P mce_keep="true">Can you imagine a situation where you weren't specifically working with the compatibility zone but you ended up with those code points anyway?</P>
+<P mce_keep="true">Well,&nbsp;when you think about the technologies that deal in glyph indices such as PDF (and the person asking as from Adobe so its safe bet that we may be talking about something PDF-esque), the very real question about minimizing font shifts is an interesting one to say the least.</P>
+<P mce_keep="true">So moving concentrically outward to what might have been one of the real questions all along, if one&nbsp; wants to know whether a font natively supports a particular character, this is something I covered a bit in <A class="" href="http://archives.miloush.net/michkap/archive/2006/06/28/649791.html" mce_href="http://archives.miloush.net/michkap/archive/2006/06/28/649791.html"><STRONG>WYSIWYG font dropdowns</STRONG></A> and <A class="" href="http://archives.miloush.net/michkap/archive/2006/06/29/650680.html" mce_href="http://archives.miloush.net/michkap/archive/2006/06/29/650680.html"><STRONG>Working beyond the BMP is going off script (according to GDI)</STRONG></A>.</P>
+<P mce_keep="true">There is one missing piece in that last part and those two posts, and it is to do with complex scripts. Anyone care to make a guess as to what that might be? It might make a nice post here at some point!</P>
+<P mce_keep="true">&nbsp;</P>
+<P mce_keep="true"><FONT color=#ff00ff><EM>This post brought to you by</EM><FONT size=6> ﺙ </FONT><EM>(<A class="" href="http://www.fileformat.info/info/unicode/char/fe99" mce_href="http://www.fileformat.info/info/unicode/char/fe99">U+fe99</A>, aka ARABIC LETTER THEH ISOLATED FORM)question</EM></FONT></P>
+<hr/><div style="margin-left: 1em"><em>no comments</em></div><hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2008/12/17 <a href="http://archives.miloush.net/michkap/archive/2008/12/17/9232191.html">Call Marlett symbolic or the problems might be quite real...</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2007/12/16/6781186.html" title="Why my IUC31 talks were presented on Vista (even though running on a MacBook Pro)">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2007/12/15/6766766.html" title="Giving myself a break">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2007-12">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2007-12-16">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2007/12/16/6780417.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:36 GMT -->
+</html>

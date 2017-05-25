@@ -1,0 +1,45 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2012/05/17/10306133.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:33 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>That 'keyboard culture list' you may have heard so much about</title></head><body>
+<h1>That 'keyboard culture list' you may have heard so much about</h1>
+<p><em>by Michael S. Kaplan, published on 2012/05/17 07:01 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2012/05/17/10306133.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<p>The question came in just the other day:</p>
+<p style="padding-left: 60px;"><span style="font-family: times new roman,times; font-size: medium;">Hi Michael,</span></p>
+<p style="padding-left: 60px;"><span style="font-family: times new roman,times; font-size: medium;">Do you have a list of all the keyboard cultures in Win8&mdash;or alternately which API would return me such a list (looking at your blog(s) I couldn&rsquo;t easily determine what this API would be. All the APIs seemed to be about installed keyboards).</span></p>
+<p>Questions like this always make me nervous you see.</p>
+<p>Because almost invariably, there is something behind such questions.</p>
+<p>Now in the end, there is no specific Win32 function to enumerate every keyboard.</p>
+<p>Essentially one has enumerate every subkey to</p>
+<p style="padding-left: 30px;"><strong><span style="font-size: large;">HKLM\SYSTEM\CurrentControlSet\Control\Keyboard Layouts</span></strong></p>
+<p>So, I decided, after saying this, to try to find out the underlying issue. The answer came back readily enough:</p>
+<p style="padding-left: 60px;"><span style="font-family: times new roman,times; font-size: medium;">There seems to be a change in behaviour (?) of when converting the keyboard ID to a culture. For example, zh-HK used to work but is now returning zh-HanT-HK. I wanted a list of these to ensure we do the right thing on our end.</span></p>
+<p style="padding-left: 60px;"><span style="font-family: times new roman,times; font-size: medium;">It asks for the currentInputLanguageTag, and then tries to convert it to lcid using LocaleNameToLCID. However, it seems to fail for Tibetan and also Chinese Traditional IME (Hong Kong with Microsoft IME) languages which come shipped with Windows.</span></p>
+<p>Now here is where the problem is obviously tangled up with someone else's implementation.</p>
+<p>You see, that registry key's subkeys&nbsp;are called&nbsp;<strong>Keyboard Layout IDentifiers</strong> (aka <strong>KLID</strong>s), some of which have <strong>Layout Id</strong> values under them, and at runtime each installed (loaded) keyboard layout has an <strong>HKL</strong> value associated with it, the lower 16 bits of which has a relationship with the <strong>KLID</strong>'s lower 16 bits -- both of which sometimes have a relationship with the <strong>Language Identifier</strong> (aka <strong>LANGID</strong>) values that represent the lower 16 bits of <strong>Locale Identifiers</strong>.</p>
+<p><em>Times they don't have such a relationship include both situations I directly caused as described in <strong><a title="Getting the language (and more!) of an LCID-less keyboard" href="../../../2007/08/23/4535058.html">Getting the language (and more!) of an LCID-less keyboard</a></strong>/<strong><a title="MSKLC keyboard layout names in your own language" href="../../../2007/08/25/4564548.html">MSKLC keyboard layout names in your own language</a></strong> and situations I inspired/indirectly caused as described in&nbsp;<strong><a title="The evolving Story of Locale Support, part 2 (raising the roof on keyboards)" href="../../../2011/11/02/10232468.html">The evolving Story of Locale Support, part 2 (raising the roof on keyboards)</a></strong></em>.</p>
+<p>Anyway, you might have noticed one of the things that was never mentioned:</p>
+<p><strong>keyboard ID</strong>s.</p>
+<p><strong>currentInputLanguageTag</strong>s.</p>
+<p><strong>culture</strong>s.</p>
+<p>And of course there is no <strong>LCID</strong> value that <a href="http://msdn.microsoft.com/library/windows/desktop/dd318711.aspx">LocaleNameToLCID</a> would ever return <strong>zh-Hant-HK</strong> for 0x0c04 (aka zh-HK).</p>
+<p>I mean we have our problems in Windows mapping names -- e.g. <strong><a title="Four cases where I don't like ResolveLocaleName (and you shouldn't either!)" href="../../04/23/10296348.html">Four cases where I don't like ResolveLocaleName (and you shouldn't either!)</a></strong> -- but this looks like an external issue is contributing or causing the problem.</p>
+<p>So whatever the problem is here, some work to clean up&nbsp;the stuff the callers are doing will be needed before I could comment on whatever problem the are hitting.</p>
+<p>To get back to the original question about a list?</p>
+<p>We don't have that, as I said.</p>
+<p>But if you enumerate those subkeys under</p>
+<p style="padding-left: 30px;"><span style="font-size: large;"><strong>HKLM\SYSTEM\CurrentControlSet\Control\Keyboard Layouts</strong></span></p>
+<p>you can then extract the lower 16 bits, and then anytime it doesn't return 0x0c00, you can call <a href="http://msdn.microsoft.com/library/windows/desktop/dd318698">LCIDToLocaleName</a>&nbsp;(removing duplicates at they come up)&nbsp;to get a&nbsp;fairly robust&nbsp;list of "keyboard cultures".</p>
+<p>This leaves just two other groups:</p>
+<ul>
+<li>The A####c00 KLID value keyboards, which are created by MSKLC; as described in <strong><a title="Getting the language (and more!) of an LCID-less keyboard" href="../../../2007/08/23/4535058.html">Getting the language (and more!) of an LCID-less keyboard</a></strong>/<strong><a title="MSKLC keyboard layout names in your own language" href="../../../2007/08/25/4564548.html">MSKLC keyboard layout names in your own language</a></strong>, there should be a <strong>Layout Locale Name</strong> that has the language that the keyboard claims to support (which may or may not be on the machine);</li>
+<li>The 0####c00 KLID value keyboards, which are provided by Microsoft as described in <strong><a title="The evolving Story of Locale Support, part 2 (raising the roof on keyboards)" href="../../../2011/11/02/10232468.html">The evolving Story of Locale Support, part 2 (raising the roof on keyboards)</a></strong>, don't have any way to get either language or script -- you'd have to hardcode a list close to RTM.</li>
+</ul>
+<p>&nbsp;I find the last bit to be slightly unfortunate from a decision-making standpoint (I originally recommended they add a <strong>Layout Locale Name</strong>&nbsp;value too)&nbsp;, but the list will be limited since there are only a few of them.</p>
+<p>At some point, I'll probably publish the list here myself, and recommend that the MSDN documentation writers do the same</p>
+<p>That just leaves out the IMEs, but the original question was just about keyboards, so I guess they're their own for that bit. :-)</p>
+<hr/><p><strong>Brian Tkatch</strong> on 17 May 2012 8:02 AM:</p><div style="margin-left: 1em"><p>And here i thought the first on a &#39;keyboard culture&#39; list would be old coffee.</p>
+</div>
+<hr/><p><em>go to <a id="newer" href="../18/10305223.html" title="There&#39;s no &quot;I&quot; in IDN, part 13: Desktop and Managed and Metro; oh my!">newer</a> or <a id="older" href="../16/10305664.html" title="The numbers are there, but it isn&#39;t used!">older</a> post, or back to <a href="../../../index-2.html">index</a> or <a href="../../../index-2.html#2012-05">month</a> or <a href="../../../index-2.html#2012-05-17">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2012/05/17/10306133.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:33 GMT -->
+</html>

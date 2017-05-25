@@ -1,0 +1,42 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2006/01/21/515793.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:40 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Return of the Mark</title></head><body>
+<h1>Return of the Mark</h1>
+<p><em>by Michael S. Kaplan, published on 2006/01/21 03:01 -05:00, original URI: http://blogs.msdn.com/b/michkap/archive/2006/01/21/515793.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<p><font face=Tahoma>Well, the RIGHT-TO-LEFT MARK (and its cousin the LEFT-TO-RIGHT MARK), that is!</font></p>
+<p><em><font size=2><font face=Tahoma>(apologies to </font><font face=Tahoma>those of you hoping for a clever play on words with Mark Morrison or his song 'Return of the Mack')</font></font></em></p>
+<p><font face=Tahoma>I talked about the former in <strong><a HREF="http://archives.miloush.net/michkap/archive/2006/01/19/514656.html">Just when you think you know a function...</a></strong> and both of them in <strong><a HREF="http://archives.miloush.net/michkap/archive/2006/01/19/514718.html">What are directional marks -- chumps who point?</a></strong>.</font></p>
+<p><font face=Tahoma>I thought I'd give another example of when code will insert these controls. Our own member of the NLS API, the <a href="http://msdn.microsoft.com/library/en-us/intl/nls_5w6s.asp">GetDateFormat</a> function!</font></p>
+<p><font face=Tahoma>Now whether you call it in Windows or in Windows CE, there are two flags you can pass to it that relate to the directional marks:</font></p>
+<p><font face=Tahoma>
+<table class=somethingCustom width="70%" border=1>
+<tbody>
+<tr vAlign=top>
+<td class=somethingCustom width="27%">DATE_LTRREADING</td>
+<td class=somethingCustom width="73%">Adds marks for left-to-right reading layout. This value cannot be used with DATE_RTLREADING.</td></tr>
+<tr vAlign=top>
+<td class=somethingCustom width="27%">DATE_RTLREADING</td>
+<td class=somethingCustom width="73%">Adds marks for right-to-left reading layout. This value cannot be used with DATE_LTRREADING</td></tr></tbody></table></font></p>
+<p><font face=Tahoma>It does not really say much about when/how those marks are added, does it?</font></p>
+<p><font face=Tahoma>Well, it actually litters them in there. Looking at the format string (either the one passed in the <em>lpFormat</em> parameter or the one gleaned from the NLS locale data), it will insert them in front of all of the following cases:</font></p>
+<ul>
+<li><font face=Tahoma>any of the d* tokens (d, dd, ddd, or dddd)</font> 
+</li><li><font face=Tahoma>any of the M* tokens&nbsp;(M, MM, MMM, or MMMM)</font> 
+</li><li><font face=Tahoma>any of the y* tokens (y, yy, or yyyy)</font> 
+</li><li><font face=Tahoma>any of the g* tokens (well, there is only gg!)</font> 
+</li><li><font face=Tahoma>any quote character (used to enclose literal strings in the format)</font></li></ul>
+<p><font face=Tahoma>So in a long date or in a complex format you could end up inserting quite a few of them!</font></p>
+<p><font face=Tahoma>At this point, you may be wondering (if you have not decided to stop reading this blog entry or even the whole blog since I seem as obsessed with these invisible characters as the <a HREF="http://archives.miloush.net/michkap/archive/2005/01/20/357028.html">nutbars who obsess about U+FEFF</a>!) why it bothers to insert so many of these individual characters rather than just use one embedding mark at the beginning (RLE/RLO or LRE/LRO) and one directional formatting pop at the end.</font></p>
+<p><font face=Tahoma>I asked co-worker Yaniv this very question, and he laughed, as once upon a time when he was working on the Office team they had started to do this very thing in Office when they found that on <a href="http://www.microsoft.com/globaldev/reference/sbcs/1255.mspx">Windows code page 1255</a> (Hebrew) and <a href="http://www.microsoft.com/globaldev/reference/sbcs/1256.mspx">Windows code page 1256</a> (Arabic) the LRM/RLM are there but the rest of the formatting codes are not. And according to Yaniv it was <a href="http://blogs.msdn.com/techtalk/default.aspx">Steven Sinofsky</a> himself who talked about the&nbsp;bad user experience in typical non-Unicode applications of having tons of question marks in the text when the RLE/RLO/LRE/LRO/PDF characters were used</font></p>
+<p><font face=Tahoma><em>(I do not know if he was a VP then or not, though I remember him answering questions on internal aliases that I had asked from time to time, so he clearly still takes interest in product issues; it may be that he was a VP when he mentioned the problem!)</em></font></p>
+<p><font face=Tahoma>So in the end, I think that is probably the right behavior -- a bunch of invisible characters trump two possibly visible ones, any day of the week. And even in a Unicode application, you never know when people will be using the clipboard to paste the text into a non-Unicode one. So it is better safe than sorry for as long as the Notepad default is ANSI....</font></p>
+<p><font face=Tahoma>Speaking of Notepad, I was having an email&nbsp;conversation with David Shiflet and Chris Walker the other day about the fact that Notepad was doing something interesting itself -- it was trying to detect when the user was in an RTL locale (more on this issue another day!) and when it thought such a case was happening on inserting a date/time value (via Edit|Time/Date... or hitting F5) it would not only pass the appropriate flag to the <a href="http://msdn.microsoft.com/library/en-us/intl/nls_5w6s.asp">GetDateFormat</a>&nbsp;function, it would also insert its own reading marker at the front of the format string it was passing!</font></p>
+<p><font face=Tahoma>I suppose this could occasionally cause a problem, say&nbsp;if you combine the fact that two RLM marks might be inserted with <a HREF="http://archives.miloush.net/michkap/archive/2006/01/19/514656.html">this issue</a> and a Hebrew or Arabic localizer could accidentally mirror a MessageBox. But they were probably going to mirror it anyway so it is really a minor, hard-to-discover&nbsp;problem (maybe worthy of a KB article if a user ever noticed it, though to date no one has AFAIK and the code has been around since at least 1996!).</font></p>
+<p><font face=Tahoma><em>(For those who were wondering, it was indeed that conversation with David and Chris that prompted all of the research into these issues -- so&nbsp;everyone should consider themselves&nbsp;warned&nbsp;about the danger of asking me questions!)</em></font></p>
+<p><font face=Tahoma>Ok, I think I have now exhausted both my knowledge of and my curiousity&nbsp;about bidirectional reading mark trivia, so I promise to quit talking about them so much. :-)</font></p>
+<p><font face=Tahoma></font>&nbsp;</p>
+<p><font face=Tahoma color=#ff1493><em>This post brought to you by</em> U+202c <em>(a.k.a. POP DIRECTIONAL FORMATTING)</em></font></p>
+<hr/><div style="margin-left: 1em"><em>no comments</em></div><hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2006/10/06 <a href="http://archives.miloush.net/michkap/archive/2006/10/06/795575.html">What do those marks do again?</a></p><p>2006/02/08 <a href="http://archives.miloush.net/michkap/archive/2006/02/08/527375.html">They make 'em smarter than GetDateFormat</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2006/01/21/515869.html" title="Adding a new blog category?">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2006/01/20/515238.html" title="Getting the characters in a code page (the code)">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2006-01">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2006-01-21">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2006/01/21/515793.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:40 GMT -->
+</html>

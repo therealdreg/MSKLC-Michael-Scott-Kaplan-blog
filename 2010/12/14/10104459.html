@@ -1,0 +1,59 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2010/12/14/10104459.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Falling back shouldn't mean falling over (though perhaps it does, a bit)</title></head><body>
+<h1>Falling back shouldn't mean falling over (though perhaps it does, a bit)</h1>
+<p><em>by Michael S. Kaplan, published on 2010/12/14 07:01 -05:00, original URI: http://blogs.msdn.com/b/michkap/archive/2010/12/14/10104459.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<p>So it was just the other day, in <a href="http://archives.miloush.net/michkap/archive/2010/12/09/10102465.html" title="It's a LIP that won't cost you an arm[enia] and a leg!"><strong>It's a LIP that won't cost you an arm[enia] and a leg!</strong></a>, that regular reader Random832 commented:</p>
+<p style="padding-left: 60px;"><span style="font-family: times new roman,times;"><em>Why is U+0580 ARMENIAN SMALL LETTER REH in Verdana and the rest of the characters are in Sylfaen? It seems that Verdana contains exactly two Armenian letters [the other being U+0564 DA]; that's very odd.<br /><br /></em></span><span style="font-family: times new roman,times;"><em>It looks like the currency symbol for Armenian (Armenia) is U+0564 U+0580 U+002E, which may explain it, but it still seems like a bizarre decision to support only part of a script.</em></span></p>
+<p>And indeed, things are exactly that way:</p>
+<p><img src="http://trigeminal.fmsinc.com/images/verdana01.jpg" border="0" />&nbsp;&nbsp;&nbsp; <img src="http://trigeminal.fmsinc.com/images/verdana02.jpg" border="0" /></p>
+<p>And they are just two lone Armenian characters.</p>
+<p>They are in there for no other purpose, simply to cover the currency symbol!</p>
+<p><img src="http://trigeminal.fmsinc.com/images/verdana03.jpg" border="0" /></p>
+<p>Of course over in Sylfaen, the font that has all the Armenian characters, both of these letters can be&nbsp;found:</p>
+<p><img src="http://trigeminal.fmsinc.com/images/verdana04.jpg" border="0" />&nbsp;&nbsp;&nbsp; <img src="http://trigeminal.fmsinc.com/images/verdana05.jpg" border="0" />&nbsp;</p>
+<p>Weird, huh?</p>
+<p>Of course, when something is in Armenian people wonder whether it is done for Georgian.</p>
+<p>But we are covered there:</p>
+<p><img src="http://trigeminal.fmsinc.com/images/verdana06.jpg" border="0" /></p>
+<p>That Latin script text (<strong>Lari</strong>) is in Verdana, obviously.</p>
+<p><em>Though to be honest the currency&nbsp;support for Georgian&nbsp;seems weird to me anyway, given the exchange rate of Lari, but that can be a topic for another day, perhaps. Today is for Armenian....</em></p>
+<p>Now at first I felt the same as Random832 did -- just a few random letters, to support the currency symbol? really?</p>
+<p>I mean, when you think about SQL Server's support for currency symbols (described in blogs of mine like <a href="http://archives.miloush.net/michkap/archive/2005/07/22/441633.html" title="Show me the [small]money!"><strong>Show me the [small]money!</strong></a>), it only takes some of the explicit currency signs that exist in Unicode -- it does not detect the text strings used in locales like Armenian's as currency signs.</p>
+<p>And yet, fonts like Verdana do a job on supporting the currency signs and symbols of many different locales, like a whole bunch in the currency symbols block:</p>
+<p><img src="http://trigeminal.fmsinc.com/images/verdana07.jpg" border="0" /></p>
+<p>But does this really help anything in the long run? </p>
+<p>I mean, do we really expect there to be a common case where one is on a machine without Sylfaen where they will be looking at Armenian (and many other)&nbsp;currency values but no Armenian text and information?</p>
+<p>It just seems like&nbsp;a really contrived scenario.</p>
+<p>Though I suppose on a site with lots of currency transactions it would save one from having to load up lotsof extra fonts. </p>
+<p>Maybe it helps someone's performance just a little bit....</p>
+<p>Okay, I can almost talk myself into it, see?</p>
+<p>Then, I try one more thing: I look at the letters in Verdana on the left vs. in Sylfaen on the right, side by side, at various sizes:</p>
+<p><img src="http://trigeminal.fmsinc.com/images/verdana08.jpg" border="0" /></p>
+<p>Crap.</p>
+<p>These letters in Verdana are much more like the style of the other characters in Verdana -- and not like the letters in Sylfaen!</p>
+<p>So on a web page that requests text be in Verdana, these two letters will come from Verdana and then when other letters are requested, they will be grabbed from Sylfaen via Uniscribe.</p>
+<p>And you will have one of those weird font mismatch situations.</p>
+<p>For two letters. <strong>Two Letters</strong>. But no others. The metrics and the style and the look, all are different....</p>
+<p>Okay, I am back where I started -- these letters in Verdana are not such a great idea.</p>
+<p>In fact, suddenly many of these currency symbols in fonts like Verdana seem like not such a great idea, given the massively different styles of some of the language specific fonts....</p>
+<p>That same type of&nbsp;problem&nbsp;I discussed in <a href="http://archives.miloush.net/michkap/archive/2008/02/06/7490625.html" title="The utility of a feature like font fallback in Uniscribe can often be somewhat obviated by its design flaw"><strong>The utility of a feature like font fallback in Uniscribe can often be somewhat obviated by its design flaw</strong></a>, given a whole new dimension.</p>
+<p>And suddenly fonts are not&nbsp;falling back so much as falloing over. Again....</p>
+<hr/><p><strong>John Cowan</strong> on 14 Dec 2010 8:25 AM:</p><div style="margin-left: 1em"><p>A site with lots of currencies would use AMD anyhow.</p>
+</div>
+<p><strong>Miguel Sousa</strong> on 14 Dec 2010 1:02 PM:</p><div style="margin-left: 1em"><p>The other problem is that the serifs on the letters&#39; descenders really don&#39;t belong in a sans-serif design such as Verdana. Have a look at Paratype&#39;s Noah (<a rel="nofollow" target="_new" href="http://www.paratype.com/pstore/fonts/Noah.htm">www.paratype.com/.../Noah.htm</a>) and Pragmatica (<a rel="nofollow" target="_new" href="http://www.paratype.com/pstore/fonts/Pragmatica-Armenian.htm">www.paratype.com/.../Pragmatica-Armenian.htm</a>)</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 14 Dec 2010 2:23 PM:</p><div style="margin-left: 1em"><p>Notice how they tried to minimize them in their take on the letters to try to solve that problem. :-)</p>
+</div>
+<p><strong>Miguel Sousa</strong> on 15 Dec 2010 12:19 PM:</p><div style="margin-left: 1em"><p>You must be talking about a different thing because the wrong serifs are not small or minimized at all. </p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 15 Dec 2010 1:28 PM:</p><div style="margin-left: 1em"><p>I am pointing out they rounded the serifs to try an match the font&#39;s other glyphs. Not 100%, but better than nothing if you wanted the same style....</p>
+</div>
+<p><strong>Random832</strong> on 15 Dec 2010 7:19 PM:</p><div style="margin-left: 1em"><p>Yet Tahoma [which is Verdana&#39;s near-identical cousin in many glyphs present in both] doesn&#39;t have the serifs - which raises the question of just where the letterforms in Verdana came from... along with why the currencies that use Arabic letters or half a dozen Indic scripts aren&#39;t covered. Tahoma, of course, has full Arabic coverage [even if it is a crap cartoon font], along with full Armenian coverage.</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 15 Dec 2010 11:06 PM:</p><div style="margin-left: 1em"><p>There ends up being some criticism for changing the look and feel of currency signs/symbols, which puts these currency symbols based entirely on letters in a very weird place....</p>
+</div>
+<hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2011/03/22 <a href="http://archives.miloush.net/michkap/archive/2011/03/22/10144474.html">Rupee! Rupee! Let down your CHAR!</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2010/12/15/10105168.html" title="I think MaxLength needs protection to assure safer text">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2010/12/13/10103924.html" title="I swear the Romanian bug is fixed; it was fixed 4.5 years ago!">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2010-12">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2010-12-14">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2010/12/14/10104459.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+</html>

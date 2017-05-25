@@ -1,0 +1,41 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2008/01/16/7125002.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:36 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Paging King Canute.Net, your critical warnings are here to be swept back with the tide! (aka Spelling fetishists ≝ language mavens)</title></head><body>
+<h1>Paging King Canute.Net, your critical warnings are here to be swept back with the tide! (aka Spelling fetishists ≝ language mavens)</h1>
+<p><em>by Michael S. Kaplan, published on 2008/01/16 10:16 -05:00, original URI: http://blogs.msdn.com/b/michkap/archive/2008/01/16/7125002.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P>Visual Studio Team System has&nbsp;many warnings that are interesting under the <STRONG>what are they thinking?</STRONG> category:</P>
+<UL>
+<LI><A class="" href="http://msdn2.microsoft.com/library/bb264483.aspx" mce_href="http://msdn2.microsoft.com/library/bb264483.aspx">CA1703</A>: Resource strings should be spelled correctly</LI>
+<LI><A class="" href="http://msdn2.microsoft.com/library/bb264474.aspx" mce_href="http://msdn2.microsoft.com/library/bb264474.aspx">CA1702</A>: Compound words should be cased correctly</LI>
+<LI><A class="" href="http://msdn2.microsoft.com/library/bb264481.aspx" mce_href="http://msdn2.microsoft.com/library/bb264481.aspx">CA1701</A>: Resource string compound words should be cased correctly</LI>
+<LI><A class="" href="http://msdn2.microsoft.com/library/bb264492.aspx" mce_href="http://msdn2.microsoft.com/library/bb264492.aspx">CA1704</A>: Identifiers should be spelled correctly</LI>
+<LI><A class="" href="http://msdn2.microsoft.com/library/ms182245.aspx" mce_href="http://msdn2.microsoft.com/library/ms182245.aspx">CA1707</A>: Identifiers should not contain underscores</LI>
+<LI><A class="" href="http://msdn2.microsoft.com/library/ms182242.aspx" mce_href="http://msdn2.microsoft.com/library/ms182242.aspx">CA1708</A>: Identifiers should differ by more than case</LI>
+<LI><A class="" href="http://msdn2.microsoft.com/library/ms182240.aspx" mce_href="http://msdn2.microsoft.com/library/ms182240.aspx">CA1709</A>: Identifiers should be cased correctly</LI>
+<LI><A class="" href="http://msdn2.microsoft.com/library/ms182258.aspx" mce_href="http://msdn2.microsoft.com/library/ms182258.aspx">CA1723</A>: Use preferred terms</LI>
+<LI><A class="" href="http://msdn2.microsoft.com/library/bb264488.aspx" mce_href="http://msdn2.microsoft.com/library/bb264488.aspx">CA2204</A>: Literals should be spelled correctly</LI></UL>
+<P>Or there are a&nbsp;whole bunch of other <A class="" href="http://msdn2.microsoft.com/library/ms182232.aspx" mce_href="http://msdn2.microsoft.com/library/ms182232.aspx">Naming Warnings</A> in addition to these...</P>
+<P>Some of these warnings are considered "breaking" and some of them are considered "critical warnings".</P>
+<P>I haven't seen this strong of a push to control language since <A class="" href="http://en.wikipedia.org/wiki/Newspeak" mce_href="http://en.wikipedia.org/wiki/Newspeak">Newspeak</A>, though this push isn't faring much better at controlling what developers do much more effectively than that push did at controlling what party members did in 1984....</P>
+<P mce_keep="true">&nbsp;</P>
+<P><FONT color=#ff00ff><EM>This post brought to you by</EM><FONT size=5> ≝ </FONT><EM>(<A class="" href="http://www.fileformat.info/info/unicode/char/225d" mce_href="http://www.fileformat.info/info/unicode/char/225d">U+225d</A>, aka EQUAL TO BY DEFINITION)</EM></FONT></P>
+<hr/><p><strong>Eusebio Rufian-Zilbermann</strong> on 16 Jan 2008 12:17 PM:</p><div style="margin-left: 1em"><p>These warnings are probably coming from FxCop (or the same source that FxCop used).</p>
+<p>FxCop is a great tool but I have found problems in the language checks that make it very tempting to turn off the spelling checks:</p>
+<p>1) The default dictionaries are not good enough. The process of customizing the dictionaries and how they interact is unclear (e.g., you may add an acronym to the acronyms section but still get errors about incorrect spelling when using it)</p>
+<p>2) There are resource items to which this detection does not apply (e.g., an rtf file embedded in the resources) but it isn't possible to turn off checking for that specific resource item (and unfortunately, there is a bug that makes FxCop hang if I exclude those messages and try to save the project)</p>
+<p>I know. I could investigate these problem further, try different cases, submit a bug report and follow up the solution but I need to find 26 hour days first...</p></div>
+<p><strong>Kevin Daly</strong> on 16 Jan 2008 1:53 PM:</p><div style="margin-left: 1em"><p>My main gripe with these is that they default to attempting to enforce defective American spelling.</p>
+<p>That kind of cultural imperialism I can do without :-)</p></div>
+<p><strong>Dean Harding</strong> on 16 Jan 2008 3:26 PM:</p><div style="margin-left: 1em"><p>I believe the &quot;breaking&quot; designation means that FIXING the problem is a breaking change, not that the problem itself is a breaking problem.</p>
+<p>I don't know why they'd be &quot;critical&quot; however...</p></div>
+<p><strong>Asztal</strong> on 16 Jan 2008 6:29 PM:</p><div style="margin-left: 1em"><p>It seems to me &quot;Identifiers should differ by more than case&quot; has a decent reason, though. But then again, I'm not sure what Visual Basic actually does when it sees two names which only differ by case.</p></div>
+<p><strong>David M. Kean</strong> on 16 Jan 2008 8:47 PM:</p><div style="margin-left: 1em"><p>This is what happens when you productize a tool orginally designed for internal use. </p>
+<p>We orginally didn't release the spelling rules for VS 2005, however, we had to for VS 2008 after customers continually questioned why they should upgrade to VS Code Analysis when the free FxCop had these rules (despite VS Code Analysis having a myriad of features over FxCop).</p>
+<p>This also stems from the problem of our all our rules being on by default - something we're fixing in the next version. Today, however, you can always turn them off.</p>
+<p>By-the-way, where does it say these warnings are critical? In VS, we don't expose the underlying FxCop 'Critical Warning', 'Critical Error', etc.</p></div>
+<p><strong>Michael S. Kaplan</strong> on 16 Jan 2008 9:31 PM:</p><div style="margin-left: 1em"><p>That data may have just been an FxCop list, I guess (I think I did find it on one site, perhaps that was a typo?) -- though I guess the question of why they were critical there is an interesting one? :-)</p>
+</div>
+<hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2008/01/17/7126999.html" title="Virtual PC + Word 2007 ≠ AltGr support?">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2008/01/16/7101598.html" title="Heading over to India, for a bit">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2008-01">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2008-01-16">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2008/01/16/7125002.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:36 GMT -->
+</html>

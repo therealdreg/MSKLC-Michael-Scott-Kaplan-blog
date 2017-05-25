@@ -1,0 +1,39 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2008/07/24/8768909.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:36 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>When you assess, you make an...</title></head><body>
+<h1>When you assess, you make an...</h1>
+<p><em>by Michael S. Kaplan, published on 2008/07/24 03:01 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2008/07/24/8768909.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P>The question was deceptively simple:</P>
+<BLOCKQUOTE>
+<P><FONT face="times new roman,times"><EM>Is String.SubString complex script safe? Can we use substring on a localized string safely?</EM></FONT></P></BLOCKQUOTE>
+<P>Now the shape of the question itself hints at the concern -- by asking about complex scripts, the question about <A class="" href="http://msdn.microsoft.com/library/system.string.substring.aspx" mce_href="http://msdn.microsoft.com/library/system.string.substring.aspx">String.Substring</A> is being framed in terms of combining characters, with the question being whether <A class="" href="http://msdn.microsoft.com/library/system.string.substring.aspx" mce_href="http://msdn.microsoft.com/library/system.string.substring.aspx">String.Substring</A>&nbsp;is smart enough to know not to chop off dependent/combining characters.</P>
+<P>Well, the obvious answer is easy -- it isn't.</P>
+<P><A class="" href="http://msdn.microsoft.com/library/system.string.substring.aspx" mce_href="http://msdn.microsoft.com/library/system.string.substring.aspx">String.Substring</A> is based UTF-16 code units and as long as things fall within those boundaries,&nbsp;it can/will split them up any way&nbsp;it is asked&nbsp;to, without warning.</P>
+<P>Once again, there is an easy answer, the one I talk about in posts like:</P>
+<UL>
+<LI><A class="" href="http://archives.miloush.net/michkap/archive/2005/02/07/368570.html" mce_href="http://archives.miloush.net/michkap/archive/2005/02/07/368570.html">Normalization as obfuscation in C#</A></LI>
+<LI><A class="" href="http://archives.miloush.net/michkap/archive/2005/04/28/413019.html" mce_href="http://archives.miloush.net/michkap/archive/2005/04/28/413019.html">Looking for that internationally savvy palindrome checker</A></LI>
+<LI><A class="" href="http://archives.miloush.net/michkap/archive/2005/04/29/413366.html" mce_href="http://archives.miloush.net/michkap/archive/2005/04/29/413366.html">Where did the new StringInfo stuff come from?</A></LI></UL>
+<P>The <A class="" href="http://msdn.microsoft.com/library/system.globalization.stringinfo.aspx" mce_href="http://msdn.microsoft.com/library/system.globalization.stringinfo.aspx">StringInfo class</A> has the methods and properties to properly respect the character boundaries the question is talking about.</P>
+<P>Note of course that this won't do anything with compressions (contractions) used in sorting, but we'll leave that one lie for now.</P>
+<P>Let's think more closely about the question for a moment:</P>
+<BLOCKQUOTE>
+<P><EM><FONT face="times new roman,times" size=4>Can we use substring on a localized string safely?</FONT></EM></P></BLOCKQUOTE>
+<P>If we take the word <STRONG>localization</STRONG> as the much more careful and enlightened version of translation, where ideally all of the relevant issues such as language, regional variation, market expectations, and so on are all considered, can any automated process that chops on character boundaries be considered "safe" for the purposes of localization?</P>
+<P>For example&nbsp;if I truncate </P>
+<BLOCKQUOTE>
+<P><STRONG>You must then watch her assessment of the project</STRONG></P></BLOCKQUOTE>
+<P>at 27 characters using the StringInfo style safety guarantees to meet some arbitrary buffer requirement using StringInfo to not break the user's character boundaries, you will get:</P>
+<BLOCKQUOTE>
+<P><STRONG>You must then watch her ass</STRONG></P></BLOCKQUOTE>
+<P>and then you'll be really sorry that the English version isn't localized so that a localizer could take one look and realize some developer was once again being clever rather than being smart!</P>
+<P>Now do we feel better if we know not truncate an Extension B ideograph due to splitting&nbsp;a surrogate pair, if we know not to convert ధు (TELUGU DHU) into ధ (TELUGU DHA)? Maybe.</P>
+<P>But is just as possible to make the same kind of mistake as the <STRONG>assess</STRONG> example in other languages.</P>
+<P>Which just goes to show every that developer has the power to make an <STRONG>ass</STRONG> out of themselves if they don't consider their options carefully. :-)</P>
+<P mce_keep="true">&nbsp;</P>
+<P><FONT color=#ff00ff><EM>This blog brought to you by</EM><FONT size=6> ధు </FONT></FONT><FONT color=#ff00ff><EM>(<A class="" href="http://www.fileformat.info/info/unicode/char/0c27" mce_href="http://www.fileformat.info/info/unicode/char/0c27">U+0c27</A> <A class="" href="http://www.fileformat.info/info/unicode/char/0c41" mce_href="http://www.fileformat.info/info/unicode/char/0c41">U+0c41</A>, aka TELUGU LETTER DHU, aka TELUGU LETTER DHA + TELUGU&nbsp;VOWEL SIGN&nbsp;U)</EM></FONT></P>
+<hr/><p><strong>Tom Ballard</strong> on 24 Jul 2008 7:10 AM:</p><div style="margin-left: 1em"><p>Dude, I have know i'd ee ah what the fsck you're talking about :-)</p></div>
+<hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2008/07/25/8771119.html" title="Let&#39;s save some time and call them all IRregular expression engines">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2008/07/23/8765885.html" title="MAKE ALL vs. MAY CALL, aka the Blog goes ever on and on">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2008-07">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2008-07-24">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2008/07/24/8768909.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:36 GMT -->
+</html>

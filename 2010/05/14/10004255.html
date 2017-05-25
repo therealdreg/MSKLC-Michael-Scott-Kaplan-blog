@@ -1,0 +1,135 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2010/05/14/10004255.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:35 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>I'm going to throw a hypothetical on the stoop and see if the cat licks it up</title></head><body>
+<h1>I'm going to throw a hypothetical on the stoop and see if the cat licks it up</h1>
+<p><em>by Michael S. Kaplan, published on 2010/05/14 07:01 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2010/05/14/10004255.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P>An interesting hypothetical came up the other day.</P>
+<P>Let's say that the Windows 7 install base is around 100 million users.</P>
+<P>It isn't exactly that, but it makes the percentages easier so we'll go with it since I am going to throw some percents out for you to consider.</P>
+<P>And I am not trying to give you overly complicated math problems.</P>
+<P>Get it? I am doing ths FOR YOU.</P>
+<P>Anyway....</P>
+<P>Let's say you found a bug in a specific calendar. You know, in&nbsp;one of <A href="http://msdn.microsoft.com/library/dd317732.aspx" mce_href="http://msdn.microsoft.com/library/dd317732.aspx">these calendars</A>:</P>
+<BLOCKQUOTE>
+<P>
+<TABLE border=1>
+<TBODY>
+<TR>
+<TH colSpan=2>Calendar identifier</TH>
+<TH>Meaning</TH></TR>
+<TR>
+<TD>1</TD>
+<TD>CAL_GREGORIAN</TD>
+<TD>Gregorian (localized)</TD></TR>
+<TR>
+<TD>2</TD>
+<TD>CAL_GREGORIAN_US</TD>
+<TD>Gregorian (English strings always)</TD></TR>
+<TR>
+<TD>3</TD>
+<TD>CAL_JAPAN</TD>
+<TD>Japanese Emperor Era</TD></TR>
+<TR>
+<TD>4</TD>
+<TD>CAL_TAIWAN</TD>
+<TD>Taiwan calendar</TD></TR>
+<TR>
+<TD>5</TD>
+<TD>CAL_KOREA</TD>
+<TD>Korean Tangun Era</TD></TR>
+<TR>
+<TD>6</TD>
+<TD>CAL_HIJRI</TD>
+<TD>Hijri (Arabic Lunar)</TD></TR>
+<TR>
+<TD>7</TD>
+<TD>CAL_THAI</TD>
+<TD>Thai</TD></TR>
+<TR>
+<TD>8</TD>
+<TD>CAL_HEBREW</TD>
+<TD>Hebrew (Lunar)</TD></TR>
+<TR>
+<TD>9</TD>
+<TD>CAL_GREGORIAN_ME_FRENCH</TD>
+<TD>Gregorian Middle East French</TD></TR>
+<TR>
+<TD>10</TD>
+<TD>CAL_GREGORIAN_ARABIC</TD>
+<TD>Gregorian Arabic</TD></TR>
+<TR>
+<TD>11</TD>
+<TD>CAL_GREGORIAN_XLIT_ENGLISH</TD>
+<TD>Gregorian transliterated English</TD></TR>
+<TR>
+<TD>12</TD>
+<TD>CAL_GREGORIAN_XLIT_FRENCH</TD>
+<TD>Gregorian transliterated French</TD></TR>
+<TR>
+<TD>23</TD>
+<TD>CAL_UMALQURA</TD>
+<TD><STRONG>Windows&nbsp;Vista and later: </STRONG>Um Al Qura (Arabic lunar) calendar </TD></TR></TBODY></TABLE></P></BLOCKQUOTE>
+<P><EM>We will assume for the sake of argument that we are not talking about the first, second, or third entries in the table. Since we aren't..</EM></P>
+<P>It is not an algorithm problem, just something displaying kind of wrong. Not exactly a misspelling. And&nbsp;not a typo. But if it had been something like that, the results would be similar.</P>
+<P>Just so you can screw your head on straight about the problem. I'm not asking you to fix the oil spill here.</P>
+<P>So if you&nbsp;wanted to ship an update to fix the bug&nbsp;but you figured only a specific (small) percentage (I won't give the actual number, assume it is less than 5%) of the 100 million were going to be affected, how would you detect what users are most likely to be impacted?</P>
+<P>Bear in mind all of the following data points:</P>
+<UL>
+<LI>This is not a security issue in any way at all;</LI>
+<LI>The thing with the problem to be fixed is a file in the system32 directory (and the syswow64 directory on a 64-bit box), and will require a reboot as part of applying the fix;</LI>
+<LI>At the time you look at the machine there is a default system locale, a default user locale (for every logged-in user), and a UI language (for every logged in user); every one of these could potentially be different;</LI>
+<LI>There could be an unknown number of currently not logged-in users, each with their own default user locale and default UI language -- and as Raymond <A href="http://blogs.msdn.com/oldnewthing/archive/2005/06/30/434209.aspx" mce_href="http://blogs.msdn.com/oldnewthing/archive/2005/06/30/434209.aspx">mentioned</A>, you may not be able to find all of them;</LI>
+<LI>The calendar with the bug is the default calendar&nbsp;for more than one locale;</LI>
+<LI>The calendar with the bug could be set on several other locales by the user in their default user locale settings;</LI>
+<LI>Eventually the fix will find its way to users in a service pack, which makes only hitting the "most likely to be impacted" <STRONG>sooner</STRONG> a potentially reasonable desire, but doing nothing until the service pack is also an option.</LI></UL>
+<P>So now for the hypothetical:</P>
+<P>What would you recommend here?</P>
+<P>1) Would you recommend deploying the fix?</P>
+<P>2) If the answer to #1 is YES, would you limit the number of machines&nbsp;who would be offered the fix?</P>
+<P>3) If the answers to #1 and #2 are YES, how would you craft the limit, exactly? (<EM>be sure to properly balance accuracy of hitting the target market and simplicity of the fix to minimize flaws in the design of the filter!</EM>)</P>
+<P>4) Would any of the above answers change if the impact were not 5% but instead 10%? 20% How about 1%?</P>
+<P>5) Can you name both sources of the quote I modified for the title, without looking them up anywhere?</P>
+<P>I have obfuscated enough details in the above to make it a proper hypothetical (plus everything is&nbsp;already figured out, so no opinion could weigh any actual decision to be made!)&nbsp;and although I am asking you what you would do as if you are the lone person deciding, in reality there is no one person&nbsp; who makes this call and even the most expert person would be a single voice that would have to have any opinion weighed in terms of how well that person could back up the opinion to a triaging group.<EM> And how well they could get people to pay attention, of course.</EM></P>
+<P>Anyone want to share how they would answer those five questions, especially the first four? :-)</P>
+<P>Of course then after you answer that I have to point out that, as it turns out,&nbsp;architecturally the update process cannot detect all of the possible detection vectors listed above, which lead to a sixth question:</P>
+<P>6) If the best possible fix is not available, is a less-good fix that will get some hits acceptable? Metaphorically, you could imagine it like&nbsp;testing for&nbsp;H1N1 by testing for other varieties of seasonal flu; you will get some hits, but you will miss some people who definitely have the bug....</P>
+<P>Your thoughts on questions 1-4 and question 6 would be appreciated. The answer to question 5 (if you didn't cheat to get it!) would tickle, at least....</P>
+<hr/><p><strong>Azarien</strong> on 14 May 2010 8:01 AM:</p><div style="margin-left: 1em"><p>If the system's built-in language is affected, or there's any MUI/LIP pack or even a keyboard layout for the language installed, or the current/default/system locale is affected (that includes current custom settings), then make the fix Recommended (if we talk about Windows Update).</p>
+<p>Make the fix Optional for everyone else. That would include a number of interested but undetectable users, and all non interested ones.</p>
+<p>Make the fix non-optional in subsequent Service Pack, if one is ever released.</p>
+<p>And it doesn't matter if this affects 0.01% or 10% of the users.</p></div>
+<p><strong>Mat</strong> on 14 May 2010 10:08 AM:</p><div style="margin-left: 1em"><p>That one is easy enough to answer: If you feel you can ignore the needs of 5 million potentially affected customers, you are obviously not behaving according to your own best interest.</p></div>
+<p><strong>Aaron</strong> on 14 May 2010 1:14 PM:</p><div style="margin-left: 1em"><p>I would not release the fix, at least at first. &nbsp;</p>
+<p>Instead, I would release a universally recommended hotfix that can be installed without forcing a reboot, whose purpose is to detect if the flawed calendar is used on the system and set a flag that the update process can check in the future.</p>
+<p>Then, when the update process detects the flag, reccommend the actual fix.</p></div>
+<p><strong>Allan</strong> on 14 May 2010 9:37 PM:</p><div style="margin-left: 1em"><p>1) Would you recommend deploying the fix?</p>
+<p>As a software developer, yes. Bugs are to be fixed, regardless of the situation.</p>
+<p>(As a manager, then probably no. But that is another matter.)</p>
+<p>2) If the answer to #1 is YES, would you limit the number of machines who would be offered the fix?</p>
+<p>No. Even if the bug does not affect me, I would want it fixed on my systems.</p>
+<p>3) If the answers to #1 and #2 are YES, how would you craft the limit, exactly? (be sure to properly balance accuracy of hitting the target market and simplicity of the fix to minimize flaws in the design of the filter!)</p>
+<p>N/A.</p>
+<p>4) Would any of the above answers change if the impact were not 5% but instead 10%? 20% How about 1%?</p>
+<p>No.</p>
+<p>5) Can you name both sources of the quote I modified for the title, without looking them up anywhere?</p>
+<p>Honestly, no.</p></div>
+<p><strong>Mihai</strong> on 25 May 2010 11:44 AM:</p><div style="margin-left: 1em"><p>1. Yes</p>
+<p>2. No</p>
+<p>3. No limit. All or nothing. This is the locale support policy in Win 7, so why break it? If there is a worry about deploying to all, make it &quot;pull&quot; for a while (people can go and download), before you &quot;push&quot; it with a regular update (one that would require a reboot, if that&#39;s the worry).</p>
+<p>4. No difference</p>
+<p>5. Don&#39;t know :-)</p>
+<p>6. I don&#39;t understand the need to restrict to some. Is is big? Unsafe?</p>
+</div>
+<p><strong>Random832</strong> on 28 May 2010 6:04 AM:</p><div style="margin-left: 1em"><p>Missed posting this before comments closed for the upgrade:</p>
+<p>All of the entries in the table except for the first two have a higher probability of being used in specific regions of the world than everywhere else in the world (i.e. the countries which the locales supporting them belong to). What do you suppose the percentage in that part of the world is, and the percentage outside that part of the world? They also probably have a higher probability of being used on some localized versions of windows than others.</p>
+<p>Also... does the bug apply to dates that are at a specific time of year, and/or does the bug apply to dates on or after a specific point in time in the future? If so, how far in the future is this date (relative to a hypothetical service pack release)?</p>
+<p>&quot;I have obfuscated enough details in the above to make it a proper hypothetical&quot; - I can only find one calendar [other than the first in the list, which you&#39;ve said it&#39;s not] that is the default calendar in more than one locale.</p>
+<p>Is there a way to apply the patch in such a way as to not require an immediate restart, but to take effect the next time the system is restarted (either by a more important update or by normally restarting the system)?</p>
+<p>Question 5... I will assume for the sake of this answer that the two sources can be named (or approximated, or otherwise identified by [say] an IMDB url, if they are too long to fit) with at least one string of no more than 512 characters. There is no such string that the procedure of choosing a random number between 0 and 512 for the length, and then choosing a random character for each element, cannot result in. So I can say, without cheating, that the answer to question 5 is &quot;yes&quot;. Now, as to what the sources in fact are? Well, that wasn&#39;t the question - in fact, I have no idea what they might be. There&#39;s a metaphor about the axiom of choice somewhere in here, I think. Or maybe about quantum computing.</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 28 May 2010 8:14 PM:</p><div style="margin-left: 1em"><p>I would tend to count that as &quot;looking them up&quot; and disqualify the entry. :-)</p>
+</div>
+<hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2011/02/09 <a href="http://archives.miloush.net/michkap/archive/2011/02/09/10125506.html">Win 7 RTM & Arabic: "We can fix up August and April. But it'll cost you July to do it…"</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2010/05/15/10013185.html" title="It isn&#39;t that I&#39;m not listening. But soon I won&#39;t be able to hear you!">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2010/05/13/9993808.html" title="Minimalism isn&#39;t laziness, really; it&#39;s trying to do the job right without side effects!">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2010-05">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2010-05-14">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2010/05/14/10004255.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:35 GMT -->
+</html>

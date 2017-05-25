@@ -1,0 +1,60 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2006/05/27/608351.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:39 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Consistent garbage text can be incorrect encoding identification (or detection)</title></head><body>
+<h1>Consistent garbage text can be incorrect encoding identification (or detection)</h1>
+<p><em>by Michael S. Kaplan, published on 2006/05/27 03:01 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2006/05/27/608351.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P><FONT face=Tahoma>Mushy asked in the Suggestion Box: </FONT></P>
+<BLOCKQUOTE dir=ltr style="MARGIN-RIGHT: 0px">
+<P><FONT face="Times New Roman" size=2>Michael, <BR>You may have an old post that explains the following situation, so point me to it if you do. &nbsp;Here is the issue. If you look on my blog page you'll see some quotation marks printed as â€™ instead of ". &nbsp;When I first posted the material they weren't there. &nbsp;Now, most of the " marks are in some other code. &nbsp;How do you get rid of them? &nbsp;Is this caused by Word, .doc, .txt, .rtc formats? &nbsp;Which is best to post in? <BR><BR>P.S. I like your blog and have bookmarked it. <BR><BR>Thanks, <BR>Mushy </FONT></P></BLOCKQUOTE>
+<P><FONT face=Tahoma><EM>(For those who are interested, Mushy's blog is </EM><A href="http://www.cross-hairs.blogspot.com/"><EM>Cross+Hairs</EM></A><EM>.)</EM></FONT></P>
+<P><FONT face=Tahoma>Some people may be familar with the byte sequence; if you are then you are a geek. :-)</FONT></P>
+<P><FONT face=Tahoma>But to see what is going on, let us first consider Microsoft Notepad's detection behavior around encodings:</FONT></P>
+<UL>
+<LI><FONT face=Tahoma>If a UTF-16 LE BOM is there, then it's UTF-16 LE.</FONT> 
+<LI><FONT face=Tahoma>If a UTF-16 BE BOM is there, then it's UTF-16 BE.</FONT> 
+<LI><FONT face=Tahoma>If a UTF-8 BOM is there, then it's UTF-8.</FONT> 
+<LI><FONT face=Tahoma>If it appears to be valid UTF-8 according to the old RFC2279 definition, then it is assumed to be UTF-8.</FONT> 
+<LI><FONT face=Tahoma>Otherwise, it is assumed to be in the default system code page, CP_ACP.</FONT></LI></UL>
+<P><FONT face=Tahoma>So,&nbsp;armed with this knowledge, lt's try the following:</FONT></P>
+<UL>
+<LI><FONT face=Tahoma>Create a new text file in Notepad</FONT> 
+<LI><FONT face=Tahoma>Add the following string to it:&nbsp;&nbsp;&nbsp; <STRONG>â€™</STRONG></FONT> 
+<LI><FONT face=Tahoma>Save the file and close it.</FONT> 
+<LI><FONT face=Tahoma>Open the file</FONT></LI></UL>
+<P><FONT face=Tahoma>What you will find is that the byte sequence 0xE2 0x80 0x99, which in <A href="http://www.microsoft.com/globaldev/reference/sbcs/1252.mspx">code page 1252</A> (and the original saved file) looks like:</FONT></P>
+<P><FONT face=Tahoma size=6><STRONG>â€™</STRONG></FONT></P>
+<P><FONT face=Tahoma>has been interpretted by the new instance of Notepad as:</FONT></P>
+<P><FONT face=Tahoma size=6>’</FONT></P>
+<P><FONT face=Tahoma>in UTF-8 -- because sequence 0xE2 0x80 0x99 is what <A href="http://www.fileformat.info/info/unicode/char/2019">U+2019</A> (RIGHT SINGLE QUOTATION MARK) looks like in the underlying&nbsp;UTF-8 datastream.</FONT></P>
+<P><FONT face=Tahoma>If a web page is showing such sequences, this is usually caused by incorrect charset meta tag info on the page, incorrect header info from the server,&nbsp;incorrect code page detection on the client, or some combination of those issues....</FONT></P>
+<P><FONT face=Tahoma>If the problem occurs with other code pages, the exact representation will be&nbsp; different:</FONT></P>
+<UL>
+<LI><FONT face=Tahoma>&nbsp;<A href="http://www.microsoft.com/globaldev/reference/sbcs/874.mspx">874</A> - โ€</FONT> 
+<LI><FONT face=Tahoma>&nbsp;<A href="http://www.microsoft.com/globaldev/reference/dbcs/932.mspx">932</A> - 窶</FONT> 
+<LI><FONT face=Tahoma>&nbsp;<A href="http://www.microsoft.com/globaldev/reference/dbcs/936.mspx">936</A> -&nbsp;鈥</FONT> 
+<LI><FONT face=Tahoma>&nbsp;<A href="http://www.microsoft.com/globaldev/reference/dbcs/949.mspx">949</A> - ?</FONT> 
+<LI><FONT face=Tahoma>&nbsp;<A href="http://www.microsoft.com/globaldev/reference/dbcs/950.mspx">950</A> - ?</FONT> 
+<LI><FONT face=Tahoma><A href="http://www.microsoft.com/globaldev/reference/sbcs/1250.mspx">1250</A> - â€™</FONT> 
+<LI><FONT face=Tahoma><A href="http://www.microsoft.com/globaldev/reference/sbcs/1251.mspx">1251</A> - вЂ™</FONT> 
+<LI><FONT face=Tahoma><A href="http://www.microsoft.com/globaldev/reference/sbcs/1252.mspx">1252</A> - â€™</FONT> 
+<LI><FONT face=Tahoma><A href="http://www.microsoft.com/globaldev/reference/sbcs/1253.mspx">1253</A> - β€™</FONT> 
+<LI><FONT face=Tahoma><A href="http://www.microsoft.com/globaldev/reference/sbcs/1254.mspx">1254</A> - â€™</FONT> 
+<LI><FONT face=Tahoma><A href="http://www.microsoft.com/globaldev/reference/sbcs/1255.mspx">1255</A> - ג€™</FONT> 
+<LI><FONT face=Tahoma><A href="http://www.microsoft.com/globaldev/reference/sbcs/1256.mspx">1256</A> - â€™</FONT> 
+<LI><FONT face=Tahoma><A href="http://www.microsoft.com/globaldev/reference/sbcs/1257.mspx">1257</A> - ā€™</FONT> 
+<LI><FONT face=Tahoma><A href="http://www.microsoft.com/globaldev/reference/sbcs/1258.mspx">1258</A> - â€™</FONT></LI></UL>
+<P><FONT face=Tahoma>Slight differences in some of them, but it helps&nbsp;point out&nbsp;why strange garbage character sequences are often just not properly detecting UTF-8....</FONT></P>
+<P><FONT face=Tahoma></FONT>&nbsp;</P>
+<P><FONT face=Tahoma color=#ff1493><EM>This post brought to you by</EM>&nbsp; <FONT size=6>’</FONT>&nbsp;<EM>(<A href="http://www.fileformat.info/info/unicode/char/2019">U+2019</A>, a.k.a. RIGHT SINGLE QUOTATION MARK)</EM></FONT></P>
+<hr/><p><a id="608719" href="#608719">#</a> <strong>Sebastian Redl</strong> on 27 May 2006 9:06 AM:</p><div style="margin-left: 1em">I'm a geek. I recognized it.</div>
+<p><a id="608738" href="#608738">#</a> <strong>Michael S. Kaplan</strong> on 27 May 2006 9:53 AM:</p><div style="margin-left: 1em">Welcome to the club, Sebastian. We should get t-shirts. :-)</div>
+<p><a id="609395" href="#609395">#</a> <strong>Michael Dunn_</strong> on 28 May 2006 12:52 PM:</p><div style="margin-left: 1em">While I didn't remember that &#226;€™ was a smart quote, three random characters starting with an accented &quot;a&quot; is a sure sign of a misinterpreted UTF-8 character.</div>
+<p><a id="610370" href="#610370">#</a> <strong>Tom Gewecke</strong> on 29 May 2006 9:01 PM:</p><div style="margin-left: 1em">Some &nbsp;Windows programs (IE and Outlook that I know of) will &nbsp;also interpret invalid UTF-8 sequences &nbsp;as if they were real characters. &nbsp;A test of this is at<br><br><a rel="nofollow" target="_new" href="http://homepage.mac.com/thgewecke/badutf8.html">http://homepage.mac.com/thgewecke/badutf8.html</a></div>
+<p><a id="610401" href="#610401">#</a> <strong>Michael S. Kaplan</strong> on 29 May 2006 10:16 PM:</p><div style="margin-left: 1em">Yes Tom, I saw your message to the contact link, and it is on my list to consider for a future post....<br><br>I have many thoughts on this issue, and will be talking about it soon. So there is no need to handle it offtopic here. :-)</div>
+<p><a id="611245" href="#611245">#</a> <strong>cate</strong> on 30 May 2006 8:37 PM:</p><div style="margin-left: 1em">So... I'm still unclear. Is this something that can be fixed and if so, how?</div>
+<p><a id="611276" href="#611276">#</a> <strong>Michael S. Kaplan</strong> on 30 May 2006 9:54 PM:</p><div style="margin-left: 1em">If it is broken on the client side? Then sure, it can be fixed -- just pick a new encoding choice....</div>
+<p><a id="632716" href="#632716">#</a> <strong>rolfhub</strong> on 15 Jun 2006 4:05 PM:</p><div style="margin-left: 1em">Well, that sequence (&quot;&#226;€™&quot;) surely is ingraved into my brain ...<br><br>I had the problem that, after installing Kubuntu Linux on my laptop, the standard shell (&quot;Konsole&quot;) ran very slowly, so I installed &quot;rxvt&quot; (very small and fast alternative), but the output of every manpage came out with many copies of the sequence mentioned.<br><br>I needed quite some time to figure out that Kubuntu is completely Unicode-based, but rxvt isn't, so the manpage parser was outputting correct unicode sequences, but rxvt didn't know that. In case anyone wants to know: just install &quot;urxvt&quot; (unicode-rxvt) -- that saved my problems.<br><br>Am I a propper unicode-geek now? ;-)<br></div>
+<hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2010/04/01 <a href="http://archives.miloush.net/michkap/archive/2010/04/01/9988607.html">Is the text in XKCD broken?</a></p><p>2008/04/23 <a href="http://archives.miloush.net/michkap/archive/2008/04/23/8417318.html">That brings new meaning to having "a ç-section" (Ãç§), doesn't it?</a></p><p>2007/10/17 <a href="http://archives.miloush.net/michkap/archive/2007/10/17/5499362.html">CSI: Unicode?</a></p><p>2007/08/11 <a href="http://archives.miloush.net/michkap/archive/2007/08/11/4342275.html">Should old aquaintance *not* be forgot, code pages may screw up their names anyhow</a></p><p>2007/07/21 <a href="http://archives.miloush.net/michkap/archive/2007/07/21/3993622.html">Avoiding an international mailto maelstrom</a></p><p>2006/12/23 <a href="http://archives.miloush.net/michkap/archive/2006/12/23/1354366.html">Do not adjust your browser, a.k.a. sometimes two wrongs DO make a right, a.k.a. dumb quotes</a></p><p>2006/07/18 <a href="http://archives.miloush.net/michkap/archive/2006/07/18/669509.html">Occam's Razor, as applied to UTF-8</a></p><p>2006/06/14 <a href="http://archives.miloush.net/michkap/archive/2006/06/14/631016.html">Behind 'How to break Windows Notepad'</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2006/05/27/608625.html" title="Changing the user interface language at runtime?">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2006/05/26/608497.html" title="Bytes over Western Europe">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2006-05">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2006-05-27">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2006/05/27/608351.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:39 GMT -->
+</html>

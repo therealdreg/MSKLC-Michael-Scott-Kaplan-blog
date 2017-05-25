@@ -1,0 +1,37 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2007/08/03/4217350.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:37 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>What is SORT_INVARIANT_MATH for?</title></head><body>
+<h1>What is SORT_INVARIANT_MATH for?</h1>
+<p><em>by Michael S. Kaplan, published on 2007/08/04 01:59 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2007/08/03/4217350.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P>The question I was asked the other day is the one in the title of this post. I thought I'd give some of the backstory....&nbsp;</P>
+<P>I remember when I was explaining to <A class="" href="http://blogs.msdn.com/murrays/" mce_href="http://blogs.msdn.com/murrays/">Murray Sargent</A> a few years back about how Windows XP and Server 2003 both sorted the Math Alphanumerics range -- a set of over 1000 Unicode characters in the&nbsp;Supplementary Multilingual Plane (more on the allocation stuff <STRONG><A class="" href="http://archives.miloush.net/michkap/archive/2005/09/24/472543.html" mce_href="http://archives.miloush.net/michkap/archive/2005/09/24/472543.html">here</A></STRONG> and more on the math range itself in a post from Murray <A class="" href="http://blogs.msdn.com/murrays/archive/2006/09/13/752206.aspx" mce_href="http://blogs.msdn.com/murrays/archive/2006/09/13/752206.aspx">here</A>).</P>
+<P><EM>(Conversation reconstructed from memory, Murray can hopefully make any corrections if he feels I misrepresented anything, as I certainly am not trying to!)</EM></P>
+<P>"So we do nothing special with them -- we sort them in binary order with the rest of the SMP. Is that okay?"</P>
+<P>"I think so, Michael. What else would you do with them?"</P>
+<P>"Well, they could be sorted after the letters that they are similar to, maybe."</P>
+<P>"Why would you want to do that? These are symbols, used in mathematical expressions."</P>
+<P>"True. But what if you were searching for one of them -- would you really want to force people to type the exact code point or would you want something fuzzier?"</P>
+<P>"Good point. But that could be done outside of Windows -- just like the input is, in Word [2007 -&nbsp;michkap]."</P>
+<P>"Okay, how about if you are building an index and want one or more of them listed. Would you want them to be separate from the letters they look like?"</P>
+<P>"Oh, wait. You're right. They should be sorted near the letters they look like."</P>
+<P>"That's what I thought you'd say. Too bad we can't do it."</P>
+<P>"Why not?"</P>
+<P>"Well, our default sorting table is UTF-16 based, and the math alphanumerics would require a compression table -- which requires a locale. And while assigning a new LCID to "Math - Flatland" would get many cool points with math geeks, it is not so sustainable from a business sense. And math is a bit too universal to jump put in one locale."</P>
+<P>"So what can be done?"</P>
+<P>After talking to some people over in NLS, and many ideas were&nbsp;considered and discarded for reasons like performance concerns, complexity, and so on, such as:</P>
+<UL>
+<LI>Adding a special compression table to the default table to affect all locales</LI>
+<LI>Creating a new flag to add these characters to any locale</LI>
+<LI>Adding a bunch of&nbsp;new weights&nbsp;to move the symbols around in specific locales that moved the original characters around</LI></UL>
+<P>In the end, the decision was made -- a new LCID was added (an alternate sort on the invariant locale). The SORTID is defined in winnt.h:</P>
+<P><FONT face="courier new,courier"><STRONG>&nbsp;&nbsp;&nbsp; #define SORT_INVARIANT_MATH&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 0x1&nbsp;&nbsp;&nbsp;&nbsp; // Invariant (Mathematical Symbols)</STRONG></FONT></P>
+<P>So, combined with the invariant locale, you get MAKELCID(MAKELANGID(LANG_INVARIANT, SUBLANG_NEUTRAL), SORT_INVARIANT_MATH) or 0x1007f....</P>
+<P>Not quite the <STRONG>Math - Flatland</STRONG> locale, but thats what custom locales are for, right?</P>
+<P>No note this is not perfect -- for example any locale that sorts any of those letters differently (like the way <STRONG>Y</STRONG> comes just after <STRONG>I</STRONG> in Lithuania) would not see the various associated math symbols moved, But to fix that would mean adding additional alternate sorts for such locales, which could also be less than ideal (it might be the same plumbing that would be underneath a special flag, but is a bigger deal to do the actual work for, in any case).</P>
+<P>But for now, at least the problem is solved in the default table - which means English and ~79 other locales. And then when you consider that so many of the 128 locales that have various exceptions don't use either Latin or Greek script and thus wouldn't sort any of these letters differently, it means there are workarounds to get those indexes sorted in many of those other locales, too....</P>
+<P mce_keep="true">&nbsp;</P>
+<P><FONT color=#ff00ff><EM>This post brought to you by</EM> <FONT face="Cambria Math" size=5>𝑪</FONT> <EM>(<A class="" href="http://www.fileformat.info/info/unicode/char/1d46a" mce_href="http://www.fileformat.info/info/unicode/char/1d46a">U+1d46a</A>, a.k.a. MATHEMATICAL BOLD ITALIC CAPITAL C)</EM></FONT></P>
+<hr/><div style="margin-left: 1em"><em>no comments</em></div><hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2008/02/10 <a href="http://archives.miloush.net/michkap/archive/2008/02/10/7579576.html">Microsoft still does not use the UCA; the converse is also true</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2007/08/04/4218091.html" title="The one code page that changed recently">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2007/08/03/4214516.html" title="Random TypeCon2007 thought -- spam sucks!">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2007-08">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2007-08-03">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2007/08/03/4217350.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:37 GMT -->
+</html>

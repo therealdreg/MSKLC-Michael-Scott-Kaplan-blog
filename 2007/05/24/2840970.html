@@ -1,0 +1,30 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2007/05/24/2840970.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:38 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Honey, you are the [_tWin]Main source of joy in my life!</title></head><body>
+<h1>Honey, you are the [_tWin]Main source of joy in my life!</h1>
+<p><em>by Michael S. Kaplan, published on 2007/05/24 08:41 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2007/05/24/2840970.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P>Human gjcoram asks:</P>
+<BLOCKQUOTE>
+<BLOCKQUOTE><FONT size=2>
+<P><FONT face="times new roman,times">I'm developing a unicode e-mail client (nPOPuk) -- works in Win32, Win32Unicode, and various WinCE platforms. I was tracking down a memory leak that originated from the fact that "lpCmdLine" is a char* rather than a TCHAR* in the declaration of WinMain in winbase.h:</FONT></P>
+<P><FONT face="times new roman,times">WinMain(<BR>&nbsp;&nbsp;&nbsp; IN HINSTANCE hInstance,<BR>&nbsp;&nbsp;&nbsp; IN HINSTANCE hPrevInstance,<BR>&nbsp;&nbsp;&nbsp; IN LPSTR lpCmdLine,<BR>&nbsp;&nbsp;&nbsp; IN int nShowCmd<BR>&nbsp;&nbsp;&nbsp; );</FONT></P>
+<P><FONT face="times new roman,times">The original developer just blithely cast the LPSTR to a TCHAR*, and what was a nice "\0" was NOT the same as TEXT("\0").</FONT></P>
+<P><FONT face="times new roman,times">Shouldn't it be<BR>&nbsp;&nbsp;&nbsp; IN LPTSTR lpCmdLine<BR>?</FONT></P></FONT></BLOCKQUOTE></BLOCKQUOTE>
+<P>Well, it isn't as simple as <EM>that</EM>, though at least you&nbsp;noticed the obvious bug in the original developer's code!</P>
+<P>If you look at the <A class="" href="http://msdn2.microsoft.com/library/ms633559.aspx" mce_href="http://msdn2.microsoft.com/library/ms633559.aspx">WinMain MSDN topic</A>, it explains a bit about what is going on here:</P>
+<BLOCKQUOTE>
+<P><EM>ANSI applications can use the lpCmdLine parameter of the WinMain function to access the command-line string, excluding the program name. Note that lpCmdLine uses the LPSTR data type instead of the LPTSTR data type. This means that WinMain cannot be used by Unicode programs. The GetCommandLineW function can be used to obtain the command line as a Unicode string. Some programming frameworks might provide an alternative entry point that provides a Unicode command line. For example, the Microsoft Visual Studio C++ complier uses the name wWinMain for the Unicode entry point.</EM></P></BLOCKQUOTE>
+<P>Another interesting tidbit can be found by looking at the Windows CE version of the WinMain topic, looking at the prototype in particular (note the piece highlighted in red!):</P>
+<BLOCKQUOTE>
+<P><FONT face="courier new,courier"><STRONG>int WINAPI WinMain(<BR>&nbsp; HINSTANCE hInstance, <BR>&nbsp; HINSTANCE hPrevInstance, <BR>&nbsp; <FONT color=#ff0000>LPWSTR</FONT> lpCmdLine, <BR>&nbsp; int nShowCmd <BR>); </STRONG></FONT></P></BLOCKQUOTE>
+<P>There is even an old&nbsp;comment to one of <A class="" href="http://blogs.msdn.com/oldnewthing" mce_href="http://blogs.msdn.com/oldnewthing">Raymond Chen</A>'s blog posts that regular SIAO&nbsp;reader Mike Dimmick <A class="" href="http://blogs.msdn.com/oldnewthing/archive/2004/01/27/63401.aspx#65021" mce_href="http://blogs.msdn.com/oldnewthing/archive/2004/01/27/63401.aspx#65021">made</A>&nbsp;that covers the CE issue and talks about what the original WinMain topic kind of hinted at -- that wWinMain is a Microsoft CRT illusion that may not work everywhere.</P>
+<P>For good measure, there is even that KB article that talks about how to fix when the illusion breaks (<A class="" href="http://support.microsoft.com/kb/125750" mce_href="http://support.microsoft.com/kb/125750">MSKB 125750</A>)....</P>
+<P>But maybe with&nbsp;everything considered,&nbsp;<A class="" href="http://msdn2.microsoft.com/library/ms683156.aspx" mce_href="http://msdn2.microsoft.com/library/ms683156.aspx">GetCommandLineW</A> is the best way to go here, though if you are using the CRT even the <A class="" href="http://msdn2.microsoft.com/library/tsbaswba.aspx" mce_href="http://msdn2.microsoft.com/library/tsbaswba.aspx">Routine Mappings</A>&nbsp;page points out the existence of _tWinMain, which will go what gjcoram was originally thinking about....</P>
+<P mce_keep="true">&nbsp;</P>
+<P><FONT color=#ff00ff><EM>This post brought to you by</EM> <FONT size=5>ᖈ</FONT> <EM>(<A class="" href="http://www.fileformat.info/info/unicode/char/1588" mce_href="http://www.fileformat.info/info/unicode/char/1588">U+1588</A>, a.k.a. CANADIAN SYLLABICS TLHO)</EM></FONT></P>
+<hr/><p><a id="2866577" href="#2866577">#</a> <strong>gjcoram</strong> on 25 May 2007 6:33 AM:</p><div style="margin-left: 1em"><p>The original code had #ifdef _WIN32_WCE to switch between the CE command line prototype (with LPTSTR) and the non-Unicode prototype; I tried to switch it to #ifdef UNICODE but this didn't work.</p>
+<p>Thanks for the pointer on GetCommandLineW.</p></div>
+<hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2007/05/25/2862437.html" title="&#39;Underage Thinking&#39; is playing in the background">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2007/05/24/2839957.html" title="How to do more sorting and grouping by 9am than most ListViews do all day">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2007-05">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2007-05-24">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2007/05/24/2840970.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:38 GMT -->
+</html>

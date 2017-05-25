@@ -1,0 +1,35 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2007/07/11/3820654.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:38 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>They don't [font] associate with font linkers, among others</title></head><body>
+<h1>They don't [font] associate with font linkers, among others</h1>
+<p><em>by Michael S. Kaplan, published on 2007/07/11 18:33 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2007/07/11/3820654.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P>Back in <STRONG><A class="" href="http://archives.miloush.net/michkap/archive/2007/06/09/3174676.html" mce_href="http://archives.miloush.net/michkap/archive/2007/06/09/3174676.html">this post</A></STRONG> and <STRONG><A class="" href="http://archives.miloush.net/michkap/archive/2007/07/11/3815916.html" mce_href="http://archives.miloush.net/michkap/archive/2007/07/11/3815916.html">this other one</A></STRONG>, I have been kind of hinting around at the functionality known as FONT ASSOCIATION.</P>
+<P>Now in the post you are reading, I am going to explain what it is.</P>
+<P>First we'll go with a dictionary definition. I'll go with the American Heritage definition since the book is close by:</P>
+<BLOCKQUOTE>
+<P><EM><STRONG>Association</STRONG> (n, ə-sō'sē-ā'shən) -- An organized body of people who have an interest, activity, or purpose in common; a society.</EM></P></BLOCKQUOTE>
+<P>One thing you notice about many such&nbsp;associations is a sense of exclusivity -- by joining the association you get privileges that others do not. But the members themselves are quite independent and have their own purposes and goals.</P>
+<P>Well, font association fits into this kind of definition quite well. :-)</P>
+<P>Basically, to join the association, you must</P>
+<OL type=a>
+<LI>be a font (duh!), and </LI>
+<LI>be used on a machine with a Chinese, Japanese, or Korean system locale, and</LI>
+<LI>have font association initialized (as discussed <STRONG><A class="" href="http://archives.miloush.net/michkap/archive/2007/06/09/3174676.html" mce_href="http://archives.miloush.net/michkap/archive/2007/06/09/3174676.html">here</A></STRONG>)</LI></OL>
+<P mce_keep="true">If you meet these guidelines, then GDI will have a general preference for the&nbsp;preferred font of the main script of the particular East Asian locale (e.g. <FONT face=SimSun><STRONG>SimSun</STRONG></FONT> for Simplified Chinese, <FONT face=Gulim><STRONG>Gulim</STRONG></FONT> for Korean and so on).</P>
+<P mce_keep="true">And this association will happen even if one does not use a font in the GDI font link chain, which one cannot always rely on otherwise. If it is not turned on then people who are used to it will <A class="" href="http://archives.miloush.net/michkap/archive/2007/06/09/3174676.html" mce_href="http://archives.miloush.net/michkap/archive/2007/06/09/3174676.html">complain about the bug they hit</A>, and sometimes if the characters are not in the font given to them by their "association" then they will get <A class="" href="http://archives.miloush.net/michkap/archive/2007/07/11/3815916.html" mce_href="http://archives.miloush.net/michkap/archive/2007/07/11/3815916.html">NULL glyphs rather than characters</A>.</P>
+<P mce_keep="true">And once again the <A class="" href="http://msdn2.microsoft.com/library/ms533931.aspx" mce_href="http://msdn2.microsoft.com/library/ms533931.aspx">LOGFONT</A> lfCharSet member becomes the only way one can break out of the association for a little while (unless your&nbsp; font already supports the script, of course). Basically one is better off if one sets the lfCharSet to something that you are sure does not contain the characters, the only good escape here.</P>
+<P mce_keep="true">Note also from that second post that Gulim has font linking behavior when Korean is the default system locale. But like all good associations, the Fellowship of the Font Linkers are not their partners, and the font link chin that exists for a given font is not respected if the font is chosen through association....</P>
+<P mce_keep="true">That is font association -- a legacy technology that leads to a specific popular behavior that customers in East Asia may be relying on now -- so we are kind of stuck with it. Even if it&nbsp;can often be lousy....</P>
+<P mce_keep="true">I wish we didn't, and that I could say "I don't associate with those kinds of fonts anymore."</P>
+<P mce_keep="true">&nbsp;</P>
+<P mce_keep="true"><FONT color=#ff00ff><EM>This post brought to you by</EM> <FONT size=6>덯</FONT> <EM>(<A class="" href="http://www.fileformat.info/info/unicode/char/0b36f" mce_href="http://www.fileformat.info/info/unicode/char/0b36f">U+b36f</A>, a.k.a. HANGUL SYLLABLE TIKEUT EO HIEUH)</EM></FONT></P>
+<hr/><p><a id="3821060" href="#3821060">#</a> <strong>Mihai</strong> on 11 Jul 2007 7:15 PM:</p><div style="margin-left: 1em"><p>&quot;they will get NULL glyphs rather than characters&quot;</p>
+<p>I assume you are talking about &quot;NOTDEF glyphs&quot; (<a rel="nofollow" target="_new" href="http://archives.miloush.net/michkap/archive/2007/06/19/3397122.html">http://blogs.msdn.com/michkap/archive/2007/06/19/3397122.aspx</a>)</p>
+<p>Sorry, I am not nitpicking, just trying to help you get rid of that habit :-D</p>
+<p>(and I have to admit, I need that too)</p></div>
+<p><a id="3821240" href="#3821240">#</a> <strong>Michael S. Kaplan</strong> on 11 Jul 2007 7:24 PM:</p><div style="margin-left: 1em"><P>i will probably keep calling them NULL glyphs most of the time, since more people know of that than .notdef.</P>
+<P>But yes, you are right. How can I disagree when you cite me in support of your argument? :-)</P></div>
+<hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2008/02/29 <a href="http://archives.miloush.net/michkap/archive/2008/02/29/7945019.html">A more definitive definition of[ Font ]Association (a technology that helps us put the backward in backward compatibility!)</a></p><p>2007/10/25 <a href="http://archives.miloush.net/michkap/archive/2007/10/25/5660564.html">Is it a Unicode issue? A non-Unicode issue? What the hell is it? (aka Beware former [Font ]Associations)</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2007/07/11/3823291.html" title="GB18030 isn&#39;t an ACP, either">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2007/07/11/3815916.html" title="Any sufficiently confusing technology is indistinguishable from magic">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2007-07">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2007-07-11">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2007/07/11/3820654.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:38 GMT -->
+</html>

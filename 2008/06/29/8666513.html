@@ -1,0 +1,45 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2008/06/29/8666513.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:36 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>If they say "it's all relative" then remind them it is not a coincidence that there is a show called Relative Madness on TV</title></head><body>
+<h1>If they say "it's all relative" then remind them it is not a coincidence that there is a show called Relative Madness on TV</h1>
+<p><em>by Michael S. Kaplan, published on 2008/06/29 03:01 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2008/06/29/8666513.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P>Sometimes the question you ask will have different answers depending on who you ask.</P>
+<P>Like&nbsp;previously when&nbsp;I described (in the blogs entitled <A class="" href="http://archives.miloush.net/michkap/archive/2007/06/19/3396819.html" mce_href="http://archives.miloush.net/michkap/archive/2007/06/19/3396819.html"><STRONG>IsCharSomethingOrOther?</STRONG></A>&nbsp;and <A class="" href="http://archives.miloush.net/michkap/archive/2005/09/12/463991.html" mce_href="http://archives.miloush.net/michkap/archive/2005/09/12/463991.html"><STRONG>Is Kana 'alphabetic' ? Depends on who you ask....</STRONG></A>), where the answer would vary depending on whether one was asking the NLS API vs. the wrapper functions around NLS contained in Win32.</P>
+<P>One could (convincingly) try to argue the differences between these two interfaces, but in the it usually boils down to different intents translating into a different understanding of the question, and thus coming up with slightly different answers.</P>
+<P>Another such problem came up the other day, when a developer asked:</P>
+<BLOCKQUOTE>
+<P><FONT face="times new roman,times"><EM>I am using PathIsRelative API is my code to ascertain where a path is relative or not. Now if I am giving input as “\Programfiles” or “\” as input the api does not take it as RelativePath. My understanding is that API will consider both of these paths as relative since in command window these inputs take me to root folder or folder relatives to root. <BR><BR>Let me know if I am wrong and also alternative way to find “\ProgramFiles” or “\” being relative or not.</EM></FONT></P></BLOCKQUOTE>
+<P>One developer pointed out the problem in understanding, from the point of view of the function:</P>
+<BLOCKQUOTE>
+<P><FONT face="times new roman,times">"\Program files" and "\" are absolute paths. Relative path is different if starts from different current folder. Relative to root is already an absolute path.</FONT></P></BLOCKQUOTE>
+<P>While another developer pointed out the overarching problem of the viewpoint:</P>
+<BLOCKQUOTE>
+<P><FONT face="times new roman,times"><EM>I am confused about the meaning of "relative" here.<BR><BR>"\" and "\Program Files" are relative—to the current working directory. If cwd is "D:\foo" then "\" means "D:\", but if cwd is "E:\foo", then "\" means "E:\".<BR><BR>So… why is "relative to root … already an absolute path"? Is this simply how "relative" is defined in the world of the win32 API?</EM></FONT></P></BLOCKQUOTE>
+<P>And that second developed answered this one in a way that not everyone will probably be able to parse completely, but which certainly failed to see the conflict that comes from the other point of view....</P>
+<BLOCKQUOTE>
+<P><FONT face="times new roman,times">You&nbsp; are correct. But \Program files has the same meaning when cwd is "d:\foo1" or "d:\foo2". Relative path starts from cwd. \Program files always starts from root (although the root is relative to cwd), so it’s absolute. Maybe you can just take this as routine.</FONT></P></BLOCKQUOTE>
+<P>Another developer volunteered a response to this question that feel a lot like that USER32 response:</P>
+<BLOCKQUOTE>
+<P><FONT face="times new roman,times">...a way to determine if paths with a leading "\" are to be considered relative ("\Program Files" was just an example).<BR><BR>In our code we have the same issue and just special case it ourselves:<BR><BR></FONT><STRONG><FONT face="courier new,courier">BOOL PathIsRelativeBlah(LPCWSTR wszPath) {<BR>&nbsp;&nbsp;&nbsp; ASSERT(wszPath != NULL);<BR>&nbsp;&nbsp;&nbsp; BOOL bIsRelative = ::PathIsRelativeW(wszPath);<BR>&nbsp;&nbsp;&nbsp; if (bIsRelative)<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; return TRUE;<BR>&nbsp;&nbsp;&nbsp;&nbsp;if (wszPath[0] == L'\\' &amp;&amp; wszPath[1] != L'\\')<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; return TRUE;<BR>&nbsp;&nbsp;&nbsp; return FALSE;<BR>}</STRONG></FONT></P></BLOCKQUOTE>
+<P>Why would one care?</P>
+<P>Well, if the current drive is unknown then in some cases the SHLWAPI <A class="" href="http://msdn.microsoft.com/library/bb773660.aspx" mce_href="http://msdn.microsoft.com/library/bb773660.aspx">PathIsRelative</A> answer is dead wrong awful since one cannot make security decisions based on being sure the path is unambiguous with the response that <A class="" href="http://msdn.microsoft.com/library/bb773660.aspx" mce_href="http://msdn.microsoft.com/library/bb773660.aspx">PathIsRelative</A> provides. So in some cases the function is acceptable, in others it is incomplete.</P>
+<P>Now when wants to determine whether one is a relative or not in real life, it is much more complicate, and the many tests include:</P>
+<UL>
+<LI>ABO blood group typing</LI>
+<LI>HLA antigen testing</LI>
+<LI>PCR (polymerase chain reaction) testing</LI>
+<LI>RFLP (restriction fragment length polymorphism) testing</LI>
+<LI>DNA testing</LI></UL>
+<P>What tests make&nbsp;sense depend a lot&nbsp;on the context -- is the goal to find out just if it is a relive? Or is it a check for parental identification?</P>
+<P>What one is prepared to accept as the answer will have a <STRONG>lot</STRONG> to do with which question one is really asking, and for what purpose....</P>
+<P>Now if one does want to call those "driveless" paths relative then wrapping the SHLWAPI <A class="" href="http://msdn.microsoft.com/library/bb773660.aspx" mce_href="http://msdn.microsoft.com/library/bb773660.aspx">PathIsRelative</A> function with one's own additional logic the same ways USER32.DLL's Is* functions wrap the NLS <A class="" href="http://msdn.microsoft.com/library/ms647481.aspx" mce_href="http://msdn.microsoft.com/library/ms647481.aspx">GetStringTypeW</A> function so they can provide their tweaks.</P>
+<P>So that people who want a slightly different bit of logic applied to "is this relative" have the chance to see that done.</P>
+<P>And I'll close this with a true story of a conversation that dates back several years with a friend of mine who was about to marry a single mother and the question of whether to adopt&nbsp;her kids came up:</P>
+<BLOCKQUOTE>
+<P><STRONG>Doug</STRONG>: So you had to go through this too?<BR><STRONG>Me</STRONG>: almost.<BR><STRONG>Doug</STRONG>: Why almost?<BR><STRONG>Me</STRONG>: One of the kids wanted me to adopt, the other two felt like it would be a betrayal, and it was mostly moot since the dad would never have gone for it and he h just started getting garnished for support so ironically in having the court acknowledge he was a deadbeat dad he actually had a say whereas he didn't before.<BR><STRONG>Doug</STRONG>: And then entirely irrelevant after you didn't actually get married.<BR><STRONG>Me</STRONG>: Also true. You have to read the fine print.<BR><STRONG>Doug</STRONG>: Windows is easier. One call to SetParent and your problems are solved.<BR><STRONG>Me</STRONG>: Actually, there are many times that the SetParent call is actually the start of even bigger problems....<BR><STRONG>Doug</STRONG>: So Windows isn't really easier, it just looks that way.<BR><STRONG>Me</STRONG>: Pretty much. The fine print gets you every time.</P></BLOCKQUOTE>
+<P mce_keep="true">&nbsp;</P>
+<P><FONT color=#ff00ff><EM>This blog brought to you by</EM><FONT size=5> P </FONT><EM>(<A class="" href="http://www.fileformat.info/info/unicode/char/0050" mce_href="http://www.fileformat.info/info/unicode/char/0050">U+0050</A>, aka LATIN CAPITAL LETTER P)</EM></FONT></P>
+<hr/><div style="margin-left: 1em"><em>no comments</em></div><hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2008/06/29/8667900.html" title="Did someone break GetTimeZoneInformation in XP?">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2008/06/28/8664589.html" title="She actually said Playing, not Praying...">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2008-06">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2008-06-29">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2008/06/29/8666513.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:36 GMT -->
+</html>

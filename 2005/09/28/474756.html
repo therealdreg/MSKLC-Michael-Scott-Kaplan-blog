@@ -1,0 +1,35 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2005/09/28/474756.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:41 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>FAT/FAT32 oddness on Win2000</title></head><body>
+<h1>FAT/FAT32 oddness on Win2000</h1>
+<p><em>by Michael S. Kaplan, published on 2005/09/28 06:01 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2005/09/28/474756.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P><FONT face=Tahoma>It all seemed so simple -- that whole 'uppercase and binary comparison' semantic. Used by NTFS, by Windows in so many places like named pipes, mutexes, environment variables, and so on.</FONT></P>
+<P><FONT face=Tahoma>But then there is FAT and FAT32. :-(</FONT></P>
+<P><FONT face=Tahoma>Take the two characters:</FONT></P>
+<UL>
+<LI><FONT face=Tahoma><FONT face="Times New Roman">ㄱ</FONT> U+3131 (HANGUL LETTER KIYEOK)</FONT> 
+<LI><FONT face=Tahoma><FONT face="Times New Roman">ᄀ</FONT> U+1100 (HANGUL CHOSEONG KIYEOK)</FONT></LI></UL>
+<P><FONT face=Tahoma>Note that they are the compatibility and combining forms of the same&nbsp;Jamo (see <a href="http://archives.miloush.net/michkap/archive/2005/09/14/463569.html">this</A> post for more info on the purposes of each).</FONT></P>
+<P><FONT face=Tahoma>Stick them both in filenames in the same&nbsp;directory in a FAT or FAT32 drive (<FONT face="Times New Roman">ㄱ</FONT>.txt and <FONT face="Times New Roman">ᄀ</FONT>.txt).</FONT></P>
+<P><FONT face=Tahoma>Works just fine.</FONT></P>
+<P><FONT face=Tahoma>Now change the default system locale to Korean and reboot.</FONT></P>
+<P><FONT face=Tahoma>If you just try to create the same files&nbsp;in a new directory, then it will give you an error:</FONT></P>
+<P align=center><IMG src="http://trigeminal.fmsinc.com/images/3131_1100.jpg"></P>
+<P><FONT face=Tahoma>There are all kinds of weirdnesses though:</FONT></P>
+<UL>
+<LI><FONT face=Tahoma>The original files are right there, they can still both be used and opened and renamed.</FONT> 
+<LI><FONT face=Tahoma>If you try to rename them to be the same (i.e. <FONT face="Times New Roman">ㄱ2</FONT>.txt and <FONT face="Times New Roman">ᄀ2</FONT>.txt), you will get the error again.</FONT> 
+<LI><FONT face=Tahoma>If you rename them both to the names that they were then you get no error.</FONT></LI></UL>
+<P><FONT face=Tahoma>Now if you look at code page 949, U+3131 is there and can roundtrip (it is 0xa4a1), but 0x1100 has a best fit mapping to the same character. I would at first have thought that this had something to do with the problem (it is certainly the cause for problems on Window 98 and Me!), but in Win2000 I can create filenames in Unicode only languages (where everything would map to ? on the code page) on these drives and I have no problems at all. So this is not just a simple code page issue.</FONT></P>
+<P><FONT face=Tahoma>It is also not&nbsp;a simple collation being used incorrectly issue, since these two characters are not considered equal there, either.</FONT></P>
+<P><FONT face=Tahoma>Luckily it also does not repro on Windows XP, Server 2003, or Vista. So whatever is going on here, they fixed it.</FONT></P>
+<P><FONT face=Tahoma>But it does keep the filesystem thing from being simple, especially since the newer machines will have the same behavior if you access those Win2000 drives over the network....</FONT></P>
+<P><FONT face=Tahoma><EM>(Special thanks to Gregg Miskelley and Dylan Lingelbach for pointing out some of the anomalies here!)</EM></FONT></P>
+<P><FONT face=Tahoma></FONT>&nbsp;</P>
+<P><FONT face=Tahoma><FONT color=#ff1493><EM>This post bought to you by</EM> "<FONT face=Tahoma><FONT face="Times New Roman">ㄱ</FONT></FONT><FONT face=Tahoma>" <EM>and</EM> "<FONT face="Times New Roman">ᄀ</FONT>"<EM>&nbsp;(<A href="http://www.fileformat.info/info/unicode/char/3131/index.htm">U+3131</A> and <A href="http://www.fileformat.info/info/unicode/char/1100/index.htm">U+1100</A>, a.k.a. HANGUL LETTER KIYEOK and </EM></FONT><FONT face=Tahoma><EM>HANGUL CHOSEONG KIYEOK)</EM></FONT></FONT></P></FONT>
+<hr/><p><a id="475215" href="#475215">#</a> <strong>Jonathan</strong> on 29 Sep 2005 2:44 AM:</p><div style="margin-left: 1em">I remember (from hacking disks with Norton DiskEdit, in Win95 days) that short file names are saved in ANSI (presumably in the system locale's codepage), while LFNs are saved in Unicode (UTF-16, don't know about surrogate support though).</div>
+<p><a id="475306" href="#475306">#</a> <strong>Michael S. Kaplan</strong> on 29 Sep 2005 10:26 AM:</p><div style="margin-left: 1em">This must be the LFN though, or things like Georgian would never work, right?</div>
+<hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2007/10/24 <a href="http://archives.miloush.net/michkap/archive/2007/10/24/5641619.html">In Case you have problems that you might think are ǸȦȘȚȲ</a></p><p>2007/09/05 <a href="http://archives.miloush.net/michkap/archive/2007/09/05/4756822.html">Head checks containing either comparison or case validation BITE</a></p><p>2005/10/17 <a href="http://archives.miloush.net/michkap/archive/2005/10/17/481600.html">Comparing Unicode file names the right way</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2005/09/28/474885.html" title="People notice when the sorting doesn&#39;t work">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2005/09/28/474690.html" title="Using Hijri dates in SQL Server">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2005-09">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2005-09-28">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2005/09/28/474756.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:41 GMT -->
+</html>

@@ -1,0 +1,46 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2010/01/19/9950377.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:35 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>You down with .OCP (Yeah you know me!)</title></head><body>
+<h1>You down with .OCP (Yeah you know me!)</h1>
+<p><em>by Michael S. Kaplan, published on 2010/01/19 07:46 -05:00, original URI: http://blogs.msdn.com/b/michkap/archive/2010/01/19/9950377.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P>It was actually just over a year ago when <A href="http://michaelholtstrom.blogspot.com/" mce_href="http://michaelholtstrom.blogspot.com/">Michael Holtstrom</A> asked a question over in the Suggestion Box:</P>
+<BLOCKQUOTE>
+<BLOCKQUOTE>
+<BLOCKQUOTE>
+<P>Hi. Here's a little program. I know it's not unicode, but the product I'm working on is 14yrs old, so it's just too late for that.</P>
+<BLOCKQUOTE>
+<BLOCKQUOTE><FONT face="Consolas,Lucida Console,Courier New,Courier,Fixed"><B>
+<P>#include &lt;iostream&gt;</P>
+<P>void info() {<BR>&nbsp; char line[1024];<BR>&nbsp; printf("\n Input via gets() ");<BR>&nbsp; gets(line);<BR>&nbsp; printf(" Echo via printf() %s\n",line);<BR>}</P>
+<P>int main(int argc, char** argv) {<BR>&nbsp; info();<BR>&nbsp; setlocale(LC_CTYPE,"");<BR>&nbsp; info();<BR>&nbsp; return 0;<BR>}</P></B></FONT></BLOCKQUOTE></BLOCKQUOTE>
+<P>So, on my dos console, built from visual studio 98, this works just fine, but built from visual studio 2008 the characters no longer round-trip.</P>
+<P>For example, after the setlocale call, ALT+252 shows SUPERSCRIPT LATIN SMALL LETTER N as expected from cp437. And the byte from gets is xFC as expected. But when you give xFC to printf, it displays as LATIN SMALL LETTER U WITH DIAERESIS as would be expected from cp1252.</P>
+<P>Now I realize that I can work around this by using&nbsp; ReadConsole/WriteConsole instead, but isn't is a little insidious that on a completely default system, using basic calls like gets/printf/setlocale, simple IO doesn't round-trip?</P>
+<P>Maybe I'm missing something, but it seems like someone has intentionally gone out of their way to make me suffer.</P>
+<P>I'd love to know why.</P>
+<P>Thanks.</P>
+<P>P.S. why call setlocale? Because we always have, and they're scared of what will happen to the database drivers, etc. if we change it.</P>
+<P>P.S. why care about non-ascii? Because many apps talk to our db and all latin1 is legal. We've already gone to a lot of trouble to avoid best-fitting when printing to the console, and the new behaviour destroys that.</P></BLOCKQUOTE></BLOCKQUOTE></BLOCKQUOTE>
+<P>Sorry it took me so long to get around to this one, Michael. There has been a lot going on....</P>
+<P>Now there are shades of the <A href="http://archives.miloush.net/michkap/archive/2009/07/13/9831700.html" mce_href="http://archives.miloush.net/michkap/archive/2009/07/13/9831700.html"><STRONG>Anything still wrong is probably wrong for good....</STRONG></A> issues here and the complex issues surrounding the CRT's <A href="http://msdn.microsoft.com/en-us/library/x99tb11d.aspx" mce_href="http://msdn.microsoft.com/en-us/library/x99tb11d.aspx">setlocale</A>.</P>
+<P>As I've mentioned there and other places and as people have noted for a long time, the nature of setlocale with the "" locale call is complicated and seems to change from time to time due to both OS settings and CRT changes.</P>
+<P>In this case, a concerted effort to take the implied meaning of <A href="http://msdn.microsoft.com/en-us/library/x99tb11d.aspx" mce_href="http://msdn.microsoft.com/en-us/library/x99tb11d.aspx">setlocale</A>'s "" setting to mean </P>
+<BLOCKQUOTE>
+<P><EM><FONT face="times new roman,times">Sets the locale to the default, which is the user-default ANSI code page obtained from the operating system.</FONT></EM></P></BLOCKQUOTE>
+<P>and actually switch more of it to use the ACP rather than not making&nbsp;changes.</P>
+<P>To make it work the old way in all versions, you can change</P>
+<BLOCKQUOTE><FONT face="Consolas,Lucida Console,Courier New,Courier,Fixed"><B>
+<P>&nbsp; setlocale(LC_ALL,"");</P></B></FONT></BLOCKQUOTE>
+<P>to</P>
+<BLOCKQUOTE><FONT face="Consolas,Lucida Console,Courier New,Courier,Fixed"><B>
+<P>&nbsp; setlocale(LC_ALL,".OCP");</P></B></FONT></BLOCKQUOTE>
+<P>though note that this will potentially also change more than was intended (it will fix the reported issue, but yo could run into another problem with something changing that you didn't expect to).</P>
+<P>But the CRT, in many cases, is beholden to a standard that it at least passively tries to live up to, just as most C compilers have a C runtime that tries to live up to that standard (possibly with their own extensions like Microsoft's does).</P>
+<P>So if a function is documented as being impacted by locale setting changes then fixing problems where the impact is not happening is simply making the CRT more conformant&nbsp;-- a change that many people feel is long past due and they are glad it happens more and more each version....</P>
+<P>I have no strong feelings in either direction, but I will note that there is no way to become more conformant if one retains nonconformant behavior, like ignoring statements about expected locale dependencies.</P>
+<P>Now note that I do think the inconsistencies that remain are still kind of weird - like the fact that <A href="http://msdn.microsoft.com/library/tf52y4t1.aspx" mce_href="http://msdn.microsoft.com/library/tf52y4t1.aspx">puts</A> (which behaves the same as <A href="http://msdn.microsoft.com/library/wc7014hz.aspx" mce_href="http://msdn.microsoft.com/library/wc7014hz.aspx">printf</A>) does not do the same thing as <A href="http://msdn.microsoft.com/library/2029ea5f.aspx" mce_href="http://msdn.microsoft.com/library/2029ea5f.aspx">gets</A> here; this seems like a bug although usually this boils down to the fact that the implementations of each function are not isolated from each other and a function that specifies no locale will deep down be calling one that does and thus one has to have an actual locale in there and then there you go. </P>
+<P>But perhaps there is a way to dig in here a bit and treat the functions that deal with the console differently&nbsp;-- and have them use the settings attached to the given console in which they are running, across the board. Since the console is also "locale" based in a broad sense such behavior would also be conformant....</P>
+<hr/><div style="margin-left: 1em"><em>no comments</em></div><hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2010/01/20/9950694.html" title="It isn&#39;t always Internet Explorer&#39;s fault, dammit!">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2010/01/18/9949627.html" title="Yet another digit substitution[.Net] problem">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2010-01">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2010-01-19">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2010/01/19/9950377.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:35 GMT -->
+</html>

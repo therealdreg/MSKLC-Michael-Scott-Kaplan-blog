@@ -1,0 +1,71 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2006/09/15/755173.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:39 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>CompareOptions.None means what?</title></head><body>
+<h1>CompareOptions.None means what?</h1>
+<p><em>by Michael S. Kaplan, published on 2006/09/15 03:01 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2006/09/15/755173.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<FONT face=Tahoma>
+<P>pf.bai asked me via the Contacting Me link:</P>
+<BLOCKQUOTE dir=ltr style="MARGIN-RIGHT: 0px"><FONT face="Times New Roman" size=2>
+<P>/// &lt;summary&gt;Indicates the default option settings for string comparisons.&lt;/summary&gt;</P>
+<P>CompareInfo.None = 0;</P>
+<P>----</P>
+<P>I found above message from MSDN about the CompareInfo.None.But I am not sure about what the "default option settings for string comparisons"</P>
+<P>indicates.Ingnore case?Ignore symbols?Ignore the Kana type? or else</P></FONT></BLOCKQUOTE>
+<P>Now the topic under dicussion here is the table in <A href="http://msdn.microsoft.com/library/en-us/cpref/html/frlrfSystemGlobalizationCompareOptionsClassTopic.asp">CompareOptions.Enumeration</A> topic.</P>
+<P>And there is definitely a requirement to look at the numbers behind the enumeration values:</P>
+<P>
+<TABLE cellSpacing=0 border=1>
+<TBODY>
+<TR vAlign=top>
+<TH width="32%">Member name</TH>
+<TH width="44%">Description</TH>
+<TH width="24%">Value</TH></TR>
+<TR vAlign=top>
+<TD width="32%"><B>IgnoreCase</B> 
+<P>Supported by the .NET Compact Framework.</P></TD>
+<TD width="44%">Indicates that the string comparison must ignore case.</TD>
+<TD width="24%">1</TD></TR>
+<TR vAlign=top>
+<TD width="32%"><B>IgnoreKanaType</B> 
+<P>Supported by the .NET Compact Framework.</P></TD>
+<TD width="44%">Indicates that the string comparison must ignore the Kana type. Kana type refers to Japanese hiragana and katakana characters, which represent phonetic sounds in the Japanese language. Hiragana is used for native Japanese expressions and words, while katakana is used for words borrowed from other languages, such as "computer" or "Internet". A phonetic sound can be expressed in both hiragana and katakana. If this value is selected, the hiragana character for one sound is considered equal to the katakana character for the same sound.</TD>
+<TD width="24%">8</TD></TR>
+<TR vAlign=top>
+<TD width="32%"><B>IgnoreNonSpace</B> 
+<P>Supported by the .NET Compact Framework.</P></TD>
+<TD width="44%">Indicates that the string comparison must ignore nonspacing combining characters, such as diacritics. The Unicode Standard defines combining characters as characters that are combined with base characters to produce a new character. Nonspacing combining characters do not occupy a spacing position by themselves when rendered. For more information on nonspacing combining characters, see The Unicode Standard at http://www.unicode.org.</TD>
+<TD width="24%">2</TD></TR>
+<TR vAlign=top>
+<TD width="32%"><B>IgnoreSymbols</B> 
+<P>Supported by the .NET Compact Framework.</P></TD>
+<TD width="44%">Indicates that the string comparison must ignore symbols, such as white-space characters, punctuation, currency symbols, the percent sign, mathematical symbols, the ampersand, and so on.</TD>
+<TD width="24%">4</TD></TR>
+<TR vAlign=top>
+<TD width="32%"><B>IgnoreWidth</B> 
+<P>Supported by the .NET Compact Framework.</P></TD>
+<TD width="44%">Indicates that the string comparison must ignore the character width. For example, Japanese katakana characters can be written as full-width or half-width and, if this value is selected, the katakana characters written as full-width are considered equal to the same characters written in half-width.</TD>
+<TD width="24%">16</TD></TR>
+<TR vAlign=top>
+<TD width="32%"><B>None</B> 
+<P>Supported by the .NET Compact Framework.</P></TD>
+<TD width="44%">Indicates the default option settings for string comparisons.</TD>
+<TD width="24%">0</TD></TR>
+<TR vAlign=top>
+<TD width="32%"><B>Ordinal</B> 
+<P>Supported by the .NET Compact Framework.</P></TD>
+<TD width="44%">Indicates that the string comparison must be done using the Unicode values of each character, which is a fast comparison but is culture-insensitive. A string starting with "U+xxxx" comes before a string starting with "U+yyyy", if xxxx is less than yyyy. This flag cannot be combined with other flags and must be used alone.</TD>
+<TD width="24%">1073741824</TD></TR>
+<TR vAlign=top>
+<TD width="32%"><B>StringSort</B> 
+<P>Supported by the .NET Compact Framework.</P></TD>
+<TD width="44%">Indicates that the string comparison must use the string sort algorithm, where the hyphen and the apostrophe, as well as other nonalphanumeric symbols, come before alphanumeric characters.</TD>
+<TD width="24%">536870912</TD></TR></TBODY></TABLE></P>
+<P>In this case, since the number under CompareOptions.None is 0, it is the implicit value that is there when none of the other flags are passed. Because that is what the default option is -- no special compare flags.</P>
+<P>Personally I hate these kind of entries in an enumeration, for the most part. They act as the one flag you cannot OR into other flags and have it do anything, and I usually find the number 0 to be&nbsp;just as&nbsp;intuitive. Maybe even more so.</P>
+<P>Though there is one benefit in C# -- you don't need to cast to pass it. :-)</P>
+<P>&nbsp;</P>
+<P><FONT color=#ff1493><EM>This post brought to you by</EM> <FONT size=6>ದ</FONT> <EM>(<A href="http://www.fileformat.info/info/unicode/char/0ca6">U+0ca6</A>, a.k.a. KANNADA LETTER DA)</EM></FONT></P></FONT>
+<hr/><div style="margin-left: 1em"><em>no comments</em></div><hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2006/09/16/755152.html" title="You want to change the time zone? Eto Akta Gamat!">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2006/09/15/754992.html" title="Unicode INI function; Unicode INI file?">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2006-09">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2006-09-15">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2006/09/15/755173.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:39 GMT -->
+</html>

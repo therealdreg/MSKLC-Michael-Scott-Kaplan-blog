@@ -1,0 +1,43 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2010/03/08/9973914.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:35 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Where'd *that* name come from anyway?</title></head><body>
+<h1>Where'd *that* name come from anyway?</h1>
+<p><em>by Michael S. Kaplan, published on 2010/03/08 07:01 -05:00, original URI: http://blogs.msdn.com/b/michkap/archive/2010/03/08/9973914.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P>The other day, Dave asked a question on a list I am on but usually don't pay enough attention to unless the title jumps out at me:</P>
+<BLOCKQUOTE>
+<P><FONT face="times new roman,times">Good morning.</FONT></P>
+<P><FONT face="times new roman,times">I’m noticing a weird mismatch when calling RegionInfo.DisplayName and was hoping someone could help out.</FONT></P>
+<P><FONT face="times new roman,times">For a lot of languages, it seems to work fine but on German and Turkish I am seeing a problem.</FONT></P>
+<P><FONT face="times new roman,times">Problem:<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; I am trying to call the ActivateServerAutomatic function for the Win32_TSLicenseServer WMI class. To do so, I need to set a few properties, including the CountryRegion.</FONT></P>
+<P><FONT face="times new roman,times">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; This seems to take the localized name for a country and in my case I want to always set it to United States.</FONT></P>
+<P><FONT face="times new roman,times">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; To do so, I am creating a RegionInfo object and then getting the DisplayName property.</FONT></P>
+<P><FONT face="times new roman,times">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; On German, this returns “Vereinigte Staaten von Amerika” which causes the WMI call to fail.</FONT></P>
+<P><FONT face="times new roman,times">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; So I went to look in control panels for the list of countries the OS recognizes and it seems like the OS uses “Vereinigte Staaten” for United States. Notice it is missing the “von Amerika” part.</FONT></P>
+<P><FONT face="times new roman,times">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; When using the short version recognized by the OS, the WMI call succeeds.</FONT></P>
+<P><FONT face="times new roman,times">Question:<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Where is this mismatch coming from and is there a different way I can get the localized name of a country that will match the OS and work in all languages?</FONT></P>
+<P><FONT face="times new roman,times">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; I actually need this in powershell so a solution either in powershell script or .Net will work.</FONT></P>
+<P><FONT face="times new roman,times">Thanks for the help,<BR>David</FONT></P></BLOCKQUOTE>
+<P>Not too long after, a member of my former former team provided a response:</P>
+<BLOCKQUOTE>
+<P><EM><FONT face="times new roman,times">The display name is the localized version of the name. They don’t match presumably because they were localized at different times by different people. To my knowledge there is no design goal for these to match, especially since .Net returns consistent results for this value on any platform that it is run on.</FONT></EM></P>
+<P><EM><FONT face="times new roman,times">You can get the value from the OS by p/invoking GetLocaleInfoEx with LCType of LOCALE_SLOCALIZEDCOUNTRYNAME.</FONT></EM></P>
+<P><EM><FONT face="times new roman,times">Before doing that though, I would try using the TwoLetterISORegionName. I would hope that their API is flexible enough to handle that.</FONT></EM></P></BLOCKQUOTE>
+<P>Now his response was accurate insofar as the differences between .Net and Windows (something I have pointed out before for a myriad of issues, including the different localizers in different divisions and how there were bound to be differences that we were not always trying to keep in sync as a design goal), there is more going on here.</P>
+<P>Because Dave was looking at a specific part of Windows in doing his comparison:</P>
+<BLOCKQUOTE>
+<P><FONT face="times new roman,times">So I went to look in control panels for the list of countries the OS recognizes and it seems like the OS uses “Vereinigte Staaten” for United States. Notice it is missing the “von Amerika” part.</FONT></P></BLOCKQUOTE>
+<P>This made me wonder.</P>
+<P>I mean sure he may have been think about the locale list:</P>
+<P><IMG style="WIDTH: 477px; HEIGHT: 550px" src="http://trigeminal.fmsinc.com/images/unitedstates1.jpg" width=477 height=550 mce_src="http://trigeminal.fmsinc.com/images/unitedstates1.jpg"></P>
+<P>which has "English (United States)" in it.</P>
+<P>But wouldn't the original question be looking more for strings that stood on their own, like in the next tab:</P>
+<P><IMG style="WIDTH: 477px; HEIGHT: 550px" src="http://trigeminal.fmsinc.com/images/unitedstates2.jpg" width=477 height=550 mce_src="http://trigeminal.fmsinc.com/images/unitedstates2.jpg"></P>
+<P>I wasn't really sure, but it made sense to wonder, I think.</P>
+<P>After all, this list is GEOID based, not based on the locale data like RegionInfo is (as I implied in <A href="http://archives.miloush.net/michkap/archive/2005/12/10/502415.html" mce_href="http://archives.miloush.net/michkap/archive/2005/12/10/502415.html"><STRONG>CurrentRegion is not based on the GEOID</STRONG></A>).</P>
+<P>Of course thinking about Dave's original concern, the GEOID list almost makes more sense than anything coming out of the other NLS or System.Globalization data anyway, since the bar to get on the GEOID list is pretty minimal (the bar to get into the locale list is huge, by comparison!). I would imagine Microsoft would be willing to license terminal services to a larger list of countries rather than a smaller one! :-)</P>
+<P>Thus the best answer may well be to look into <A href="http://msdn.microsoft.com/library/dd318099.aspx" mce_href="http://msdn.microsoft.com/library/dd318099.aspx">GetGeoInfo</A> with the <A href="http://msdn.microsoft.com/library/dd374071.aspx" mce_href="http://msdn.microsoft.com/library/dd374071.aspx">GEO_FRIENDLYNAME</A>, a value that is localized into the language Windows is localized into. That list is probably the same as the ones WMI's resources would be localized into, too....</P>
+<P>And the friendly name <STRONG>does</STRONG> have a design goal to stay in sync to a point, though the GEOID's official name much moreso!</P>
+<hr/><div style="margin-left: 1em"><em>no comments</em></div><hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2010/03/09/9975184.html" title="Coloring outside the lines in the a-ness of the Hungarian Technical Sort">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2010/03/07/9972623.html" title="Farsi? Persian? You&#39;ll be getting some LIP about it either way">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2010-03">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2010-03-08">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2010/03/08/9973914.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:35 GMT -->
+</html>

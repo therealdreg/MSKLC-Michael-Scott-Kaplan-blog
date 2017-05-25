@@ -1,0 +1,60 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2010/06/29/10031096.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:35 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Kazakh it to me, aka On being small and unique</title></head><body>
+<h1>Kazakh it to me, aka On being small and unique</h1>
+<p><em>by Michael S. Kaplan, published on 2010/06/29 07:01 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2010/06/29/10031096.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<p>So, the other day I was asked a strange question about behavior.</p>
+<p>In sorting, not my personal behavior!</p>
+<p>As I have mentioned, most people forget that I haven&rsquo;t owned the collation code in Windows for years now. Though I suppose the fact that I keep answering the questions anyway kind of means it&rsquo;s my fault&hellip;.</p>
+<p><em>In my personal behavior I get people questioning it all the time (the most recent one was just days prior to this blog being posted) but that isn&rsquo;t something I am blogging about now. Besides, that was just flirting and she started it (plus she suggested the complainer join the current century so I&rsquo;m probably okay on this one).</em></p>
+<p>Anyway, back to the topic.</p>
+<p>It had to do with the fact that in Kazakh the following pairs of letters were not being considered equal in a case-insensitive comparison:</p>
+<blockquote>
+<p><span style="font-family: courier new,courier;"><strong>Ё (U+0401, aka CYRILLIC CAPITAL LETTER IO) <br />ё (U+0451, aka CYRILLIC SMALL LETTER IO)</strong></span></p>
+</blockquote>
+<p>and</p>
+<blockquote>
+<p><span style="font-family: courier new,courier;"><strong>Е (U+0415, aka CYRILLIC CAPITAL LETTER IE) <br />е (U+0435, aka CYRILLIC SMALL LETTER IE)</strong></span></p>
+</blockquote>
+<p>Intrigued, I looked into it a bit.</p>
+<p>And I found the following Kazakh exception table entries, used in every version of Windows since XP:</p>
+<blockquote>
+<p><span style="font-family: courier new,courier;"><strong>0x0435&nbsp; 16&nbsp; 25&nbsp;&nbsp; 2&nbsp;&nbsp; 2 ;Cyrillic Small Ie (The small versions of Ie come after the capital as unique AW) <br />0x04bd&nbsp; 16&nbsp; 25&nbsp;&nbsp; 5&nbsp;&nbsp; 2 ;Cyrillic Small Ie Hook <br />0x0451&nbsp; 16&nbsp; 25&nbsp; 19&nbsp;&nbsp; 2 ;Cyrillic Small Io <br />0x04bf&nbsp; 16&nbsp; 25&nbsp; 23&nbsp;&nbsp; 2 ;Cyrillic Small Ie Hook Ogonek </strong></span></p>
+</blockquote>
+<p>with the following relevant default table entries (overridden entries marked appropriately):</p>
+<blockquote><span style="font-family: courier new,courier;"><strong><span style="text-decoration: line-through;"><span style="color: #c0c0c0;">0x0435&nbsp; 16&nbsp; 24&nbsp;&nbsp; 2&nbsp;&nbsp; 2 ;Cyrillic Small Ie</span> <br /></span>0x0415&nbsp; 16&nbsp; 24&nbsp;&nbsp; 2&nbsp; 18 ;Cyrillic Capital Ie <br /></strong></span><span style="font-family: courier new,courier;"><strong><span style="text-decoration: line-through;"><span style="color: #c0c0c0;">0x04bd&nbsp; 16&nbsp; 24&nbsp;&nbsp; 5&nbsp;&nbsp; 2 ;Cyrillic Small Ie Hook <br /></span></span>0x04bc&nbsp; 16&nbsp; 24&nbsp;&nbsp; 5&nbsp; 18 ;Cyrillic Capital Ie Hook <br /></strong></span><span style="font-family: courier new,courier;"><strong><span style="text-decoration: line-through;"><span style="color: #c0c0c0;">0x0451&nbsp; 16&nbsp; 24&nbsp; 19&nbsp;&nbsp; 2 ;Cyrillic Small Io <br /></span></span>0x0401&nbsp; 16&nbsp; 24&nbsp; 19&nbsp; 18 ;Cyrillic Capital Io <br /><span style="text-decoration: line-through;"><span style="color: #c0c0c0;">0x04bf&nbsp; 16&nbsp; 24&nbsp; 23&nbsp;&nbsp; 2 ;Cyrillic Small Ie Hook Ogonek</span></span> <br />0x04be&nbsp; 16&nbsp; 24&nbsp; 23&nbsp; 18 ;Cyrillic Capital Ie Hook Ogonek </strong></span></blockquote>
+<p>Note the clear case pair relationship in the default table that is essentially removed in the Kazakh exception table, by making each of the four lowercase letters a single new letter with a unique alphabetic weight (interestingly ignoring the secondary/diacritic weight &ndash; NORM_IGNORENONSPACE &ndash; will cause all four lowercase characters to be treated as equal and all four uppercase characters to be treated as equal!).</p>
+<p>In any case, the data and the comment explains the behavior that was being seen, though not the reason for it.</p>
+<p>I mean</p>
+<blockquote>
+<p><em><strong><span style="color: #ff0000;">(The small versions of Ie come after the capital as unique AW)</span></strong></em></p>
+</blockquote>
+<p>is a strange comment by pretty much most definitions of strangeness if you ask me, since it does not really tell you the source of the information or its veracity, its reliability. How to tell why such a thing would be expected without the source becomes rather complicated (I have been unable to verify it as of yet, though I have only looked for the same amount of time that a journalist claims someone was not available for comment and I never believe they tried hard enough so I probably haven&rsquo;t tried hard enough yet either!</p>
+<p>I often talk about how CASE != COLLATION (or CASE &lt;&gt; COLLATION for you VB types!) but it is usually in the other direction; these EIGHT characters may be the only four case pairs whose relationship exists in the casing table but not in the collation table (only for Kazakh). If it is really true maybe there should be a Kazakh-specific entry in the linguistic casing tables too! </p>
+<p>The entries exist in the RTM version of XP and later, which will of course narrow down the &ldquo;who&rdquo; but that won&rsquo;t really help either. I mean like from 10 years ago? Who are we kidding?</p>
+<p>But is it inaccurate? Or is there really something in Kazakh that has been intending to be doing this all along &ndash; as farfetched as that may seem?</p>
+<p>I mean no one has complained up until now in the last ten years, sure. But how often would the problem really get noticed if it is in fact a problem?</p>
+<p><strong>So, any Kazakh speakers have light to shed here on whether there is a reason for this?</strong></p>
+<hr/><p><strong>Evan</strong> on 29 Jun 2010 7:40 AM:</p><div style="margin-left: 1em"><p>My question is - Why are they referring to:</p>
+<p>0x04bd &nbsp;[Cyrillic Small Ie Hook]<br />0x04bc &nbsp;[Cyrillic Capital Ie Hook]<br />0x04bf &nbsp;[Cyrillic Small Ie Hook Ogonek]<br />0x04be &nbsp;[Cyrillic Capital Ie Hook Ogonek]</p>
+<p>as Ie-s [How do　I pluralise this?!] with hooks, when they have always [to the best of my knowledge] been referred to as Abkhasian Che-s with/without a descender.</p></div>
+<p><strong>Michael S. Kaplan</strong> on 29 Jun 2010 7:53 AM:</p><div style="margin-left: 1em"><p>Those are just comments, they aren&#39;t the official character names...</p>
+</div>
+<p><strong>John Cowan</strong> on 29 Jun 2010 8:34 AM:</p><div style="margin-left: 1em"><p>My guess is that the difference between YE and YO with or without hook/ogonek/descender is only interesting at the beginning of a proper name.</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 29 Jun 2010 12:30 PM:</p><div style="margin-left: 1em"><p>Not sure I understand, John -- the &quot;differences&quot; are the same for both lowercase and uppercase, just no longer the same between them.</p>
+</div>
+<p><strong>Random832</strong> on 30 Jun 2010 5:10 AM:</p><div style="margin-left: 1em"><p>Those comments had to come from somewhere, though. They are, in fact, the Unicode 1.0 names of those characters [which also had to come from somewhere, I suppose, but the story is probably a lot less interesting than that of the &quot;Caron&quot;].</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 30 Jun 2010 10:57 AM:</p><div style="margin-left: 1em"><p>Remembering blogs like <a href="http://archives.miloush.net/michkap/archive/2007/08/28/4605786.html" title="Every character has a story #29: U+1000^H^H^H^H0f40, (TIBETAN or MYANMAR LETTER KA, depending on when you ask)"><strong>Every character has a story #29: U+1000^H^H^H^H0f40, (TIBETAN or MYANMAR LETTER KA, depending on when you ask)</strong></a>, the original sorting tables were done so early that they were likely based on pre-Unicode 1.0. The later table for Kazakh (added in XP) probably just copied the code points and comments, just changing weights....</p></div>
+<p><strong>MAKKAM</strong> on 14 Nov 2010 4:14 AM:</p><div style="margin-left: 1em"><p>Hello, Michael!</p>
+<p>As Kazakh native speaker I have to say that there is no any reason for this weird behavior. There is no special rules for that exceptions in Kazakh language. So, uppercase and lowercase ie-s and io-s officially correspond to each other. As well as there is no reason to compare uppercase and lowercase ie-s in a different way.</p>
+<p>Io is used very rarely in kazakh language, mostly in foreign origin words.</p>
+<p>Maybe it&#39;s too late to comment this post, but I hope answer makes sense here.</p>
+</div>
+<p><strong>John Cowan</strong> on 26 Nov 2010 10:48 PM:</p><div style="margin-left: 1em"><p>Unfortunately, I can&#39;t figure out what I meant either. &nbsp;Musta been a bad day at the skunk works.</p>
+</div>
+<hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2010/06/30/10032695.html" title="Giving the people Urdu, we are!">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2010/06/28/10031437.html" title="My name is கப்லன், மைக்கேல் எஸ். கப்லன் (or maybe கப்லான், depending on your accent).">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2010-06">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2010-06-29">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2010/06/29/10031096.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:35 GMT -->
+</html>

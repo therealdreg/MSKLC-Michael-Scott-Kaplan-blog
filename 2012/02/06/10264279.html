@@ -1,0 +1,44 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2012/02/06/10264279.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>The oft-repeated 'What version of Unicode do we/will me support?' question, Redux</title></head><body>
+<h1>The oft-repeated 'What version of Unicode do we/will me support?' question, Redux</h1>
+<p><em>by Michael S. Kaplan, published on 2012/02/06 07:01 -05:00, original URI: http://blogs.msdn.com/b/michkap/archive/2012/02/06/10264279.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<p>This Blog talks about not just Microsoft, but also internationalization and language issues beyond what Microsoft handles or supports.</p>
+<p>This blog today, on the other hand, like many other blogs within this Blog, is going to talk about Microsoft.</p>
+<p>More specifically, this blog will be about Windows.</p>
+<p>And to be even more specific, this blog will talk about Windows 8.</p>
+<p>Remember the other day, when I blogged about&nbsp;<strong><a title="Changing the world, 0.1 steps at a time!" href="http://archives.miloush.net/michkap/archive/2012/02/01/10262583.html">Changing the world, 0.1 steps at a time!</a></strong>?</p>
+<p>A very reasonable question one might (and some have) asked, is <strong>What version of Unicode will Windows 8 support?</strong></p>
+<p>Of course as previous blogs in this Blog like <strong><a title="What version of Unicode should we support?" href="http://archives.miloush.net/michkap/archive/2008/09/06/8928632.html">What version of Unicode should we support?</a></strong> underscore, there is no simple answer to that question.</p>
+<p>Plus it can be really difficult to talk about unreleased products, obviously.</p>
+<p>Though looking just as the Developer Preview of Windows 8, character property and rendering and collation and font and keyboard and algorithm support seem to be aimed primarily at Unicode 6.0.</p>
+<p>There is obviously time prior to ship yet after Unicode 6.1 was released that in theory might change that story slightly, though given the complexity of doing more work, I suspect that Windows 8 will largely be centered on 6.0, not 6.1.</p>
+<p>That is something I would tend to blame (if I ever wanted to stoop to something as low as blame!) on how much we have historically sucked at trying to influence of timing of Unicode releases to better sync up to Microsoft product releases.</p>
+<p>Not just for our sake, but for Unicode's as well (since our Unicode support story tends to make the Unicode Consortium look better or worse much more than Microsoft -- we tend to support more of the overall standard than just about any other company).</p>
+<p>For now, it is probably best to assume that it will be largely support Unicode 6.0, up to and including the over 92% of the encoded&nbsp;character repertoire there....</p>
+<hr/><p><strong>Simon Buchan</strong> on 6 Feb 2012 1:40 PM:</p><div style="margin-left: 1em"><p>Of course, what &quot;supports&quot; means can wildly vary depending on context, obviously you&#39;re not adding BiDi to the Console any time soon! (Largely correctly, I might add) Presumably you mean in terms of collation, locale data and UniScribe? (maybe some other areas I&#39;ve forgotten about.) Is there any sort of formal &quot;core&quot; APIs that you consider to count as support?</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 7 Feb 2012 6:05 AM:</p><div style="margin-left: 1em"><p>Very true, very true. Some specifics:</p>
+<p>•	NLS default collation supports all BMP characters defined in Unicode 6.0. Locale-specific collation for East Asian locales supports all EA characters in Unicode 6.0, including CJK Extensions C and D.</p>
+<p>•	NLS case mapping functions are updated with default case mappings for all characters in Unicode 6.0.</p>
+<p>•	IDN support functions are updated for all characters in Unicode 6.0 (and, also, for IDNA 2008 + UTS#46)</p>
+<p>•	Line-breaking behaviour in GDI/Unscribe and DirectWrite are updated with character data for all Unicode 6.0 characters.</p>
+</div>
+<p><strong>Ernst Tremel</strong> on 19 May 2012 3:05 PM:</p><div style="margin-left: 1em"><p>I installed Windows 8 Consumer Preview 32-Bit on a Notebook for testing purposes.</p>
+<p>I could install &quot;KeyboardLayoutCreator 1.4/ MSKLC.exe&quot;, too.</p>
+<p>After having copied my Avestan Font (cf. &quot;Ahuramazda-Avestan-Font-1.0.zip&quot;) into the Windows (&#39;s Font-Folder</p>
+<p>I made the &nbsp;Keyboard Layout &quot;ETAvestanWindows8.klc&quot; using the KeyboardLayoutCreator 1.4. Please have a look at the two JPG- files.</p>
+<p>But trying to install this Keyboard Layout failed. Cf. &quot;KeyboardVerify.log&quot; and &quot;KeyboardBuild.log&quot;.</p>
+<p>I think Windos 8 CP does not yet support Unicode ranges bigger than Hex 10000.</p>
+<p>Therefore I already contacted Mr. Michael Kaplan (cf. &quot;an Michael Kaplan Microsoft geschickt.txt&quot;)</p>
+<p>I&#39;d be obliged to get your appreciated answer.</p>
+<p>Kind regards,</p>
+<p>Ernst Tremel</p>
+</div>
+<p><strong>Ernst Tremel</strong> on 25 Jul 2012 3:23 PM:</p><div style="margin-left: 1em"><p>Why are keyboards made with Keyboard Layout Creator Version 1.4 in Windows 8 Release Preview only working correctly in Office XP, in LibreOffice and in Wordpad but not in Office 2010 and Office 2013?</p>
+<p>Do you plan to update Keyboard Layout Creator or make a new version of it functioning in Windows 9, too?</p>
+</div>
+<hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2012/09/27 <a href="http://archives.miloush.net/michkap/archive/2012/09/27/10353657.html">Announcing The Unicode Standard, Version 6.2 (and a little about what MS is doing about it)</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2012/02/07/10264760.html" title="If you have to ask &quot;How do I say ____ in ____ language?&quot; then maybe you shouldn&#39;t!">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2012/02/04/10263076.html" title="Latest about the &quot;post-iBot&quot; world....">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2012-02">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2012-02-06">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2012/02/06/10264279.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+</html>

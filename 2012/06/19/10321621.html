@@ -1,0 +1,86 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2012/06/19/10321621.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:33 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Maybe they're just showing off their fancy fonts? ;-)</title></head><body>
+<h1>Maybe they're just showing off their fancy fonts? ;-)</h1>
+<p><em>by Michael S. Kaplan, published on 2012/06/19 07:01 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2012/06/19/10321621.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<p>You may have noticed Windows locales cart around a lot of languages.</p>
+<p>I talked about this a bit in <strong><a title="What's up with the language names?" href="../../../2005/12/05/499949.html">What's up with the language names?</a></strong> and <strong><a title="Regarding the overthinking and underimplementing of names" href="../../../2011/05/04/10160919.html">Regarding the overthinking and underimplementing of names</a></strong>.</p>
+<p>We have, for example, all of the following:</p>
+<table border="1" cellspacing="5" cellpadding="5">
+<tbody>
+<tr>
+<td></td>
+<td><strong>Native name</strong></td>
+<td><strong>English name</strong></td>
+<td><strong>Localized name</strong></td>
+</tr>
+<tr>
+<td><strong>Display Name</strong></td>
+<td><a href="http://msdn.microsoft.com/library/dd373863.aspx">LOCALE_SNATIVEDISPLAYNAME</a></td>
+<td><a href="http://msdn.microsoft.com/library/dd373843.aspx">LOCALE_SENGLISHDISPLAYNAME</a></td>
+<td>
+<p><a href="http://msdn.microsoft.com/library/dd373853.aspx">LOCALE_SLOCALIZEDDISPLAYNAME</a><br />(aka <a href="http://msdn.microsoft.com/library/dd373851.aspx">LOCALE_SLANGUAGE</a>)</p>
+</td>
+</tr>
+<tr>
+<td><strong>Language</strong></td>
+<td><a href="http://msdn.microsoft.com/library/dd373863.aspx">LOCALE_SNATIVELANGUAGENAME</a><br />(aka <a href="http://msdn.microsoft.com/library/dd373863.aspx">LOCALE_SNATIVELANGNAME</a>)</td>
+<td><a href="http://msdn.microsoft.com/library/dd373843.aspx">LOCALE_SENGLISHLANGUAGENAME</a><br />(aka&nbsp;<a href="http://msdn.microsoft.com/library/dd373844.aspx">LOCALE_SENGLANGUAGE</a>)</td>
+<td>
+<p><a href="http://msdn.microsoft.com/library/dd373853.aspx">LOCALE_SLOCALIZEDLANGUAGENAME</a><br />(aka <a href="http://msdn.microsoft.com/library/dd373850.aspx">LOCALE_SLANGDISPLAYNAME</a>)</p>
+</td>
+</tr>
+<tr>
+<td><strong>Region/Country</strong></td>
+<td><a href="http://msdn.microsoft.com/library/dd373863.aspx">LOCALE_SNATIVECOUNTRYNAME</a><br />(aka <a href="http://msdn.microsoft.com/library/dd373863.aspx">LOCALE_SNATIVECTRYNAME</a>)</td>
+<td><a href="http://msdn.microsoft.com/library/dd373843.aspx">LOCALE_SENGLISHCOUNTRYNAME</a><br />(aka <a href="http://msdn.microsoft.com/library/dd373844.aspx">LOCALE_SENGCOUNTRY</a>)</td>
+<td><a href="http://msdn.microsoft.com/library/dd373853.aspx">LOCALE_SLOCALIZEDCOUNTRYNAME</a><br />(aka <a href="http://msdn.microsoft.com/library/dd373835.aspx">LOCALE_SCOUNTRY</a>)</td>
+</tr>
+</tbody>
+</table>
+<p>Now let's ignore all the random problems that came up in those two blogs.</p>
+<p>Let's say you need to show a list of languages, display names, or languages+regions</p>
+<p>Which one&nbsp;should you use&nbsp;to get the names:</p>
+<ul>
+<li>the <strong>English</strong> name?</li>
+<li>the <strong>Native</strong> name?&nbsp;</li>
+<li>the <strong>Localized</strong> name?</li>
+</ul>
+<p>Each has specific advantages and disadvantages, depending on the goals one has putting such a list into a user interface.</p>
+<p><strong>The English names</strong> are a nice way to make sure that many people can read it, up to and including your own testers, even without specific knowledge.</p>
+<p><strong>The Localized names</strong> are a nice way to make sure everyone knows the language version they have can read everything in their own language, which we have a good faith basis to believe is true.</p>
+<p><em>Note that this is the precise method that has been used in the main list in <strong>Regional Options</strong> and its later offshoot <strong>Regional and Language Options</strong> in every single version of Windows that has ever been produced/shipped since 1993.</em></p>
+<p><strong>The Native Names</strong> are a nice way to make sure people who are being steered to their own language while being kind of steered away from other languages you don't know, since those are much more likely to be useless to you.</p>
+<p><em>Note that this the logic underpinning the <strong><a title="If you can't read it, don't switch to it!" href="../../../2005/12/08/501449.html">If you can't read it, don't switch to it!</a></strong> concept that Windows has used in MUI from Windows 2000 until Windows 7/Windows Server 2008.</em></p>
+<p>There is one other difference between these three choices that can and will affect their ultimate usefulness for you:</p>
+<p>The <strong>English Names</strong> are largely done by the NLS team (even when occasionally nudged in cases like <strong><a title="Bangla/Bengali" href="../../03/02/10276258.html">Bangla/Bengali</a></strong>, <strong><a title="Persian/Farsi" href="../../../2006/05/16/599204.html">Persian/Farsi</a></strong>, <strong><a title="Uyghur/Uighur" href="../../../2006/07/15/666779.html">Uyghur/Uighur</a></strong>, and other such cases), and the ultimate arbiter of what goes in is a very small group of people, especially when it comes to the general style and form and capitalization and such.</p>
+<p>Similarly, the <strong>Localized names</strong> are usually done by a single localizer who again can show consistency in such things.</p>
+<p>The odd one out here is the <strong>Native Names</strong>, since each one is most often provided by a different person, one per language - sometimes based on preferences or standards requirements or grammatical rules in each language!</p>
+<p>Thus, one can&nbsp;see the results of&nbsp;many different preferences in places like the way Windows before Windows 8 could be looking at one capitalized <strong>Portugu&ecirc;s</strong> and one uncapitalized portugu&ecirc;s in the same list (right next to each other!) as well as seeing different capitalization preference using the same script:</p>
+<p><a href="http://msdnshared.blob.core.windows.net/media/MSDNBlogsFS/prod.evol.blogs.msdn.com/CommunityServer.Blogs.Components.WeblogFiles/00/00/00/33/81/5710.langlist02.jpg"><img title="Did some font run out capital letters?" border="0" alt="Did some font run out capital letters?" src="http://msdnshared.blob.core.windows.net/media/MSDNBlogsFS/prod.evol.blogs.msdn.com/CommunityServer.Blogs.Components.WeblogFiles/00/00/00/33/81/5710.langlist02.jpg" /></a></p>
+<p>Or the new Windows 8 Add Languages dialog, which apparently alphabetizes by the <strong>English name</strong> even though the <strong>Native Name</strong> is so prominently displayed, with such differences:</p>
+<p><a href="http://msdnshared.blob.core.windows.net/media/MSDNBlogsFS/prod.evol.blogs.msdn.com/CommunityServer.Blogs.Components.WeblogFiles/00/00/00/33/81/0020.langlist01.jpg"><img title="The Windows 8 Add Languages Dialog ahows capitalization inconsistencus in some cases" border="0" alt="The Windows 8 Add Languages Dialog ahows capitalization inconsistencus in some cases" src="http://msdnshared.blob.core.windows.net/media/MSDNBlogsFS/prod.evol.blogs.msdn.com/CommunityServer.Blogs.Components.WeblogFiles/00/00/00/33/81/0020.langlist01.jpg" /></a></p>
+<p>I ultimately feel that such user interfaces that do not either hide or at least de-emphasize the Native Names are potentially distracting and unattractive for these differences.</p>
+<p>So, if someone reports this to me in a bug, I explain it is <strong>BY DESIGN</strong> for the data itself.</p>
+<p>However, there is&nbsp;a bug in the UI itself.</p>
+<p>Whether <strong>showing off</strong> the extensive language list.</p>
+<p>Or <strong>showing off</strong> the fine typography across scripts.</p>
+<p>Or whether just plain <strong>showing off</strong>.... :-)</p>
+<hr/><p><strong>kinokijuf</strong> on 19 Jun 2012 7:09 AM:</p><div style="margin-left: 1em"><p>Can I download a pseoudolanguage MUI for Vista?</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 19 Jun 2012 7:20 AM:</p><div style="margin-left: 1em"><p>Not at present, no....</p>
+</div>
+<p><strong>nitpicker#5</strong> on 17 Jul 2012 1:55 AM:</p><div style="margin-left: 1em"><p>&quot;The Native Names are a nice way to make sure people who are being steered to their own language while being kind of steered away from other languages you don&#39;t know, since those are much more likely to be useless to you.&quot;</p>
+<p>...do WHAT? &nbsp; (the verb is missing)</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 18 Jul 2012 3:51 PM:</p><div style="margin-left: 1em"><p>:-)</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 18 Jul 2012 3:54 PM:</p><div style="margin-left: 1em"><p>Dealing with ambiguity is a core competency....</p>
+</div>
+<p><strong>Matthew Slyman</strong> on 17 Apr 2013 5:15 AM:</p><div style="margin-left: 1em"><p>Any respectable language chooser is going to list the languages in two languages at once: NATIVE, and CURRENT-DISPLAY.</p>
+<p>The new system is better. There are reasons to switch into a language you can&#39;t understand (software development/testing, learning a new language, configuring Windows for someone else.) Only ten days ago, I had to set up a projector with an online media service available in 20+ language options. The people viewing the presentation were Chinese (they required Mandarin). I accidentally selected Japanese, because the people serving up the media had reckoned &quot;If you can&#39;t read it, don&#39;t switch to it!&quot; Not very good, eh? Fortunately, I asked them to check the setup before the broadcast started.</p>
+</div>
+<hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2012/08/22 <a href="../../08/22/10342205.html">There is no LOCALE_INATIVENAMECANBECAPITALIZEDIFYOUREALLYREALLYWANTTODOTHAT flag</a></p></div><p><em>go to <a id="newer" href="../20/10322015.html" title="Not giving someone their space can lead to SA (Separator Anxiety)">newer</a> or <a id="older" href="../18/10321342.html" title="Happy Father&#39;s Day, POP^H^H^HDAD!">older</a> post, or back to <a href="../../../index-2.html">index</a> or <a href="../../../index-2.html#2012-06">month</a> or <a href="../../../index-2.html#2012-06-19">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2012/06/19/10321621.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:33 GMT -->
+</html>

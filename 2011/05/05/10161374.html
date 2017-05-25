@@ -1,0 +1,93 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2011/05/05/10161374.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Worked like a dog trying to make Tuesday Wednesday? Maybe he just needed Windows. And Bollywood.</title></head><body>
+<h1>Worked like a dog trying to make Tuesday Wednesday? Maybe he just needed Windows. And Bollywood.</h1>
+<p><em>by Michael S. Kaplan, published on 2011/05/05 07:04 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2011/05/05/10161374.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<p>Now have any of you ever seen the movie Xanadu? </p>
+<p>Yes, I agree with you. It was not a very good movie.</p>
+<p>Anyhow, remember the part where Sonny Malone&nbsp;told his boss&nbsp;"<strong>Tuesday's Wednesday</strong>" in a line that almost nobody understood,, because the joke was just done wrong?</p>
+<p>Or later when he said "<strong>Simpson, I've worked like a dog trying to make Tuesday Wednesday. I couldn't do it. I must be a failure.</strong>" Remember that?</p>
+<p>Well it is safe to say that Sonny was not probably&nbsp;in Assam at the time. If he was, perhaps the line would have had just the right ironic, Microsoft-bashing twist. Prophetic, even!</p>
+<p>Let me explain....</p>
+<p>To start, as a disclaimer, I'll menion that Assamese is not Bangla.</p>
+<p>I&nbsp; figured I should start by saying that, before I say anything else.</p>
+<p>Both languages&nbsp;<strong>do</strong> use the same script, mind you. The Bengali script (you can see it in the Unicode code charts <a href="http://www.unicode.org/charts/PDF/U0980.pdf">here</a>).</p>
+<p>These days, Windows has three locales using this script:</p>
+<ul>
+<li>as-IN (Assamese - India)&nbsp;<strong>&nbsp;&nbsp;&nbsp;&nbsp; &lt;-- Added in Vista</strong></li>
+<li>bn-IN (Bengali - India)<strong>&nbsp;&nbsp;&nbsp;&nbsp; &lt;-- Added in XP SP2 and Vista</strong></li>
+<li>bn-BD (Bengali - Bangladesh)<strong>&nbsp;&nbsp;&nbsp;&nbsp; &lt;-- Added in Vista</strong></li>
+</ul>
+<p>It should be noted that although Unicode has just one script&nbsp;here that there are those who believe there is an <a href="http://en.wikipedia.org/wiki/Assamese_script">Assamese script</a>, which is identical in its current form except for a few letters (Unicode adds the extra letters to the "Bengali block").</p>
+<p>But this blog is not about any of those script issues.</p>
+<p>Instead, it is a simple question about the days. The names of the days, I mean.</p>
+<p>I took the following code:</p>
+<p><strong><span style="font-family: consolas,lucida console,courier new,courier,fixed;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; CultureInfo[] rgci = {<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; new CultureInfo("en-US"),<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; new CultureInfo("bn-IN"), <br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; new CultureInfo("bn-BD"),<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; new CultureInfo("as-IN")<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; };<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; for(int j=1; j &lt; rgci.Length; j++) {<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Console.WriteLine(rgci[j].Name);<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; for(int i=0; i &lt; 7; i++) {<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Console.WriteLine("\t{0}: {1}", <br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; rgci[0].DateTimeFormat.AbbreviatedDayNames[i], <br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; rgci[j].DateTimeFormat.DayNames[i]);<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }</span></strong></p>
+<p>and ran it on both Vista and Windows 7. Here is the output (this may almost be better if you can't read it!):</p>
+<p><strong><span style="font-size: large; font-family: consolas,lucida console,courier new,courier,fixed;">E:\ROOT\TEST&gt;ben.exe<br />bn-IN<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Sun: রবিবার<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Mon: সোমবার<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Tue: মঙ্গলবার<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Wed: বুধবার<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Thu: বৃহস্পতিবার<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Fri: শুক্রবার<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Sat: শনিবার<br />bn-BD<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Sun: রবিবার<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Mon: সোমবার<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Tue: মঙ্গলবার<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Wed: বুধবার<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Thu: বৃহস্পতিবার<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Fri: শুক্রবার<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Sat: শনিবার<br />as-IN<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Sun: সোমবাৰ<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Mon: মঙ্গলবাৰ<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Tue: বুধবাৰ<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Wed: বৃহস্পতিবাৰ<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Thu: শুক্রবাৰ<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Fri: শনিবাৰ<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Sat: ৰবিবাৰ</span></strong></p>
+<p>Or, over in Powershell ISE:</p>
+<p><img src="http://msdnshared.blob.core.windows.net/media/MSDNBlogsFS/prod.evol.blogs.msdn.com/CommunityServer.Blogs.Components.WeblogFiles/00/00/00/33/81/4274.Assamese01.jpg" /></p>
+<p>Now remember that Assamese is not Bangla.</p>
+<p>Do any of these lists seem a little off?</p>
+<p><em>If you know either language then you should let those who do not know find themselves feeling curious about the very thing that you might be finding really really bad and wrong doubleplusungood.</em></p>
+<p>&nbsp;Look at the shapes of the letters. Ignore&nbsp;any minor differences and let the overall suggestion of the shapes of the words capture your imagination.</p>
+<p>Yes, that is really what is going on here:</p>
+<p><strong><span style="font-size: x-large;">Tuesday's Wednesday.</span></strong></p>
+<p>And all the other days are one off, too.</p>
+<p>Which just goes to show that if Xanadu had been done as a Bollywood movie and they added a joke about Microsoft Windows, it might perhaps have done better!</p>
+<p>Now this particular issue disturbs me on many levels. You can probably guess what some of them are....</p>
+<p>In part it makes me wonder how many people who know Assamese and who use Windows are making use of the Assamese locale. Or the Assamese LIP along with it.</p>
+<p>I wonder....</p>
+<p>Perhaps everyone is just very forward-looking in Assam. And they were thinking Microsoft was being supportive.</p>
+<p>Or perhaps Xanadu, which was really a terrible movie, would have done better as a Bollywood movie, and the locale is a secret Easter Egg of a tribute to to Xanadu -- Microsoft telling&nbsp;people that <strong>Tuesday's Wednesday!</strong> </p>
+<p>I admit that this would be very unlikely.</p>
+<p>Actually let's just look at the <a href="http://msdn.microsoft.com/library/dd373839.aspx">LOCALE_SDAYNAME* Constants</a> description:</p>
+<p style="text-align: center;">This topic defines the LOCALE_SDAYNAME* constants used by NLS. </p>
+<table align="center" cellpadding="3" cellspacing="3" border="1">
+<tbody>
+<tr>
+<th>Value</th><th>Meaning</th>
+</tr>
+<tr>
+<td>LOCALE_SDAYNAME1</td>
+<td>Native long name for Monday. The maximum number of characters allowed for this string is 80, including a terminating null character.</td>
+</tr>
+<tr>
+<td>LOCALE_SDAYNAME2</td>
+<td>Native long name for Tuesday. The maximum number of characters allowed for this string is 80, including a terminating null character.</td>
+</tr>
+<tr>
+<td>LOCALE_SDAYNAME3</td>
+<td>Native long name for Wednesday. The maximum number of characters allowed for this string is 80, including a terminating null character.</td>
+</tr>
+<tr>
+<td>LOCALE_SDAYNAME4</td>
+<td>Native long name for Thursday. The maximum number of characters allowed for this string is 80, including a terminating null character.</td>
+</tr>
+<tr>
+<td>LOCALE_SDAYNAME5</td>
+<td>Native long name for Friday. The maximum number of characters allowed for this string is 80, including a terminating null character.</td>
+</tr>
+<tr>
+<td>LOCALE_SDAYNAME6</td>
+<td>Native long name for Saturday. The maximum number of characters allowed for this string is 80, including a terminating null character.</td>
+</tr>
+<tr>
+<td>LOCALE_SDAYNAME7</td>
+<td>Native long name for Sunday. The maximum number of characters allowed for this string is 80, including a terminating null character.</td>
+</tr>
+</tbody>
+</table>
+<p>&nbsp;Okay, so the Windows names start with Monday.</p>
+<p>&nbsp;We'll contrast that with the <a href="http://msdn.microsoft.com/library/system.globalization.datetimeformatinfo.daynames.aspx">DateTimeFormatInfo.DayNames Property</a>:</p>
+<p style="padding-left: 60px;"><span><span>A one-dimensional array of type <span><a href="http://msdn.microsoft.com/en-us/library/system.string.aspx">String</a></span> containing the culture-specific full names of the days of the week. The array for <span><a href="http://msdn.microsoft.com/en-us/library/system.globalization.datetimeformatinfo.invariantinfo.aspx">InvariantInfo</a></span> contains "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", and "Saturday".</span></span></p>
+<p>So&nbsp;.Net is Sunday based.</p>
+<p>Perhaps this is yet another bug in the shuffle to move the Windows locale data to use the .Net format (the format is now internally a .Net-like semicolon delimited list of month names starting with Sunday). </p>
+<p>A bug that no one notriced. </p>
+<p>Or maybe just no one complained about.</p>
+<p>Maybe it's just like the way people set their alarm clarks ahead, and everyone thought it would help....</p>
+<p>This seems like something worth fixing at some point in the future, though!</p>
+<hr/><div style="margin-left: 1em"><em>no comments</em></div><hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2011/07/12 <a href="http://archives.miloush.net/michkap/archive/2011/07/12/10185373.html">The first isn't always #1</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2011/05/06/10161793.html" title="Compare ≠ Equals, Invariant ≠ Ordinal, readers of this blog ≠ everyone else, and so on....">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2011/05/04/10160919.html" title="Regarding the overthinking and underimplementing of names">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2011-05">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2011-05-05">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2011/05/05/10161374.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+</html>

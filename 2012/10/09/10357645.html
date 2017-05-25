@@ -1,0 +1,53 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2012/10/09/10357645.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:25 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>It is quite ironic to call it 'Logical' if no one really knows what to do with it!</title></head><body>
+<h1>It is quite ironic to call it 'Logical' if no one really knows what to do with it!</h1>
+<p><em>by Michael S. Kaplan, published on 2012/10/09 07:01 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2012/10/09/10357645.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<p>Back in 2006, I put my extreme example string in the blog <strong><a title="More on cursor support: the rest of the answer" href="../../../2006/01/10/511194.html">More on cursor support: the rest of the answer</a></strong>.</p>
+<p>Many people, even native speakers of bidirectional languages and scripts who do not really know about Unicode or the UBA, find it to be confusing.</p>
+<p>Now those native speakers of bidirectional languages and scripts who do know a bit about what is going on here? Even they can&nbsp;have trouble editing bidirectional text. This extreme case is showing off how complicated things <em>can</em> be.</p>
+<p>This confusion that everyone can have to some degree is the main reason that people can often find the <strong>visual</strong> option in Word to be interesting:</p>
+<p><a href="http://msdnshared.blob.core.windows.net/media/MSDNBlogsFS/prod.evol.blogs.msdn.com/CommunityServer.Blogs.Components.WeblogFiles/00/00/00/33/81/4274.logical01.jpg"><img title="Logical vs. Visual" alt="Logical vs. Visual" src="http://msdnshared.blob.core.windows.net/media/MSDNBlogsFS/prod.evol.blogs.msdn.com/CommunityServer.Blogs.Components.WeblogFiles/00/00/00/33/81/4274.logical01.jpg" /></a></p>
+<p>Kind of ironic that the <strong>Cursor Movement</strong> options are <strong>Logical</strong> and <strong>Visual</strong>.</p>
+<p>I mean, the <strong>Visual</strong> option is well-named -- it is WYSIWYG (What You See Is What You Get), <em>and bring the cursor along for the ride</em>!</p>
+<p>But if editing in Word confuses both new users and old users (in different ways) to some extent, then calling it :<strong>Logical</strong> is kind of silly.</p>
+<p>Thus my suggestion for Word and for everyone -- the setting should be</p>
+<p style="padding-left: 60px;"><span style="font-size: xx-large;">Illogical</span></p>
+<p style="padding-left: 60px;"><span style="font-size: xx-large;">vs.</span></p>
+<p style="padding-left: 60px;"><span style="font-size: xx-large;">Visual</span></p>
+<p>right?</p>
+<p>Of course, it currently is the default option in Word, which would put them in the awkward position of calling their default illogical.</p>
+<p>So that may not be such a good option for them.</p>
+<p>I mean, its one thing to be illogical by default, but it is quite another to say it in your dialog!</p>
+<p>Now it isn't fair to blame Unicode or the Unicode Bidi Algorithm (<a href="http://www.unicode.org/reports/tr9/">UAX #9</a>), since it doesn't refer to cursor movement or text selection issues at all.</p>
+<p>The whole "Logical" vs. "Visual" thing does come from there, because from the point of view of the Unicode Standard, it makes sense to call the text in the backing store <strong>logical</strong>.</p>
+<p>Whether the default option in Word or the only option most other places should follow that direction, and extend it to cursor movement and text selection is a hard one.</p>
+<p>So hard that they encourage so many implementations to do it in a way that confuses people!</p>
+<p>Perhaps they should take up this issue and talk about it. You know, have the Unicode Standard weigh in.</p>
+<p>Now that I think would be <strong>logical</strong>.</p>
+<hr/><p><strong>John Cowan</strong> on 9 Oct 2012 7:50 AM:</p><div style="margin-left: 1em"><p>I think it should be called &quot;phonological order&quot;, or some less technical equivalent like &quot;spoken order&quot;.</p>
+</div>
+<p><strong>Random832</strong> on 9 Oct 2012 9:28 AM:</p><div style="margin-left: 1em"><p>With visual movement, if you&#39;ve got the string &quot;abcdאבגדabcd&quot;, and the cursor is on the left side of the RTL substring, is it &quot;before&quot; or &quot;after&quot; it? What if it&#39;s on the right side? And either case, the visual location where typed text will actually be inserted depends on both the logical cursor position _and_ the direction of the new typed text. (Chrome, which exhibits visual cursor movement behavior and presumably has its own implementation of such, seems to get confused and blank out parts of the line if I attempt to insert or erase RTL characters on or near the boundary in certain situations) Granted, without a split insertion point, there is still an ambiguity of where to display the cursor in each case, but at least you&#39;re starting with a well-defined idea of where the cursor &quot;actually is&quot; in the character stream.</p>
+<p>With visual mode, am I expected to be able to position my cursor at the left side of the embedded RTL substring, and typing &quot;ה&quot; will append it after (abcdאבגדה), but typing &quot;e&quot; will insert it before (abcdeאבגד)? If I type into a blank area &quot;abcdאבגד&quot;, where will the cursor be, and what happens if the next thing I type is &quot;abcd&quot;?</p>
+<p>Maybe the solution is to support a &quot;logical display mode&quot; that only goes in one direction (pick one. maybe have it be boustrophedon with a randomly selected starting direction), and everyone can just sdrawckab daer ot nrael.</p>
+</div>
+<p><strong>Alex Cohn</strong> on 9 Oct 2012 9:54 AM:</p><div style="margin-left: 1em"><p>This may be also called EDITING order. Fwiw we all expect the backspace key to change its direction following the context. Or callit EDITCONTROL order, because this is how the cursor moves in response to left and right arrow keys in the system edit box. But maybe really soon the touch screen will make this whole discussion archaeological.</p>
+</div>
+<p><strong>Doug Ewell</strong> on 9 Oct 2012 10:11 AM:</p><div style="margin-left: 1em"><p>&quot;Logical&quot; does not necessarily mean &quot;intuitive.&quot;</p>
+</div>
+<p><strong>Random832</strong> on 9 Oct 2012 10:26 AM:</p><div style="margin-left: 1em"><p>(I tried posting this earlier, but I think I took too long writing it and it didn&#39;t go through)</p>
+<p>With visual movement, if you&#39;ve got the string &quot;abcdאבגדabcd&quot;, and the cursor is on the left side of the RTL substring, is it &quot;before&quot; or &quot;after&quot; it? What if it&#39;s on the right side? And either case, the visual location where typed text will actually be inserted depends on both the logical cursor position _and_ the direction of the new typed text. (Chrome, which exhibits visual cursor movement behavior and presumably has its own implementation of such, seems to get confused and blank out parts of the line if I attempt to insert or erase RTL characters on or near the boundary in certain situations) Granted, without a split insertion point, there is still an ambiguity of where to display the cursor in each case, but at least you&#39;re starting with a well-defined idea of where the cursor &quot;actually is&quot; in the character stream.</p>
+<p>With visual mode, am I expected to be able to position my cursor at the left side of the embedded RTL substring, and typing &quot;ה&quot; will append it after (abcdאבגדה), but typing &quot;e&quot; will insert it before (abcdeאבגד)? If I type into a blank area &quot;abcdאבגד&quot;, where will the cursor be, and what happens if the next thing I type is &quot;abcd&quot;?</p>
+<p>Maybe the solution is to support a &quot;logical display mode&quot; that only goes in one direction (pick one. maybe have it be boustrophedon with a randomly selected starting direction), and everyone can just sdrawckab daer ot nrael.</p>
+</div>
+<p><strong>Azarien</strong> on 10 Oct 2012 2:30 AM:</p><div style="margin-left: 1em"><p>I wonder what happens, when you make a text selection that begins in the middle of text of one direction, but ends in the middle of other direction?</p>
+<p>If text selection is also made in &quot;visual&quot; way, the text (when copy-pasted) will be non-contiguous, but with &quot;illogical&quot; selection, the selection must be visually non-contiguous.</p>
+<p>Which one actually happens if you enable visual cursor movement?</p>
+</div>
+<p><strong>Random832</strong> on 10 Oct 2012 5:33 AM:</p><div style="margin-left: 1em"><p>@Azarien That depends on what you mean by &quot;will be non-contiguous&quot;. If you have the string &quot;abcdאבגדabcd&quot;, and you copy &quot;cdגד&quot; from the middle, I could imagine that some people might consider that the most sensible thing in the world even though you&#39;ve just done the equivalent of going from &quot;abcdABCDabcd&quot; to &quot;cdCD&quot;.</p>
+<p>You could simply ban selections from beginning or ending in an embedded opposite-direction run. If you start in one, and go out of it, it selects the whole thing the same as when Word makes you select the whole word you started in the middle of (which you can override, yes, by backtracking back into the original word with the mouse - you could allow the same thing for the user to force an &quot;illogical&quot; selection.)</p>
+</div>
+<hr/><p><em>go to <a id="newer" href="../10/10358083.html" title="&#39;The more they over-think the plumbing, the easier it is to stop up the drain.&#39;">newer</a> or <a id="older" href="../08/10357076.html" title="The feature that never happened (probably because it wasn&#39;t needed!)">older</a> post, or back to <a href="../../../index-2.html">index</a> or <a href="../../../index-2.html#2012-10">month</a> or <a href="../../../index-2.html#2012-10-09">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2012/10/09/10357645.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:25 GMT -->
+</html>

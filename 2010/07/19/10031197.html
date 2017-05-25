@@ -1,0 +1,62 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2010/07/19/10031197.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:35 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>It's a bug, it's always been a bug. In either direction....</title></head><body>
+<h1>It's a bug, it's always been a bug. In either direction....</h1>
+<p><em>by Michael S. Kaplan, published on 2010/07/19 07:01 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2010/07/19/10031197.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<p>So the other day someone pointed me to a thread going on over on the forums.</p>
+<p>The post in question was: <a href="http://social.msdn.microsoft.com/Forums/en-US/winforms/thread/d7ccd909-7eff-4cc0-b3e3-25af266e61e8"><strong>Problem with symbols when drawing Hebrew text by Graphics.DrawString function from the RichTextBox control</strong></a>, if you want to skip ahead of my description and see what I&rsquo;m going to talk about before I start talking&hellip;</p>
+<p>The stated problem from winrazor:</p>
+<blockquote>
+<p><span style="font-family: Times New Roman;"><em>Hi all, </em></span></p>
+<p><span style="font-family: Times New Roman;"><em>I have a question: <br />I'm trying to draw RightToLeft (Hebrew) text on the Image object using "Graphics.DrawString" function. <br />Text is previously loaded from the RTF file into RichTextBox control, and in this control it seems correct. <br />But after drawing on the image symbols like "(" , ":"&nbsp; and "." displayed on the incorrect positions when they are last or first in the text line. <br />In other words mixing Hebrew with Simbols (English) does not work correct. </em></span></p>
+<p><span style="font-family: Times New Roman;"><em>Do you have any idea? </em></span></p>
+<p><span style="font-family: Times New Roman;"><em>Thanks a lot! <br />Timur.</em></span></p>
+</blockquote>
+<p>Now regular readers here might know what is going on already.</p>
+<p>This is the typical problem with neutral characters at the end of an RTL run of characters that are embedded in an LTR context &ndash; the neutral character takes the overiding directionality to decide where it should be placed rather than the preceding text.</p>
+<p>The user has just noticed that the RichTextBox (as well as WordPad and Word and Outlook) have been doing a slightly better job than GDI+ (as well as plain old Notepad, plain old EDIT controls, plain old Uniscribe).</p>
+<p>We can start with an easy point.</p>
+<p>The bug in question will never be [intentionally] fixed. Period.</p>
+<p>GDI+ is in maintenance mode now and only high severity bugs like crashing or security exploit bugs are being fixed. And while a misplaced period can sometimes crash one&rsquo;s plans for an evening, it is never going to crash a version of Windows.</p>
+<p>So Graphics.DrawString is going to live with the same limitations as Notepad, the regular EDIT control, the TextBox control, and plain old Uniscribe that it has roughly for the lifetime of Bidi support on Microsoft products that do these &ldquo;mixed directionality with neutral characters on the border of items&rdquo; scenarios.</p>
+<p>Now for the rest of the thread, it gets a little weird, with the MS person claiming the bug can&rsquo;t be reproduced even though the sample written by the MS person completely reproduces the bug that the customer reported. A screenshot of the non-repro that was repro&rsquo;ed was provided:</p>
+<p><img src="http://6gugmq.bay.livefilestore.com/y1p93uXO5SoD8y5gZqzFzlOTFte66px43RvlJG5puC2sQ6zBdmEi_6zBUxJBFqUH1Vs9IjpkRWXkEFXlhAEGHmKB6TzrlS12cnD/form3.jpg" /></p>
+<p>The post was then moved to &ldquo;General Discussion&rdquo; since requested information wasn&rsquo;t provided after just four days. Even though it really had been (this is a problem that anyone with knowledge of Bidi can easily speak to).</p>
+<p>Ten days later, WinRazor responded (I added checkmarks to the lines that are accurate):</p>
+<blockquote>
+<p><span style="font-family: Times New Roman;"><em>Dear Friend, </em></span></p>
+<p>✔<span style="font-family: Times New Roman;"><em>Hebrew is Right to Left language, it means that dot should be from the left side. (in the end of the frase) </em></span></p>
+<p>✔<span style="font-family: Times New Roman;"><em>Initial string also has dot from the right - it's another bug of this online tool. </em></span></p>
+<p><span style="font-family: Times New Roman;"><em>Dots braces and other symbols are placed incorrectly by MS new functions. <br />Finally I've fixed the problem by using old functions, which have awfull preformance with long texts, this problem is also fixed by manual separating pages with additional optimization. </em></span></p>
+<p><span style="font-family: Times New Roman;"><em>In other words:&nbsp; MS should fix 2 bugs: <br />✔1) In the new function "MeasureString" - RTL is not supported as needed!!! (symbols mixed with Hebrew text have incorrect positions) <br />✔2) Bug in this online tool - typing and copy\paste have the same problem with symbols as 1) . </em></span></p>
+<p><span style="font-family: Times New Roman;"><em>I did serious investigation in the net, and a lot of people have the same problem and suggest to use old interface, <br />it also suggested in the MS example. I think that a nice way or fix this bug or notice about this problem in the help of the new functions. </em></span></p>
+<p>✔<span style="font-family: Times New Roman;"><em>And please don't say that you don't have enough info - you can see the problem in your answer. </em></span></p>
+<p><span style="font-family: Times New Roman;"><em>Anyway, thank you for your answer! And please let me know when 1) is fixed. (if it's possible) <br />Timur.</em></span></p>
+</blockquote>
+<p>Well, the first few lines were right (in fact all the lines I put a check in front of are correct!).</p>
+<p>Now it is unclear what is meant here by &ldquo;old functions&rdquo; since this only works correctly in newer versions of certain controls. I assume the problem is that it used to work with other RichTextBox editing stuff and that can make the definition of &ldquo;old&rdquo; and &ldquo;new&rdquo; change a bit (it is easy to think of these functions as <strong>NEW to the people using it</strong>, I suppose).</p>
+<p>But there have been misunderstandings about what is going on here on both sides!</p>
+<p>So be it, though.</p>
+<p>Microsoft never responded to this last post, even after nine months, which is more than enough time for cow, countess, or response from support. So it probably won&rsquo;t be responded to ever at this point.</p>
+<p>I mean except for me weighing in, of course! :-)</p>
+<p>This is the kind of bug that really ought to be just fixed given the many reports over the years and the real impact it has, though of course when/who/how type questions clearly will impact such a fix&hellip;</p>
+<hr/><p><strong>John Cowan</strong> on 19 Jul 2010 9:01 AM:</p><div style="margin-left: 1em"><p>Using strategically placed RLE characters, or a RLO/PDF pair, might solve the immediate problem.</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 19 Jul 2010 10:19 AM:</p><div style="margin-left: 1em"><p>Of course. :-)</p>
+<p>I was focusing on the bigger issues, as they were....</p>
+</div>
+<p><strong>rs</strong> on 19 Jul 2010 11:33 AM:</p><div style="margin-left: 1em"><p>I am wondering whether the behavior described (using the directionality of the surrounding text for symbols) isn&#39;t actually correct: What I mean is that the text</p>
+<p> &nbsp; &nbsp;abc (in Hebrew, אבג)</p>
+<p>should appear as</p>
+<p> &nbsp; &nbsp;abc (in Hebrew, ℷℶℵ)</p>
+<p>not</p>
+<p> &nbsp; &nbsp;abc (in Hebrew, (ℷℶℵ</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 19 Jul 2010 11:50 AM:</p><div style="margin-left: 1em"><p>There is a context issue here for parens that is also relevant (and which Office does correctly here). In this case, parens that start before the RTL zone need to follow the same context rules when the parens end.</p>
+</div>
+<p><strong>jon</strong> on 19 Jul 2010 1:52 PM:</p><div style="margin-left: 1em"><p>Par-for-the-course when reporting bugs to Microsoft unfortunately. I&#39;m not saying the official company policy is to claim non-reproducability without actually trying or attempting to try to reproduce, but it sure feels like that at times...</p>
+</div>
+<hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2010/07/23 <a href="http://archives.miloush.net/michkap/archive/2010/07/23/10041679.html">It used to be Windows doing it right, and Office following. But now...</a></p><p>2010/07/22 <a href="http://archives.miloush.net/michkap/archive/2010/07/22/10033828.html">When I say Graphics.MeasureString can hang with you, I mean it in a bad way!</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2010/07/20/10040040.html" title="Amazon? Dumas would be spinning in his ` (grave) if he knew.">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2010/07/18/10039492.html" title="Where&#39;s the other Urdu?">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2010-07">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2010-07-19">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2010/07/19/10031197.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:35 GMT -->
+</html>

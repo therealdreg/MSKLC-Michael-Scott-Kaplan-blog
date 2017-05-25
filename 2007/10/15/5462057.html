@@ -1,0 +1,21 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2007/10/15/5462057.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:37 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>We're Lost. Maybe the map is wrong. Maybe all maps are wrong?</title></head><body>
+<h1>We're Lost. Maybe the map is wrong. Maybe all maps are wrong?</h1>
+<p><em>by Michael S. Kaplan, published on 2007/10/15 10:46 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2007/10/15/5462057.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P>The title quote comes from a Friends episode with Lisa Kudrow ending the mini conversation by giving us one of those pondering questions out of nowhere....</P>
+<P>Think of this post as a follow-up of sorts to <A class="" href="http://archives.miloush.net/michkap/archive/2006/02/09/528297.html" mce_href="http://archives.miloush.net/michkap/archive/2006/02/09/528297.html"><STRONG>Is RtlCompareUnicodeString used correctly?</STRONG></A></P>
+<P>That post pointed out that every call I could see to&nbsp;<A href="http://msdn.microsoft.com/library/en-us/Kernel_r/hh/Kernel_r/k109_ddeef320-7510-446b-af6f-756c3999bec1.xml.asp"><FONT face=Tahoma>RtlCompareUnicodeString</FONT></A>&nbsp;was functionally equivalent to a slightly faster call to <A href="http://msdn.microsoft.com/library/en-us/Kernel_r/hh/Kernel_r/k109_59d7c507-968a-4cf5-b1f0-91c8cd7ccb64.xml.asp"><FONT face=Tahoma>RtlEqualUnicodeString</FONT></A>. </P>
+<P>As a follow-up, let's look at <A class="" href="http://archives.miloush.net/michkap/archive/2007/09/14/4900107.html" mce_href="http://archives.miloush.net/michkap/archive/2007/09/14/4900107.html"><STRONG>How do I feel about lstrcmpi? I think it blows....</STRONG></A> and consider the fact that of the tens of thousands of uses of <A class="" href="http://msdn2.microsoft.com/library/ms647489.aspx" mce_href="http://msdn2.microsoft.com/library/ms647489.aspx">lstrcmpi</A> in the source tree, almost every one of them is incorrect.</P>
+<P>And this particular incorrectness <A class="" href="http://archives.miloush.net/michkap/archive/2007/10/12/5396685.html" mce_href="http://archives.miloush.net/michkap/archive/2007/10/12/5396685.html"><STRONG><EM>may</EM> be faster</STRONG></A> (for now), but in some cases the difference may not matter due to a closed set of strings being tested, but it is still the wrong function, and many of those instances are real bugs that will need to be fixed by someone such as myself.</P>
+<P>But then I stop and ask myself something.</P>
+<P>If a function is used a lot and is almost always used incorrectly, should I instead consider changing the way the function works instead?</P>
+<P>I mean, is it just being stubborn to claim it is a backcompat issue to actually change behavior to meet the obvious expectation of callers, at the minor cost of complicating the documentation a bit and fixing up a few callers who may have been getting it right?</P>
+<P>Or is it better to preserve the consistent (but wrong) user locale specific, linguistically correct behavior?</P>
+<P>Boy, that's a tough call!</P>
+<P mce_keep="true">&nbsp;</P>
+<P><EM><FONT color=#ff00ff>The characters of Unicode are all too shocked to sponsor this post</FONT></EM></P>
+<hr/><div style="margin-left: 1em"><em>no comments</em></div><hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2007/10/15/5464496.html" title="Better than an elevator friend, but...">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2007/10/15/5461947.html" title="Hitting the &#39;right&#39; keys (in the &#39;wrong&#39; order), looking beyond damage control">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2007-10">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2007-10-15">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2007/10/15/5462057.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:37 GMT -->
+</html>

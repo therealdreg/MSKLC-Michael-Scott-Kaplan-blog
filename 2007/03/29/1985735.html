@@ -1,0 +1,45 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2007/03/29/1985735.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:38 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>I Kana understand you, could you repeater that? (Part 1)</title></head><body>
+<h1>I Kana understand you, could you repeater that? (Part 1)</h1>
+<p><em>by Michael S. Kaplan, published on 2007/03/29 04:01 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2007/03/29/1985735.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P>I have made bad puns in the titles of blog posts talking about Kana previously (e.g. <A class="" href="http://archives.miloush.net/michkap/archive/2005/06/01/423711.html" mce_href="http://archives.miloush.net/michkap/archive/2005/06/01/423711.html"><STRONG>Knock knock! Who's there? Kana! Kana Who?</STRONG></A>).</P>
+<P>Now, in a bold bit of irony, I am going to repeat that experience here and talk about the repeater. Somewhat repeatedly in a series....</P>
+<P>There are several different kinds of repeaters. One of them&nbsp;is <FONT size=4>々</FONT> (<A class="" href="http://www.fileformat.info/info/unicode/char/3005" mce_href="http://www.fileformat.info/info/unicode/char/3005">U+3005</A>, a.k.a. IDEOGRAPHIC ITERATION MARK).</P>
+<P>As I pointed out in that previous post:</P>
+<BLOCKQUOTE>
+<P>An iteration mark duplicates a letter, so it duplicates the weight and adds a little bit (so it sorts right after)<BR>e.g. きき before き々 (<A class="" href="http://www.fileformat.info/info/unicode/char/304d" mce_href="http://www.fileformat.info/info/unicode/char/304d">U+304d</A> <A class="" href="http://www.fileformat.info/info/unicode/char/304d" mce_href="http://www.fileformat.info/info/unicode/char/304d">U+304d</A> aka HIRAGANA LETTER KI; HIRAGANA LETTER KI before <A class="" href="http://www.fileformat.info/info/unicode/char/304d" mce_href="http://www.fileformat.info/info/unicode/char/304d">U+304d</A> <A class="" href="http://www.fileformat.info/info/unicode/char/3005" mce_href="http://www.fileformat.info/info/unicode/char/3005">U+3005</A> HIRAGANA LETTER KI; IDEOGRAPHIC ITERATION MARK) </P></BLOCKQUOTE>
+<P mce_keep="true">But now let's add in another character to the mix:</P>
+<P mce_keep="true"><FONT size=4>〻</FONT> (<A class="" href="http://www.fileformat.info/info/unicode/char/303b" mce_href="http://www.fileformat.info/info/unicode/char/303b">U+303b</A>, a.k.a. VERTICAL IDEOGRAPHIC ITERATION MARK)</P>
+<P mce_keep="true">The name is kind of&nbsp;implies the usage&nbsp;-- it is like its non-vertical counterpart, but used in vertical writing. Which is cool since sometimes Kana and also Kanji is written vertically.</P>
+<P mce_keep="true"><EM>(And yes, usually one would see the Hiragana or Katakana iteration marks with Kana, but let's leave that aside for the time being, I am trying to make a different point here!)</EM></P>
+<P mce_keep="true">It is not like <A class="" href="http://msdn2.microsoft.com/library/ms647476.aspx" mce_href="http://msdn2.microsoft.com/library/ms647476.aspx">CompareString</A> has a vertical directionality parameter, so what would one do with <A class="" href="http://www.fileformat.info/info/unicode/char/303b" mce_href="http://www.fileformat.info/info/unicode/char/303b">U+303b</A>?</P>
+<P mce_keep="true">I mean, is there really more that one&nbsp;could do&nbsp;other than just blindly doing the same thing that one does with <A class="" href="http://www.fileformat.info/info/unicode/char/3005" mce_href="http://www.fileformat.info/info/unicode/char/3005">U+3005</A>?</P>
+<P mce_keep="true">Although the name implies the usage, the fact is that they simply have two different appearances. Perhaps one character could have been encoded which conditionally changed its appearance based on whether one was displaying vertically or not, but these characters were added to JIS long before Unicode or OpenType were around, so even if that were desirable, it is too late now.</P>
+<P mce_keep="true">And whether is desirable is also somewhat questionable -- what about situations where one needs to display <A class="" href="http://www.fileformat.info/info/unicode/char/303b" mce_href="http://www.fileformat.info/info/unicode/char/303b">U+303b</A> in a horizontal context (say if one is documenting its usage)?</P>
+<P mce_keep="true">And since the&nbsp;collation functions do not have any kind of directionality-specific behavior and it is unclear whether one should treat the character differently if it is used in the wrong context -- that would be like punishing a spelling error by screwing&nbsp;with the sort order. Hardly a kind behavior....</P>
+<P mce_keep="true">So in the end, in Vista the two characters have the same behavior. Which is not such a bad thing. :-)</P>
+<P mce_keep="true">I'll be talking more about the repeater in an upcoming post in this series....</P>
+<P mce_keep="true">&nbsp;</P>
+<P mce_keep="true"><FONT color=#ff00ff><EM>This post brought to you by</EM> <FONT size=5>〻</FONT> <EM>(<A class="" href="http://www.fileformat.info/info/unicode/char/303b" mce_href="http://www.fileformat.info/info/unicode/char/303b">U+303b</A>, a.k.a. VERTICAL IDEOGRAPHIC ITERATION MARK)</EM></FONT></P>
+<hr/><p><a id="1987836" href="#1987836">#</a> <strong>wagahai</strong> on 29 Mar 2007 8:13 AM:</p><div style="margin-left: 1em"><p>You example きき -&gt; き々 is not valid.</p>
+<p>U+3005 is used to repeat kanji, not kana.</p>
+<p>To repeat kana, you may use U+309D, U+309E, U+30FD, or U+30FE. Note that kana repetition marks are fairly old style and not that common anymore; there may be valid literacy problems for younger Japanese. On the other hand, the kanji repetition mark U+3005 is used so often it's hard to go an hour without missing in Japan.</p>
+<p>Tōkyō, Japan</p></div>
+<p><a id="1987844" href="#1987844">#</a> <strong>wagahai</strong> on 29 Mar 2007 8:15 AM:</p><div style="margin-left: 1em"><P>[Continued]</P>
+<P>The name for U+3005 (IDEOGRAPHIC ITERATION MARK) is also a big clue. Kana, as opposed to kanji (or Han), are not ideographic.</P>
+<HR>
+
+<P><EM><STRONG>You saw my note here on this issue, right? As I said </STRONG></EM></P>
+<BLOCKQUOTE>
+<P><EM>(And yes, usually one would see the Hiragana or Katakana iteration marks with Kana, but let's leave that aside for the time being, I am trying to make a different point here!)</EM></P></BLOCKQUOTE>
+<P><STRONG><EM>I was focusing on a different issue here, to wit the verticalality issue.... - Michael</EM></STRONG></P></div>
+<p><a id="1987866" href="#1987866">#</a> <strong>Michael S. Kaplan</strong> on 29 Mar 2007 8:21 AM:</p><div style="margin-left: 1em"><p>Well, although not valid, they actually work in Windows, technically (since the repeaters will repeat the previous character, whatever it may be).</p>
+<p>So you could think of it as more of a functional example. :-)</p>
+</div>
+<p><a id="1990844" href="#1990844">#</a> <strong>roxfan</strong> on 29 Mar 2007 5:11 PM:</p><div style="margin-left: 1em"><p>Here's a good reference on repetition marks:</p>
+<p><a rel="nofollow" target="_new" href="http://www.sljfaq.org/w/Symbols#Repetition_marks">http://www.sljfaq.org/w/Symbols#Repetition_marks</a></p></div>
+<hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2007/04/01 <a href="http://archives.miloush.net/michkap/archive/2007/04/01/2004424.html">I Kana understand you, could you repeater that? (Part 2)</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2007/03/29/1989831.html" title="Why does it use strings to represent numbers, exactly?">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2007/03/28/1977465.html" title="Like Cartman, that &#39;W&#39; letter isn&#39;t fat; it&#39;s big boned!">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2007-03">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2007-03-29">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2007/03/29/1985735.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:38 GMT -->
+</html>

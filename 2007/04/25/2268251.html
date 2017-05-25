@@ -1,0 +1,19 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2007/04/25/2268251.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:38 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Maybe it was registry rumination</title></head><body>
+<h1>Maybe it was registry rumination</h1>
+<p><em>by Michael S. Kaplan, published on 2007/04/25 03:01 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2007/04/25/2268251.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P>One of the things that <A class="" href="http://www.microsoft.com/globaldev/tools/msklc.mspx" mce_href="http://www.microsoft.com/globaldev/tools/msklc.mspx">MSKLC</A> does in its installation packages is add the necessary registry key and related values to support the keyboard layout on the machine.</P>
+<P>These are the ones under <STRONG>HKLM\SYSTEM\CurrentControlSet\Control\Keyboard Layouts</STRONG>.</P>
+<P>Anyway, since one of the big features of the 1.4 update was 64-bit support, I had to look into what had to be done differently for 64-bit machines.</P>
+<P>Among other things,&nbsp;I looked up all the information about <A class="" href="http://msdn2.microsoft.com/library/aa384232.aspx" mce_href="http://msdn2.microsoft.com/library/aa384232.aspx">registry redirection</A>, specifically about <A class="" href="http://msdn2.microsoft.com/library/aa384235.aspx" mce_href="http://msdn2.microsoft.com/library/aa384235.aspx">registry reflection</A> and <A class="" href="http://msdn2.microsoft.com/library/aa384253.aspx" mce_href="http://msdn2.microsoft.com/library/aa384253.aspx">shared registry keys</A>.</P>
+<P>And after I read those topics and noticed that my subkey's&nbsp;tree was apparently not covered by either technology, I made a little note to look into whether I would need to write the key twice (once for 32-bit and once for 64-bit!).</P>
+<P>Luckily I did not do more than make that note, since it was not needed. I only had to write the keys once in the install package, and the keyboard worked for both 64-bit and 32-bit (once I was putting the right layout DLLs into the right directories, at least!).</P>
+<P>OK, so its not redirection or reflection or replication or any of these other technologies (or if it is, it is not documented as such!).</P>
+<P>So I ruminated on this for a bit, and decided to tentatively name the effect "<STRONG>registry rumination</STRONG>" in honor of this intellectual pause I took between Limonatas.... :-)</P>
+<P mce_keep="true">&nbsp;</P>
+<P><FONT color=#ff00ff><EM>This post brought to you by&nbsp;<FONT size=5>ら</FONT> </EM>(<A class="" href="http://www.fileformat.info/info/unicode/char/3089" mce_href="http://www.fileformat.info/info/unicode/char/3089">U+3089</A>, a.k.a. HIRAGANA LETTER RA)</FONT></P>
+<hr/><div style="margin-left: 1em"><em>no comments</em></div><hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2007/05/22 <a href="http://archives.miloush.net/michkap/archive/2007/05/22/2800224.html">Getting the language of an LCID-less keyboard</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2007/04/25/2268592.html" title="Building your own better Ordinal comparison">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2007/04/24/2267048.html" title="Don&#39;t forget to reboot, please">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2007-04">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2007-04-25">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2007/04/25/2268251.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:38 GMT -->
+</html>

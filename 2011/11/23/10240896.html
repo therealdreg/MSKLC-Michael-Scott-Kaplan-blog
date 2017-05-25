@@ -1,0 +1,95 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2011/11/23/10240896.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>The evolving Story of Locale Support, part 11: What language is that keyboard for?</title></head><body>
+<h1>The evolving Story of Locale Support, part 11: What language is that keyboard for?</h1>
+<p><em>by Michael S. Kaplan, published on 2011/11/23 07:01 -05:00, original URI: http://blogs.msdn.com/b/michkap/archive/2011/11/23/10240896.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<p>Previous blogs from this series:</p>
+<ul>
+<li><strong><a title="part 10: Perhaps it is best to think of it as unintelligent design?" href="http://archives.miloush.net/michkap/archive/2011/11/22/10239572.html">part 10: Perhaps it is best to think of it as unintelligent design?</a></strong></li>
+<li><strong><a title="part 9: Nastaleeq vs. Nastaliq? Either way, Windows 8 has got it!" href="http://archives.miloush.net/michkap/archive/2011/11/16/10237715.html">part 9: Nastaleeq vs. Nastaliq? Either way, Windows 8 has got it!</a></strong></li>
+<li><strong><a title="part 8: [Finally] taking care of some [more] languages in Pakistan" href="http://archives.miloush.net/michkap/archive/2011/11/15/10237317.html">part 8: [Finally] taking care of some [more] languages in Pakistan</a></strong></li>
+<li><strong><a title="part 7: That would be a " href="http://archives.miloush.net/michkap/archive/2011/11/11/10236194.html" call="" and="" raise="" for="" hawaiian="" a="">part 7: That would be a "call and a raise" for Hawaiian</a></strong></li>
+<li><strong><a title="part 6 (Behind the Cherokee Phonetic layout in Windows 8)" href="http://archives.miloush.net/michkap/archive/2011/11/09/10235391.html">part 6 (Behind the Cherokee Phonetic layout in Windows 8)</a></strong></li>
+<li><strong><a title="part 5 part 5 (...until the decision was made to not refuse to add it)" href="http://archives.miloush.net/michkap/archive/2011/11/08/10234995.html">part 5 (...until the decision was made to not refuse to add it)</a></strong></li>
+<li><strong><a title="part 4 (working beyond one's bugs, and the case for an MSKLC update)" href="http://archives.miloush.net/michkap/archive/2011/11/04/10233999.html">part 4 (working beyond one's bugs, and the case for an MSKLC update)</a></strong></li>
+<li><strong><a title="part 3 (working beyond one's bugs, the setup)" href="http://archives.miloush.net/michkap/archive/2011/11/03/10233591.html">part 3 (working beyond one's bugs, the setup)</a> </strong></li>
+<li><strong><a title="part 2 (raising the roof on keyboards)" href="http://archives.miloush.net/michkap/archive/2011/11/02/10232468.html">part 2 (raising the roof on keyboards)</a></strong></li>
+<li><strong><a title="part 1 (Some people don't want to double-d's)" href="http://archives.miloush.net/michkap/archive/2011/11/01/10232070.html">part 1 (Some people don't want to double-d's)</a></strong></li>
+<li><strong><a title="part 0 (The introduction)" href="http://archives.miloush.net/michkap/archive/2011/10/31/10231661.html">part 0 (The introduction)</a></strong></li>
+</ul>
+<p>Continuing the tradition started in part 10 about things that are likely to make you say <strong>meh</strong> than <strong>oooooo!</strong>, let's talk about some of those new keyboards again.</p>
+<p>Looking all the way back to part 2 of the&nbsp;series, I had an interesting list of keyboards at the end:</p>
+<ul>
+<li>New Tai Lue</li>
+<li>Tai Le</li>
+<li>Tiffing</li>
+<li>Myanmar</li>
+<li>Ogham</li>
+<li>Phags-Pa</li>
+<li>Lisu</li>
+<li>N'Ko</li>
+</ul>
+<p>And of course people are already noticing these keyboards, and even trying to use them.</p>
+<p>Like the other day, when a developer here asked me:</p>
+<p style="padding-left: 30px;"><span style="font-family: times new roman,times;">Hi Gentlemen,</span></p>
+<p style="padding-left: 30px;"><span style="font-family: times new roman,times;">I installed the Myanmar keyboard on Windows 8. When we call ::GetKeyboardLayout(), we got 0xFFFFFFFFF0302400. So, the primary langid is 0x0 (instead of 0x55 for LANG_MYANMAR). Is this a bug?</span></p>
+<p>Now that value for LANG_MYANMAR has been reserved since at least 2007, but it has never shown up anywhere&nbsp;before in wither ntdef.h or winnt.h.</p>
+<p>Remember that the main purpose of the LANG_* and SUBLANG_* consonants is to define legal values to use in all functions accept or return LCIDs -- and no&nbsp;data&nbsp;is defined for a Burmese locale.</p>
+<p>Now in theory since we can work with expatriate linguists and language experts, the fact that we can't work directly with people in country does not block such a locale -- in fact this helps us with the font work we did do or Myanmar and the others covered by the list above.</p>
+<p>Generally, this change can be thought of as a way to try to make huge chunks of what is displayable in fonts able to be typed in keyboards.</p>
+<p>In the Developer Preview and even in latest builds, there doesn't seem to be an indication in the registry of what the language/script might be -- e.g. no "Layout Locale Name" registry value. I'm&nbsp;not sure if this is an oversight or not, but perhaps people will have to keep the list around themselves if they get a 0 for the LANGID and there is no "Layout Locale Name" there:</p>
+<table border="1" cellspacing="2" cellpadding="2">
+<tbody>
+<tr>
+<td>KLID</td>
+<td>Layout Text</td>
+</tr>
+<tr>
+<td>00010c00</td>
+<td>Myanmar</td>
+</tr>
+<tr>
+<td>00020c00</td>
+<td>New Tai Lue</td>
+</tr>
+<tr>
+<td>00030c00</td>
+<td>Tai Le</td>
+</tr>
+<tr>
+<td>00040c00</td>
+<td>Ogham</td>
+</tr>
+<tr>
+<td>00050c00</td>
+<td>Tifinagh (Basic)</td>
+</tr>
+<tr>
+<td>00060c00</td>
+<td>Tifinagh (Full)</td>
+</tr>
+<tr>
+<td>00070c00</td>
+<td>Lisu (Basic)</td>
+</tr>
+<tr>
+<td>00080c00</td>
+<td>Lisu (Standard)</td>
+</tr>
+<tr>
+<td>00090c00</td>
+<td>N'Ko</td>
+</tr>
+<tr>
+<td>000a0c00</td>
+<td>Phags-pa</td>
+</tr>
+</tbody>
+</table>
+<p>Some might wonder why I don't just suggest that people use the "Layout Text" registry values like the ones in the table, but since they can change occasionally (the underlying keyboard don't but the string can if the name of the keyboard changes), it seems like a bad idea to me.</p>
+<p>I originally asked for "Layout Locale Name" to be added,&nbsp;since users trying to suss out custm keyboard layouts would have to look for that anyway. But people didn't see the point -- anyone reading here want to&nbsp;weigh in on that?</p>
+<p>Perhaps there will be other way to get at the info programatically at some point though....</p>
+<hr/><div style="margin-left: 1em"><em>comments not archived</em></div><hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2012/10/26 <a href="http://archives.miloush.net/michkap/archive/2012/10/26/10362603.html">The evolving Story of Locale Support, part 28: We finally fixed that 'Install New Languages' thing!</a></p><p>2012/10/02 <a href="http://archives.miloush.net/michkap/archive/2012/10/02/10354988.html">The evolving Story of Locale Support, part 27: No, the T and the H aren't silent...</a></p><p>2012/08/20 <a href="http://archives.miloush.net/michkap/archive/2012/08/20/10341516.html">The evolving Story of Locale Support, part 26: Hey Windows 8, there's someone on the phone for you.</a></p><p>2012/07/11 <a href="http://archives.miloush.net/michkap/archive/2012/07/11/10327775.html">The evolving Story of Locale Support, part 25: Something old, something new, something repurposed, and something...</a></p><p>2012/06/07 <a href="http://archives.miloush.net/michkap/archive/2012/06/07/10316511.html">The evolving Story of Locale Support, part 24: I Adar you! Hell, I Double Adar you! (Windows 8 ed.)</a></p><p>2012/06/05 <a href="http://archives.miloush.net/michkap/archive/2012/06/05/10315033.html">The evolving Story of Locale Support, part 23: Tamazight? Outta sight!</a></p><p>2012/04/12 <a href="http://archives.miloush.net/michkap/archive/2012/04/12/10292952.html">The evolving Story of Locale Support, part 22: Digit Substitution 2.0</a></p><p>2012/03/08 <a href="http://archives.miloush.net/michkap/archive/2012/03/08/10278921.html">The evolving Story of Locale Support, part 21: The Windows 8 Hijripalooza extraordinaire!</a></p><p>2012/03/02 <a href="http://archives.miloush.net/michkap/archive/2012/03/02/10276258.html">The evolving Story of Locale Support, part 20: Yes, it's Bangla. Not Bengali!</a></p><p>2012/02/21 <a href="http://archives.miloush.net/michkap/archive/2012/02/21/10270502.html">The evolving Story of Locale Support, part 19: In honor of International Mother Language Day...</a></p><p>2012/02/15 <a href="http://archives.miloush.net/michkap/archive/2012/02/15/10268235.html">The evolving Story of Locale Support, part 18: Two scripts that share ten digits can be trouble</a></p><p>2012/02/02 <a href="http://archives.miloush.net/michkap/archive/2012/02/02/10263136.html">The evolving Story of Locale Support, part 17: Today I feel like translating you more than before</a></p><p>2012/01/24 <a href="http://archives.miloush.net/michkap/archive/2012/01/24/10259941.html">The evolving Story of Locale Support, part 16: We can't scale to a Xishuangbanna Dai locale, but…</a></p><p>2012/01/17 <a href="http://archives.miloush.net/michkap/archive/2012/01/17/10256884.html">The evolving Story of Locale Support, part 15: Fixing our listings up in Windows 8!</a></p><p>2011/12/22 <a href="http://archives.miloush.net/michkap/archive/2011/12/22/10250349.html">The evolving Story of Locale Support, part 14: Tifinagh, Tamazight, and Berber? Oh my!</a></p><p>2011/12/21 <a href="http://archives.miloush.net/michkap/archive/2011/12/21/10249983.html">The evolving Story of Locale Support, part 13: Divvying up locales, yet again!</a></p><p>2011/12/20 <a href="http://archives.miloush.net/michkap/archive/2011/12/20/10249596.html">On limitations your design that you may have failed to take into account</a></p><p>2011/12/09 <a href="http://archives.miloush.net/michkap/archive/2011/12/09/10246051.html">The evolving Story of Locale Support, part 12: Logic dictates that we keep a sense of proportion about the RATIO</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2011/11/28/10242018.html" title="We don&#39;t try to mask what the numbers looks like when you&#39;re blind">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2011/11/22/10239572.html" title="The evolving Story of Locale Support, part 10: Perhaps it is best to think of it as unintelligent design?">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2011-11">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2011-11-23">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2011/11/23/10240896.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+</html>

@@ -1,0 +1,57 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2011/03/12/10140165.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>A resource segue, #3 (how'd they manage to screw this one up?)</title></head><body>
+<h1>A resource segue, #3 (how'd they manage to screw this one up?)</h1>
+<p><em>by Michael S. Kaplan, published on 2011/03/12 07:01 -05:00, original URI: http://blogs.msdn.com/b/michkap/archive/2011/03/12/10140165.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<p>Now yesterday I wrote <a href="http://archives.miloush.net/michkap/archive/2011/03/11/10139662.html" title="A resource segue, #2 (architecting the wheels off the wagon, a bit)"><strong>A resource segue, #2 (architecting the wheels off the wagon, a bit)</strong></a>.</p>
+<p>And the day before that I wrote <a href="http://archives.miloush.net/michkap/archive/2011/03/11/10139662.html" title="A resource segue, #1"><strong>A resource segue, #1</strong></a>.</p>
+<p>Between them I've covered a bunch of the good and bad-ass about the version resources attached to win32 binaries on the Windows platform.</p>
+<p>And a few odd digs about Visual Studio's place in the mix.</p>
+<p>In a way those digs are unfair; I mean Visual Studio is one of the single most versatile and full-featured resource editors there is. The times when it does stuff slightly off that is often relly the fault of poor communication between parts of DEVDIV and Windows. I guess (being on Windows myself) it would be normal for me to blame DEVDIV, but I actually don't since it more often ends up being the fault of Windows.</p>
+<p>Sorry about that, DEVDIV.</p>
+<p>With that said, I'm about to point out some genuine problems they ought to fix over there, in some future version.</p>
+<p>Like the next one. Or the one after that.</p>
+<p>These are things that have been broken for five versions, so it would be silly to tell them they should be fired if they don' t drop everything to fix it next week.</p>
+<p>Just one day, okay? :-)</p>
+<p>As you might guess given the series we're in part 3 of, we're talking about version resources, still.</p>
+<p>and <strong>Managed Code</strong>&trade;.</p>
+<p>If you build your small managed app in Visual Studio, it will automatically add a Win32 version resource with the same version number as the managed resources claim to be.</p>
+<p>Easy.</p>
+<p><img src="http://blogs.msdn.com/cfs-file.ashx/__key/CommunityServer-Blogs-Components-WeblogFiles/00-00-00-33-81/3681.mui06.jpg" /></p>
+<p>This is a good interop story -- in Windows, anyone can right click on your app, choose P<strong>roperties</strong>, and see the dialog.</p>
+<p>And if you include an .RC file or a .RES file in the project that has a resource already, it will let you use that one instead. Which is nice.</p>
+<p>Of course now we get to the problem.</p>
+<p>Let's switch to WinForms. I'll make a form and put it in a language.</p>
+<p>I'll choose Amharic, because that's kind of cool.</p>
+<p>Not that the result is, mind you.</p>
+<p>Here is the resource it sticks on the main binary:</p>
+<p><img src="http://blogs.msdn.com/cfs-file.ashx/__key/CommunityServer-Blogs-Components-WeblogFiles/00-00-00-33-81/1440.mui07.jpg" /></p>
+<p>and here is the one it puts on the resource DLL sitting in the am-ET subdirectory:</p>
+<p><img src="http://blogs.msdn.com/cfs-file.ashx/__key/CommunityServer-Blogs-Components-WeblogFiles/00-00-00-33-81/7875.mui08.jpg" /></p>
+<p>Ugh, where do I start?</p>
+<p>First, the obvious -- even if I was running with the Amharic LIP it would never use the DLL's resources in that kind of mixed way that MUI-ized files do.</p>
+<p>But why would they mark the language-specific binary <strong>Language Neutral</strong>, anyway?</p>
+<p>And of course because of this one never gets to localize the version resources, like we can with Win32.</p>
+<p>Which is kind of lame, I think. In fact except by the accident of the directory it is in you have no&nbsp;indication of what language that resource DLL is!</p>
+<p>Now you could in theory run MUIRCT.EXE on your binary (described on MSDN <a href="http://msdn.microsoft.com/en-us/library/dd319113.aspx">here</a>) and use it to create a WindowsFormApplication2.exe.mui that you could go off and localize -- in fact you can run it with the -F parameter to do just the version resource.</p>
+<p><em>Of course you'll have to followmy advice about creating it with an .RC file or a .RES file, because MUIRCT.EXE won't split a language neutral file.</em></p>
+<p>Now once youi do all this, you'll have three files:</p>
+<ul>
+<li>WindowsFormApplication2.exe</li>
+<li>WindowsFormApplication2.resources.dll</li>
+<li>WindowsFormApplication2.exe.mui</li>
+</ul>
+<p>And your localizer can localize that .MUI file and Windows will treat it the way it treats all of its files.</p>
+<p>This may not be important to you, but when you think of the hundreds of managed code binaries that ship in Windows itself, the fact that you would have to ship a whole different file, per language, just to get parity with what Windows has been doing this exact same way since Vista, is a little silly.</p>
+<p>Note that MUIRCT.EXE lets you specify another name for the resource file -- so you could in theory bind the managed resource dll in to let the whole MUI system treat the managed code the same way the native Win32 code works. So DEVDIV could totally make their binaries work with the Windows resource model without changing their own model.</p>
+<p>But instead they just stay inconsistent in this way that makes for unlocalized/unlocalizable files....</p>
+<p>I'd call it a terrible bug, but then the native story is a little messy these days too. So perhaps if both sides could clean up their acts a bit we could see everything working properly all at once!</p>
+<hr/><p><strong>Noam C.</strong> on 13 Mar 2011 9:19 AM:</p><div style="margin-left: 1em"><p>&quot;in Windows, anyone can _fight click_ on your app&quot;?</p>
+<p>That this some kind of Fight Club meets Windows thingamajig?</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 13 Mar 2011 9:34 AM:</p><div style="margin-left: 1em"><p>&quot;f&quot; and &quot;r&quot; are pretty close together -- a legitimate typo. Or maybe a freudian keyslip about the relationship between the two orgs? :-)</p>
+</div>
+<hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2011/03/14 <a href="http://archives.miloush.net/michkap/archive/2011/03/14/10140462.html">Microsoft is better as one big company</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2011/03/13/10140303.html" title="I&#39;m not bad. I just bleed that way....">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2011/03/11/10139662.html" title="A resource segue, #2 (architecting the wheels off the wagon, a bit)">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2011-03">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2011-03-12">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2011/03/12/10140165.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+</html>

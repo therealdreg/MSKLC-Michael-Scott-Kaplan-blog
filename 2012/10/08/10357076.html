@@ -1,0 +1,41 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2012/10/08/10357076.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:25 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>The feature that never happened (probably because it wasn't needed!)</title></head><body>
+<h1>The feature that never happened (probably because it wasn't needed!)</h1>
+<p><em>by Michael S. Kaplan, published on 2012/10/08 07:01 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2012/10/08/10357076.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<p>So the last couple of blogs (<strong><a title="LIMITED TIME OFFER: Your chance to be NLS MacGyver, right here in this very blog!" href="../04/10355814.html">LIMITED TIME OFFER: Your chance to be NLS MacGyver, right here in this very blog!</a></strong> and <strong><a title="We'll give it until Monday!" href="../05/10356326.html">We'll give it until Monday!</a></strong>) centered on a specific question:</p>
+<hr />
+<p><span style="font-family: times new roman,times; font-size: medium;">If you can</span></p>
+<ul>
+<li><span style="font-family: times new roman,times; font-size: medium;">set your region in setup, and</span></li>
+<li><span style="font-family: times new roman,times; font-size: medium;">get the value later in the <strong>Location</strong> tab, and</span></li>
+<li><span style="font-family: times new roman,times; font-size: medium;">retrieve the <strong>GEOID</strong> of the location with a call to <a href="http://msdn.microsoft.com/en-us/library/windows/desktop/dd318138(v=vs.85).aspx"><strong>GetUserGeoID</strong></a>, and</span></li>
+<li><span style="font-family: times new roman,times; font-size: medium;">set a new location by setting the right <strong>GEOID</strong> via a call to <a href="http://msdn.microsoft.com/en-us/library/windows/desktop/dd374055(v=vs.85).aspx"><strong>SetUserGeoID</strong></a>, and</span></li>
+<li><span style="font-family: times new roman,times; font-size: medium;">retrieve interesting attributes of that <strong>GEOID</strong> by calling <a href="http://msdn.microsoft.com/en-us/library/windows/desktop/dd318099(v=vs.85).aspx"><strong>GetGeoInfo</strong></a> with <a href="http://msdn.microsoft.com/en-us/library/windows/desktop/dd374071(v=vs.85).aspx"><strong>SYSGEOTYPE</strong></a> enumeration members like <strong>GEO_LATITUDE</strong> and <strong>GEO_LONGITUDE</strong>, and</span></li>
+<li><span style="font-family: times new roman,times; font-size: medium;">use cool mapping/location/GPS features in other parts of the system</span></li>
+</ul>
+<p><span style="font-family: times new roman,times; font-size: medium;">then couldn't you build some amazing feature for mobile users who travel a lot?</span></p>
+<hr />
+<p>The answer, in the end, is that there is nothing to do here.</p>
+<p>Not a darn&nbsp;thing.</p>
+<p>i mean, you have to consider where GEOID values&nbsp;come&nbsp;from.</p>
+<p>They&nbsp;are very&nbsp;small&nbsp;subset of the ID&nbsp;values used by MapPoint. The actual IDs get down to the street level. Which is how you do maps.</p>
+<p>The full list has a lot of potential uses, if they were still around, that is.</p>
+<p>Now,&nbsp;it is the thing no one uses anymore -- they use Bing or Apple or Google or Nokia or whomever.</p>
+<p>GEOIDs were this curious addition to NLS, with one per country/region.</p>
+<p>The latitude and longitude values are mildly interesting, though the meaning of one value for the entire US, or India, or Russia, or China, is ridiculous in a world with GPS and location info.</p>
+<p>A feature could try to map them all together, sure.</p>
+<p>It could even set your location for you automatically by somehow comparing your location to these coordinates that the GEOID provides.</p>
+<p>Especially good if you want your application/platform to behave even worse than Apple for mapping!</p>
+<p>As features go, it is an appendix in the body that is the NLS API. SetUserGeoID and GetUserGeoID are potentially useful if you map rich GPS info to this small list of GEOIDs, but since GEO stuff is not used much, it is unclear whether the behavior will be better or worse.</p>
+<p>I suspect it would mostly be worse for people, though.</p>
+<p>If you wanted to see what happens, you can always change the setting in Windows, and see if you notice anything.</p>
+<p>Anyway, nobody got the internship. Too many people tried to make it useful, despite the fact that it really isn't....</p>
+<p>But&nbsp;life feature simply never emerged properly, and circumstances conspired to make it somewhat useless for people.</p>
+<p>I'm not saying we should remove it, but I wouldn't recommend gratuitously removing your appendix, either...</p>
+<hr/><p><strong>John Cowan</strong> on 8 Oct 2012 8:39 AM:</p><div style="margin-left: 1em"><p>Indeed, the appendix is part of the human immune system. &nbsp;Just because it serves no *digestive* function doesn&#39;t mean it serves no function at all.</p>
+</div>
+<hr/><p><em>go to <a id="newer" href="../09/10357645.html" title="It is quite ironic to call it &#39;Logical&#39; if no one really knows what to do with it!">newer</a> or <a id="older" href="../05/10356326.html" title="We&#39;ll give it until Monday!">older</a> post, or back to <a href="../../../index-2.html">index</a> or <a href="../../../index-2.html#2012-10">month</a> or <a href="../../../index-2.html#2012-10-08">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2012/10/08/10357076.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:25 GMT -->
+</html>

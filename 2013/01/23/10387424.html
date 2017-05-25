@@ -1,0 +1,53 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2013/01/23/10387424.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:24 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>PowerShell ISE will do *everything* (IF YOU LET IT!)</title></head><body>
+<h1>PowerShell ISE will do *everything* (IF YOU LET IT!)</h1>
+<p><em>by Michael S. Kaplan, published on 2013/01/23 07:01 -05:00, original URI: http://blogs.msdn.com/b/michkap/archive/2013/01/23/10387424.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<p>I thought I'd blather about the console for a bit.</p>
+<p>There are three basic kinds of console applications:</p>
+<ol>
+<li>Most&nbsp;console applications emit data that&nbsp;is read later, usually in other tools;</li>
+<li>Many other&nbsp;console applications emit data that is generally used right in the console;</li>
+<li>A few console applications are interactive with the user.</li>
+</ol>
+<p>Some people who spend most of their time with the latter two categories might argue about my wording's claim of common usages, and there are tools that span categories (e.g. using PING's results in a log file), but overall I believe this categorization holds true.</p>
+<p>Now let's add internationalization and world readiness to the mix.</p>
+<p>For the first category, where the end result is primarily for some other app, WR is easy to do and fully support any&nbsp;characters, whether off code page or supplementary or combining or complex.</p>
+<p>Everything can just work.</p>
+<p>In the latter two categories, and when the first category initially displays in the console, the WR story is pretty bleak.</p>
+<p>Even if you are building completely Unicode console apps and are using TrueType fonts, the best you can hope for when you are off code page or supplementary or combining or complex is square boxes -- otherwise all you get is usually lots of corrupted display and question marks.</p>
+<p>This is especialy true in PowerShell, where for then most part <strong>it doesn't have to be!</strong></p>
+<p>Well, it does have to be for legacy CSRSS/cmd based PowerShell, where these limitations are baked into the architecture.</p>
+<p>But the <strong>Integrated Scripting Environment</strong> (ISE), can support it all, whether off code page or supplementary or combining or complex.</p>
+<p>The ISE can even do amazing things with those few proud&nbsp;legacy Unicode console applications I mentioned earlier.</p>
+<p>Remember <strong>WriteLineRight.exe</strong>?</p>
+<p>Here it is, in the legacy console with raster fonts:</p>
+<p><a href="http://msdnshared.blob.core.windows.net/media/MSDNBlogsFS/prod.evol.blogs.msdn.com/CommunityServer.Blogs.Components.WeblogFiles/00/00/00/33/81/5076.ise05.jpg"><img style="max-width: 550px;" src="http://msdnshared.blob.core.windows.net/media/MSDNBlogsFS/prod.evol.blogs.msdn.com/CommunityServer.Blogs.Components.WeblogFiles/00/00/00/33/81/5076.ise05.jpg" alt="" border="0" /></a></p>
+<p>Even Unicode can't do much with raster fonts!</p>
+<p>Let's try with Consolas:</p>
+<p><a href="http://msdnshared.blob.core.windows.net/media/MSDNBlogsFS/prod.evol.blogs.msdn.com/CommunityServer.Blogs.Components.WeblogFiles/00/00/00/33/81/8004.ise04.jpg"><img style="max-width: 550px;" src="http://msdnshared.blob.core.windows.net/media/MSDNBlogsFS/prod.evol.blogs.msdn.com/CommunityServer.Blogs.Components.WeblogFiles/00/00/00/33/81/8004.ise04.jpg" alt="" border="0" /></a></p>
+<p>Much better!</p>
+<p>But let's try it in the ISE:</p>
+<p><a href="http://msdnshared.blob.core.windows.net/media/MSDNBlogsFS/prod.evol.blogs.msdn.com/CommunityServer.Blogs.Components.WeblogFiles/00/00/00/33/81/7318.ise01.jpg"><img style="max-width: 550px;" src="http://msdnshared.blob.core.windows.net/media/MSDNBlogsFS/prod.evol.blogs.msdn.com/CommunityServer.Blogs.Components.WeblogFiles/00/00/00/33/81/7318.ise01.jpg" alt="" border="0" /></a></p>
+<p>Oops, I forgot they stupidly picked <strong>Lucida Console</strong> as their default font!</p>
+<p>Let's go to Tools|Options... and fix that:</p>
+<p><a href="http://msdnshared.blob.core.windows.net/media/MSDNBlogsFS/prod.evol.blogs.msdn.com/CommunityServer.Blogs.Components.WeblogFiles/00/00/00/33/81/6457.ise02.jpg"><img style="max-width: 550px;" src="http://msdnshared.blob.core.windows.net/media/MSDNBlogsFS/prod.evol.blogs.msdn.com/CommunityServer.Blogs.Components.WeblogFiles/00/00/00/33/81/6457.ise02.jpg" alt="" border="0" /></a></p>
+<p>That's better!</p>
+<p>We don't even have to run <strong>WriteLineRight.exe</strong> again:</p>
+<p><a href="http://msdnshared.blob.core.windows.net/media/MSDNBlogsFS/prod.evol.blogs.msdn.com/CommunityServer.Blogs.Components.WeblogFiles/00/00/00/33/81/5618.ise03.jpg"><img style="max-width: 550px;" src="http://msdnshared.blob.core.windows.net/media/MSDNBlogsFS/prod.evol.blogs.msdn.com/CommunityServer.Blogs.Components.WeblogFiles/00/00/00/33/81/5618.ise03.jpg" alt="" border="0" /></a></p>
+<p>Just one settings change&nbsp;away from magic!</p>
+<p>And now my challenge to you PowerShell developers, and you legacy console developers....</p>
+<p>Strut your stuff in the ISE, and see what happens.</p>
+<p>No offense, but I'm guessing you.aren't quite <strong>World Ready</strong> yet.... :-)</p>
+<hr/><p><strong>Joshua</strong> on 23 Jan 2013 1:21 PM:</p><div style="margin-left: 1em"><p>&gt; Strut your stuff in the ISE, and see what happens.</p>
+<p>All I get is blurry fonts and &quot;Cannot start &quot;(omitted)&quot;. Interactive console applications are not supported.&quot;</p>
+<p>Get me a terminal that works or it&#39;s Unicode support doesn&#39;t matter.</p>
+</div>
+<p><strong>L.</strong> on 23 Jan 2013 4:44 PM:</p><div style="margin-left: 1em"><p>Yes, the ISE is very nice compared to the old console. &nbsp;I had a bit of a hard time getting used to its limitations but it was definitively worth it. &nbsp;It&#39;s a shame these limitations (no interactive console apps, especially) are there, because they are quite significant and IMHO kill any chance of ISE becoming more popular (at least, not soon).</p>
+</div>
+<p><strong>Joshua</strong> on 24 Jan 2013 3:29 PM:</p><div style="margin-left: 1em"><p>I am impressed that Michael Kaplan is obviously moderating posts yet does not filter out posts critical to him or on-topic bashing of MS products.</p>
+</div>
+<hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2013/02/20 <a href="../../02/20/10395416.html">PowerShell ISE will do *everything* (but good luck finding it on Windows 8 without help!)</a></p><p>2013/02/19 <a href="../../02/19/10395086.html">PowerShell ISE will do *everything* (though some assembly may be required!)</a></p><p>2013/02/15 <a href="../../02/15/10393862.html">PowerShell ISE (or legacy) will do *everything* (and it's really easy to start!)</a></p></div><p><em>go to <a id="newer" href="../24/10387957.html" title="The Cherokee LIP on Windows 8, part 3:The Language Interface Pack, released!">newer</a> or <a id="older" href="../22/10387105.html" title="The top 10 reasons the people responsible for Building 86 should be glad Jews don&#39;t believe there&#39;s a Hell">older</a> post, or back to <a href="../../../index-2.html">index</a> or <a href="../../../index-2.html#2013-01">month</a> or <a href="../../../index-2.html#2013-01-23">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2013/01/23/10387424.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:24 GMT -->
+</html>

@@ -1,0 +1,49 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2013/02/13/10393199.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:22 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>The time has come to fix a bug that has been in Windows more than twice as long as I have...</title></head><body>
+<h1>The time has come to fix a bug that has been in Windows more than twice as long as I have...</h1>
+<p><em>by Michael S. Kaplan, published on 2013/02/13 07:01 -05:00, original URI: http://blogs.msdn.com/b/michkap/archive/2013/02/13/10393199.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<p>The other day, I was reminded about two old blogs of mine:</p>
+<ul>
+<li><strong><a title="Cyrillic looks so spacy when viewed from some parts of East Asia...." href="../../../2007/05/11/2559407.html">Cyrillic looks so spacy when viewed from some parts of East Asia....</a></strong></li>
+<li><strong><a title="WideCharToMultiByte vs. DrawTextW? In tennis terms, 15-Love!" href="../../../2012/04/05/10290985.html">WideCharToMultiByte vs. DrawTextW? In tennis terms, 15-Love!</a></strong></li>
+</ul>
+<p>Here's the art:</p>
+<p><a href="http://msdnshared.blob.core.windows.net/media/MSDNBlogsFS/prod.evol.blogs.msdn.com/CommunityServer.Blogs.Components.WeblogFiles/00/00/00/33/81/4643.spaced_2D00_cyrillic2.jpg"><img src="http://blogs.msdn.com/resized-image.ashx/__size/550x0/__key/communityserver-blogs-components-weblogfiles/00-00-00-33-81/4643.spaced_2D00_cyrillic2.jpg" alt="" border="0" /></a></p>
+<p>Anyway, I was reminded when a colleague asked me whatever happened to the bug (is was too late in the cycle to fix at that time):</p>
+<p style="padding-left: 60px;"><em><span style="font-family: times new roman,times; font-size: large;">Hello Michael,</span></em></p>
+<p style="padding-left: 60px;"><em><span style="font-family: times new roman,times; font-size: large;">May I ask what was the decision on bug described in your WideCharToMultiBytes vs. DrawTextW blog post? Was a bug logged for this issue?</span></em></p>
+<p style="padding-left: 60px;"><em><span style="font-family: times new roman,times; font-size: large;">Why I'm asking: From time to time we receive questions about spacy Cyrillic in Visual Studio on EA OS's. Though we're telling them that there's nothing wrong with their code and that there's a workaround in VS (set font to Segoe UI instead of Automatic which forces font to be inherited from OS in VS settings, more on that here), it would be great to provide more details to those who ask. Reference to your blog post is good but bug # and your (Windows) final decision in addition would be even better.</span></em></p>
+<p style="padding-left: 60px;"><em><span style="font-family: times new roman,times; font-size: large;">Thanks,</span></em><br /><em><span style="font-family: times new roman,times; font-size: large;">nik</span></em></p>
+<p>I thought maybe I should go follow up on that bug in <strong>DrawText</strong>, since we have time.</p>
+<p>The bug is easy to fix, as I pointed out in <a title="WideCharToMultiByte vs. DrawTextW? In tennis terms, 15-Love!" href="../../../2012/04/05/10290985.html">that second blog</a>:</p>
+<p style="padding-left: 60px;"><span style="font-family: times new roman,times; font-size: medium;">The bug is in using WideCharToMultiByte to detect "wide" characters by converting it using a code page.</span><br />&nbsp;<br /><span style="font-family: times new roman,times; font-size: medium;">Because every CJK code page has some characters that are not double width that is situated one of the two byte ranges inside the code page (other characters that can hit this problem include random symbols and such).</span><br />&nbsp;<br /><span style="font-family: times new roman,times; font-size: medium;">Clearly to fix this in any version would require a different, more reliable test for full width characters!</span><br />&nbsp;<br /><span style="font-family: times new roman,times; font-size: medium;">For example, a simple call to GetStringTypeW(CT_CTYPE3, ...) checking for the C3_FULLWIDTH character type flag -- the non locale specific code that should have been there all along....</span></p>
+<p>I think I'll go have a chat with some DrawText dev owners.</p>
+<p>I'll even offer to do the work if they want.</p>
+<p>Or maybe I'll code up the fix and ask them to do the CR.</p>
+<p>The fact that a partner team noticed the bug and saw my blog explaining how easy the fix is won't hurt my case.</p>
+<p>Bad code is just a bad idea, doncha think?</p>
+<p>The fact that I'm offering to do all this <strong>here</strong> is fun, too.</p>
+<p>In case there was any doubt, <strong>I'm back!</strong> :-)</p>
+<hr/><p><strong>Random832</strong> on 13 Feb 2013 9:10 AM:</p><div style="margin-left: 1em"><p>!!!WARNING!!!: Ideographs (and Hiragana), which are probably what the original test is _meant_ to detect (since it&#39;s deciding what to treat as &quot;a word&quot;), _do not_ set C3_FULLWIDTH. I detected this in writing a test program to look at my question from last time about what it returns for Cyrillic.</p>
+<p>Also - the assertion &quot;The various non-full-width CJK fonts don&#39;t give the Cyrillic characters full width visually&quot; is NOT true of MS PGothic or PMingLiU. And I don&#39;t know where you could possibly get the idea that &quot;you&#39;d just get fat Cyrillic&quot;, those fonts give the characters the extra width by making more white space, not by stretching the glyphs. Did you only check Meiryo, or did you only look at the glyphs in isolation without putting them next to each other?</p>
+<p>And why would it be adding spaces just because it passes this [however broken or not] test? It doesn&#39;t do so for the Ideographs, which also presumably set cChars = 2.</p>
+<p>Incidentally, here&#39;s the output of a test program I wrote to see what flags are set by what characters:</p>
+<p>Char &nbsp; &nbsp;Val &nbsp;F H ----</p>
+<p>U+0061: 8040 0 1 0000 (Latin)</p>
+<p>U+03b1: 8000 0 0 0000 (Greek)</p>
+<p>U+0410: 8000 0 0 0000 (Cyrillic)</p>
+<p>U+ff41: 8080 1 0 0000 (Latin FW)</p>
+<p>U+4e9c: 8100 0 0 0100 (Ideograph)</p>
+<p>U+3042: 8020 0 0 0020 (Hiragana)</p>
+<p>U+30a2: 8090 1 0 0010 (Katakana)</p>
+<p>U+ff71: 8050 0 1 0010 (Katakana HW)</p>
+<p>U+0000: 0000 0 0 0000</p>
+<p>(The last column is the value with C3_ALPHA|C3_FULLWIDTH|C3_HALFWIDTH masked out - nothing unexpected there, just ideograph, hiragana, and katakana)</p>
+</div>
+<p><strong>Azarien</strong> on 18 Feb 2013 5:55 AM:</p><div style="margin-left: 1em"><p>There is also a problem with Arabic (Egypt) on this screenshot. The parentheses look wrong.</p>
+</div>
+<hr/><p><em>go to <a id="newer" href="../14/10393578.html" title="Those languages aren&#39;t Right-to-Left, they&#39;re Bidirectional!!!">newer</a> or <a id="older" href="../12/10392953.html" title="ShellExecute/ShellExecuteEx can&#39;t be bothered to get all supplementary....">older</a> post, or back to <a href="../../../index-2.html">index</a> or <a href="../../../index-2.html#2013-02">month</a> or <a href="../../../index-2.html#2013-02-13">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2013/02/13/10393199.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:22 GMT -->
+</html>

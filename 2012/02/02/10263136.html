@@ -1,0 +1,85 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2012/02/02/10263136.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>The evolving Story of Locale Support, part 17: Today I feel like translating you more than before</title></head><body>
+<h1>The evolving Story of Locale Support, part 17: Today I feel like translating you more than before</h1>
+<p><em>by Michael S. Kaplan, published on 2012/02/02 07:01 -05:00, original URI: http://blogs.msdn.com/b/michkap/archive/2012/02/02/10263136.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<p><span style="color: #ff0000;"><em>Apologies to Grace Slick for the title riff!</em></span></p>
+<p>Previous blogs from this series:</p>
+<ul>
+<li><strong><a title="part 16 (We can't scale to a Xishuangbanna Dai locale, but&hellip;)" href="http://archives.miloush.net/michkap/archive/2012/01/24/10259941.html">part 16 (We can't scale to a Xishuangbanna Dai locale, but&hellip;)</a></strong></li>
+<li><strong><a title="part 15 (Fixing our listings up in Windows 8!)" href="http://archives.miloush.net/michkap/archive/2012/01/17/10256884.html">part 15 (Fixing our listings up in Windows 8!)</a></strong></li>
+<li><strong><a title="part 14 (Tifinagh, Tamazight, and Berber? Oh my!)" href="http://archives.miloush.net/michkap/archive/2011/12/22/10250349.html">part 14 (Tifinagh, Tamazight, and Berber? Oh my!)</a></strong></li>
+<li><strong><a title="part 13 (Divvying up locales, yet again!)" href="http://archives.miloush.net/michkap/archive/2011/12/21/10249983.html">part 13 (Divvying up locales, yet again!)</a></strong></li>
+<li><strong><a title="part 12 (Logic dictates that we keep a sense of proportion about the RATIO)" href="http://archives.miloush.net/michkap/archive/2011/12/09/10246051.html">part 12 (Logic dictates that we keep a sense of proportion about the RATIO)</a></strong></li>
+<li><strong><a title="part 11: What language is that keyboard for?)" href="http://archives.miloush.net/michkap/archive/2011/11/23/10240896.html">part 11 (What language is that keyboard for?)</a></strong></li>
+<li><strong><a title="part 10 (Perhaps it is best to think of it as unintelligent design?)" href="http://archives.miloush.net/michkap/archive/2011/11/22/10239572.html">part 10 (Perhaps it is best to think of it as unintelligent design?</a></strong></li>
+<li><strong><a title="part 9 (Nastaleeq vs. Nastaliq? Either way, Windows 8 has got it!)" href="http://archives.miloush.net/michkap/archive/2011/11/16/10237715.html">part 9 (Nastaleeq vs. Nastaliq? Either way, Windows 8 has got it!</a></strong></li>
+<li><strong><a title="part 8 ([Finally] taking care of some [more] languages in Pakistan)" href="http://archives.miloush.net/michkap/archive/2011/11/15/10237317.html">part 8 ([Finally] taking care of some [more] languages in Pakistan</a></strong></li>
+<li><strong><a title="part 7 (That would be a 'call and a raise' for Hawaiian" href="http://archives.miloush.net/michkap/archive/2011/11/11/10236194.html">part 7 (That would be a 'call and a raise' for Hawaiian)</a></strong></li>
+<li><strong><a title="part 6 (Behind the Cherokee Phonetic layout in Windows 8)" href="http://archives.miloush.net/michkap/archive/2011/11/09/10235391.html">part 6 (Behind the Cherokee Phonetic layout in Windows 8)</a></strong></li>
+<li><strong><a title="part 5 (...until the decision was made to not refuse to add it)" href="http://archives.miloush.net/michkap/archive/2011/11/08/10234995.html">part 5 (...until the decision was made to not refuse to add it)</a></strong></li>
+<li><strong><a title="part 4 (working beyond one's bugs, and the case for an MSKLC update)" href="http://archives.miloush.net/michkap/archive/2011/11/04/10233999.html">part 4 (working beyond one's bugs, and the case for an MSKLC update)</a></strong></li>
+<li><strong><a title="part 3 (working beyond one's bugs, the setup)" href="http://archives.miloush.net/michkap/archive/2011/11/03/10233591.html">part 3 (working beyond one's bugs, the setup)</a> </strong></li>
+<li><strong><a title="part 2 (raising the roof on keyboards)" href="http://archives.miloush.net/michkap/archive/2011/11/02/10232468.html">part 2 (raising the roof on keyboards)</a></strong></li>
+<li><strong><a title="part 1 (Some people don't want to double-d's)" href="http://archives.miloush.net/michkap/archive/2011/11/01/10232070.html">part 1 (Some people don't want to double-d's)</a></strong></li>
+<li><strong><a title="part 0 (The introduction)" href="http://archives.miloush.net/michkap/archive/2011/10/31/10231661.html">part 0 (The introduction)</a></strong></li>
+</ul>
+<p>So, back when I was writing about <strong><a title="The Locales of Windows 7, all divvied up" href="http://archives.miloush.net/michkap/archive/2011/05/24/10167604.htmlZ">The Locales of Windows 7, all divvied up</a></strong> and <strong><a title="The Locales of Windows 7, divvied up further" href="http://archives.miloush.net/michkap/archive/2011/07/07/10183904.html">The Locales of Windows 7, divvied up further</a></strong>, there is an important point that it appears it is all too easy to forget about.</p>
+<p>"What fact, Michael?" you may ask.</p>
+<p><em>I mean, not because youy think I need the prompting, but because you know when I get on a roll I just assume people will be caught up in it too!</em></p>
+<p>Anyway, I'll explain.</p>
+<p>You have that very first table of "Language Pack" locales I mentioned in the "divvying" blog&nbsp;-- fewer than forty of those.</p>
+<p>Then that second table of "Language Interface Pack" locales -- add another 60 or so, each of which will localize fewer strings than the first group, but are as good as they can&nbsp;be under the circumstances.</p>
+<p>And then that third table that is just locales -- none of it localized at all, but with all that underlying data we store so that people who know or use or love those languages can benefit from what we do have.</p>
+<p>Now in an ideal world of:</p>
+<ul>
+<li>infinite time;</li>
+<li>infinite money;</li>
+<li>infinite expertise.</li>
+</ul>
+<p>we can imagine if every single locale was in the first table, and nothing needed to be divvied up at all.</p>
+<p>However, <strong>we do not live in such a world</strong>.</p>
+<p>This gives us two choices:</p>
+<ul>
+<li>We can dump support for everything in Table 3 and tell you "tough luck" if you know or use or love one of them, since we only support languages we translate into, or</li>
+<li>We have to have two separate concepts: one for the user locale, one for the UI language.</li>
+</ul>
+<p>Obviously we have chosen the second option. :-)</p>
+<p>Of course that doesn't stop people from fighting the idea.</p>
+<p>Sometimes even Microsoft employees who add features that use locales!</p>
+<p>For example,&nbsp;let's take a quick look at the MonthCal -- the MonthCalendar control, the MonthView ActiveX control. They are all based on the same thing.</p>
+<p>Here is an example showing a few of them in&nbsp;design view:</p>
+<p><a href="http://msdnshared.blob.core.windows.net/media/MSDNBlogsFS/prod.evol.blogs.msdn.com/CommunityServer.Blogs.Components.WeblogFiles/00/00/00/33/81/8546.MonthCal01.png"><img border="0" alt="" src="http://blogs.msdn.com/resized-image.ashx/__size/550x0/__key/communityserver-blogs-components-weblogfiles/00-00-00-33-81/8546.MonthCal01.png" /></a></p>
+<p>The control is based&nbsp;on <strong>LOCALE_USER_</strong>DEFAULT.<strong></strong></p>
+<p>The entire control.</p>
+<p>Well, with one exception.</p>
+<p>The word TODAY, which is localized, and thus based on <strong>User Interface Language</strong>!!!!</p>
+<p>People will then complain (as owners or uses of the feature who try to mix and match the two settings and see the effect on the control) to be really non-intuitive.</p>
+<p>And they loudly proclaim: "<strong>Can't we just have one setting? This is broken!</strong>"</p>
+<p>Um, no.</p>
+<p>Sorry.</p>
+<p>Maybe this use of&nbsp; the User Interface Language that has the [possibly localized] <strong>Today</strong> is broken. But that's <em>their</em> feature.</p>
+<p>And&nbsp;that is hardly the fault of the user locale. Or the UI Language. Or the data supporting either one. This is just a bit of a feature that doesn't scale to the product it is sitting on.</p>
+<p>It is a simple design flaw in this piece of UI, the owners of which have no one to blame but themselves for the bug!</p>
+<p>So they are responsible for doing something here, or not.</p>
+<p>To put it simply (if rudely):</p>
+<p><span style="font-size: x-large;"><strong>We can't dumb down our locale support just because they dumbed down&nbsp;their feature!</strong></span></p>
+<p>Maybe next time, they'll formally request a feature to add such strings to the locale data. Maybe the "Today", maybe something else like it.</p>
+<p>And maybe they'll do it with enough time to actually in fact let us <strong>get the data</strong>.</p>
+<p>Or, if history of the last ten versions of Windows acts as a guide, they'll drop the issue, and bring it up next version, when it is too late once again. :-/</p>
+<hr/><p><strong>metathinker</strong> on 2 Feb 2012 8:41 AM:</p><div style="margin-left: 1em"><p>Is there any particular reason you&#39;re using LabVIEW to show the two monthly calendar controls? </p>
+<p>Just wondering...</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 2 Feb 2012 9:37 AM:</p><div style="margin-left: 1em"><p>Just needed to show the problem in a multi-version way....</p>
+</div>
+<p><strong>Ian Boyd</strong> on 2 Feb 2012 8:42 PM:</p><div style="margin-left: 1em"><p>Just so I know I&#39;m not crazy: the screenshot doesn&#39;t show anything particularly &quot;wrong&quot;, right?</p>
+<p>I mean &quot;Today&quot; is spelled t-o-d-a-y in both controls.</p>
+<p>One control isn&#39;t sized correctly - but that&#39;s not a localization issue (is it?)</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 2 Feb 2012 9:55 PM:</p><div style="margin-left: 1em"><p>You&#39;re not crazy. :-)</p>
+<p>But when the UI language changes, the translated string appears, instead of &quot;Today&quot;....</p>
+</div>
+<hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2012/10/26 <a href="http://archives.miloush.net/michkap/archive/2012/10/26/10362603.html">The evolving Story of Locale Support, part 28: We finally fixed that 'Install New Languages' thing!</a></p><p>2012/10/02 <a href="http://archives.miloush.net/michkap/archive/2012/10/02/10354988.html">The evolving Story of Locale Support, part 27: No, the T and the H aren't silent...</a></p><p>2012/08/20 <a href="http://archives.miloush.net/michkap/archive/2012/08/20/10341516.html">The evolving Story of Locale Support, part 26: Hey Windows 8, there's someone on the phone for you.</a></p><p>2012/07/11 <a href="http://archives.miloush.net/michkap/archive/2012/07/11/10327775.html">The evolving Story of Locale Support, part 25: Something old, something new, something repurposed, and something...</a></p><p>2012/06/07 <a href="http://archives.miloush.net/michkap/archive/2012/06/07/10316511.html">The evolving Story of Locale Support, part 24: I Adar you! Hell, I Double Adar you! (Windows 8 ed.)</a></p><p>2012/06/05 <a href="http://archives.miloush.net/michkap/archive/2012/06/05/10315033.html">The evolving Story of Locale Support, part 23: Tamazight? Outta sight!</a></p><p>2012/04/12 <a href="http://archives.miloush.net/michkap/archive/2012/04/12/10292952.html">The evolving Story of Locale Support, part 22: Digit Substitution 2.0</a></p><p>2012/03/08 <a href="http://archives.miloush.net/michkap/archive/2012/03/08/10278921.html">The evolving Story of Locale Support, part 21: The Windows 8 Hijripalooza extraordinaire!</a></p><p>2012/03/02 <a href="http://archives.miloush.net/michkap/archive/2012/03/02/10276258.html">The evolving Story of Locale Support, part 20: Yes, it's Bangla. Not Bengali!</a></p><p>2012/02/21 <a href="http://archives.miloush.net/michkap/archive/2012/02/21/10270502.html">The evolving Story of Locale Support, part 19: In honor of International Mother Language Day...</a></p><p>2012/02/15 <a href="http://archives.miloush.net/michkap/archive/2012/02/15/10268235.html">The evolving Story of Locale Support, part 18: Two scripts that share ten digits can be trouble</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2012/02/03/10263576.html" title="Sometimes MMM is MMMM, other times MMM is M! (aka Not all abbreviations are created equal)">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2012/02/01/10262583.html" title="Changing the world, 0.1 steps at a time!">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2012-02">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2012-02-02">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2012/02/02/10263136.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+</html>

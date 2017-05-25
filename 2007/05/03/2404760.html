@@ -1,0 +1,23 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2007/05/03/2404760.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:38 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Changing the keyboard for always?</title></head><body>
+<h1>Changing the keyboard for always?</h1>
+<p><em>by Michael S. Kaplan, published on 2007/05/04 00:41 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2007/05/03/2404760.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P><EM>(The inspiration for the title is from a Buck Rogers episode&nbsp;from the second season that I doubt anyone&nbsp;will recall!)</EM></P>
+<P>Craig's question was:</P>
+<BLOCKQUOTE><FONT size=2>
+<P><EM><FONT face="times new roman,times">How do you change the Keyboard input local correctly? <FONT size=2>We need to change it in all process, but looks like LoadKeyboardLayout works only for the current process. How do you change the keyboard input type for the whole system ?</P></FONT></FONT></EM></FONT></BLOCKQUOTE>
+<P>Now there is no way to change it for the whole system (which implies all of the users on it!), but there is an easy way to set the default input language that will be used for every new process that a user starts -- just use the <A class="" href="http://msdn2.microsoft.com/library/ms724947.aspx" mce_href="http://msdn2.microsoft.com/library/ms724947.aspx">SystemParametersInfo</A> function with SPI_SETDEFAULTINPUTLANG. </P>
+<P>In fact, that call is the same one that is set when you set the Default Input Language in the <STRONG>Text Services and Input Languages dialog</STRONG>.</P>
+<P>Of course that call to <A class="" href="http://msdn2.microsoft.com/library/ms724947.aspx" mce_href="http://msdn2.microsoft.com/library/ms724947.aspx">SystemParametersInfo</A>&nbsp;needs an HKL, so you probably would want to hold onto that <A class="" href="http://msdn2.microsoft.com/library/ms646305.aspx" mce_href="http://msdn2.microsoft.com/library/ms646305.aspx">LoadKeyboardLayout</A> code to get the HKL to use. But at least it will let that keyboard be the one that is used by default in every new process....</P>
+<P mce_keep="true">&nbsp;</P>
+<P><FONT color=#ff00ff><EM>This post brought to you by</EM> <FONT size=5>Ձ</FONT> <EM>(<A class="" href="http://www.fileformat.info/info/unicode/char/0541" mce_href="http://www.fileformat.info/info/unicode/char/0541">U+0541</A>,a.k.a. ARMENIAN CAPITAL LETTER JA)</EM></FONT></P>
+<hr/><p><strong>Lars Viklund</strong> on 4 May 2007 6:33 AM:</p><div style="margin-left: 1em"><p>When reading this post, was it just me that recalled Raymond Chen's &quot;What if two programs did this?&quot; blog post?</p></div>
+<p><strong>Paul Yates</strong> on 11 Aug 2009 10:17 AM:</p><div style="margin-left: 1em"><p>And what about existing threads under the current user's session?</p>
+<p>Basically within the corporate I work for we want to mange the input language setting automatically for travelling user's, so if a user from France (azerty keyboard layout) comes to the UK, their roaming profile will have the UK keyabord added as the new default.</p>
+<p>This I can manage, with SystemParametersInfo (win xp enviroment), however the SPIF_SENDCHANGE flag doesn't seem to affect existing threads (e.g. Winlogon).</p>
+<p>Anyone got any ideas?</p></div>
+<hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2007/05/04/2407782.html" title="The limitations of keyboard layouts (again)">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2007/05/03/2403467.html" title="Does bear shit in woods^H^H^H^H^HSlovenia?">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2007-05">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2007-05-03">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2007/05/03/2404760.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:38 GMT -->
+</html>

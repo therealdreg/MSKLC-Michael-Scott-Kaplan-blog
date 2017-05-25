@@ -1,0 +1,27 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2006/11/08/1037769.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:39 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Keeping it simple while working on MSKLC</title></head><body>
+<h1>Keeping it simple while working on MSKLC</h1>
+<p><em>by Michael S. Kaplan, published on 2006/11/08 12:30 -05:00, original URI: http://blogs.msdn.com/b/michkap/archive/2006/11/08/1037769.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<FONT face=Tahoma size=3>
+<P>There are lots of times that the code underneath the UI is made a bit more complicated to make the user experience simpler. </P>
+<P>Perhaps the most recognizable example of this is seen in the <STRONG>Save</STRONG>/<STRONG>Save As...</STRONG> functionality in most applications. Now&nbsp;<STRONG>Save As...</STRONG> always prompts for a filename, but the <STRONG>Save</STRONG> will only prompt for a filename if it never as before. Simpler UI might just disallow the <STRONG>Save</STRONG> functionality before one has used <STRONG>Save As...</STRONG>, but this would just make everything more complicated for users.</P>
+<P>A whole bunch of these sorts of simplifications happened in&nbsp;<A class="" href="http://www.microsoft.com/globaldev/tools/msklc.mspx" mce_href="http://www.microsoft.com/globaldev/tools/msklc.mspx">Microsoft Keyboard Layout Creator</A>&nbsp;as well. </P>
+<P>For example, early versions of MSKLC separated the keyboard layout DLL building state from the setup building state, until we kind of thought about it and realized that adding separate interim steps here didn't make a whole lot of sense. Almost everyone would never need to do something separate with the DLL and the&nbsp;few people who did could just grab it from the setup directory anyway. Why not just make it easier on everyone and have one step to do both -- it does not take very long to do either of them!</P>
+<P>And for the&nbsp;much anticipated&nbsp;update to MSKLC to support 64-bit keyboard layout DLLs, the notion of </P>
+<UL>
+<LI>building complex UI steps to let people choose different targets, or </LI>
+<LI>requiring different setups to be created for each platform, or even worse </LI>
+<LI>requiring different setups to be created for each platform plus bitness combo&nbsp;</LI></UL>
+<P>all of these choices seem ridiculous. In the end, the better option (considering how small the files are) and the preferred solution is to just to create one setup that will run on all platforms. </P>
+<P>Obviously more complicated on the Microsoft side, but <STRONG>much</STRONG> easier for customers....</P>
+<P>I'll probably talk more about this as the project continues to unfold, but the core point is to keep&nbsp;things as simple a possible for people using MSKLC. If you have used it before and find there is anything in particular about the process that seems hard, why not mention it here and now while that unfolding is taking place? There will never be a better time. :-)</P>
+<P mce_keep="true">&nbsp;</P>
+<P><FONT color=#ff00ff><EM>This post brought to you by</EM>&nbsp;<FONT size=6>ឰ</FONT> <EM>(<A class="" href="http://www.fileformat.info/info/unicode/char/17b0" mce_href="http://www.fileformat.info/info/unicode/char/17b0">U+17b0</A>, a.k.a. KHMER INDEPENDENT VOWEL QAI)</EM></FONT></P></FONT>
+<hr/><p><strong>Charles Bocock</strong> on 9 Nov 2006 5:45 AM:</p><div style="margin-left: 1em"><p>It's so much better for the developer to swallow the complexity and hide it from the customer. I see far too many developers passing the buck on this one.</p>
+<p>A really common example is a credit card number box that says &quot;Enter card number (Without spaces!!!)&quot;. How hard is it for the developer to just strip the spaces on the server side?</p>
+<p>You've done the right thing with MSKLC. Sure, you've made the output slightly bigger, but in these days of broadband and insane GiB hard drives it doesn't matter that you're &quot;wasting&quot; a few bytes.</p></div>
+<hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2006/11/09/1043843.html" title="You wonder if like Vista supports custom locales? Fer shur!">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2006/11/08/1032747.html" title="What the hell is MFCENU.DLL?">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2006-11">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2006-11-08">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2006/11/08/1037769.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:39 GMT -->
+</html>

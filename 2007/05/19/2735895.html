@@ -1,0 +1,38 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2007/05/19/2735895.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:38 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Custom code pages? Redux</title></head><body>
+<h1>Custom code pages? Redux</h1>
+<p><em>by Michael S. Kaplan, published on 2007/05/19 12:39 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2007/05/19/2735895.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P><STRONG><EM><FONT color=#ff0000>Warning: what is being described in this post is documented but is not supported. Please keep this mind before considering it!</FONT></EM></STRONG></P>
+<P>People ask me all the time how to create custom code pages. Like regular reader Ivan Petrov, who has asked several times (e.g. <A class="" href="http://archives.miloush.net/michkap/archive/2006/07/05/656283.html" mce_href="http://archives.miloush.net/michkap/archive/2006/07/05/656283.html"><STRONG>Custom code pages?</STRONG></A>) how to take the world of <A class="" href="http://msdn2.microsoft.com/library/ms776420.aspx" mce_href="http://msdn2.microsoft.com/library/ms776420.aspx">WideCharToMultiByte</A> and <A class="" href="http://msdn2.microsoft.com/library/ms776413.aspx" mce_href="http://msdn2.microsoft.com/library/ms776413.aspx">MultiByteToWideChar</A> and make it their own....</P>
+<P>Well, I'll start by saying that I am not a lawyer, so none of this is legal advice. Keep this in mind to.</P>
+<P>But I'll point to three functions that are documented pretty much only in the interests of the Consent decree, that are used internally by Windows o support DLL-based code pages:</P>
+<UL>
+<LI><A class="" href="http://msdn2.microsoft.com/library/ms776462.aspx" mce_href="http://msdn2.microsoft.com/library/ms776462.aspx">BytesToUnicode</A> -- convert bytes into Unicode (XP and Server 2003 only)</LI>
+<LI><A class="" href="http://msdn2.microsoft.com/library/ms776465.aspx" mce_href="http://msdn2.microsoft.com/library/ms776465.aspx">UnicodeToBytes</A> -- convert Unicode into bytes (XP and Server 2003 only)</LI>
+<LI><A class="" href="http://msdn2.microsoft.com/library/ms776464.aspx" mce_href="http://msdn2.microsoft.com/library/ms776464.aspx">NlsDllCodePageTranslation</A> -- gets code page information or does conversion (XP and later, though note that the c_*.dll files in Win2000 also technically have this export!)</LI></UL>
+<P>So what makes GB 18030 support on Win32 work is:</P>
+<UL>
+<LI>a DLL that supports the appropriate functions from these three&nbsp;(in this case c_g18030.dll, since c_gb18030 would violate 8.3 naming rules!)</LI>
+<LI>a string registry value under HKLM\SYSTEM\CurrentControlSet\Control\Nls\CodePage whose value name is the code page and the value is the name of the DLL</LI></UL>
+<P>For a code page number, you&nbsp;have to be between 50000 and 59999&nbsp;so Windows knows you are in the&nbsp;DLL-based code page range,&nbsp;and outside of anything like what is out there now (probably best to stay in the 599## range if you are asking me for advice, and if you aren't then you weren't going to listen anyway, right?).</P>
+<P>From there, you can have your own code page that will work on Win32 as well as you write your DLL and its functions (remembering that bugs were fixed between versions so you may see slightly different results, especially where the flags are concerned!).</P>
+<P><EM>It should be obvious, but just in case remember that interoperability between machines is out the window if you do not have the same code page set up on both of them.</EM> :-)</P>
+<P>Now this is only part of the story of course -- there is really no good promise how (or even that) this will work with MLang, for example. And although it seems to work&nbsp;in .NET for versions 1.0 and 1.1 (if you stick to numbered code pages and conversions only), it will definitely not work in 2.0 and beyond <STRONG>at all</STRONG> and is completely unsupported and undocumented in all of those versions.</P>
+<P><EM>(The managed story is based on a side effect -- .NET used to use Windows to do its code page stuff, but it does not do so anymore!)</EM></P>
+<P>If you want to create custom code pages in .NET the supported way for 2.0 and beyond, see Shawn's <A class="" href="http://blogs.msdn.com/shawnste/archive/2006/09/29/best-way-to-make-your-own-encoding.aspx" mce_href="http://blogs.msdn.com/shawnste/archive/2006/09/29/best-way-to-make-your-own-encoding.aspx">Best Way to Make Your Own Encoding</A>. It even links to a sample that he created, which is more than I will do here with the Win32 case. :-)</P>
+<P>Anyway, this is something that a lot of people have figured out already so none of it should be too mysterious. I figure putting it all in one place might make people less likely to incorrectly speculate about how stuff works, if nothing else.</P>
+<P>Summary:</P>
+<OL>
+<LI>Use Unicode.</LI>
+<LI>If you can't use Unicode, then at least try and use one of the built-in code pages in Windows.</LI>
+<LI>If you can't do that, then you can use the info in this article to create your own (unsupported) code page.</LI></OL>
+<P>Tip your servers. Enjoy the veal!</P>
+<P mce_keep="true">&nbsp;</P>
+<P><FONT color=#ff00ff><EM>This post brought to you by</EM> ၌ <EM>(<A class="" href="http://www.fileformat.info/info/unicode/char/104c" mce_href="http://www.fileformat.info/info/unicode/char/104c">U+104c</A>, a.k.a. MYANMAR SYMBOL LOCATIVE)</EM></FONT></P>
+<hr/><p><a id="2831921" href="#2831921">#</a> <strong>Shawn Steele - MSFT</strong> on 24 May 2007 12:28 AM:</p><div style="margin-left: 1em"><p><a rel="nofollow" target="_new" href="http://blogs.msdn.com/shawnste/archive/2007/03/17/hacking-code-pages-or-how-to-totally-hose-your-machine-and-your-data.aspx">http://blogs.msdn.com/shawnste/archive/2007/03/17/hacking-code-pages-or-how-to-totally-hose-your-machine-and-your-data.aspx</a> has more scaryness</p>
+</div>
+<hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2010/01/12 <a href="http://archives.miloush.net/michkap/archive/2010/01/12/9946880.html">On my "Vietnamese Plus" and "pseudo-Form V" constructs</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2007/05/19/2746193.html" title="Ssang. Ssang. Come Back!">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2007/05/18/2724714.html" title="Farther in the future could I accept it being sung as Further Down?">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2007-05">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2007-05-19">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2007/05/19/2735895.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:38 GMT -->
+</html>

@@ -1,0 +1,47 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2006/09/15/754992.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:39 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Unicode INI function; Unicode INI file?</title></head><body>
+<h1>Unicode INI function; Unicode INI file?</h1>
+<p><em>by Michael S. Kaplan, published on 2006/09/15 03:11 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2006/09/15/754992.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<FONT face=Tahoma>
+<P>Jake asked me via the Contacting Me... link: </P>
+<BLOCKQUOTE dir=ltr style="MARGIN-RIGHT: 0px"><FONT size=2>
+<P>I wanted to store my application settings in an .INI file so migration of settings would be easier than the registry allows. I have some Unicode strings to store, but I was not worried since I was using WritePrivateProfileStringW. But the file that is created wasn't Unicode!<BR><BR>The documentation claims it would make Unicode files, but it seems to be wrong.<BR><BR>So, what's the point of calling a Unicode function if it is not going to write a Unicode file?</P></FONT></BLOCKQUOTE>
+<P>Ah, this takes me back. It is an issue&nbsp;that I first noticed way back when I was writing the INI file function wrappers for MSLU.</P>
+<P><FONT color=#ff0000 size=2><EM>Disclaimer: this entire post, as well as my original investigation, is based entirely on my own investigtions into the behavior of functions, and any discussion of motives is pure supposition on my part to try to explain the behavior.</EM></FONT></P>
+<P>It probably dates all the way back to when WritePrivateProfileStringW and WritePrivateProfileStringA were added to NT. </P>
+<P>To be perfectly honest, sometimes INI files might <STRONG>be</STRONG> Unicode, and they didn't want to refuse to read them. One day that might be more common, after all.</P>
+<P>But the developers probably figured that most INI files would not be Unicode, at least not any time soon. </P>
+<P>Now obviously the parameter encoding is for 99.9% of the population bound to whether the app is Unicode or not, and further given that the prototypes for the two functions enforce it for everyone who explicitly chooses a version to call, it would be stupid to not base the parameter encoding on the&nbsp; function that is called (if there is any type mismatch the app will not even compile, and if the wrong type is passed at runtime you have either a very small string or a buffer overrun waiting to happen!).</P>
+<P>Similarly, it would&nbsp;be a bad idea&nbsp;to base&nbsp;how a file being created would have its encoding&nbsp;chosen by&nbsp;what function is called, since that would mean that the act of converting your app to Unicode would break the reading of possibly important settings.</P>
+<P>And obviously&nbsp;, linking the file content's encoding to what function is called is a bad idea, too, and just as likely to break conveted applications.</P>
+<P>But a hint of what to do came out of all of these principles of what not to do. I mean, if a file is already Unicode then writing anything but Unicode would be stupid. And if a file is already ANSI, it would be idiotic to write anything but ANSI. And if the file does not exist then the most common choice can be made.</P>
+<P>So the plan for the behavior was easy: </P>
+<UL>
+<LI>Keep the parameters and the content separate;</LI>
+<LI>If the file being written to is a Unicode file, then write Unicode, and</LI>
+<LI>If the file being written to is either ANSI or non-existent, to be created, then write ANSI.</LI></UL>
+<P>Then all they had to do was document the behavior so people would know about it!</P>
+<P>Of course, that never really seems to have happened. The text in the documentation is not entirely clear, as Jake noticed. The <A href="http://msdn.microsoft.com/library/en-us/sysinfo/base/writeprivateprofilestring.asp">WritePrivateProfileString</A> docs say:</P>
+<BLOCKQUOTE dir=ltr style="MARGIN-RIGHT: 0px"><FONT size=2>
+<P><I>lpFileName</I><BR><BR>&nbsp;&nbsp;&nbsp;&nbsp; [in] The name of the initialization file. </P>
+<P>If the file was created using Unicode characters, the function writes Unicode characters to the file. Otherwise, the function writes ANSI characters.</P></FONT></BLOCKQUOTE>
+<P>Now I have almost no idea what this text is trying to say, but I am 100% sure that it is wrong. You can easily verify if you save a file as Unicode in Notepad and you will see it is kept that way, and you'll see if the function creates the file it never creates a Unicode file, even if the name has Unicode characters in it.</P>
+<P>So Jake, you have your simple fix now -- create a two byte file, containing the BOM, and then let <A href="http://msdn.microsoft.com/library/en-us/sysinfo/base/writeprivateprofilestring.asp">WritePrivateProfileString</A>&nbsp;handle the rest.</P>
+<P>Just for fun, you can even reverse the BOM bytes and <A href="http://msdn.microsoft.com/library/en-us/sysinfo/base/writeprivateprofilestring.asp">WritePrivateProfileString</A>&nbsp;will write to it as&nbsp;a UTF-16 BE (Big Endian) file!</P>
+<P>Now&nbsp;before you fans of that other Unicode format&nbsp;ask -- if it is a UTF-8 file, then although it will still be a UTF-8 file when the call finishes, none of the data is written in UTF-8, so anything off of the CP_ACP will be a question mark. This is likely to be bad for the file's contents if the app, key, or value name strings contain non-ACP characters....</P>
+<P>Makes for an interesting&nbsp;historical note, in any case. And a fascinating study in forensic appcompat analysis that would probably still be buried had Jake not asked the question!</P>
+<P>(if any oldtimers are reading this and can either confirm or correct any of my suppositions, I would of course appreciate it!)</P>
+<P>&nbsp;</P>
+<P><FONT color=#ff1493><EM>This post brought to you by</EM> <FONT size=6><STRONG>ໜ</STRONG></FONT> <EM>(<A href="http://www.fileformat.info/info/unicode/char/0edc">U+0edc</A>, a.k.a. LAO HO NO)</EM></FONT></P></FONT>
+<hr/><p><a id="755462" href="#755462">#</a> <strong>Dean Harding</strong> on 15 Sep 2006 3:33 AM:</p><div style="margin-left: 1em">I don't think the docs are &quot;wrong&quot;, they're just worded funny.<br><br>&gt; If the file was created using Unicode characters<br><br>This doesn't mean &quot;if the filename contains Unicode characters&quot; it means &quot;if the file already contains Unicode characters&quot; - where &quot;already contains Unicode characters&quot; actually means &quot;starts with a UTF-16 BOM&quot; (or does it? Maybe WritePrivateProfileString calls IsTextUnicode, and the BOM is just a big hint for that?)</div>
+<p><a id="756283" href="#756283">#</a> <strong>Raymond Chen - MSFT</strong> on 15 Sep 2006 2:06 PM:</p><div style="margin-left: 1em">Dean Harding is correct on all counts. It means &quot;If the INI file already exists and appears to be Unicode text&quot; and the way the code determines this is through our favorite dodgy API - IsTextUnicode. (The BOM serves as a big hint.)</div>
+<p><a id="756308" href="#756308">#</a> <strong>Michael S. Kaplan</strong> on 15 Sep 2006 2:24 PM:</p><div style="margin-left: 1em">But how clear is the text, &nbsp;really? And how much sense does it make to put it in the text describing the parameter rather than more general remarks?<br><br>I am willing to say that it must just be me and that to everyone else the topic is entirely clear, if that's what people think. But is it really true that (given how it all works) the text could not be improved at all? :-)</div>
+<p><a id="756484" href="#756484">#</a> <strong>Raymond Chen - MSFT</strong> on 15 Sep 2006 4:35 PM:</p><div style="margin-left: 1em">The text is misplaced. It should be in the Remarks, not in the parameters.</div>
+<p><strong>Mohsen Farjami</strong> on 19 Nov 2011 10:42 PM:</p><div style="margin-left: 1em"><p>This is the definite solution:</p>
+<p><a rel="nofollow" target="_new" href="http://www.codeproject.com/KB/files/unicode_ini.aspx">www.codeproject.com/.../unicode_ini.aspx</a></p>
+</div>
+<hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2006/09/15/755173.html" title="CompareOptions.None means what?">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2006/09/14/754652.html" title="Not just uppercasing or italicizing; bolding can cause problems too!">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2006-09">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2006-09-15">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2006/09/15/754992.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:39 GMT -->
+</html>

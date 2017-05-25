@@ -1,0 +1,34 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2008/04/28/8435937.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:36 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Much ado about zero, aka These zeroes won't ever amount to anything</title></head><body>
+<h1>Much ado about zero, aka These zeroes won't ever amount to anything</h1>
+<p><em>by Michael S. Kaplan, published on 2008/04/28 15:11 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2008/04/28/8435937.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P>The weirdness is easily noted if you try the following code in both .NET &lt;= 1.1 and .NET &gt;= 2.0:</P>
+<BLOCKQUOTE>
+<P><FONT face="consolas,lucida console,courier new,courier"><STRONG>static void Main(string[] args) {<BR>&nbsp;&nbsp; Decimal val1 = 0m;<BR>&nbsp;&nbsp; Decimal val2 = 0.0m;<BR>&nbsp;&nbsp; Decimal val3 = 0.00m;<BR>&nbsp;&nbsp; Decimal val4 = 1m;<BR>&nbsp;&nbsp; Decimal val5 = 1.0m;<BR>&nbsp;&nbsp; Decimal val6 = 1.00m;<BR>&nbsp;&nbsp; Console.WriteLine("0 → " + val1.ToString());<BR>&nbsp;&nbsp; Console.WriteLine("0.0 → " + val2.ToString());<BR>&nbsp;&nbsp; Console.WriteLine("0.00 → " + val3.ToString());<BR>&nbsp;&nbsp; Console.WriteLine("1 → " + val4.ToString());<BR>&nbsp;&nbsp; Console.WriteLine("1.0 → " + val5.ToString());<BR>&nbsp;&nbsp; Console.WriteLine("1.00 → " + val6.ToString());<BR>}</STRONG></FONT></P></BLOCKQUOTE>
+<P>The&nbsp;&nbsp;output in the console would be as follows in &lt;= 1.1:</P>
+<BLOCKQUOTE>
+<P><FONT face="consolas,lucida console,courier new,courier"><STRONG>0 → 0<BR>0.0 → 0<BR>0.00 → 0<BR>1 → 1<BR>1.0 → 1.0 <BR>1.00 → 1.00<BR>==</STRONG></FONT></P></BLOCKQUOTE>
+<P>and then as follows in &gt;= 2.0:</P>
+<BLOCKQUOTE>
+<P><FONT face="consolas,lucida console,courier new,courier"><STRONG>0 → 0<BR>0.0 → 0.0<BR>0.00 → 0.00<BR>1 → 1<BR>1.0 → 1.0 <BR>1.00 → 1.00</STRONG></FONT></P></BLOCKQUOTE>
+<P>Subtle difference, that -- but one that does seem more consistent -- and was an intentional "break" to compatibility for the sake of that consistency that only affects the "0" values.</P>
+<P>Note that this has no connection to <A class="" href="http://archives.miloush.net/michkap/archive/2008/02/19/7785815.html" mce_href="http://archives.miloush.net/michkap/archive/2008/02/19/7785815.html"><STRONG>Insanity defined: In the real world -0 == 0, in Vista -0 &lt; 0, and in Windows Server 2008 -0 ≮ 0</STRONG></A> at all, or any of the collation mistakes there.</P>
+<P>And it isn't connected with <A class="" href="http://blogs.msdn.com/bclteam/archive/2006/10/12/decimal-negative-zero-representation-lakshan-fernando.aspx" mce_href="http://blogs.msdn.com/bclteam/archive/2006/10/12/decimal-negative-zero-representation-lakshan-fernando.aspx">Decimal Negative Zero Representation</A> from over on the BCLTeam blog, either.</P>
+<P>Because we aren't dealing with -0 versus 0, we are dealing with 0 vs. 0.0 and so on. :-)</P>
+<P>Though in a way we are talking about the same thing --- given that the goal of .NET here is to capture minute distinctions that keep exactly the same value no matter what -- since to most people in the universe</P>
+<BLOCKQUOTE>
+<P><FONT face="consolas,lucida console,courier new,courier"><STRONG>0 == 0.0 == 0.00 == -0 == -0.0 == -0.00</STRONG></FONT></P></BLOCKQUOTE>
+<P>and so on.</P>
+<P>And we won't even talk about the StrCmpLogicalW changes that differentiate between other things that are kind of the same, making</P>
+<BLOCKQUOTE>
+<P><FONT face="consolas,lucida console,courier new,courier"><STRONG>000001 &lt; 00001 &lt; 0001 &lt; 001 &lt; 01 &lt; 1</STRONG></FONT></P></BLOCKQUOTE>
+<P>This last&nbsp;part does seem a little inconsistent, huh? :-)</P>
+<P>It may seem&nbsp;a little silly in the end to spend a lot of time keeping track of and sometimes even changing results of these edge cases.</P>
+<P><STRONG>Much Ado About Nothing</STRONG>, if you ask me. :-)</P>
+<P mce_keep="true">&nbsp;</P>
+<P><FONT color=#ff00ff><EM>This blog brought to you by</EM><FONT size=5> 0 </FONT><EM>(<A class="" href="http://www.fileformat.info/info/unicode/char/0030" mce_href="http://www.fileformat.info/info/unicode/char/0030">U+0030</A>, aka DIGIT ZERO)</EM></FONT></P>
+<hr/><div style="margin-left: 1em"><em>no comments</em></div><hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2008/04/29/8436482.html" title="JScript&#39;s ultimate globalization hero: VBScript">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2008/04/28/8434623.html" title="You&#39;ve heard of C* fonts? How about G* fonts? :-)">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2008-04">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2008-04-28">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2008/04/28/8435937.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:36 GMT -->
+</html>

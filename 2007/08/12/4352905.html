@@ -1,0 +1,45 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2007/08/12/4352905.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:37 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Hello Madda, Hello Father (Iranian style)</title></head><body>
+<h1>Hello Madda, Hello Father (Iranian style)</h1>
+<p><em>by Michael S. Kaplan, published on 2007/08/12 13:53 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2007/08/12/4352905.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P>Collation of the Arabic script in Windows has really had its ups and downs over the years.</P>
+<P>And customers tend to notice that sort of thing -- there are few things as visible as software screwing up the alphabet.</P>
+<P>Some of the results were beyond outrageous -- letters being treated like they were <STRONG><A class="" href="http://archives.miloush.net/michkap/archive/2005/01/19/356280.html" mce_href="http://archives.miloush.net/michkap/archive/2005/01/19/356280.html">symbols</A></STRONG>, <A class="" href="http://archives.miloush.net/michkap/archive/2006/05/24/605603.html" mce_href="http://archives.miloush.net/michkap/archive/2006/05/24/605603.html"><STRONG>symbols</STRONG></A> being treated like they were letters, the wrong flag having the wrong (well, unintuitive) results, and so on.</P>
+<P>Of course having people on the team who speak Arabic or Farsi<FONT size=1><SUP>1</SUP></FONT> or Urdu natively&nbsp;never made that any easier -- since they would of course regularly point out the shortcomings in this regard, and eagerly suggest that they be fixed lest we forget that things were kind of broken. :-)</P>
+<P>In Vista we finally fixed many of these issues.</P>
+<P>In a singularly unique meeting, I had all of the native speakers of any Arabic script language I could find, there to help me apply the principles embodied in <A class="" href="http://archives.miloush.net/michkap/archive/2005/09/12/463483.html" mce_href="http://archives.miloush.net/michkap/archive/2005/09/12/463483.html"><STRONG>How does Microsoft assign new collation weights?</STRONG></A> to the Arabic script once and for all:</P>
+<BLOCKQUOTE>
+<LI><FONT size=1><FONT face=Tahoma>Sometimes, there is an actual ordering for a specific language we support and it does not conflict with any of the weights that are already there. When that happens, the new characters can simply be inserted, using existing space in the weight table.</FONT> </FONT>
+<LI><FONT size=1><FONT face=Tahoma>Other times, there is an actual ordering for a specific language we support and it <EM>does</EM> conflict with weights that are already there. In those cases, we put it an an exception table. But of course we have to add it somewhere in the default table too, so we end up doing one of a few different things with code points not already there:</FONT> </FONT>
+<UL>
+<LI><FONT size=1><FONT face=Tahoma>We may add it in the place that one of those default table languages might expect it due to its appearance;</FONT> </FONT>
+<LI><FONT size=1><FONT face=Tahoma>We may add it in a place consistent with how other characters have been added in (apparently) similar situations;</FONT> </FONT>
+<LI><FONT face=Tahoma size=1>We may add it to the end of the list of characters in the script.</FONT></LI></UL>
+<LI><FONT face=Tahoma size=1>Still other times,&nbsp;we may not have a specific language that needs the script but are trying to fill out a subrange of things in Unicode, in which case either of those previous three mechanisms might be used.</FONT></LI></BLOCKQUOTE>
+<P>A recent message in the Microsoft VOLT users community from Vladmir made me feel pretty good and bad at the same time. In side the message there was the following text:</P>
+<BLOCKQUOTE>
+<P><EM>...now we get much better alphabetical sorting for Persian (but not perfect one: alef + madda should be placed before alef).</EM></P></BLOCKQUOTE>
+<P>This told me two things -- 1) that things really had improved overall (this is a message we have gotten from many other people!), and 2) there was at least one mistake in there in the way</P>
+<BLOCKQUOTE>
+<P><STRONG><FONT size=5>آ</FONT></STRONG> (<A class="" href="http://www.fileformat.info/info/unicode/char/0622" mce_href="http://www.fileformat.info/info/unicode/char/0622">U+0622</A>, a.k.a. ARABIC LETTER ALEF WITH MADDA ABOVE) </P></BLOCKQUOTE>
+<P>is sorted in Persian (and perhaps in other non-Arabic language collations that use the Arabic script, though no feedback has been received on&nbsp;that point).</P>
+<P mce_keep="true">Basically, it needs to come before</P>
+<BLOCKQUOTE>
+<P mce_keep="true"><FONT size=5><STRONG>ا</STRONG></FONT> (<A class="" href="http://www.fileformat.info/info/unicode/char/0627" mce_href="http://www.fileformat.info/info/unicode/char/0627">U+0627</A>, a.k.a. ARABIC LETTER ALEF)</P></BLOCKQUOTE>
+<P mce_keep="true">with a primary&nbsp;distinction rather than just after it with a&nbsp;secondary one.</P>
+<P mce_keep="true">It is easy to blame me since it was my checkin (and I do, this is quite unfortunate) or the native Persian speakers for not noticing the difference in time (and I don't, as it is hard to capture all of the differences in a collation such that they can point them out, it really is).</P>
+<P mce_keep="true">But RCA (root cause analysis) really has been done here in that the exact cause for the regression is known and understood; there is no real need to assign blame (beyond the blame I will assign to myself, as I mentioned!). It will just be a bug to fix for Persian<FONT size=1><SUP>2</SUP></FONT> in the future which we traded&nbsp;in the process of fixing approximately nine&nbsp;other bugs. </P>
+<P mce_keep="true">Hopefully the overall improvement will mediate this....</P>
+<P mce_keep="true">&nbsp;</P>
+<P mce_keep="true"><EM>1 - Farsi is what everyone called it then and <STRONG><A class="" href="http://archives.miloush.net/michkap/archive/2006/05/23/604843.html" mce_href="http://archives.miloush.net/michkap/archive/2006/05/23/604843.html">this issue</A></STRONG> had not yet been raised. I don't know why we even bother to pretend that we have no direct contact with Iran if we do have contact with the expat community and they <STRONG>do</STRONG> have contact with Iran and start nagging us immediately after pronouncements are made!<BR>2 - And possibly also Urdu, Pashto, and other Arabic script languages if they have the same expectation?</EM></P>
+<P mce_keep="true">&nbsp;</P>
+<P mce_keep="true"><FONT color=#ff00ff><EM>This post brought to you by</EM> <FONT size=5>آ</FONT> <EM>(<A class="" href="http://www.fileformat.info/info/unicode/char/0622" mce_href="http://www.fileformat.info/info/unicode/char/0622">U+0622</A>, a.k.a. ARABIC LETTER ALEF WITH MADDA ABOVE) </EM></FONT></P>
+<hr/><p><a id="4372168" href="#4372168">#</a> <strong>Vladimir Ivanov</strong> on 13 Aug 2007 5:01 PM:</p><div style="margin-left: 1em"><p>Dear Michael,</p>
+<p>or Mishka (if you allow me to use such an endearing Russian word). I'm really very happy to hear from you. I haven't heard about you since the discussion in unicode.org has dissapeared. I have learned much from it and especially from your observations.</p>
+<p>Thank you for your comments. It is as useful and interesting as it had been before.</p>
+<p>Your Vladimir</p></div>
+<hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2010/05/01 <a href="http://archives.miloush.net/michkap/archive/2010/05/01/9993575.html">Purloined alphabets. Anachronistic throwbacks. Superior input. The dignity of language. And Maren....</a></p><p>2008/11/11 <a href="http://archives.miloush.net/michkap/archive/2008/11/11/9056745.html">Trying to ignore the small stuff is harder, if you're Arabic</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2007/08/12/4361116.html" title="English as a NEW second language...">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2007/08/12/4347121.html" title="On the error, and the inspiration, of randomness">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2007-08">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2007-08-12">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2007/08/12/4352905.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:37 GMT -->
+</html>

@@ -1,0 +1,54 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2007/10/26/5677426.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:37 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Superstition: Why MSLU stopped using GetFileAttributesW in its platform detection</title></head><body>
+<h1>Superstition: Why MSLU stopped using GetFileAttributesW in its platform detection</h1>
+<p><em>by Michael S. Kaplan, published on 2007/10/26 10:01 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2007/10/26/5677426.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P>I was reading Raymond's <A class="" href="http://blogs.msdn.com/oldnewthing/archive/2007/10/23/5612082.aspx" mce_href="http://blogs.msdn.com/oldnewthing/archive/2007/10/23/5612082.aspx"><STRONG>Superstition: Why is GetFileAttributes the way old-timers test file existence?</STRONG></A> the other day and all I could think about was the fact that the way that <A class="" href="http://go.microsoft.com/fwlink/?LinkId=14851" mce_href="http://go.microsoft.com/fwlink/?LinkId=14851">Microsoft Layer for Unicode on Windows 95/98/Me Systems</A> (MSLU) had to drop its usage of this function!</P>
+<P>You see, originally we used a GetFileAttributesW call to determine whether we were running on a 9x or an NT-based platform.&nbsp;</P>
+<P>MSLU (in the loader)&nbsp;would pass it <FONT face="courier new,courier"><STRONG>L"???.???"</STRONG></FONT> as a filename, and then after the function failed (which it always did since the filename was invalid) we'd call GetLastError and look for either ERROR_INVALID_PARAMETER on an NT-based platform or ERROR_CALL_NOT_IMPLEMENTED on a Win9x-based platform.</P>
+<P>The method being used was actually recommended by several old-timers, interestingly enough. Raymond might even have been one of them though I honestly can't remember; several others definitely did. The theory was simple:</P>
+<UL>
+<LI>Available on every platform</LI>
+<LI>No Unicode version on any 9x platform</LI>
+<LI>Always a Unicode version on any NT platform</LI>
+<LI>Function does its work very quickly and every oldtimer knew it</LI></UL>
+<P>The first&nbsp;few releases of MSLU shipped with this code in its loader and in the DLL.&nbsp;</P>
+<P>Then we got an interesting bug report from a product team that was using MSLU (I believe it was <A class="" href="http://en.wikipedia.org/wiki/Microsoft_Picture_It%21" mce_href="http://en.wikipedia.org/wiki/Microsoft_Picture_It%21"><STRONG>Microsoft Picture It!</STRONG></A>) that was getting random failures trying to use MSLU, on some but not all machines -- <STRONG>NT only</STRONG>!</P>
+<P>We had not been having any NT-based bug reports before since the library worked so hard to run as little code as possible on NT-based platforms, so I was understandably freaked by this turn of events....</P>
+<P>It was quite difficult to get the repro set up, as no one could isolate when it happened and once I was vigorously looking into it, no one was seeing it anymore.</P>
+<P>Finally, I&nbsp;found out that the close-to-headcheck for the filename being invalid was preceded by a closer-to-headcheck for the&nbsp;drive being invalid.</P>
+<P>And it just so happens that <STRONG>Picture It!</STRONG> was often setting the CDROM drive to be the current drive, even though someone might remove the disk from the drive prior to any Unicode based functions being called.</P>
+<P>And when this happened, the detection was failing and nothing good was happening after that.</P>
+<P>We triaged it and looked all kinds of fixes (like always appending a valid path which seemed stupid to have to do for a file that was going to be invalid anyway or detecting the additional case as an NT-based platform&nbsp;and so on) before finally deciding to stop using GetFileAttributesW and finding another way to do the detection. We wanted to be running as little code as possible and adding any code in there was just not really something we wanted to do....</P>
+<P>So much for GetFileAttributes being the fastest function, in my mind it will forever be associated with all the rest of the Win32 functions that do too much! :-)</P>
+<P mce_keep="true">&nbsp;</P>
+<P><FONT color=#ff00ff><EM>This post brought to you by</EM> <FONT size=5>.</FONT> <EM>(<A class="" href="http://www.fileformat.info/info/unicode/char/002e" mce_href="http://www.fileformat.info/info/unicode/char/002e">U+002e</A>, a.k.a. FULL STOP)</EM></FONT></P>
+<hr/><p><a id="5692671" href="#5692671">#</a> <strong>Mike Dimmick</strong> on 26 Oct 2007 11:34 AM:</p><div style="margin-left: 1em"><p>Presumably some oddity where CDFS did something differently and returned a different error number? Raymond would tell you that Windows error numbers are not documented so they can be changed in future.</p>
+</div>
+<p><a id="5692708" href="#5692708">#</a> <strong>Michael S. Kaplan</strong> on 26 Oct 2007 11:40 AM:</p><div style="margin-left: 1em"><p>Yup. In fact since the 9x code path was known and fixed, it could have been written smarter to assume all other errors are NT-based. But it still meant the code paath was slower than it had to be, so we gave up and found a faster method (one that would not involve more code running!)....</p>
+</div>
+<p><a id="5695345" href="#5695345">#</a> <strong>BryanK</strong> on 26 Oct 2007 3:53 PM:</p><div style="margin-left: 1em"><p>Could you have just used L&quot;C:\\???.???&quot; instead (providing an absolute path)? &nbsp;Or are there other issues with that route?</p>
+<p>(Actually, is the C: drive actually guaranteed to exist in both 9x and NT? &nbsp;I suspect so, but I don't know for sure. &nbsp;It's not guaranteed in ancient windows versions (1.0 at least, and possibly 3.1), as they can (in a pinch) run from a floppy disk only. &nbsp;But I don't think you can do that in 95 and newer anymore.)</p>
+</div>
+<p><a id="5695360" href="#5695360">#</a> <strong>Michael S. Kaplan</strong> on 26 Oct 2007 3:56 PM:</p><div style="margin-left: 1em"><p>Well, we had that worry -- about the drive existing. Mainly it was the notion that this would run a lot of extra code, it kind of freaked us out a bit....</p>
+</div>
+<p><a id="5697676" href="#5697676">#</a> <strong>Igor</strong> on 26 Oct 2007 8:40 PM:</p><div style="margin-left: 1em"><p>So how does the actual code look now?</p></div>
+<p><a id="5700085" href="#5700085">#</a> <strong>Michael S. Kaplan</strong> on 26 Oct 2007 10:33 PM:</p><div style="margin-left: 1em"><p>You mean the actual platfrom detection? Ah, we just look for a function that is only on one platform and never the other (but we don't call it, we just GetProcAddress it to see if it exists)....</p>
+</div>
+<p><a id="5753163" href="#5753163">#</a> <strong>Michael Dunn_</strong> on 28 Oct 2007 10:41 PM:</p><div style="margin-left: 1em"><p>You can't assume you'll have a C: drive, most notably because of NEC PC-98 hardware where the hard drive is A: *shiver*</p>
+</div>
+<p><a id="5764085" href="#5764085">#</a> <strong>John Elliott</strong> on 29 Oct 2007 8:59 AM:</p><div style="margin-left: 1em"><p>In NT 3.51 it's quite possible to change the letter of the system drive, so you have (for example) only drive E:. NT 3.1 doesn't seem to like existence without a drive C:, and later ones need to have their registries monkeyed with.</p></div>
+<p><strong>Yuhong Bao</strong> on 6 Dec 2010 6:42 PM:</p><div style="margin-left: 1em"><p>&quot;You can&#39;t assume you&#39;ll have a C: drive, most notably because of NEC PC-98 hardware where the hard drive is A: &quot;</p>
+<p>And the floppy was C:. Imagine being prompted for a floppy because some program hardcoded a C: drive!</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 6 Dec 2010 8:56 PM:</p><div style="margin-left: 1em"><p>It was only an NT bug, and AFAIK that machine couldn&#39;t run NT.</p>
+<p>I had one down the hall from me, back in the day....</p>
+</div>
+<p><strong>Yuhong Bao</strong> on 7 Dec 2010 12:09 PM:</p><div style="margin-left: 1em"><p>Yes, it did, up to Win2000.</p>
+</div>
+<p><strong>Yuhong Bao</strong> on 10 Dec 2010 10:40 PM:</p><div style="margin-left: 1em"><p>For the record, it ran Win9x up to 98SE. WinMe did not have a NEC PC-98 version.</p>
+</div>
+<hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2007/10/26/5677876.html" title="I agree, the best way to process Unicode input is indeed to make somebody else do it">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2007/10/25/5686727.html" title="Not all in sync quite yet (aka SQL and the CLR and Windows and .NET)">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2007-10">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2007-10-26">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2007/10/26/5677426.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:37 GMT -->
+</html>

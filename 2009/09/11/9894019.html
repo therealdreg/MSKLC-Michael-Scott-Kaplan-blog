@@ -1,0 +1,91 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2009/09/11/9894019.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:35 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Microsoft is a company in Redmond, WA, in the USA</title></head><body>
+<h1>Microsoft is a company in Redmond, WA, in the USA</h1>
+<p><em>by Michael S. Kaplan, published on 2009/09/11 10:01 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2009/09/11/9894019.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P>Microsoft is a company based in Redmond, Washington, in the United States of America.</P>
+<P>Yes it is a world wide company.</P>
+<P>Yes almost 60% of its products are sold to customers who are not in the US.</P>
+<P>Yes there are development centers around the world and in many of them code that is written there ultimately can end up in Microsoft products.</P>
+<P>But ultimately, that original fact is inescapable:</P>
+<P>Microsoft is a company based in Redmond, Washington, in the United States of America.</P>
+<P>All it takes something like the DST 2007 snafu to get people to see it: a bug affects users throughout the world (including in the USA in places like Indiana) for over a decade with minimal help/work from Microsoft yet as soon as it affects Redmond too the push to fix problems and help users even have vice presidents and general managers and directors of Microsoft logging phone hours to help users and afterward there are numerous presentations about how each team dealt with the problem that all ignore the fact that they had been ignoring the problem all along for a decade.</P>
+<P>I could give countless other examples but many are less well known and some might violate my NDA so for now you can trust me that there are other examples.</P>
+<P>Now there is no shame in being a company based in Redmond, Washington, in the United States of America.</P>
+<P>And I would not want imply otherwise either in a blog or in person.</P>
+<P>Though there probably ought to be some shame involved in not realizing the pain one causes others (e.g. those other countries dealing with time zone issues for a decade, something I even not-too-gently but not-too-harshly chastised a couple directors about when that DST 2007 thing was winding down!).</P>
+<P>Anyway, take the above as valid, if you don't then you may as well skip the rest of this blog and maybe even this Blog (since no relationship can really stay healthy when there is no trust!).</P>
+<P>Did you know that any developer who is enlisted in the full sources for Windows (sources that include the compiler, linker, headers files, and LIBs as well as source) can build Windows?</P>
+<P>It is true.</P>
+<P>There are in fact developers in many parts of the world who work on Windows who have to do that very thing either occasionally or regularly. Or both.</P>
+<P>Many people inside Microsoft have even given presentations about the strengths of such distributed development models and the advantages of being a company so large as to offer the opportunity of such models.</P>
+<P>Now, for the other shoe to drop.</P>
+<P>To build the full Windows product, all sources, you really must have a default system locale that will cause your default system code page to be 1252.</P>
+<P>Such as US English.</P>
+<P>The reason for this is that there are some source files that contain characters that are legal in cp1252 but in other code pages are either interpreted differently (incorrectly) or that will cause the build of those files to fail.</P>
+<P>I ran across many of these as I was looking at code all over Windows and in most cases was not allowed to "fix" the problem as no one really saw it as a problem.</P>
+<P>In almost every case I saw it was the same character (see <A href="http://archives.miloush.net/michkap/archive/2007/02/20/1724946.html" mce_href="http://archives.miloush.net/michkap/archive/2007/02/20/1724946.html"><STRONG>Dumb quotes... or maybe they are just smart-ass quotes</STRONG></A> for which character it was) and the problem was in a comment.</P>
+<P>A comment that was clearly created in an email written in Outlook using Word as the mail editor and then copied/pasted into the source.</P>
+<P>Of course it is not a bug to make this mistake since it is not a bug to make a file unable to compile on another system locale.</P>
+<P>Being a company based in Redmond, Washington in the United States of America, that just isn't a priority....</P>
+<P>Now this is all well and good and is generally an internal issue at Microsoft that never impacts a customer in a way they would realize.</P>
+<P>But if you look at recent version of the Windows SDK (formerly known as the Platform SDK), you may see an exception to this generalization.</P>
+<P>First we'll look at the older version of the file in question, shobjidl.idl.</P>
+<P>This one compiles everywhere.</P>
+<P>The non-offending bit of the file, if you scroll down a bit, is:</P>
+<BLOCKQUOTE>
+<BLOCKQUOTE><FONT face="Consolas,Lucida Console,Courier New,Courier,Fixed"><B>
+<P>// IShellFolder::CompareIDs lParam flags<BR>//<BR>//&nbsp; SHCIDS_ALLFIELDS is a mask for lParam indicating that the shell folder<BR>//&nbsp; should first compare on the lParam column, and if that proves equal,<BR>//&nbsp; then perform a full comparison on all fields.&nbsp; This flag is supported<BR>//&nbsp; if the IShellFolder supports IShellFolder2.<BR>//<BR>//&nbsp; SHCIDS_CANONICALONLY is a mask for lParam indicating that the shell folder<BR>//&nbsp; that the caller doesn't care about proper sort order -- only equality matters.<BR>//&nbsp; (Most CompareIDs test for equality first, and in the case of inequality do<BR>//&nbsp; a UI sort.&nbsp; This bit allows for a more efficient sort in the inequality case.)</P></B></FONT></BLOCKQUOTE></BLOCKQUOTE>
+<P>Ok, see the problem?</P>
+<P>That was a trick question, there is no problem.</P>
+<P mce_keep="true">Fast forward to a much newer version, like the one in the 6.1 and 7.0 SDK:</P>
+<BLOCKQUOTE>
+<BLOCKQUOTE><FONT face="Consolas,Lucida Console,Courier New,Courier,Fixed"><B>
+<P mce_keep="true">// IShellFolder::CompareIDs lParam flags<BR>// *these should only be used if the folder supports IShellFolder2*<BR>//<BR>// SHCIDS_ALLFIELDS<BR>//<BR>// only be used in conjunction with SHCIDS_CANONCALONLY or column 0.<BR>// This flag requests that the folder test for *pidl identity*, that is<BR>// “are these pidls logically the same”. This implies that cached fields<BR>// in the pidl that would distinguish them should be tested.<BR>// Without this flag, you are comparing the *object* s the pidls refer to.<BR>//<BR>// SHCIDS_CANONICALONLY<BR>//<BR>// This indicates that the sort should be *the most efficient sort possible*, the implication<BR>// being that the result will not be displayed to the UI: the SHCIDS_COLUMNMASK portion<BR>// of the lParam can be ignored. (Before we had SHCIDS_CANONICALONLY<BR>// we assumed column 0 was the "efficient" sort column.)<BR>//<BR>//</P></B></FONT></BLOCKQUOTE></BLOCKQUOTE>
+<P mce_keep="true">Ok, now we have a party.</P>
+<P mce_keep="true">We have a couple of those quote characters that don't exist on all code pages and in fact for Japanese represent a byte that is illegal to have by itself, which means it will not compile.</P>
+<P mce_keep="true">The long and short of it is if you have a Japanese system locale you can't use this .IDL file unless you munge the file to remove the bogus quotes.</P>
+<P mce_keep="true">Now I don't know of any devs who write either code or comments in Word, but getting an email containing an "updated comment to better explain this bit" seems pretty obvious and not at all uncommon to see (if you ignore the relative uncommonality of such updates).</P>
+<P mce_keep="true">Oops.</P>
+<P mce_keep="true">This oops is in a couple of Windows SDK editions and some of those that shipped in products like Visual Studio and in the not-yet-shipped VS 2010.</P>
+<P mce_keep="true">In fact, I don't think it will be fixed for VS 2010 since they ship an already shipped PSDK and there won't be an update they pick up before they ship.</P>
+<P mce_keep="true">Oops again.</P>
+<P mce_keep="true">Anyway, they're on it now, and this will get fixed at some point.</P>
+<P mce_keep="true">That fix will eventually end up everywhere.</P>
+<P mce_keep="true">If you hit this problem, maybe you will feel somewhat less unhappy knowing that people like me can hit this problem&nbsp;a bunch&nbsp;of times in a night if I do a full Windows build. So that I share your pain....</P>
+<P mce_keep="true">And we are still a company in Redmond, Washington, in the United States of America.</P>
+<hr/><p><strong>Robert</strong> on 11 Sep 2009 12:29 PM:</p><div style="margin-left: 1em"><p>Maybe the problem is that the compiler is trying to make sense of something that it is supposed to skip?</p></div>
+<p><strong>John Cowan</strong> on 11 Sep 2009 7:38 PM:</p><div style="margin-left: 1em"><p>&quot;Now there is no shame in being a company based in Redmond, Washington, in the United States of America.&quot;</p>
+<p>No. &nbsp;But there is shame in being Microsoft.</p>
+<p>(Sorry, Lord. &nbsp;The man tempted me, and I did snark.)</p></div>
+<p><strong>Michael Everson</strong> on 11 Sep 2009 8:37 PM:</p><div style="margin-left: 1em"><p>Erm. Um. Well. OK, one might just suggest you switch to the Mac OS. At least there's joy.</p></div>
+<p><strong>Henry Skoglund</strong> on 12 Sep 2009 5:17 PM:</p><div style="margin-left: 1em"><P>I remember a project long ago where developers had to edit their code using the Terminal font when a release was imminent, just to catch these kinds of errors (because some of the files were shared with mainframes, i.e. EBCDIC).</P>
+<P>Still a valuable advice, it seems.</P>
+<P>Rgrds Henry</P></div>
+<p><strong>Cheong</strong> on 13 Sep 2009 2:45 PM:</p><div style="margin-left: 1em"><p>Robert: almost wanted to second your comment, but seems XML documentation style comments are inside comment. So the compiler cannot ignore them completely.</p>
+<p>And it's always easier to write code to check the whole file for particular code page, then to write code that skips comments, eapecially considering both // and /* */ are legal comments.</p>
+<p>Not that it's rocket science to write something to process it like that, but the priority it's that high to make them push the fix. </p></div>
+<p><strong>Erzengel</strong> on 14 Sep 2009 2:45 AM:</p><div style="margin-left: 1em"><p>Is there any particular reason that these files can't be marked with a UTF-8 BOM? (That's not sarcasm, I'm genuinely curious)</p></div>
+<p><strong>chavakiran</strong> on 14 Sep 2009 4:49 AM:</p><div style="margin-left: 1em"><p>:)</p>
+<p>There are many more internal tools with such behavior ; better stick to default locale than fixing them :P</p></div>
+<p><strong>Michael S. Kaplan</strong> on 14 Sep 2009 8:25 AM:</p><div style="margin-left: 1em"><p>One can postulate many ways to fix the problem, but when no one wants to change a file at all, the options are much more limited!</p>
+</div>
+<p><strong>Random832</strong> on 14 Sep 2009 1:30 PM:</p><div style="margin-left: 1em"><p>Why don't the tools just use a substitute character? (for cp932 it would be U+30FB KATAKANA MIDDLE DOT, covering both the offending byte and the one after it)</p>
+<p>Or better yet, restrict to ASCII in all cases so that the error can be found immediately.</p>
+<p>Or have a command-lne flag for what codepage to use</p></div>
+<p><strong>Michael S. Kaplan</strong> on 14 Sep 2009 7:47 PM:</p><div style="margin-left: 1em"><p>Given that MultiByteToWideChar is used today, the first two would be a huge behavior change.</p>
+<p>The last idea alreadys exists, but changing per file would ne just as much of a change to Windows as anything else would in tyerms of behavior -- and no one else sees it as a bug here....</p>
+<p>Making every customer change how they compile would be even more difficult, all to make up for an MS bug? :-(</p>
+</div>
+<p><strong>Pacific Reader</strong> on 6 Oct 2009 8:18 AM:</p><div style="margin-left: 1em"><p>Speaking of DST snafus, we're at GMT+13 here and you mightn't be surprised by the poor software support in general. Programmers just assume there's nothing beyond GMT+12!</p></div>
+<p><strong>Yuhong Bao</strong> on 16 Oct 2009 1:32 PM:</p><div style="margin-left: 1em"><p>&quot;One can postulate many ways to fix the problem, but when no one wants to change a file at all, the options are much more limited!&quot;</p>
+<p>What about just ignoring invalid characters inside comments? After all, comments are just that, they are not compiled at all.</p></div>
+<p><strong>Michael S. Kaplan</strong> on 17 Oct 2009 12:25 PM:</p><div style="margin-left: 1em"><p>And the folks who use the current behavior as a way to make sure projects *are* compiled under certain environments? We'd be breaking them!</p>
+<p>Ignoring that, implementation simply converts the whole file, it does not parse before conversion (parsing first is FRAUGHT with problems of the decidedly non-trivial type!)....</p>
+</div>
+<p><strong>Yuhong Bao</strong> on 26 Dec 2011 12:37 AM:</p><div style="margin-left: 1em"><p>Another example is how RTL layout in IE is less tested and thus more buggy than LTR layout.</p>
+</div>
+<hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2010/08/07 <a href="http://archives.miloush.net/michkap/archive/2010/08/07/10045212.html">A way to say "this is who I am, where I am, what I think is wrong, and why" ?</a></p><p>2009/10/26 <a href="http://archives.miloush.net/michkap/archive/2009/10/26/9912727.html">Maybe we're wrong, but we'd likely never admit it</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2009/09/12/9894533.html" title="Vegas as the safe bet">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2009/09/09/9893085.html" title="On not being in Germany in October">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2009-09">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2009-09-11">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2009/09/11/9894019.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:35 GMT -->
+</html>

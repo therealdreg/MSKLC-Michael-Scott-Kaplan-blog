@@ -1,0 +1,41 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2007/02/04/1600427.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:38 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>So how does that Naqittaut keyboard work, exactly?</title></head><body>
+<h1>So how does that Naqittaut keyboard work, exactly?</h1>
+<p><em>by Michael S. Kaplan, published on 2007/02/04 19:07 -05:00, original URI: http://blogs.msdn.com/b/michkap/archive/2007/02/04/1600427.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P>The keyboard layout for Inuktitut has a fascinating history on Windows, even though it really only dates back to the post-XP SP2 <A class="" href="http://archives.miloush.net/michkap/archive/2005/01/26/360685.html" mce_href="http://archives.miloush.net/michkap/archive/2005/01/26/360685.html"><STRONG>ELK</STRONG></A> package in <A class="" href="http://support.microsoft.com/?kbid=897338" mce_href="http://support.microsoft.com/?kbid=897338">KB897338</A> that I mentioned <STRONG><A class="" href="http://archives.miloush.net/michkap/archive/2005/08/09/449405.html" mce_href="http://archives.miloush.net/michkap/archive/2005/08/09/449405.html">here</A></STRONG>.</P>
+<P>That first version only provides support for the Latin script. There was a real push to support more, but given that the <A class="" href="http://www.unicode.org/charts/PDF/U1400.pdf" mce_href="http://www.unicode.org/charts/PDF/U1400.pdf">Canadian Syllabics subrange</A> in Unicode <STRONG><A class="" href="http://archives.miloush.net/michkap/archive/2005/01/18/355210.html" mce_href="http://archives.miloush.net/michkap/archive/2005/01/18/355210.html">had no weight</A></STRONG>&nbsp;in the collation tables, the results of trying to use it would have been less than optimal. So the keyboard was floated with various informants and held until Vista, and the Latin script support is all that shipped.</P>
+<P><EM>(As a miscellaneous note of interest, there was a push to provide a special sort for the Latin script version of Inuktitut, but as it turns out the results it provided for anything in either English or French was bad enough that it just didn't make very much sense to pick up as a collation for the locale, yet another example of the phenomenon I mentioned first when talking about <STRONG><A class="" href="http://archives.miloush.net/michkap/archive/2006/07/27/679538.html" mce_href="http://archives.miloush.net/michkap/archive/2006/07/27/679538.html">a Cantonese sort</A></STRONG> -- an attempt to provide a functionality fails due to the disappointing results trying out the prototype!)</EM></P>
+<P>Anyway, the Latin script keyboard is nothing special (as compared with many other Windows layouts, at least!). </P>
+<P>But then move into Vista and with the Gavin Nesbitt-provided layout things start to get more interesting. Here it is in the BASE, SHIFT, ALTGR, and ALTGR+SHIFT states:</P>
+<P><IMG src="http://trigeminal.fmsinc.com/images/InuktitutBase.png"></P>
+<P><IMG src="http://trigeminal.fmsinc.com/images/InuktitutShift.png"></P>
+<P><IMG src="http://trigeminal.fmsinc.com/images/InuktitutAltGr.png"></P>
+<P><IMG src="http://trigeminal.fmsinc.com/images/InuktitutShiftAltGr.png"></P>
+<P>As you might guess, the BASE and SHIFT states are almost identical to the older Latin script keyboard. Which is I suppose good for compatibility (though I have my doubts about how many people installed that particular QFE who were concerned about Vista compat for their keyboard layout experience!). But there is another problem here....</P>
+<P>If you were typing with the Syllabics, you might be really unhappy if every letter you typed required hitting the Right ALT (AltGr) key. So the SGCAPS and SHIFT+SGCAPS state was also used:</P>
+<P><IMG src="http://trigeminal.fmsinc.com/images/InuktitutSgcaps.png"></P>
+<P><IMG src="http://trigeminal.fmsinc.com/images/InuktitutShiftSgcaps.png"></P>
+<P>And there is also that one last difference back in the BASE state -- that dead key, which looks like this:</P>
+<P><IMG src="http://trigeminal.fmsinc.com/images/inuktitut_deadkeys_xp.png"></P>
+<P>Oops, let's not do this on XP, let's do it on Vista where the font is installed and Uniscribe knows what to do with it:</P>
+<P><IMG src="http://trigeminal.fmsinc.com/images/inuktitut_deadkeys.png"></P>
+<P>Display automatically working in ToolTips even though it is unlikely that the font will have the characters is the&nbsp;kind of feature uses that new special not-yet-defined definition of complex scripts that I talked about in <STRONG><A class="" href="http://archives.miloush.net/michkap/archive/2005/10/18/481654.html" mce_href="http://archives.miloush.net/michkap/archive/2005/10/18/481654.html">this post</A></STRONG>....</P>
+<P>So basically you have three different ways to type in characters -- the dead keys, the SGCAPS assignments, or the AltGr assignments. It is probably not as likely that usage of the three would overlap; I suspect a user would pick one to learn and go with it. Just my impression.... though it does make for a very interesting use of SGCAPS that I would tentatively call a good idea and an exception to my usual thoughts on the functionality....</P>
+<P>Last note -- the font&nbsp;being used in Vista&nbsp;is <STRONG>Euphemia</STRONG>, and I have no idea what the backstory is for that font name. :-)</P>
+<P mce_keep="true">&nbsp;</P>
+<P><FONT color=#ff00ff><EM>This post brought to you by</EM>&nbsp;<FONT size=5>ᙱ</FONT> <EM>(<A class="" href="http://www.fileformat.info/info/unicode/char/1671" mce_href="http://www.fileformat.info/info/unicode/char/1671">U+1671</A>, a.k.a. CANADIAN SYLLABICS NNGI)</EM></FONT></P>
+<hr/><p><a id="1922851" href="#1922851">#</a> <strong>Gavin Nesbitt</strong> on 20 Mar 2007 10:45 PM:</p><div style="margin-left: 1em"><p>Hi Michael,</p>
+<p>I just noticed your post...For the general interest of those who might search on this, the latin keyboard does contain a few things of interest.</p>
+<p>A few characters were never (easily) available for input. They usually had poor substitutes such as the &quot;&amp;&quot; instead of the &quot;ł&quot; (barred l). Very unnattractive </p>
+<p>The character references are: </p>
+<p>ł (u+0142) used to represent the &nbsp;U+15A0... (ᖠ) type syllabics</p>
+<p>and</p>
+<p>ŋ (u+014B) used for the U+1671...(ᙱ) type syllabics you used above.</p>
+<p>These particular characters are also in the Vista syllabic keyboard, but they do help a number of users attempting to do Inuktitut latin in XP. </p>
+<p>Thanks for your post! </p>
+<p>Gavin</p></div>
+<hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2010/07/07 <a href="http://archives.miloush.net/michkap/archive/2010/07/07/10032340.html">[Pretty much] All the things you can't do with SGCAPS, and why</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2007/02/05/1602498.html" title="The sort may not be reproducible">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2007/02/04/1596987.html" title="The name of the song is not &#39;ps-PS I Love You&#39;">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2007-02">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2007-02-04">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2007/02/04/1600427.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:38 GMT -->
+</html>

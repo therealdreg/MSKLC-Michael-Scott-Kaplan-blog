@@ -1,0 +1,25 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2010/08/11/10048694.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:35 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Loading the strings from the MUI file?</title></head><body>
+<h1>Loading the strings from the MUI file?</h1>
+<p><em>by Michael S. Kaplan, published on 2010/08/11 14:01 +00:00, original URI: http://blogs.msdn.com/b/michkap/archive/2010/08/11/10048694.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostGoogleFeed -->
+<p>It was a less than thirty four months ago that I wrote <a href="http://archives.miloush.net/michkap/archive/2010/08/10/5284413.html" title="Cracking the binary (aka How to open .MUI files?)"><strong>Cracking the binary (aka How to open .MUI files?)</strong></a>.</p>
+<p>And it was a less than 24 hours ago that reader Vinzy asked in a comment to that blog:</p>
+<p style="padding-left:30px"><span style="font-family:times new roman,times"><em>Is there a way to read strings from loaded MUI files, say shell32.dll.mui using C#?</em></span></p>
+<p>I'll admit my first thought was that the answer was in the original blog, albeit buried a bit.</p>
+<p>I mean after all, if you could open up the resources by making Visual Studio treat the files the same way they would treat other binaries like DLLs, then it kind of implies that they are in the exact same format, from a resources point of view.</p>
+<p>But I thought about it a bit.</p>
+<p>I mean it isn&#39;t like C# or even .Net has a bunch of built in methods to load traditional Wine32 resources built in, right?</p>
+<p>Basically you have to P/Invoke the Win32 functions, like LoadString, for example:</p>
+<p style="padding-left:30px"><span style="font-family:courier new,courier"><strong>            [DllImport(&quot;user32.dll&quot;, CharSet=CharSet.Unicode, EntryPoint=&quot;LoadStringW&quot;, ExactSpelling=true)]<br>            internal static extern int LoadString(<br>                IntPtr hInstance, <br>                uint uID, <br>                StringBuilder lpBuffer, <br>                int nBufferMax);</strong></span></p>
+<p>Now Vinzy was specific about the idea that the files were already loaded, so a GetModuleHandle call will get the IntPtr that fits for that hInstance parameter, or maybe that vaslue is something already loaded.</p>
+<p>And you can l,oad up any string you need.</p>
+<p>Note that although it is possible to do all of this with a .MUI file directly, that is not the best way to do it.</p>
+<p>You can instead load the original resource DLL and let Windows and its resource loader figure out which .MUI file to load and get data from. </p>
+<p>You can reserve figuring it out yourself and loading the .MUI file directly for the times  that you are writing your own resource loader. :-)</p>
+<p>There is also one last point to make here, since we are talking about getting strings from shell32.dll.mui and shell32.dll.</p>
+<p>For almost everyone in the world, that is the wrong thing to do; the one real exception would be people on the Shell team who are loading the strings as part of their feature -- no one else should really be depending on strings in system files like shell2.dll <em>or </em>shell32.dll.mui!</p>
+<hr/><div style="margin-left: 1em"><em>comments not archived</em></div><hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2010/08/12/10049039.html" title="Strike TWO!">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2010/08/10/10047945.html" title="What&#39;s up with the name of the &quot;Print Screen&quot; key?">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2010-08">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2010-08-11">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2010/08/11/10048694.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:35 GMT -->
+</html>

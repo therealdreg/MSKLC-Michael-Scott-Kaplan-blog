@@ -1,0 +1,62 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2005/04/28/412977.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:41 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Cleaning out the suggestion box a bit</title></head><body>
+<h1>Cleaning out the suggestion box a bit</h1>
+<p><em>by Michael S. Kaplan, published on 2005/04/28 08:40 -07:00, original URI: http://blogs.msdn.com/michkap/archive/2005/04/28/412977.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostOld -->
+<P><FONT face=Tahoma>The theme for this post is going to be disappointing people's hopes.... picking out suggestions that do not go along with the probable desires of those asking the questions.</FONT></P>
+<P><FONT face=Tahoma>The first question comes from <A href="http://products.pyramid.ro/">marius mihalca</A>:</FONT></P>
+<BLOCKQUOTE dir=ltr style="MARGIN-RIGHT: 0px">
+<P><FONT face=Tahoma size=2><EM>Sorry to bother you with this but I found no other way to send you a message. I fallowed all the stept from this article (How to build the 7.1 MFC and the CRT DLLs with MSLU) but my simple VC71 generated application can't display unicode on Windows98 SE. </EM></FONT></P>
+<P><FONT face=Tahoma size=2><EM>Everything sims OK except the fact that instead of bulgarin (or greek) language my application displays ? and _ (or other characters). I am positive that unicows.dll is loaded. </EM></FONT></P>
+<P><FONT face=Tahoma size=2><EM>I tried to make an simple editbox and tried to paste some unicode text. The editbox shows incorect text. </EM></FONT></P>
+<P><FONT face=Tahoma size=2><EM>How can I be sure that my applicatin is using unicows.dll correctly? </EM></FONT></P>
+<P><FONT face=Tahoma size=2><EM>Please help.<BR></EM></FONT><FONT face=Tahoma size=2><EM>10x </EM></FONT></P></BLOCKQUOTE>
+<P><FONT face=Tahoma>MSLU is actually behaving as designed here. The Microsoft Layer for Unicode is not, as some people seem to think, a library that provides Unicode support for Win9x. It is, rather, a thin layer over the non-Unicode Win9x that allows one to write a Unicode application. It will still convert those Unicode string parameters from the various Win32 API functions out of Unicode in order to call the underlying operating system. The key is that the Unicode application, <STRONG>when run on an operating system that supports Unicode</STRONG>, will allow one to get full Unicode support.</FONT></P>
+<P><FONT face=Tahoma>This design is the very one that Julie Bennett originally <a href="http://archives.miloush.net/michkap/archive/2005/02/12/371650.html">envisioned</A>&nbsp;and that Cathy Wissink and I <A href="http://msdn.microsoft.com/msdnmag/issues/01/10/MSLU/">wrote about</A> for MSDN Magazine.</FONT></P>
+<P><FONT face=Tahoma>Now there are components that provide a degree of actual Unicode support on Win9x, such as Uniscribe, RichEdit, the Shell Common Controls (version 5.80 and later), and others. But <A href="http://msdn.microsoft.com/library/en-us/mslu/winprog/other_existing_unicode_support.asp">those items</A>&nbsp;do not include MSLU, which is not a rewrite of those 550+ APIs but a wrapper around them. I know this may be disappointing to those who were hoping that it was indeed a Unicode solution of Win9x, but it has never been documented anywhere as such a solution....</FONT></P>
+<HR>
+
+<P><FONT face=Tahoma>On April 13, I heard from AC:</FONT></P>
+<BLOCKQUOTE dir=ltr style="MARGIN-RIGHT: 0px">
+<P><FONT face=Tahoma size=2><EM>I'm receiving this question from the developers who'd like to have the possibility to make the language customization for the users of Windows 9x/ME which would allow them to later more gracefully upgrade to NT/2K/XP:</EM></FONT></P>
+<P><FONT face=Tahoma size=2><EM>- how can they add the additional code page to the Windows 9x/ME? </EM></FONT></P>
+<P><FONT face=Tahoma size=2><EM>The goal is to be able to enter unicode characters by typing them. Good enough MS KLC equivalents for Win 9x/ME already exist. </EM></FONT></P>
+<P><FONT face=Tahoma size=2><EM>I know that once was probably considered not so good idea to open the specs of Windows 9x/ME .NLS files. But I guess now it shouldn't be such a problem? </EM></FONT></P></BLOCKQUOTE>
+<P><FONT face=Tahoma>Well, the answer to this will also not thrill. There is not going to be any kind of opening up of code pages or other .NLS files on Win9x or elsewhere. In practice, this would not help graceful upgrades but it would delay the time before people did upgrade to a NT/2K/XP by offering an incomplete solution for other languages today, in a way that hurts interoperability.</FONT></P>
+<P>
+<HR>
+
+<P></P>
+<P><FONT face=Tahoma>In the beginning of February, Richard Caruana asked:</FONT></P>
+<BLOCKQUOTE dir=ltr style="MARGIN-RIGHT: 0px">
+<P><FONT face=Tahoma size=2><EM>Do you know if the following can or will be instituted :</EM></FONT></P>
+<OL>
+<LI><FONT face=Tahoma size=2><EM>To be able to have a core fontlet/character in the centre which can have overlay accents or diacritics which can be added/overlaid/plyed at run-time in a unicode text editor. </EM></FONT>
+<LI><FONT face=Tahoma size=2><EM>A section for developers in the UNICODE font (~ 1000 character spaces or less if the above idea can be instituted ) </EM></FONT></LI></OL>
+<P><FONT face=Tahoma size=2><EM>Also, do you know where I can download a unicode character search program which if you paste in the character (chinese) it gives you the character code (eg 5CFO) and a definition.</EM></FONT></P></BLOCKQUOTE>
+<P><FONT face=Tahoma>Well, #1 is sort of there now, although it only works well when the font author does the hard work of having all the appropriate code points and attachment points defined.</FONT></P>
+<P><FONT face=Tahoma>#2 is sort of there with now, although the private use area of Unicode is only for private use and not for interchange, and I honestly don't see how it could help this situation anyway.</FONT></P>
+<P><FONT face=Tahoma>As for the place to get info about Unicode characters, check out the <A href="http://www.fileformat.info/info/unicode/char/search.htm">Unicode Character Search (by fileformat.info)</A>&nbsp;that will accept both characters and code points. I do not know offhand about downloadable tools, but if you could reach my blog then you can reach that site, I suppose. Right? :-)</FONT></P>
+<P><FONT face=Tahoma>
+<HR>
+
+<P></P>
+<P></FONT><FONT face="Times New Roman"></FONT></P>
+<P><FONT face=Tahoma>Then, back in the end of January, G* asked:</FONT></P>
+<BLOCKQUOTE dir=ltr style="MARGIN-RIGHT: 0px">
+<P><FONT face=Tahoma size=2><EM>Care to take a break from the wonders of Unicode and elaborate on the pain that is the console codepage 437? </EM></FONT></P></BLOCKQUOTE>
+<P><FONT face=Tahoma>Sorry, no. :-)</FONT></P>
+<P><FONT face=Tahoma>I am all about the Unicode thing. </FONT></P>
+<P><FONT face=Tahoma>Unless you have something particular in mind beyond what I have talked about in prior posts about encoding issues, like <a href="http://archives.miloush.net/michkap/archive/2005/02/08/369197.html">this</A> one?</FONT></P>
+<HR>
+
+<P><FONT face=Tahoma>Ok, that is enough disapointment for one day. I'll try to work harder to meet people's expectations/wishes next time....</FONT></P>
+<P><FONT face=Tahoma></FONT>&nbsp;</P>
+<P><FONT face=Tahoma><FONT color=#ff0000><EM>This post brought to you by</EM> "峰<EM>" (<A href="http://www.fileformat.info/info/unicode/char/5cf0/index.htm">U+5cf0</A></EM></FONT></FONT><FONT face=Tahoma color=#ff0000><EM>,&nbsp;an ideograph meaning&nbsp;"peak, summit; hump of camel" according to the Unihan database)</EM></FONT></P>
+<hr/><p><a id="412988" href="#412988">#</a> <strong>Jonathan Payne</strong> on Thursday, April 28, 2005 9:33 AM:</p><div style="margin-left: 1em">Would you be interested in having a go at the question described here:<br><br><a rel="nofollow" target="_new" href="http://channel9.msdn.com/ShowPost.aspx?PostID=19171">http://channel9.msdn.com/ShowPost.aspx?PostID=19171</a><br><br>Basically the MSDN Channel 9 people show a mock Microsoft interview question where they ask the candidate to write a function to detect if a given string is a palindrome.  What answer would you have given to this question given your background in Unicode and internationalization?<br><br>I suspect the “perfect” solution would be very hard to implement as it would have to take into account so many of the things you have covered (case insensitive comparisons, multiple representations of the same character, ignoring certain character cases and so on).</div>
+<p><a id="413008" href="#413008">#</a> <strong>Michael S. Kaplan</strong> on Thursday, April 28, 2005 10:32 AM:</p><div style="margin-left: 1em">The thing I would definitely note is that the solutions do not seem to handle combining chars. But I would do something like this for it: <br><br>using System; <br>using System.Text; <br>using System.Globalization; <br><br>namespace Testing <br>{ <br> class Palindrome <br> { <br>  [STAThread] <br>  static void Main(string[] args) <br>  { <br>   StringInfo si = new StringInfo(args[0]); <br>   int count = si.LengthInTextElements; <br><br>   if (count == 0) <br>   { <br>    Console.WriteLine(&quot;False&quot;); <br>    return; <br>   } <br><br>   for (int i = 0; i &lt; ((count % 2 != 0) ? count - 1 : count) / 2; i++) <br>   { <br>    string st1 = si.SubstringByTextElements(i, 1); <br>    string st2 = si.SubstringByTextElements(count - i - 1, 1); <br><br>    if (CultureInfo.CurrentCulture.CompareInfo.Compare(st1, st2) != 0) <br>    { <br>     Console.WriteLine(&quot;False&quot;); <br>     return; <br>    } <br>   } <br><br>   Console.WriteLine(&quot;true&quot;); <br>   return; <br><br>  } <br> } <br>}</div>
+<p><a id="413034" href="#413034">#</a> <strong>Michael S. Kaplan</strong> on Thursday, April 28, 2005 11:37 AM:</p><div style="margin-left: 1em">See <a rel="nofollow" target="_new" href="http://archives.miloush.net/michkap/archive/2005/04/28/413019.html">http://blogs.msdn.com/michkap/archive/2005/04/28/413019.aspx</a> for my answer, with formatting that works a little better.</div>
+<hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2005/04/28 <a href="http://archives.miloush.net/michkap/archive/2005/04/28/413019.html">Looking for that internationally savvy palindrome checker....</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2005/04/28/413019.html" title="Looking for that internationally savvy palindrome checker....">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2005/04/27/412454.html" title="Reason #8 to not be so anxious to update your Platform SDK?">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2005-04">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2005-04-28">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2005/04/28/412977.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:41 GMT -->
+</html>

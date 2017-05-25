@@ -1,0 +1,29 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2008/09/22/8960832.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:35 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>A lot of problems to enumerate...</title></head><body>
+<h1>A lot of problems to enumerate...</h1>
+<p><em>by Michael S. Kaplan, published on 2008/09/22 10:01 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2008/09/22/8960832.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<p>The question (asked over in the microsoft.public.win32.programmer.international newsgroup) was:</p><blockquote><p><font face="times new roman,times">I think there is something fundamental that I missing about the CompareString API.&nbsp; Distilling a lot of confusion, I have an example where something like...<br><br>LPCTSTR cTest = L"{\rtf";<br><br>CompareString( LOCAL_INVARIANT, 0, cTest, -1, cTest, -1)&nbsp; does not return CSTR_EQUAL.<br><br>CompareString( LOCAL_INVARIANT, NOM_IGNORECASE, cTest, -1, cTest, -1) does not return CSTR_EQUAL.<br><br>It does return CSTR_EQUAL on XP with English locales (UK and US), but fails with a German locale.<br><br>Shouldn't a string be equal to itself?&nbsp; What am I missing?<br><br>Alternatively, can someone suggest a better way to do a case insensitive test of equality that works independent of the locale?&nbsp; I can see where sorting would be locale dependent, but it seems that equality should not depend on locale.<br><br>Thanks.</font></p></blockquote><p>Now there are a whole bunch of problems here, but I thought I'd open it up to the <font color="#999999"><strike>peanut gallery</strike></font>readers if anyone wants to enumerate errors here, and by errors I mean technical errors, process errors, errors in the questions being asked, usage errors, conventional errors, best practice errors, errors in language usage, errors in spelling, errors in the color coordination of the person asking, literally anything -- provided you can prove it by using the text above to do so (i you can figure out how to prove the color coordination issue I will be quite impressed!).</p><p>Anyone who was there for the first time but has not forgotten the answers, and anyone who tries to find the old thread in the newsgroups is disqualified.</p><p>Psychic debugging encouraged, and I'll be using it to determine if people cheat on any of the above. :-) </p><p>Ready, set, go! <br></p>
+<hr/><p><strong>Rob</strong> on 22 Sep 2008 11:10 AM:</p><div style="margin-left: 1em"><p>Someone forgot to #define UNICODE?</p>
+<p> &nbsp; &nbsp;LPCTSTR cTest = L&quot;{\rtf&quot;;</p>
+<p>If you're using a Unicode string, why not declare cTest as LPCWSTR?</p></div>
+<p><strong>Christian Kaiser</strong> on 23 Sep 2008 10:06 AM:</p><div style="margin-left: 1em"><p>My first thoughts:</p>
+<p>a) it's not &quot;LOCAL_INVARIANT&quot;, but &quot;LOCALE_INVARIANT&quot;</p>
+<p>b) comparing binary key strings like &quot;{\rtf&quot; does not make sense using CompareString and collational compare - such a comparison has no meaning for to the binary stream that an RTF stream is.</p>
+<p>c) why CompareString does differ on the (assumed) thread locale, or the user locale, while it has a 'invariant' locale parameter, looks strange to me, but you will surely have a reasonable answer ;-)</p>
+<p>d) the return value of the API is not checked - does CompareString possibly fail? 0 is not CSTR_EQUAL. As you see, I have not compiled or run that code above.</p>
+<p>Christian</p></div>
+<p><strong>Christian Kaiser</strong> on 23 Sep 2008 10:28 AM:</p><div style="margin-left: 1em"><p>Oh, just found two more while waiting for a build to complete here: </p>
+<p>d) &quot;\r&quot; is an escape ;-))) &nbsp;-&gt; could be a reason to return 0 for the API?</p>
+<p>e) NOM_IGNORECASE -&gt; NORM_IGNORECASE</p>
+<p>Christian</p></div>
+<p><strong>Michael S. Kaplan</strong> on 24 Sep 2008 1:15 AM:</p><div style="margin-left: 1em"><p>Okay, I am going to let this go on a tiny little bit longer, as I'm still looking for a couple more answers, especially the &quot;Gregory House&quot; type answer that ties everything together and explains it all. :-)</p>
+<p>(That is a hint that there is still one clever issue out there has not been caught yet!)</p>
+</div>
+<p><strong>Michiel</strong> on 26 Sep 2008 9:55 AM:</p><div style="margin-left: 1em"><p>Weird, that \r escape followed by tf. Probably unintentional, considering the RTF text format. </p>
+<p>CompareString is of course capable of returning equal, smaller, greater and wrong parameter (0) . Since we're not going to get smaller of greater, it means we must be getting wrong parameter. What's wrong? Well, for starters ignoring case is hard without a locale. What's the lowercase 'I'?</p>
+<p>And of course, if &quot;{\\rtf&quot; is indeed a markup code, it shoud not be compared with CompareString. That's intended for human-consumable text.</p></div>
+<hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2008/09/23/8961799.html" title="As the comma turned (in space!)">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2008/09/22/8960804.html" title="Michael hasn&#39;t worn pants in months">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2008-09">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2008-09-22">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2008/09/22/8960832.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:35 GMT -->
+</html>

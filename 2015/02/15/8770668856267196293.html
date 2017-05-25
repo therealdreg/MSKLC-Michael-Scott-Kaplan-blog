@@ -1,0 +1,37 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2015/02/15/8770668856267196293.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:00 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Why nobody wants to fix the problem of the console</title></head><body>
+<h1>Why nobody wants to fix the problem of the console</h1>
+<p><em>by Michael S. Kaplan, published on 2015/02/15 22:31 +00:00, original URI: http://www.siao2.com/2015/02/15/8770668856267196293.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostWordpress -->
+<p>The ultimate problem is defining "Unicode support in the console".</p>
+<p>The console from the customer's viewpoint is much simpler than the technical reality, which is:</p>
+<p>{cmd.exe | CRT | PowerShell ISE | custom console provider} + {0 - n EXEs that can interact with the console}</p>
+<p>Ignoring</p>
+<p>• bugs in the custom console provider, whose bugs are for the most part owned by some third party developer, and
+• bugs in the CRT, which has been broken so long that more recent version fixes don't help so much, and
+• bugs in the PowerShell ISE, which are comparatively low</p>
+<p>all of my blogs have been about the Unicode support of cmd.exe, which I admit is hard to get at, because no wants to add new functions to wrap the old ones, even wrappers that would support multiple versions, either via .LIB or via header file, either one of which would work.</p>
+<p>The last category, the 0 - n EXEs that can interact with the console, is ignored despite the fact that so many things that are done in the console depend on them.</p>
+<p>This is why UA/UE has resisted efforts to document the story, and DevDiv has resisted efforts to either document or further improve the story: because from the customer point of view, the scenario will continue to suck a lot of the time.</p>
+<p>Back in the Windows 7 timeframe, people were able to add Unicode support to a handful of specific EXEs that handle network support, but even very influential people in one area had a hard time getting other owners in another area to fix bugs in EXEs they own.</p>
+<p>My meager efforts to Unicodize as well as third parties are covered here: <a href="../../../2007/12/24/6843995.html">http://www.siao2.com/2007/12/24/6843995.aspx</a></p>
+<p>But short of a DaveC esque crusade to fix Unicode bugs in legacy EXEs combined with a DevDiv effort to document how developers can fix their own Unicode bugs, the overall scenario cannot be fixed. And no one is that big a fan of Unicode within Microsoft.</p>
+<p></p>
+<hr/><p><a id="14637" href="#14637">#</a> <strong>WndSks</strong> on 2015-02-16 16:47:23:</p><div style="margin-left: 1em">I'm not sure I agree with your reality.
+
+At the bottom you have conhost/csrss, this is the server side of WriteConsole* and it has some Unicode issues. I'm guessing it is limited to UCS16/BMP because it uses a single WCHAR in parts of the API. You could probably work around it by adding a new Ex version for the low-level API parts but all of the console internals would have to be changed to UCS32 and this might be a lot of work and old versions of ReadConsole* would have to return FFFD for things outside UCS16. The other issue is display based and some characters show up as boxes, this is probably because font-linking and Uniscribe is not used in the drawing code and could be fixed without compatibility issues?
+
+Some people like to believe that there is a middle layer where cmd.exe and PowerShell live but in reality they should be treated like any other console application.
+
+Finally we have the top layer where the client applications live. There are multiple issues here with the CRT and dealing with file redirection but you have already made some excellent posts about this so I'm not going into details here. The thing we really need here is a time machine so that NT3+ has a WriteStdString function that calls WriteConsoleW or WriteFile for you and it needs to support UTF16LE-BOM detection + WCToMB with console CP fallback...
+
+I'm not sure what you mean by console provider. Could you write your own version of cmd.exe, sure. Can you write your own terminal/console host, no, not really. 
+
+A simple version might use pipes but that does not work with interactive/GUI/curses style applications. Some try screenscraping but that means pulling and you might miss fast scrolling output. This only leaves you with using Detours to hook the entire client side of the public console API + Write/ReadFile and you have to do this in all child processes. I have never seen anyone even attempt this but it should work in theory. The only issue is process groups and ctrl+c handling where you would have to use job objects. Windows has supported it before job objects existed but I assume that is some secret juice in csrss/kernel?</div>
+<p><a id="14661" href="#14661">#</a> <strong>Michael S. Kaplan</strong> on 2015-02-26 21:22:44:</p><div style="margin-left: 1em">Well, a certain amount of simplification and feigned ignorance is required to talk about the console while both keeping the myth of a somewhat organized process and not getting laid off for discussing  "internal only" information in an external place.
+
+Mainly I am trying to convey how hard it is to fix any of these problems, even with high level support within Microsoft.</div>
+<hr/><p><em>go to <a id="newer" href="../../03/02/8770668856267196299.html" title="Solving Trigeminal Neuralgia v.2!">newer</a> or <a id="older" href="../04/8770668856267196281.html" title="Sorry, but Sorting it all Out has often  been about sex for the last decade">older</a> post, or back to <a href="../../../index-2.html">index</a> or <a href="../../../index-2.html#2015-02">month</a> or <a href="../../../index-2.html#2015-02-15">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2015/02/15/8770668856267196293.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:00 GMT -->
+</html>

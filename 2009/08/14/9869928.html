@@ -1,0 +1,28 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2009/08/14/9869928.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:35 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Header files are not retarded, aka What the @#%&* is _O_WTEXT?</title></head><body>
+<h1>Header files are not retarded, aka What the @#%&* is _O_WTEXT?</h1>
+<p><em>by Michael S. Kaplan, published on 2009/08/14 10:01 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2009/08/14/9869928.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<p>There was a recent [internal] discussion thread where someone was asking about what was the best way to output localized text to the console.</p>
+<p>After a bit of thread drift, STL pointed out that blog post (<b><a href="http://archives.miloush.net/michkap/archive/2008/03/18/8306597.html" mce_href="http://archives.miloush.net/michkap/archive/2008/03/18/8306597.html">Conventional wisdom is retarded, aka What the @#%&amp;* is _O_U16TEXT?</a></b>) which explains how to fix the bulk of the problems one sees with wprintf and such.</p>
+<p>Not that it did much good initially, since the conclusion reached:</p>
+<blockquote>
+<blockquote>
+<p><i><font face="times new roman,times">Thanks. <br><br>Why not using WriteFile always and drop WriteConsole? Unicode string may be converted to ASCII one before calling WriteFile. The code is simpler and the output is uniform – both, string in file and one copied from console, are ASCII. Otherwise, console string is ASCII, but file contains Unicode.</font></i> <br></p>
+</blockquote>
+</blockquote>
+<p>clearly suggests that the topic was not read to the bottom! :-)</p>
+<p>It's okay, he was set straight very quickly, so no worries there. Given how unlikely I am to read a email from a VP all the way to the end, I can't expect people to read a blog post of mine to the end; they have staffs and get paid a helluva lot more money for what they wrote and even spell-checked it!</p>
+<p>Anyway, one thing that was mentioned even further in the thread, after someone complained about the documentation being inadequate (a problem I talked some too, in the original blog and <b><a href="http://archives.miloush.net/michkap/archive/2008/03/19/8321717.html" mce_href="http://archives.miloush.net/michkap/archive/2008/03/19/8321717.html">Before you say "What's next?" you have to figure out the action items</a></b>), was that all of the correct info was sitting in the header file (fcntl.h):</p>
+<blockquote>
+<blockquote>
+<b><font face="Consolas,Lucida Console,Courier New,Courier,Fixed">
+<p>/* O_TEXT files have &lt;cr&gt;&lt;lf&gt; sequences translated to &lt;lf&gt; on read()'s,<br>** and &lt;lf&gt; sequences translated to &lt;cr&gt;&lt;lf&gt; on write()'s<br>*/<br><br>#define _O_TEXT&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 0x4000&nbsp; /* file mode is text (translated) */<br>#define _O_BINARY&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 0x8000&nbsp; /* file mode is binary (untranslated) */<br>#define _O_WTEXT&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 0x10000 /* file mode is UTF16 (translated) */<br>#define _O_U16TEXT&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 0x20000 /* file mode is UTF16 no BOM (translated) */<br>#define _O_U8TEXT&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 0x40000 /* file mode is UTF8&nbsp; no BOM (translated) */ <br></p>
+</font></b>
+</blockquote>
+</blockquote>
+<p>So this explains the difference between the various _O_*TEXT defines much more concisely than the documentation does! :-)</p><p>Now yes blog posts do not add up to official documentation, even when they are more accurate and are cited by technology owners.</p><p>And yes header files (especially ones with warnings like the one at the top of fcntl.h!) might not be either in some legal sense.</p><p>But remember that when documentation is wrong, the only bad consequence is confusion -- it does not make programs spontaneously fail.</p><p>Header files, on the other hand, are intended to represent what the developer was honestly expecting the code to do, and there is an honest chance that a non-comment mistake in a header file will keep something from building -- which means there is a greater chance that the problem might be fixed!</p><p>So if you want to know <b>What the @#%&amp;* is _O_WTEXT?</b>, you may want to check the header file first. You might be surprise yourself....<br></p>
+<hr/><div style="margin-left: 1em"><em>no comments</em></div><hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2009/08/17/9871988.html" title="On not looking at Uyghur through a Chinese prism">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2009/08/12/9866743.html" title="Turkish Character in Directory Name Hung Windows NT 3.5, aka small enough to be internationally stupid">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2009-08">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2009-08-14">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2009/08/14/9869928.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:35 GMT -->
+</html>

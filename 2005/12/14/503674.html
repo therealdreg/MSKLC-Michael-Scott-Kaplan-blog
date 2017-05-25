@@ -1,0 +1,28 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2005/12/14/503674.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:40 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>It may seem like a bug, but it is not....</title></head><body>
+<h1>It may seem like a bug, but it is not....</h1>
+<p><em>by Michael S. Kaplan, published on 2005/12/14 13:21 -05:00, original URI: http://blogs.msdn.com/b/michkap/archive/2005/12/14/503674.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P><FONT face=Tahoma>A user with the amusing handle of IDisposable asked me the following question via the contact link:</FONT></P>
+<BLOCKQUOTE dir=ltr style="MARGIN-RIGHT: 0px">
+<P><STRONG><FONT size=2><EM>Title: Am I nuts?</EM></FONT></STRONG></P><FONT size=2>
+<P><EM>Could you check this Ladybug report for me? I think it is bad code, but I'm not versed enough in the String.Compare(x,x,x,x,StringComparison.OrdinalIngoreCase) to be sure...</EM></P>
+<P></FONT><A href="http://lab.msdn.microsoft.com/ProductFeedback/viewfeedback.aspx?feedbackid=5bb29e79-abdd-45e1-b431-6bf3ec52c35f"><U><FONT color=#0000ff size=2><EM>http://lab.msdn.microsoft.com/ProductFeedback/viewfeedback.aspx?feedbackid=5bb29e79-abdd-45e1-b431-6bf3ec52c35f</EM></U></FONT></A></P></BLOCKQUOTE>
+<P><FONT face=Tahoma>Well, I don't think IDisposable is nuts, but he is incorrect.</FONT></P>
+<P><FONT face=Tahoma>As I have often stated here, Ordinal comparisons are binary ones, not language specific ones.</FONT></P>
+<P><FONT face=Tahoma>And OrdinalIgnoreCase is not ignoring case in a language-specific way, so there is no way that language differences can affect the casing part of the operation.</FONT></P>
+<P><FONT face=Tahoma>To make a further somewhat related point, currently in Microsoft products there is no casing operation that will change the length of a string -- the casing tables map one UTF-16 code&nbsp;unit to another, and even in .NET where casing of supplementary characters has been added, you always convert two UTF-16 code code units to two other ones. So the length will remain constant.</FONT></P>
+<P><FONT face=Tahoma>Of course linguistic comparisons do a bit more than that (as I pointed out in <a href="http://archives.miloush.net/michkap/archive/2005/03/10/391564.html">this</A> post and <a href="http://archives.miloush.net/michkap/archive/2005/04/10/406880.html">this</A> one, too), not to mention issues such as Unicode canonical equivalance that definitely let different length strings be equal. But neither Ordinal nor OrdinalIgnoreCase comparisons do anything like that....</FONT></P>
+<P><FONT face=Tahoma></FONT>&nbsp;</P>
+<P><FONT color=#ff1493><FONT face=Tahoma><EM>This post sponsored by</EM> "ß" <EM>(<A href="http://www.fileformat.info/info/unicode/char/00df">U+00df</A>, LATIN SMALL LETTER SHARP S)</EM></FONT></FONT></P>
+<hr/><p><a id="503897" href="#503897">#</a> <strong>IDisposable</strong> on 14 Dec 2005 9:04 PM:</p><div style="margin-left: 1em">Thanks!  I thought I was nuts...</div>
+<p><a id="503908" href="#503908">#</a> <strong>Michael S. Kaplan</strong> on 14 Dec 2005 9:22 PM:</p><div style="margin-left: 1em">Nah, not nuts at all. But I would prescribe reading this blog once a week and enter comments prn (as needed).<br><br>:-)</div>
+<p><a id="503999" href="#503999">#</a> <strong>CornedBee</strong> on 15 Dec 2005 3:45 AM:</p><div style="margin-left: 1em">On a stylistic note, you might want to use tinyurl or a similar service for URLs such as these.</div>
+<p><a id="504000" href="#504000">#</a> <strong>Michael S. Kaplan</strong> on 15 Dec 2005 3:47 AM:</p><div style="margin-left: 1em">It wasn't my URL, it was IDisposable's. Anyone can click on it right from the blog page. :-)<br><br>Once you see it you'll ealixe you do not need to save the reference....</div>
+<p><a id="504002" href="#504002">#</a> <strong>Michael S. Kaplan</strong> on 15 Dec 2005 3:49 AM:</p><div style="margin-left: 1em">It looks like the post was removed anyway. I guess someone decided I was correct. :-)</div>
+<p><a id="504004" href="#504004">#</a> <strong>Anutthara MSFT</strong> on 15 Dec 2005 3:58 AM:</p><div style="margin-left: 1em">Clicking on the URL gives me:<br>Spam<br>This feedback is not being displayed because it has been deemed as inappropriate content. Please refer to the FAQ for more details.<br><br>If you think this happened by mistake, please use the Contact Us link in the footer.<br></div>
+<p><a id="504007" href="#504007">#</a> <strong>Michael S. Kaplan</strong> on 15 Dec 2005 4:00 AM:</p><div style="margin-left: 1em">Thats what I mean, Anutthara -- the post is gone now. I assume IDisposable took it down (there are four other posts with an author by that name, but this one has disappeared).</div>
+<hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2005/12/14/503918.html" title="My first Channel 9 appearance!">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2005/12/14/503464.html" title="We&#39;ve come a long way, I think">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2005-12">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2005-12-14">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2005/12/14/503674.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:40 GMT -->
+</html>

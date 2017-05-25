@@ -1,0 +1,29 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2011/04/04/10149502.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>UXTheme in the non-Unicode world isn't "Double Secret ANSI"</title></head><body>
+<h1>UXTheme in the non-Unicode world isn't "Double Secret ANSI"</h1>
+<p><em>by Michael S. Kaplan, published on 2011/04/04 07:01 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2011/04/04/10149502.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<p>It was a while back that Gisle asked in the Suggestion Box:</p>
+<p style="padding-left: 60px;"><span style="font-family: times new roman,times;">Hi Michael,</span></p>
+<p style="padding-left: 60px;"><span style="font-family: times new roman,times;">I have enjoyed your blog for a long time, learned a lot and also had the pleasure of attending some of your talks at Unicode conferences.</span></p>
+<p style="padding-left: 60px;"><span style="font-family: times new roman,times;">I work for a company that produces a compiler and a runtime. In the past we have implemented support for the UXTheme, for various reasons we have not yet been able to make the system fully Unicode. The UXTheme implementation have however worked well, until recently when a user with special demands started using it. The special thing about this user is that they alter the application locale to allow input from other locales during execution. Like for instance going from English to Greek. </span></p>
+<p style="padding-left: 60px;"><span style="font-family: times new roman,times;">What we then experienced, was that when our non Unicode application for instance swapped to Greek on a system with the default non Unicode locale set to English, we were only getting substitute characters (?).</span></p>
+<p style="padding-left: 60px;"><span style="font-family: times new roman,times;">I assume this is because the UXTheme controls are all native Unicode and in a response to the WM_GETTEXT (also tried with GetWindowTextW), it is translating it to the default system locale (I am guessing this as I tried to change the system locale to Greek and it then worked).</span></p>
+<p style="padding-left: 60px;"><span style="font-family: times new roman,times;">So, I guess you figured out where I am heading. Is there a way to overrule the UXTheme default translation from CP_ACP to a specific locale programmatically?</span></p>
+<p style="padding-left: 60px;"><span style="font-family: times new roman,times;">I have searched your blog to see if I missed something, but either I am not searching for the right thing, or is it just not there.</span></p>
+<p style="padding-left: 60px;"><span style="font-family: times new roman,times;">Hoping for a suggestion.</span></p>
+<p style="padding-left: 60px;"><span style="font-family: times new roman,times;">Keep up the good work, you are a great resource for the rest of us!</span></p>
+<p>I wish I had a better answer, but there is unfortunately no Visual Styles (UXTheme) way to globally change the code page used to do conversions to and from Unicode.</p>
+<p>UXTheme is pretty much a "Unicode or CP_ACP" technology....</p>
+<p><em>Though there is&nbsp;a habit of thread locale type behavior you can look into here -- you may get lucky trying that? They don't document it as working that way but it has been quite common in the past in some places, so it may work -- it's hard to say. Plus they might break it later if it works sometimeas.</em></p>
+<p>This functionality&nbsp;even breaks some of the functionality that worked on Windows 95/98/Me -- the functionality I discussed in <a href="http://archives.miloush.net/michkap/archive/2007/03/08/1838231.html" title="Double Secret ANSI, part 1 (Somewhere between ANSI and Unicode)"><strong>Double Secret ANSI, part 1 (Somewhere between ANSI and Unicode)</strong></a>. In its own way that is unfortunate since that is exactly the feature you're looking for.</p>
+<p>Though given how much&nbsp;Microsoft&nbsp;broke that later (ref: <a href="http://archives.miloush.net/michkap/archive/2007/03/20/1917161.html" title="Double Secret ANSI, part 2 (the brokenest one yet, sorry 'bout that!)"><strong>Double Secret ANSI, part 2 (the brokenest one yet, sorry 'bout that!)</strong></a>), I guess it isn't really something that it would have made too much sense to depend on. :-(</p>
+<p>So solutions here are (more or less) unavailable.</p>
+<p>Now with all that said, some basic testing with <a href="http://archives.miloush.net/michkap/archive/2006/10/17/834208.html"><strong>App Locale</strong></a> and it seems to work. So I suppose as workarounds go that isn't all bad.</p>
+<p>Though it is still pretty limited since you stay limited to one code page at a time.</p>
+<p>In the long run, the only way to support the scenario is to start supporting Unicode.</p>
+<p>Sorry, Gisle. :-(</p>
+<hr/><div style="margin-left: 1em"><em>no comments</em></div><hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2011/04/05/10150001.html" title="Men Without Hats? Michael Without Shoes!">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2011/04/03/10149190.html" title="It&#39;s like a lower class of Lowercase...">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2011-04">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2011-04-04">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2011/04/04/10149502.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+</html>

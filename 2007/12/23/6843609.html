@@ -1,0 +1,41 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2007/12/23/6843609.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:36 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>How many ways can a developer say 'File Not Found?' (aka Making your localizer's life easier, Part 1)</title></head><body>
+<h1>How many ways can a developer say 'File Not Found?' (aka Making your localizer's life easier, Part 1)</h1>
+<p><em>by Michael S. Kaplan, published on 2007/12/23 10:16 -05:00, original URI: http://blogs.msdn.com/b/michkap/archive/2007/12/23/6843609.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P><EM><FONT color=#ff0000>The first in what might be a large series of blogs in this Blog....</FONT></EM></P>
+<P>Conventional wisdom from those enlightened in the ways of writing localizable applications suggests that developers should do their best to avoid reusing strings in different contexts where a localizer might need to provide two different translations for the string due to their different contexts.</P>
+<P>A great example of this is one I mentioned before in Microsoft Access, where the names for various properties in forms and reports is essentially duplicated in two different contexts (strings to be used in code versus the property sheet). The reason for the architected duplication is that in Japanese the full-width strings are required for the former (functional) case&nbsp;but is considered pretty ugly in the property sheets, where the half-width form is preferred.</P>
+<P>Now despite the basic truth of this, there are times that duplication is plain and simple duplication. </P>
+<P>And in some of those cases (and even in the above example) while duplication is okay, <STRONG>non-identical duplication</STRONG> is not.</P>
+<P>For example all of the following strings were found in one of the projects for Windows (I do not recall which version offhand):</P>
+<UL>
+<LI>File not found.</LI>
+<LI>The file could not be found.</LI>
+<LI>File cannot be found.</LI>
+<LI>Can't find file.</LI>
+<LI>Could not find the file.</LI>
+<LI>Unable to find file</LI>
+<LI>Could not find file.</LI>
+<LI>Cannot find the file.</LI>
+<LI>Can't locate file.</LI>
+<LI>File could not be located.</LI>
+<LI>File was not found.</LI></UL>
+<P>Now in fairness here some of them&nbsp; if tracked down might be for error codes in completely different technologies. But the simple fact that the actual strings vary so widely mean that not only does the base English product have to carry around the 11 ways to say the same thing but that localizers have the opportunity to carry the same inconsistency over without having the opportunity to use translation memories or even in some cases translation glossaries (if the strings are different enough).</P>
+<P>Now note that this localizability tip is also a good usability tip around building a consistent user interface in your project that is either not yet localized or is never localized -- even if the strings were hard-coded in the source saying the same thing eleven different ways is not a great way to build the mose usable experience!</P>
+<P>It is just in a software project's best interests to try to be smart enough about reuse that strings that are the same (whether or not they are expected to be used in the same contexts) use consistent, identical strings....</P>
+<P mce_keep="true">&nbsp;</P>
+<P mce_keep="true"><EM><FONT color=#ff00ff>All of the characters in Unicode have taken off for Grand Cayman for the Christmas holiday weekend<BR><FONT size=1>(they are staying at the Marriott Grand Cayman Beach Hotel in case you are there and are curious at all the characters hanging out by the pool!)</FONT></FONT></EM></P>
+<hr/><p><a id="6855996" href="#6855996">#</a> <strong>Mihai</strong> on 24 Dec 2007 6:08 PM:</p><div style="margin-left: 1em"><p>It is a good idea to make a difference between &quot;reuse&quot; (or duplication) and &quot;consistency.&quot;</p>
+<p>Duplication is good, consistency is good, reuse is bad.</p>
+<p>Duplication: to have the same string in several places.</p>
+<p>Consistency: to have all instances be the same.</p>
+<p>Reuse: to merge all identical strings into one and use that one (usually &quot;to save money&quot;).</p>
+<p>It is good to have the same string repeated. You need to say &quot;Print&quot; 50 times? Then have it 50 times! This gives the freedom to the translator to do what it's right for his language. Costs more? Maybe. But it will cost even more if you merge them (work), then you have a bug filed saying that titles and buttons need different translations.</p>
+<p>The challenge is to keep strings separate and consistent in the same time.</p>
+<p>Usually translated versions end up being more consistent, because are done by linguists, with access to the full set of strings, with proper tools, then edited with consistency as one of the point to check.</p>
+<p>The English version is just bunch of strings put together by various programmers, some of them with English as a second language, usually without a spell-check, and over a long period of time.</p></div>
+<hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2011/03/19 <a href="http://archives.miloush.net/michkap/archive/2011/03/19/10142458.html">Lack of confidence in a feature can keep me from installng it. Oh yeah, a BSOD can, too.</a></p><p>2010/02/28 <a href="http://archives.miloush.net/michkap/archive/2010/02/28/9970358.html">Silly money equivalency games work both ways (aka Making your localizer's life easier, Part 3)</a></p><p>2008/02/21 <a href="http://archives.miloush.net/michkap/archive/2008/02/21/7837478.html">We're back and we're embarrassing ourselves? (aka Making your localizer's life easier, Part 2)</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2007/12/24/6843913.html" title="The 9.0 instructions for building MFC and the CRT to use MSLU?">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2007/12/23/6841289.html" title="Now experiencing what is *almost* a pleasant exacerbation">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2007-12">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2007-12-23">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2007/12/23/6843609.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:36 GMT -->
+</html>

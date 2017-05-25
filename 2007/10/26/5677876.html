@@ -1,0 +1,32 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2007/10/26/5677876.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:37 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>I agree, the best way to process Unicode input is indeed to make somebody else do it</title></head><body>
+<h1>I agree, the best way to process Unicode input is indeed to make somebody else do it</h1>
+<p><em>by Michael S. Kaplan, published on 2007/10/26 10:16 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2007/10/26/5677876.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P>I saw Raymond Chen's <A class="" href="http://blogs.msdn.com/oldnewthing/archive/2007/10/22/5586861.aspx" mce_href="http://blogs.msdn.com/oldnewthing/archive/2007/10/22/5586861.aspx">The best way to process Unicode input is to make somebody else do it</A> and I wholeheartedly second that motion.</P>
+<P><EM>Wow, riffing on Raymond two posts in a row!</EM></P>
+<P>And there are lots of reasons for it -- not just the things he talked about but also for random reasons like the problems that came up the next day in <A class="" href="http://archives.miloush.net/michkap/archive/2007/10/23/5623838.html" mce_href="http://archives.miloush.net/michkap/archive/2007/10/23/5623838.html"><STRONG>If you would wait till I *FINISHED* what I was trying to say, you punk... (aka Premature validation)</STRONG></A> where eager Unicode character input processing to do validation did not take some of the fundamental issues with character input into account -- supplementary characters.</P>
+<P>There are also the many issues that come up with complex scripts where it is quite easy for real problems to come up unless you leave that processing to the professionals and avoid doing character input processing in your own code, entirely.</P>
+<P>Unless you happen to be writing your own edit or richedit control, in which case you have the job of learning and supporting these many scenarios, and I wish you luck (since you're going to need it!). :-)</P>
+<P><EM>As an aside, I don't think that first letter in Raymond's IME table is the one he meant to use, but the one that as there and the one that probably he meant to go there are both co-sponsoring this post....</EM></P>
+<P mce_keep="true">&nbsp;</P>
+<P><FONT color=#ff00ff><EM>This post brought to you by</EM> <FONT size=5>ә</FONT> <EM>and</EM> <FONT size=5>ə</FONT>&nbsp;<EM>(<A class="" href="http://www.fileformat.info/info/unicode/char/04d9" mce_href="http://www.fileformat.info/info/unicode/char/04d9">U+04d9</A> and <A class="" href="http://www.fileformat.info/info/unicode/char/0259" mce_href="http://www.fileformat.info/info/unicode/char/0259">U+0259</A>, a.k.a. CYRILLIC SMALL LETTER SCHWA and LATIN SMALL LETTER SCHWA)</EM></FONT></P>
+<hr/><p><a id="5692575" href="#5692575">#</a> <strong>Raymond Chen - MSFT</strong> on 26 Oct 2007 11:21 AM:</p><div style="margin-left: 1em"><p>That was actually intentional -- Windows XP doesn't install IPA fonts by default, but it does install Cyrillic fonts.</p>
+</div>
+<p><a id="5692592" href="#5692592">#</a> <strong>Raymond Chen - MSFT</strong> on 26 Oct 2007 11:25 AM:</p><div style="margin-left: 1em"><p>Oh wait, except that U+0259 isn't in the IPA block. I must have faked myself out.</p>
+</div>
+<p><a id="5692599" href="#5692599">#</a> <strong>Michael S. Kaplan</strong> on 26 Oct 2007 11:26 AM:</p><div style="margin-left: 1em"><p>I think it is in Tahoma and Microsoft Sans Serif, so it should be safe to look for on XP and Win2000 boith, between them....</p>
+<p>(This is not true of all IPA, but I think this particular one is also used in some languages?)</p>
+</div>
+<p><a id="5692611" href="#5692611">#</a> <strong>Michael S. Kaplan</strong> on 26 Oct 2007 11:27 AM:</p><div style="margin-left: 1em"><p>This one is used for both (if you look it up on the charts you'll see it in the Latin Extended block and lisyted in the IPA block -- so people looking fori t don't assume its missing!).</p>
+</div>
+<p><a id="5692612" href="#5692612">#</a> <strong>Michael S. Kaplan</strong> on 26 Oct 2007 11:27 AM:</p><div style="margin-left: 1em"><p>This one is used for both (if you look it up on the charts you'll see it in the Latin Extended block and lisyted in the IPA block -- so people looking fori t don't assume its missing!).</p>
+</div>
+<p><a id="5695865" href="#5695865">#</a> <strong>Mihai</strong> on 26 Oct 2007 5:20 PM:</p><div style="margin-left: 1em"><p>Actually, U+0259 is in the IPA Extension block, and it has glyphs in Arial, Arial Unicode MS, Courier New, Microsoft Sans Serif, Tahoma, Times New Roman.</p></div>
+<p><a id="5718226" href="#5718226">#</a> <strong>orcmid</strong> on 27 Oct 2007 3:52 PM:</p><div style="margin-left: 1em"><p>Sigh. &nbsp;You may now notice, quite correctly, that I read through my feed-reader backlog in most-recent first order. &nbsp;</p>
+<p>So yes, here is the place where some day I will have to worry about this stuff. &nbsp;Not that far away either. &nbsp;Sometime in early in 2008 at best. &nbsp;Drat.</p>
+</div>
+<hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2007/10/26/5683410.html" title="All things being equal, your mom probably has an easier time with case insensitivity than not">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2007/10/26/5677426.html" title="Superstition: Why MSLU stopped using GetFileAttributesW in its platform detection">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2007-10">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2007-10-26">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2007/10/26/5677876.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:37 GMT -->
+</html>

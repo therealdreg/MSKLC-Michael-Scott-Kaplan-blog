@@ -1,0 +1,47 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2010/04/09/9992866.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:35 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>A difference that makes no difference, makes no difference (well, other than the bugs you cause "fixing" it, that is!)</title></head><body>
+<h1>A difference that makes no difference, makes no difference (well, other than the bugs you cause "fixing" it, that is!)</h1>
+<p><em>by Michael S. Kaplan, published on 2010/04/09 07:01 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2010/04/09/9992866.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P>I am told I&nbsp;have something of a reputation for being a&nbsp;huge stickler about backcompat and proper usage, such that on at least three occasions I have been described to someone who was to make contact with me in such a way that they assumed I was some crotchety 60 year old grouch who can't stand change.</P>
+<P>Thankfully I was able (in the long run)&nbsp;to convince all three that the description was [at least partially] inaccurate. :-)</P>
+<P>But I was thinking about this the other day when a question came up.</P>
+<P>Someone who was wondering about what kinds of tests existed to catch when people were doing international support incorrectly.</P>
+<P>When pressed for details on what kinds of tests/checks he had in mind, he said something that struck me so much that I moved this blog you are reading from Sunday to today and gutted the original introduction entirely and wrote the one you are in the middle of reading!</P>
+<P>You might be curious what could it be that was so memorable in his reply.</P>
+<P><EM>If you aren't then I have to wonder why you are still reading here, of course!</EM></P>
+<P>It was pretty simple:</P>
+<BLOCKQUOTE>
+<P><FONT face="times new roman,times">Since I haven’t look at the code yet it is hard to come up with examples. The only one that comes to my mind is the use of en-US locale to get invariant sorting behavior instead of using the invariant locale.</FONT></P></BLOCKQUOTE>
+<P>I was shocked.</P>
+<P>That is not something I would ever ask someone to change, for a very simple reason:</P>
+<P>"<STRONG>Invariant sorting behavior</STRONG>" and "<STRONG>en-US sorting behavior</STRONG>" are identical!</P>
+<P>Now when you combine this with the known fact of <A href="http://archives.miloush.net/michkap/archive/2005/11/12/491519.html" mce_href="http://archives.miloush.net/michkap/archive/2005/11/12/491519.html"><STRONG>the second tester's axiom</STRONG></A>, the thing you risk if you simply choose to replace all those instances is regressions when the change is done improperly. And the axiom is clear that such things are not only possible but can often be expected!</P>
+<P>For those who figure it is an easy change, I highly recommend getting to </P>
+<UL>
+<LI>know,&nbsp;or </LI>
+<LI>befriend, or </LI>
+<LI>date </LI></UL>
+<P>a tester (in my experience any of the three of those options can&nbsp;help here!);&nbsp;said tester&nbsp;will quickly help you appreciate the mistake in judgment there. :-)</P>
+<P>Now we can perhaps re-frame the question a bit into something more actionable, and someone who owns that code can determine if the code that is present is wrong.</P>
+<P>Perhaps the default user locale would provide the correct intended behavior. </P>
+<P>Or an "ordinal" (binary) comparison might be the riught thing here.</P>
+<P>And I would never tell someone who had such a flaw in their code's design to ignore it if they found it.</P>
+<P>But if you show me a developer who would clean up the cases that aren't problems then I'll point out you've shown me a developer who introduces a lot of regressions in the code base. :-)</P>
+<hr/><p><strong>Deskin Miller [MSFT]</strong> on 9 Apr 2010 10:11 AM:</p><div style="margin-left: 1em"><p>I rather disagree with the premise you distill here, particularly the way you phrase it in the last line. &nbsp;Testing one's code is a great way to stand behind any assertion that it is not broken; thus if one refactors code which is covered by unit tests, one may have high confidence that the change does not introduce regressions. &nbsp;Development processes like TDD focus on leveraging unit tests for this and many other benefits.</p>
+<p>Certainly 'cleaning up the cases that aren't problems' may introduce regressions, but it need not.</p></div>
+<p><strong>Michael S. Kaplan</strong> on 9 Apr 2010 12:53 PM:</p><div style="margin-left: 1em"><P>Well, one could log the next 100 such changes along the lines of the one mentioned here that are done and do a longitudinal study -- in looking at specific groups in that way I have found my conclusions to be correct. :-)</P>
+<P>Whether it requires one to be likely to have 100 such changes to review may be related!</P>
+<P>I have yet work on any team that used TDD so I cannot comment authoritatively on whether TDD can help mitigate Axiom #2.....</P></div>
+<p><strong>Mihai</strong> on 9 Apr 2010 6:10 PM:</p><div style="margin-left: 1em"><p>&gt; &quot;Invariant sorting behavior&quot; and &quot;en-US sorting behavior&quot; are identical!</p>
+<p>I think &quot;they just happen to be identical today.&quot;</p>
+<p>Ok, it is not a random &quot;happening,&quot; it is caused by the fact that for a long time there was no invariant locale, so people were advised to use en-US. So when a real invariant locale was introduced, it was only natural to make it identical to en-US, so that things don't break.</p>
+<p>But locales change. In (in theory) nothing prevent en-US from changing (it happened with other locales before). Unlikely? Yes. Impossible? Probably not.</p>
+<p>Plus, it helps clarifying the intent. Same as using BYTE instead of unsigned char, or NULL instead of 0.</p>
+<p>So, when you mean invariant, use invariant, not en-US :-)</p></div>
+<p><strong>Michael S. Kaplan</strong> on 9 Apr 2010 6:38 PM:</p><div style="margin-left: 1em"><P>These two will always be the same.</P>
+<P>I described its origin and purpose <A href="http://archives.miloush.net/michkap/archive/2004/12/29/344136.html">here</A>.</P></div>
+<hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2010/04/10/9990226.html" title="Getting rid of that extra notification...">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2010/04/08/9991592.html" title="Are you old enough to get your Bosnian on?">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2010-04">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2010-04-09">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2010/04/09/9992866.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:35 GMT -->
+</html>

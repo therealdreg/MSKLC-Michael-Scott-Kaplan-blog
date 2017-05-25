@@ -1,0 +1,45 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2011/02/07/10125541.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>You might almost say that Gmail got þwned</title></head><body>
+<h1>You might almost say that Gmail got þwned</h1>
+<p><em>by Michael S. Kaplan, published on 2011/02/07 07:01 -05:00, original URI: http://blogs.msdn.com/b/michkap/archive/2011/02/07/10125541.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<p>So it all started when Michael Everson started a new blog:</p>
+<p><a href="http://xn--orn-ooa.info/">http://&thorn;orn.info</a></p>
+<p>This is not a porn site.</p>
+<p>Because that's not LATIN SMALL LETTER P there. It's LATIN SMALL LETTER THORN.</p>
+<p>Aren't IDNs awesome? :-)</p>
+<p>Anyway, David Starner noted:</p>
+<p style="PADDING-LEFT: 60px">On Sun, Feb 6, 2011 at 3:14 PM, Michael Everson &lt;<a href="http://blogs.msdn.com/src/compose.php?send_to=everson%40evertype.com">everson@evertype.com</a>&gt; wrote:<br /><span style="color: #800000;">&gt; Pleased to announce a new blog, http://žorn.info</span><br /><br />And yet even today, Unicode email is reliably unreliable.</p>
+<p>Interesting!</p>
+<p>Others identified the problem, it's one that has been discussed before.</p>
+<p>Michael was using Apple Mail to send the email.</p>
+<p>Apple Mail&nbsp;encoded the mail as being ISO-8859-1. This is reasonable since every character in the email can fit in that code page.</p>
+<p>And David was using gmail for his email client.</p>
+<p>And this is where the wheels came off the wagon.</p>
+<p>Alexandros (&Alpha;&lambda;έ&xi;&alpha;&nu;&delta;&rho;&omicron;&sigmaf;) explained it most fully:</p>
+<p style="PADDING-LEFT: 60px">The original message was correctly tagged as ISO-8859-1, but it looks<br />like both people responding saw it interpreted as ISO-8859-13. Judging<br />from the Message-IDs, both seem to be posting from Gmail, so this must be<br />an example of Google's encoding guessing, which has been discussed here<br />in the past: since many web pages and mail messages in other encodings<br />are mistagged as ISO-8859-1, Google uses various heuristics which are<br />easy to go wrong when there's only a few non-ASCII characters in the<br />text.<br /><br />As I recall, posting in UTF-8 makes the problem go away, although it's<br />hard to find fault with Apple Mail for going with the most conservative<br />and appropriate encoding for the content (i.e. ISO-8859-1).</p>
+<p>I personally don't care for Google's behavior here.</p>
+<p>There are certainly programs that get things wrong. Hell, the company I work for produced a version of FrontPage that had a serial inability to properly tag and use 8859-1 and CP1252.</p>
+<p>A lot of what Alexandros&nbsp;was saying came from things said by Mark Davis of Google in the past. Mark has explained at length about all the data they work from and how much is tainted (incorrectly tagged).</p>
+<p>But to be honest, this behavior? I find it to be disturbing.</p>
+<p>Remember, this is a world that Google looks at the stats and detects that over 50% of the web is Unicode (as I discussed in <a href="http://archives.miloush.net/michkap/archive/2010/09/19/10064647.html" title="&gt;50% of the web is Unicode? Meh, I say. Meh."><strong>&gt;50% of the web is Unicode? Meh, I say. Meh.</strong></a>).</p>
+<p>So maybe it is time for Google, which&nbsp;officially&nbsp;suggests people use Unicode to get correct results, and which works in a world where most modern clients produce correct results anyway, to start shirting over to being more trusting of the huge number of clients out here who aren't getting this wrong.</p>
+<p>They are supposed to be running rings around everyone with the ability to use the whole Internet as a corpus.</p>
+<p>So perhaps Google isn't being pwned by this problem, but this clear willingness to&nbsp;trust an algorithm that distrusts others (and that minimal investigation shows to be a detectable phenomenon, albeit one which Google doesn't go so far&nbsp;as to detect, though) is proving to be a bit of a &thorn; (thorn) in their side....</p>
+<hr/><p><strong>L.</strong> on 7 Feb 2011 8:29 AM:</p><div style="margin-left: 1em"><p>&gt; a version of FrontPage that had a serial inability to properly tag and use 8859-1 and CP1252.</p>
+<p>MS Office Outlook still (in Office 2010) tags CP1252 as iso-8859-1, by the way.</p>
+</div>
+<p><strong>Yuhong Bao</strong> on 7 Feb 2011 9:18 AM:</p><div style="margin-left: 1em"><p>Yea, the IETF charset mailing list archives seems to always tag as ISO-8859-1, for example.</p>
+</div>
+<p><strong>JohnGalt</strong> on 7 Feb 2011 9:35 AM:</p><div style="margin-left: 1em"><p>The problem is that Apple should have and should be encoding all messages as UTF-8 period end of conversation. In fact we should be killing off all code pages ASAP. There&#39;s no reason for them any longer other than for backwards compatibility.</p>
+<p>And yes, google has to guess the code page because most email clients do not report the code page properly. Yet another reason to use UTF.</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 7 Feb 2011 9:41 AM:</p><div style="margin-left: 1em"><p>Given how easy it is to detect the Apple mail client (which gets it right) and trust its claims, perhaps Google could do a bit more work here?</p>
+<p>In any case, Google algorithm clearly has problems. They should either (a) abandon it and trust the claims of others, or (b) enhance it. Because it is much better to be wrong when it someone else&#39;s fault than your own!!!</p>
+</div>
+<p><strong>Michael Everson</strong> on 12 Feb 2011 4:07 PM:</p><div style="margin-left: 1em"><p>Þanks for your interest!</p>
+</div>
+<hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2011/02/08/10125363.html" title="Viva Valencia!">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2011/02/05/10125236.html" title="I serve at the pleasure of the customer (except maybe when they annoy me?)">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2011-02">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2011-02-07">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2011/02/07/10125541.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+</html>

@@ -1,0 +1,58 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2007/09/18/4971899.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:37 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Depending on when/where/who you ask, that character may not be your [c]type</title></head><body>
+<h1>Depending on when/where/who you ask, that character may not be your [c]type</h1>
+<p><em>by Michael S. Kaplan, published on 2007/09/18 03:31 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2007/09/18/4971899.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P>The customer question was:</P>
+<BLOCKQUOTE>
+<P><EM><FONT face="times new roman,times">The whole story is about saving in XML format foreign symbols – from time-to-time it fails for some of them.<BR>We found a way to bypass it by filtering them out with isprintable function. <BR>The problem was solved, but some of good symbols are gone…</FONT></EM></P>
+<P><EM><FONT face="times new roman,times">Japanese customers complaining that we are filtering out some of their characters.<BR>They sent us some string containing such chars.</FONT></EM></P>
+<P><EM><FONT face="times new roman,times">I've prepared short test to see what happens.<BR>Actually second, third and some other character is recognized as not printable, but they – Japanese – say it's perfectly OK…</FONT></EM></P></BLOCKQUOTE>
+<P>The sample string in question:</P>
+<BLOCKQUOTE>
+<P><FONT size=5>ﾎﾞｰﾘﾝｸﾞ工具</FONT></P></BLOCKQUOTE>
+<P>Let's look at the <A class="" href="http://msdn2.microsoft.com/library/ms647481.aspx" mce_href="http://msdn2.microsoft.com/library/ms647481.aspx">GetStringTypeW</A> CT_CTYPE3 values for each character.</P>
+<P>In Vista (where the bug does not repro), the values are:</P><FONT size=2><B>
+<UL>
+<LI><FONT size=4>ﾎ</FONT>&nbsp; <A class="" href="http://www.fileformat.info/info/unicode/char/ff8e" mce_href="http://www.fileformat.info/info/unicode/char/ff8e">U+ff8e</A>&nbsp; C3_ALPHA | C3_HALFWIDTH | C3_KATAKANA</LI>
+<LI><FONT size=4>ﾞ</FONT>&nbsp; <A class="" href="http://www.fileformat.info/info/unicode/char/ff9e" mce_href="http://www.fileformat.info/info/unicode/char/ff9e">U+ff9e</A>&nbsp; C3_ALPHA | C3_HALFWIDTH | C3_KATAKANA | C3_DIACRITIC</LI>
+<LI><FONT size=4>ｰ</FONT>&nbsp; <A class="" href="http://www.fileformat.info/info/unicode/char/ff70" mce_href="http://www.fileformat.info/info/unicode/char/ff70">U+ff70</A>&nbsp; C3_ALPHA | C3_HALFWIDTH | C3_KATAKANA | C3_HIRAGANA | C3_DIACRITIC</LI>
+<LI><FONT size=4>ﾘ</FONT>&nbsp; <A class="" href="http://www.fileformat.info/info/unicode/char/ff98" mce_href="http://www.fileformat.info/info/unicode/char/ff98">U+ff98</A>&nbsp; C3_ALPHA | C3_HALFWIDTH | C3_KATAKANA</LI>
+<LI><FONT size=4>ﾝ</FONT>&nbsp; <A class="" href="http://www.fileformat.info/info/unicode/char/ff9d" mce_href="http://www.fileformat.info/info/unicode/char/ff9d">U+ff9d</A>&nbsp; C3_ALPHA | C3_HALFWIDTH | C3_KATAKANA</LI>
+<LI><FONT size=4>ｸ</FONT>&nbsp; <A class="" href="http://www.fileformat.info/info/unicode/char/ff78" mce_href="http://www.fileformat.info/info/unicode/char/ff78">U+ff78</A>&nbsp; C3_ALPHA | C3_HALFWIDTH | C3_KATAKANA</LI>
+<LI><FONT size=4>ﾞ</FONT>&nbsp; <A class="" href="http://www.fileformat.info/info/unicode/char/ff9e" mce_href="http://www.fileformat.info/info/unicode/char/ff9e">U+ff9e</A>&nbsp; C3_ALPHA | C3_HALFWIDTH | C3_KATAKANA | C3_DIACRITIC</LI>
+<LI><FONT size=4>工</FONT>&nbsp; <A class="" href="http://www.fileformat.info/info/unicode/char/5de5" mce_href="http://www.fileformat.info/info/unicode/char/5de5">U+5de5</A> C3_ALPHA | C3_IDEOGRAPH</LI>
+<LI><FONT size=4>具</FONT>&nbsp; <A class="" href="http://www.fileformat.info/info/unicode/char/5177" mce_href="http://www.fileformat.info/info/unicode/char/5177">U+5177</A>&nbsp; C3_ALPHA | C3_IDEOGRAPH</LI></UL></B></FONT>
+<P>In XP/Server 2003, <A class="" href="http://www.fileformat.info/info/unicode/char/ff9e" mce_href="http://www.fileformat.info/info/unicode/char/ff9e">U+ff9e</A> (HALFWIDTH KATAKANA VOICED SOUND MARK) and <A class="" href="http://www.fileformat.info/info/unicode/char/ff70" mce_href="http://www.fileformat.info/info/unicode/char/ff70">U+ff70</A> (HALFWIDTH KATAKANA-HIRAGANA PROLONGED SOUND MARK) did not have the C3_ALPHA on them and were therefore not considered alphabetic by the CRT function.</P>
+<P>So the problem will not happen in Vista, and it will not happen&nbsp;(if memoy serves)&nbsp;in Win2000 and earlier....<BR>&nbsp;<BR>Though to be honest I wonder why the CRT would require something to be a letter to consider something printable, it seems strange (being a diacritic should be enough to make something printable, if you ask me). But after the feedback of what the change was actually doing, the NLS change was essentually reverted (in the process of adding all the Unicode 5.0 characters)....</P>
+<P>The underlying issue? Well, since NLS made a change which NLS essentially reverted, I guess you can blame NLS. Though I honestly prefer to think of it as a misguided attempt to be more properly descriptive of Unicode properties in the [boneheaded] NLS character property descriptions, which later caved to the realities of the [equally boneheaded] C runtime character categories. :-)</P>
+<P mce_keep="true">&nbsp;</P>
+<P><FONT color=#ff00ff><EM>This post brought to you by</EM> <FONT size=5>ﾞ</FONT> <EM>(<A class="" href="http://www.fileformat.info/info/unicode/char/ff9e" mce_href="http://www.fileformat.info/info/unicode/char/ff9e">U+ff9e</A>, a.k.a. HALFWIDTH KATAKANA VOICED SOUND MARK)</EM></FONT></P>
+<hr/><p><a id="4985433" href="#4985433">#</a> <strong>jmdesp</strong> on 18 Sep 2007 3:57 PM:</p><div style="margin-left: 1em"><p>So they should call GetStringType directly instead of isPrintable, and if the letter is C3_DIACRITIC then let it go through even if it's not C3_ALPHA</p>
+<p>Or they convince their client to stop using the stupid, retro-compatibility only, half-width forms and they will have no problem with U+30DC KATAKANA LETTER BO or U+30B0 KATAKANA LETTER GU.</p></div>
+<p><a id="4985803" href="#4985803">#</a> <strong>Michael S. Kaplan</strong> on 18 Sep 2007 4:27 PM:</p><div style="margin-left: 1em"><p>Yep, either will work here. :-)</p>
+</div>
+<p><a id="4998710" href="#4998710">#</a> <strong>Mihai</strong> on 19 Sep 2007 12:54 PM:</p><div style="margin-left: 1em"><p>I would say that they have to figure out why &quot;from time-to-time it fails for some of them.&quot;</p>
+<p>That is the way to address the cause, not the symptom.</p></div>
+<p><a id="4998803" href="#4998803">#</a> <strong>Michael S. Kaplan</strong> on 19 Sep 2007 1:01 PM:</p><div style="margin-left: 1em"><p>The return of isPrintable does not change on one machine, but it does change between platform versions... that was the source of the variation....</p>
+</div>
+<p><a id="9187344" href="#9187344">#</a> <strong>Thomas Yeung</strong> on 9 Dec 2008 9:04 AM:</p><div style="margin-left: 1em"><p>Michael, </p>
+<p>Do you mean XP has a known issue of GetStringTypeW whereas pre-XP and Vista doesn't? Where could I find the &quot;official&quot; information of this issue?</p>
+<p>What's the workaround to handle those missing characters? Is the following snippet OK?</p>
+<p>if ( GetStringTypeExW( LOCALE_NEUTRAL, CT_CTYPE3, &amp;nChar, 1, &amp;wCharType ) )</p>
+<p> &nbsp; &nbsp; &nbsp;return ( ( wCharType &amp; (C3_ALPHA | C3_DIACRITIC ) );</p>
+<p>I found C++ APIs istalpha and istalnum of VS 2008 on XP can't tell some Japanese characters are characters. I remember that somebody from Unicode Consortium said some ISV may mis-classify some characters to non-characters following recommendations of ISO TR 10176 (which excludes combining marks based on its own theory of what should be included in identifiers). Are istalpha(c) and istalnum(c) unlucky to be two of them?</p></div>
+<p><a id="9187390" href="#9187390">#</a> <strong>Michael S. Kaplan</strong> on 9 Dec 2008 9:34 AM:</p><div style="margin-left: 1em"><p>No, the CRT issues are completely due to the GetStringTypeW one. It is a problem I have talked about many times before, and it can be directly observed (as you have pointed out), so I'm not sure of the exact benefit of being any more &quot;official&quot; might be in this case. Maybe you can find a KB article somewhere that will talk about it?</p>
+<p>And NEVER use GetStringTypeEx, always use GetStringTypeW. I have talked about this before, too.... :-)</p>
+</div>
+<p><a id="9196073" href="#9196073">#</a> <strong>Thomas Yeung</strong> on 11 Dec 2008 5:17 AM:</p><div style="margin-left: 1em"><p>Michael,</p>
+<p>Thank you for pointing out some issues you've talked about many times. :-)</p>
+<p>How to deal with some characters which GetStringTypeW can't tell a C*_ALPHA? Should I treat them as special cases by hard-code and just let them pass through?</p>
+<p>For example, &nbsp;under my English version of XP, a test of 0x30FC (KATAKANA-HIRAGANA PROLONGED SOUND MARK) got the following result:</p>
+<p> &nbsp;GetStringTypeW(1) -&gt; 0x0200 (C1_DEFINED)</p>
+<p> &nbsp;GetStringTypeW(3) -&gt; 0x0032 (C3_HIRAGANA | C3_KATAKANA | C3_DIACRITIC)</p>
+<p>Neither CType 1 nor 3 returns a C*_ALPHA, but I found XP accepts this character in file names.</p></div>
+<hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2007/09/19/4992574.html" title="Don&#39;t just delete registry keys!">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2007/09/18/4971376.html" title="A&amp;P of Sort Keys, part 8 (aka You can often think of ignoring weights as a form of ignorance)">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2007-09">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2007-09-18">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2007/09/18/4971899.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:37 GMT -->
+</html>

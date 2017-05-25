@@ -1,0 +1,203 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2012/07/02/10325344.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:32 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>So we have these CTRY_* codes, and these LOCALE_ICOUNTRY values, see?</title></head><body>
+<h1>So we have these CTRY_* codes, and these LOCALE_ICOUNTRY values, see?</h1>
+<p><em>by Michael S. Kaplan, published on 2012/07/02 07:01 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2012/07/02/10325344.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<p>So we have these values in locales, the <a href="http://msdn.microsoft.com/library/windows/desktop/dd373752">LOCALE_ICOUNTRY</a> values.</p>
+<p>They [mostly] correspond to some constants in winnls.h, the CTRY_* constants.</p>
+<p>Now values are largely the same between them, when they both exist.</p>
+<p>But some of the values are wrong.</p>
+<p>Some of them have been wrong for many years, in fact.</p>
+<p>Now they [mostly] represent International Dialing codes, though in most cases to be used as such they have to be zero-padded....</p>
+<p>Anyway, let's look at the full list or broken LOCALE_ICOUNTRY values, with their corresponding CTRY_* constants (there are other locales for countries lacking those constants, that would require a bit more work to fill out!).</p>
+<p>In the table, if it is <span style="color: #ff0000;"><strong>RED and BOLD</strong></span> then it is wrong -- missing constant, wrong value represented by the constant, wrong value in the locale:</p>
+<table border="1" cellspacing="3" cellpadding="3">
+<tbody>
+<tr>
+<td><strong>BCP47</strong></td>
+<td><strong>Country</strong></td>
+<td><strong>CTRY_* constant</strong></td>
+<td><strong>iCountryCode</strong></td>
+<td><strong>CTRY_* value</strong></td>
+<td><strong>Country it actually belongs to</strong></td>
+<td><strong>Correct iCountryCode</strong></td>
+</tr>
+<tr>
+<td>be-BY</td>
+<td>Belarus</td>
+<td>CTRY_BELARUS</td>
+<td><strong><span style="color: #ff0000;">7</span></strong></td>
+<td>375</td>
+<td>Russia</td>
+<td>375</td>
+</tr>
+<tr>
+<td>tn-BW</td>
+<td>Botswana</td>
+<td><span style="color: #ff0000;"><strong>n/a</strong></span></td>
+<td><strong><span style="color: #ff0000;">27</span></strong></td>
+<td><strong><span style="color: #ff0000;">n/a</span></strong></td>
+<td>South Africa</td>
+<td>267</td>
+</tr>
+<tr>
+<td>en-CA</td>
+<td>Canada</td>
+<td>CTRY_CANADA</td>
+<td><span style="color: #ff0000;"><strong>2</strong></span></td>
+<td><strong><span style="color: #ff0000;">2</span></strong></td>
+<td>n/a</td>
+<td>1</td>
+</tr>
+<tr>
+<td>fr-CA</td>
+<td>Canada</td>
+<td>CTRY_CANADA</td>
+<td><span style="color: #ff0000;"><strong>2</strong></span></td>
+<td><strong><span style="color: #ff0000;">2</span></strong></td>
+<td>n/a</td>
+<td>1</td>
+</tr>
+<tr>
+<td>moh-CA</td>
+<td>Canada</td>
+<td>CTRY_CANADA</td>
+<td><strong><span style="color: #ff0000;">2</span></strong></td>
+<td><strong><span style="color: #ff0000;">2</span></strong></td>
+<td>n/a</td>
+<td>1</td>
+</tr>
+<tr>
+<td>iu-Latn-CA</td>
+<td>Canada</td>
+<td>CTRY_CANADA</td>
+<td><strong><span style="color: #ff0000;">2</span></strong></td>
+<td><strong><span style="color: #ff0000;">2</span></strong></td>
+<td>n/a</td>
+<td>1</td>
+</tr>
+<tr>
+<td>iu-Cans-CA</td>
+<td>Canada</td>
+<td>CTRY_CANADA</td>
+<td><strong><span style="color: #ff0000;">2</span></strong></td>
+<td><strong><span style="color: #ff0000;">2</span></strong></td>
+<td>n/a</td>
+<td>1</td>
+</tr>
+<tr>
+<td>fa-IR</td>
+<td>Iran</td>
+<td>CTRY_IRAN</td>
+<td><span style="color: #ff0000;"><strong>981</strong></span></td>
+<td><strong><span style="color: #ff0000;">981</span></strong></td>
+<td>nothing - looks like a typo</td>
+<td>98</td>
+</tr>
+<tr>
+<td>lo-LA</td>
+<td>Laos</td>
+<td><strong><span style="color: #ff0000;">n/a</span></strong></td>
+<td><span style="color: #ff0000;"><strong>457</strong></span></td>
+<td><strong><span style="color: #ff0000;">n/a</span></strong></td>
+<td>this is the mobile dialing code,<br />but not the regular&nbsp;dialing code</td>
+<td>856</td>
+</tr>
+<tr>
+<td>de-Li</td>
+<td>Liechtenstein</td>
+<td>CTRY_LIECHTENSTEIN</td>
+<td><strong><span style="color: #ff0000;">41</span></strong></td>
+<td><span style="color: #ff0000;">41</span></td>
+<td>Switzerland</td>
+<td>423</td>
+</tr>
+<tr>
+<td>sr-Latn-ME</td>
+<td>Montenegro</td>
+<td><strong><span style="color: #ff0000;">n/a</span></strong></td>
+<td><span style="color: #ff0000;">381</span></td>
+<td><strong><span style="color: #ff0000;">n/a</span></strong></td>
+<td>Serbia</td>
+<td>382</td>
+</tr>
+<tr>
+<td>sr-Cyrl-ME</td>
+<td>Montenegro</td>
+<td><strong><span style="color: #ff0000;">n/a</span></strong></td>
+<td><span style="color: #ff0000;"><strong>381</strong></span></td>
+<td><span style="color: #ff0000;"><strong>n/a</strong></span></td>
+<td>Serbia</td>
+<td>382</td>
+</tr>
+<tr>
+<td>wo-SN</td>
+<td>Senegal</td>
+<td><strong><span style="color: #ff0000;">n/a</span></strong></td>
+<td><span style="color: #ff0000;"><strong>608</strong></span></td>
+<td><strong><span style="color: #ff0000;">n/a</span></strong></td>
+<td>the Senegal country code,<br />but not the dialing code</td>
+<td>221</td>
+</tr>
+<tr>
+<td>ff-Latn-SN</td>
+<td>Senegal</td>
+<td><strong><span style="color: #ff0000;">n/a</span></strong></td>
+<td><strong><span style="color: #ff0000;">608</span></strong></td>
+<td><strong><span style="color: #ff0000;">n/a</span></strong></td>
+<td>the Senegal country code,<br />but not the dialing code</td>
+<td>221</td>
+</tr>
+<tr>
+<td>ta-LK</td>
+<td>Sri Lanka</td>
+<td><strong><span style="color: #ff0000;">n/a</span></strong></td>
+<td><strong><span style="color: #ff0000;">91</span></strong></td>
+<td><strong><span style="color: #ff0000;">n/a</span></strong></td>
+<td>India</td>
+<td>94</td>
+</tr>
+<tr>
+<td>uz-Latn-UZ</td>
+<td>Uzbekistan</td>
+<td>CTRY_UZBEKISTAN</td>
+<td><span style="color: #ff0000;"><strong>7</strong></span></td>
+<td><span style="color: #ff0000;"><strong>n/a</strong></span></td>
+<td>Russia</td>
+<td>998</td>
+</tr>
+<tr>
+<td>uz-Cyrl-UZ</td>
+<td>Uzbekistan</td>
+<td>CTRY_UZBEKISTAN</td>
+<td><strong><span style="color: #ff0000;">7</span></strong></td>
+<td><strong><span style="color: #ff0000;">n/a</span></strong></td>
+<td>Russia</td>
+<td>998</td>
+</tr>
+</tbody>
+</table>
+<p>Especially the longstanding issue for Canada, which I believe has been around since Windows NT 3.1/Windows 95. There was a reason for this that used to be documented -- I think it might have been the old IBM country/region codes or something, but they're moved on and no longer use them. Cathy thinks so too, though it's been years for her as well. Anyone have any antiquated IBM standards info handy? :-)</p>
+<p>I introduced three of these in Windows 8, I believe -- tn-BW and ta-LK and ff-Latn-SN&nbsp;(all taken from the locales they were based on, with the Tamil - Sri Lanka case being a bit sillier since Sinhlala - Sri Lanka is in there, and correct).</p>
+<p>The reason behind the Montenegro ones is obvious how that happened.</p>
+<p>But the Senegal ones grabbing the wrong kind of country code? Weird!</p>
+<p>Laos has me stunned -- maybe the mobile dialing code would be a helluva lot more useful in some scenarios -- these can all be on Windows Phone at some point, right? Forcing use of the non-mobile code seems less and less relevant over time, right?</p>
+<p>The Iran&nbsp;thing? An oops from long&nbsp;ago.</p>
+<p>And the Liechtenstein&nbsp;one?&nbsp;It was originally largely based on Switzerland's data, so I guess that makes sense.</p>
+<p>Russia used to mean a lot more to Belarus and Uzbekistan, and they've been that way a while....</p>
+<p>[At least] 4 new constants in a global header file, and 12-17 changes to locale data.</p>
+<p>Sounds like a fascinating bug to convince people to approve of a fix for, huh? :-)</p>
+<p>On the one hand, I care a lot -- this data is wrong and should be fixed.</p>
+<p>On the other hand, these have all been wrong for 1-18 years, without any customer complaints. That is a strike against them, I'll admit....</p>
+<p>Kind of proves an issue we've long known -- data only available programatically is generally of lower quality, and lacks the basic checks and balances that items in visible UI have.</p>
+<p>This particular item that isnt even in the Locale Builder or in .Net at all? We're lucky to have ~20-30 bugs only!</p>
+<hr/><p><strong>Doug Ewell</strong> on 2 Jul 2012 8:48 AM:</p><div style="margin-left: 1em"><p>2 for Canada (or &quot;Canadian-French&quot;) goes all the way back to the COUNTRY setting in MS-DOS CONFIG.SYS. See <a rel="nofollow" target="_new" href="http://www.vfrazee.com/ms-dos/6.22/help/country.htm">www.vfrazee.com/.../country.htm</a> or numerous other online references.</p>
+<p>That setting was my first experience with country codes, well before I learned about ISO 3166. I adapted it for the commercial software I was working on at the time, as well as for customer records. Hooray, the country code also helps us dial the number! Of course, the MS-DOS codes aren&#39;t exactly ITU-T E.164 country codes—besides the errors you show here, there were all the non-US, NANP countries that needed ad-hoc codes. MS-DOS gave us 2 for Canada as an example, but I was on my own for the rest. There were other conflicts; 7 was the dialing code for many ex-Soviet countries for years after the breakup, and is still used for Kazakhstan as well as Russia. Liechtenstein used to be dialed as if it were part of Switzerland.</p>
+<p>No country coding system can be perfect, because of the imprecise definition of &quot;country.&quot; ISO 3166 is clearly (IMHO) the best choice today, but even then some people are outraged because, for example, Bouvet Island has a 3166 code element but Scotland doesn&#39;t.</p>
+</div>
+<p><strong>Ken Sadahiro (MSFT)</strong> on 2 Jul 2012 10:42 AM:</p><div style="margin-left: 1em"><p>Thank you Michael, for blogging about this!</p>
+</div>
+<hr/><p><em>go to <a id="newer" href="../03/10326365.html" title="Please Look before you Leap a second (take down your servers edition)">newer</a> or <a id="older" href="../../06/29/10323350.html" title="Locale IDs Assigned by [some unknown part of] Microsoft [Kevin only knows when!]">older</a> post, or back to <a href="../../../index-2.html">index</a> or <a href="../../../index-2.html#2012-07">month</a> or <a href="../../../index-2.html#2012-07-02">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2012/07/02/10325344.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:32 GMT -->
+</html>

@@ -1,0 +1,48 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2005/12/27/507599.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:40 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>When the roof got raised, and why</title></head><body>
+<h1>When the roof got raised, and why</h1>
+<p><em>by Michael S. Kaplan, published on 2005/12/27 16:01 -05:00, original URI: http://blogs.msdn.com/b/michkap/archive/2005/12/27/507599.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P><FONT face=Tahoma>Documentation for API functions can sometimes fall behind and not keep up to the way functions work.</FONT></P>
+<P><FONT face=Tahoma>I know, that is a huge newsflash for everyone.... :-)</FONT></P>
+<P><FONT face=Tahoma>Eventually we fix in though.</FONT></P>
+<P><FONT face=Tahoma>If you look at the <A href="http://msdn.microsoft.com/library/en-us/intl/nls_8rse.asp">Locale Information</A> topic that contains the LCTYPE values used by <A href="http://msdn.microsoft.com/library/en-us/intl/nls_34rz.asp">GetLocaleInfo</A>/<A href="http://msdn.microsoft.com/library/en-us/intl/nls_7w1b.asp">SetLocaleInfo</A>, you will notice that for&nbsp;all of the string fields that can be altered by <A href="http://msdn.microsoft.com/library/en-us/intl/nls_7w1b.asp">SetLocaleInfo</A> we list the maximum legal size (including the NULL character). For example:</FONT></P>
+<BLOCKQUOTE dir=ltr style="MARGIN-RIGHT: 0px">
+<P><FONT face=Tahoma><STRONG>LOCALE_S1159 </STRONG><BR><EM>String for the AM designator (first 12 hours of the day). The maximum number of characters allowed for this string is different for different releases of Windows: </EM></FONT></P>
+<UL>
+<LI><FONT face=Tahoma size=2>Windows 95/98/Me, Windows NT 4/2000: nine.</FONT> 
+<LI><FONT face=Tahoma size=2>Windows XP: thirteen for SetLocaleInfo, fifteen for GetLocaleInfo.</FONT> 
+<LI><FONT face=Tahoma size=2>Windows Server 2003 or later: fifteen</FONT></LI></UL>
+<P><FONT face=Tahoma><STRONG>LOCALE_S2359 </STRONG><BR><EM>String for the PM designator (second 12 hours of the day). The maximum number of characters allowed for this string is different for different releases of Windows: </EM></FONT></P>
+<UL>
+<LI><FONT face=Tahoma><FONT size=2>Windows 95/98/Me, Windows NT 4/2000: nine.</FONT></FONT> 
+<LI><FONT face=Tahoma><FONT size=2>Windows XP: thirteen for SetLocaleInfo, fifteen for GetLocaleInfo.</FONT></FONT> 
+<LI><FONT face=Tahoma><FONT size=2>Windows Server 2003 or later: fifteen</FONT></FONT></LI></UL></BLOCKQUOTE>
+<P><FONT face=Tahoma>Now obviously this was not always what was there. In fact, if you look at the Platform SDK documentation in the October 2005 MSDN release, you will find a different story:</FONT></P>
+<BLOCKQUOTE dir=ltr style="MARGIN-RIGHT: 0px">
+<P><FONT face=Tahoma><STRONG>LOCALE_S1159 </STRONG><BR><EM>String for the AM designator. The maximum number of characters allowed for this string is nine. </EM></FONT></P>
+<P><FONT face=Tahoma><STRONG>LOCALE_S2359 <BR></STRONG><EM>String for the PM designator. The maximum number of characters allowed for this string is nine.</EM></FONT></P></BLOCKQUOTE>
+<P><FONT face=Tahoma>(that number includes the NULL character)</FONT></P>
+<P><FONT face=Tahoma>So the new documentation has certainly worked to better describe a problem that has existed in the documentation for years after Windows XP and Server 2003 have shipped.</FONT></P>
+<P><FONT face=Tahoma>So how is it that the <A href="http://msdn.microsoft.com/library/en-us/intl/nls_34rz.asp">GetLocaleInfo</A>&nbsp;and <A href="http://msdn.microsoft.com/library/en-us/intl/nls_7w1b.asp">SetLocaleInfo</A>&nbsp;limits are different?</FONT></P>
+<P><FONT face=Tahoma>Well, I guess it was a combination of how the functions work and what they are trying to do in Windows.</FONT></P>
+<P><FONT face=Tahoma>Prior to Vista, the locale data is always what we ship, which we trust. So <A href="http://msdn.microsoft.com/library/en-us/intl/nls_34rz.asp">GetLocaleInfo</A> does not have to verify the length, it can just pick up its null-terminated string from its cache and return it. This is different than <A href="http://msdn.microsoft.com/library/en-us/intl/nls_7w1b.asp">SetLocaleInfo</A>, which has to do things with that string like put it in the registry and thd cache. So we have to care about the maximum length a bit more.</FONT></P>
+<P><FONT face=Tahoma>Now some time before XP shipped, the official limit was raised&nbsp;to 13 (12 plus the NULL) because some locale had strings greater then 8 characters.</FONT></P>
+<P><FONT face=Tahoma>Unfortunately, no one noticed that Gujarati had strings that were longer than this:</FONT></P>
+<UL>
+<LI><FONT face=Tahoma>પૂર્વ&nbsp;મધ્યાહ્ન</FONT> 
+<LI>ઉત્તર&nbsp;મધ્યાહ્ન</LI></UL>
+<P><FONT face=Tahoma>They are both 14 characters each. So you can retrieve them, but you can't set them!</FONT></P>
+<P><FONT face=Tahoma>Sometimes we might look less strange/mysterious when we explain what is happening, at the cost of seeming a little more foolish. It is definitely a trade off!</FONT></P>
+<P><FONT face=Tahoma></FONT>&nbsp;</P>
+<P><FONT face=Tahoma color=#ff1493><EM>This post brought to you by</EM> "મ" <EM>(<A href="http://www.fileformat.info/info/unicode/char/0aae">U+0aae</A>, GUJARATI LETTER MA)</EM></FONT></P>
+<hr/><p><a id="507749" href="#507749">#</a> <strong>Centaur</strong> on 28 Dec 2005 11:00 AM:</p><div style="margin-left: 1em">Now, this raises two questions. First, why was there a roof in the first place? And second, when it was found that the roof is inconvenient for some tall people, why wasn’t it raised all the way to the sky? Another example of “ought to be enough for everyone”?</div>
+<p><a id="507751" href="#507751">#</a> <strong>Michael S. Kaplan</strong> on 28 Dec 2005 11:07 AM:</p><div style="margin-left: 1em">Well, the issue of memory allocation comes up (people do not want to call it twice to get the size and then get the value), so the max. size per item is allocated. Unfortunately, it then ended up needing to get bigger....</div>
+<p><a id="508152" href="#508152">#</a> <strong>Centaur</strong> on 29 Dec 2005 11:59 PM:</p><div style="margin-left: 1em">Speaking of calling API functions twice… It seems to me that each occurence of this pattern is an invitation for a race condition.<br><br>Suppose we want to read a string value from the registry. But we don’t know how long it is, so we call RegQueryValue once with 0 size, and it tells us how much space we will need. We allocate that much and call it again with the new size and the buffer pointer.<br><br>But while we were allocating, another process or thread was scheduled, and it rewrote the value to be longer. So, when we regain consciousness, we find that our buffer is insufficient.<br><br>The correct thing would be to deallocate the obsolete-sized buffer, allocate a new one that seems to be sufficient, and retry; but a maliciously inclined concurrent process or thread still might make the value longer, potentially catching us in an infinite loop, until we hit the registry size limit, memory limit or address space limit.<br><br>Anyway, how many programs will just fail when the second call to RegQueryValue returns “buffer is too small”?</div>
+<p><a id="508208" href="#508208">#</a> <strong>Michael S. Kaplan</strong> on 30 Dec 2005 10:11 AM:</p><div style="margin-left: 1em">It is perhaps useful to consider that (1) updates are rare, and that (2) you can avoid the issue you are worried about by using the LOCALE_NOUSEROVERRIDE flag in which case you get only Microsoft-provided data?</div>
+<p><a id="508226" href="#508226">#</a> <strong>silverpie</strong> on 30 Dec 2005 12:06 PM:</p><div style="margin-left: 1em"><a rel="nofollow" target="_new" href="http://www.catb.org/~esr/jargon/html/Z/Zero-One-Infinity-Rule.html">http://www.catb.org/~esr/jargon/html/Z/Zero-One-Infinity-Rule.html</a></div>
+<p><a id="508234" href="#508234">#</a> <strong>Michael S. Kaplan</strong> on 30 Dec 2005 12:39 PM:</p><div style="margin-left: 1em">The reality of software denies the premise though, sorry. The possibilities are not unlimited, and forcing developers to prepare for unknown limits is not really something that software is interested in doing..... Nice try though! :-)</div>
+<hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2010/04/11 <a href="http://archives.miloush.net/michkap/archive/2010/04/11/9990383.html">When one dishes it out but can't take it (aka Raising the roof, 2010 edition)</a></p><p>2009/08/20 <a href="http://archives.miloush.net/michkap/archive/2009/08/20/9876922.html">When you're in the red, you don't have a lot of choices</a></p><p>2008/02/21 <a href="http://archives.miloush.net/michkap/archive/2008/02/21/7836829.html">Why is the separator blue?</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2005/12/28/507750.html" title="globalization vs. localization (a new answer)">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2005/12/27/507404.html" title="Administrator vs. Administrateur, et. al.">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2005-12">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2005-12-27">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2005/12/27/507599.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:40 GMT -->
+</html>

@@ -1,0 +1,22 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2007/04/25/2268592.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:38 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Building your own better Ordinal comparison</title></head><body>
+<h1>Building your own better Ordinal comparison</h1>
+<p><em>by Michael S. Kaplan, published on 2007/04/25 06:01 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2007/04/25/2268592.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P>OK, I previously talked about <A class="" href="http://archives.miloush.net/michkap/archive/2007/04/17/2166496.html" mce_href="http://archives.miloush.net/michkap/archive/2007/04/17/2166496.html"><STRONG>the problem with Ordinal comparisons</STRONG></A> and one of the more <A class="" href="http://archives.miloush.net/michkap/archive/2007/04/24/2256377.html" mce_href="http://archives.miloush.net/michkap/archive/2007/04/24/2256377.html"><STRONG>uncool suggested ways around the problem</STRONG></A>.</P>
+<P>So what is a potential better way to approach the problem?</P>
+<P>Well, if we take the simplified model of the Ordinal comparison where every code point has an equal weight and focus on the fact that the real flaw is in the order, what is the best way to proceed?</P>
+<P>Well, the entire table could be built up by ordering every single code point by their sort keys, breaking ties with the code point's numeric value.</P>
+<P>And then giving each of those code points a weight from 0x0000 to 0xFFFF, beginning to end.</P>
+<P>With each new version of the sorting tables (like when new Unicode versions come out and the new characters are added), this process can be repeated.</P>
+<P>In fact, why wait for Microsoft to do this? </P>
+<P>For the cost of 256k (the amount of space that 2<FONT size=1><SUP>16</SUP></FONT> DWORDS will take up), you could implement this yourself! :-)</P>
+<P>In fact (were I interviewing candidates at this moment!) I think this would make a fun interview question, focusing on not just building the table but designing the interface to use it. </P>
+<P>I'd probably have to think this through a bit more first, and I'll&nbsp;most likely&nbsp;be thinking about something else entirely by then anyway. But if you ever found yourself dismayed by how stupid the results of an ordinal comparison seem then you could code this idea up pretty quickly.</P>
+<P>If you go to the next Unicode Conference you could show me what you came up with and impress me....</P>
+<P mce_keep="true">&nbsp;</P>
+<P><FONT color=#ff00ff><EM>This post brought to you by</EM>&nbsp;<FONT size=5>￮</FONT> <EM>(<A class="" href="http://www.fileformat.info/info/unicode/char/ffee" mce_href="http://www.fileformat.info/info/unicode/char/ffee">U+ffee</A>, a.k.a. HALFWIDTH WHITE CIRCLE)</EM></FONT></P>
+<hr/><div style="margin-left: 1em"><em>no comments</em></div><hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2007/04/25/2273289.html" title="The nature of OrdinalIgnoreCase vs. intuitive expectations">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2007/04/25/2268251.html" title="Maybe it was registry rumination">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2007-04">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2007-04-25">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2007/04/25/2268592.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:38 GMT -->
+</html>

@@ -1,0 +1,22 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2007/10/11/5397051.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:37 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Rumor as prophecy in Win32</title></head><body>
+<h1>Rumor as prophecy in Win32</h1>
+<p><em>by Michael S. Kaplan, published on 2007/10/11 10:31 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2007/10/11/5397051.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P>Have you ever caused (or at least inspired) an event to happen by starting a rumor that it was happening?</P>
+<P>It can make for an interesting technique to solve the problem pointed out at the beginning of the year in <A class="" href="http://archives.miloush.net/michkap/archive/2007/01/14/1463873.html" mce_href="http://archives.miloush.net/michkap/archive/2007/01/14/1463873.html"><STRONG>The 'in' process for out of process keyboard work</STRONG></A> where the goal was to change the keyboard layout within a process other than the one in which your code is running.</P>
+<P>The trick? As Haali pointed out in a comment:</P>
+<BLOCKQUOTE>
+<P><EM><FONT face="times new roman,times">Actually you can (ab)use WM_INPUTLANGCHANGEREQUEST. The documentation for that message says that DefWindowProc will do the needed changes, and indeed it works fine most of the time (I know it doesn't work for some input fields in Outlook).</FONT></EM></P></BLOCKQUOTE>
+<P>Obviously the intent of the notification is to allow an application to accept or deny a keyboard change attempted by a user.</P>
+<P>But if, instead of waiting for a user to try and change the keyboard, you "start a rumor" that the user tried to make this change, then you can in many cases get the application to pass the message on and see the application pass the message on and cause the&nbsp;very change you are looking for to happen!</P>
+<P>Now it is important to note that even though the Text Services Framework caused the WM_INPUTLANGCHANGEREQUEST message to not be passed to the application (ref: <A class="" href="http://archives.miloush.net/michkap/archive/2006/05/16/598980.html" mce_href="http://archives.miloush.net/michkap/archive/2006/05/16/598980.html"><STRONG>What broke the input language messages?</STRONG></A>), that you can still take advantage of the&nbsp;notification to have another process switch.</P>
+<P>The application still gets the final word in this case (as it should), but even so this is a technique to be used only sparingly, as it is in most cases incredibly obnoxious to change people's keyboard layouts out from under them.</P>
+<P>It also won't always work since some people have switch to use the Text Services Framework methodology here and know to not pass on the notification. </P>
+<P>But as tricks go it will work some of the time....</P>
+<P mce_keep="true">&nbsp;</P><FONT color=#ff00ff><EM>
+<P><FONT face=Tahoma color=#ff1493><EM>This post brought to you by</EM> "<FONT size=6>ꁖ</FONT>" <EM>(<A href="http://www.fileformat.info/info/unicode/char/a056">U+a056</A>, a.k.a. YI SYLLABLE BBIT)</EM></FONT></P></EM></FONT>
+<hr/><div style="margin-left: 1em"><em>no comments</em></div><hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2008/06/02 <a href="http://archives.miloush.net/michkap/archive/2008/06/02/8568145.html">One keyboard to rule them all?</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2007/10/11/5398306.html" title="Unicode [prematurely?] posts the rules of how to handle the display of what you do not (in fact) support the display of">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2007/10/11/5396360.html" title="If you aren&#39;t adequate, I guess that means you&#39;re inadequate; if you&#39;re not complex, I suppose that means you&#39;re simple?">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2007-10">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2007-10-11">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2007/10/11/5397051.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:37 GMT -->
+</html>

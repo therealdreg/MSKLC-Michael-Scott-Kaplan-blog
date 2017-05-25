@@ -1,0 +1,39 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2005/03/05/386021.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:42 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>"POSIX" style locale support on Windows?</title></head><body>
+<h1>"POSIX" style locale support on Windows?</h1>
+<p><em>by Michael S. Kaplan, published on 2005/03/05 21:03 -05:00, original URI: http://blogs.msdn.com/b/michkap/archive/2005/03/05/386021.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P>Greg asked, in the suggestion box:</P>
+<BLOCKQUOTE dir=ltr>
+<P><FONT size=2>The POSIX locale interface seems awkward in that it has a single global locale state that you have to change and then change back if you want to temporarily use a different locale. </FONT></P></BLOCKQUOTE>
+<P dir=ltr>It seems like you are actually thinking of the C Runtime's <A href="http://msdn.microsoft.com/library/en-us/vclib/html/_crt_locale.asp">locale-dependent functions</A>. I do not know if they are based on a POSIX per-se (if you comb the CRT documentation you occasionally see vague, oblique references to POSIX requirements, but even the CRT is mainly based on the C Standard.</P>
+<P dir=ltr>So I guess my response to the above would be:</P>
+<OL>
+<LI>
+<DIV>None of the APIs I own use a model that is anything like what you describe. :-)</DIV>
+<LI>
+<DIV>Of course, the reason for this is that NLS has little to do with the C Standard or the CRT (though occasionally the Microsoft CRT calls NLS APIs to do its work; other times they keep their own tables).</DIV>
+<LI>
+<DIV>NLS has very little to do with POSIX, the major exception being if you look at the <A title=GetStringTypeEx href="http://msdn.microsoft.com/library/en-us/winui/winui/windowsuserinterface/resources/strings/stringreference/stringfunctions/getstringtypeex.asp" target=_blank>GetStringTypeEx</A> you will see that CT_CTYPE1 supports the ANSI C and POSIX LC_CTYPE character typing functions. We attempt to map from Unicode which is a little messy since the former is much more limited than the latter.</DIV></LI></OL>
+<P>With that said, it does seem a limited and unwieldy model to me.&nbsp; But that is speaking as someone who is not a regular user of it; perhaps a fan of that model would see benefits of the stateful nature of this model. I can say I have often been involved in efforts (inside and outside of Microsoft) to move away from the model due to problems it causes due to the shared locale information in the DLL that anyone in a process can change.</P>
+<P dir=ltr>Anyway, Greg went on to propose a different model:</P>
+<BLOCKQUOTE dir=ltr>
+<P><FONT size=2>It seems like a better interface would be to look up a locale and get back a handle that you could pass to strxfrm or </FONT><A title=strcoll href="http://msdn.microsoft.com/library/en-us/vclib/html/_crt_strcoll_functions.asp" target=_blank><FONT size=2>strcoll</FONT></A><FONT size=2> or whatever to specify the locale to use for that invocation. </FONT></P>
+<P><FONT size=2>Ie, effectively an object oriented interface where you get back a locale object and call methods like strxfrm or <A title=strcoll href="http://msdn.microsoft.com/library/en-us/vclib/html/_crt_strcoll_functions.asp" target=_blank>strcoll</A> on it. </FONT></P></BLOCKQUOTE>
+<P dir=ltr>I think Greg should probably look at the .NET Framework, which actually provides just such an object oriented interface....</P>
+<P dir=ltr>Greg went on to say:</P>
+<BLOCKQUOTE dir=ltr>
+<P><FONT size=2>This comes up with sofwtare like databases that want to do things like </FONT></P>
+<P><FONT size=2>SELECT * FROM tab ORDER BY french_str, english_str </FONT></P>
+<P><FONT size=2>where french_str might have a default collation order of fr_FR and english_str might have a default collcation order of en_US. The overhead of repeatedly calling setlocale can be as high as 20x the comparison time on some platforms, but even on platforms where there's a good implementation it's still unnecessary overhead. </FONT></P></BLOCKQUOTE>
+<P dir=ltr>Well, Microsoft SQL Server provides such an interface... Greg, you will want to look into the COLLATE keyword, which allows you to specify collations as far down as the expression or query level. I'll be talking further&nbsp;about&nbsp;<a href="http://archives.miloush.net/michkap/archive/2005/02/25/380314.html">those things</A> at Tech·Ed in Orlando, in June.</P>
+<P dir=ltr>Greg then summarizes by asking</P>
+<BLOCKQUOTE dir=ltr>
+<P><FONT size=2>Does Windows provide an interface like that?</FONT></P></BLOCKQUOTE>
+<P>Well, as I indicated inline above, Microsoft provides several different ways to get at the core NLS functionality that my team provides, not only to Windows but the .NET Framework, SQL Server, Office, and others. Some of these interfaces share facets with items that Greg describes, and though there are obviously some minor syntatic differences the different models he describes would not look unfamiliar to users of the MS-provided functionality (or vice versa).</P>
+<P><FONT color=#ff0000><EM>This post brought to you by</EM> "c" <EM>(<A href="http://www.fileformat.info/info/unicode/char/0063/index.htm">U+0063</A>, LATIN SMALL LETTER C)</EM></FONT></P>
+<hr/><p><a id="386153" href="#386153">#</a> <strong>Andrew Goodale</strong> on 6 Mar 2005 7:35 AM:</p><div style="margin-left: 1em">Take a look at the C++ locale classes. std::locale and the locale facets provide an API that Greg is looking for. And the code is (largely) portable.</div>
+<hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2005/03/05/386026.html" title="TechEd 2005 - I&#39;ll be there!">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2005/03/04/385160.html" title="Parenthetical karma">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2005-03">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2005-03-05">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2005/03/05/386021.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:42 GMT -->
+</html>

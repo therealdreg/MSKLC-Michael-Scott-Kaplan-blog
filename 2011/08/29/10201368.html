@@ -1,0 +1,50 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2011/08/29/10201368.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>At this point, it's a doc bug....</title></head><body>
+<h1>At this point, it's a doc bug....</h1>
+<p><em>by Michael S. Kaplan, published on 2011/08/29 07:01 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2011/08/29/10201368.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<p>Andrew asked:</p>
+<p style="padding-left: 90px;">Is it a bug in RtlUTF8ToUnicodeN, or a doc bug in MSDN? Thanks.</p>
+<p style="padding-left: 90px;"><b><span style="text-decoration: underline;">User Mode Codes:<br /></span></b>WCHAR&nbsp; wsUtf16[100];<br />ULONG&nbsp; cwUtf16Written;<br />CHAR&nbsp;&nbsp; chTest1 = 'A';<br />CHAR&nbsp;&nbsp; chTest2[] = {'A','B'};</p>
+<p style="padding-left: 90px;">status = RtlUTF8ToUnicodeN(wsUtf16,<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ARRAYSIZE(wsUtf16),<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &amp;cwUtf16Written,<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &amp;chTest1,<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; sizeof(chTest1));<br />printf("cwUtf16Written = %d\n", cwUtf16Written);</p>
+<p style="padding-left: 90px;">status = RtlUTF8ToUnicodeN(wsUtf16,<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ARRAYSIZE(wsUtf16),<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &amp;cwUtf16Written,<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; chTest2,<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; sizeof(chTest2));<br />printf("cwUtf16Written = %d\n", cwUtf16Written);</p>
+<p style="padding-left: 90px;"><b><span style="text-decoration: underline;">Output:<br /></span></b>cwUtf16Written = 2<br />cwUtf16Written = 4</p>
+<p style="padding-left: 90px;"><b><span style="text-decoration: underline;">MSDN:<br /></span></b>NTSTATUS WINAPI RtlUTF8ToUnicodeN(<br />&nbsp; __out&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;PWSTR UnicodeStringDestination,<br />&nbsp; __in&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ULONG UnicodeStringMaxWCharCount,<br />&nbsp; __out_opt&nbsp;&nbsp;PULONG UnicodeStringActualWCharCount,<br />&nbsp; __in&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;PCCH UTF8StringSource,<br />&nbsp; __in&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ULONG UTF8StringByteCount<br />);</p>
+<p style="padding-left: 90px;"><a href="http://msdn.microsoft.com/en-us/library/ee453688(VS.85).aspx">http://msdn.microsoft.com/en-us/library/ee453688(VS.85).aspx</a></p>
+<p style="padding-left: 90px;">Regards,</p>
+<p style="padding-left: 90px;">Andrew</p>
+<p>Now of course that link is just one of those relevant to this function.</p>
+<p>The two links are:</p>
+<ul>
+<li><a href="http://msdn.microsoft.com/library/ee453688.aspx">RtlUTF8ToUnicodeN Function</a>&nbsp;in Miscellaneous Low-Level Client Support(in ntdlldll), and</li>
+<li><a href="http://msdn.microsoft.com/library/ff563018.aspx">RtlUTF8ToUnicodeN Routine</a>&nbsp;in the Windows Driver Kit (in Ntoskrnl.exe)</li>
+</ul>
+<p>As this would hint at, there are a potentially huge number of callers of this function, all of whom would be broken if the buffer size variable meaning was changed.</p>
+<p>Therefore, whether this was ever in the noble history of RtlUTF8ToUnicodeN considered a bug in the function, it is officially now just a doc bug.</p>
+<p>Bugs like this that exist in different doc libraries (despite actually being in just one&nbsp;part of the source tree, albeit&nbsp;a part&nbsp;compiled many different times), and up being complicated to keep in sync.</p>
+<p>The vast differences in the two doc topics help indicate that -- and suggest that there may even be a better way to keep them in sync.</p>
+<p>I mean, it wouldn't have helped with <em>this</em> bug, but....</p>
+<hr/><p><strong>cheong00</strong> on 29 Aug 2011 7:58 PM:</p><div style="margin-left: 1em"><p>At some point, maybe Microsoft documentation team who manages these docs will consider it worthwhile to create webparts that reads from a web services. That web service can locate and parse a specified header location to fetch the information out. (may need help from the compiler teams to do so)</p>
+<p>Note: I&#39;m in the mood of over-engineering problems. :P</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 30 Aug 2011 8:16 AM:</p><div style="margin-left: 1em"><p>Assumes lots of facts not in evidence, since:</p>
+<ul>
+<li>There are many teams, spanning multiple divisions</li>
+<li>Header files seldom contain most of the info docs routinely do</li>
+<li>Doc writers don&#39;t get to change header file content in most cases</li>
+</ul>
+<p>The net effect would be a serious impoverishing of the docs.</p>
+<p>Can we really call it &quot;overengineering&quot; if the net effect is underperformance? :-)</p></div>
+<p><strong>cheong00</strong> on 30 Aug 2011 6:32 PM:</p><div style="margin-left: 1em"><p>I don&#39;t know... perheps if the header files contains XML comment that&#39;s written by function creators, it&#39;d be able to add a nice side-reference to the documentation. The current MSDN documentation could be described as a reparsed interpretation of that the developer involved said, and that reinterpretation may not be accurate enough in some case.</p>
+<p>Before anyone saying the header files are included in Visual Studio anyway, I&#39;ll be the first to admit that since I don&#39;t know how to write C++, nor there&#39;s requirement for me to write in that in my job, I seldom required to install full version of VS in my job machine. Usually only C# or VB.NET part is installed.</p>
+<p>Regarding there are many teams, since the doc writers need to gather the information from the teams anyway, I should require much additional effort to fetch a copy of current header files for them.</p>
+</div>
+<p><strong>Yuhong Bao</strong> on 31 Aug 2011 1:05 PM:</p><div style="margin-left: 1em"><p>I think the real question is why there are redundant documentation for the same function in ntoskrnl and ntdll?</p>
+</div>
+<p><strong>Yuhong Bao</strong> on 24 Jan 2012 4:34 PM:</p><div style="margin-left: 1em"><p>In fact, look at the end of this comment thread:</p>
+<p><a rel="nofollow" target="_new" href="http://blogs.msdn.com/b/oldnewthing/archive/2009/06/15/9751659.aspx">blogs.msdn.com/.../9751659.aspx</a></p>
+</div>
+<hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2011/08/30/10202389.html" title="When you want to get horizontal or vertical with some character, don&#39;t ask Uniscribe where to go">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2011/08/27/10201146.html" title="On swastikas that don&#39;t (or at least shoudn&#39;t) offend">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2011-08">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2011-08-29">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2011/08/29/10201368.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+</html>

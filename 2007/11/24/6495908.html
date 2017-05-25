@@ -1,0 +1,23 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2007/11/24/6495908.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:37 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>I don't do dishes, GDI doesn't do supplementary characters</title></head><body>
+<h1>I don't do dishes, GDI doesn't do supplementary characters</h1>
+<p><em>by Michael S. Kaplan, published on 2007/11/24 10:01 -05:00, original URI: http://blogs.msdn.com/b/michkap/archive/2007/11/24/6495908.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P>Everyone&nbsp;has&nbsp;a&nbsp;certain set of tasks that they simply do not want to perform.</P>
+<P>Even if it seems like&nbsp;the sort of thing&nbsp;that others might (right or wrong) expect them to do as a part of their job.</P>
+<P>Like some housekeepers&nbsp;don't do windows.</P>
+<P>And some secretaries don't get coffee.</P>
+<P>And I don't do dishes.</P>
+<P>And GDI on Windows doesn't do supplementary characters.</P>
+<P>Over in the microsoft.public.win32.programmer.international newsgroup, semi-regular reader Christian Kaiser asked:</P>
+<BLOCKQUOTE>
+<P><EM><FONT face="times new roman,times">Possibly I'm missing something, but I did not find any documentation on how&nbsp;to use GetCharABCWidths() with UTF16 surrogate pairs (additional planes).<BR>Is there any way to use that API (or the like)? The API gets UINT instead&nbsp;of TCHAR, so maybe by shifting the high surrogate and 'or'ing with the low&nbsp;one?<BR><BR>Christian</FONT></EM></P></BLOCKQUOTE>
+<P>But Christian isn't missing anything here -- the only way that GDI can ever handle supplementary characters is as glyph ID values; it cannot handle either surrogate pairs or UTF-32 encoded Unicode Scalar Values.</P>
+<P>Kind of unfortunate for the whole family of GDI functions like <A class="" href="http://msdn2.microsoft.com/library/ms534215.aspx" mce_href="http://msdn2.microsoft.com/library/ms534215.aspx">GetCharABCWidths</A>, since only some of them will also take glyph ID values. And although all supplementary character processing does through Uniscribe, there are many pieces of the supplementary ranges that do not require any complex script processing other than this particular requirement, which just means that some functions have no supplementary equivalent.</P>
+<P>Because GDI wouldn't know a supplementary character if that character walked up and bit it in the ass (thus inspiring the post's sponsor)....</P>
+<P mce_keep="true">&nbsp;</P>
+<P><FONT color=#ff00ff><EM>This post brought to you by</EM><FONT size=5> 𝌽 </FONT><EM>(<A class="" href="http://www.fileformat.info/info/unicode/char/1d33d" mce_href="http://www.fileformat.info/info/unicode/char/1d33d">U+1d33d</A>, aka <A class="" href="http://www.fileformat.info/info/unicode/char/d834" mce_href="http://www.fileformat.info/info/unicode/char/d834">U+d834</A> <A class="" href="http://www.fileformat.info/info/unicode/char/df3d" mce_href="http://www.fileformat.info/info/unicode/char/df3d">U+df3d</A>, aka TETRAGRAM FOR CLOSED MOUTH)</EM></FONT></P>
+<hr/><div style="margin-left: 1em"><em>no comments</em></div><hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2007/11/25/6505199.html" title="The etiquette (such as it is) of social networking -- like I would have a clue?">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2007/11/24/6494996.html" title="We didn&#39;t split up, because we were in Japan (aka They have an opening that you might fit)">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2007-11">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2007-11-24">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2007/11/24/6495908.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:37 GMT -->
+</html>

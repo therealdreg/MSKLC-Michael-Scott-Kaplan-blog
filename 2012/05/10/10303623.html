@@ -1,0 +1,64 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2012/05/10/10303623.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:33 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Sometimes, we don't break for spaces...</title></head><body>
+<h1>Sometimes, we don't break for spaces...</h1>
+<p><em>by Michael S. Kaplan, published on 2012/05/10 07:01 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2012/05/10/10303623.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<p>This blog today is about a character in Unicode.</p>
+<p><span style="font-size: x-large;">U+00a0, aka NO-BREAK SPACE, specifically.</span></p>
+<p><span style="font-size: x-large;"><a href="http://msdnshared.blob.core.windows.net/media/MSDNBlogsFS/prod.evol.blogs.msdn.com/CommunityServer.Blogs.Components.WeblogFiles/00/00/00/33/81/6305.00a0.jpg"><img title="U+00a0, aka NO-BREAK SPACE, in its Code Chart view" border="0" alt="U+00a0, aka NO-BREAK SPACE, in its Code Chart view" src="http://msdnshared.blob.core.windows.net/media/MSDNBlogsFS/prod.evol.blogs.msdn.com/CommunityServer.Blogs.Components.WeblogFiles/00/00/00/33/81/6305.00a0.jpg" /></a></span></p>
+<p>I could have made it an <strong>Every Character Has a Story</strong> blog, almost.</p>
+<p>Except it is really going to be about locales on Microsoft platforms, rather than a history and/or story&nbsp;of the character itself.</p>
+<p>So I won't talk about the suggestion to Sri Lanka to use it in their Standards, or the role Unicode has it play in lone combining characters, or any of the other interesting stories about it.</p>
+<p>Sorry!</p>
+<p>To start, there is a regular space, which allows anyone rendering text to treat it opportunistically as a line breaking opportunity.</p>
+<p>Like if you have more characters in a line then you have line, then it will break at one of those places -- perhaps on that space!</p>
+<p>But if you put a NO-BREAK SPACE there, then it will not be used as a line breaking opportunity -- the text on either side will act as if it is just another letter or something.</p>
+<p><em>I endeavored to explain <em>to my girlfriend </em>what U+00a0 does, and she suggested maybe it was like how she and I were connected. That'll work. </em>:-)</p>
+<p>Anyhow, if you look at all of the LOCALE data in Windows, there are ~185 instances of the NO-BREAK SPACE, U+00a0.</p>
+<p>The ~185 instances fall into two categories:</p>
+<ul>
+<li>In ~100 of them, it is used by itself for the 50 locales that have it as their <a href="http://msdn.microsoft.com/library/dd373895.aspx">LOCALE_STHOUSAND</a> and <a href="http://msdn.microsoft.com/library/dd373857">LOCALE_SMONTHOUSANDSEP</a>;</li>
+<li>In the other ~85 of them, it is used to act as spaces within various language names, month names, calendar, country, currency, and day names.</li>
+</ul>
+<p>Now that second category makes sense.</p>
+<p>If one has a month name of <span style="font-size: large;">كانون&nbsp;الثاني</span>, one may genuinely want to not let it span lines.</p>
+<p>And so on.</p>
+<p>The first category also makes sense -- one may want to make sure that the number <strong><span style="font-size: large;">$100 000 000.00</span></strong> or <strong><span style="font-size: large;">45 678.00</span></strong> doesn't get split up either.</p>
+<p>In fact, one may wonder about the ~9 cases that are similar to category #1 that use U+0020 for their <a href="http://msdn.microsoft.com/library/dd373895.aspx">LOCALE_STHOUSAND</a>&nbsp;or <a href="http://msdn.microsoft.com/library/dd373857">LOCALE_SMONTHOUSANDSEP</a>, right? :-)</p>
+<p>You have to wonder if some or all of those ~9&nbsp;and of&nbsp;the other ~214 cases that fall into category #2 usages of U+0020 are mistakes that would also be U+00a0, if they had a chance to think about it!</p>
+<p>And then there are a few other interesting cases:</p>
+<ul>
+<li>The ~125 cases where <a href="http://msdn.microsoft.com/library/dd373800.aspx">LOCALE_IPOSITIVEPERCENT</a> is 0 -- Number, space, percent; for example, # %</li>
+<li>The ~3 cases where <a href="http://msdn.microsoft.com/library/dd373800.aspx">LOCALE_IPOSITIVEPERCENT</a> is 3 -- Percent, space, number; for example, % #</li>
+<li>The ~124 cases where <a href="http://msdn.microsoft.com/library/dd373790">LOCALE_INEGATIVEPERCENT</a> is 0 -- Negative sign, number, space, percent; for example, -# %</li>
+<li>The ~1 cases where <a href="http://msdn.microsoft.com/library/dd373790">LOCALE_INEGATIVEPERCENT</a> is 9 -- Percent, space, number, negative sign; for example, % #-</li>
+<li>The ~1 cases where <a href="http://msdn.microsoft.com/library/dd373790">LOCALE_INEGATIVEPERCENT</a> is 10 -- Percent, space, negative sign, number; for example, % -#</li>
+<li>The ~77 cases where <a href="http://msdn.microsoft.com/library/dd373755">LOCALE_ICURRENCY</a> is&nbsp;2 -- Prefix, 1-character separation, for example, $ 1.1</li>
+<li>The ~80 cases where <a href="http://msdn.microsoft.com/library/dd373755">LOCALE_ICURRENCY</a> is 3 -- Suffix, 1-character separation, for example, 1.1 $</li>
+<li>The ~78 cases where <a href="http://msdn.microsoft.com/library/dd373791">LOCALE_INEGCURR</a> is 8 -- Negative sign, number, space, monetary symbol (like #5, but with a space before the monetary symbol); for example, -1.1 $</li>
+<li>The ~7 cases where <a href="http://msdn.microsoft.com/library/dd373791">LOCALE_INEGCURR</a> is 9 -- Negative sign, monetary symbol, space, number (like #1, but with a space after the monetary symbol); for example, -$ 1.1</li>
+<li>The ~1 cases where <a href="http://msdn.microsoft.com/library/dd373791">LOCALE_INEGCURR</a> is 10 -- Number, space, monetary symbol, negative sign (like #7, but with a space before the monetary symbol); for example, 1.1 $-</li>
+<li>The ~33 cases where <a href="http://msdn.microsoft.com/library/dd373791">LOCALE_INEGCURR</a> is 12 -- Monetary symbol, space, negative sign, number (like #2, but with a space after the monetary symbol); for example, $ -1.1</li>
+<li>The ~6 cases where <a href="http://msdn.microsoft.com/library/dd373791">LOCALE_INEGCURR</a> is 14 -- left parenthesis, monetary symbol, space, number, right parenthesis (like #0, but with a space after the monetary symbol); for example, ($ 1.1)</li>
+<li>The ~1 cases where <a href="http://msdn.microsoft.com/library/dd373791">LOCALE_INEGCURR</a> is 15 -- Left parenthesis, number, space, monetary symbol, right parenthesis (like #4, but with a space before the monetary symbol); for example, (1.1 $)</li>
+</ul>
+<p>All of these cases have one thing in common.</p>
+<p>According to docs, they insert a SPACE (<a href="http://msdn.microsoft.com/library/dd373755">LOCALE_ICURRENCY</a> calls it&nbsp;a "separation") in all of these cases, even if the <a href="http://msdn.microsoft.com/library/dd373895.aspx">LOCALE_STHOUSAND</a> or <a href="http://msdn.microsoft.com/library/dd373857">LOCALE_SMONTHOUSANDSEP</a> have U+00a0 in them.</p>
+<p>Obviously either the docs are wrong or the code creates formatted strings that could be broken before the line ends even if the separators clearly try to avoid this.</p>
+<p>I don't know about you, but both ideas fail to sit very well with me, entirely.</p>
+<p>How about you?</p>
+<p><em>I'm almost afraid to try. Almost....</em></p>
+<hr/><p><strong>John Cowan</strong> on 10 May 2012 8:02 AM:</p><div style="margin-left: 1em"><p>So what appears to be a gap between you is actually an unbreakable bond? &nbsp;How extremely romantic!</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 10 May 2012 8:07 AM:</p><div style="margin-left: 1em"><p>Correct, no mere space! :-)</p>
+</div>
+<p><strong>cheong00</strong> on 10 May 2012 6:55 PM:</p><div style="margin-left: 1em"><p>I don&#39;t know... I mostly do web programming, so I need to turn them into &nbsp; before displaying anyway.</p>
+</div>
+<p><strong>cheong00</strong> on 10 May 2012 11:01 PM:</p><div style="margin-left: 1em"><p>Oops, not realizing the blog software doesn&#39;t escape it to &amp;nbsp; for me. :P</p>
+</div>
+<p><strong>Aaron Eshbach</strong> on 11 May 2012 8:36 AM:</p><div style="margin-left: 1em"><p>As someone who writes software that generates XSL Transforms, I&#39;m more familiar with it as &amp;‍#A0;</p>
+</div>
+<hr/><p><em>go to <a id="newer" href="../11/10304133.html" title="Inaccurate localization can make you forget why you did something!">newer</a> or <a id="older" href="../09/10302596.html" title="Every character has a story #39: U+20ba, aka TURKISH LIRA SIGN (coming soon to Turkey near you!)">older</a> post, or back to <a href="../../../index-2.html">index</a> or <a href="../../../index-2.html#2012-05">month</a> or <a href="../../../index-2.html#2012-05-10">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2012/05/10/10303623.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:33 GMT -->
+</html>

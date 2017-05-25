@@ -1,0 +1,27 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2007/12/03/6643380.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:37 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>2,5 ≠ 2,500</title></head><body>
+<h1>2,5 ≠ 2,500</h1>
+<p><em>by Michael S. Kaplan, published on 2007/12/03 09:16 -05:00, original URI: http://blogs.msdn.com/b/michkap/archive/2007/12/03/6643380.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P>Over in the microsoft.public.dotnet.internationalization newsgroup, Marcel asks:</P>
+<BLOCKQUOTE>
+<P><EM><FONT face="times new roman,times">Hi NG!<BR>I have a little question about the localization of a double.<BR><BR>If I use the CultureInfo "en-US" I have the following behavior:<BR><BR>1.) If I enter the value 2.5 into a textbox the double.Parse(text1.Text) returns 2.5 as expected.<BR>2.) If I enter the value 2,5 into a textbox the double.Parse(text1.Text) returns 25...why 25 and not 2500. The , is the group-separator.<BR><BR>Is it possible to ignore these behavior to ensure the 2,5 and 2.5 will always be interpreted as 2.5 (like in the calculator) ? Or do I have to implement this behavior by my self?<BR><BR>Regards<BR>Marcel</FONT></EM></P></BLOCKQUOTE>
+<P>Unfortunately, there is no way to do this within the .NET Framework. There is only one decimal separator. And the grouping separator is treated as an ignorable thing, without it having zeroes added aiutomatically....</P>
+<P>And applications like the Windows calculator are doing what they do all by themselves.</P>
+<P>Though it is worth considering what you would want an application to do with strings like:</P>
+<P>1,234,567,890.123</P>
+<P>1.234.567.890,123</P>
+<P>Noting of course that the Windows calculator does not do much that one might expect in many different cases.</P>
+<P>When one writes a parser, one should definitely keep the weird cases in mind....</P>
+<P mce_keep="true">&nbsp;</P>
+<P><FONT color=#ff00ff><EM>This post brought to you by</EM><FONT size=5> . </FONT><EM>(<A class="" href="http://www.fileformat.info/info/unicode/char/002e" mce_href="http://www.fileformat.info/info/unicode/char/002e">U+002e</A>, aka FULL STOP)</EM></FONT></P>
+<hr/><p><strong>Aaron</strong> on 3 Dec 2007 1:06 PM:</p><div style="margin-left: 1em"><p>If you're looking to uniformly treat '.' and ',' as digit separators, could you not query the decimal separator and then [[ decSep = cultureInfo.NumberFormat.NumberDecimalSeparator; x.Replace(&quot;,&quot;, decSep).Replace(&quot;.&quot;, decSep) ]]?</p>
+<p>This begs the question, should you:</p>
+<p>a) use 'CultureInfo.CurrentCulture', and the no-args double precision float parser, or</p>
+<p>b) use 'CultureInfo.InvariantCulture', and hard-code decSep as '.', making the expression [[ x.Replace(&quot;,&quot;, &quot;.&quot;) ]]</p>
+<p>Most likely the former, since there are more parts to a number than just the decimal separator (say, the sign, digits, optional exponent character, currency symbol, etc) that may be cultureinfo-dependent. &nbsp;However, option (a) still feels wrong.</p>
+<p>#aaron</p></div>
+<hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2007/12/04/6644773.html" title="Living on the top floor of a 3-story walk-up, and signing my name on every email....">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2007/12/03/6643180.html" title="Every character has a story #31: U+272f0 from CJK Extension B, an ideograph that proves that every rose has its thorn! (aka It wasn&#39;t my fault, but [from the Windows standpoint] it was because of me....)">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2007-12">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2007-12-03">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2007/12/03/6643380.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:37 GMT -->
+</html>

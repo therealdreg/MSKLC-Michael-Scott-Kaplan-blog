@@ -1,0 +1,109 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2006/10/04/788429.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:39 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Wild[card] thing, You make my CHAR sing</title></head><body>
+<h1>Wild[card] thing, You make my CHAR sing</h1>
+<p><em>by Michael S. Kaplan, published on 2006/10/04 03:11 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2006/10/04/788429.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<FONT face=Tahoma>
+<P>How do those lyrics go again?</P>
+<BLOCKQUOTE>
+<P><EM>Wild[card] thing<BR>You make my CHAR sing.<BR>You make everything query<BR>Wild[card] thing.<BR><BR>Wild[card] thing, your results might move me.<BR>But I want to know for sure.<BR>C'mon I'll run with you one more time.<BR>Your results move me.</EM></P></BLOCKQUOTE>
+<P>Or something like that?</P>
+<P>Time to get serious now....</P>
+<P>Documentation such as that for the <A class="" href="http://msdn.microsoft.com/library/en-us/spssdk/html/_like_predicate.asp" mce_href="http://msdn.microsoft.com/library/en-us/spssdk/html/_like_predicate.asp">LIKE Predicate</A> in SQL Server's T-SQL queries is always something that one can easily look up if needed (though most developers who use SQL Server tend to just sort of learn these things, and they don't feel the need to look them up too often!). </P>
+<P>In any case, an interesting point came up (while I was looking at another issue)&nbsp;that I have never seen any documentation about and&nbsp;that several people I asked honestly had no idea about either. First a bit from the above&nbsp;Books Online&nbsp;topic, where wildcards are explained: </P>
+<BLOCKQUOTE>
+<P>
+<TABLE class="" width="80%" border=1>
+<TBODY>
+<TR vAlign=top>
+<TH class="" align=left width="19%">Wildcard</TH>
+<TH class="" align=left width="36%">Description</TH>
+<TH class="" align=left width="45%">Example</TH></TR>
+<TR vAlign=top>
+<TD class="" width="19%">% (percent)</TD>
+<TD class="" width="36%">Matches zero or more of any character.</TD>
+<TD class="" width="45%">'comp%r' matches 'comp' followed by zero or more of any characters, ending in an r.</TD></TR>
+<TR vAlign=top>
+<TD class="" width="19%">_ (underscore)</TD>
+<TD class="" width="36%">Matches any single character.</TD>
+<TD class="" width="45%">'comp_ter' matches 'comp' followed by exactly one of any character, followed by 'ter'. </TD></TR>
+<TR vAlign=top>
+<TD class="" width="19%">[ ] (square brackets)</TD>
+<TD class="" width="36%">Matches any single character within the specified range or set. For example [a-z] specifies a range; [aeiou] specifies the set of vowels.</TD>
+<TD class="" width="45%">'comp[a-z]re' matches 'comp' followed by a single character in the range of lowercase a through lowercase z, followed by 're'. 
+<P>'comp[ao]' matches 'comp' followed by a single character that must be either a lowercase a or a lowercase o.</P></TD></TR>
+<TR vAlign=top>
+<TD class="" width="19%">[^ ] (caret)</TD>
+<TD class="" width="36%">Matches any single character that is not within the specified range or set. For example, [^a-z] specifies a range that excludes lowercase a through lowercase z; [^aeiou] specifies a set that excludes lowercase vowels.</TD>
+<TD class="" width="45%">'comp[^u]' matches 'comp' followed by any single character that is not a lowercase u.</TD></TR></TBODY></TABLE></P></BLOCKQUOTE>
+<P mce_keep="true">Now perhaps if you are a regular reader and remember reading <STRONG><A class="" href="http://archives.miloush.net/michkap/archive/2005/03/11/394359.html" mce_href="http://archives.miloush.net/michkap/archive/2005/03/11/394359.html">When good SQL queries have trouble....</A></STRONG>, you may have some idea where I am going with this. :-)</P>
+<P mce_keep="true">Anyway, let's take a bit of SQL and try some things out. For the purposes of these queries, keep in mind that Traditional Spanish considers the letters <STRONG>ch</STRONG> to be a single unique sort element between <STRONG>c</STRONG> and <STRONG>d</STRONG>....</P>
+<BLOCKQUOTE><FONT face="Consolas,Courier New,Courier" size=2><B>
+<P mce_keep="true"><FONT color=#0000ff>use</FONT> master<BR><FONT color=#0000ff>IF</FONT> <FONT color=#cc0099>DB_ID</FONT> <FONT color=#999999>(</FONT>N<FONT color=#ff0000>'dbTest'</FONT><FONT color=#999999>)</FONT> <FONT color=#999999>IS NOT NULL&nbsp;</FONT><FONT color=#0000ff>DROP DATABASE</FONT> dbTest;<BR><FONT color=#0000ff>CREATE DATABASE</FONT> dbTest;<BR>GO<BR><FONT color=#0000ff>use</FONT> dbTest<BR><FONT color=#0000ff>CREATE TABLE</FONT> tblTest <FONT color=#999999>(</FONT><BR>&nbsp;&nbsp;&nbsp; colTest varchar <FONT color=#999999>(</FONT>4<FONT color=#999999>)</FONT> <FONT color=#0000ff>COLLATE</FONT> Latin1_General_CS_AS_KS_WS <FONT color=#999999>NULL</FONT><BR><FONT color=#999999>)</FONT><BR>GO<BR><FONT color=#0000ff>INSERT INTO</FONT> tblTest <FONT color=#999999>(</FONT>colTest<FONT color=#999999>)</FONT> <FONT color=#0000ff>VALUES</FONT> <FONT color=#999999>(</FONT><FONT color=#ff0000>'chap'</FONT><FONT color=#999999>)</FONT><BR><BR><FONT color=#0000ff>SELECT</FONT> <FONT color=#999999>*</FONT> <FONT color=#0000ff>FROM</FONT> tblTest;<BR><FONT color=#0000ff><BR>SELECT</FONT> <FONT color=#999999>*</FONT> <FONT color=#0000ff>FROM</FONT> tblTest <FONT color=#0000ff>WHERE</FONT> colTest <FONT color=#999999>LIKE</FONT> <FONT color=#ff0000>'_ap'</FONT>;<BR><FONT color=#0000ff><BR>SELECT</FONT> <FONT color=#999999>*</FONT> <FONT color=#0000ff>FROM</FONT> tblTest <FONT color=#0000ff>WHERE</FONT> colTest <FONT color=#999999>LIKE</FONT> <FONT color=#ff0000>'_hap'</FONT>;<BR><FONT color=#0000ff><BR>SELECT</FONT> <FONT color=#999999>*</FONT>&nbsp;<FONT color=#0000ff>FROM</FONT> tblTest <FONT color=#0000ff>WHERE</FONT> colTest <BR>&nbsp;&nbsp;&nbsp; <FONT color=#0000ff>COLLATE</FONT> Traditional_Spanish_CS_AS_KS_WS <FONT color=#999999>LIKE</FONT> <FONT color=#ff0000>'_ap'</FONT>;<BR><FONT color=#0000ff><BR>SELECT</FONT> <FONT color=#999999>*</FONT> <FONT color=#0000ff>FROM</FONT> tblTest <FONT color=#0000ff>WHERE</FONT> colTest <BR>&nbsp;&nbsp;&nbsp; <FONT color=#0000ff>COLLATE</FONT> Traditional_Spanish_CS_AS_KS_WS <FONT color=#999999>LIKE</FONT> <FONT color=#ff0000>'_hap'</FONT>;&nbsp;</P></B></FONT></BLOCKQUOTE>
+<P mce_keep="true">So if you just go ahead and run this whole script, here will be the results of the five queries:</P>
+<UL>
+<LI>
+<DIV mce_keep="true">QUERY #1: 1 row</DIV></LI>
+<LI>
+<DIV mce_keep="true">QUERY #2: 0 rows</DIV></LI>
+<LI>
+<DIV mce_keep="true">QUERY #3: 1 row</DIV></LI>
+<LI>
+<DIV mce_keep="true">QUERY #4: 1 row</DIV></LI>
+<LI>
+<DIV mce_keep="true">QUERY #5: 0 rows</DIV></LI></UL>
+<P mce_keep="true">There you have it! When SQL Server documentation claims that "_ (underscore) matches any single character", what it clearly means is not exactly a single&nbsp;CHARACTER at all. It means a single SORT ELEMENT!</P>
+<P mce_keep="true">(I have talked about sort elements in previous posts such as <STRONG><A class="" href="http://archives.miloush.net/michkap/archive/2005/07/19/440320.html" mce_href="http://archives.miloush.net/michkap/archive/2005/07/19/440320.html">this one</A></STRONG> and <A class="" href="http://archives.miloush.net/michkap/archive/2005/07/20/440842.html" mce_href="http://archives.miloush.net/michkap/archive/2005/07/20/440842.html"><STRONG>this one</STRONG></A>.)</P>
+<P mce_keep="true">Of course there are problems here, since both the square brackets and caret style wildcards also refer to single characters but will only refer to sort elements in what they do not specify; everything specified has to be a single UTF-16 code unit, in most cases. Looking at some more queries:</P>
+<BLOCKQUOTE><FONT face="Consolas,Courier New,Courier" size=2><B>
+<P mce_keep="true"><FONT color=#0000ff>SELECT</FONT> <FONT color=#999999>*</FONT> <FONT color=#0000ff>FROM</FONT> tblTest <FONT color=#0000ff>WHERE</FONT> colTest <FONT color=#999999>LIKE</FONT> '[b-d]ap';<FONT color=#009900>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; /* Returns 0 rows */</FONT><BR><FONT color=#0000ff><BR>SELECT</FONT> <FONT color=#999999>*</FONT> <FONT color=#0000ff>FROM</FONT> tblTest <FONT color=#0000ff>WHERE</FONT> colTest <FONT color=#999999>LIKE</FONT> '[b-d]hap';&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<FONT color=#009900>&nbsp;&nbsp; /* Returns&nbsp;1 row &nbsp;*/</FONT><BR><FONT color=#0000ff><BR>SELECT</FONT> <FONT color=#999999>*</FONT> <FONT color=#0000ff>FROM</FONT> tblTest <FONT color=#0000ff>WHERE</FONT> colTest <BR>&nbsp;&nbsp;&nbsp; <FONT color=#0000ff>COLLATE</FONT> Traditional_Spanish_CS_AS_KS_WS <FONT color=#999999>LIKE</FONT> '[b-d]ap';&nbsp; <FONT color=#009900>&nbsp; /* Returns&nbsp;1 row&nbsp; */</FONT><BR><FONT color=#0000ff><BR>SELECT</FONT> <FONT color=#999999>*</FONT> <FONT color=#0000ff>FROM</FONT> tblTest <FONT color=#0000ff>WHERE</FONT> colTest <BR>&nbsp;&nbsp;&nbsp; <FONT color=#0000ff>COLLATE</FONT> Traditional_Spanish_CS_AS_KS_WS <FONT color=#999999>LIKE</FONT> '[b-d]hap';<FONT color=#009900>&nbsp;&nbsp; /* Returns 0 rows */</FONT><BR><FONT color=#0000ff><BR>SELECT</FONT> <FONT color=#999999>*</FONT> <FONT color=#0000ff>FROM</FONT> tblTest <FONT color=#0000ff>WHERE</FONT> colTest <BR>&nbsp;&nbsp;&nbsp; <FONT color=#0000ff>COLLATE</FONT> Traditional_Spanish_CS_AS_KS_WS <FONT color=#999999>LIKE</FONT> '[ch-d]ap';<FONT color=#009900>&nbsp;&nbsp; /* Returns 0 rows */</FONT><BR><FONT color=#0000ff><BR>SELECT</FONT> <FONT color=#999999>*</FONT> <FONT color=#0000ff>FROM</FONT> tblTest <FONT color=#0000ff>WHERE</FONT> colTest <FONT color=#999999>LIKE</FONT> '[^ch]ap';&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<FONT color=#009900>&nbsp;&nbsp; /* Returns 0 rows */</FONT><BR><FONT color=#0000ff><BR>SELECT</FONT> <FONT color=#999999>*</FONT> <FONT color=#0000ff>FROM</FONT> tblTest <FONT color=#0000ff>WHERE</FONT> colTest <BR>&nbsp;&nbsp;&nbsp; <FONT color=#0000ff>COLLATE</FONT> Traditional_Spanish_CS_AS_KS_WS <FONT color=#999999>LIKE</FONT> '[^ch]ap';&nbsp; <FONT color=#009900>&nbsp; /* Returns&nbsp;1 row &nbsp;*/</FONT><BR><FONT color=#0000ff><BR>SELECT</FONT> <FONT color=#999999>*</FONT> <FONT color=#0000ff>FROM</FONT> tblTest <FONT color=#0000ff>WHERE</FONT> colTest <BR>&nbsp;&nbsp;&nbsp; <FONT color=#0000ff>COLLATE</FONT> Traditional_Spanish_CS_AS_KS_WS <FONT color=#999999>LIKE</FONT> '[^ch-d]hap'; <FONT color=#009900>/* Returns&nbsp;1 row&nbsp; */<BR><BR><FONT color=#0000ff>SELECT</FONT><FONT color=#000000> </FONT><FONT color=#999999>*</FONT><FONT color=#000000> </FONT><FONT color=#0000ff>FROM</FONT><FONT color=#000000> tblTest </FONT><FONT color=#0000ff>WHERE</FONT><FONT color=#000000> colTest <BR>&nbsp;&nbsp;&nbsp; </FONT><FONT color=#0000ff>COLLATE</FONT><FONT color=#000000> Traditional_Spanish_CS_AS_KS_WS </FONT><FONT color=#999999>LIKE</FONT><FONT color=#000000> '[^cdh]hap'; </FONT><FONT color=#009900>&nbsp;/* Returns 0 rows */<BR></FONT></FONT></P></B></FONT></BLOCKQUOTE>
+<P mce_keep="true">Clearly in all of these cases, just as in the ones before, it is assuming that what you type into the expression is individual UTF-16 code units, even though the engine will <STRONG>usually</STRONG>&nbsp;(maybe always?) treat compressions as single characters later on. This makes the whole definition of "single character" pretty fluid since it means different things depending on whether you are looking at the query beforehand or the engine running the query later.</P>
+<P mce_keep="true">So has anyone noticed this before and I (and those people writing docs) just haven't&nbsp;ever&nbsp;run across&nbsp;it? </P>
+<P mce_keep="true">I mean, is that really possible?</P>
+<P mce_keep="true">Or is this really&nbsp;a pseudo-stealth "feature" created by SQL Server's implementation of linguistic collation that nobody ever noticed before?</P>
+<P mce_keep="true">And either way, how on earth can this be "fixed" in the future, or even documented? I mean, given the need to avoid breaking existing (albeit undocumented) behavior?</P>
+<P mce_keep="true"><FONT color=#ff0099><EM>This post brought to you by </EM>&nbsp;<FONT size=6>C</FONT> <EM>(<A class="" href="http://www.fileformat.info/info/unicode/char/0043" mce_href="http://www.fileformat.info/info/unicode/char/0043">U+0043</A>, a.k.a. LATIN CAPITAL LETTER C)</EM></FONT></P></FONT>
+<hr/><p><a id="792284" href="#792284">#</a> <strong>Michael S. Kaplan</strong> on 4 Oct 2006 7:16 PM:</p><div style="margin-left: 1em"><p>I am starting to wonder if people who use SQL Server actually read this blog! :-( </p>
+<p>Is there nobody who is either unbelieving of how dumb I am for not knowing this or shocked that they did not know it themselves? </p>
+</div>
+<p><a id="794391" href="#794391">#</a> <strong>Eric Duran</strong> on 5 Oct 2006 3:02 PM:</p><div style="margin-left: 1em"><p>I wasn't aware that Traditional Spanish was implementing the deprecated &quot;ch&quot; character. My bet is that the Royal Spanish Academy, foreseeing that our lovely &quot;ch&quot; would make using computers harder, just dropped the whole double characters at all (we used to have ll, rr and ch as single chars). &nbsp;This was many years ago (10-12, I would say).</p>
+<p>Interesting that you pointed out this, but that's yet another reason for not using the Traditional Spanish collation.</p>
+</div>
+<p><a id="794674" href="#794674">#</a> <strong>Michael S. Kaplan</strong> on 5 Oct 2006 5:33 PM:</p><div style="margin-left: 1em"><p>Hi Eric, </p>
+<p>There are many other languages that include compressions that are valid -- this just happened to be an easy one to show. So one cannot avoid the problem unless one is also avoiding language support!</p>
+</div>
+<p><a id="795010" href="#795010">#</a> <strong>Dean Harding</strong> on 5 Oct 2006 8:45 PM:</p><div style="margin-left: 1em"><p>Well, I use SQL Server fairly often. But I tend to stay away from the LIKE operator whenever possible. It's not very index-friendly (at least, it's easy to USE in a non-index friendly way)...</p>
+</div>
+<p><a id="1160399" href="#1160399">#</a> <strong>bobo</strong> on 27 Nov 2006 12:18 PM:</p><div style="margin-left: 1em"><p>you said:</p>
+<p>&quot;Attention all database developers out there! I have been somewhat dismayed at getting so few comments&quot;</p>
+<p>I did not realize that because someone put something in their blog that was of interest to them, that the rest of the world was obligated to post a comment on the matter.</p></div>
+<p><a id="1160449" href="#1160449">#</a> <strong>Michael S. Kaplan</strong> on 27 Nov 2006 12:41 PM:</p><div style="margin-left: 1em"><p>Obligated?</p>
+<p>Not at all. </p>
+<p>But usually if I post something that interests people, they comment about it. I was surprised at the lack of interest!</p>
+</div>
+<p><a id="1160488" href="#1160488">#</a> <strong>Mike Dimmick</strong> on 27 Nov 2006 12:58 PM:</p><div style="margin-left: 1em"><p>I don't think the underscore wildcard is actually used all that often. When you're searching for something in the database, you'll tend to use the % wildcard - typically at the end of the search term, if you're trying to take advantage of indexes. Still, the search results would presumably be different for 'c%' vs 'ch%'?</p>
+<p>For any serious use of keyword matching, you would probably build a full-text search index, whose behaviour might be different (since the work is farmed out to an MSSearch process, IIRC).</p>
+</div>
+<p><a id="1179121" href="#1179121">#</a> <strong>Luis Lobo Borobia</strong> on 30 Nov 2006 1:50 PM:</p><div style="margin-left: 1em"><P>Wow. This is something i didn't know, and I'm a spanish talker. May be because, to keep ourself out of trouble we always (in our company) install the english version of sqlserver.</P>
+<P>By the way, ch, now is no longer used as a single letter for sorting, it is put between cg and ci starting words. But it is a letter in the alphabet by its own. This is from the Real Spanish Academy.</P>
+<P>(in spanish)</P>
+<P><A class="" href="http://www.rae.es/rae/gestores/gespub000006.nsf/(voAnexos)/arch2A2805E472038A72C125717700366F42/$FILE/Cuestiones para el FAQ de consultas.htm#ap31">http://www.rae.es/rae/gestores/gespub000006.nsf/(voAnexos)/arch2A2805E472038A72C125717700366F42/$FILE/Cuestiones%20para%20el%20FAQ%20de%20consultas.htm#ap31</A></P></div>
+<p><a id="1226915" href="#1226915">#</a> <strong>Brian Gonsalves</strong> on 6 Dec 2006 6:34 PM:</p><div style="margin-left: 1em"><p>I have one for you:</p>
+<p>Identical data in identical tables on (supposidly) identical SQL servers.</p>
+<p>server A:</p>
+<p>select cv_id from cvspec where cv_id like 'cv1048__'</p>
+<p>cv_id &nbsp; &nbsp;</p>
+<p>-------- </p>
+<p>CV1048 &nbsp; </p>
+<p>CV10481 &nbsp;</p>
+<p>CV104810</p>
+<p>ServerB:</p>
+<p>select cv_id from cvspec where cv_id like 'cv1048__'</p>
+<p>cv_id &nbsp; &nbsp;</p>
+<p>-------- </p>
+<p>CV104810</p>
+<p>Any idea what controls this behaviour?</p></div>
+<hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2008/10/06 <a href="http://archives.miloush.net/michkap/archive/2008/10/06/8977552.html">UCS-2 to UTF-16, Part 4: Talking about the ask</a></p><p>2008/07/25 <a href="http://archives.miloush.net/michkap/archive/2008/07/25/8771119.html">Let's save some time and call them all IRregular expression engines</a></p><p>2007/12/11 <a href="http://archives.miloush.net/michkap/archive/2007/12/11/6730684.html">In SQL Server, there is the rest of Unicode (aka the SiaO Incompleteness Theorem)</a></p><p>2007/01/24 <a href="http://archives.miloush.net/michkap/archive/2007/01/24/1520227.html">Sometimes a WCHAR really *is* just a character....</a></p><p>2007/01/15 <a href="http://archives.miloush.net/michkap/archive/2007/01/15/1469885.html">With SQL Server (and SQL itself) comes the illogic of 'trailing spaces' (and the myth of fixed width)</a></p><p>2006/11/27 <a href="http://archives.miloush.net/michkap/archive/2006/11/27/1160195.html">Any database developers reading this?</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2006/10/04/788747.html" title="Will I C U at the IUC? (Redux)">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2006/10/03/786095.html" title="What&#39;s the KeyboardDataQueueSize for?">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2006-10">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2006-10-04">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2006/10/04/788429.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:39 GMT -->
+</html>

@@ -1,0 +1,71 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2008/04/18/8405696.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:36 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>The mythical nature of bidirectional support, and where the wheels come off the wagon</title></head><body>
+<h1>The mythical nature of bidirectional support, and where the wheels come off the wagon</h1>
+<p><em>by Michael S. Kaplan, published on 2008/04/18 10:01 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2008/04/18/8405696.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P><EM><FONT color=#ff0000 size=1>Content of </FONT></EM><A class="" href="http://blogs.msdn.com/michkap" mce_href="http://blogs.msdn.com/michkap"><EM><FONT size=1>Michael Kaplan's personal blog</FONT></EM></A><FONT color=#ff0000 size=1><EM> not approved by Microsoft (see </EM></FONT><A class="" href="http://archives.miloush.net/michkap/archive/2008/02/28/7934999.html" mce_href="http://archives.miloush.net/michkap/archive/2008/02/28/7934999.html"><EM><FONT size=1>disclaimer</FONT></EM></A><FONT color=#ff0000 size=1><EM>)!<BR></EM></FONT><EM><FONT color=#ff0000 size=1>Regular readers should keep in mind that all I said in <A class="" href="http://archives.miloush.net/michkap/archive/2008/03/30/8340299.html" mce_href="http://archives.miloush.net/michkap/archive/2008/03/30/8340299.html"><STRONG>The End?</STRONG></A> still applies; the allusion to the X-Files continues for people who understand such references....</FONT></EM></P>
+<P>The problem has its roots in&nbsp;<A class="" href="http://archives.miloush.net/michkap/archive/2007/01/06/1421178.html" mce_href="http://archives.miloush.net/michkap/archive/2007/01/06/1421178.html"><STRONG>Mixing it up with bidirectional text</STRONG></A>&nbsp;and <A class="" href="http://archives.miloush.net/michkap/archive/2008/04/07/8364480.html" mce_href="http://archives.miloush.net/michkap/archive/2008/04/07/8364480.html"><STRONG>The Bug(s) Spotted, aka Design flaws are worse than bugs</STRONG></A>, two blog entries which talk about specific lamenesses with the bidirectional support within Windows.</P>
+<P>I don't want to imply that there aren't more problems beyond these. Because to be perfectly honest, there are.</P>
+<P>Microsoft is incredibly lame here, though to be frank for a moment only lame in a way that everyone else is too, right now. Including Unicode.</P>
+<P>To illustrate, I'll need a sample bit of text.</P>
+<P>Let's build up a path. :-)</P>
+<P>We'll take a nice little English string:</P>
+<BLOCKQUOTE>
+<P dir=ltr><FONT size=5>NAME ‎(BIG)‎</FONT></P></BLOCKQUOTE>
+<P>And then we'll make another one in Hebrew, kind of a localized version of that string.</P>
+<BLOCKQUOTE>
+<P dir=rtl align=left><FONT size=5>שם ‏(גדול)‏</FONT></P></BLOCKQUOTE>
+<P mce_keep="true">It is really quite reasonable to hope one could take these chunks, create a path with them (one chunk per directory) and have everything come out right.</P>
+<P mce_keep="true">I mean a path like:</P>
+<BLOCKQUOTE>
+<P dir=ltr mce_keep="true"><FONT size=4>C:\NAME ‎(BIG)‎\שם ‏(גדול)‏\NAME ‎(BIG)‎\שם ‏(גדול)‏</FONT></P></BLOCKQUOTE>
+<P mce_keep="true">may be a Destryian scenario, but at its root it's just&nbsp;a small valid scenario&nbsp;that you would really want to work.</P>
+<P mce_keep="true">Let's try it with no special decorative control characters and leave it to the whim of your browser:</P>
+<BLOCKQUOTE>
+<BLOCKQUOTE>
+<P mce_keep="true"><FONT size=4>C:\NAME (BIG)\שם (גדול)\NAME (BIG)\שם (גדול)</FONT></P></BLOCKQUOTE></BLOCKQUOTE>
+<P mce_keep="true">It didn't look right on all four that I tried (Safari, FireFix, Opera, and Internet Explorer).</P>
+<P mce_keep="true">How about in Notepad?</P>
+<P mce_keep="true">Well you can choose your means of failure there via the right-click menu:</P>
+<P mce_keep="true"><IMG src="http://trigeminal.fmsinc.com/images/bigname05.png"></P>
+<P mce_keep="true">vs.</P>
+<P mce_keep="true"><IMG src="http://trigeminal.fmsinc.com/images/bigname06.png"></P>
+<P mce_keep="true">Let's try it on the latest and greatest version of Windows, as a path:</P>
+<P mce_keep="true"><IMG src="http://trigeminal.fmsinc.com//images/bigname03.png"></P>
+<P mce_keep="true">Hmmmm. Not so great in the breadcrumb bar, huh? What if we click in the address bar space to get rid of the breadcrumb bar:</P>
+<P mce_keep="true"><IMG src="http://trigeminal.fmsinc.com//images/bigname04.png"></P>
+<P mce_keep="true">Still broken, those tokens. All of the English ones look fine, but the Hebrew ones are broken.</P>
+<P mce_keep="true">Maybe we can do better on a Hebrew user interface language.</P>
+<P mce_keep="true">We'll look at the breadcrumb bar again:</P>
+<P mce_keep="true"><IMG src="http://trigeminal.fmsinc.com//images/bigname01.png"></P>
+<P mce_keep="true">Well, good news and bad news here -- the Hebrew looks good now, but the English is broken!</P>
+<P mce_keep="true">Is the hope for</P>
+<BLOCKQUOTE>
+<P dir=ltr mce_keep="true"><FONT size=4>C:\NAME ‎(BIG)‎\שם ‏(גדול)‏\NAME ‎(BIG)‎\שם ‏(גדול)‏</FONT></P></BLOCKQUOTE>
+<P mce_keep="true">such a fruitless one? So very unreasonable?</P>
+<P mce_keep="true">Turns out that if you are running on Windows, it is. :-(</P>
+<P mce_keep="true">Now obviously you can do some work here with <A class="" href="http://www.fileformat.info/info/unicode/char/200e" mce_href="http://www.fileformat.info/info/unicode/char/200e">U+200e</A> (LEFT-TO-RIGHT MARK) and <A class="" href="http://www.fileformat.info/info/unicode/char/200f" mce_href="http://www.fileformat.info/info/unicode/char/200f">U+200f</A> (RIGHT-TO-LEFT MARK) or other Bidi control characters to try and make this better, but obviously this is something one wants to have happening behind the scenes without requiring the user to add control characters to the string.</P>
+<P mce_keep="true">Especially a string where the intent is so obvious and easy to discern.... a slightly more complicated case than the one in <A class="" href="http://archives.miloush.net/michkap/archive/2007/01/06/1421178.html" mce_href="http://archives.miloush.net/michkap/archive/2007/01/06/1421178.html"><STRONG>Mixing it up with bidirectional text</STRONG></A> but not all that much more complicated, is it?</P>
+<P mce_keep="true">But it is by no means an easy problem for users to have to solve. so it really would be much better if the OS could do the&nbsp;heavy lifting&nbsp;here, rather than forcing it on everyone else.</P>
+<P mce_keep="true">Which is not to say there is some other operating system that magically does everything right here. Last time I checked, no one was doing so well in this space, and bidirectional support in these edge cases is kind of&nbsp;a myth for now....</P>
+<P mce_keep="true">Let's pause to do a little RCA (Root Cause Analysis) for the problems here -- that as a standard, the <STRONG>Bidirectional Algorithm</STRONG> is several levels lower than one needs to handle the mix of LTR and RTL scripts, and the various "clients" who more or less support the standard (be they application or operating system or browser or other) but do not provide a whole lot&nbsp;beyond it (other than sometimes providing that notion of a higher level definition of default directionality). It does quite well with cases like Hebrew that actually have some LTR pieces within themselves, but there is no good way to handle other script LTR text embedded within unless a bunch of other work happens. Work that no one really wants to provide. Remember what that one person said in response to <A class="" href="http://archives.miloush.net/michkap/archive/2008/04/07/8364480.html" mce_href="http://archives.miloush.net/michkap/archive/2008/04/07/8364480.html"><STRONG>that hack bug</STRONG></A>:</P>
+<BLOCKQUOTE>
+<P mce_keep="true"><EM>"The correct fix is to delete the test entirely. We are all-Unicode now. We don't need an old hack for Hebrew/Arabic Windows 95."</EM></P></BLOCKQUOTE>
+<P mce_keep="true">No one wants to do too much beyond Unicode even though plain Unicode alone (without making use of higher level protocols to place control characters) is insufficient for handling these cases....</P>
+<P mce_keep="true">Note that is also also one of the reasons RTL IDN is so complicated and looks so broken most of the time.</P>
+<P mce_keep="true">It all amounts to&nbsp;<STRONG>A place where everyone blows, equally.</STRONG></P>
+<P mce_keep="true">&nbsp;</P>
+<P mce_keep="true"><FONT color=#ff00ff><EM>This blog&nbsp;brought to you by&nbsp;</EM></FONT><FONT color=#ff00ff><EM><A class="" href="http://www.fileformat.info/info/unicode/char/200e" mce_href="http://www.fileformat.info/info/unicode/char/200e">U+200e</A></EM></FONT><FONT color=#ff00ff><EM>&nbsp;and </EM></FONT><FONT color=#ff00ff><EM><A class="" href="http://www.fileformat.info/info/unicode/char/200f" mce_href="http://www.fileformat.info/info/unicode/char/200f">U+200f</A></EM></FONT><FONT color=#ff00ff><EM> (aka&nbsp;LEFT-TO-RIGHT MARK and RIGHT-TO-LEFT MARK)</EM></FONT></P>
+<hr/><p><a id="8408593" href="#8408593">#</a> <strong>Andrew Cook</strong> on 18 Apr 2008 1:59 PM:</p><div style="margin-left: 1em"><p>At first I didn't quite get what the problem was until I loaded the Blog in Firefox.</p>
+<p>MS Office Outlook 2007: &quot;RTL what?&quot;</p>
+<p><a rel="nofollow" target="_new" href="http://thorin.twelvebaud.net:25005/Stuff/michkap20080418.png">http://thorin.twelvebaud.net:25005/Stuff/michkap20080418.png</a></p></div>
+<p><a id="8408683" href="#8408683">#</a> <strong>Michael S. Kaplan</strong> on 18 Apr 2008 2:26 PM:</p><div style="margin-left: 1em"><P>Whole new meaning to black box testing, huh? :-)</P></div>
+<p><a id="8418677" href="#8418677">#</a> <strong>Jan Kučera</strong> on 23 Apr 2008 5:24 AM:</p><div style="margin-left: 1em"><p>So when I want to store bidi in database, should I add the LTR/RTL marks correctly or just leave it as it is and hope the rendering system will get it eventually right... in (far) future?</p></div>
+<p><a id="8418682" href="#8418682">#</a> <strong>Jan Kučera</strong> on 23 Apr 2008 5:26 AM:</p><div style="margin-left: 1em"><p>By the way, I was reading this and the next post in Pocket IE and although it just showed rectangles, it was in correct order.. :)</p>
+<p>From some point of view, less is more... </p></div>
+<p><a id="8419202" href="#8419202">#</a> <strong>Michael S. Kaplan</strong> on 23 Apr 2008 11:00 AM:</p><div style="margin-left: 1em"><p>Whether to add marks or rely on marks to be added for rendering purpose eventually becomes a personal choice, based on one's own cynical nature of how long that is expected to take. :-)</p>
+</div>
+<hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2010/09/20 <a href="http://archives.miloush.net/michkap/archive/2010/09/20/10064640.html">If you are Persian, you may not always want to follow your Parent</a></p><p>2010/07/23 <a href="http://archives.miloush.net/michkap/archive/2010/07/23/10041679.html">It used to be Windows doing it right, and Office following. But now...</a></p><p>2008/08/25 <a href="http://archives.miloush.net/michkap/archive/2008/08/25/8893033.html">The Bidi Algorithm's own SEP Field</a></p><p>2008/06/10 <a href="http://archives.miloush.net/michkap/archive/2008/06/10/8588265.html">When Unicode's "PDF" character isn't supported, you really *can* say that the app's Bidi support doesn't POP!</a></p><p>2008/04/19 <a href="http://archives.miloush.net/michkap/archive/2008/04/19/8409778.html">Even if the text is right underneath, it may look wrong close up....</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2008/04/19/8409778.html" title="Even if the text is right underneath, it may look wrong close up....">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2008/04/18/8403631.html" title="The importance of Tagalog to Burmese, aka &quot;Of course I&#39;d lie to you, I&#39;m a font!&quot;">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2008-04">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2008-04-18">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2008/04/18/8405696.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:36 GMT -->
+</html>

@@ -1,0 +1,27 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2007/01/05/1387397.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:38 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>How can be changed the keyboard layout name label?</title></head><body>
+<h1>How can be changed the keyboard layout name label?</h1>
+<p><em>by Michael S. Kaplan, published on 2007/01/05 03:01 -05:00, original URI: http://blogs.msdn.com/b/michkap/archive/2007/01/05/1387397.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P>Regular reader from Romania Christian Secara asks:</P>
+<BLOCKQUOTE><FONT face="times new roman,times" size=2>
+<P><EM>How can be changed the keyboard layout names, the ones from the tray&nbsp;icon for example, from a programmatic point of view ?<BR><BR>After installing LIP or MUI, the keyboard layout names have&nbsp;translated names, so there should be a way to change this. Is there a&nbsp;"public" mechanism (API, or smth), or this is reserved for language packs only ?<BR><BR>Cristi</EM></P></FONT></BLOCKQUOTE>
+<P>Well, there is no way from a programmatic point of view.</P>
+<P>But if you look in the registry where the list of keyboard layouts lives, down in</P>
+<BLOCKQUOTE>
+<P><STRONG><FONT size=4>HKLM\SYSTEM\CurrentControlSet\Control\Keyboard Layouts\</FONT></STRONG></P></BLOCKQUOTE>
+<P>and look at any&nbsp;of the subkeys and values under it, e.g. under XP:</P>
+<BLOCKQUOTE>
+<P>HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Keyboard Layouts\00000418<BR>&nbsp;&nbsp;&nbsp; Layout Display Name&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; @%SystemRoot%\system32\input.dll,-5037<BR>&nbsp;&nbsp;&nbsp; Layout File&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; KBDRO.DLL<BR>&nbsp;&nbsp;&nbsp; Layout Text&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Romanian</P></BLOCKQUOTE>
+<P>That "Layout Display Name" entry&nbsp;(which has been around since XP) is a string designed for the SHLWAPI <A class="" href="http://msdn2.microsoft.com/library/ms538594.aspx" mce_href="http://msdn2.microsoft.com/library/ms538594.aspx">SHLoadIndirectString</A> function.</P>
+<P>The way that it changes when the UI language changes is the way all of the rest of the resources change -- they load the strings from the appropriate localized DLL...</P>
+<P>In versions prior to XP, the <STRONG>Layout Text</STRONG> value is the one that would be used, and its language would not change when the UI language did.</P>
+<P>For more info (including a function to enumerate the keyboards), you can look to the post I did this last May entitled <A class="" href="http://archives.miloush.net/michkap/archive/2006/05/06/591174.html" mce_href="http://archives.miloush.net/michkap/archive/2006/05/06/591174.html"><STRONG>Getting the real (localized) name of the keyboard</STRONG></A>, which I guess points to the best answer -- the search box for this blog! :-)</P>
+<P mce_keep="true">&nbsp;</P>
+<P><FONT color=#ff00ff><EM>This post brought to you by</EM>&nbsp;<FONT size=4>ţ</FONT> <EM>(U+0163, a.k.a. LATIN SMALL LETTER T WITH CEDILLA)<BR><FONT size=1>(because in the words of Buck Murdock,&nbsp;irony can be pretty ironic sometimes!)</FONT></EM></FONT></P>
+<hr/><p><a id="9242922" href="#9242922">#</a> <strong>DSpider</strong> on 19 Dec 2008 4:55 PM:</p><div style="margin-left: 1em"><p>Vroiam să zic mulţumesc pt. informaţii ! De aici m-am inspirat si mi-am rezolvat problema. Mersi frumos.</p>
+<p>Just wanted to thanks for the info ! This is where I got my inspiration from and fixed my problem. Thanks a lot.</p></div>
+<hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2007/05/22 <a href="http://archives.miloush.net/michkap/archive/2007/05/22/2800224.html">Getting the language of an LCID-less keyboard</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2007/01/05/1413001.html" title="Converting a project to Unicode: Part 9 (The project&#39;s postpartum postmortem)">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2007/01/04/1409380.html" title="Converting a project to Unicode: Part 8 (Fitting MSLU into the mix)">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2007-01">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2007-01-05">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2007/01/05/1387397.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:38 GMT -->
+</html>

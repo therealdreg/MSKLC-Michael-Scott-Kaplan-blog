@@ -1,0 +1,83 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2008/05/26/8554142.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:36 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>You want to know what's weak? Strong password rules, that's what's weak!</title></head><body>
+<h1>You want to know what's weak? Strong password rules, that's what's weak!</h1>
+<p><em>by Michael S. Kaplan, published on 2008/05/27 02:11 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2008/05/26/8554142.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P>Regular reader Jan Kučera asked over in the Suggestion Box:</P>
+<BLOCKQUOTE>
+<P><EM><FONT face="times new roman,times">Hi,<BR><BR>Okay, this might be a little bit non-technical question, but... every day, somebody wants a _strong_ password from me. The best one would be of course kilometer long, with some crazy stuff like _-*!#$ in it.<BR><BR>Well, I have nothing against special 'symbols' in the password, but why on earth only ASCII characters are supported? I don't know how about eg. banks in USA, but for my short life I haven't found any web site allowing me to enter (um... support) unicode password.<BR><BR>Am I missing something fundamental here? :)<BR><BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Jan</FONT></EM></P></BLOCKQUOTE>
+<P>My experience has been similar to Jan's though slightly different:</P>
+<OL>
+<LI>You can include pretty much any kind of character you want, but</LI>
+<LI>Characters outside of ASCII are not given&nbsp;appropriate consideration in term of overall complexity.</LI></OL>
+<P>Thus when you look at MSDN topics like <A class="" href="http://msdn.microsoft.com/library/ms722458.aspx" mce_href="http://msdn.microsoft.com/library/ms722458.aspx">Strong Password Enforcement and Passfilt.dll</A>, they say things like:</P>
+<BLOCKQUOTE>
+<P>The following complexity requirements are enforced by strong password enforcement:</P>
+<UL>
+<LI>Passwords may not contain your user name or any part of your full name. 
+<LI>Passwords must be at least six characters long. 
+<LI>Passwords must contain elements from three of the four following types of characters. </LI></UL>
+<P>
+<TABLE class="" border=1>
+<TBODY>
+<TR>
+<TH class="">Character types</TH>
+<TH class="">Examples</TH></TR>
+<TR>
+<TD class="">English uppercase letters</TD>
+<TD class="">A, B, C, … Z</TD></TR>
+<TR>
+<TD class="">English lowercase letters</TD>
+<TD class="">a, b, c, … z</TD></TR>
+<TR>
+<TD class="">Westernized Arabic numerals</TD>
+<TD class="">0, 1, 2, … 9</TD></TR>
+<TR>
+<TD class="">Non-alphanumeric characters (special characters)</TD>
+<TD class="">$,!,%,^</TD></TR>
+<TR>
+<TD class="">Unicode characters</TD>
+<TD class="">€, Γ, ƒ, λ</TD></TR></TBODY></TABLE></P></BLOCKQUOTE>
+<P mce_keep="true">Having a nod to Unicode seems nice, and it is a welcome addition to the world of password complexity.</P>
+<P mce_keep="true">But I have a hard time having four categories apply to a subset of the first 27 characters in Unicode and then having just one category apply to the other 65,000+ characters in the BMP.</P>
+<P mce_keep="true">The fact that </P>
+<UL>
+<LI>
+<DIV mce_keep="true">they would not be on most keyboards;</DIV></LI>
+<LI>
+<DIV mce_keep="true">they would be difficult for most people to describe even if they saw the password over a colleague's shoulder;</DIV></LI>
+<LI>
+<DIV mce_keep="true">these other 65,000+ characters all have different properties making them letters or symbols or numbers or non-characters</DIV></LI></UL>
+<P mce_keep="true">seems to not be considered.</P>
+<P mce_keep="true">Articles that put more verbiage and justification into the issue, like <A class="" href="http://www.microsoft.com/protect/yourself/password/create.mspx" mce_href="http://www.microsoft.com/protect/yourself/password/create.mspx">Strong passwords: How to create and use them</A>, somehow just seem worse, with the only nod to the bulk of Unicode being isolated suggestions like</P>
+<BLOCKQUOTE>
+<P mce_keep="true"><FONT face="times new roman,times">Your password will be much stronger if you choose from all the symbols on the keyboard, including punctuation marks not on the upper row of the keyboard, and any symbols unique to your language.</FONT></P></BLOCKQUOTE>
+<P mce_keep="true">or</P>
+<BLOCKQUOTE>
+<P mce_keep="true"><FONT face="times new roman,times">You can use symbols that look like letters, combine words (remove spaces) and other ways to make the password more complex. Using these tricks, we create a pass phrase of "MySoN 8N i$ 3 yeeR$ old" or a password (using the first letter of each word) "M$8ni3y0".</FONT></P></BLOCKQUOTE>
+<P mce_keep="true">But say if I tried to make a password based on random Unicode characters, such as:</P>
+<BLOCKQUOTE>
+<P mce_keep="true"><FONT size=7>ফཛڰװෝܣ໓ᄝឲౠफ़ဏஇฬほᢎሄ</FONT></P></BLOCKQUOTE>
+<P mce_keep="true">sites like the Microsoft <A class="" href="http://www.microsoft.com/protect/yourself/password/checker.mspx" mce_href="http://www.microsoft.com/protect/yourself/password/checker.mspx">Password Checker</A> consider this password to be weak.</P>
+<P mce_keep="true">To me, this seems like an analogue to audio encryption that uses frequencies beyond human auditory ranges, and hardly "weak".</P>
+<P mce_keep="true">Unless the checking is done for sites that convert the string to the system default code page, which would turn most of these to question marks....</P>
+<P mce_keep="true"><FONT color=#ff00ff><EM>This blog brought to you by</EM><FONT size=7> ཛ </FONT>(<EM><A class="" href="http://www.fileformat.info/info/unicode/char/0f5b" mce_href="http://www.fileformat.info/info/unicode/char/0f5b">U+0f5b</A>, aka TIBETAN LETTER DZA)</EM></FONT></P>
+<hr/><p><a id="8554813" href="#8554813">#</a> <strong>Cory Nelson</strong> on 27 May 2008 8:47 AM:</p><div style="margin-left: 1em"><P>This is how I determine password complexity:</P>
+<P>- remove any user info from it: username, first/last name, phone, etc.</P>
+<P>- collapse any duplications: "abcabc" -&gt; "abc", "foofoo" -&gt; "fo"</P>
+<P>- take what's left, and complexity = sum of distances between characters.</P>
+<P>It aims to not only ensure a computer can't easily brute force it, but also to ensure it won't be trivial for a human to guess or remember from a quick glance.</P>
+<P>It has worked well for me. &nbsp;Works with and even rewards using Unicode.</P></div>
+<p><a id="8554959" href="#8554959">#</a> <strong>josh</strong> on 27 May 2008 10:38 AM:</p><div style="margin-left: 1em"><p>There are five types of characters. &nbsp;I love Big Brother.</p></div>
+<p><a id="8554961" href="#8554961">#</a> <strong>Bruce Rusk</strong> on 27 May 2008 10:39 AM:</p><div style="margin-left: 1em"><p>One reason for not using Unicode passwords: if you'll be using multiple computers, including public terminals and mobile devices, you may not be able to enter a non-ASCII password.</p></div>
+<p><a id="8555005" href="#8555005">#</a> <strong>Michael S. Kaplan</strong> on 27 May 2008 11:06 AM:</p><div style="margin-left: 1em"><p>Hi Bruce --</p>
+<p>That is a reason to not use them; it is hardly an argument against the amount of complexity they add, though...</p>
+</div>
+<p><a id="8555586" href="#8555586">#</a> <strong>Dean Harding</strong> on 27 May 2008 6:57 PM:</p><div style="margin-left: 1em"><p>Bruce gives *a* reason not to use Unicode passwords, but it obviously doesn't apply to everybody -- it certainly would only apply in the U.S. and maybe a few other English-speaking countries, but even in Australia, most internet cafes support lots of different languages (we do tourists here...). And what about people who don't use public computers at all (personally, the idea of typing my bank password in a public computer gives me the willies)</p>
+<p>I gotta agree with you on this one, Michael. When you look at the number of possible characters in each of those five &quot;categories&quot; you get 27, 27, 10, 50 (tops) and 65,000+. Something is funny there...</p></div>
+<p><a id="8555588" href="#8555588">#</a> <strong>Dean Harding</strong> on 27 May 2008 7:01 PM:</p><div style="margin-left: 1em"><p>In fact, I'd probably go so far as to say that typing *any* password requiring &quot;complexity rules&quot; should not by typed into a public computer at all...</p>
+<p>I know, sometimes you might not have a choice, but if it were me, I'd change my password as quickly as I can after doing it. If you're going overseas on holidays for example, you could change your password to a simple ASCII-based one before you leave, and then change it back to a strong one when I got back.</p></div>
+<hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2011/06/28 <a href="http://archives.miloush.net/michkap/archive/2011/06/28/10180787.html">●●●●●●●●●●●●●● isn't complex, no matter what the underlying language is</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2008/05/27/8556091.html" title="SQL and the CLR? (2008 edition!)">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2008/05/25/8551406.html" title="On the fear of [consequences of ]rejection">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2008-05">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2008-05-26">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2008/05/26/8554142.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:36 GMT -->
+</html>

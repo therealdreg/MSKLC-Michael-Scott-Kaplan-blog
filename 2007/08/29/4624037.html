@@ -1,0 +1,23 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2007/08/29/4624037.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:37 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>If the data is invalid, the results can be invalid too</title></head><body>
+<h1>If the data is invalid, the results can be invalid too</h1>
+<p><em>by Michael S. Kaplan, published on 2007/08/29 03:16 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2007/08/29/4624037.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P>They say that a good lawyer never asks&nbsp;a question in court without already knowing the answer.</P>
+<P>Well, I'd probably make a lousy lawyer. </P>
+<P>Because when I was doing the research for <STRONG><A class="" href="http://archives.miloush.net/michkap/archive/2007/07/25/4037646.html" mce_href="http://archives.miloush.net/michkap/archive/2007/07/25/4037646.html">What's up with MB_ERR_INVALID_CHARS?</A></STRONG>, I did not know the full extent of the overall limitations in the flag.</P>
+<P>But given what I discovered, I made some recommendations.</P>
+<P>Though I find myself really agreeing with Yossi and the comment Yossi <A class="" href="http://archives.miloush.net/michkap/archive/2007/07/25/4037646.html#4620067" mce_href="http://archives.miloush.net/michkap/archive/2007/07/25/4037646.html#4620067">left</A>:</P>
+<BLOCKQUOTE>
+<P><EM><FONT face="times new roman,times">This inconsistency is pretty bad (the difference between how the actual Code page and best fit tables treat invalid characters). It renders MultiByteToWideChar pretty much useless in certain cases where these invalid characters are finding themselves into the output stream. <BR><BR>I'm using MSXML2 to read an XML file which was produced after converting MBSC character stream to Unicode. Since the following characters:<BR><BR>0x81 0x0081<BR>0x8d 0x008d<BR>0x8f 0x008f<BR>0x90 0x0090<BR>0x9d 0x009d<BR><BR>in the 1252 best fit appears to be "OK", the MSXML2 just fails to parse the file.<BR><BR>Is there a way to resolve this problem (other than to scan the stream in a for-loop and replacing this invalid characters?<BR><BR>Is there a version of MSXML2 that is consistent with the behavior of MultiByteToWideChar?</FONT></EM></P></BLOCKQUOTE>
+<P>I do find myself curious about what method msxml2 is using here for its conversions that is managing to fail on these characters that are technically mapped in the code page 1252 that the system defines. How is this component doing its conversions, exactly?</P>
+<P>But on the other hand, I am left with the knowledge that this never-before-defined behavior is hardly referring to bytes that are useful in a stream of text. </P>
+<P>So if you are seeing them, it is entirely reasonable to consider the text to be corrupt. What is that expression? <STRONG>Garbage in, garbage out</STRONG>. </P>
+<P>And then of course relying on code pages in this day and age is not the best plan even when you stay within the valid mapped characters that make up the long-documented portions of the code pages.</P>
+<P>The best thing to do is just stay away from them, especially if you think you might have invalid data like Yossi was seeing (or maybe investigating whatever is converting text to these unexpected code points!).</P>
+<P mce_keep="true">&nbsp;</P>
+<P><FONT color=#ff00ff><EM>This post brought to you&nbsp;by</EM> <FONT size=6>ǻ</FONT> <EM>(<A class="" href="http://www.fileformat.info/info/unicode/char/01fb" mce_href="http://www.fileformat.info/info/unicode/char/01fb">U+01fb</A>, a.k.a. LATIN SMALL LETTER A WITH RING ABOVE AND ACUTE)</EM></FONT></P>
+<hr/><div style="margin-left: 1em"><em>no comments</em></div><hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2007/08/29/4633356.html" title="Are you Mr. Kaplan?">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2007/08/29/4622293.html" title="Sometimes a request is made of me and the question is asked in such a way that I just don&#39;t know exactly how to respond">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2007-08">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2007-08-29">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2007/08/29/4624037.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:37 GMT -->
+</html>

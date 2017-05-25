@@ -1,0 +1,33 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2012/07/03/10326365.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:32 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Please Look before you Leap a second (take down your servers edition)</title></head><body>
+<h1>Please Look before you Leap a second (take down your servers edition)</h1>
+<p><em>by Michael S. Kaplan, published on 2012/07/03 06:41 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2012/07/03/10326365.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<p>It way way back in 2008 that I&nbsp;blogged <strong><a title="Please Look before you Leap a second" href="../../../2008/05/03/8451692.html">Please Look before you Leap a second</a></strong>.</p>
+<p>The proposal to abolish leap seconds didn't really succeed, by the way.</p>
+<p>But that isn't what today's blog is about.</p>
+<p>It's something that happened on June 30th.</p>
+<p>It was described in <a title="Leap second bug cripples Linux servers at airlines, Reddit, LinkedIn (Not a good time to be Australian)" href="http://www.theregister.co.uk/2012/07/02/leap_second_crashes_airlines/">Leap second bug cripples Linux servers at airlines, Reddit, LinkedIn (Not a good time to be Australian)</a>.</p>
+<p>Ugh.</p>
+<p>From the article:</p>
+<p style="padding-left: 60px;"><em><span style="font-family: times new roman,times; font-size: medium;">A spokesperson for Amadeus confirmed to The Reg today that the outage had been caused by a bug in the kernel of the open-source Linux operating system, and the flaw was triggered by the leap-second change on Saturday night. He said the problem has been sidestepped using a workaround within an hour, but Amadeus is investigating how to avoid and detect similar bugs in advance.</span></em></p>
+<p style="padding-left: 60px;"><em><span style="font-family: times new roman,times; font-size: medium;">Servers run by Mozilla, StumbleUpon, Yelp, FourSquare, Reddit and LinkedIn were also reported to have been hit by the same bug. Mozilla said its implementation of the Java-based Hadoop data processing framework and ElasticSearch weren&rsquo;t working properly on Saturday evening.</span></em></p>
+<p>Leap seconds aren't a completely new concept, so I am having my trouble getting my head around a bug that could cause so many different components and servers and sites to have trouble.</p>
+<p>Perhaps somebody familiar with the issue can enlighten me on this point.</p>
+<p>None of my Vista, Server 2008, Windows 7, Server 2008 R2, or Windows 8 machines had problems during that period, for what it's worth....</p>
+<p>Is this a new service in the Linux kernel? Or a bug in an existing service?</p>
+<p>I'm really not familiar enough with Linux to know how one goes about making kernel changes -- does someone have the bug assigned to them to fix this?</p>
+<p>Who owns the issue?</p>
+<hr/><p><strong>metathinker</strong> on 3 Jul 2012 7:28 AM:</p><div style="margin-left: 1em"><p>It was a bug in the kernel&#39;s real-time clock code to update the system time for a leap second adjustment - the code forgot to call the function to signal an RTC change. Because the kernel&#39;s (high-resolution) timers are partially dependent on the system time, this caused all of them to expire one second early. Then, they were reset by or on behalf of their user-space clients, so they expired again, and again, and again, for quite a while - causing a sudden CPU load spike on the affected machines.</p>
+<p>See this page for much much more: <a rel="nofollow" target="_new" href="http://lwn.net/SubscriberLink/504744/5c4c9ae88c52d92b/">lwn.net/.../5c4c9ae88c52d92b</a></p>
+</div>
+<p><strong>Mihai</strong> on 4 Jul 2012 12:51 AM:</p><div style="margin-left: 1em"><p>&quot;Leap seconds aren&#39;t a completely new concept&#39;</p>
+<p>And the leap year concept is even older. But still...</p>
+<p><a rel="nofollow" target="_new" href="http://www.wired.com/wiredenterprise/2012/03/azure-leap-year-bug/">www.wired.com/.../azure-leap-year-bug</a></p>
+</div>
+<p><strong>Daniel Cheng</strong> on 4 Jul 2012 9:36 AM:</p><div style="margin-left: 1em"><p>It changed the way time adjustment are handled for some high-resolution timer.</p>
+<p>Yes, they have tested the leap second thing -- that&#39;s why they fixed a deadlock issue long ago. The new issue is just high cpu usage which is harder to notice.</p></div>
+<hr/><p><em>go to <a id="newer" href="../04/10326704.html" title="Michael&#39;s window office -- Take 4! (aka Size Matters!)">newer</a> or <a id="older" href="../02/10325344.html" title="So we have these CTRY_* codes, and these LOCALE_ICOUNTRY values, see?">older</a> post, or back to <a href="../../../index-2.html">index</a> or <a href="../../../index-2.html#2012-07">month</a> or <a href="../../../index-2.html#2012-07-03">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2012/07/03/10326365.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:32 GMT -->
+</html>

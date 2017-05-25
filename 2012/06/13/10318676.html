@@ -1,0 +1,35 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2012/06/13/10318676.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:33 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Console limitations</title></head><body>
+<h1>Console limitations</h1>
+<p><em>by Michael S. Kaplan, published on 2012/06/13 07:01 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2012/06/13/10318676.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<p>In response to <strong><a title="chcp can't do everything" href="../11/544251.html">chcp can't do everything</a></strong> from March 2006, PierreMic asked over six years later:</p>
+<p style="padding-left: 30px;"><em>Is it true that one can't add SimSun as a TrueType command box font on a Windows 7 Ultimate box unless the OS default locale is already Chinese!?</em></p>
+<p style="padding-left: 30px;"><em>What is a *good* reason for this limitation?</em></p>
+<p>Yes, it is true that the console limits its font selection based on the default system locale.</p>
+<p>Since the console is based on the default OEM system codepage, it wouldn't make much sense to let another font outside the system codepage be selected.</p>
+<p>This actually is a limitation that no one seems terribly interested in fixing, since changing the way the console works in such a huge way is an implicit promise that the console is still supported.</p>
+<p>Which is something no one wants, since the backcompat bar is so high!</p>
+<p>In the end, it is better left as legacy. PowerShell is the future for the console (note that the PowerShell ISE doesn't limit font selection this way!).</p>
+<hr/><p><strong>skSdnW</strong> on 13 Jun 2012 7:13 AM:</p><div style="margin-left: 1em"><p>PowerShell ISE does not support interactive applications ( <a rel="nofollow" target="_new" href="http://blogs.msdn.com/b/powershell/archive/2009/02/04/console-application-non-support-in-the-ise.aspx">blogs.msdn.com/.../console-application-non-support-in-the-ise.aspx</a> ) so I don&#39;t understand how you can call it the future. FTP? VIM? etc</p>
+<p>&quot;...that the console is still supported&quot; why does MS hate the console so much? 20 years later and we are still stuck with stupid block selection, no tabs, incomplete font&amp;unicode support etc.</p>
+</div>
+<p><strong>Joshua</strong> on 13 Jun 2012 8:37 AM:</p><div style="margin-left: 1em"><p>WndSks has a point. There is fundamentally no way to build a roguelike on top of PowerShell ISE _or any other pipe driven console replacement_ without re-linking the binary.</p>
+<p>Since developers won&#39;t forgo a working console, you&#39;re in a pretty bad bind if you don&#39;t improve the existing one. Since forcing 65002 to OEMCP almost works (published hack), maybe finishing it is the way to go.</p>
+</div>
+<p><strong>Random832</strong> on 18 Jun 2012 12:09 PM:</p><div style="margin-left: 1em"><p>CJK characters also (in addition to being boxes, that is) only take up a single character cell on non-CJK locales - I assume as fullwidth characters they take up two character cells in the appropriate locales.</p>
+</div>
+<p><strong>Random832</strong> on 18 Jun 2012 12:16 PM:</p><div style="margin-left: 1em"><p>@Joshua </p>
+<p>Roguelikes are a bit much to ask for... If you&#39;re going to build a roguelike, and specifically targeting windows (if you&#39;re not specifically targeting windows, it&#39;d be best to use either pdcurses, or something like cygterm or cygwin rxvt), why wouldn&#39;t you use... well, windows? as in, the GUI?</p>
+<p>A more serious problem is that if the console is unsupported, and powershell ISE can&#39;t support interactive input, then there is no support for ANSI/ISO C or C++ with stdin or cin for ordinary &quot;ask a question, user types the answer&quot; type interactive programs.</p>
+<p>Anyway, I don&#39;t think Powershell ISE supports Unicode from console applications (as opposed to from powershell scriptlets). The earlier blog <a rel="nofollow" target="_new" href="../../../2010/10/07/10072032.html">blogs.msdn.com/.../10072032.aspx</a> says how to detect running in powershell ISE, but doesn&#39;t actually say how to accomplish unicode output if that is the case - WriteFile inherently doesn&#39;t support Unicode, and WriteConsole doesn&#39;t work in ISE.)</p>
+</div>
+<p><strong>Joshua</strong> on 18 Jun 2012 2:24 PM:</p><div style="margin-left: 1em"><p>@Random832: &quot;...powershell ISE can&#39;t support interactive input...&quot;</p>
+<p>Turns out that fixing this is the problem that blocks roguelikes anyway.</p>
+</div>
+<p><strong>Yuhong Bao</strong> on 30 Jul 2012 11:20 PM:</p><div style="margin-left: 1em"><p>Someone proposed on the Old New Thing that replacement conhosts be supported.</p>
+</div>
+<hr/><p><em>go to <a id="newer" href="../18/10321342.html" title="Happy Father&#39;s Day, POP^H^H^HDAD!">newer</a> or <a id="older" href="../12/10318599.html" title="Not Microsoft nor Mozilla nor Unicode; could the problem be Wikipedia? :-)">older</a> post, or back to <a href="../../../index-2.html">index</a> or <a href="../../../index-2.html#2012-06">month</a> or <a href="../../../index-2.html#2012-06-13">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2012/06/13/10318676.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:33 GMT -->
+</html>

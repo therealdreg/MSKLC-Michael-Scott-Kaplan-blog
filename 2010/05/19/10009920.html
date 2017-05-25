@@ -1,0 +1,35 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2010/05/19/10009920.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:35 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>What's the Word on interference in typing from Word?</title></head><body>
+<h1>What's the Word on interference in typing from Word?</h1>
+<p><em>by Michael S. Kaplan, published on 2010/05/19 07:01 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2010/05/19/10009920.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P>So, the message from Dharma via the Contact Link was:</P>
+<BLOCKQUOTE>
+<P><FONT face="times new roman,times">Dear Michael,</FONT></P>
+<P><FONT face="times new roman,times">First, I would like to thank you for your great BLOG!&nbsp; Well done!&nbsp; I've spent many hours reading and studying various articles and have found all of them helpful AND entertaining as well.&nbsp; And it's hard to do both of those things at once!</FONT></P>
+<P><FONT face="times new roman,times">Although I've worked in the Java world for years, I'm new to Windows programming.&nbsp; So please forgive my ignorance!</FONT></P>
+<P><FONT face="times new roman,times">1.&nbsp; The app that I'm building involves using 2 new keyboard layouts.&nbsp; So I built them using MSKLC.&nbsp; Everything was fine except they did not quite work in Microsoft Word 2007 running on XP.&nbsp; Most of the keyboard worked just fine.&nbsp; In particular the Devanagari layout didn't quite work in Word although it works fine in Notepad, Wordpad, and Excel 2007!&nbsp; It turns out that when I use a dead key to obtain some of the cerebral consonants in a glyph they don't combine!&nbsp; And it only happens when the dead key letter is in second position!</FONT></P>
+<P><FONT face="times new roman,times">Let me explain more clearly with an example.</FONT></P>
+<P><FONT face="times new roman,times">Here is what is supposed to happen (see the Devanagari Unicode table):</FONT></P>
+<P><FONT face="times new roman,times">Let + be short for the words "followed by" in the example below</FONT></P>
+<P><FONT face="times new roman,times">0938 + 094d + 0925</FONT></P>
+<P><FONT face="times new roman,times">This sort of thing works just fine in MOST cases.&nbsp; The 2 letters are combined into a glyph &amp; are properly rendered on-screen</FONT></P>
+<P><FONT face="times new roman,times">However, if the last code point in the example is created by using a dead key (dead key + someKeystroke), the 2 letters do NOT combine into a new glyph as they do all the other times.&nbsp; If you then move the cursor backwards on the screen to select the letters of the word, then the glyph fixes itself and properly renders!</FONT></P>
+<P><FONT face="times new roman,times">So I've found a way around this by simply not using dead keys but it makes for a less convenient keyboard mapping.</FONT></P>
+<P><FONT face="times new roman,times">What's happening here?&nbsp; I saw an article where one of your readers said something about Rich Edit causing something like this.&nbsp; It was a small and somewhat vague remark.&nbsp; Could this be the case here?&nbsp; I don't mean for you to spend a lot of time on this.&nbsp; If you could just point me in the right direction to understand what is happening, I'd be grateful.</FONT></P>
+<P><FONT face="times new roman,times">Thanks again Michael.&nbsp; Tell your boss that I said you're doing a great job!</FONT></P>
+<P><FONT face="times new roman,times">Dharma</FONT></P></BLOCKQUOTE>
+<P>It is funny, a colleague of mine was talking about this "feature" recently.</P>
+<P>He was talking about RichEdit though he explained how the same feature existed in Word.</P>
+<P>The feature?</P>
+<P>Well, providing rendering smarts by using information about the keyboard and the input stream.</P>
+<P>This may be what is interferring here.</P>
+<P>A good way to check is to take the text that looks good in the other apps, copy it, then paste it into Word (or RichEdit).</P>
+<P>If it looks right in both then it is the keyboard "smarts", if not then read on....</P>
+<P>Now that I think about it, I am goint to a priori blame Indic sequence checking in this case (ref: <A href="http://archives.miloush.net/michkap/archive/2007/03/05/1807683.html" mce_href="http://archives.miloush.net/michkap/archive/2007/03/05/1807683.html"><STRONG>You're not the one out of sequence, and that's the Word</STRONG></A>), since that is one that you can verify being the problem by turning off the feature&nbsp;and seeing what happens!</P>
+<P>The problem with the sequence checking is its assumptions about the way proper input looks can be entirely unforgiving in such cases if it does not recognize the nature of the input (like this keyboard may be causing for it).</P>
+<P>The best fix there is to turn it off, always, as it breaks proper use of language in so many cases with its provincial and narrow view of what constitutes normal input....</P>
+<hr/><div style="margin-left: 1em"><em>no comments</em></div><hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2010/05/20/10013737.html" title="Attempting to discourage some variations?">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2010/05/18/9997861.html" title="All right, guys, uh, listen. This is a locale in Windows, watch me for the changes, and try and keep up, okay?">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2010-05">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2010-05-19">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2010/05/19/10009920.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:35 GMT -->
+</html>

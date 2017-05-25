@@ -1,0 +1,56 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2010/10/15/10076268.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>"Breaking changes" are mostly about potential, not realization</title></head><body>
+<h1>"Breaking changes" are mostly about potential, not realization</h1>
+<p><em>by Michael S. Kaplan, published on 2010/10/15 07:01 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2010/10/15/10076268.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<p>"Breaking changes" is often referring to the contract of both an interface's definition and its&nbsp;behavior, which makes it one crazyass metric. </p>
+<p>Much moreso for the latter than the former, because the former's "break" potential is direct a compile-time issue, while the latter'as "break" potential is a nebulous theoretical issue once you move past the "elementary school" issues of exception types.</p>
+<p>Bundlng all of this in one place is ridiculous since it is like bundling up your apples with your seas otters.</p>
+<p>Take me word for it, this is a bad idea; when I have done this in the past, my sea otters have eaten my apples every time.</p>
+<p>So for the rest of this blog, let's assume I have added a define:</p>
+<p>#define BREAKING_CHANGE SutbleBehaviorChangesThatBreakAppsWhenYouMayLeastExpect</p>
+<p>and just make that part easier, since the problem I am limiting the definition to is enough on its own....</p>
+<p>You may have noticed earlier this month that when I wrote <a href="http://archives.miloush.net/michkap/archive/2010/10/04/10070978.html" title="Figuring out the applicability of the term &quot;breaking change&quot;"><strong>Figuring out the applicability of the term "breaking change"</strong></a>, I palmed a card there. Lots of you didn't but a few of you did.</p>
+<p>What did I do?</p>
+<p>Well, by focusing only on the behavior at two levels of granularity:</p>
+<ul>
+<li>the level of an individual data change in a locale, and</li>
+<li>the level of the bundle of many changes made in one release</li>
+</ul>
+<p>the simple fact that every version is guaranteed to have changes makes the second level a guaranteed expectation of a breaking change that every application simply must assume as both past behavior and future intent will apply their own behavioral correction on anyone who refuses to allow the facts to intrude on their world view.</p>
+<p><em>Note that .Net 4.0 forces managed code developers to learn the same lesson for managed culture changes, an issue they were largely shielded from in all previous versions!</em></p>
+<p>That blog post is a very reasonable method of framing the question in a way that lets one control the direction the conversation will take.</p>
+<p>If you read it, then sorry if you feel manipulated. :-)</p>
+<p>Now it is time to widen the problem a bit and see if I can make the issue a little more complicated!</p>
+<p>We'll start with the rule.</p>
+<p>The main rule.</p>
+<p>The rule we never never never want to break.</p>
+<p><span style="font-size: large;">We never change locale data except in new OS versions.</span></p>
+<p>Even after we make a change in a new version, we do not go back and change prior versions.</p>
+<p>Easy, right?</p>
+<p>There are very good reasons for this, but one of the most important ones relates to both managed code that parses data formatted according a specific culture and any work that another developer has done to do the same thing with locale-specific formatting. Because if any of the formats change within&nbsp;a single version then code that would never have broken can suddenly break.</p>
+<p>And that is lame, when it happens.</p>
+<p>So from a "breaking change" application compatibility standpoint, this is a very careful and deliberate rule that avoids breaking customers.</p>
+<p>Then of course every good rule kind of begs for an exception.</p>
+<p>And that exception?</p>
+<p><span style="font-size: large;">Currency updates with the likely potential of huge impact on large customer segments that have a reasonable expectation of the change occurring.</span></p>
+<p>Both the initial update of many countries to change their currency to the Euro and later updates as new countries joined the Euro zone&nbsp;were judged to fall into the category carved by this exception. And thus far every country moving to start using the Euro as their currency has enjoyed this privileges of membership of this category</p>
+<p>Other updates with smaller impact have had mixed results -- some have been taken even when only some of the dimensions&nbsp;of this exception's requirements are proven, many more have not.</p>
+<p>Each of those two groups will have both people in it </p>
+<ul>
+<li>grateful for the results (in one case because people got the change they wanted and in the other because their apps kept working) and </li>
+<li>angry about them (in one case because it broke their application and in the other case because Microsoft is not picking up a change that they consider crucial).</li>
+</ul>
+<p>I won't go so far as to say there is always a completely consistent bar applied here, because the decision is so often dependent on how compelling of a case is made and how backed up by facts it is -- above and beyond the obvious objective points like "national standard" and such --&nbsp;and those more subjective requirements can often drag the issue either over the finish line or into the penalty box, by the time all is said and done.</p>
+<p>You may even have your own examples of the past in your mind as you read this blog. </p>
+<p>And perhaps even prior blogs on <a href="http://archives.miloush.net/michkap/archive/2010/03/18/9976688.html"><strong>Turkish</strong></a> or <a href="http://archives.miloush.net/michkap/archive/2010/06/01/10017368.html"><strong>Kazakh</strong></a> or <a href="http://archives.miloush.net/michkap/archive/2010/04/12/9993605.html"><strong>Paraguayan</strong></a>, and so on. I suspect it will always be this way.</p>
+<p>Okay, now that I have tried to outline everything in a way that I think is all reasonable, it is now your turn to rip holes in this and explain why too much is changing, or not enough is.</p>
+<p>Ready? Set? Go!</p>
+<hr/><p><strong>Mihai</strong> on 15 Oct 2010 10:52 AM:</p><div style="margin-left: 1em"><p>Here is another exception (hidden for now, and hopefully not manifested too soon): the Japanese era. It is now possible to add some more by changing the registry. And that feature might be needed at some point. With even shorter notice than a currency change.</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 15 Oct 2010 10:59 AM:</p><div style="margin-left: 1em"><p>Yep, I&#39;ve talked about that one before too. But I didn&#39;t want to seem morbid. :-)</p>
+</div>
+<hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2010/10/16/10076687.html" title="The ordinary nature of being exciting">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2010/10/14/10074498.html" title="Where&#39;d that font go? Was it ever in there?">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2010-10">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2010-10-15">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2010/10/15/10076268.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+</html>

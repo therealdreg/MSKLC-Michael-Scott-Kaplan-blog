@@ -1,0 +1,29 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2006/09/27/773448.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:39 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>'for' handling Unicode? That would be running against 'type'</title></head><body>
+<h1>'for' handling Unicode? That would be running against 'type'</h1>
+<p><em>by Michael S. Kaplan, published on 2006/09/27 05:04 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2006/09/27/773448.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<FONT face=Tahoma>
+<P>Tony's question was straightforward enough: </P>
+<BLOCKQUOTE dir=ltr style="MARGIN-RIGHT: 0px"><FONT face="Times New Roman" size=2>
+<P>I have a CMD file that attempts to read and parse the contents of a text file but fails due to the file being Unicode. Is there any way to get For to process the file as Unicode or do I need to copy the file to ANSI?<BR><BR>I’ve attached Unicode and Ansi text files and if you execute the following “For” lines you’ll see that the Unicode version does not output any results.<BR><BR>C:\&gt;For /F %a In (readmeBuildAnsi.txt) Do echo %a<BR><BR>C:\&gt;echo Update<BR><BR>Update<BR><BR>C:\&gt;For /F %a In (readmeBuildUnicode.txt) Do echo %a<BR><BR>C:\&gt;</P></FONT></BLOCKQUOTE>
+<P>What Tony has run across is one of those pieces of the console that is unapologetically non-Unicode, even when you run CMD with the /U flag that "Causes the output of internal commands to a pipe or file to be Unicode". </P>
+<P>It is hardly alone here, as there are many pieces of the console that do not support Unicode. </P>
+<P>Though Stephen Malcolm suggested a good workaround for this particular issue: </P>
+<BLOCKQUOTE dir=ltr style="MARGIN-RIGHT: 0px"><FONT face="Times New Roman" size=2>
+<P>Did you try?<BR><BR>for /f %a in ('type readmebuildunicode.txt') do @echo %a<BR><BR>It appears that the for command doesn’t recognize Unicode files natively but type does.</P></FONT></BLOCKQUOTE>
+<P>This is quite true -- the type command actually goes through special effort to support Unicode parsing of the files it processes, and it can be used to do the heavy lifting in many of these cases.</P>
+<P>Stephen also pointed out another example of this kind of use of the <STRONG>type</STRONG> command, this time using the non-Unicode <STRONG>findstr.exe</STRONG>:</P>
+<BLOCKQUOTE dir=ltr style="MARGIN-RIGHT: 0px"><FONT face="Times New Roman" size=2>
+<P>Another pain with Unicode files is trying to search them with findstr. This command doesn’t understand Unicode files but you can still you it by doing the following:<BR><BR>type &lt;file&gt;|findstr &lt;search_string&gt;<BR><BR>This works for the same reason, because type does recognize Unicode files.</P></FONT></BLOCKQUOTE>
+<P>The key here (and the reason that this is such an effective workaround, generically) is that what <STRONG>type</STRONG> does is put the text into one of the standard handles, and once it is there then any tool or command can have better luck processing it (because it will be converted out of Unicode and into the console's code page, which all of the non-Unicode command line tools and console commands can handle. </P>
+<P>Of course the downside is that these non-Unicode tools will not be able to do meaningful processing on Unicode data outside of that code page; the workaround is simply making it easier for the non-Unicode tools to work as they always would (I would actually love a Unicode findstr!).</P>
+<P>But I guess we'll have to wair for Monad....er, PowerShell, for a better Unicode story here&nbsp;in the bulk of the console's processing....</P>
+<P>&nbsp;</P>
+<P><FONT color=#ff1493><EM>This post brought to you by</EM>&nbsp;<FONT size=6>U</FONT> <EM>(<A href="http://www.fileformat.info/info/unicode/char/0055">U+0055</A>, a.k.a. LATIN CAPITAL LETTER U)</EM></FONT></P></FONT>
+<hr/><p><strong>Adam</strong> on 27 Sep 2006 5:58 AM:</p><div style="margin-left: 1em">What do you mean by &quot;won't be able to do meaningful processing&quot;? If the unicode file contains characters that are not available in the console's code page, what happens? Are all characters converted to some kind of marker (&quot;?&quot;?); is conversion stopped and an error generated? Something else?<br></div>
+<p><strong>Michael S. Kaplan</strong> on 27 Sep 2006 6:30 AM:</p><div style="margin-left: 1em">They get question marks, Conversion continues but data is clearly lost....</div>
+<hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2006/09/28/774885.html" title="When they move everything around and change the signs">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2006/09/27/773341.html" title="LOCALE_SABBREVLANGNAME is more than just an ISO-639 code">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2006-09">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2006-09-27">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2006/09/27/773448.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:39 GMT -->
+</html>

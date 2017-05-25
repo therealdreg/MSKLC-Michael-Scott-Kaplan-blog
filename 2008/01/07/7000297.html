@@ -1,0 +1,36 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2008/01/07/7000297.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:36 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>How does Microsoft 'manage' to not correct a spelling error, exactly?</title></head><body>
+<h1>How does Microsoft 'manage' to not correct a spelling error, exactly?</h1>
+<p><em>by Michael S. Kaplan, published on 2008/01/07 10:16 -05:00, original URI: http://blogs.msdn.com/b/michkap/archive/2008/01/07/7000297.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P><EM><FONT color=#ff0000>From the recently pre-recorded blogs collection...</FONT></EM></P>
+<P>Flashback. Well, rewind and flashback. Not too far...</P>
+<P>Way back in May of 2005, Denis Onischenko <A class="" href="http://www.dotnetmonster.com/Uwe/Forum.aspx/dotnet-internationalization/251/CultureInfo-NativeName-BUG" mce_href="http://www.dotnetmonster.com/Uwe/Forum.aspx/dotnet-internationalization/251/CultureInfo-NativeName-BUG">mentioned</A>:</P>
+<BLOCKQUOTE>
+<P><EM>NativeName property of "uk" and "uk-UA" CultureInfo is misspelled.</EM></P></BLOCKQUOTE>
+<P>A few clarifying questions later and the problem was clear: both the .NET <A class="" href="http://msdn2.microsoft.com/library/system.globalization.cultureinfo.nativename.aspx" mce_href="http://msdn2.microsoft.com/library/system.globalization.cultureinfo.nativename.aspx">CultureInfo.NativeName</A> property and the return of Win32 NLS&nbsp;API call <A class="" href="http://msdn2.microsoft.com/library/ms776270.aspx" mce_href="http://msdn2.microsoft.com/library/ms776270.aspx">GetLocaleInfo</A> with LOCALE_NATIVELANGNAME&nbsp;return</P>
+<BLOCKQUOTE>
+<P><FONT size=5>україньска</FONT></P></BLOCKQUOTE>
+<P>instead of</P>
+<BLOCKQUOTE>
+<P><FONT size=5>українська</FONT></P></BLOCKQUOTE>
+<P>I got the word off to the <A class="" href="http://blogs.msdn.com/kierans" mce_href="http://blogs.msdn.com/kierans">data owner at the time</A> and she&nbsp;got the fix in. Now Vista spells the language name Ukranian spelled in Ukrainian right.</P>
+<P>Downlevel on Windows, the bug is not fixed. Because while a misspelling is embarrassing, it has also existed in Windows since Ukrainian was added in NT 4.0 and it is a really a challenge to call it a security bug that needs to be fixed. The string is not available in the UI (except <EM>maybe</EM> in installation and/or UI&nbsp;language list after installation of the XP Ukrainian LIP (first mentioned here back in <A class="" href="http://archives.miloush.net/michkap/archive/2005/02/10/370460.html" mce_href="http://archives.miloush.net/michkap/archive/2005/02/10/370460.html"><STRONG>Microsoft, you giving us some LIP?</STRONG></A>). To date, no one has ever (as far as I know) reported the problem on any Windows platform....</P>
+<P>Of course, it has now been nearly 2.5 years and several versions of the .NET Framework have shipped, yet the bug is still not fixed in the managed case and the <A class="" href="http://msdn2.microsoft.com/library/system.globalization.cultureinfo.nativename.aspx" mce_href="http://msdn2.microsoft.com/library/system.globalization.cultureinfo.nativename.aspx">CultureInfo.NativeName</A> property, though that has to do with the fact that little to no updates have been made to the built-in data in the .NET Framework in any of those releases (if memory serves&nbsp;a bunch&nbsp;of&nbsp;bug fixes&nbsp;from the XP SP2 locale work were picked up, but I think there were some bugs in those updates not found until it was too late to fix them, which soured people on the update story a tad?).</P>
+<P>The impact is that this misspelling is still sitting there in .NET even in the Orcas release, which is enduring proof that Microsoft can't always manage to spell thing correctly....</P>
+<P>Now how important is this kind of bug? Hard to say. I mean, how many people would think if weird if I talked about <STRONG>Sotring it all Out, Mihcael Kalpan's radnom stuff of duboius value</STRONG>, other than me? some bugs are just really embarrassing....</P>
+<P>In the end, I honestly have no real clue when a fix or update is planned here.</P>
+<P>To get a report on this letter we will head over to <A class="" href="http://www.ukrainianpower.com/game/alphabet.html" mce_href="http://www.ukrainianpower.com/game/alphabet.html">Ukrainian Power</A> and ask Boomchyk how a real Ukrainian person would pronounce what under-Ukrainian-educated unicode folks like myself call the&nbsp;CYRILLIC SMALL LETTER SOFT SIGN. Thanks, Boomchyk!</P>
+<P><EM>Hmmm.... I&nbsp;wish I could have gotten out of doing fifth grade spelling tests for Ms. Simon with a note from Microsoft about it!</EM></P>
+<P mce_keep="true">&nbsp;</P>
+<P><FONT color=#ff00ff><EM>This post brought to you by</EM><FONT size=5> ь </FONT><EM>(<A class="" href="http://www.fileformat.info/info/unicode/char/044c" mce_href="http://www.fileformat.info/info/unicode/char/044c">U+044c</A>, aka CYRILLIC SMALL LETTER SOFT SIGN)</EM></FONT></P>
+<hr/><p><a id="7017690" href="#7017690">#</a> <strong>Igor Tandetnik</strong> on 7 Jan 2008 12:24 PM:</p><div style="margin-left: 1em"><p>The soft sign is silent. What it does is alter the pronunciation of the preceding consonant. For example, 'н' (cyrillic letter en) usually sounds like 'n' in 'no'. 'нь' (en followed by soft sign) sounds like 'n' in 'new'.</p>
+<p>Boomchyk doesn't really pronounce the soft sign (it doesn't have a pronunciation of its own), but spells out the letter's name. That is, he literally says &quot;soft sign&quot;.</p></div>
+<p><a id="7017886" href="#7017886">#</a> <strong>Michael S. Kaplan</strong> on 7 Jan 2008 12:44 PM:</p><div style="margin-left: 1em"><p>Like how I look at &quot;W&quot; and say &quot;double you&quot; in English -- the letter name is not the letter sound (and for this letter that is the only choice since it has no independent sound of it own...). </p>
+<p>Cool!</p>
+</div>
+<p><a id="7019058" href="#7019058">#</a> <strong>John Cowan</strong> on 7 Jan 2008 2:27 PM:</p><div style="margin-left: 1em"><p>Note that most anglophones in the Western Hemisphere pronounce &quot;no&quot; and &quot;new&quot; the same way, with the hard (non-palatalized) &quot;n&quot;. &nbsp;Spanish n-tilde or French/italian gn is more like it.</p></div>
+<hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2008/01/07/7011593.html" title="Baby, you had me at Oscar Wilde....">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2008/01/06/7002043.html" title="Barack Obama sorts it all out?">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2008-01">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2008-01-07">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2008/01/07/7000297.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:36 GMT -->
+</html>

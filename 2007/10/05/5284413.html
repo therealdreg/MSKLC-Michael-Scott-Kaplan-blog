@@ -1,0 +1,60 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2007/10/05/5284413.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:37 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Cracking the binary (aka How to open .MUI files?)</title></head><body>
+<h1>Cracking the binary (aka How to open .MUI files?)</h1>
+<p><em>by Michael S. Kaplan, published on 2007/10/05 10:31 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2007/10/05/5284413.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P>Developer Andrew asked:</P>
+<BLOCKQUOTE>
+<P class=MsoNormal><EM><FONT face="times new roman,times">Can anyone suggest how to view/dump resources in readable format from mui file?<BR><BR>I need to find out if a MUI file contains particular dialog resource or string resource.<BR><BR>Thanks,<BR>Andrew</FONT></EM></P></BLOCKQUOTE>
+<P>And I&nbsp;figured as long as I was going to answer <A class="" href="http://archives.miloush.net/michkap/archive/2007/10/05/5283962.html" mce_href="http://archives.miloush.net/michkap/archive/2007/10/05/5283962.html"><STRONG>Cory's&nbsp;.MUI file question</STRONG></A>, it might be a good time to answer this one. :-)</P>
+<P>Lily, one of the great SDE/Ts in Windows International (and someone who has probably had to deal with this very problem in the past many times!) pointed out something that most people don't realize (in fact in a casual survey of developers at Microsoft outside of our building, fewer than 20% of them knew it, including me!):</P>
+<BLOCKQUOTE>
+<P><FONT face="times new roman,times">You can rename the MUI file, e.g. foo.dll.mui to foo.dll,&nbsp; then open it using Visual studio. </FONT></P></BLOCKQUOTE>
+<P>And then ace developer Jay pointed out something that I did know about (though not as it relates to .MUI files since as I mentioned I did not know that they were DLLs):</P>
+<BLOCKQUOTE>
+<P><FONT face="times new roman,times"><EM>You don't have to rename the file.<BR>In the VC file.open dialog boxes there is an "open as" or "open with" drop down.<BR>Select "resources" or "resource editor".<BR>It's also trivial to write a custom dumper yourself starting with&nbsp; the EnumResource APIs...</EM></FONT></P></BLOCKQUOTE>
+<P>It is actually amazing how rich some of the VS functionality is that is hidden by its own notions of "known file types" for various operations. It is very easy to override, too -- something that I hope gets to be even more intuitive.</P>
+<P>And maybe in some future version (since they are going out with a resource compiler that can build .MUI files) they could put them on their list of known binaries for resource loading!</P>
+<P>In the meantime, it is nice that this feature simply works. :-)</P>
+<P mce_keep="true">&nbsp;</P>
+<P><FONT color=#ff00ff><EM>This post brought to you by </EM>&nbsp;<FONT size=3>྾</FONT>&nbsp; <EM>(<A class="" href="http://www.fileformat.info/info/unicode/char/0fbe" mce_href="http://www.fileformat.info/info/unicode/char/0fbe">U+0fbe</A>, a.k.a. TIBETAN KU RU KHA)</EM></FONT></P>
+<hr/><p><strong>Krishna Kumar</strong> on 25 Feb 2010 3:57 AM:</p><div style="margin-left: 1em"><p>Hi Thanks for the valid information, but how windows will use this files internally, what will happen when i click right click on desktop. How windows will display the context menu. Which message handler will get execute when i click refresh?</p>
+<p>Thanks in advance.</p></div>
+<p><strong>Michael S. Kaplan</strong> on 25 Feb 2010 10:10 AM:</p><div style="margin-left: 1em"><p>They are DLLs that hold resources, but the Shell doesn't think of them that way. So they look like unknown files....</p>
+</div>
+<p><strong>Vinzy</strong> on 10 Aug 2010 2:16 PM:</p><div style="margin-left: 1em"><p>Is there a way to read strings from loaded MUI files, say shell32.dll.mui using C#?</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 11 Aug 2010 8:05 AM:</p><div style="margin-left: 1em"><p>Vinzy, see <a href="http://archives.miloush.net/michkap/archive/2010/08/11/10048694.html">here</a> for the response to your question....</p></div>
+<p><strong>ph_arnaud</strong> on 17 Jan 2011 9:40 AM:</p><div style="margin-left: 1em"><p>Hello,</p>
+<p>I try to modify some dialogs or strings of a MUI opened in Visual Studio 2008/2010 (using Visual Studio as a sort of binary editor) and save, but there is an error saving (&quot;Cannot save file&quot;).</p>
+<p>Why can Visual Studio modify and save other Win32 (non MUI) dlls with resources, but not MUI format files?</p>
+<p>I tried with both a test app I created using MUIRCT.exe and also with the notepad.exe.mui file. &nbsp;Same results.</p>
+<p>thanks,</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 17 Jan 2011 10:02 AM:</p><div style="margin-left: 1em"><p>Modifying Microsoft Windows&#39;s own binaries is an unsupported violation of the Windows license....</p>
+</div>
+<p><strong>ph_arnaud</strong> on 18 Jan 2011 6:09 AM:</p><div style="margin-left: 1em"><p>The purpose and question is to localize/translate our own MUI app with a binary localization process.</p>
+<p>Since the binary loc tool was able to load our .MUI file, but not save it, I tried to do the same modification to our .MUI file with Visual Studio 2008/2010 (which normally has the capability to modify the resources of Win32 res.dlls binaries.)</p>
+<p>Visual Studio shows the same behavior as the binary localization tool, it can load, but not save our .MUI file.</p>
+<p>Can Visual Studio modify and save any .MUI files?</p>
+<p>I&#39;d expect yes since the help says the .MUI file is just standard Win32 resources with a new resource type of MUI, and the help does mention the possibilty of binary localization.</p>
+<p>As soon as I delete the custom RCDATA resource of type &quot;MUI&quot; Visual Studio can save the file successfully, except of course the file is not a valid MUI one without the MUI resource. &nbsp;If I change the MUI resource number to something different than 1 (the default), it also saves successfully, but of course it needs to be 1, to work as a MUI file.</p>
+<p>thanks,</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 18 Jan 2011 6:36 AM:</p><div style="margin-left: 1em"><p>Visual Studio is (as the blog indicates) rather ignorant of .MUI files, and it is also not a typical localizer&#39;s tool. There are several tools inside and outside of Microsoft that do a good job of binary localization with .MUI files and they *are* tools that localizers use, so generally I&#39;d push people in that direction before I&#39;d hope for VS to shore up the scenario....</p>
+</div>
+<p><strong>ph_arnaud</strong> on 19 Jan 2011 2:46 AM:</p><div style="margin-left: 1em"><p>From a few more tests, I find that our binary localization tool and Visual Studio 2008 can open/edit and save the .MUI file on Windows XP.</p>
+<p>However on Windows Vista and Windows 7, neither our binary localization tool nor Visual Studio 2008 can save the .MUI file anymore (open/edit still ok).</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 19 Jan 2011 5:48 AM:</p><div style="margin-left: 1em"><p>I don&#39;t know what your tool is, but there are tools both inside and outside of Microsoft that are able to work here, even if VS or your tool&nbsp;do not. My answer is the same....</p></div>
+<p><strong>Uwe Philipps</strong> on 9 Sep 2011 1:48 AM:</p><div style="margin-left: 1em"><p>Is there a documentation of the resource configuration data within a .mui file? It&#39;s in the &quot;MUI&quot; resource.</p>
+<p>I&#39;m developer for one of the &quot;tools outside Microsoft&quot; for software localization, and we need to modify/create the MUI resource data.</p>
+</div>
+<p><strong>anmol</strong> on 11 Jun 2012 2:30 AM:</p><div style="margin-left: 1em"><p>i have recently downloaded a theme file of mui format but how cn i open it i dint know .please help me </p>
+</div>
+<p><strong>Mohammed Goder</strong> on 27 Jun 2013 9:38 PM:</p><div style="margin-left: 1em"><p>Just use ResHacker: <a rel="nofollow" target="_new" href="http://www.angusj.com/resourcehacker/">www.angusj.com/resourcehacker</a></p>
+</div>
+<hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2011/03/11 <a href="http://archives.miloush.net/michkap/archive/2011/03/11/10139662.html">A resource segue, #2 (architecting the wheels off the wagon, a bit)</a></p><p>2010/08/11 <a href="http://archives.miloush.net/michkap/archive/2010/08/11/10048694.html">Loading the strings from the MUI file?</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2007/10/05/5285665.html" title="From partially broken to fully broken in just a couple of versions">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2007/10/05/5283962.html" title="Creating the binary (aka How to make .MUI files?)">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2007-10">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2007-10-05">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2007/10/05/5284413.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:37 GMT -->
+</html>

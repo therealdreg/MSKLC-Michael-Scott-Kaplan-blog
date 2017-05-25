@@ -1,0 +1,40 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2007/11/13/6122573.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:37 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>I know that header file is around here somewhere</title></head><body>
+<h1>I know that header file is around here somewhere</h1>
+<p><em>by Michael S. Kaplan, published on 2007/11/13 10:16 -05:00, original URI: http://blogs.msdn.com/b/michkap/archive/2007/11/13/6122573.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P>Over in the microsoft.public.win32.programmer.international newsgroup, JohnD asked:</P>
+<BLOCKQUOTE>
+<BLOCKQUOTE>
+<P><FONT face="times new roman,times"><EM>Hello all,<BR><BR>I have an interest in calling KbdLayerDescriptor.<BR><BR>Michaels blog here:<BR><BR></EM></FONT><A href="http://archives.miloush.net/michkap/archive/2004/12/22/329657.html"><FONT face="times new roman,times"><EM>http://blogs.msdn.com/michkap/archive/2004/12/22/329657.aspx</EM></FONT></A><BR><BR><FONT face="times new roman,times"><EM>reports that the return of KbdLayerDescriptor is defined in "kdb.h".<BR><BR>I've downloaded the "Windows Driver Kit for Windows Vista", but I cannot find kbd.h or anything relevant in there.<BR><BR>Where can I get kbd.h? Is it part of one of the other Microsoft SDKs/DDKs?<BR><BR>Thanks in advance.<BR><BR>/john</EM></FONT></P></BLOCKQUOTE></BLOCKQUOTE>
+<P>If JohnD had asked in the blog's Suggestion Box or as a reply to that post (<A class="" href="http://archives.miloush.net/michkap/archive/2004/12/22/329657.html" mce_href="http://archives.miloush.net/michkap/archive/2004/12/22/329657.html"><STRONG>%WINDIR%\system32\kbd*.dll</STRONG></A>) I probably would have seen the question sooner!:-)</P>
+<P>Anyway, I have had several of the&nbsp;various DDK/WDK packages installed plus being enlisted in various source code projects at Microsoft, so here are&nbsp;three reliable places to find the file:</P>
+<UL>
+<LI>If you are internal to Microsoft&nbsp;and work in a source code project that picks up the NT Publics, it can be found at <STRONG>oak\inc\kbd.h</STRONG>.</LI>
+<LI>If you have MSKLC 1.3 or 1.4 installed, it can be found in the MSKLC installation directory,&nbsp;at <STRONG>inc\kbd.h</STRONG>.</LI>
+<LI>If you install the <A class="" href="http://www.microsoft.com/whdc/devtools/wdk/default.mspx" mce_href="http://www.microsoft.com/whdc/devtools/wdk/default.mspx">Windows Driver Kit</A>, it can be found in the WDK install directory, under <STRONG>inc\api\kbd.h</STRONG> (sample projects using it can be found in the WDK install directory&nbsp;under <STRONG>src\input\layout</STRONG>).</LI></UL>
+<P>There are other DDK/WDK type installations that also have it, so in all likelihood if you have one installed some casual spelunking through <STRONG>inc</STRONG> directories might be worth a look.</P>
+<P>John had a follow-up question a few days later after he found the file (on his own, via the third bullet point above):</P>
+<BLOCKQUOTE>
+<P><EM><FONT face="times new roman,times">Am I correct in assuming that typedef KbdLayerDescriptor returns a struct tagKbdLayer?</FONT></EM></P></BLOCKQUOTE>
+<P>This is a great time to look at those samples I mention above -- with the exception of conceptual topics, code is always the best documentation, dontcha think? :-)</P>
+<P>I must admit that I am always curious about what people are trying to do when they want to call a keyboard layout DLL directly. It has come up probably about 15 times over the last five years, in all but one case it was not really what was needed....</P>
+<P mce_keep="true">&nbsp;</P>
+<P><FONT color=#ff00ff><EM>This post brought to you by</EM><FONT size=6> ᢤ </FONT><EM>(<A class="" href="http://www.fileformat.info/info/unicode/char/18a4" mce_href="http://www.fileformat.info/info/unicode/char/18a4">U+18a4</A>, a.k.a. MONGOLIAN LETTER MANCHU ALI GALI ZHA<FONT size=1> - a letter that is not on the Vista keyboard for Mongolian, for hopefully obvious reasons?</FONT>)</EM></FONT></P>
+<hr/><p><a id="6216219" href="#6216219">#</a> <strong>John Daintree</strong> on 14 Nov 2007 11:38 AM:</p><div style="margin-left: 1em"><p>Hello Michael,</p>
+<p>Thanks for that, it looks very promising. &nbsp;The reason I want this is that I want to be able to display in my GUI the keystroke combinations needed to generate a particular character. I'm hoping that &nbsp;KbdLayerDescriptor will allow me to do that.</p>
+<p>Thanks, Again,</p>
+<p>John</p></div>
+<p><a id="6216978" href="#6216978">#</a> <strong>Michael S. Kaplan</strong> on 14 Nov 2007 11:59 AM:</p><div style="margin-left: 1em"><p>Actually, you can also use the supported USER32 functionality to do this -- you can look at the series I did at <a rel="nofollow" target="_new" href="http://archives.miloush.net/michkap/archive/2006/04/22/581107.html">http://blogs.msdn.com/581107.aspx</a> for more info (that is the last post in the series, it has links to all the previous ones).</p>
+</div>
+<p><a id="6224003" href="#6224003">#</a> <strong>Gene</strong> on 14 Nov 2007 3:14 PM:</p><div style="margin-left: 1em"><p>OK, I give up... why isn't U+18A4 not on the keyboard, and why is the reason obvious?</p></div>
+<p><a id="6225759" href="#6225759">#</a> <strong>Michael S. Kaplan</strong> on 14 Nov 2007 4:01 PM:</p><div style="margin-left: 1em"><p>For the same reason that the English keyboards are missing some letters used for Hungarian -- because that letter is used for Manchu and Ali Gali. :-)</p>
+</div>
+<p><a id="6253484" href="#6253484">#</a> <strong>John Daintree</strong> on 15 Nov 2007 5:45 AM:</p><div style="margin-left: 1em"><p>Michael,</p>
+<p>You are, of course, correct. VkKeyScan gives me the information I need. &nbsp; &nbsp; I'd tried VkKeyScan earlier, on a non-&quot;Microsoft Keyboard Layout Creator&quot; keyboard and it had not worked, so I had discounted it. In hindsight I should have realized that VkKeyScan would have to call KbdLayerDescriptor to get the job done.</p>
+<p>Thanks for pointing me in the right direction.</p>
+<p>/john</p></div>
+<hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2011/03/24 <a href="http://archives.miloush.net/michkap/archive/2011/03/24/10145161.html">Knowing the layout doesn't mean knowing how to lay it out....</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2007/11/13/6162269.html" title="Even if you aren&#39;t expecting a 51.35 pound package, you shouldn&#39;t refuse delivery">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2007/11/12/6139309.html" title="I&#39;m simply saying that life^H^H^H^Hcharacters, uh... find a way">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2007-11">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2007-11-13">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2007/11/13/6122573.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:37 GMT -->
+</html>

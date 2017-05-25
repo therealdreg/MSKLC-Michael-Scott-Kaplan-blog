@@ -1,0 +1,71 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2012/02/09/10265712.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Keeping a sense of *order* about the RATIO!</title></head><body>
+<h1>Keeping a sense of *order* about the RATIO!</h1>
+<p><em>by Michael S. Kaplan, published on 2012/02/09 07:01 -05:00, original URI: http://blogs.msdn.com/b/michkap/archive/2012/02/09/10265712.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<p>Today's blog starts with an inspirational video <em>(</em><strong>warning</strong><em>: fairly safe for work other than some language)</em> to set the stage:</p>
+<p><object width="560" height="315"><param name="movie" value="http://www.youtube.com/v/OQBOC1OPWyU?version=3&amp;hl=en_US" /><param name="allowFullScreen" value="true" /><param name="allowscriptaccess" value="always" /><embed height="315" type="application/x-shockwave-flash" width="560" src="http://www.youtube.com/v/OQBOC1OPWyU?version=3&amp;hl=en_US" allowscriptaccess="always" allowfullscreen="true" /></object></p>
+<p>Now we laugh -- and especially fans and regular readers of <strong>this</strong> Blog will laugh -- at the idea of a video game meant to be so amazingly and intensely realistic that could get something as basic as the <em>language</em> wrong.</p>
+<p><em>Keep in mind that both Bing and Google do with "Pakistan Language" -- for those fans of Bing out there!</em></p>
+<p>Anyway, regular&nbsp;readers may remember how back in December I blogged <strong><a title="The evolving Story of Locale Support, part 12: Logic dictates that we keep a sense of proportion about the RATIO" href="http://archives.miloush.net/michkap/archive/2011/12/09/10246051.html">The evolving Story of Locale Support, part 12: Logic dictates that we keep a sense of proportion about the RATIO</a></strong>, telling the story how in Windows 8 some work was being put into using RATIO (U+2236) rather than COLON (U+0039) in some of the time values, since the placement of the lower dot in the RATIO is&nbsp; much more like the way you would expect to see it in digital clocks and such.</p>
+<p>Since the thing you always thought was a COLON kind of wasn't!</p>
+<p>I had some people ask&nbsp;me offline whether the locale data would also be changing so that the <a href="http://msdn.microsoft.com/library/windows/desktop/dd373896.aspx">LOCALE_STIMEFORMAT</a> and <a href="http://msdn.microsoft.com/library/windows/desktop/dd373891.aspx">LOCALE_SSHORTTIME</a>&nbsp;and <a href="http://msdn.microsoft.com/library/windows/desktop/dd373842.aspx">LOCALE_SDURATION</a>&nbsp;would be changing for all our locales.</p>
+<p><strong>No way!</strong> is what I told them -- who would want to change all the code to accept is as a new "expected" <a href="http://msdn.microsoft.com/library/windows/desktop/dd373896.aspx">LOCALE_STIME</a> character or change every single time and duration format to have a bunch of literals in them, plus change the data either way?</p>
+<p>Nasty.</p>
+<p>But there is another good reason, one that you can find&nbsp;in the Unicode Character Database&nbsp;<a href="http://www.unicode.org/Public/UNIDATA/UnicodeData.txt">UnicodeData.txt</a>&nbsp;info for the two characters:</p>
+<p style="padding-left: 30px;"><span style="font-size: large;"><strong><span style="font-family: courier new,courier;">003A;COLON;Po;0;CS;;;;;N;;;;;</span></strong></span></p>
+<p style="padding-left: 30px;"><strong><span style="font-family: courier new,courier; font-size: large;">2236;RATIO;Sm;0;ON;;;;;N;;;;;</span></strong></p>
+<p>These two Unicode characters have more differences than the slightly-better-put-together bottom on the RATIO.</p>
+<p>One (the COLON) is GeneralCategory==Po (Punctuation, Other) and BidiClass==CS (Common Number Separator).</p>
+<p>So saying <strong>9:01</strong> is saying "this is one number".</p>
+<p>The other (RATIO) is GeneralCategory==Sm (Symbol, Math) and BidiClass==ON (Other Neutrals).</p>
+<p>So saying 9∶01 is saying "this is two numbers with a non-specific neutral character between them".</p>
+<p>So, try to imagine what the latter means for Bidi scenarios!</p>
+<p>It is to my mind mildly ironic that perhaps the most appealing visual representation of something can so easily be considerered the most terrible technical way to get the job done. :-)</p>
+<p>The scenarios are made "artifically" easier by the fact tat the "time" value should always be Left-to-Right, but even still it can be really&nbsp;involved to fiiigure it out!</p>
+<p>Our "toolkit" today is made up of a few key Unicode control characters:</p>
+<ul>
+<li><strong>U+202a</strong>, aka LEFT-TO-RIGHT EMBEDDING;</li>
+<li><strong>U+202c</strong>, aka POP DIRECTIONAL FORMATTING;</li>
+<li><strong>U+200e</strong>, aka LEFT-TO-RIGHT MARK;</li>
+</ul>
+<p>I'll enumerate the relevasnt cases here, using the one and only Notepad, looking at four string in each scenario:</p>
+<ul>
+<li>String #1: LRE prepend, LRM&nbsp;in front of&nbsp;the RATIO, PDF suffix;</li>
+<li>String #2: LRE prepend, PDF suffix;</li>
+<li>String #3: LRM in front of the RATIO;</li>
+<li>String #4: no Unicode control characters.</li>
+</ul>
+<p>The exact Unicode characters being used are shown below to make it easier for those who want to follow along at home.</p>
+<p>Here we go! :-)</p>
+<p><strong>Scenario #1: Left to right reading order, no digit substitution</strong>:</p>
+<p><a href="http://msdnshared.blob.core.windows.net/media/MSDNBlogsFS/prod.evol.blogs.msdn.com/CommunityServer.Blogs.Components.WeblogFiles/00/00/00/33/81/0535.RATIO_2D00_Scenario1.jpg"><img title="Scenario #1: Left to right reading order, no digit substitution -- All four strings look good." border="0" alt="Scenario #1: Left to right reading order, no digit substitution -- All four strings look good." src="http://blogs.msdn.com/resized-image.ashx/__size/550x0/__key/communityserver-blogs-components-weblogfiles/00-00-00-33-81/0535.RATIO_2D00_Scenario1.jpg" /></a></p>
+<p><em>All four strings look good.</em></p>
+<p><strong>Scenario #2: Right to Left reading order, no digit substitution</strong>:</p>
+<p><a href="http://msdnshared.blob.core.windows.net/media/MSDNBlogsFS/prod.evol.blogs.msdn.com/CommunityServer.Blogs.Components.WeblogFiles/00/00/00/33/81/6557.RATIO_2D00_Scenario2.jpg"><img title="Scenario #2: Right to Left reading order, no digit substitution -- Strings 1-3 look good, string 4 is backward." border="0" alt="Scenario #2: Right to Left reading order, no digit substitution -- Strings 1-3 look good, string 4 is backward." src="http://blogs.msdn.com/resized-image.ashx/__size/550x0/__key/communityserver-blogs-components-weblogfiles/00-00-00-33-81/6557.RATIO_2D00_Scenario2.jpg" /></a></p>
+<p><em>Strings 1-3 look good, string 4 is backward.</em></p>
+<p><strong>Scenario #3: Left to right reading order, context digit substitution</strong>:</p>
+<p><a href="http://msdnshared.blob.core.windows.net/media/MSDNBlogsFS/prod.evol.blogs.msdn.com/CommunityServer.Blogs.Components.WeblogFiles/00/00/00/33/81/7723.RATIO_2D00_Scenario3.jpg"><img title="Scenario #3: Left to right reading order, context digit sustitution -- All of strings once again look good." border="0" alt="Scenario #3: Left to right reading order, context digit sustitution -- All of strings once again look good." src="http://blogs.msdn.com/resized-image.ashx/__size/550x0/__key/communityserver-blogs-components-weblogfiles/00-00-00-33-81/7723.RATIO_2D00_Scenario3.jpg" /></a></p>
+<p><em>All of strings once again look good.</em></p>
+<p><strong>Scenario #4: Right to left reading order, context digit substitution</strong>:</p>
+<p><a href="http://msdnshared.blob.core.windows.net/media/MSDNBlogsFS/prod.evol.blogs.msdn.com/CommunityServer.Blogs.Components.WeblogFiles/00/00/00/33/81/1830.RATIO_2D00_Scenario4.jpg"><img title="Scenario #4: Right to left reading order, context digit substitution -- Strings 1 and 2 look good, String 3 is half-substituted and String 4 looks substituted and backward." border="0" alt="Scenario #4: Right to left reading order, context digit substitution -- Strings 1 and 2 look good, String 3 is half-substituted and String 4 looks substituted and backward." src="http://blogs.msdn.com/resized-image.ashx/__size/550x0/__key/communityserver-blogs-components-weblogfiles/00-00-00-33-81/1830.RATIO_2D00_Scenario4.jpg" /></a></p>
+<p><em>Strings 1 and 2 look good, String 3 is half-substituted and String 4 looks substituted and backward.</em></p>
+<p><strong>Scenario #5: Left to right reading order, national (always) digit substitution</strong>:</p>
+<p><a href="http://msdnshared.blob.core.windows.net/media/MSDNBlogsFS/prod.evol.blogs.msdn.com/CommunityServer.Blogs.Components.WeblogFiles/00/00/00/33/81/7178.RATIO_2D00_Scenario5.jpg"><img title="Scenario #5: Left to right reading order, national (always) digit substitution -- All four strings look okay." border="0" alt="Scenario #5: Left to right reading order, national (always) digit substitution -- All four strings look okay." src="http://blogs.msdn.com/resized-image.ashx/__size/550x0/__key/communityserver-blogs-components-weblogfiles/00-00-00-33-81/7178.RATIO_2D00_Scenario5.jpg" /></a></p>
+<p><em>All four strings look okay.</em></p>
+<p><strong>Scenario #6: right to left reading order, always (national) digit substitution</strong>:</p>
+<p><a href="http://msdnshared.blob.core.windows.net/media/MSDNBlogsFS/prod.evol.blogs.msdn.com/CommunityServer.Blogs.Components.WeblogFiles/00/00/00/33/81/7563.RATIO_2D00_Scenario6.jpg"><img title="Scenario #6: right to left reading order, always (national) digit substitution -- Strings 1-3 all look substituted and good, but String 4 looks substituted yet backward." border="0" alt="Scenario #6: right to left reading order, always (national) digit substitution -- Strings 1-3 all look substituted and good, but String 4 looks substituted yet backward." src="http://blogs.msdn.com/resized-image.ashx/__size/550x0/__key/communityserver-blogs-components-weblogfiles/00-00-00-33-81/7563.RATIO_2D00_Scenario6.jpg" /></a></p>
+<p><em>Strings 1-3 all look substituted and good, but String 4 looks substituted yet backward.</em></p>
+<p>Perhaps this explains yet another reason to <strong>not</strong> update the locale data from using the COLON as in previous versions.</p>
+<p><span style="font-size: large;">Because when you the colon, all four strings look good in all six scenarios!</span></p>
+<p>Armed with the knowledge that only the first two strings will work consistently in all cases, someone trying for better aesthetics can do quite well; someone not as well armed will sometimes do a good job and sometimes embarrass themselves.</p>
+<p>Putting the user in that same situation, and&nbsp;I doubt they will all be enchanted by the aesthetics -- they'll get pretty mad at us for mucking with their locale's data!</p>
+<p>Now of course there are other soutions involving LRO and other placements of such Unicode control characters, but you get the point. And now you know to keep a senxe of proportion about the&nbsp;RATIO, if you need to....</p>
+<hr/><p><strong>Simon Buchan</strong> on 9 Feb 2012 1:53 PM:</p><div style="margin-left: 1em"><p>Would perhaps user a specialized &quot;time font&quot; where Windows displays time be more semantically preferable?</p>
+<p>Oh man, I knew Call of Duty screwed up the Arabic (they use isolated glyphs for all the signs you see in game, and I think it&#39;s LTR as well - probably due to them rendering them in Flash with the crappy old TextField [the new TLF text is pretty damn good at Unicode]), but I didn&#39;t know they got the damn *language* wrong!</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 9 Feb 2012 6:48 PM:</p><div style="margin-left: 1em"><p>If it had been up to me, I&#39;d have just updated the font! But Si only knows that&#39;s just one of the reasons I&#39;d never work out in his group....</p></div>
+<hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2012/04/11 <a href="http://archives.miloush.net/michkap/archive/2012/04/11/10292682.html">How often should you read my Blog? Use the RATIO between blogs you don't like and blogs you do, and divide!</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2012/02/13/10267034.html" title="&quot;Now that its been saved, how do I open it?&quot;">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2012/02/08/10265404.html" title="The awkward insert of shortest day names...">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2012-02">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2012-02-09">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2012/02/09/10265712.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+</html>

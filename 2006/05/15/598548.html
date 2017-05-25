@@ -1,0 +1,24 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2006/05/15/598548.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:39 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Even if the message is not for you, you still need to pass it on</title></head><body>
+<h1>Even if the message is not for you, you still need to pass it on</h1>
+<p><em>by Michael S. Kaplan, published on 2006/05/15 22:43 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2006/05/15/598548.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P><FONT face=Tahoma>As far back as elementary school, there may have been times when notes were being passed. The note would have on it the name of the person it is intended for; if it was not you then you would need to pass it on. Certainly you weren't supposed to throw it away or read it or whatever.</FONT></P>
+<P><FONT face=Tahoma>These lessons we learned a youngsters do not always get remembered when they ought be, though....</FONT></P>
+<P><FONT face=Tahoma>It was less than a month ago that Raymond Chen reminded people that <A HREF="http://blogs.msdn.com/oldnewthing/archive/2006/04/25/583093.aspx">No, really, you need to pass all unhandled messages to DefWindowProc</A>. And he is entirely correct about&nbsp;the issue.</FONT></P>
+<P><FONT face=Tahoma>I thought I'd point out another good example -- the <A href="http://msdn.microsoft.com/library/en-us/winui/winui/windowsuserinterface/windowing/windows/windowreference/windowmessages/wm_inputlangchangerequest.asp">WM_INPUTLANGCHANGEREQUEST</A> notification. It is handled in simple, deterministic way:</FONT></P><FONT face=Tahoma>
+<BLOCKQUOTE dir=ltr style="MARGIN-RIGHT: 0px">
+<P><FONT size=2><STRONG><EM>Return Value</EM></STRONG></FONT></P>
+<BLOCKQUOTE><FONT size=2>This message is posted, not sent, to the application, so the return value is ignored. To accept the change, the application should pass the message to <B>DefWindowProc</B>. To reject the change, the application should return zero without calling <B>DefWindowProc</B>.<BR><BR></FONT></BLOCKQUOTE>
+<P><FONT size=2><STRONG><EM>Remarks</EM></STRONG></FONT></P>
+<BLOCKQUOTE>
+<P><FONT size=2>When the </FONT><FONT size=2><STRONG>DefWindowProc</STRONG></FONT><FONT size=2> function receives the <B>WM_INPUTLANGCHANGEREQUEST</B> message, it activates the new input locale and notifies the application of the change by sending the </FONT><FONT size=2><STRONG>WM_INPUTLANGCHANGE</STRONG></FONT><FONT size=2> message.</FONT></P>
+<P><FONT size=2>The language indicator is present on the taskbar only if you have installed more than one keyboard layout and if you have enabled the indicator using the Keyboard control panel application.</FONT></P></BLOCKQUOTE></BLOCKQUOTE></FONT>
+<P><FONT face=Tahoma>So if your application does not pass the message to <A href="http://msdn.microsoft.com/library/en-us/winui/winui/windowsuserinterface/windowing/windowprocedures/windowprocedurereference/windowprocedurefunctions/defwindowproc.asp">DefWindowProc</A>, then the user won't be able to change the keyboard layout. Ick!</FONT></P>
+<P><FONT face=Tahoma>Now in fairness, the above deterministic process stopped being 100% true all the time starting with Windows XP; this is an issue that is for the most part by design but does not appear to be in any of the documentation. I'll explain what broke the model and why (as well as how to keep things working properly!) tomorrow....</FONT></P>
+<P><FONT face=Tahoma></FONT>&nbsp;</P>
+<P><FONT face=Tahoma color=#ff1493><EM>This post brought to you by</EM> "<FONT size=6>ܞ</FONT>" <EM>(<A href="http://www.fileformat.info/info/unicode/char/071e">U+071e</A>, a.k.a. SYRIAC LETTER YUHD HE)</EM></FONT></P>
+<hr/><div style="margin-left: 1em"><em>no comments</em></div><hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2006/05/16 <a href="http://archives.miloush.net/michkap/archive/2006/05/16/598980.html">What broke the input language messages?</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2006/05/16/598980.html" title="What broke the input language messages?">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2006/05/14/597278.html" title="Long live the Emperor">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2006-05">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2006-05-15">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2006/05/15/598548.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:39 GMT -->
+</html>

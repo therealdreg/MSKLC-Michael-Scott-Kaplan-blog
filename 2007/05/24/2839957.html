@@ -1,0 +1,54 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2007/05/24/2839957.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:38 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>How to do more sorting and grouping by 9am than most ListViews do all day</title></head><body>
+<h1>How to do more sorting and grouping by 9am than most ListViews do all day</h1>
+<p><em>by Michael S. Kaplan, published on 2007/05/24 07:41 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2007/05/24/2839957.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P>Remember when I talked about <A class="" href="http://archives.miloush.net/michkap/archive/2006/03/06/544257.html" mce_href="http://archives.miloush.net/michkap/archive/2006/03/06/544257.html"><STRONG>Grouping and Sorting in a ListView</STRONG></A>, how I couldn't find a way to do it? </P>
+<P>Well, Bevan pointed out:</P>
+<BLOCKQUOTE><FONT size=2>
+<P><EM>Greetings from New Zealand.</EM></P>
+<P><EM>I found your post on ListView sorting at this link:</EM></P>
+<P></FONT><A href="http://archives.miloush.net/michkap/archive/2006/03/06/544257.html"><U><FONT color=#0000ff size=2><EM>http://blogs.msdn.com/michkap/archive/2006/03/06/544257.aspx</EM></U></FONT></A></P><FONT size=2>
+<P><EM>Since comments are disabled, I thought I'd drop you this note - I've found a workaround to the issue:</EM></P>
+<P><EM>Step 1: Prior to applying the sort, remove the grouping by setting Group to null on each ListViewItem. As you do this, cache the grouping.</EM></P>
+<P><EM>Step 2: Sort the list normally</EM></P>
+<P><EM>Step 3: Restore the groupings cached earlier</EM></P>
+<P><EM>TaDa!</EM></P>
+<P><EM>Any chance you could post an update to the blog post so others can find the workaround?</EM></P>
+<P><EM>Keep Smiling,</EM></P>
+<P><EM>Bevan.</EM></P></FONT></BLOCKQUOTE>
+<P>I do get a lot of benefit out of that 90-day limit on comments; in fact, looking at the place where caught spam is found, I'd get even better results with a shorter time. But I like to give people the option for a bit....</P>
+<P>Maybe I never though I'd still be doing this after this long? :-)</P>
+<P>Anyway,&nbsp;cool idea Bevan. Though&nbsp;this method&nbsp;does not let one sort within the groups, it does allow one to put together a sort that will be applied to all of the groups. Not what I was hoping was lurking somewhere but good enough for most uses, I think. :-)</P>
+<P>I wonder if it can be relied on since it is not documented? Or maybe the fact that search through MSDN will find this post in a few days means it <STRONG>is</STRONG> documented in a weird kind of a way. :-)</P>
+<P>Ah well, a discussion for a future version&nbsp;when the behavior changes. For now, use with joyous caution....</P>
+<P>Thanks, Bevan!</P>
+<P mce_keep="true">&nbsp;</P>
+<P><FONT color=#ff00ff><EM>This post brought to you by <FONT size=5>Ṝ</FONT> (<A class="" href="http://www.fileformat.info/info/unicode/char/1e5c" mce_href="http://www.fileformat.info/info/unicode/char/1e5c">U+1e5c</A>, a.k.a. LATIN CAPITAL LETTER R&nbsp;WITH DOT&nbsp;BELOW WITH MACRON)</EM></FONT></P>
+<hr/><p><strong>Jason Owen</strong> on 5 Jan 2009 3:47 AM:</p><div style="margin-left: 1em"><p>Greetings from Portland. &nbsp;:-)</p>
+<p>I've run into this problem myself, and this page was very helpful.</p>
+<p>After doing some more testing, however, I think there is a slightly simpler way to sort a ListView in group view mode:</p>
+<p>Step 1, sort normally (ListView_SortItems).</p>
+<p>Step 2, for each item, move it to a temporary group, then move it back to its proper group (for i = 0; i &lt; ListView_GetItemCount(myHwnd); ++i) { lvI.iItem = i; ... }).</p>
+<p>I believe the reason this works is that sorting re-arranges the iItem index for all ListView items. &nbsp;Group view ignores the index, but iterating through them is then done in the new, sorted order. &nbsp;Each item is effectively moved from its former position in the group to the bottom the group, and when the iteration is complete, the items are in the proper order in the proper group. &nbsp;This approach also has the advantage of never making the ListView window height smaller, which means that (if there is a scrollbar) the scroll position is preserved - moving all the items to the same group / no group caused the now-empty groups' headers to disappear, which would scroll the window up.</p>
+<p>Here is the full code I'm using (all basic win32, no winforms or anything else, and without error checking for brevity):</p>
+<p>	ListView_SortItems(lvHwnd, ListViewSortFunc, &amp;data);</p>
+<p>	int i, groupID;</p>
+<p>	LVITEM lvI;</p>
+<p>	lvI.mask = LVIF_GROUPID;</p>
+<p>	lvI.iSubItem = 0;</p>
+<p>	for (i = 0; i &lt; ListView_GetItemCount(lvHwnd); ++i)	{</p>
+<p>		lvI.iItem = i;</p>
+<p>		ListView_GetItem(lvHwnd, &amp;lvI);</p>
+<p>		groupID = lvI.iGroupId;</p>
+<p>		lvI.iGroupId = TEMPORARY_GROUP_ID;</p>
+<p>		ListView_SetItem(lvHwnd, &amp;lvI);</p>
+<p>		lvI.iGroupId = groupID;</p>
+<p>		ListView_SetItem(lvHwnd, &amp;lvI);</p>
+<p>	}</p></div>
+<p><strong>Ari</strong> on 4 Aug 2010 12:31 AM:</p><div style="margin-left: 1em"><p>Thanks a lot! it works flawlessly;</p>
+</div>
+<hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2007/05/24/2840970.html" title="Honey, you are the [_tWin]Main source of joy in my life!">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2007/05/23/2832047.html" title="Could it BE any clearer that it isn&#39;t the Limonata?">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2007-05">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2007-05-24">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2007/05/24/2839957.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:38 GMT -->
+</html>

@@ -1,0 +1,54 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2007/07/08/3764316.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:38 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Being more like Doron</title></head><body>
+<h1>Being more like Doron</h1>
+<p><em>by Michael S. Kaplan, published on 2007/07/08 12:18 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2007/07/08/3764316.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P>Bindesh's question was:</P>
+<BLOCKQUOTE><FONT face="times new roman,times">
+<P><EM>Hi <BR><BR>I am trying to print out the value from a reg key and have the following code:</EM></P><FONT face="Consolas,Lucida Console,Courier New,Courier"><B>
+<P>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; HKEY hkey;<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; LONG returnStatus;<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; DWORD dwRegType = REG_SZ;<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; DWORD dwRegSize = 255;<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; char cRegVal[255];<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; char regKeyPath[] ="";<BR><BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; returnStatus = RegOpenKeyEx(HKEY_LOCAL_MACHINE,<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; TEXT("SOFTWARE\\Microsoft\\Netmon3"),<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 0,<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; KEY_READ,<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &amp;hkey);</P>
+<P>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; if(returnStatus == ERROR_SUCCESS) {<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; returnStatus = RegQueryValueEx(hkey,TEXT("InstallDir"),NULL,&amp;dwRegType,(LPBYTE)&amp;cRegVal,&amp;dwRegSize);<BR><BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; if(returnStatus == ERROR_SUCCESS)&nbsp; {<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <FONT color=#ff0000><STRONG>cout&lt;&lt;cRegVal</STRONG>;</FONT><BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; } else {<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; cout&lt;&lt;"Error "&lt;&lt;returnStatus&lt;&lt;endl;<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; } else {<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; cout&lt;&lt;"did not get the key"&lt;&lt;endl;<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; } </B></FONT></P>
+<P><EM>The issue is that the output from cRegVal(highlighted one) just brings the first character (in this case, just the alphabet ‘c’) from the array and when I see the value stored in the array(putting a breakpoint) I find that after each character there is a null kept that basically marks the character as a complete string and hence I am unable to print the entire value.</EM> </P></FONT></BLOCKQUOTE>
+<P mce_keep="true">Luckily, <A class="" href="http://blogs.msdn.com/doronh/" mce_href="http://blogs.msdn.com/doronh/">Doron Holan</A>&nbsp;(a fellow <STRONG><A class="" href="http://archives.miloush.net/michkap/archive/2005/03/15/395685.html" mce_href="http://archives.miloush.net/michkap/archive/2005/03/15/395685.html">Technical Lead</A></STRONG>, at least for the moment!)&nbsp;pointed out the problems here quickly:</P>
+<BLOCKQUOTE><FONT face="times new roman,times">
+<P mce_keep="true">Are you compiling your application as Unicode?&nbsp; You are mixing character size independent macros&nbsp; (TEXT) with hard coded types (char) instead of size independent types (TCHAR).&nbsp; Furthermore, cout is ANSI, to output in unicode you need to use wcout.<BR><BR>d</P></FONT></BLOCKQUOTE>
+<P mce_keep="true">Interestingly, I answered the same question that was&nbsp;forwarded to me earlier (thought not seen by Bindesh until after he had asked elsewhere) as follows:</P>
+<BLOCKQUOTE>
+<P mce_keep="true"><EM>The NULL values are likely due to it being Unicode text, and for that you need to use wcout, not cout.<BR><BR>Though looking at the code you will also want to fix mixed use of TEXT macros and hardcoded data types (if nothing else use WCHAR/wchar_t, but consider getting rid of TEXT() and replacing with L"" type strings, etc.).</EM></P></BLOCKQUOTE>
+<P mce_keep="true">Now the way that Doron presented the answer was very interesting, and it is the type of thing I want to get better at myself.</P>
+<P mce_keep="true">The code clearly had two problems -- one of which was causing the reported problem, and the other of which led to the problem and might lead the same problem happening again (in fact, had the code only been switched from cout to wcout, I think it would have also failed with the new error of a datatype mismatch).</P>
+<P mce_keep="true">But by starting with the actual solution to the immediate problem rather than starting with underlying problem, I might have unintentionally caused the other issues to not be considered due to the general&nbsp;situation in many cases of developers "coding 'til it works" rather than "coding 'til its right".</P>
+<P mce_keep="true">Now in this case it wouldn't matter since both problems had to be fixed, at least enough for the wcout call to succeed. But sometimes that won't be the case, and a person could get by until the next bug that came up.</P>
+<P mce_keep="true">The benefit is in pointing out the architectural issues first (the char variable that led to the cout call) rather than&nbsp;treating it like&nbsp;a side point. It makes it more likely that a person would be nore likely to address all of the issues at the same time....</P>
+<P mce_keep="true">Now I am probably reading way too much into this short example and attributing way too much to <A class="" href="http://blogs.msdn.com/doronh/" mce_href="http://blogs.msdn.com/doronh/">Doron</A>, though he is actually a good person to pay attention to, anyway. </P>
+<P mce_keep="true">So no harm done. But it did remind me of this particular tendency I have in question answering which ironically enough can be appreciated by the asker even if it would be more helpful to end with the answer rather than begin with it. :-)</P>
+<P mce_keep="true">&nbsp;</P>
+<P mce_keep="true"><FONT color=#ff00ff><EM>This post brought to you by</EM> <FONT size=5>d</FONT> <EM>(<A class="" href="http://www.fileformat.info/info/unicode/char/0064" mce_href="http://www.fileformat.info/info/unicode/char/0064">U+0064</A>, a.k.a. LATIN SMALL LETTER D)</EM></FONT></P>
+<hr/><p><a id="3767472" href="#3767472">#</a> <strong>Michael Dunn_</strong> on 8 Jul 2007 4:34 PM:</p><div style="margin-left: 1em"><p>The fact that AppWizards now default to Unicode builds has tripped up many, many newbies. I assume they are working off platform-independent books and/or sample code that make no mention of character sets and use char everywhere. When they get a seemingly crazy error message on a simple line such as MessageBox(&quot;Hello world&quot;) they don't have the knowledge or experience to fix it, let alone understand the underlying issues.</p>
+<p>At least your and Doron's responses were better than the average you'd find on a message board. Often times, replies will say to use casts, which shut the compiler up but can leave a newbie in a worse position (with more code he doesn't understand). And if the casts happen to work, it still hurts the newbie because he gets the impression that throwing in casts is the right way to fix compiler errors.</p>
+</div>
+<p><a id="3768813" href="#3768813">#</a> <strong>Erzengel</strong> on 8 Jul 2007 7:24 PM:</p><div style="margin-left: 1em"><p>std::cout accepts wchar_t*s, and std::wcout accepts char*s, both printing out &quot;acceptable&quot; results. This can trip up newbies to unicode (like me, at a time) when std::wcout &lt;&lt; &quot;blah&quot;; works but MessageBoxW(&quot;blah&quot;,…) doesn't. Wouldn't it be nice to have a compiler switch where &quot;blah&quot; was unicode and C&quot;blah&quot; was ansi, or something like that? (yes yes, non-standard. Wouldn't it be nice though?)</p>
+<p>Or, Windows could do as DirectX and other COM apis do and have a precompiler directive to use c++'s features, for example:</p>
+<p>#ifdef __cplusplus</p>
+<p>inline int MessageBox(char* Message,…)</p>
+<p>{</p>
+<p> &nbsp; &nbsp;return MessageBoxA(Message,…);</p>
+<p>}</p>
+<p>inline int MessageBox(wchar_t* Message,…)</p>
+<p>{</p>
+<p> &nbsp; &nbsp;return MessageBoxW(Message,…);</p>
+<p>}</p>
+<p>#else</p>
+<p>#if _UNICODE</p>
+<p>#define MessageBox MessageBoxW</p>
+<p>#else</p>
+<p>#define MessageBox MessageBoxA</p>
+<p>#endif//_UNICODE</p>
+<p>#endif//_cplusplus</p>
+<p>Not that such a thing will be done... probably would cost too much for the benefit recieved. Plus it makes it even harder to break the habit of forgetting the L's in front of unicode text.</p></div>
+<p><a id="3781626" href="#3781626">#</a> <strong>Michael S. Kaplan</strong> on 9 Jul 2007 9:24 AM:</p><div style="margin-left: 1em"><p>Well, &quot;acceptable&quot; is relative here though, right? You do end up with some truncation in some cases....</p>
+</div>
+<hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2007/07/09/3784549.html" title="Character Map Plus?">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2007/07/08/3747992.html" title="UnLCMapString or LCUnMapString?">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2007-07">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2007-07-08">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2007/07/08/3764316.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:38 GMT -->
+</html>

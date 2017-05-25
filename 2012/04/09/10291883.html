@@ -1,0 +1,29 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2012/04/09/10291883.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:33 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Sometimes, it's Unicode or nothing...</title></head><body>
+<h1>Sometimes, it's Unicode or nothing...</h1>
+<p><em>by Michael S. Kaplan, published on 2012/04/09 07:01 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2012/04/09/10291883.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<p>The question was simple enough:</p>
+<p style="padding-left: 60px;"><span style="font-family: times new roman,times;">I have a cmd line tool. On French Windows its output is correct in the cmd window but when I redirect it to a file it is no longer good. I noticed that if I set the output encoding on the Console class explicitly to the default encoding then redirecting to a file works fine:</span></p>
+<p style="padding-left: 60px;"><span style="font-family: times new roman,times;">&nbsp;&nbsp;&nbsp; Console.OutputEncoding = Encoding.Default;</span></p>
+<p style="padding-left: 60px;"><span style="font-family: times new roman,times;">Does anyone know why the default encoding is not set by default? Is there any reason why I shouldn&rsquo;t put the line above in my code?</span></p>
+<p style="padding-left: 60px;"><span style="font-family: times new roman,times;">Thanks</span></p>
+<p>Wow, if there was ever a property to avoid, <a href="http://msdn.microsoft.com/en-us/library/system.text.encoding.default.aspx">Encoding.Default</a> would be it.</p>
+<p>As the MSDN topic explains, it is the default system ANSI code page - in other words the <strong>CP_ACP</strong>, the code page used by non-Unicode Windows applications and the programs that can read/write non-Unicode files.</p>
+<p>Like the default .TXT file type handler, NOTEPAD.EXE.</p>
+<p>Console applications, on the other hand, use <strong>CP_OEMCP</strong> by default, which is why the described problem is happening.</p>
+<p>Because <strong>CP_ACP</strong> and <strong>CP_OEMCP</strong> are not the same thing, for a lot&nbsp;of different default system locales.</p>
+<p>And if there is anything that the <strong>CP_ACP</strong> and the CP_OEMCP have in common, it is that they both act as non-overlapping subsets of Unicode</p>
+<p>Now some console apps can support all of Unicode, in which case CP_UTF8 is a better use of <strong>Encoding</strong>. Or it cannot support any change, in which case using <strong>Encoding.Default</strong> will be talking text that is filtered through <strong>CP_OEMCP</strong> is and then add a <strong>CP_ACP</strong> filter as well....</p>
+<p>In the end, you should go&nbsp;UP to UTF-8, or least if Unicode won't work, then <strong>CP_OEMCP</strong> should be left alone....</p>
+<hr/><p><strong>Claudia Lawrence</strong> on 9 Apr 2012 10:22 AM:</p><div style="margin-left: 1em"><p>Thank you. &nbsp;That really opened the kimono for me. </p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 9 Apr 2012 6:51 PM:</p><div style="margin-left: 1em"><p>Ha!</p>
+</div>
+<p><strong>Random832</strong> on 10 Apr 2012 1:04 PM:</p><div style="margin-left: 1em"><p>Of course, this only works if you want to make a UTF-8 text file. If you want to make an OEM text file, leave it as CP_OEMCP. If you want to make an ANSI text file...</p>
+<p>Of course, if your output is to a pipe to a tool that expects OEM text, such as, I don&#39;t know, &quot;more&quot;, then you really do need it in CP_OEMCP. On balance it&#39;s probably best to have a specific option for making output files (in whatever encoding), use WriteConsoleW for console output, and just leave things alone if the output is a pipe.</p>
+</div>
+<hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2012/04/10/10291801.html" title="Good times at MS, smooth sailing with my MS, and a new Ms.!">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2012/04/05/10290985.html" title="WideCharToMultiByte vs. DrawTextW? In tennis terms, 15-Love!">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2012-04">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2012-04-09">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2012/04/09/10291883.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:33 GMT -->
+</html>

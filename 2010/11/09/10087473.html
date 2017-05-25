@@ -1,0 +1,42 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2010/11/09/10087473.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>I [will have] told you so! Well, perhaps too late (all things considered)...</title></head><body>
+<h1>I [will have] told you so! Well, perhaps too late (all things considered)...</h1>
+<p><em>by Michael S. Kaplan, published on 2010/11/09 07:01 -05:00, original URI: http://blogs.msdn.com/b/michkap/archive/2010/11/09/10087473.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<p>The year was 2004.</p>
+<p>The Blog you are reading now had just a few blogs in it.</p>
+<p>And I wrote a blog titled <a href="http://archives.miloush.net/michkap/archive/2004/11/28/271121.html" title="Microsoft does not use the Unicode Collation Algorithm"><strong>Microsoft does not use the Unicode Collation Algorithm</strong></a>.</p>
+<p>The year was 2008.</p>
+<p>Thousands of blogs had been added to thie Blog since that earlier blog.</p>
+<p>And I wrote a blog titled <a href="http://archives.miloush.net/michkap/archive/2008/02/10/7579576.html" title="Microsoft still does not use the UCA; the converse is also true"><strong>Microsoft still does not use the UCA; the converse is also true</strong></a>.</p>
+<p>Nothing has changed, it is all still true.</p>
+<p>Though over the years as these two different implementations worked to cover this single large space, their functionality has overlapped and each implementation has often in its efforts to do the right thing not paid enough heed when the other implementation had already realized that a particular solution was a bad idea for one reason or another.</p>
+<p>Now by itself thisdoes not mean that it would necessarily be a mistake to solve the problem in that particular way -- at times there are underlying architectural reasons why the differences exist and there is not much reason to try and change those differences.</p>
+<p>With all that said,&nbsp;part of&nbsp;a recent release to the <strong>Unicode Announcements</strong> alias struck me as interesting. The text of the announcement read in part:</p>
+<p style="padding-left: 60px;"><span style="font-family: times new roman,times;">Mountain View, CA, USA &ndash; October 29, 2010 &ndash; The new version of Unicode Technical Standard #10, Unicode Collation Algorithm (UCA), has been updated for Unicode Version 6.0, adding support for 2,088 characters in sorting, searching, and matching. Also in this release new data files for support of the Unicode Common Locale Data Repository (CLDR), which provides customization for different languages.<br /><br />Reorderable Categories. The data files for CLDR order characters strictly by certain major categories. This allows programmers to parametrically reorder these groups of characters to put them in the desired order for different languages. For example, numbers can be ordered after letters, or Cyrillic before Latin. The reorderable categories are:<br /><br />whitespace, punctuation, general symbols, currency symbols, and numbers, then Latin, Greek, Coptic, Cyrillic, ..., Egyptian Hieroglyphs, and finally, CJK.</span></p>
+<p><strong>Reorderable Categories</strong>.</p>
+<p>Microsoft did something like that years ago.</p>
+<p>Not a configurable system to do it, but an explicit change for one sort.</p>
+<p>You may remember reading about it, in one or more of the following blogs:</p>
+<ul>
+<li><a href="http://archives.miloush.net/michkap/archive/2004/12/31/344888.html" title="Unlike LCMapString, the sort keys for English characters precede the sort keys for Korean"><strong>Unlike LCMapString, the sort keys for English characters precede the sort keys for Korean</strong></a></li>
+<li><a href="http://archives.miloush.net/michkap/archive/2007/10/08/5270854.html" title="A&amp;P of Sort Keys, part 12 (aka Han sorts first!)"><strong>A&amp;P of Sort Keys, part 12 (aka Han sorts first!)</strong></a></li>
+<li><a href="http://archives.miloush.net/michkap/archive/2008/02/19/7791306.html" title="The most important language in the whole wide world is yours, and you hardly even know yours! -- NOT!"><strong>The most important language in the whole wide world is yours, and you hardly even know yours! -- NOT!</strong></a></li>
+</ul>
+<p>As that last blog pointed out, we removed the customization because we ultimately deemed it to be not such a great idea.</p>
+<p>Now perhaps what is being done differently here will make it not such a big deal that the latest version of Unicode added a flexible architectural feature that Microsoft started to realize was a bad idea&nbsp;at least eight &nbsp;years ago and finally removed from its implementation four years ago.</p>
+<p>I don't know, since I haven't looked beyind the announcement itself.</p>
+<p>Of course I have no way of knowing whether the issue was mentioned by any of the Microsoft representatives present&nbsp;(I wasn't there, and no one who was mentioned it to me until after everything was done and I was pointed at the announcement mail in as generic sense when everyone was).</p>
+<p>Not to mention that to be honest I don't think very many of the support issues and problems that came up with this Korean "feature" (here or in Korea) ever made it to much into the public, either. We barely even documented it, except in one oblique doc comment that no one understood.</p>
+<p>And those three blogs of mine,</p>
+<p>Since Microsoft currently uses neither the Unicode Collation Algorithm nor the CLDR tailorings of it, I don't have too much of a specific business reason to do much more here.</p>
+<p>But I figure I can mention it here, at least.</p>
+<p>If people using this new flexible algorithm start running into strange complication, compatibility issues, or other problems....just remember I told everyone so, right here. Even if I did so just a bit too late.....</p>
+<hr/><p><strong>John Cowan</strong> on 9 Nov 2010 10:00 AM:</p><div style="margin-left: 1em"><p>I have to admit I don&#39;t really understand from your posts just what the feature was that MS introduced and then removed, but it seems to have been specific to Korean. &nbsp;The new ICU feature has to do with tailoring the sort order at the script level rather than at the character level. &nbsp;It doesn&#39;t provide essentially new functionality, it just makes script-level reordering easier to do rather than having to go through and tailor each and every character of the script. &nbsp;So if you want Latin &gt; Coptic &gt; Greek in the index to your book on Coptic, for example, you can easily get it.</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 9 Nov 2010 2:35 PM:</p><div style="margin-left: 1em"><p>The Korean feature was to put all the Hangul and Hanja in front of the other scripts, including Latin. So basically the kind of thing you could do with this new feature in the UCA in your app, though the app in this case is the size of Windows. :-)</p>
+</div>
+<hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2010/11/10/10088658.html" title="Please don&#39;t feed the list">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2010/11/08/10087179.html" title="Header files are the wrong place to be less than helpful">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2010-11">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2010-11-09">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2010/11/09/10087473.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+</html>

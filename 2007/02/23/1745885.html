@@ -1,0 +1,36 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2007/02/23/1745885.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:38 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>The failure of 1124</title></head><body>
+<h1>The failure of 1124</h1>
+<p><em>by Michael S. Kaplan, published on 2007/02/23 03:01 -05:00, original URI: http://blogs.msdn.com/b/michkap/archive/2007/02/23/1745885.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P>The question to the alias was something like this:</P>
+<BLOCKQUOTE>
+<P><EM>Hi<BR><BR>I hit a crash because of an argument exception. The text suggests a non-supported culture ID. I look at culture ID table and could not find ID 1124. This is an English W2K3 server with .Net 2.0. Any insight that caused this?<BR></EM><BR><FONT face="courier new,courier">0:005&gt; dc 00000000016612f8 <BR>00000000`016612f8&nbsp; 7881edd8 00000642 0000003e 00000034&nbsp; ...xB...&gt;...4...<BR>00000000`01661308&nbsp; 00750043 0074006c 00720075 00200065&nbsp; C.u.l.t.u.r.e. .<BR>00000000`01661318&nbsp; 00440049 00310020 00320031 00200034&nbsp; I.D. .1.1.2.4. .<BR>00000000`01661328&nbsp; 00300028 00300078 00360034 00290034&nbsp; (.0.x.0.4.6.4.).<BR>00000000`01661338&nbsp; 00690020 00200073 006f006e 00200074&nbsp;&nbsp; .i.s. .n.o.t. .<BR>00000000`01661348&nbsp; 00200061 00750073 00700070 0072006f&nbsp; a. .s.u.p.p.o.r.<BR>00000000`01661358&nbsp; 00650074 00200064 00750063 0074006c&nbsp; t.e.d. .c.u.l.t.<BR>00000000`01661368&nbsp; 00720075 002e0065 00000000 00000000&nbsp; u.r.e...........</FONT></P></BLOCKQUOTE>
+<P>So, I guess there are two problems here.</P>
+<P>First -- don't use LCIDs, use locale names! LCIDs are provided for backwards compatibility with versions of Windows that only have LCIDs in them. Which brings us to the other problem....</P>
+<P>Second - the locale in question that uses an LCID of 0x0464 is <STRONG>Filipino - Philippines (fil-PH)</STRONG>, which was added in Vista and is not available&nbsp;in any version of Windows&nbsp;<STRONG>before</STRONG> Vista. So it will always fail if you try to ask for it by LCID in a version of Windows like Server 2003 (even if one added a custom culture for fil-PH, it still wouldn't have this LCID attached to it).</P>
+<P>There is also an irony attached to all this, one that I will talk about soon. :-)</P>
+<P mce_keep="true">&nbsp;</P>
+<P><FONT color=#ff00ff><EM>This post brought&nbsp;to you by</EM>&nbsp;<FONT size=4>ⵒ</FONT> <EM>(<A class="" href="http://www.fileformat.info/info/unicode/char/2d52" mce_href="http://www.fileformat.info/info/unicode/char/2d52">U+2d52</A>, a.k.a.TIFINAGH LETTER YAP)</EM></FONT></P>
+<hr/><p><a id="1747871" href="#1747871">#</a> <strong>Ted.</strong> on 23 Feb 2007 10:32 AM:</p><div style="margin-left: 1em"><p>Windows 2003 Server has locale names?</p></div>
+<p><a id="1747897" href="#1747897">#</a> <strong>Michael S. Kaplan</strong> on 23 Feb 2007 10:38 AM:</p><div style="margin-left: 1em"><p>No, but if you have .NET 2.0 or later installed, it can have custom cultures, and those will have names....</p>
+</div>
+<p><a id="1748194" href="#1748194">#</a> <strong>Mihai</strong> on 23 Feb 2007 12:04 PM:</p><div style="margin-left: 1em"><p>&lt;&lt;First -- don't use LCIDs, use locale names! LCIDs are provided for backwards compatibility with versions of Windows that only have LCIDs in them&gt;&gt;</p>
+<p>You mean ALL versions until Vista, which started to sell less than a month ago?</p>
+<p>What is a developer to do? Drop XP on a dime?</p>
+<p>A compatibility library back-ported to XP (MUI style) would help here. And I hope it does not come too late (MSLU style :-)</p></div>
+<p><a id="1748322" href="#1748322">#</a> <strong>Michael S. Kaplan</strong> on 23 Feb 2007 12:39 PM:</p><div style="margin-left: 1em"><p>Of course we're talking about managed apps here, of course (at least in the case of the original question), though your points are well taken....</p>
+<p>MSLU wasn't entirely too late. I think some people like it? :-)</p>
+</div>
+<p><a id="1748571" href="#1748571">#</a> <strong>Mihai</strong> on 23 Feb 2007 1:31 PM:</p><div style="margin-left: 1em"><p>&lt;&lt;MSLU wasn't entirely too late. I think some people like it? :-)&gt;&gt;</p>
+<p>People like it because they where also late :-)</p>
+<p>My experience is that many companies did not move to Unicode earlier because they did have to support 9x.</p>
+<p>It was released July 2001. XP was released Oct. 2001, so Win 2000, exactly the system needing migration most, did not have much benefit from MSLU.</p>
+<p>The &quot;Design a Single Unicode App that Runs on Both Windows 98 and Windows 2000&quot; article was out in 1999, but the prospect of wrapping thousands of APIs was not too appealing. Something a small company would not consider to take on, together with it's own projects.</p>
+<p>MS wanted people to move to Win2000 and Unicode (a good thing), so providing (asap) a library to help would this have make sense.</p>
+<p>Ok, in retrospective 2001 is not so far from 1999 for such a project, and MSLU was not too late, maybe.</p>
+<p>But as an outsider my feeling was that it takes forever, and when I heard is out, the perception was really &quot;too bad is soooooo late. Who cares about 9x when XP is out?&quot;</p></div>
+<hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2007/02/23/1748028.html" title="The MSL8 project? Cool!">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2007/02/22/1738882.html" title="Getting the resource info you want">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2007-02">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2007-02-23">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2007/02/23/1745885.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:38 GMT -->
+</html>

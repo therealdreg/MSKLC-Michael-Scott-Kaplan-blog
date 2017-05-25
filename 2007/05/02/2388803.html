@@ -1,0 +1,56 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2007/05/02/2388803.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:38 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>There is no IsDBCSTrailByte</title></head><body>
+<h1>There is no IsDBCSTrailByte</h1>
+<p><em>by Michael S. Kaplan, published on 2007/05/03 02:59 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2007/05/02/2388803.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P>bcbryant asks:</P><FONT face="times new roman,times" size=2>
+<BLOCKQUOTE>
+<P><EM>DBCS trailing bytes always seem to be greater than or equal to 0x40 although the GB18030 mentions some use of 0x30+ in four byte characters. Do you know of any official source for a restriction that would allow me to depend on the trailing bytes being at least 0x30? This restriction would yield convenience in trimming trailing ASCII whitespace from strings in multibyte encodings.</EM></P></BLOCKQUOTE></FONT>
+<P>There is no specific rule or restriction on the minimum for the trail byte values (though generally staying out of the very low ASCII ranges seems to have been a pretty consistent theme).</P>
+<P>Note that these code pages were all based on various national standards, so as principles go this one may have just been inherited! :-)</P>
+<P>There are no plans by Microsoft to add more code pages or modify existing ones ever, so relying on the ones that are there now should be good enough....</P>
+<P mce_keep="true">&nbsp;</P>
+<P><EM><FONT color=#ff00ff>This post brought to you by <A class="" href="http://www.fileformat.info/info/unicode/char/0020" mce_href="http://www.fileformat.info/info/unicode/char/0020">U+0020</A>, a.k.a. SPACE</FONT></EM></P>
+<hr/><p><strong>Ben Bryant</strong> on 3 May 2007 7:46 AM:</p><div style="margin-left: 1em"><p>Thanks! </p></div>
+<p><strong>Michael Dunn_</strong> on 3 May 2007 1:03 PM:</p><div style="margin-left: 1em"><p>You could use _IsDBCSTrailByte from WTL:</p>
+<p>bool _IsDBCSTrailByte(LPCTSTR lpstr, int nChar)</p>
+<p>{</p>
+<p>#ifndef _UNICODE</p>
+<p> &nbsp; &nbsp;int i = nChar;</p>
+<p> &nbsp; &nbsp;for( ; i &gt; 0; i--)</p>
+<p> &nbsp; &nbsp;{</p>
+<p> &nbsp; &nbsp; &nbsp; &nbsp;if(!::IsDBCSLeadByte(lpstr[i - 1]))</p>
+<p> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;break;</p>
+<p> &nbsp; &nbsp;}</p>
+<p> &nbsp; &nbsp;return ((nChar &gt; 0) &amp;&amp; (((nChar - i) &amp; 1) != 0));</p>
+<p>#else // _UNICODE</p>
+<p> &nbsp; &nbsp;lpstr; nChar;</p>
+<p> &nbsp; &nbsp;return false;</p>
+<p>#endif // _UNICODE</p>
+<p>}</p>
+<p>This returns true if lpstr[nChar] is a trail byte.</p>
+</div>
+<p><strong>Mihai</strong> on 3 May 2007 3:02 PM:</p><div style="margin-left: 1em"><p>The logic in the WTL _IsDBCSTrailByte is &quot;if the previous character is lead byte, then this one is trail byte.</p>
+<p>It does not work for GB 18030, which can have up to 4 bytes per character.</p></div>
+<p><strong>Michael Dunn_</strong> on 3 May 2007 8:37 PM:</p><div style="margin-left: 1em"><p>The code is definitely written with the assumption that no code page uses more than 2 bytes for a &quot;character&quot;. Isn't that true for all the multi-byte code pages that Windows supports?</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 3 May 2007 9:20 PM:</p><div style="margin-left: 1em"><p>Nope, there are several algorithmic and DLL based ones that do not follow these rules (though the lead byte function does not work for those code pages, either!).</p>
+</div>
+<p><strong>Ben Bryant</strong> on 4 May 2007 9:41 AM:</p><div style="margin-left: 1em"><p>Mike, I think you are right that there are no Windows locale &quot;ANSI&quot; code pages that have more than 2 bytes. But even assuming DBCS, I think your code does not work because leading byte codes can overlap trailing byte codes. So you could find that the previous character is a IsDBCSLeadByte even if it is actually a trailing byte. </p></div>
+<p><strong>Ben Bryant</strong> on 4 May 2007 11:32 PM:</p><div style="margin-left: 1em"><p>Oh -- I realized that:</p>
+<p>1. _IsDBCSTrailByte is not Mike's; it is WTL's function.</p>
+<p>2. the logic is not as Mihai described it: &quot;if the previous character is lead byte, then this one is trail byte&quot; which for example would be a very bad assumption when dealing with any single-byte Shift-JIS character after 9e 9e (U+68CD).</p>
+<p>Actually, the logic of _IsDBCSTrailByte is:</p>
+<p>&quot;go back to the previous non-lead byte and return true if it is an odd number of bytes before the one in question&quot;</p>
+<p>the worst case scenario is extremely inefficient, which is another reason I would like to know if there are any trail bytes under 0x30. I guess I will have to do the survey myself....</p></div>
+<p><strong>Ben Bryant</strong> on 5 May 2007 1:23 AM:</p><div style="margin-left: 1em"><p>make that: &quot;go back to the previous non-lead byte and return true if it is an *even* number of bytes before the one in question&quot;</p>
+<p>which makes sense because that is the only way of definitively finding a lead byte -- it has to be after a character that cannot be a lead byte. Once you have a definite lead byte, you've got an achor from which to determine the byte in question. Since all characters back to that anchor are candidate lead bytes, the characters must all be byte pairs. Hence, the test for any even number of bytes between.</p>
+<p>The worst case scenario is you have a very long string, with *all* 2 byte pairs in which all the trail bytes happen to be valid lead bytes too.</p></div>
+<p><strong>Yuhong Bao</strong> on 26 Nov 2010 11:09 PM:</p><div style="margin-left: 1em"><p>&quot;There is no specific rule or restriction on the minimum for the trail byte values (though generally staying out of the very low ASCII ranges seems to have been a pretty consistent theme).&quot;</p>
+<p>Yea, the fact that some DBCS, including all four of the Windows DBCS codepages, uses part of the ASCII range for trail byte causes a lot of pain. For example:</p>
+<p><a rel="nofollow" target="_new" href="http://blogs.msdn.com/b/oldnewthing/archive/2003/11/05/55575.aspx">blogs.msdn.com/.../55575.aspx</a></p>
+</div>
+<hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2007/05/03/2397803.html" title="Note to self: don&#39;t run over the General Manager">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2007/05/01/2367135.html" title="Not everyone does the right thing for Romanian">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2007-05">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2007-05-02">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2007/05/02/2388803.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:38 GMT -->
+</html>

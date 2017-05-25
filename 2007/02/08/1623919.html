@@ -1,0 +1,24 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2007/02/08/1623919.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:38 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>On how to do nothing else but to call it</title></head><body>
+<h1>On how to do nothing else but to call it</h1>
+<p><em>by Michael S. Kaplan, published on 2007/02/08 06:01 -05:00, original URI: http://blogs.msdn.com/b/michkap/archive/2007/02/08/1623919.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P>Mike Akin asked in regard to the ClearKeyboardBuffer routine I had discussed previously in the <STRONG><A class="" href="http://archives.miloush.net/michkap/search.aspx?q=%22Getting+all+you+can+out+of+a+keyboard+layout%22&amp;p=1" mce_href="../../../../search.aspx?q=%22Getting+all+you+can+out+of+a+keyboard+layout%22&amp;p=1">Getting all you can out of a keyboard layout</A></STRONG> series:</P>
+<BLOCKQUOTE><FONT face="times new roman,times" size=2><I>
+<P><EM>What would i have to do to convert this function so that I don't need to do anything else but call it?<BR><BR>Thanks,<BR><BR>Mike</EM></P></I></FONT></BLOCKQUOTE>
+<P mce_keep="true">I admit I was kind of baffled at first trying to understand what Mike was asking. I am going to try and use this post to figure it out. :-)</P>
+<P mce_keep="true">We'll start with the code, first introduced in <STRONG><A class="" href="http://archives.miloush.net/michkap/archive/2006/04/06/569632.html" mce_href="http://archives.miloush.net/michkap/archive/2006/04/06/569632.html">Part 7</A></STRONG> of the series:</P>
+<BLOCKQUOTE><STRONG><FONT face="Consolas,Lucida Console,Courier New,Courier" size=2>
+<P mce_keep="true">private static void ClearKeyboardBuffer(uint vk, uint sc, IntPtr hkl) {<BR>&nbsp;&nbsp;&nbsp;&nbsp;StringBuilder sb = new StringBuilder(10);<BR>&nbsp;&nbsp;&nbsp;&nbsp;int rc = 0;<BR>&nbsp;&nbsp;&nbsp;&nbsp;while(rc != 1) {<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;rc = ToUnicodeEx(vk, sc, lpKeyStateNull, sb, sb.Capacity, 0, hkl);<BR>&nbsp;&nbsp;&nbsp;&nbsp;}<BR>}&nbsp;</P></FONT></STRONG></BLOCKQUOTE>
+<P mce_keep="true">Perhaps he meant he did not want to pass a VK value, since (as I mentioned there) you would want to be especially careful to pick one that is unlikely to ever have any kind of dead key assignment -- which is why i was choosing VK_DECIMAL.</P>
+<P mce_keep="true">Of course the function could just call it with VK_DECIMAL explicitly and not require the caller to pass it.</P>
+<P mce_keep="true">Or maybe he meant he did not want to pass in the target keyboard (that hkl parameter). Even easier -- remove the parameter and call <A class="" href="http://msdn2.microsoft.com/library/ms646320.aspx" mce_href="http://msdn2.microsoft.com/library/ms646320.aspx">ToUnicode</A> rather than calling <A class="" href="http://msdn2.microsoft.com/library/ms646322.aspx" mce_href="http://msdn2.microsoft.com/library/ms646322.aspx">ToUnicodeEx</A>. :-)</P>
+<P mce_keep="true">Or perhaps Mike was trying to not make it be a C# function but instead put it in another language. This too is easy enough, though of course the answer would depend on the language in question....</P>
+<P mce_keep="true">Maybe what was actually meant was getting rif of the external dependency caused by that lpKeyStaeNull value. You could replace the lpKeyStateNull with what was assigned to that variable (just an empty key state&nbsp;array).</P>
+<P mce_keep="true">Those are my guesses about the intent. Mike, can you clarify which you meant (or give me the specifics of the one I missed?).</P>
+<P mce_keep="true">&nbsp;</P>
+<P mce_keep="true"><FONT color=#ff00ff><EM>This post brought to you by</EM> <FONT face="Arial Unicode MS,Code2000" size=6><STRONG>␀</STRONG></FONT> <EM>(<A class="" href="http://www.fileformat.info/info/unicode/char/2400" mce_href="http://www.fileformat.info/info/unicode/char/2400">U+2400</A>, a.k.a. SYMBOL FOR NULL)</EM></FONT></P>
+<hr/><div style="margin-left: 1em"><em>no comments</em></div><hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2007/02/08/1632045.html" title="Language is Politics">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2007/02/08/1623512.html" title="Donkey Kong? No, it is just the Meiryō brothers!">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2007-02">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2007-02-08">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2007/02/08/1623919.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:38 GMT -->
+</html>

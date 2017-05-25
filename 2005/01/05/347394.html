@@ -1,0 +1,40 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2005/01/05/347394.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:42 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>The new compiler error C4819</title></head><body>
+<h1>The new compiler error C4819</h1>
+<p><em>by Michael S. Kaplan, published on 2005/01/05 21:07 -05:00, original URI: http://blogs.msdn.com/b/michkap/archive/2005/01/05/347394.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P>I was looking at <A href="http://weblogs.asp.net/elyasse/">Elyasse's Weblog</A> and was reminded of one of the <A href="http://weblogs.asp.net/elyasse/archive/2005/01/05/347048.aspx">coolest feature</A>&nbsp;entries in Whidbey.</P>
+<P>I think I have been waiting roughly 112 versions of the Microsoft compilers for this. Well, probably not that many but it does feel like that....</P>
+<P>New in Whidbey! From the help:</P>
+<BLOCKQUOTE dir=ltr>
+<P class=MsoNormal><FONT size=3><SPAN>C4819 occurs when an ANSI source file is compiled on a system with a codepage that cannot represent all characters in the file. </SPAN></FONT></P>
+<P class=MsoNormal><FONT size=3><SPAN>To resolve C4819, save the file in Unicode format.</SPAN></FONT></P></BLOCKQUOTE>
+<P>This is incredibly cool.... :-)</P>
+<P>&nbsp;</P>
+<P><FONT color=#800080><EM>This post is sponsored by </EM>"<FONT size=5>©</FONT>"<EM> (a.k.a. U+009, COPYRIGHT SIGN)</EM></FONT></P>
+<hr/><p><a id="349271" href="#349271">#</a> <strong>Anon</strong> on 8 Jan 2005 4:21 PM:</p><div style="margin-left: 1em">&quot;C4819 occurs when a non-ANSI compliant compiler ignores clause 2.1 (Phases of Translation) in the C++ standard and does not map physical source characters to the basic source character set&quot;</div>
+<p><a id="349290" href="#349290">#</a> <strong>Michael Kaplan</strong> on 8 Jan 2005 5:35 PM:</p><div style="margin-left: 1em">Answer to the question this post implied....</div>
+<p><a id="349450" href="#349450">#</a> <strong>Anon</strong> on 9 Jan 2005 8:03 AM:</p><div style="margin-left: 1em">Ah, it generates this when it can't perform the mapping because it has encountered a nonsense byte? That's fine, but I still think &quot;save the file as unicode&quot; is duff advice considering all the legacy source control systems out there...<br><br>I'm now curious. What did the compiler do prior to Whidbey? Assume a particular codepage?</div>
+<p><a id="349476" href="#349476">#</a> <strong>Michael Kaplan</strong> on 9 Jan 2005 9:38 AM:</p><div style="margin-left: 1em">Well, the advice is for *new* code, not legacy.<br><br>Legacy systems would always save the file as ANSI and so the characters in question would be converted to question marks (same as in notepad when you try to save as ANSI).</div>
+<p><a id="8464049" href="#8464049">#</a> <strong>Vladislav Vaintroub</strong> on 6 May 2008 6:05 PM:</p><div style="margin-left: 1em"><p>Too much i18n does not seem good for the compiler.</p>
+<p>Michael, by all respect I cannot share your view on this &quot;incredibly cool&quot; feature. I think it is incredibly uncool.</p>
+<p>The bad thing about this warning &nbsp;can result to an error like here</p>
+<p><a rel="nofollow" target="_new" href="http://connect.microsoft.com/VisualStudio/feedback/ViewFeedback.aspx?FeedbackID=341454">http://connect.microsoft.com/VisualStudio/feedback/ViewFeedback.aspx?FeedbackID=341454</a> </p>
+<p>is that : C strings, &nbsp;the null terminated arrays of bytes,</p>
+<p>do not have any encoding information per se, i.e are supposed to be treated as opaque arrays of bytes. Now, I have a perfectly valid</p>
+<p>C file, containing ASCII-only, except for UTF8 bytes instrings (UTF8 for a good reason, I intend to edit this file in UTF-8 editor). And such a file will break with incomprehensible message on Whidbey on Japanese Windows now </p>
+<p>The connect bug is now resolved with Won't Fix, so I can not even hope that this will be fixed with the next version of the compiler.</p>
+<p>Alternatives for me?</p>
+<p>1)Documentation and support says &nbsp;- add a BOM to the file. No way, then it will break on older compiler and on non-Microsoft compilers.</p>
+<p>2)#pragma setlocale?</p>
+<p>Does not work</p>
+<p>3) convert strings &nbsp;to &nbsp;their hex-byte-array array form</p>
+<p>something like</p>
+<p>char foo={0xba,0xad,0xf0,0x0d,0x00}?</p>
+<p>Will work, will look ugly and I'll have to forget about editing this file in a my wonderful UTF8 -capable editor , VS2005 IDE.</p>
+<p>Or forget about getting this file compiled on Japanese Windows. It is not important *for me* anyway. &nbsp;This compiler works quite well on latin1 territories:)</p></div>
+<p><a id="8464134" href="#8464134">#</a> <strong>Michael S. Kaplan</strong> on 6 May 2008 6:37 PM:</p><div style="margin-left: 1em"><P>Since the BOM does exist, you could also petition the other compilers to start recognizing it, too. I'm sorry, but I agree with Jonathan Caves on this issue -- use the BOM and you are golden.</P></div>
+<hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2010/06/05 <a href="http://archives.miloush.net/michkap/archive/2010/06/05/10019465.html">Not all developers speak English. Dammit.</a></p><p>2008/05/19 <a href="http://archives.miloush.net/michkap/archive/2008/05/19/8518545.html">Everyone seems averse to the BOM these days; Should we blame TSA? :-)</a></p><p>2005/12/09 <a href="http://archives.miloush.net/michkap/archive/2005/12/09/502290.html">More on the C4819 error</a></p><p>2005/11/23 <a href="http://archives.miloush.net/michkap/archive/2005/11/23/495193.html">100% roundtrip ASCII? 100% roundtrip ANSI?</a></p><p>2005/10/28 <a href="http://archives.miloush.net/michkap/archive/2005/10/28/486019.html">It isn't Unicode, it's Double Secret Unicode!</a></p><p>2005/01/08 <a href="http://archives.miloush.net/michkap/archive/2005/01/08/349230.html">How does it detect invalid characters?</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2005/01/06/347536.html" title="The West Wing last night (5 January 2005)">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2005/01/05/346933.html" title="What is up with number sorting?">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2005-01">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2005-01-05">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2005/01/05/347394.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:42 GMT -->
+</html>

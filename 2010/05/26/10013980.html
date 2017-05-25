@@ -1,0 +1,48 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2010/05/26/10013980.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:35 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>The SOP for STX vs. SOH vs. SOT: excitabat enim fluctus in simpulo!</title></head><body>
+<h1>The SOP for STX vs. SOH vs. SOT: excitabat enim fluctus in simpulo!</h1>
+<p><em>by Michael S. Kaplan, published on 2010/05/26 07:01 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2010/05/26/10013980.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<p><em><span style="color: #ff0000;">If your Latin is a little rusty, the title has a bit from Cicero in it;&nbsp;literally translated it would be something like "He was stirring up billows in a ladle" so think of it as me very pretentiously referring to "a tempest in&nbsp;a teapot"!</span></em></p>
+<p>Sometimes Microsoft makes mistakes.</p>
+<p>I know, major newsflash there. Stop the presses, for sure....</p>
+<p>How quickly they are noticed, and how quickly they are fixed? Both points are subject to interpretation and bias. I tend to not be so&nbsp;biased in most cases (being unafraid to call a bone-headed thing bone-headed). But that might be a story for another day....</p>
+<p>For now, I'll talk about one of the mistakes.</p>
+<p>One that can be be traced back quite a ways though it is not entirely clear how far back.</p>
+<p>You may&nbsp;have had your eyes pass over this bug yourself, once or perhaps many times.</p>
+<p>If you know what I mean.</p>
+<p>Perhaps if I explained what I was talking about it would be easier for you, huh?</p>
+<p>I have a feeling this will gio much faster if I just start talking about what I am talking about.</p>
+<p>It started with a customer report of a problem on one of web pages on goglobal (<a href="http://msdn.microsoft.com/ru-ru/goglobal/cc305144(en-us).aspx">this one</a>, the one with code page 1251 on it):</p>
+<blockquote>
+<p><span style="font-family: times new roman,times;">* Name: Юрий<br /></span><span style="font-family: times new roman,times;">* URL: </span><a href="http://msdn.microsoft.com/ru-ru/goglobal/cc305144(en-us).aspx"><span style="font-family: times new roman,times;">http://msdn.microsoft.com/ru-ru/goglobal/cc305144(en-us).aspx</span></a><br /><span style="font-family: times new roman,times;">* Feedback Details: Здравствуйте! Мне кажется что символы с кодами 01 и 02 перепутаны местами, и символ SOT должен называться SOH (Start Of Heading)</span></p>
+</blockquote>
+<p>Oh wait,&nbsp; some of you might feel like your Russian skills are a tad rusty. I know mine are barely enough for this one myself.</p>
+<p>Put simply, Yuri (Юрий)&nbsp;was suggesting that the character codes for 0x01 and 0x02 were reversed, and that SOT should be SOH.</p>
+<p>In <a href="http://msdn.microsoft.com/en-us/goglobal/cc305144.aspx">this</a> table:</p>
+<p><img src="http://trigeminal.fmsinc.com/images/stx01.jpg" border="0" style="max-width: 550px;" /></p>
+<p>Every single <a href="http://msdn.microsoft.com/en-us/goglobal/bb964656.aspx">code page reference on the goglobal</a>&nbsp;site, and the original GlobalDev site tables they were migrated from, has the same layout for these two slots. Including, ironically enough, <a href="http://msdn.microsoft.com/en-us/goglobal/bb964656.aspx">the ISO code pages</a>.</p>
+<p>This is one of those weird cases though. I mean, nothing is reversed in regard to the numbers (0x01 goes with U+0001 and 0x02 goes with U+0002 -- so the data in the table is right).</p>
+<p>But if you look at info on <a href="http://en.wikipedia.org/wiki/C0_and_C1_control_codes">these C0 control codes</a>, you'll see that Yuri is right about the symbols the table uses to describe the slots;&nbsp;the symbols should actually look more like they looked in the original <strong>Developing International Software for Windows 95 and Windows NT</strong>.</p>
+<p>Most of the code pages don't have these tables in them, but look in your copy of the book, check out the beginning of code page 932 right where <strong>Appendix G</strong> starts. </p>
+<p>Go on, look now.</p>
+<p>I'll wait.</p>
+<p>Or, if your copy of the book isn't handy (maybe it is at the office and you are at home, or vice versa), you can check it out online <a href="http://msdn.microsoft.com/en-us/library/cc194889(v=MSDN.10).aspx">here</a>:</p>
+<p><img src="http://trigeminal.fmsinc.com/images/stx02.jpg" border="0" style="max-width: 550px;" /></p>
+<p>See what I mean?</p>
+<p>Oops.</p>
+<p>Now unless I'm mistaken, the tables for the book were provided by the same person who provided the tables for the website (most likely one of two people: either the person who I would totally excuse the lapse in,&nbsp;or the other person who I'd shrug and say "that figures").&nbsp;But either way,&nbsp;how this particular mistake came about is not entirely clear, either way.</p>
+<p>The names themselves are also odd in that there are not the names according to Unicode; instead they are defined in places like ISO/IEC 6429:1992, a standard that I actually have a copy of from a few years back and which does quite clearly match the one in the book and not the ones on the globaldev/goglobal sites.</p>
+<p>Now this error is not a recent problem -- according to the Internet Archive it has existed <a href="http://web.archive.org/web/19991007005812/www.microsoft.com/globaldev/reference/sbcs/1251.htm">at least since 1999 when GlobalDev went live</a>&nbsp;(as the WayBack Machine link proves pretty conclusively!).</p>
+<p>And if you consider <a href="http://msdn.microsoft.com/en-us/goglobal/bb964656.aspx">every code page table that has this wrong</a> and the fact that they have been online for over decade and <strong>no one has ever reported it before</strong>, quite possibly <strong>INCLUDING YOU</strong>, which tends to put the&nbsp; words of the person who forwarded it on to someone who forwarded it on to someone who forwarded it on to someone who forwarded it on to someone who forwarded it on to someone who asked me to comment about it:</p>
+<p style="padding-left: 60px;"><em><span style="font-family: times new roman,times;">Seems like one of our customers found a huge, huge issue with our GoGlobal center. The issue happens across all locales.</span></em></p>
+<p>in rather sharp relief.</p>
+<p>I mean, is it really that huge?</p>
+<p>The text tables below have it right and there is no programmatic process that uses those graphical representations in Windows and the names are correct, it is just the two symbols in the table that are wrong.</p>
+<p>Now there are some people out there who, when see that Microsoft is wrong about something, they alert Digg or SlashDot or Mary Foley or whoever and it's a big thing. But this small (admittedly x 35) graphical error that has been around over 10 years that no one ever noticed and if they had would never have made that kind of impact.... does not seem like such a big deal.</p>
+<p>Maybe it is worth fixing (though I don't happen to think so, and if it were my call I wouldn't bother). Perhaps it is worth a KB article; I mean, if we can put up ones like my old favorite&nbsp;<a href="http://web.archive.org/web/20040603154438/support.microsoft.com/?kbid=172653">KB172653</a>&nbsp;(the one which made me want to look into working for Product Support for a bit!) then certainly we could consider writing one up about this web site graphics issue that has made it through over 10 years and almost ten versions of Windows. :-)</p>
+<p><em>It just occurred to me that (in this blog)&nbsp;I assumed that you, as a reader here, knows both Latin and Russian, has a copy of the 1st version Developing International Software,&nbsp;and has seen those code page table at least once and maybe many times just because I have linked to them many times. I hope at least some of it was true, and if not that you were not too distracted thereby!</em></p>
+<hr/><div style="margin-left: 1em"><em>no comments</em></div><hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2010/05/27/10016095.html" title="O-O-O-Iced Win7 and an Oriya Cookie, They forever go together, What a Classic Combination....">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2010/05/25/10014052.html" title="Can you Vai for attention and get in a Tif[inagh] with [Marie] Osman[ya]? N&#39;ko way!">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2010-05">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2010-05-26">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2010/05/26/10013980.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:35 GMT -->
+</html>

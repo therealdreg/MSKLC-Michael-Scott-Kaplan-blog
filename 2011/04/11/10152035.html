@@ -1,0 +1,58 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2011/04/11/10152035.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>One of my colleagues is the "Pseudo Man" (a rich source of puns in conversation!)</title></head><body>
+<h1>One of my colleagues is the "Pseudo Man" (a rich source of puns in conversation!)</h1>
+<p><em>by Michael S. Kaplan, published on 2011/04/11 07:01 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2011/04/11/10152035.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<p>Pseudolocalization.</p>
+<p>That interesting noun has its own Wikipedia article that was first written in&nbsp;October of 2005&nbsp;(link <a href="http://en.wikipedia.org/wiki/Pseudolocalization">right here</a>, it has warnings as not citing references and sources first put up in June 2009), which includes the following definition:</p>
+<p style="padding-left: 60px;"><em>Pseudolocalization is a software testing method that is used to test internationalization aspects of software. Specifically, it brings to light potential difficulties with localization by replacing localizable text (particularly in a graphical user interface) with text that imitates the most problematic characteristics of text from a wide variety of languages, and by forcing the application to deal with similar input text.</em></p>
+<p style="padding-left: 60px;"><em>If used properly, it provides a cheap but effective sanity test for localizability that can be helpful in the early stages of a software project.</em></p>
+<p>The article references the E7 blog <a href="http://blogs.msdn.com/b/e7/archive/2009/07/07/engineering-windows-7-for-a-global-market.aspx">Engineering Windows 7 for a Global Market</a>&nbsp;which has a definition more focused on its used in Windows:</p>
+<h3 style="padding-left: 60px;"><em>Pseudo-Localization</em></h3>
+<p style="padding-left: 60px;">To prevent common globalization bugs, pseudo-localized builds were created. Pseudo-localization is a process that creates a localized product in an artificial language. That language is identical to English except that each character is written with a different character that visually resembles the English character. Except for being entirely machine generated, we create the pseudo-localized builds exactly the same way as we create the localized builds. Because even monolingual US software developers can read pseudo-localized text, it has proven to be an excellent way to find globalization problems early in the development cycle. In the Windows 7 beta, some UI elements were still in their pseudo-localized form, causing some interesting theories about what the meaning might be. We hope we have solved the mystery with this blog post. :-)</p>
+<p style="padding-left: 60px;">&nbsp;</p>
+<p align="center" style="padding-left: 60px;"><img height="354" width="668" src="http://blogs.msdn.com/blogfiles/e7/WindowsLiveWriter/EngineeringWindows7foraGlobalMarket_BEA8/image_30.png" alt="Pseudo-loc control panel" border="0" title="Pseudo-loc control panel" style="display: inline; border-width: 0px;" /></p>
+<p align="center" style="padding-left: 60px;"><b>Control Panel Dialog in Pseudo-localized Windows 7</b></p>
+<p>The words here might imply that pseudo started with Windows 7, but that isn't true.</p>
+<p>Now it did not exist when XP or Server 2003 or Server 2003 R2 were being developed.</p>
+<p>In truth, it started during the early design phases of Vista. Way back in the before time, when it was called Longhorn, actually.</p>
+<p>Pseudo builds were first available in Beta 1 of Vista</p>
+<p>The project&nbsp;was hatched largely by the localizability engineers, something they organically designed to help catch problems that these people knew of that were usually not caught until localization was formally underway since localized builds were required.</p>
+<p>When presenting about&nbsp;pseudo&nbsp;to core teams,&nbsp;I usually have a description of it that is something like this:</p>
+<p style="padding-left: 30px;">Think of pseudo as an eager and hardworking yet naive <strong>intern localizer</strong>, who is eager to prove himself [or herself, I tended to alternate the gender] and who going to translate every single string that you don't say shouldn't get translated. So that when you install the build you know that:</p>
+<ul style="padding-left: 30px;">
+<li>if there are any places that aren't available to localization due to being hard-coded, since the intern localizer couldn't reach it, and</li>
+<li>if there are places that, when localized, break code because things were put into resources that perhaps shouldn't be (think e.g. HTML tags)</li>
+</ul>
+<p style="padding-left: 30px;">Because while&nbsp;much and in many cases the majority&nbsp;of the time localizers can be smart and make the right choices, when you look at the millions of words across over 100 languages, someone can obviously make a mistake -- and the mistake can be easy to find or hard to do so. Therefore, this pseudo, this intern localizer, by acting as the busiest canary in the coal mine ever, can find the kinds&nbsp;of issues that we could never have hoped to have the same coverage of in every single language -- and faster than we ever could have done, anyway.</p>
+<p>Little known fact that I'll tell you all now: <strong>we actually stage lots of our Windows builds on pseudo and "localize" them into English!</strong></p>
+<p>This was originally a bug while pseudo was first being set up in the official build lab, but became something of a de facto&nbsp;standard procedure due to the bugs we found in the process of enduring this original bug.</p>
+<p>And now it is a great and easy way to verify the build process</p>
+<p>Now since it was long before the NLS team build their own pseudo locales (the ones I first mentioned them in <a href="http://archives.miloush.net/michkap/archive/2006/08/16/702877.html" title="Walking off the end of the eighth bit"><strong>Walking off the end of the eighth bit</strong></a>, pointing to Shawn's <a href="http://blogs.msdn.com/shawnste/archive/2006/06/27/647915.aspx" title="Pseudo Locales in Windows Vista Beta 2"><strong>Pseudo Locales in Windows Vista Beta 2</strong></a>), they had to build on top of an existing&nbsp;locale (and they needed an existing locale for architectural reasons). They decided to choose a locale that "would never be a localization target language in Windows or Office".</p>
+<p>They built it at atop Turkmen (Turkmenistan), aka tk-TM. </p>
+<p>This led to some interesting consequences with the collation of strings due to the way&nbsp;Turkmen sorting works&nbsp;-- a fact that was reported as a bug several times during both Vista and Windows 7!</p>
+<p>And they were almost right about it never being a localization target language.</p>
+<p>If you define <strong>never </strong>as being "until the next version" that is --&nbsp;since we did create a Turkmen LIP for Windows 7....</p>
+<p>ref: my <a href="http://archives.miloush.net/michkap/archive/2011/02/23/10132959.html" title="Turkmen! (for both Turkmen and women of Turkeminstan)"><strong>Turkmen! (for both Turkmen and women of Turkmenistan)</strong></a> from earlier this year. </p>
+<p>And don't even get me started on this ps-PS issue, I ranted about that enough in <a href="http://archives.miloush.net/michkap/archive/2007/02/04/1596987.html" title="The name of the song is not 'ps-PS I Love You'"><strong>The name of the song is not 'ps-PS I Love You'</strong></a>.</p>
+<p>Note that the Turkmen LIP almost could have been scrubbed due to the complications of all the work that assumed it would never be needed for localization, and we had to overcome some interesting engineering challenges because of all of the places in build scripts and test suites that would&nbsp;mistake it for pseudo.</p>
+<p>Personally, I'm glad those hurdles&nbsp;were able to&nbsp;be overcome. </p>
+<p>The whole question of <a href="http://archives.miloush.net/michkap/archive/2010/10/30/10083402.html" title="Why one LIP and not another?"><strong>Why one LIP and not another?</strong></a> is hard enough without adding "and has never been added [even unintentionally] to the Naughty List"....</p>
+<hr/><p><strong>John Cowan</strong> on 11 Apr 2011 8:11 AM:</p><div style="margin-left: 1em"><p>What, you couldn&#39;t choose my favorite example of a useless locale, nv-DK? &nbsp;Shaaaaame.</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 11 Apr 2011 10:08 AM:</p><div style="margin-left: 1em"><p>Well it had to be one we had on the box already; not too many code talkers in our target markets....</p>
+</div>
+<p><strong>Yuhong Bao</strong> on 11 Apr 2011 12:25 PM:</p><div style="margin-left: 1em"><p>Reminds me of reddit mold.</p>
+</div>
+<p><strong>kinokijuf</strong> on 14 Apr 2011 8:30 AM:</p><div style="margin-left: 1em"><p>Can we download the pseudo MUI?</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 14 Apr 2011 8:57 AM:</p><div style="margin-left: 1em"><p>It is not currently available, though that question has come up before....</p>
+</div>
+<p><strong>Alex Grigoriev</strong> on 31 May 2011 7:10 AM:</p><div style="margin-left: 1em"><p>My favorit localizaton bug, If I remember correctly, is that the response strings for MCI commands (which are supposed to be parsed by programs) were translated.</p>
+</div>
+<p><strong>Peter</strong> on 27 Jul 2012 12:24 AM:</p><div style="margin-left: 1em"><p>Why didn&#39;t you clone the locale under non-existing name like xa-XU?</p>
+</div>
+<hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2011/06/20 <a href="http://archives.miloush.net/michkap/archive/2011/06/20/10176769.html">There's a ™ joke in here somewhere, I just don't know what is (aka And if a 't' turned out to be 'm'…)</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2011/04/12/10152369.html" title="Better to be wrong while being right than to be right while missing the point...">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2011/04/09/10151666.html" title="[Keyboard ]Solution Unsatisfactory">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2011-04">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2011-04-11">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2011/04/11/10152035.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+</html>

@@ -1,0 +1,30 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2011/07/05/10183038.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Easy question begat convoluted answer....</title></head><body>
+<h1>Easy question begat convoluted answer....</h1>
+<p><em>by Michael S. Kaplan, published on 2011/07/05 07:01 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2011/07/05/10183038.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<p>Rich's question was straightforward enough:</p>
+<p style="padding-left: 60px;"><span style="font-family: times new roman,times; font-size: medium;">Hello,</span></p>
+<p style="padding-left: 60px;"><span style="font-family: times new roman,times; font-size: medium;">The product I work on needs to run on .Net 2 but our test harness needs to run on .Net 4.&nbsp; These are hard restrictions and we can&rsquo;t get around them due to dependencies.</span></p>
+<p style="padding-left: 60px;"><br /><span style="font-family: times new roman,times; font-size: medium;">When I run the following code on .Net 2.0 and .Net 4.0, I get different outputs.</span><br /><span style="font-family: times new roman,times; font-size: medium;">DateTime now = DateTime.Now;</span><br /><span style="font-family: times new roman,times; font-size: medium;">CultureInfo ci = new CultureInfo("it-IT", false);</span></p>
+<p style="padding-left: 60px;"><span style="font-family: times new roman,times; font-size: medium;">Console.Write(now.ToString("T", ci));</span></p>
+<p style="padding-left: 60px;"><span style="font-family: times new roman,times; font-size: medium;">The operating systems seem to have different values as well, though the .Net behavior will be the same on either OS.&nbsp;&nbsp; Does anyone know what is correct time format is and where this is defined?</span></p>
+<p style="padding-left: 60px;"><span style="font-family: times new roman,times; font-size: medium;">Server 2008 SP2:<br /></span><span style="font-family: times new roman,times; font-size: medium;"><img src="http://msdnshared.blob.core.windows.net/media/MSDNBlogsFS/prod.evol.blogs.msdn.com/CommunityServer.Blogs.Components.WeblogFiles/00/00/00/33/81/0652.italy01.jpg" width="348" height="400" /></span></p>
+<p style="padding-left: 60px;"><span style="font-family: times new roman,times; font-size: medium;">Server 2008 R2 SP1:<br /><img src="http://msdnshared.blob.core.windows.net/media/MSDNBlogsFS/prod.evol.blogs.msdn.com/CommunityServer.Blogs.Components.WeblogFiles/00/00/00/33/81/6180.italy02.jpg" width="351" height="405" /></span></p>
+<p>I suppose this question just helps to prove that the question&nbsp;being straightforward isn't much of an indicator for whether the answer will be.</p>
+<p>Where should we start?</p>
+<ul>
+<li>There is absolutely no guarantee whatsoever that data will not change&nbsp;between versions of Windows;</li>
+<li>There is absolutely no guarantee whatsoever that data will not be different between Windows and .Net;</li>
+<li>Cultures like it-IT were not changed at all in .Net 2.0/3.0/3.5, but were all updated in .Net 4.0 based on changes that had been happening;</li>
+<li>The notion of adding a dependency between multiple versions returning the same results is dangerous at best and can often be counted on to fail.</li>
+</ul>
+<p>In the end, the only surprising fact is that the scenario ever "worked" -- failure can eventually be pretty much guaranteed....</p>
+<hr/><p><strong>jader3rd</strong> on 5 Jul 2011 9:54 AM:</p><div style="margin-left: 1em"><p>After reading a lot of posts on &quot;The Old New Thing&quot; one tidbit has been impressed on me; the fact that Microsoft&#39;s biggest problem may be how to communicate the fact that things which &quot;worked&quot; weren&#39;t supposed to, and now that they&#39;re fixed, it&#39;s actually a good thing.</p>
+</div>
+<p><strong>John Cowan</strong> on 18 Jul 2011 8:07 AM:</p><div style="margin-left: 1em"><p>Indeed, sometimes bug-for-bug compatibility is the Wrong Thing, and sometimes it&#39;s the Right Thing, and sometimes people think it&#39;s the Wrong Thing when it&#39;s really the Right Thing, and sometimes ... you get the idea. &nbsp;Backward, turn backward, O Time, in your flight ....</p>
+</div>
+<hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2011/07/06/10183433.html" title="Maybe there is a movement of people who want to send an ever-so-respectful BITE ME">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2011/07/04/10182859.html" title="It could be worse. We could be telling Japanese users &#39;Go stick your head in a pig&#39;!">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2011-07">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2011-07-05">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2011/07/05/10183038.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+</html>

@@ -1,0 +1,88 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2008/09/17/8954874.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:35 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>About the people who work for companies, and *their* fonts</title></head><body>
+<h1>About the people who work for companies, and *their* fonts</h1>
+<p><em>by Michael S. Kaplan, published on 2008/09/17 03:01 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2008/09/17/8954874.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<p><font color="#ff0000"><i>On a completely unrelated note, can anything ever be really Wright again now that Rick is gone. :-(</i></font><br></p>
+
+<p>People who read my blog from the other day titled <b><a href="http://archives.miloush.net/michkap/archive/2008/09/14/8951009.html" mce_href="http://archives.miloush.net/michkap/archive/2008/09/14/8951009.html">About companies and their fonts</a></b> the other day who know something about fonts on Vista might be torn between two different feelings.</p>
+
+<p>You know, the feeling of "wondering if I have any idea what I am talking about" versus the feeling of "being cheated of the full answer."</p>
+
+<p>I suppose in fairness to that latter group that still have some faith in me, I should come clean and finish the story. :-) <br></p>
+
+<p>Now it is true that, as I said:</p>
+
+<blockquote>
+<p><font face="times new roman,times">Of course, to start with there is that whole <b><a href="http://archives.miloush.net/michkap/archive/2008/09/08/8932366.html" mce_href="http://archives.miloush.net/michkap/archive/2008/09/08/8932366.html">On 
+installing and removing fonts</a></b> series that has laid out many of the real 
+problems with and added some suggestions about the installation, updating, and 
+removal of fonts from Windows.</font></p>
+
+<p><font face="times new roman,times">And of course from the information in that series one can see the exact 
+permissions that must be allowed if one wants permissions to be broadly granted 
+to users to manage their own fonts:<br></font></p>
+
+<ul>
+<li><font face="times new roman,times">Write permissions to the Fonts folder, and 
+</font></li>
+
+<li><font face="times new roman,times">Permissions to add values to the </font><font size="1" face="times new roman,times"><b>HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Fonts</b></font><font face="times new roman,times"> 
+subkey in the registry.</font></li>
+</ul>
+</blockquote>
+
+<p>but if you find a company full of users who know how to do all of that manually then....</p>
+
+<p>Never mind, that has never happened.</p>
+
+<p>On the other hand if you find a company that would lock systems down but then go out of its way to open them up like this, then....</p>
+
+<p>Never mind, that company will fold soon, so what their corporate network security and policy practices may or may not be is only interesting from a forensic analysis of who took the company down. :-)</p>
+
+<p>What people are looking for any time they talk about <b>managing their own fonts</b> is not the ability to randomly write registry keys via function call, copy files via the DOS prompt, and reboot. They are talking about how to use the tools that are there -- the Fonts folder, dragging files in and out, etc.</p>
+
+<p>That no longer works the same way -- having permission is not enough now, because of the way UAC/LUA works.<br></p>
+
+<p>One example from the people who asked me about the rest of the story I was skipping there came from developer Matthew:</p>
+
+<blockquote>
+<p><i><font face="times new roman,times">Indeed it is more complicated than that--at least as best as I can determine.<br><br>You'll recall there was a thread recently (end of August) about pretty much this issue.&nbsp; I looked at the relevant code (the font dialog and the functions it uses), and, from what I saw, the only way to allow a user to manage their own fonts, across sessions, using documented UI or API, is for that user to be a member of the Administrators group.&nbsp; This stems from the way the font dialog uses UAC--it requires elevation to Administrator (not just to an elevated token) before attempting any font manipulation, even if the user would have access.</font></i><br></p>
+</blockquote>
+
+<p>That's just it -- the handler on top of the virtual <b>Fonts</b> folder, both from the <b>Add Fonts...</b> dialog and from drag/drop with the folder, is expecting more.</p>
+
+<p>It runs through the "<b>Elevate Me, Please?</b>" code which has some pretty high expectations, as Matt indicates above -- higher than you may have set them to yourselves since in this case that code is not designed to try it and try to elevate on failure.</p>
+
+<p>Which is just about the only way it could work well in this case.<br></p>
+
+<p><i>And what is worse is that if you turn UAC off (which some people do!) then because of the way the code is structured, you might still be unable to add fonts, due to the way the code was structured to fail the attempt if elevation could not happen (and not properly handling the case where elevation failed due to it being turned off!). Luckily this is not a typical scenario for large companies to be allowing, it is just an additional bad example which can easily hit customers in the non-LORG case....</i></p>
+
+<p>So what to do here, exactly?</p>
+
+<p>Well, I suppose the space is ripe for third party utilities that will do all of the things that can be done programmatically when the main user interface to do the work has been shut down, either by intentionally having the UAC code blocking their way, or by turning UAC off and blocking this case anyway.</p>
+
+<p>Hopefully someone is looking into making this space better for next version.</p>
+
+<p>And also hopefully someone is looking at a utility like the one above to handle the cases today.</p>
+
+<p>And finally, hopefully application developers who have to design applications that do not require Administrative permissions have looked at resources like that <b><a href="http://archives.miloush.net/michkap/archive/2008/09/08/8932366.html" mce_href="http://archives.miloush.net/michkap/archive/2008/09/08/8932366.html">On installing and removing fonts</a></b> series here, especially <b><a href="http://archives.miloush.net/michkap/archive/2008/09/08/8932366.html" mce_href="http://archives.miloush.net/michkap/archive/2008/09/08/8932366.html">that last part</a></b> that goes into the benefits of using font embedding and private fonts to remove the need for Administrative permission entirely.</p>
+
+<p>Of course it is easy to start going on at length about how this kind of thing makes the OS seem unfinished. Though taking the wider view, I think the better locking down of the Fonts folder <b>IS</b> finished. What is left is working on the overall usability features of the <b>Fonts folder</b>, something that has been lacking for a long time anyway, even outside the problems noted here....</p>
+
+<p>In the meantime, the pieces are in place for Microsoft to make all of this better; the pieces are even in place for others to step up in the meantime. The glass is, if not half full, then at least not half empty -- and both the bartender and a server behind the bar are on how way back to do the refill. :-)<br></p>
+
+<p><br></p>
+
+<p><font color="#ff00ff"><i>This blog brought to you by</i><font size="6"> ઘ </font><i>(<a href="http://www.fileformat.info/info/unicode/char/0a98" mce_href="http://www.fileformat.info/info/unicode/char/0a98">U+0a98</a>, aka GUJARATI LETTER GHA)</i></font><br></p>
+<hr/><p><a id="8955668" href="#8955668">#</a> <strong>John Cowan</strong> on 17 Sep 2008 11:26 AM:</p><div style="margin-left: 1em"><p>Ah, the wonders of $HOME/.fonts, which lets me install my own fonts without interfering with the system-installed fonts.</p></div>
+<p><strong>Simon Buchan</strong> on 22 Sep 2008 3:30 AM:</p><div style="margin-left: 1em"><p>I have wondered why a per-user font folder (imitating the *nix system, as John mentioned) has not been defined yet.</p>
+<p>This seems to be the fairly simple task of running AddFontResource() over the contents of some folder in the profile dir (%APPDATA%\Fonts?), then broadcasting WM_FONTCHANGE, on login. Or does AddFontResource() elevate? (MSDN says nothing about it, which normally means no)</p></div>
+<p><strong>Michael S. Kaplan</strong> on 22 Sep 2008 3:42 AM:</p><div style="margin-left: 1em"><p>AddFontResource does not elevate, no. </p>
+<p>But this particular question is one I want to get some expert testimony about rather than making guesses (even if they would be somewhat educated!). It will likely be a whole new blog eventually...</p>
+</div>
+<p><strong>John Cowan</strong> on 22 Sep 2008 12:03 PM:</p><div style="margin-left: 1em"><p>Fortunately, I don't need to reboot (or even restart X) to add a font: I just stuff the font file in the correct directory, run the reindexing program from a terminal (yeah, there should be a GUI for this, but I haven't found one), and the next time a program enumerates fonts it will find the new one, or if I know its name I can use it in any running program.</p></div>
+<hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2008/09/17/8954928.html" title="Behind the Proposed Change to Tamil in Unicode (five different ways)">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2008/09/16/8953564.html" title="Vérité (add MUI support in a service pack) ou oser (tell me whether returning &#39;vrai&#39; was intentional)?">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2008-09">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2008-09-17">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2008/09/17/8954874.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:35 GMT -->
+</html>

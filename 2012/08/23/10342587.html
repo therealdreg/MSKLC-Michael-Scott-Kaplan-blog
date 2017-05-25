@@ -1,0 +1,54 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2012/08/23/10342587.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:30 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Some notes about The Locales of Windows 8, not yet divvied up...</title></head><body>
+<h1>Some notes about The Locales of Windows 8, not yet divvied up...</h1>
+<p><em>by Michael S. Kaplan, published on 2012/08/23 07:01 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2012/08/23/10342587.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<p>The other day my blog <strong><a title="The Locales of Windows 8, not yet divvied up..." href="../21/10341855.html">The Locales of Windows 8, not yet divvied up...</a></strong> went up.</p>
+<p>Some people made observations.</p>
+<p>Some people asked questions.</p>
+<p>A few of them even did all that in the comments....</p>
+<p>Like <strong>Andrew West</strong>, who commented:</p>
+<p style="padding-left: 60px;"><span style="font-family: times new roman,times; font-size: medium;">I've said it before, and I'll say it one last time, I think the MS spelling of ᠮᠤᠨᠭᠭᠤᠯ (m-u-n-g-g-u-l) for the more usual ᠮᠣᠩᠭᠣᠯ (m-o-ng-g-o-l) is bizarre.</span><br />&nbsp;<br /><span style="font-family: times new roman,times; font-size: medium;">On a different matter, can you explain why Basque, Catalan and Cherokee repeat the language name in parentheses instead of giving the name of the country in which the language is spoken, as is the case with all the other locales on the list?&nbsp; And why is "Iran" present in the native name for Persian but omitted from the display name?</span></p>
+<p>I forwarded on that Mongolian comment previously, but I will do it again. :-)</p>
+<p>For Persian I'm not sure - maybe that whole "for the ex-pats, with no contact with the country" thing came into play.</p>
+<p>I think the fact that we don't say it's <strong>Farsi</strong> anymore was the biggest issue for them.</p>
+<p>Those three cases where the BCP-47 tag has a country/region but the name does not -- and the&nbsp;fourth case involving moh-CA&nbsp;aka Mohawk (Mohawk)&nbsp;--&nbsp;are I think&nbsp;just&nbsp;cases where the locale is covering dependent nations (<strong>not</strong> sovereign nations) where it just makes people more comfortable. Just trying to be a little respectful....</p>
+<p>And then <strong>Azarian</strong> pointed out some of the same things and some new things:</p>
+<p style="padding-left: 60px;"><span style="font-family: times new roman,times; font-size: medium;">Interesting:</span><br />&nbsp;<br /><span style="font-family: times new roman,times; font-size: medium;">English (Caribbean) having weird code of en-029.</span><br />&nbsp;<br /><span style="font-family: times new roman,times; font-size: medium;">English (Republic of the Philippines) having native name of English (Philippines).</span><br />&nbsp;<br /><span style="font-family: times new roman,times; font-size: medium;">Cherokee (Cherokee) and Catalan (Catalan) with a non-country country name.</span><br />&nbsp;<br /><span style="font-family: times new roman,times; font-size: medium;">Persian with no country name at all.</span><br />&nbsp;<br /><span style="font-family: times new roman,times; font-size: medium;">Norwegian, Bokm&aring;l (Norway) being the only Display Name with a non-ASCII character.</span><br />&nbsp;<br /><span style="font-family: times new roman,times; font-size: medium;">And no less than 6 Sami locales.</span></p>
+<p>Now the English (Philippines) vs. English (Republic of the Philippines) case is just a side effect of the English display name coming from us and the native name coming from the native reviewer.</p>
+<p>It is a good candidate to clean up at some point -- we don't have a good reason to use the long name if the language expert doesn't think it's important! :-)</p>
+<p>The Norwegian, Bokm&aring;l (Norway) case is a longstanding issue we've just always had, in part because no Norwegian we've ever worked with or talked to found it acceptable to use <strong>Bokmal</strong> instead.</p>
+<p>As for that code, <strong>Doug Ewell</strong> explained it:</p>
+<p style="padding-left: 60px;"><span style="font-family: times new roman,times; font-size: medium;">@Azarien: '029' is the UN M.49 code element for the Caribbean.</span></p>
+<p>It's a little embarrassing, but we had this <strong>English (Caribbean)</strong> locale, but we had no ISO-3166 code for it. So someone found that 029 and we went with it.</p>
+<p>There's probably something smarter we could have done later via BCP-47 but no one wanted to change the name again, so it stayed that way.</p>
+<p>As for the "no less than 6 Sami locales" -- we have <strong>nine</strong> Sami locales!</p>
+<p><strong>Doug Ewell</strong>'s other comment:</p>
+<p style="padding-left: 60px;"><span style="font-family: times new roman,times; font-size: medium;">'ko-KR' should not expand to "Korean (Korea)." The name of the country is Republic of Korea, or South Korea, or whatever. Just because North Korea is isolationist and the is no localized version of Windows for it, that doesn't mean it doesn't exist. This is particularly noticeable given the indulgent "Bolivarian Republic of Venezuela."</span></p>
+<p>Since we don't have North Korea or DPRK on the list, the usage of South Korea is not necessary -- it's the only Korea we ship to. :-)</p>
+<p>So it is our "short name"....</p>
+<p>I wouldn't consider the Venezuela name to be indulgent -- but someone asked us to update the English display name so we did. It's the kind of thing we could probably do for English (Philippines) at some point.</p>
+<p>The last comment there was from <strong>Paul B.</strong>:</p>
+<p style="padding-left: 60px;"><span style="font-family: times new roman,times; font-size: medium;">Great. Next, tell us the delta from Win7 to Win8 - what's new and what's changed? :-)</span></p>
+<p>Now <strong>that</strong> would have to be a whole new blog, some other day!</p>
+<p>I was disappointed no one asked about the difference with the display name and native name of Macedonia, but maybe people knew <strong><a title="And here comes Macedonian!" href="../../../2010/08/28/10055371.html">I already covered it</a></strong>....</p>
+<hr/><p><strong>John Cowan</strong> on 23 Aug 2012 8:53 AM:</p><div style="margin-left: 1em"><p>en-029 is the totally correct BCP 47 language tag for Caribbean English.</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 23 Aug 2012 3:41 PM:</p><div style="margin-left: 1em"><p>Good, less work for me. :-)</p>
+</div>
+<p><strong>Joan Montan&#233;</strong> on 23 Aug 2012 3:42 PM:</p><div style="margin-left: 1em"><p>Just one comment,</p>
+<p>why the display name of &quot;ca-ES-valencia&quot; is &quot;Valencian&quot;? It&#39;s a Catalan language variant, so &quot;Catalan (Valencian)&quot; or &quot;Catalan (Valencian, Spain)&quot; can be a better choice. In Linux world &quot;Catalan (Valencian) is in used for this locale, :) &nbsp;</p>
+<p>So, It&#39;s strange we have </p>
+<p>Catalan (Catalan)</p>
+<p>Basque (Basque)</p>
+<p>Galician (Galician)</p>
+<p>but...</p>
+<p>Valencian (Spain)?!!!!</p>
+<p>It&#39;s really strange, :)))</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 23 Aug 2012 3:47 PM:</p><div style="margin-left: 1em"><p>A lot of conversations led to what we ended up with. Language politics in Spain can be rather complicated at times....</p>
+</div>
+<hr/><p><em>go to <a id="newer" href="../24/10343121.html" title="Keyboard driver development isn&#39;t easy">newer</a> or <a id="older" href="../22/10342205.html" title="There is no LOCALE_INATIVENAMECANBECAPITALIZEDIFYOUREALLYREALLYWANTTODOTHAT flag">older</a> post, or back to <a href="../../../index-2.html">index</a> or <a href="../../../index-2.html#2012-08">month</a> or <a href="../../../index-2.html#2012-08-23">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2012/08/23/10342587.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:30 GMT -->
+</html>

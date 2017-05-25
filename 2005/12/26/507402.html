@@ -1,0 +1,31 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2005/12/26/507402.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:40 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>COleDateTime's ParseDateTime and locales....</title></head><body>
+<h1>COleDateTime's ParseDateTime and locales....</h1>
+<p><em>by Michael S. Kaplan, published on 2005/12/26 15:01 -05:00, original URI: http://blogs.msdn.com/b/michkap/archive/2005/12/26/507402.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P><FONT face=Tahoma>Some time ago, Mike asked:</FONT></P>
+<BLOCKQUOTE dir=ltr style="MARGIN-RIGHT: 0px">
+<P><FONT size=2><EM>I need to convert some strings to dates and then use the dates for some calculations. I was looking at COleDateTime::ParseDateTime() and it had the statement - "Note that the locale ID will also affect whether the string format is acceptable for conversion to a date/time value." Can you give me some direction on what I need to do? Is there an arcticle(s) I can read to get a handle on this?</EM></FONT></P></BLOCKQUOTE>
+<P><FONT face=Tahoma>A very&nbsp;interesting question.</FONT></P>
+<P><FONT face=Tahoma>The <A href="http://msdn.microsoft.com/library/en-us/vclib/html/_MFC_COleDateTime.3a3a.ParseDateTime.asp">COleDateTime::ParseDateTime()</A> method is an interesting one. The remarks in the documentation give a hint as to what is going on:</FONT></P><FONT face=Tahoma>
+<BLOCKQUOTE dir=ltr style="MARGIN-RIGHT: 0px">
+<BLOCKQUOTE dir=ltr style="MARGIN-RIGHT: 0px">
+<P><FONT size=1>The <I>lpszDate</I> parameter can take a variety of formats. For example, the following strings contain acceptable date/time formats:</FONT></P><PRE class=code><FONT size=1>"25 January 1996"
+"8:30:00"
+"20:30:00"
+"January 25, 1996 8:30:00"
+"8:30:00 Jan. 25, 1996"
+"1/25/1996 8:30:00"  // always specify the full year,
+                     // even in a 'short date' format</FONT></PRE>
+<P><FONT size=1>Note that the locale ID will also affect whether the string format is acceptable for conversion to a date/time value.</FONT></P></BLOCKQUOTE></BLOCKQUOTE></FONT>
+<P><FONT face=Tahoma>It may remind some of the <STRONG><a href="http://archives.miloush.net/michkap/archive/2004/11/26/270769.html">'Evil date parsing', Parse, and ParseExact</A></STRONG> post from last year. And with good reason -- it is indeed the evil date parsing logic in COM that is largely responsible for the uncertainty here.</FONT></P>
+<P><FONT face=Tahoma>When you attempt to parse a date/time value, the method assumes that the data is valid and will do its best to convert it (using the LCID parameter as a 'hint'), even if the conversion is inappropriate. The method would probably be more stable and generally useful if the LCID were used for more than just a hint about issues&nbsp;like the order of date/month/year versus month/date/year, but at this point the behavior cannot be changed.</FONT></P>
+<P><FONT face=Tahoma>So the LCID is just a hint and the hope is that you are passing a date to parse that falls within what is reasonable for that locale....</FONT></P>
+<P><FONT face=Tahoma></FONT>&nbsp;</P>
+<P><FONT face=Tahoma color=#ff1493><EM>This post brought to you by</EM> "<FONT size=6>ඤ</FONT>" <EM>(<A href="http://www.fileformat.info/info/unicode/char/0da4">U+0da4</A>, a.k.a. SINHALA LETTER TAALUJA NAASIKYAYA)</EM></FONT></P>
+<hr/><p><a id="507445" href="#507445">#</a> <strong>PatriotB</strong> on 26 Dec 2005 6:41 PM:</p><div style="margin-left: 1em">Awww.  A blog entry with OLE in the title (somewhat).  Brings a smile to my face :)</div>
+<p><a id="507472" href="#507472">#</a> <strong>Michael S. Kaplan</strong> on 27 Dec 2005 12:32 AM:</p><div style="margin-left: 1em">Yeah, it does kind of take you back....</div>
+<hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2005/12/27/507404.html" title="Administrator vs. Administrateur, et. al.">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2005/12/25/507347.html" title="Locale dependencies in the managed debuuger?">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2005-12">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2005-12-26">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2005/12/26/507402.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:40 GMT -->
+</html>

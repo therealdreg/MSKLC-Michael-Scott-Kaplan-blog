@@ -1,0 +1,22 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2007/03/23/1937085.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:38 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Having a 'c09' container clearly implies that one can contain an Aussie</title></head><body>
+<h1>Having a 'c09' container clearly implies that one can contain an Aussie</h1>
+<p><em>by Michael S. Kaplan, published on 2007/03/23 08:32 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2007/03/23/1937085.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P>So Ben asked me via the contact link:</P>
+<BLOCKQUOTE><FONT face="times new roman,times" size=2>
+<P><EM>Hey Michael,<BR><BR>Great Blog you've got going here. A colleague of mine at work introduced me and I thought i'd ask you a question which has been plaguing me for a while.<BR><BR>I want to change the Display Name for my users within the display specifiers in my AD (Server 2003). I want English Australia to display as "Surname, GivenName".<BR><BR>The problem I face is, I can't seem to find the correct container for English Australia. The only one which comes close is CN=409, but thats for English US.<BR><BR>Do you what the correct container is for English Australia and how I get it to populate in my AD?<BR><BR>Thanks<BR><BR>Ben</EM></P></FONT></BLOCKQUOTE>
+<P>I don't actually control an Active Directory to test this on, but I'll say what I know of from reading some docs, and then maybe ask a few others to correct my understanding if it is not right. :-)</P>
+<P>Active Directory is limited in the locales you can specify to the legal Windows locales on the machine. As the <A class="" href="http://msdn2.microsoft.com/library/ms675904.aspx" mce_href="http://msdn2.microsoft.com/library/ms675904.aspx">DisplaySpecifiers Container</A> topic states:</P>
+<BLOCKQUOTE>
+<BLOCKQUOTE>
+<P><EM>The Configuration container stores the DisplaySpecifiers container, which then stores containers that correspond to each locale. These locale containers are named using the hexadecimal representation of the locale identifier. For example, the US/English locale container is named 409, the German locale's container is named 407, and the Japanese locale's container is named 411.</EM></P></BLOCKQUOTE></BLOCKQUOTE>
+<P>There is also a C++ code sample in that topic&nbsp;that binds to the DisplaySpecifiers container for a specific locale.</P>
+<P><EM>(The sample uses the&nbsp;</EM><A class="" href="http://msdn2.microsoft.com/library/ms776315.aspx" mce_href="http://msdn2.microsoft.com/library/ms776315.aspx"><EM>GetSystemDefaultLCID function</EM></A><EM> to get the locale, but clearly one&nbsp;could substitute <FONT face="courier new,courier"><STRONG>MAKELANGID(LANG_ENGLISH, SUBLANG_ENGLISH_AUS)</STRONG></FONT> or 0x0c09 instead. We'll ignore the groaner of using the default system locale here)</EM></P>
+<P>For Ben's case where he is looking for the container string, a CN=c09 should do the trick?</P>
+<P mce_keep="true">&nbsp;</P>
+<P><FONT color=#ff00ff><EM>This post brought to you by</EM>&nbsp;<FONT size=4>ệ</FONT> <EM>(U+1ec7, a.k.a. LATIN SMALL LETTER E WITH CIRCUMFLEX AND DOT BELOW)</EM></FONT></P>
+<hr/><div style="margin-left: 1em"><em>no comments</em></div><hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2007/03/24/1941034.html" title="It was déjà vu, man. Pure déjà vu....">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2007/03/22/1934083.html" title="Dumb ellipses?">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2007-03">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2007-03-23">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2007/03/23/1937085.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:38 GMT -->
+</html>

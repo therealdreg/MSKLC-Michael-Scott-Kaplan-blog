@@ -1,0 +1,94 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2011/02/09/10125506.161918.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Win 7 RTM & Arabic: "We can fix up August and April. But it'll cost you July to do it…"</title></head><body>
+<h1>Win 7 RTM & Arabic: "We can fix up August and April. But it'll cost you July to do it…"</h1>
+<p><em>by Michael S. Kaplan, published on 2011/02/09 08:19 -08:00, original URI: http://blogs.msdn.com/b/michkap/archive/2011/02/09/10125506.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostMail -->
+<p><em><span style="color: #ff0000;">Alternate titles taking U+0648 (Waw) U+062a (Teh) U+0641 (Feh) into some kind of WTF homage pun that might even be vaguely relevant were discarded as being too obscure for some readers and too stupid for the ones who would get it....</span></em></p>
+ <p>There are few times when one says things like "two steps forward, one step back" is it so literally the case.</p>
+ <p>But this might very well&nbsp;be one of those times.</p>
+ <p>It starts with the localized names of the Gregorian months in nine of the Arabic locales on Windows.</p>
+ <p>So here is what they look like:</p>
+ <table cellpadding="3" cellspacing="6" border="1">
+ <tbody>
+ <tr>
+ <td>in English</td>
+ <td>in Arabic</td>
+ </tr>
+ <tr>
+ <td>January</td>
+ <td style="text-align: right;"><span style="font-size: xx-large;">يناير</span></td>
+ </tr>
+ <tr>
+ <td>February</td>
+ <td style="text-align: right;"><span style="font-size: xx-large;">فبراير</span></td>
+ </tr>
+ <tr>
+ <td>March</td>
+ <td style="text-align: right;"><span style="font-size: xx-large;">مارس</span></td>
+ </tr>
+ <tr>
+ <td>April</td>
+ <td style="text-align: right;"><span style="font-size: xx-large;">ابريل</span></td>
+ </tr>
+ <tr>
+ <td>May</td>
+ <td style="text-align: right;"><span style="font-size: xx-large;">مايو</span></td>
+ </tr>
+ <tr>
+ <td>June</td>
+ <td style="text-align: right;"><span style="font-size: xx-large;">يونيو</span></td>
+ </tr>
+ <tr>
+ <td>July</td>
+ <td style="text-align: right;"><span style="font-size: xx-large;">يوليو</span></td>
+ </tr>
+ <tr>
+ <td>August</td>
+ <td style="text-align: right;"><span style="font-size: xx-large;">اغسطس</span></td>
+ </tr>
+ <tr>
+ <td>September</td>
+ <td style="text-align: right;"><span style="font-size: xx-large;">سبتمبر</span></td>
+ </tr>
+ <tr>
+ <td>October</td>
+ <td style="text-align: right;"><span style="font-size: xx-large;">اكتوبر</span></td>
+ </tr>
+ <tr>
+ <td>November</td>
+ <td style="text-align: right;"><span style="font-size: xx-large;">نوفمبر</span></td>
+ </tr>
+ <tr>
+ <td>December</td>
+ <td style="text-align: right;"><span style="font-size: xx-large;">ديسمبر</span></td>
+ </tr>
+ </tbody>
+ </table>
+ <p>Now these month names (which were in nine different Arabic locales in Windows) weren't exactly wrong. Neither were the day names. Most of them were fine, as they were.</p>
+ <p>But over in Office some of them were slightly different.</p>
+ <p>Like that fourth month, the one people call April?</p>
+ <p>Well Windows had it as&nbsp;<span style="font-size: x-large;">ابريل</span> but Office had it as <span style="font-size: x-large;">أبريل</span>.</p>
+ <p>It's a subtle difference, but Windows was starting with an ARABIC LETTER ALEF while Office was using an ARABIC LETTER ALEF WITH HAMZA ABOVE. Neither was wrong per se, but everyone felt that even though they are both "right" that the Office way was a little more right.</p>
+ <p>You can look up more about the Hamza on Wikipedia <a href="http://en.wikipedia.org/wiki/Hamza">here</a>:</p>
+ <p style="padding-left: 60px;"><em><span style="font-size: medium;">Hamza is not one of the 28 "full" letters, and owes its existence to historical orthographical inconsistencies in early Islamic times. In the Phoenician and Aramaic alphabets, from which the Arabic alphabet is descended, the glottal stop was expressed by ʼāleph, continued by Arabic alphabet ʼalif. However, alif was used to express both a glottal stop, and a long vowel /aː/. To indicate that a glottal stop, and not a mere vowel, was intended, hamza was added diacritically to alif.</span></em></p>
+ <p>This might help make it clear why one might generally be considered more right....</p>
+ <p>Life in Windows without the Hamza hadn't really been so terrible, mind you. And I wouldn't want to apply that it had been.</p>
+ <p>But there was this inconsistency, and of course anyone using managed code in Office might have&nbsp;run into&nbsp;that inconsistency in weird ways what with random parsing and formatting -- like if they were using managed code and interacting with results from Office itself.</p>
+ <p><em>Not that I don't think some of those scenarios aren't also totally&nbsp;broken too. But we'll get into that some other day!</em></p>
+ <p>Anyway, Windows decided to fix up these cases, so that in Windows 7 they would have all of the names the way that was more right -- the Office way, in this particular case.</p>
+ <p>So the updates happened. </p>
+ <p>And now, August and April would be safe for Windows 7 in nine Arabic locales (ar-BH, ar-EG, ar-KW, ar-LY, ar-OM, ar-QA, ar-SA, ar-AE, and ar-YE, to be specific). This happened in time for Windows 7's release.</p>
+ <p>But there was one problem here. </p>
+ <p>Yep, they replaced <span style="font-size: x-large;">يوليو</span>, by which I mean July (a month that was not broken) with&nbsp;<span style="font-size: x-large;">يوليه</span>.</p>
+ <p>In the process of adding Hamzas to two Alefs, an ARABIC LETTER&nbsp;WAW was replaced with an ARABIC LETTER HEH.</p>
+ <p><em>That "Wah Teh Feh" pun is almost taking shape for you now, right?</em> :-)</p>
+ <p>This is obviously a problem. This is in fact the problem I was indirectly talking about last year in <a href="http://archives.miloush.net/michkap/archive/2010/05/14/10004255.html" title="I'm going to throw a hypothetical on the stoop and see if the cat licks it up"><strong>I'm going to throw a hypothetical on the stoop and see if the cat licks it up</strong></a>.</p>
+ <p>For people who didn't get the update (you may recall the challenges in detecting who might that I brought up in that blog) but really want&nbsp;it and don't mind the reboot, you can wait for SP1 (which rolls up this sand other changes), or you get it from the following KB article:</p>
+ <p style="padding-left: 30px;"><a href="http://support.microsoft.com/?kbid=981981">Arabic translations in the month of July may be incorrect in the Windows calendar in Windows 7 or in Windows Server 2008 R2</a></p>
+ <p>and this will fix up the problem.</p>
+ <p>The fancy language in the KB article and the download pages is to try to work around the fact that the fix was pushed to some people already. So don't feel like you need to gratuitously pick up this fix if you aren't interested, or might already have it....</p>
+ <p><span style="color: #ff0000;">Anyway, at the start I pointed out how the whole "two steps forward, one step back" seemed awfully literal here, what with Windows 7 fixing April and August while breaking July. Technically there are is also the abbreviated July, the abbreviated April and August, two day names with the original Hamza issue, and the abbreviated forms of those two days two. It's just that "8 steps forward, 2 steps back" seems so much less catchy!</span></p>
+<hr/><div style="margin-left: 1em"><em>comments not archived</em></div><hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2011/03/22 <a href="http://archives.miloush.net/michkap/archive/2011/03/22/10144474.html">Rupee! Rupee! Let down your CHAR!</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2011/02/09/10125506.html" title="Win 7 RTM &amp; Arabic: &quot;We can fix up August and April. But it&#39;ll cost you July to do it…&quot;">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2011/02/08/10125363.html" title="Viva Valencia!">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2011-02">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2011-02-09">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2011/02/09/10125506.161918.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+</html>

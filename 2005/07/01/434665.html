@@ -1,0 +1,67 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2005/07/01/434665.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:41 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>It's on, and you are invited....</title></head><body>
+<h1>It's on, and you are invited....</h1>
+<p><em>by Michael S. Kaplan, published on 2005/07/01 11:01 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2005/07/01/434665.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P><FONT face=Tahoma>Early last month, a developer at Microsoft asked:</FONT></P>
+<BLOCKQUOTE dir=ltr style="MARGIN-RIGHT: 0px">
+<P><FONT size=2><EM>Where can I find information on what locale uses what paper sizes? Basically looking for info on what locales use Letter vs. A4. </EM></FONT></P></BLOCKQUOTE>
+<P><FONT face=Tahoma>Now there is one place to look any time you want information on Windows about a locale -- the clearinghose, grocery store function that lets you find anything you need to:</FONT></P>
+<P><FONT face=Tahoma size=5><A href="http://msdn.microsoft.com/library/en-us/intl/nls_34rz.asp">GetLocaleInfo</A></FONT></P>
+<P><FONT face=Tahoma>The topic that this function links to named <A href="http://msdn.microsoft.com/library/en-us/intl/nls_8rse.asp">Locale Information</A> (which has never itself been in the MSDN index for reasons I cannot fathom, but it is a link away through this function and <A href="http://msdn.microsoft.com/library/en-us/intl/nls_7w1b.asp">SetLocaleInfo</A> so I do not worry too much).</FONT></P>
+<P><FONT face=Tahoma>Now this topic does have a <EM>ton</EM> of information in it; a lot of locale information has been added over the years. In this case, a simple search for the term "A4" finds what you want:</FONT></P><FONT face=Tahoma>
+<DL>
+<DL>
+<DT>LOCALE_IPAPERSIZE 
+<DD><B>Windows 2000/XP:</B> Default paper size associated with the locale. The specifier can be one of the following values. 
+<TABLE width="30%" border=1>
+<TBODY>
+<TR vAlign=top>
+<TH class=data align=left width="12%">
+<BLOCKQUOTE dir=ltr style="MARGIN-RIGHT: 0px">
+<P>Value&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </P></BLOCKQUOTE></TH>
+<BLOCKQUOTE>
+<TH class=data align=left width="28%">Meaning</TH></BLOCKQUOTE></TR>
+<TR vAlign=top>
+<TD class=data width="12%">
+<BLOCKQUOTE dir=ltr style="MARGIN-RIGHT: 0px">
+<P>1</P></BLOCKQUOTE></TD>
+<TD class=data width="28%">
+<BLOCKQUOTE dir=ltr style="MARGIN-RIGHT: 0px">
+<P>US Letter</P></BLOCKQUOTE></TD></TR>
+<TR vAlign=top>
+<TD class=data width="12%">
+<BLOCKQUOTE dir=ltr style="MARGIN-RIGHT: 0px">
+<P>5</P></BLOCKQUOTE></TD>
+<TD class=data width="28%">
+<BLOCKQUOTE dir=ltr style="MARGIN-RIGHT: 0px">
+<P>US legal</P></BLOCKQUOTE></TD></TR>
+<TR vAlign=top>
+<TD class=data width="12%">
+<BLOCKQUOTE dir=ltr style="MARGIN-RIGHT: 0px">
+<P>8</P></BLOCKQUOTE></TD>
+<TD class=data width="28%">
+<BLOCKQUOTE dir=ltr style="MARGIN-RIGHT: 0px">
+<P>A3</P></BLOCKQUOTE></TD></TR>
+<TR vAlign=top>
+<TD class=data width="12%">
+<BLOCKQUOTE dir=ltr style="MARGIN-RIGHT: 0px">
+<P>9</P></BLOCKQUOTE></TD>
+<TD class=data width="28%">
+<BLOCKQUOTE dir=ltr style="MARGIN-RIGHT: 0px">
+<P>A4</P></BLOCKQUOTE></TD></TR></TBODY></TABLE></DD></DL></DL></FONT>
+<P><FONT face=Tahoma>And there it is!</FONT></P>
+<P><FONT face=Tahoma>Now as I said this function has a lot of stuff in it, so it is always easy to query for all sorts of information. You can even get the localized name of the current sort (hint: take a look at&nbsp;<EM>LOCALE_SSORTNAME!</EM>).</FONT></P>
+<P><FONT face=Tahoma>So take a look, treat it like a surprise party with a lot of cool presents, some&nbsp;that will not be interesting but others that will make your day.</FONT></P>
+<P><FONT face=Tahoma>So the next time you want to know if there is a particular bit of information in which you have interest, the party's on -- take a look and see what Uncle Bill has for you!</FONT></P>
+<P><FONT face=Tahoma></FONT>&nbsp;</P>
+<P><FONT face=Tahoma color=#ff0000><EM>This post brought to you by</EM> "<FONT face=Tahoma size=3>Ɛ</FONT>" <EM>(<A href="http://www.fileformat.info/info/unicode/char/0190/index.htm">U+0190</A>, a.k.a. LATIN CAPITAL LETTER OPEN E)</EM></FONT></P>
+<hr/><p><a id="434669" href="#434669">#</a> <strong>Michael S. Kaplan</strong> on 1 Jul 2005 11:10 AM:</p><div style="margin-left: 1em">And I'll cover some of the interesting ins and outs of GetLocaleInfo and some of its eccentricities another day....</div>
+<p><a id="434675" href="#434675">#</a> <strong>Maurits [MSFT]</strong> on 1 Jul 2005 11:24 AM:</p><div style="margin-left: 1em">According to <a rel="nofollow" target="_new" href="http://msdn.microsoft.com/library/default.asp?url=/library/en-us/intl/nls_8otv.asp">http://msdn.microsoft.com/library/default.asp?url=/library/en-us/intl/nls_8otv.asp</a><br><br>the letter h in the time format string is converted to the hour (1-12, no leading zero)<br><br>How do you specify a literal h, for military time? (like right now it's 08h23 - eight hundred twenty-three hours)</div>
+<p><a id="434760" href="#434760">#</a> <strong>Primoz Gabrijelcic</strong> on 1 Jul 2005 4:59 PM:</p><div style="margin-left: 1em">There is a locale using A3 as a default paper???</div>
+<p><a id="434761" href="#434761">#</a> <strong>Michael S. Kaplan</strong> on 1 Jul 2005 5:01 PM:</p><div style="margin-left: 1em">&lt;P&gt;Hi Maurits, &lt;/P&gt;<br>&lt;P&gt;Any time you want a literal string, the safest way to do it is to surround the literal with single quotes. Although technically you only are required to do this for strings that would conflict with tokens that have specific meanings (like h does), but in practice if you alaways do it then you won't ever accidentally conflict. Thus you could use something like &quot;HH'h'mm&quot; to get the time you want....&lt;/P&gt;</div>
+<p><a id="434762" href="#434762">#</a> <strong>Michael S. Kaplan</strong> on 1 Jul 2005 5:05 PM:</p><div style="margin-left: 1em">Hi Primoz,<br><br>Not sure, but it is easy to check by combining an EnumSystemLocales call with a call to GetLocaleInfo with the LCMAP_IPAPERSIZE flag. :-)<br><br>Note that this is a setting you can change through SetLocaleInfo (though not through Regional Options), so one could always get their machine customized to use A3 if they wanted....</div>
+<hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2005/07/01/434768.html" title="I once had a window office">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2005/06/30/434453.html" title="Michael Penn wants his space....">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2005-07">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2005-07-01">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2005/07/01/434665.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:41 GMT -->
+</html>

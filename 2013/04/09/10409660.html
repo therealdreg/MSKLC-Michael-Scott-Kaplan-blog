@@ -1,0 +1,45 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2013/04/09/10409660.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:19 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>What is the freaking point of OutputDebugStringW, anyway?</title></head><body>
+<h1>What is the freaking point of OutputDebugStringW, anyway?</h1>
+<p><em>by Michael S. Kaplan, published on 2013/04/09 07:10 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2013/04/09/10409660.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<p>The <a href="http://msdn.microsoft.com/en-us/library/windows/desktop/aa363362(v=vs.85).aspx">OutputDebugString function</a> has a long history.</p>
+<p>Though perhaps not such a noble one.</p>
+<p>Now with most Win32 functions that have string parameters, there is a 'W' version that takes Unicode, and an 'A' version that does not.</p>
+<p>In a just universe, each would have a purpose.</p>
+<p>It is unfortunate that we don't live in a just universe!</p>
+<p>Because the very first thing that OutputDebugStringW does is convert it's Unicode string out of Unicode.</p>
+<p>What the hell is the freaking point of this function?</p>
+<p>It's like the <strong>Petunia Pig</strong> of Win32.</p>
+<p>And we all know <strong>Petunia Pig</strong> had no point.</p>
+<p>I mean, what was she there for, to make <strong>Porky Pig</strong> seem more manly?</p>
+<p>We all know that <strong>Porky Pig</strong> is gay!</p>
+<p>But now, thanks to the good people in Visual Studio, the GB folks in the PRC may be looking at OutputDebugStringW.</p>
+<p>Which could make it the <strong>Yoko Ono</strong> of Win32.</p>
+<p>Sigh.</p>
+<p>I'll put a bug in....</p>
+<hr/><p><strong>John Cowan</strong> on 10 Apr 2013 8:54 AM:</p><div style="margin-left: 1em"><p>Dude, if you are going to be porked by an actual porker, you need to have a heliacal Hershey highway -- which nobody does. &nbsp;So while Porky may be able to fool around with his best buds a bit, for true satisfaction it&#39;s home sweet home to Petunia.</p>
+</div>
+<p><strong>WndSks</strong> on 10 Apr 2013 12:55 PM:</p><div style="margin-left: 1em"><p>Having a crappy W version that just converts back to ACP is better than having no function at all when it comes to debugging stuff IMHO, especially back in the 9x/NT split days when you might be compiling both TCHAR versions.</p>
+</div>
+<p><strong>Kalle Olavi Niemitalo</strong> on 10 Apr 2013 3:54 PM:</p><div style="margin-left: 1em"><p>At the debugger side, the OUTPUT_DEBUG_STRING_INFO structure already supports Unicode. &nbsp;I don&#39;t know whether the kernel debugging protocols do.</p>
+<p>(Have there been any requests for GetProcAddressW? &nbsp;Windows CE apparently has it already.)</p>
+</div>
+<p><strong>Mike Dimmick</strong> on 12 Apr 2013 6:00 AM:</p><div style="margin-left: 1em"><p>@Kalle: GetProcAddress on CE (no W suffix) is a WTF because the strings are all byte-oriented in the PE format, meaning the implementation has to convert back from Unicode to ACP to do its job. According to the documentation, a GetProcAddressA routine was added in CE 3.0.</p>
+<p>The CE rule was &#39;all Unicode all the time&#39; and it led to a few inappropriate conversions. WinMain taking an LPWSTR rather than LPSTR for lpCommandLine is another - kind of sensible for CE, but source-incompatible with desktop/server Win32.</p>
+</div>
+<p><strong>Yuhong Bao</strong> on 12 Apr 2013 3:24 PM:</p><div style="margin-left: 1em"><p>&quot;WinMain taking an LPWSTR rather than LPSTR for lpCommandLine is another - kind of sensible for CE, but source-incompatible with desktop/server Win32.&quot;</p>
+<p>Not if you use _tWinMain.</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 13 Apr 2013 2:33 PM:</p><div style="margin-left: 1em"><p>It&#39;s part of why we even Windows 95 had GetCommandLineW. :-)</p>
+</div>
+<p><strong>Yuhong Bao</strong> on 14 Apr 2013 10:26 PM:</p><div style="margin-left: 1em"><p>BTW, I wonder why Win9x did the file system Unicode/ANSI/OEM conversions in IFSMGR, without any way to directly access the Unicode long filename from user mode that I know of?</p>
+</div>
+<p><strong>Random832</strong> on 15 Apr 2013 10:11 AM:</p><div style="margin-left: 1em"><p>So on Win9x, did GetCommandLineA return the command line in ACP or OEMCP? Was it affected by SetFileApisToOEM (and if so, what mode was it in for passing the argument to WinMain)?</p>
+</div>
+<p><strong>Yuhong Bao</strong> on 15 Apr 2013 7:48 PM:</p><div style="margin-left: 1em"><p>BTW, not related to internationalization, but do you know why some MS05/06 security updates for 9x used KBxxxxxx.exe/Qxxxxxx.dll instead of actually patching the files?</p>
+</div>
+<hr/><p><em>go to <a id="newer" href="../11/10410235.html" title="&quot;My old group? I couldn&#39;t really reach them anymore, so I talked to my people and had them 86&#39;d...&quot;">newer</a> or <a id="older" href="10409551.html" title="Ask an armchair linguist a question, the answer may not be accurate. But it will at least be astute...">older</a> post, or back to <a href="../../../index-2.html">index</a> or <a href="../../../index-2.html#2013-04">month</a> or <a href="../../../index-2.html#2013-04-09">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2013/04/09/10409660.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:19 GMT -->
+</html>

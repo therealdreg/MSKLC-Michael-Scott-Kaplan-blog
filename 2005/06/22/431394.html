@@ -1,0 +1,72 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2005/06/22/431394.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:41 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>What APIs do I own?</title></head><body>
+<h1>What APIs do I own?</h1>
+<p><em>by Michael S. Kaplan, published on 2005/06/22 02:01 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2005/06/22/431394.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P><FONT face=Tahoma>Yesterday, in a <a href="http://archives.miloush.net/michkap/archive/2005/06/21/431062.html#431351">comment</A> to my conversation about SHAnsiToUnicode/SHUnicodeToAnsi, <A href="http://www.unsanity.org/">Rosyna</A>&nbsp;asked some interesting questions:</FONT></P>
+<BLOCKQUOTE dir=ltr>
+<P><EM>This actually brings up an interesting point. If someone&nbsp;working on one group at MS sees a problem in another group's&nbsp;software that affects them, can get just fix the other group's&nbsp;code?</EM></P></BLOCKQUOTE>
+<P><FONT face=Tahoma>Generally speaking, people would not directly change code in other groups. But you may work with them and provide opinions and expertise and assistance. There is a lot of dogfooding of products that also goes on....</FONT></P>
+<P><FONT face=Tahoma>There are exceptions, but by and large its how things that I have seen have worked.</FONT></P>
+<P><FONT face=Tahoma>Within a group, people will often work with code that others own to help fix bugs and load balance work -- we are all in a very cooperative environment. :-)</FONT></P>
+<BLOCKQUOTE dir=ltr>
+<P><EM>And when you're in a group at MS, how much code is your&nbsp;(individually, one person's) responsibility? An entire DLL?&nbsp;A few functions in a DLL? A lot of DLLs under the same&nbsp;"genre"?</EM></P></BLOCKQUOTE>
+<P><FONT face=Tahoma>That depends on the dev, on the group, on the complexity, and on the expertise. I can&nbsp;only really answer for me, so I will try to do that right now. :-)</FONT></P>
+<P><FONT face=Tahoma>I own the following APIs (and I know people who own more and people who own less):</FONT></P>
+<UL>
+<LI><FONT face=Tahoma>CompareStringW</FONT> 
+<LI><FONT face=Tahoma>CompareStringA</FONT> 
+<LI><FONT face=Tahoma>LCMapStringW</FONT> 
+<LI><FONT face=Tahoma>LCMapStringA</FONT> 
+<LI><FONT face=Tahoma>GetNLSVersion</FONT> 
+<LI><FONT face=Tahoma>IsNLSDefinedString</FONT> 
+<LI><FONT face=Tahoma>FoldStringW <FONT size=2><EM>&lt;--- well, the less cool 2/5 of it</EM></FONT></FONT> 
+<LI><FONT face=Tahoma>FoldStringA <EM><FONT size=2>&lt;--- well, the less cool 2/5 of it</FONT></EM></FONT> 
+<LI><FONT face=Tahoma>GetStringTypeA</FONT> 
+<LI><FONT face=Tahoma>GetStringTypeW</FONT> 
+<LI><FONT face=Tahoma>GetStringTypeEx</FONT></LI></UL>
+<P><FONT face=Tahoma>Plus some that I do not own but kind of de facto own since they are thin wrappers around one of the above functions and their behavior comes off of them 100%, e.g. lstrcmpW, CharUpperW, CharNextW</FONT></P>
+<P><FONT face=Tahoma>Plus several new APIs I will talk about after Longhorn Beta 1 and Beta 2 are out:</FONT></P>
+<UL>
+<LI><FONT face=Tahoma>************</FONT> 
+<LI><FONT face=Tahoma>********************</FONT> 
+<LI><FONT face=Tahoma>***************</FONT> 
+<LI><FONT face=Tahoma>***************</FONT> 
+<LI><FONT face=Tahoma>*************</FONT> 
+<LI><FONT face=Tahoma>***************</FONT> 
+<LI><FONT face=Tahoma>********************</FONT> 
+<LI><FONT face=Tahoma>***************</FONT></LI></UL>
+<P><FONT face=Tahoma>(I may have added in some random extra stars to explicitly foil guessers. Sorry!)</FONT></P>
+<P><FONT face=Tahoma>Plus some tools and libraries:</FONT></P><FONT face=Tahoma>
+<UL>
+<LI>MSLU (a.k.a. unicows.dll, Microsoft Layer for Unicode on Windows 95, 98, and Me Systems) 
+<LI>MSKLC (Microsoft Keyboard Layout Creator) 
+<LI>*************************</FONT></LI></UL>
+<P><FONT face=Tahoma>Plus the managed equivalents of the above:</FONT></P>
+<UL>
+<LI><FONT face=Tahoma>CompareInfo class and the bulk of the methods/properties in it</FONT> 
+<LI><FONT face=Tahoma>Sortkey class and the bulk of the methods/properties in it</FONT> 
+<LI><FONT face=Tahoma>TextInfo <EM><FONT size=2>&lt;--- Well, the least interesting small piece of it!</FONT></EM></FONT></LI></UL>
+<P><FONT face=Tahoma>Plus some various infrastructure pieces (e.g. I am the development owner of the Windows keyboard layouts, though it is actually the data PM who is the <EM>real</EM> owner; I am just the guy who checks them in and gets them into setup).</FONT></P>
+<P><FONT face=Tahoma>And I help out now and again with locales and such, though not as much as I used to.</FONT></P>
+<P><FONT face=Tahoma>And I am involved with Unicode, sometimes as an&nbsp;alternate rep, other times as just a technical&nbsp;person who participates.....</FONT></P>
+<P><FONT face=Tahoma>It's a living.:-)</FONT></P>
+<P><FONT face=Tahoma></FONT>&nbsp;</P>
+<P><FONT face=Tahoma><FONT color=#ff0000><EM>This post brought to you by</EM> "の" <EM>(<A href="http://www.fileformat.info/info/unicode/char/306e/index.htm">U+306e</A>, a.k.a. HIRAGANA LETTER NO)</EM></FONT></FONT></P>
+<hr/><p><a id="431398" href="#431398">#</a> <strong>Rosyna</strong> on 22 Jun 2005 12:19 AM:</p><div style="margin-left: 1em">Wow, that *thoroughly* answered my questions. Thanks.</div>
+<p><a id="431460" href="#431460">#</a> <strong>Mike G</strong> on 22 Jun 2005 4:13 AM:</p><div style="margin-left: 1em">Interesting post!  Roughly how many lines of code does that run to?</div>
+<p><a id="431463" href="#431463">#</a> <strong>Michael S. Kaplan</strong> on 22 Jun 2005 4:20 AM:</p><div style="margin-left: 1em">Hey Mike --<br><br>I haven't a clue, I have always sucked at those sorts of estimates. I did manage to remove about 1000 lines of it in Longhorn by streamlining a few things, though. Negative production that week? :-)<br><br>I suppose I should run one of those K-LOC tools on it all one of these days, though. It's one of those cool numbers you can bat around at [geeky] parties....</div>
+<p><a id="431501" href="#431501">#</a> <strong>Mike G</strong> on 22 Jun 2005 7:26 AM:</p><div style="margin-left: 1em">I used a little utility called &quot;Counting&quot; last week, which gives code/comment line counts.  You can get it from here: <a rel="nofollow" target="_new" href="http://www.codeguru.com/Cpp/data/data-misc/fileinformation/article.php/c4547/">http://www.codeguru.com/Cpp/data/data-misc/fileinformation/article.php/c4547/</a><br><br>Neat little interface and very quick.</div>
+<p><a id="431512" href="#431512">#</a> <strong>Daniel Garlans</strong> on 22 Jun 2005 8:17 AM:</p><div style="margin-left: 1em">Michael, when you develop these API's, do you design the whole thing from the bottom up, or do &quot;they&quot; give you some prototypes and a specification to work off of? <br><br>In other words, do you get to develop the whole thing or do you have to just implement what they tell you to?<br><br>I'm just curious as to how much freedom they give you to work on these API's :)</div>
+<p><a id="431543" href="#431543">#</a> <strong>Michael S. Kaplan</strong> on 22 Jun 2005 9:22 AM:</p><div style="margin-left: 1em">Hey Mike --<br><br>Someone pointed me to an internal tool. :-)<br><br>Ok, all of the above stuff totals in at around just over 78,000 lines. About half is code I wrote from scratch (projects like MSLU and MSKLC), aznd of the other half some that I wrote, some that I have modified, and some that I just maintain.<br><br>If memory serves, the Access wizard project was a bit larger than that, but that was mostly VBA so I don't think it counts. :-)</div>
+<p><a id="431545" href="#431545">#</a> <strong>Michael S. Kaplan</strong> on 22 Jun 2005 9:28 AM:</p><div style="margin-left: 1em">Hi Daniel,<br><br>Many of the APIs listed there predate me, and I was a mere external user of them for years. But the stuff I have developed I have so far just about always been the person who wrote the design doc (I have also written many design docs for features in which I was interested but which I did not end up implementing myself).<br><br>(see <a rel="nofollow" target="_new" href="http://archives.miloush.net/michkap/archive/2005/01/03/346090.html">http://blogs.msdn.com/michkap/archive/2005/01/03/346090.aspx</a> for my opinions on design docs)<br><br>:-)<br><br>In this group, devs have a lot of say in the design of what they develop. And there is a lot of meeting and discussing and deciding to help shape how it ends up....</div>
+<p><a id="431549" href="#431549">#</a> <strong>Michael S. Kaplan</strong> on 22 Jun 2005 9:38 AM:</p><div style="margin-left: 1em">Uh oh, forgot a project!<br><br>Its actually more like 103K lines when you include it all....</div>
+<p><a id="431603" href="#431603">#</a> <strong>Mihai</strong> on 22 Jun 2005 11:21 AM:</p><div style="margin-left: 1em">Interesting post.<br>Now two questions:<br> - if we have a problem with some API, where can we complain?<br> - can we play Hangman on the &quot;stars API&quot;?<br>   Is there an 'a'? Is there an &quot;Ex&quot; ? :-)</div>
+<p><a id="431647" href="#431647">#</a> <strong>Michael S. Kaplan</strong> on 22 Jun 2005 1:30 PM:</p><div style="margin-left: 1em">Hello Mihai!<br><br>&gt;&gt;&gt; - if we have a problem with some API, where can we complain? <br><br>Well, you can always complain here, of course. Especially if it is one I own!<br><br>&gt;&gt;&gt; - can we play Hangman on the &quot;stars API&quot;? <br>&gt;&gt;&gt; Is there an 'a'? Is there an &quot;Ex&quot; ? :-)<br><br>Heh heh heh -- no clues, like I said I even added extra stars to keep people from trying to guess. You'll find out soon enough....</div>
+<p><a id="431798" href="#431798">#</a> <strong>Mihai</strong> on 23 Jun 2005 1:32 AM:</p><div style="margin-left: 1em">The complain: a full family of Enum functions.<br>On the happy side, none of them are yours :-)<br><br>The functions do not take and extra parameter that can be used to transfer a pointer to a structure or a class.<br>As a result, you have to use global variables or classes with static members (which is pretty much the same thing).<br><br>Some functions get it right.<br>Here is a list (probably not complete, and targeting I18N/L10N API):<br><br>--- The Good ---<br>EnumFonts<br>EnumFontFamiliesEx<br>EnumLanguageGroupLocales <br>EnumSystemLanguageGroups<br>EnumResourceLanguages<br>EnumResourceNames<br>EnumResourceTypes<br>EnumUILanguages<br><br>--- The Bad ---<br>EnumCalendarInfo<br>EnumCalendarInfoEx<br>EnumDateFormats<br>EnumDateFormatsEx<br>EnumSystemCodePages<br>EnumSystemGeoID<br>EnumSystemLocales<br>EnumTimeFormats<br><br>--- The Ugly :-) ---<br>************<br>********************<br>***************<br>***************<br>*************<br>***************<br>********************<br>***************</div>
+<p><a id="431858" href="#431858">#</a> <strong>Michael S. Kaplan</strong> on 23 Jun 2005 5:58 AM:</p><div style="margin-left: 1em">Hmmmm... not sure I understand. But you are right, I don't own any of them....</div>
+<p><strong>Random832</strong> on 9 Aug 2009 11:24 PM:</p><div style="margin-left: 1em"><p>You recently linked back to this article - just out of curiosity, what are the &quot;Longhorn&quot; (i.e. Vista) APIs that you starred out?</p></div>
+<hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2009/07/20 <a href="http://archives.miloush.net/michkap/archive/2009/07/20/9840848.html">Garbage in, garbage out -- and this means Ü!</a></p><p>2008/12/16 <a href="http://archives.miloush.net/michkap/archive/2008/12/16/9223301.html">UCS-2 to UTF-16, Part 9: The torrents of breaking CharNext/CharPrev</a></p><p>2007/04/19 <a href="http://archives.miloush.net/michkap/archive/2007/04/19/2190207.html">Is CharNextExA broken?</a></p><p>2005/06/24 <a href="http://archives.miloush.net/michkap/archive/2005/06/24/432121.html">LCMapString's *other* job</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2005/06/23/431849.html" title="Not so small as to be internationally stupid">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2005/06/21/431062.html" title="Whither SHAnsiToUnicode?">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2005-06">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2005-06-22">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2005/06/22/431394.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:41 GMT -->
+</html>

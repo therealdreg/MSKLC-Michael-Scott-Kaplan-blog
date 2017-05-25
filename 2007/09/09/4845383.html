@@ -1,0 +1,52 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2007/09/09/4845383.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:37 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>A dash of this, a dash of that (aka MS v. Adobe? Shaping engines v. fonts? Typographers v. Unicode? Everyone v. everyone else!)</title></head><body>
+<h1>A dash of this, a dash of that (aka MS v. Adobe? Shaping engines v. fonts? Typographers v. Unicode? Everyone v. everyone else!)</h1>
+<p><em>by Michael S. Kaplan, published on 2007/09/09 15:51 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2007/09/09/4845383.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P>Over in the VOLT users community, Bob H asked:</P>
+<BLOCKQUOTE>
+<P><FONT face="times new roman,times"><EM>Is there any hope of the rtla feature being supported by Uniscribe for RTL scripts?<BR>&nbsp;<BR>See </EM></FONT><A href="http://www.microsoft.com/typography/otspec/features_pt.htm#rtla"><FONT face="times new roman,times"><EM>http://www.microsoft.com/typography/otspec/features_pt.htm#rtla</EM></FONT></A><BR><FONT face="times new roman,times"><EM>&nbsp;<BR>Bob</EM></FONT></P></BLOCKQUOTE>
+<P>Colleague Sergey had the direct answer for that question:</P>
+<BLOCKQUOTE>
+<P><FONT face="times new roman,times">Glyph mirroring is currently done on character basis, no rtla feature. We do not have a definition of exact rtla behavior yet. But you should always hope :)</FONT></P></BLOCKQUOTE>
+<P>To which Bob H responded:</P>
+<BLOCKQUOTE>
+<P><EM><FONT face="times new roman,times">Meanwhile, there are a lot of mirrored characters that cannot be handled on a character basis but can only be handled at the glyph level, so we're stuck until rtla is implemented.<BR><BR>B</FONT></EM></P></BLOCKQUOTE>
+<P>But to look at the larger question of all of these types of features that exist in OpenType that either Adobe or Microsoft supports, it hearkens back to the issues related to 'The Font Peace' I mentioned previously in <STRONG><A class="" href="http://archives.miloush.net/michkap/archive/2007/08/12/4347121.html" mce_href="http://archives.miloush.net/michkap/archive/2007/08/12/4347121.html">On the error, and the inspiration, of randomness</A></STRONG> and <STRONG><A class="" href="http://archives.miloush.net/michkap/archive/2007/08/13/4376409.html" mce_href="http://archives.miloush.net/michkap/archive/2007/08/13/4376409.html">The Font Cold War?</A></STRONG>, and the earlier <A class="" href="http://archives.miloush.net/michkap/archive/2006/06/16/634291.html" mce_href="http://archives.miloush.net/michkap/archive/2006/06/16/634291.html"><STRONG>Well, we support our half of OpenType</STRONG></A>.</P>
+<P>And it also speaks to an issue beyond Microsoft and beyond Adobe that just recently came up on the Unicode List, where Mark Davis actually made the following statement:</P>
+<BLOCKQUOTE>
+<P><FONT face="times new roman,times">A similar annoyance is the fact that so many fonts don't map the default-ignorable code points (like variation selectors) to a zero-width invisible glyph by default. Especially since with True/OpenType, it is essentially free to add support for a character that has the same glyph as one you already have in the font.<BR><BR>Maybe what would help would be a document aimed at font developers, which contained a list of the default mappings that they should apply.</FONT></P></BLOCKQUOTE>
+<P>Given how annoyed I get when people&nbsp;claim I am speaking&nbsp;for Microsoft, I will not claim that Mark is&nbsp;speaking for Google (I doubt he is) or Unicode (I know he's not after having talked to several others). :-)&nbsp;</P>
+<P>Of course those in typography can reasonably disagree with this&nbsp;idea on several levels:</P>
+<UL>
+<LI>It is hardly free for the font size since to have to add the CMAP and that adds up;</LI>
+<LI>one has to take the time to add the entries and typography is a challenging enough job that none of them work without charging for&nbsp;labor;</LI>
+<LI>font developers will use the characters that apply to them and what they are trying to cover so it is unlikely that they will be moved to add things that they feel do not apply;</LI>
+<LI>In most cases systems will actually do their own work here and ignore the font anyway, so why include glyphs one will never see?</LI></UL>
+<P>Fonts and more to the point typographers are definitely not lackeys of Unicode&nbsp;that have to perform tasks such as bulking up fonts with features that don't apply to&nbsp;their target scripts&nbsp;and won't get used anyway, most of the time....</P>
+<P>But the underlying pressure is clear in both the OpenType feature case, and in the fuzzy line between&nbsp;fonts and Unicode implementers&nbsp;-- the only difference between these two&nbsp;situations is that we have The Font Peace in the latter case where Adobe and Microsoft have agreed to disagree, but in the case of Unicode and fonts, no one has agreed to anything yet -- they are still making claims of what the other should do.</P>
+<P>Eric Muller has argued that font support for certain characters like U+2010 (HYPHEN) and all the rest of the dash-like characters has been less than stellar, which is why shaping engines tend to take over. But that is hardly fair either, since once again not every font is targeting markets where such support is required. So maybe this is a wider shaping engines and fonts debate, which if so had the additional burden to face that the balance is different between different implementations (of both fonts and platforms).</P>
+<P>In the decision between fonts and shaping engines, the winner depends on the platform and the tools -- a decision that has no appeals process. It makes creating fonts that span platforms a much bigger expense, something that no seems to be constructive about solving (even foundries can still charge for the extra work if you come right down to it,&nbsp;as long as&nbsp;they have paying clients for different platforms!).</P>
+<P>So is there any commonality here beyond me blathering?</P>
+<P>Sure!</P>
+<P>Essentially, there are no standard rules for ANY of these situations -- everyone does what they think is right, curses the people who disagree and put the disagreements into the implementations in ways that negate their efforts, and from time to time people make bold sweeping statements about what someone else ought to be doing, statements that often seem outrageous to those who would be affected by the pronouncements were they actual requirements.</P>
+<P>Now The Font Peace was industry driven since there were two main players, but there aren't really main players in the same sense here to try to work out a standard way of dealing with things -- so is really is everyone against everyone else, for now....</P>
+<P mce_keep="true">&nbsp;</P>
+<P><FONT color=#ff00ff><EM>This post brought to you by</EM> <FONT size=5>‐</FONT> <EM>(<A class="" href="http://www.fileformat.info/info/unicode/char/2010" mce_href="http://www.fileformat.info/info/unicode/char/2010">U+2010</A>, a.k.a. HYPHEN)</EM></FONT></P>
+<hr/><p><a id="4892442" href="#4892442">#</a> <strong>William Overington</strong> on 13 Sep 2007 6:54 AM:</p><div style="margin-left: 1em"><p>&gt; Now The Font Peace was industry driven since there were two main players, but there aren't really main players in the same sense here to try to work out a standard way of dealing with things -- so is really is everyone against everyone else, for now....</p>
+<p>Well, main players can arise.</p>
+<p>Suppose that you start putting a few suggestions as to what you suggest in your blog.</p>
+<p>There can be discussion and maybe a consensus can arise amongst those who participate. &nbsp;That could be published in a pdf (portable document format) document on the web. &nbsp;It could become very influential.</p>
+<p>In my opinion, everyone is not against everyone else. &nbsp;In order to be able to provide what is wanted, people need first to know what is wanted. &nbsp;So, if it becomes clear what is wanted then maybe some independent fontmakers will produce what is wanted.</p>
+<p>As you may know, I like to make fonts. &nbsp;I am hoping to become a professional font designer.</p>
+<p>Now that I am aware, from your blog, that support for U+2010 is desired, that is information upon which I can act and I can try to add support for U+2010 to my fonts.</p>
+<p>I have already added glyphs for U+2010 and U+2011 into my Quest text font as a result of reading your blog post, thus producing version 2.21.</p>
+<p><a rel="nofollow" target="_new" href="http://www.users.globalnet.co.uk/~ngo/QUESTTXT.TTF">http://www.users.globalnet.co.uk/~ngo/QUESTTXT.TTF</a></p>
+<p>I have started a thread in a fontmaking forum about support for U+2010 in fonts.</p>
+<p><a rel="nofollow" target="_new" href="http://forum.high-logic.com/viewtopic.php?t=1879">http://forum.high-logic.com/viewtopic.php?t=1879</a></p>
+<p>William Overington</p>
+<p>13 September 2007</p></div>
+<hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2007/10/11 <a href="http://archives.miloush.net/michkap/archive/2007/10/11/5398306.html">Unicode [prematurely?] posts the rules of how to handle the display of what you do not (in fact) support the display of</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2007/09/10/4847780.html" title="A&amp;P of Sort Keys, part 0 (aka The empty string sorts the same in every language)">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2007/09/09/4839909.html" title="Amazing what a difference a preposition makes (aka Boy with stick, gets no chick)">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2007-09">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2007-09-09">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2007/09/09/4845383.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:37 GMT -->
+</html>

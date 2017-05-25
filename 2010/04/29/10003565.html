@@ -1,0 +1,30 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2010/04/29/10003565.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:35 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>New for Windows 7: The PROCESS to keep MUI from being THREADbare....</title></head><body>
+<h1>New for Windows 7: The PROCESS to keep MUI from being THREADbare....</h1>
+<p><em>by Michael S. Kaplan, published on 2010/04/29 07:01 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2010/04/29/10003565.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P>I fully admit that once upon a time, <A href="http://archives.miloush.net/michkap/archive/2006/12/16/1300320.html" mce_href="http://archives.miloush.net/michkap/archive/2006/12/16/1300320.html"><STRONG>MUI would make me bipolar</STRONG></A>.</P>
+<P>But thankfully, that all ended in Windows 7. With two specific changes.</P>
+<P>The first change is the obvious one: the bug I mentioned in that blog that existed for Vista and Server 2008 for <A href="http://msdn.microsoft.com/library/dd374052.aspx" mce_href="http://msdn.microsoft.com/library/dd374052.aspx">SetThreadPreferredUILanguages</A>? They fixed it so that in Windows 7 and Server 2008 R2, you can set a custom locale to be the thread preferred UI language!</P>
+<P>Now that was a bug fix. While very cool, there is something cooler.</P>
+<P>It has to do with the model here</P>
+<P>MUI was something that would work as the UI language for an entire session <STRONG>or</STRONG> per thread. And nothing in between.</P>
+<P>This is great if you were following the UI language being used by Windows (what the session level setting would have) or if you had one application where you had a limited number of threads and could set this information for each one that might be loading resources.</P>
+<P>Obviously there is a whole sheaf of scenarios for ISVs and occasionally even IHVs where having only these two levels of support was simply terrible.</P>
+<P>You can probably think of many of these on your own, like applications using thread pools for a big one.</P>
+<P>Now this architectural limitation bleeds over into managed code as well (by the way), where the CurrentUICulture is&nbsp;a per-thread setting.</P>
+<P>How many languages can you say <STRONG>that sucks</STRONG> in? :-(</P>
+<P>But in Windows 7 and Server 2008 R2, a new function was added: <A href="http://msdn.microsoft.com/library/dd374050.aspx" mce_href="http://msdn.microsoft.com/library/dd374050.aspx">SetProcessPreferredUILanguages</A>!</P>
+<P>It works the same way as its thread-based cousin, but all newly created threads from this process will pick up this default! In fact, if you change the function names in that sample and remove the MUI_THREAD_LANGUAGES constant from the call (obviously that flag makes no sense when getting the <STRONG>process</STRONG> UI languages!), it works as is.</P>
+<P>Simply amazing!</P>
+<P><EM>There are perhaps a few places in the docs that call this a Vista feature -- it was not. <STRONG>New in Windows 7!</STRONG></EM></P>
+<P>Now .Net of course could choose in the future to pick this up, and use it -- perhaps even extend it to the AppDomain level if that makes sense, but if not make it work in all of the applications that currently have less-than-ideal behavior for their thread-level dependencies.</P>
+<P>So now I can set the UI language at the appropriate place -- the PROCESS level; and I can set it to any locale that is available on the system -- including one I might have just made myself!</P>
+<P>I really do feel that this "therapy" that Erik Fortune and the whole MUI team provided for me in Windows 7 and Windows Server 2008 R2 have mostly nursed me back to health of all of the problems inspired by previous versions. </P>
+<P><EM>By the way, I verified that .Net <STRONG>never</STRONG> picks up the process default, either in an initial thread for a process if set right away&nbsp;or in any later thread you create within that process (I did not check what happens with processes created from a process after calling the function, so there may be a workaround to make it work? </EM></P>
+<P><EM>This behavior in .Net seems like something they are over-optimizing ("since the UI language couldn't ever change even though it could before in native contexts and now can in a very feature-driven way that .Net really ought to pick up. <STRONG><FONT color=#ff0000>Note to Josh!!!!</FONT></STRONG></EM></P>
+<P>As soon as .Net can pick up this work too, I will officially be cured.... :-)</P>
+<hr/><div style="margin-left: 1em"><em>no comments</em></div><hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2011/12/27 <a href="http://archives.miloush.net/michkap/archive/2011/12/27/10251232.html">You don't waste my time if you 'reinvent the wheel' but you often waste yours!</a></p><p>2010/05/23 <a href="http://archives.miloush.net/michkap/archive/2010/05/23/10013884.html">Drowning one's sorrows in the ThreadPool</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2010/04/30/10003621.html" title="[Unicode Announcement] Call for Participation: IUC 34, Oct 18-20, 2010">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2010/04/28/10002896.html" title="&quot;Does my buttload look too big for that stream?&quot; (from the Tales of the &quot;That&#39;s what she said!&quot; files)">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2010-04">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2010-04-29">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2010/04/29/10003565.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:35 GMT -->
+</html>

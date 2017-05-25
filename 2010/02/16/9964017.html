@@ -1,0 +1,28 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2010/02/16/9964017.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:35 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>LOCALE_SDECIMAL? Quite a character! Or two. Or three...</title></head><body>
+<h1>LOCALE_SDECIMAL? Quite a character! Or two. Or three...</h1>
+<p><em>by Michael S. Kaplan, published on 2010/02/16 07:01 -05:00, original URI: http://blogs.msdn.com/b/michkap/archive/2010/02/16/9964017.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P>One of the very first bugs I ever fixed as a consultant for a customer was in an application that printed financial reports, It ran on Windows 95 and NT 4.0, which were the main version of Windows people were on then (the move from Win 3.1[1] on the client and NT 3.5[1] on the&nbsp;client (if not the server) was pretty complete with the customers I was dealing with).</P>
+<P>The application had problems any time a user made the decimal separator more than one character. Like you can do still in Windows 7 just as you could in every prior version of Windows:</P>
+<P><IMG style="WIDTH: 477px; HEIGHT: 583px" border=1 src="http://trigeminal.fmsinc.com/images/sdecimal.jpg" width=477 height=583 mce_src="http://trigeminal.fmsinc.com/images/sdecimal.jpg"></P>
+<P>I looked at the documentation surrounding the LOCALE_SDECIMAL constant (<A href="http://msdn.microsoft.com/library/dd373841.aspx" mce_href="http://msdn.microsoft.com/library/dd373841.aspx">here</A> in its most recent form):</P>
+<BLOCKQUOTE>
+<P><EM><FONT face="times new roman,times">Character(s) used for the decimal separator, for example, "." in "3.14" or "," in "3,14". The maximum number of characters allowed for this string is four, including a terminating null character. </FONT></EM></P></BLOCKQUOTE>
+<P>Now some things are different here (it used to not have a dedicated topic as the line of text was a part of the larger <A href="http://msdn.microsoft.com/library/dd464799.aspx" mce_href="http://msdn.microsoft.com/library/dd464799.aspx">Locale Information Constants</A> topic, and it did not used to mention that although it allowed four characters that one of them had to be the NULL), but the basic limitations have not changed since that time.</P>
+<P>I fixed the bug in the code, by the way. </P>
+<P>It was clear (to me at least, back then) that there was no use fighting the documented abilities of an operating system. Not supporting this configuration is a bug in the application, after all.</P>
+<P>Now for just about as long as this feature has been around, there have been applications that have been tripping over it.</P>
+<P>Not every application, mind you.</P>
+<P>Just some of them.</P>
+<P>In fact, the fancy <STRONG>Calculator</STRONG> in the new version of Windows is just such an application who sees its decimal handling broken when you make such a change.</P>
+<P>Darn, and after all the work they did to support user preferences, to trip on this obscure one (which despite being around for so long is still not widely known).</P>
+<P>Now, you may remember how I have talked about the pseudo locales like <STRONG>qps-ploc</STRONG> that&nbsp;test out extreme cases harder to readily test for in prior blogs like <A href="http://archives.miloush.net/michkap/archive/2006/08/16/702877.html" mce_href="http://archives.miloush.net/michkap/archive/2006/08/16/702877.html"><STRONG>Walking off the end of the eighth bit</STRONG></A>. Well it just so happens that <STRONG>qps-ploc</STRONG> has two characters in its decimal separator to make this feature easier to test out and make sure it does not break you.</P>
+<P>So you can look at this as <STRONG>your</STRONG> chance to find the bug that even folks at Microsoft missed, and fix it in your own code.</P>
+<P>And just remember that this feature has now been around for over a decade and a half, so if it breaks you application then it is your application that is broken. And has been for some time.</P>
+<P>Just FYI, but curiosity over whether some existing locale has ever used this feature is just an act of desperation to avoid doing the job. -)</P>
+<P>Pseudo just made it easier for you to find the bug!</P>
+<hr/><div style="margin-left: 1em"><em>no comments</em></div><hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2010/03/02 <a href="http://archives.miloush.net/michkap/archive/2010/03/02/9971296.html">Seeing double? You're not drunk; you're just running pseudo! (aka Announcement: Pseudo Day!)</a></p><p>2010/02/24 <a href="http://archives.miloush.net/michkap/archive/2010/02/24/9968410.html">I have not, generally speaking, been a "flasher" (for the last few years at least!)</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2010/02/17/9964066.html" title="Knock knock! Who&#39;s there? Kana! Kana Who? I Kana got something wrong!">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2010/02/15/9963784.html" title="The real problem(s) with all of these console &quot;fallback&quot; discussions">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2010-02">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2010-02-16">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2010/02/16/9964017.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:35 GMT -->
+</html>

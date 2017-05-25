@@ -1,0 +1,47 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2007/09/11/4861436.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:37 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>A&P of Sort Keys, part 1 (aka The law of the letter -- e.g. Latin < Greek < Cyrillic)</title></head><body>
+<h1>A&P of Sort Keys, part 1 (aka The law of the letter -- e.g. Latin < Greek < Cyrillic)</h1>
+<p><em>by Michael S. Kaplan, published on 2007/09/11 03:16 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2007/09/11/4861436.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P>Previous posts in this series:</P>
+<UL>
+<LI>Part 0: <STRONG><A class="" href="http://archives.miloush.net/michkap/archive/2007/09/10/4847780.html" mce_href="http://archives.miloush.net/michkap/archive/2007/09/10/4847780.html">The empty string sorts the same in every language</A></STRONG></LI></UL>
+<P>Okay, we'll start with something simple, basically a bunch of simple lowercase letters with no diacritics on them.</P>
+<P>I'll take a string that grabs some of those look-alike characters from the Latin, Cyrillic, and Greek scripts. Our test string will be:</P>
+<BLOCKQUOTE>
+<P><FONT size=4>aokαοκаок</FONT></P></BLOCKQUOTE>
+<P>Which is <A class="" href="http://www.fileformat.info/info/unicode/char/0061" mce_href="http://www.fileformat.info/info/unicode/char/0061">U+0061</A> <A class="" href="http://www.fileformat.info/info/unicode/char/006f" mce_href="http://www.fileformat.info/info/unicode/char/006f">U+006f</A> <A class="" href="http://www.fileformat.info/info/unicode/char/006b" mce_href="http://www.fileformat.info/info/unicode/char/006b">U+006b</A> <A class="" href="http://www.fileformat.info/info/unicode/char/03b1" mce_href="http://www.fileformat.info/info/unicode/char/03b1">U+03b1</A> <A class="" href="http://www.fileformat.info/info/unicode/char/03bf" mce_href="http://www.fileformat.info/info/unicode/char/03bf">U+03bf</A> <A class="" href="http://www.fileformat.info/info/unicode/char/03ba" mce_href="http://www.fileformat.info/info/unicode/char/03ba">U+03ba</A> <A class="" href="http://www.fileformat.info/info/unicode/char/0430" mce_href="http://www.fileformat.info/info/unicode/char/0430">U+0430</A> <A class="" href="http://www.fileformat.info/info/unicode/char/043e" mce_href="http://www.fileformat.info/info/unicode/char/043e">U+043e</A> <A class="" href="http://www.fileformat.info/info/unicode/char/043a" mce_href="http://www.fileformat.info/info/unicode/char/043a">U+043a</A>, or:</P>
+<BLOCKQUOTE>
+<P>LATIN SMALL LETTER A,&nbsp;LATIN SMALL LETTER O, LATIN SMALL LETTER K,<BR>GREEK SMALL LETTER ALPHA, GREEK SMALL LETTER OMICRON, GREEK SMALL LETTER KAPPA,<BR>CYRILLIC SMALL LETTER A, CYRILLIC SMALL LETTER O, CYRILLIC SMALL LETTER KA</P></BLOCKQUOTE>
+<P>Good enough?</P>
+<P>Ok, let's look at the sort key, with a simple call to LCMapString with the LCMAP_SORTKEY flag, using 0x0409 (US English), although many other LCIDs will give use that same default table....</P>
+<P>The sort key is the following stream of bytes. As in the first post, the sentinels are in <STRONG>black</STRONG>. The Unicode weight (UW) values&nbsp;will be&nbsp;in <STRONG><FONT color=#009900>green</FONT></STRONG>.</P>
+<BLOCKQUOTE>
+<P><FONT face="consolas,lucida console,courier new,courier"><STRONG><FONT color=#009900>0e 02 0e 7c 0e 36 0f 02 0f 10 0f 0b 10 06 10 48 10 36</FONT> 01 01 01 01 00</STRONG></FONT></P></BLOCKQUOTE>
+<P mce_keep="true">Ok, so we have a nice easy read here --&nbsp;9 characters, 18 bytes.</P>
+<P mce_keep="true">Notice how the first byte in this two byte Unicode weight is the same for each script? That is the Script Member (SM) value:</P>
+<UL>
+<LI>
+<DIV mce_keep="true"><STRONG><FONT face="courier new,courier">0e</FONT></STRONG> for Latin</DIV></LI>
+<LI>
+<DIV mce_keep="true"><STRONG><FONT face="courier new,courier">0f</FONT></STRONG> for Greek</DIV></LI>
+<LI>
+<DIV mce_keep="true"><STRONG><FONT face="courier new,courier">10</FONT></STRONG> for Cyrillic</DIV></LI></UL>
+<P mce_keep="true">and so on. The assignments here are arbitrary and of course are not guaranted if a major version change occurs. </P>
+<P mce_keep="true">Thus where I generated this key, quite arbitrarily, Latin &lt; Greek &lt; Cyrillic. Thus if one is comparing the first letter to the fourth, one will get the same results as comparing the first byte of <STRONG>0e 02</STRONG> with the first bytes of <STRONG>0f 02</STRONG>.</P>
+<P mce_keep="true">The second byte is a value used to distinguish primary differences between letters. If one were comparing the second byte of <STRONG>0e 02</STRONG> with the second byte of <STRONG>03 7c</STRONG>.</P>
+<P mce_keep="true">Any time a string contains only simple alphabetic characters with no additional weights on them, this same kind of key will be generated.</P>
+<P mce_keep="true">Since&nbsp;a shorter string always comes before an otherwise equal but longer one, comparing <STRONG>αο</STRONG> to <STRONG>αοκ</STRONG> would be comparing </P>
+<BLOCKQUOTE>
+<P mce_keep="true"><STRONG><FONT face=Consolas><FONT color=#009900>0e 02 0e 7c </FONT>01 01 01 01 00</FONT></STRONG></P></BLOCKQUOTE>
+<P mce_keep="true">&nbsp;to</P>
+<BLOCKQUOTE>
+<P mce_keep="true"><STRONG><FONT face=Consolas><FONT color=#009900>0e 02 0e 7c 0e 36&nbsp;</FONT>01 01 01 01 00</FONT></STRONG></P></BLOCKQUOTE>
+<P mce_keep="true">and suddenly the value of those sentinels becomes clear - since they will (bugs aside) be less than any legitimate weight, the shorter string comes before the longer.</P>
+<P mce_keep="true">Now at this point there is not much more to say about this simple case,since it is (after all) simple. So tomorrow we will try to make things a little bit more complicated....</P>
+<P mce_keep="true">&nbsp;</P>
+<P mce_keep="true"><FONT color=#ff00ff><EM>This post brought to you by</EM>&nbsp;<FONT size=5>1</FONT> <EM>(<A class="" href="http://www.fileformat.info/info/unicode/char/0031" mce_href="http://www.fileformat.info/info/unicode/char/0031">U+0031</A>, a.k.a. DIGIT ONE)</EM></FONT></P>
+<hr/><div style="margin-left: 1em"><em>no comments</em></div><hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2008/08/21 <a href="http://archives.miloush.net/michkap/archive/2008/08/21/8883467.html">A&P of Sort Keys, part 14: The Hangul is really getting OLD</a></p><p>2007/10/09 <a href="http://archives.miloush.net/michkap/archive/2007/10/09/5375754.html">A&P of Sort Keys, part 13 (About the function that is too lazy to get it right every time)</a></p><p>2007/10/08 <a href="http://archives.miloush.net/michkap/archive/2007/10/08/5270854.html">A&P of Sort Keys, part 12 (aka Han sorts first!)</a></p><p>2007/09/24 <a href="http://archives.miloush.net/michkap/archive/2007/09/24/5085893.html">A&P of Sort Keys, part 11 (aka It's not like ideographic sorts were developed idiopathically)</a></p><p>2007/09/21 <a href="http://archives.miloush.net/michkap/archive/2007/09/21/5027338.html">A&P of Sort Keys, part 10 (aka I've kana wanted to start talking about Japanese)</a></p><p>2007/09/20 <a href="http://archives.miloush.net/michkap/archive/2007/09/20/5008305.html">A&P of Sort Keys, part 9 (aka Not always transitive, but punctual and punctuating)</a></p><p>2007/09/18 <a href="http://archives.miloush.net/michkap/archive/2007/09/18/4971376.html">A&P of Sort Keys, part 8 (aka You can often think of ignoring weights as a form of ignorance)</a></p><p>2007/09/17 <a href="http://archives.miloush.net/michkap/archive/2007/09/17/4950008.html">A&P of Sort Keys, part 7 (aka You're very thin now, but I can still recognize you)</a></p><p>2007/09/16 <a href="http://archives.miloush.net/michkap/archive/2007/09/16/4937196.html">A&P of Sort Keys, part 6 (aka Relax, be calm, and deCOMPRESS if you are feeling out of sorts)</a></p><p>2007/09/15 <a href="http://archives.miloush.net/michkap/archive/2007/09/15/4924008.html">A&P of Sort Keys, part 5 (aka EXPANSIONing your horizons)</a></p><p>2007/09/14 <a href="http://archives.miloush.net/michkap/archive/2007/09/14/4905625.html">A&P of Sort Keys, part 4 (aka It isn't a race but let's make an EXCEPTION and cross the Finnish line)</a></p><p>2007/09/13 <a href="http://archives.miloush.net/michkap/archive/2007/09/13/4889199.html">A&P of Sort Keys, part 3 (aka Should you let a string make it's case? If so, Y?)</a></p><p>2007/09/12 <a href="http://archives.miloush.net/michkap/archive/2007/09/12/4875560.html">A&P of Sort Keys, part 2 (aka The string that won? Didn't have a mark on him!)</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2007/09/11/4873992.html" title="4400 (*not* &#39;The 4400&#39;)">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2007/09/11/4860978.html" title="Perhaps they don&#39;t quite get it just yet, #1">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2007-09">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2007-09-11">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2007/09/11/4861436.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:37 GMT -->
+</html>

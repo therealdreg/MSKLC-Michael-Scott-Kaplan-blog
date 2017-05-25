@@ -1,0 +1,39 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2011/11/30/10242902.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>On not being well served by the mantra "must support Unicode"</title></head><body>
+<h1>On not being well served by the mantra "must support Unicode"</h1>
+<p><em>by Michael S. Kaplan, published on 2011/11/30 07:01 -05:00, original URI: http://blogs.msdn.com/b/michkap/archive/2011/11/30/10242902.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<p>Yesterday, I was having an interesting conversation, one that has given me pause.</p>
+<p>We were talking about Unicode, and the need for components in the OS to do a better job of directly embracing it.</p>
+<p>This is obviously nothing new around these parts, but a new twist was interjected into the conversation.</p>
+<p>You see, the components we were talking about were consistently calling the "W" suffixed Unicode functions all the time -- either explicitly or because Windows has&nbsp;been compiled with /DUNICODE and /D_UNICODE for years now.</p>
+<p>However, at certain critical bottlenecks, they had two requirements added:</p>
+<ul>
+<li>the characters had to be on the CP_ACP, and</li>
+<li>the characters had to be on the CP_OEMCP</li>
+</ul>
+<p>The net effect of these two requirements was a system default locale dependency, which resulted in many serious limitations, the most important of which:</p>
+<ul>
+<li>anywhere from hundreds to&nbsp;tens of thousands of&nbsp;characters required by national standards like JIS X 2004, HKSCS, and the all important GB18030 were often blocked;</li>
+<li>all of the "Unicode only" locales that could never be system locales were blocked completely.</li>
+</ul>
+<p>Now the fact that they were mistaken was not a surprise; people have been making this mistake for almost two decades.</p>
+<p>The shocker (for&nbsp;me) was how long it took them to understand and accept that some characters were not on any ACP or OEMCP at all. And that "Unicode-only locales, first introduced during the early betas of NT 5.0 (aka Windows 2000), even existed.</p>
+<p>I first wrote <strong><a title="Code pages are really not enough...." href="http://archives.miloush.net/michkap/archive/2005/03/01/382289.html">Code pages are really not enough....</a></strong>&nbsp;and <strong><a title="Why ACP != OEMCP (usually)" href="http://archives.miloush.net/michkap/archive/2005/02/08/369197.html">Why ACP != OEMCP (usually)</a></strong>&nbsp;over six years ago, but the very real consequences on the destruction of text <a href="http://blogs.msdn.com/b/oldnewthing/archive/2005/07/19/440404.aspx">by flags like ES_OEMCONVERT</a>&nbsp;was simply new information to some people who would never blink at swearing by the need for Unicode support.</p>
+<p>So I've decided that the mantra of making sure components&nbsp;"must support Unicode" is insufficient.</p>
+<p>I'll need to make sure it's always clear that a system default locale/CP_ACP/CP_OEMCP dependency is just as bad, and perhaps even worse. Because removing a code page dependency can be more involved than just compiling the code differently.</p>
+<p><strong>Sometimes a lot more involved....</strong></p>
+<hr/><p><strong>MGetz</strong> on 30 Nov 2011 7:55 AM:</p><div style="margin-left: 1em"><p>This would explain why many core OS components don&#39;t support anything outside of the BMP, and why there has never been any serious movement to change that (something I&#39;ve found odd for years now...).</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 30 Nov 2011 8:22 AM:</p><div style="margin-left: 1em"><p>Not necessarily -- since &quot;Unicode&quot; usually means UTF-16 for MS platforms, you can fit supplementary characters just fine. The bug I talk about here in this blog blocks many things, including characters more common than &quot;outside the BMP&quot; ones....</p>
+</div>
+<p><strong>Mihai</strong> on 30 Nov 2011 10:08 PM:</p><div style="margin-left: 1em"><p>In my book, the two requirements almost negated the whole effort to be Unicode. I often compare &quot;Unicode support&quot; to a pipe: you might have a 1000 miles pipe that can (in theory) move 1000 galons of water per second, but if you have one singleone foot bottleneck that can only pass 20 galons per second, then your pipe is not a 1000 galons per second pipe, bacause (as end user) I will never be able to get that debit.</p></div>
+<p><strong>Yuhong Bao</strong> on 4 Dec 2011 5:05 PM:</p><div style="margin-left: 1em"><p>Reminds me of this:</p>
+<p><a rel="nofollow" target="_new" href="https://bugzilla.mozilla.org/show_bug.cgi?id=512032">bugzilla.mozilla.org/show_bug.cgi</a></p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 5 Dec 2011 6:55 AM:</p><div style="margin-left: 1em"><p>Mihai -- I agree with you to a point, though it doesn&#39;t negate all of the support that is allowed for the full range of Unicode....</p>
+</div>
+<hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2011/12/01/10243326.html" title="No one ever doubts me when I tell them SharePoint ate my spec!">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2011/11/29/10242356.html" title="TODAY: My IUC 35 talks, the &quot;Microsoft Internal&quot; edition">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2011-11">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2011-11-30">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2011/11/30/10242902.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+</html>

@@ -1,0 +1,31 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2007/02/23/1748028.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:38 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>The MSL8 project? Cool!</title></head><body>
+<h1>The MSL8 project? Cool!</h1>
+<p><em>by Michael S. Kaplan, published on 2007/02/23 11:10 -05:00, original URI: http://blogs.msdn.com/b/michkap/archive/2007/02/23/1748028.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P>Bart mentions over the Suggestion Box:</P>
+<BLOCKQUOTE>
+<P><FONT face="times new roman,times"><EM>Continuing on the 'Wednesday, October 11, 2006 8:05 AM Michael S. Kaplan<BR><BR>Why can't the CP_ACP be UTF-8? ' topic.<BR><BR>We are currently looking into making something like unicows.dll.<BR><BR>Except that it intercepts calls to A functions and converts from UTF-8 instead of CP_ACP and calls the W functions. (and back ofcourse))<BR><BR>This is probably less work then converting our apps to use W functions. (third party components we can't replace is the biggest problem, that and delphi isn't strong on the WChar side)</EM></FONT></P></BLOCKQUOTE>
+<P>Yep, Bart was following on to <STRONG><A class="" href="http://archives.miloush.net/michkap/archive/2006/10/11/816996.html" mce_href="http://archives.miloush.net/michkap/archive/2006/10/11/816996.html">this</A></STRONG> post. :-)</P>
+<P>As projects go, the one he is talking about sounds like a pretty interesting one. And not just because it is a much cooler version of the very <A class="" href="http://www.microsoft.com/globaldev/handson/dev/mslu_announce.mspx" mce_href="http://www.microsoft.com/globaldev/handson/dev/mslu_announce.mspx">MSLU</A> project from my past, though I will admit that is a&nbsp;not insignificant&nbsp;part of it.</P>
+<P>It is just amazing to think about in terms of how much easier it would be to accomplish, using the same automated means as the very first build of MSLU (the one that had none of the hundreds of special cases needed later to try to work around various Win9x bugs). I'd be able to focus on the more compelling side of the user messaging story, the sort of thing that there just wasn't time to do&nbsp;with unicows.dll.</P>
+<P>I doubt I'd be able to convince anyone at Microsoft to sponsor it (not that I wouldn't be willing to try!), though in terms of how much work it would require, it would cost significantly less than trying to get the ANSI Win32 API to support UTF-8, a perennial topic of discussion it seems at times....</P>
+<P>Assuming it wouldn't have to be written in Delphi of course, maybe I should ask Bart if he is hiring and take a short leave of absence? :-)</P>
+<P mce_keep="true">&nbsp;</P>
+<P><FONT color=#ff00ff><EM>This post brought to you by</EM>&nbsp;<FONT size=5>8</FONT> <EM>(<A class="" href="http://www.fileformat.info/info/unicode/char/0038" mce_href="http://www.fileformat.info/info/unicode/char/0038">U+0038</A>, a.k.a. DIGIT EIGHT)</EM></FONT></P>
+<hr/><p><strong>Ben Bryant</strong> on 23 Feb 2007 1:22 PM:</p><div style="margin-left: 1em"><p>I think this is an interesting idea. As it stands you cannot reliably put UTF-8 strings into Delphi Strings or AnsiStrings if any of the core code will be utilizing Win32 or library functions. This would conceivably allow that, however a lot of code that assumes Ansi (max of 2 bytes per character, as well as lead/trail byte stuff) must be addressed such as string functions like EndsWith, NextChar, etc, so I still have questions about the strategy.</p>
+<p>Michael, I assume you are saying that you wouldn't need the Win9x bug workarounds &nbsp;because you would not be supporting Win9x, not because UTF-8 would inherently solve those issues.</p></div>
+<p><strong>Michael S. Kaplan</strong> on 23 Feb 2007 1:54 PM:</p><div style="margin-left: 1em"><p>Correct, Ben -- one of the biggest pain points in the project was Win9x bugs and behavior and debugging challenges....</p>
+</div>
+<p><strong>Rob Kennedy</strong> on 24 Feb 2007 1:55 AM:</p><div style="margin-left: 1em"><p>Bart might be interested in my MSLU units for Delphi. One is just a set of functions that directly call the unicows.dll functions (no different from calling any other DLL), but the other is one that patches the import table to redirect all calls the program makes, even from areas of the program you don't have source-code access to.</p>
+<p><a rel="nofollow" target="_new" href="http://www.cs.wisc.edu/~rkennedy/mslu">http://www.cs.wisc.edu/~rkennedy/mslu</a></p></div>
+<p><strong>Bart</strong> on 26 Feb 2007 5:35 AM:</p><div style="margin-left: 1em"><p>I got a proof of concept working allready, altough some parts are truncated and RichEdits seem to be a real challenge.</p>
+<p>Intercepting all the WndProc's flying about required some runtime code generation, but that seems to be working fine.</p>
+<p>Ben, besides redirection the Windows unit functions i will also redirect stuff like NextChar where needed</p>
+<p>Rob, Thanks i'll take a look :)</p>
+<p>Currently i'm looking at what kind of code is at the current implementation and either change the jump address or overwrite it with a jmp.</p>
+<p>Michael, sorry it is all in Delphi :) and i can't hire you either :) i was hoping more for the reverse.</p></div>
+<hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2011/06/22 <a href="http://archives.miloush.net/michkap/archive/2011/06/22/10177704.html">There and Back Again (aka ACP --> UTF-8 --> ACP)</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2007/02/23/1748986.html" title="Writing better, faster code">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2007/02/23/1745885.html" title="The failure of 1124">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2007-02">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2007-02-23">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2007/02/23/1748028.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:38 GMT -->
+</html>

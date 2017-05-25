@@ -1,0 +1,56 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2010/04/20/9998063.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:35 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>You can't get this particular bit of proverbial toothpaste back into the tube</title></head><body>
+<h1>You can't get this particular bit of proverbial toothpaste back into the tube</h1>
+<p><em>by Michael S. Kaplan, published on 2010/04/20 07:01 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2010/04/20/9998063.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P><FONT color=#ff0000><EM>Before I forget, I'll wish everyone a happy 420 on this day, 4/20. I'm just saying....</EM></FONT></P>
+<P>It is often quite ironic that the main point of an inquiry is buried at the end of the inquiry.</P>
+<P>Sometimes this is done to take emphasis away from the main point as a means to avoid showing bias.</P>
+<P>I'll give a likely example of this morning of the first day of the Text Summit (for you MS internal folks!), talking about something vaguely relevant to the Summit itself but completely irrelevant to pretty much everything being discussed at the Summit itself, including my own talk being given there. :-)</P>
+<P>So anyhow, a recent question to the Contact link left me a little nonplussed:</P>
+<BLOCKQUOTE>
+<P><EM><FONT face="times new roman,times">I have looked extensively on your blog but did not receive an answer to this question, so I will just ask directly.<BR><BR></FONT></EM><EM><FONT face="times new roman,times">If Microsoft claims to support Unicode, how can it not put the equivalence between Unicode Normalization Forms C and D into collation for Korean?</FONT></EM></P></BLOCKQUOTE>
+<P>At first I was not sure how to respond.</P>
+<P>I mean, I feel like I had answered this question before in blogs like <A href="http://archives.miloush.net/michkap/archive/2005/02/25/380266.html" mce_href="http://archives.miloush.net/michkap/archive/2005/02/25/380266.html"><STRONG>Theory vs. practice for Korean text collation</STRONG></A> and <A href="http://archives.miloush.net/michkap/archive/2005/09/12/463560.html" mce_href="http://archives.miloush.net/michkap/archive/2005/09/12/463560.html"><STRONG>Theory vs. practice for Korean text collation, redux</STRONG></A>.&nbsp;</P>
+<P>The conformance to Unicode issue vis-a-vis the <A href="http://www.unicode.org/reports/tr10/" mce_href="http://www.unicode.org/reports/tr10/">UTS 10: Unicode Collation Algorithm</A> is really not an issue at all; as the Unicode Standard itself says in the UCA document which spells out the meaning of a UTS (Unicode Technical Standard):</P>
+<BLOCKQUOTE>
+<P><STRONG>A Unicode Technical Standard (UTS) is an independent specification. Conformance to the Unicode Standard does not imply conformance to any UTS.</STRONG></P></BLOCKQUOTE>
+<P>Instead of UTS 10, Microsoft has its own independent support of collation, a support that by and large supports much of the intent of UTS 10. it even predates UTS 10; when one considers the number of times that Microsoft weighed in with thoughts/opinions on UTS 10 starting from when it was DUTR 10, images of Microsoft's feature telling the young DUTR "I'm am your father" are only squelched to avoid "evil empire" jokes.</P>
+<P>Now Microsoft supports Unicode,&nbsp;in many ways. Via usage in its products, via hosting their main offices in one of our own campuses in Mountain View CA, via its full membership, via board membership at present and many times in the past.</P>
+<P>More to the point at hand, Microsoft supports it by supporting Normalization as defined in <A href="http://www.unicode.org/reports/tr15/" mce_href="http://www.unicode.org/reports/tr15/">UAX 15: Unicode Normalization Forms</A>, which as in the previous case spells out the meaning of a UAX (Unicode Standard Annex):</P>
+<BLOCKQUOTE>
+<P><STRONG>A Unicode Standard Annex (UAX) forms an integral part of the Unicode Standard, but is published online as a separate document. The Unicode Standard may require conformance to normative content in a Unicode Standard Annex, if so specified in the Conformance chapter of that version of the Unicode Standard. The version number of a UAX document corresponds to the version of the Unicode Standard of which it forms a part.</STRONG></P></BLOCKQUOTE>
+<P>Normalization is something that Microsoft has largely supported in a de facto manner in both fonts and collation before it was formally defined as a standard, with the bulk of the exceptions rightfully considered either a) bugs to fix, or b) explicit design decisions not to.</P>
+<P>For the Normalization conversion itself, it is completely supported in Microsoft products and has been for many years.</P>
+<P>So, to review:</P>
+<UL>
+<LI>Microsoft supports UAX 15;</LI>
+<LI>Microsoft&nbsp;does not support UTS 10;</LI>
+<LI>Microsoft's&nbsp;own independent implementation of collation is</LI>
+<UL>
+<LI>intended to support the same requirements as UTS 10, </LI>
+<LI>was largely created before either standard existed, </LI>
+<LI>and in de facto manner happens to support most of both UAX 15 and UTS 10 in its operations.</LI></UL></UL>
+<P>Now obviously this talk of "largely supports" and "supports most of" has an obvious implicit statement that there are times the support isn't there.</P>
+<P>And the biggest "exception" to the idea of generally supporting them both is, ironically in the Alanis or maybe Britney sense, the most likely central point of that original question I was asked, even though it was the word at the end:</P>
+<BLOCKQUOTE>
+<P><STRONG><FONT size=4>Korean.</FONT></STRONG></P></BLOCKQUOTE>
+<P>Now Korean has an interesting place in languages, and in Unicode.</P>
+<P>A "perfect alphabet" developed in the 1500's by a king who wanted it to be easy for everyone to read and write, something opposed by the powers that could&nbsp;(as I discussed slightly in some of the introductory material to <A href="http://archives.miloush.net/michkap/archive/2006/03/12/549951.html" mce_href="http://archives.miloush.net/michkap/archive/2006/03/12/549951.html"><STRONG>Traditional versus modern sorts</STRONG></A>), one could argue that its encoding in Unicode and ISO 10646 is anything but perfect.</P>
+<P>It is not only technically encoded 4 times in Unicode (as I mentioned in <A href="http://archives.miloush.net/michkap/archive/2005/09/14/463569.html" mce_href="http://archives.miloush.net/michkap/archive/2005/09/14/463569.html"><STRONG>One more thing about Korean....</STRONG></A>).</P>
+<P>But because of the very natural and rational direct connection between the composed Hangul and decomposed Jamo, an operation that has a sound linguistic basis that no unbiased linguist would challenge, Unicode and ISO 10646 has borne the displeasure of the government for so long that the war of attrition finally succeeded in getting some Jamo added that were in theory already encoded (ref: <A href="http://archives.miloush.net/michkap/archive/2007/02/24/1751301.html" mce_href="http://archives.miloush.net/michkap/archive/2007/02/24/1751301.html"><STRONG>Using a character proposal for a 'repertoire fence' extension</STRONG></A>).</P>
+<P>Though there were no widely used implementations available in practice, due to the government itself actively seeking to&nbsp;discourage those implementations that existed.</P>
+<P><EM>I have referred to the chutzpah of killing one's parents and begging the court for leniency on the grounds of being an orphan in the past.</EM> :-)</P>
+<P>In that context, one can look at this exception to the degree to which Microsoft supports UAX 15 in collation&nbsp;as largely an effort in support of the government's desire to not so widely support an equivalence between the two forms of Korean characters, for modern Hangul.</P>
+<P>A good way to placate, if nothing else.</P>
+<P>From&nbsp;technical and "almost a linguist, minus the education" perspectives I may find the solution unsatisfying, though the workaround is easy enough: convert the string to a&nbsp;particular&nbsp;Normalization form and then compare them. This allows both the people who know they are the same to be happy to see their knowledge confirmed while still allowing those who need to differentiate them to feel they are treated differently.</P>
+<P>To be honest, Unicode does what it does&nbsp;via&nbsp;a long process that&nbsp;started as a sensible&nbsp;defining of&nbsp;canonical decompositions that finally became Normalization, all in a way that made conformance guarantees to Unicode and compliance requirements to other standards that use the Normalization definitions.</P>
+<P>I suspect if they knew everything we know now, even those initial canonical&nbsp;decompositions would likely have been defined as something else (not compatibility decompositions but some other,&nbsp;third type), and would have saved over a decade of headaches, both political and the other kind.</P>
+<P>But it is too late now, as you can't get this particular bit of&nbsp;proverbial toothpaste back into the tube.</P>
+<P>In the current situation, there is nothing you can't get if you use the support methods and functions that Microsoft provides. Even if you have to work a little harder to make some of it happen....</P>
+<P>And Microsoft is conformant to Unicode here, completely. It "fails" the test of being 100% conformant to the goals of UTS 10 in an area that Unicode itself would likely skip if it could. Which is a wonderful advantage Microsoft (and every other company) has over Unicode in this case, in my opinion!</P>
+<P>The moral of the story -- be careful what you promise. When there are people recording what is said, at least!</P>
+<hr/><div style="margin-left: 1em"><em>no comments</em></div><hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2010/04/21 <a href="http://archives.miloush.net/michkap/archive/2010/04/21/9997523.html">If no one supported the OLD Old proposal, jumping in to support the NEW Old proposal may not make sense…</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2010/04/21/9997523.html" title="If no one supported the OLD Old proposal, jumping in to support the NEW Old proposal may not make sense…">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2010/04/19/9997912.html" title="The sad sad tale of the BARREE YEH">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2010-04">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2010-04-20">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2010/04/20/9998063.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:35 GMT -->
+</html>

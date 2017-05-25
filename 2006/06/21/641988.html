@@ -1,0 +1,21 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2006/06/21/641988.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:39 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Is it on the list?</title></head><body>
+<h1>Is it on the list?</h1>
+<p><em>by Michael S. Kaplan, published on 2006/06/21 17:08 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2006/06/21/641988.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P><FONT face=Tahoma>When you look at Win32 API functions like by <A href="http://msdn.microsoft.com/library/en-us/intl/nls_34rz.asp">GetLocaleInfo</A>/<A href="http://msdn.microsoft.com/library/en-us/intl/nls_7w1b.asp">SetLocaleInfo</A>, you will notice that only have a setting for LOCALE_SLONGDATE and not for the big list of suggested possible long date values that shows up in Regional and Language Options (RLO).</FONT></P>
+<P><FONT face=Tahoma>To get the list, you have to call <A href="http://msdn.microsoft.com/library/en-us/intl/nls_5ucz.asp">EnumDateFormats</A> or one of its cousins (<A href="http://msdn.microsoft.com/library/en-us/intl/nls_4h14.asp">EnumDateFormatsEx</A> or <A href="http://msdn.microsoft.com/library/en-us/intl/nls_EnumDateFormatsExEx.asp">EnumDateFormatsExEx</A>). That is in fact what Regional and Language Options does.</FONT></P>
+<P><FONT face=Tahoma><EM>(And yes, I know some of you hate those ExEx names, but things are what they are and we all have to move on now!)</EM></FONT></P>
+<P><FONT face=Tahoma>Obviously anything that is in the specific field is, at least to start with, something that ought to be somewhere on the big list of possible formats.</FONT></P>
+<P><FONT face=Tahoma>Which is not to say that there has not been the occasional bug alomg the lines of it not being on the list (not a problem by default since the big list in RLO is built by adding the current format if it is not already in the list, but an obvious problem if you change the&nbsp; format since then the old format will not shown at all!).</FONT></P><FONT face=Tahoma>
+<P><FONT face=Tahoma>(The same is true for short date formats, time formats, and calendars, in case you were wondering!)</FONT></P>
+<P>The interesting part here is that starting in Vista, the independent fields (e.g. LOCALE_SLONGDATE, LOCALE_SSHORTDATE, etc.) are no longer independently stored. Instead, they are the first item in the big list.</P>
+<P>Which is almost always just fine (and neatly avoids the sort of bug I mentioned before), but there is one change in behavior that you may have already noticed either from the buildup above or just by being a frequent RLO user....</P>
+<P>The change is that if the default item used to be the third on the list (for reasons of asthetics, balance, alphabetical order, or any other justification), then it will not be any more. It will always be first on the list.</P>
+<P>Obviously a minor issue for most, and the bugs that are avoided are a lot worse than the small regression in the order of the list, but I though it might at least be worth a blog post!</FONT></P>
+<P><FONT face=Tahoma></FONT>&nbsp;</P>
+<P><FONT face=Tahoma color=#ff1493><EM>This post brought to you by</EM> <FONT size=6><STRONG>ড়</STRONG></FONT> <EM>(<A href="http://www.fileformat.info/info/unicode/char/09dc">U+09dc</A>, a.k.a. BENGALI LETTER RRA)</EM></FONT></P>
+<hr/><div style="margin-left: 1em"><em>no comments</em></div><hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2006/06/22/643179.html" title="Quechua me if you can!">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2006/06/21/641030.html" title="Give me a break [Char] !">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2006-06">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2006-06-21">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2006/06/21/641988.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:39 GMT -->
+</html>

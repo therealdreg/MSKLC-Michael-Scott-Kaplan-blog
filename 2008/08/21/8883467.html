@@ -1,0 +1,183 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2008/08/21/8883467.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:36 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>A&P of Sort Keys, part 14: The Hangul is really getting OLD</title></head><body>
+<h1>A&P of Sort Keys, part 14: The Hangul is really getting OLD</h1>
+<p><em>by Michael S. Kaplan, published on 2008/08/21 03:01 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2008/08/21/8883467.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<p>Previous posts in this series before the long unexplained hiatus:<br></p>
+
+<ul>
+<li>Part 0: <b><a href="http://archives.miloush.net/michkap/archive/2007/09/10/4847780.html" mce_href="http://archives.miloush.net/michkap/archive/2007/09/10/4847780.html">The 
+empty string sorts the same in every language</a></b> 
+</li>
+
+<li>Part 1: <b><a href="http://archives.miloush.net/michkap/archive/2007/09/11/4861436.html" mce_href="http://archives.miloush.net/michkap/archive/2007/09/11/4861436.html">The law 
+of the letter -- e.g. Latin &lt; Greek &lt; Cyrillic</a></b> 
+</li>
+
+<li>Part 2: <a href="http://archives.miloush.net/michkap/archive/2007/09/12/4875560.html" mce_href="http://archives.miloush.net/michkap/archive/2007/09/12/4875560.html"><b>The 
+string that won? Didn't have a mark on him!</b></a> 
+</li>
+
+<li>Part 3: <a href="http://archives.miloush.net/michkap/archive/2007/09/13/4889199.html" mce_href="http://archives.miloush.net/michkap/archive/2007/09/13/4889199.html"><b>Should 
+you let a string make it's case? If so, Y?</b></a> 
+</li>
+
+<li>Part 4: <a href="http://archives.miloush.net/michkap/archive/2007/09/14/4905625.html" mce_href="http://archives.miloush.net/michkap/archive/2007/09/14/4905625.html"><b>It 
+isn't a race but let's make an EXCEPTION and cross the Finnish line</b></a> 
+</li>
+
+<li>Part 5: <a href="http://archives.miloush.net/michkap/archive/2007/09/15/4924008.html" mce_href="http://archives.miloush.net/michkap/archive/2007/09/15/4924008.html"><b>EXPANSIONing 
+your horizons</b></a> 
+</li>
+
+<li>Part 6: <a href="http://archives.miloush.net/michkap/archive/2007/09/16/4937196.html" mce_href="http://archives.miloush.net/michkap/archive/2007/09/16/4937196.html"><b>Relax, 
+be calm, and deCOMPRESS if you are feeling out of sorts</b></a> 
+</li>
+
+<li>Part 7: <a href="http://archives.miloush.net/michkap/archive/2007/09/17/4950008.html" mce_href="http://archives.miloush.net/michkap/archive/2007/09/17/4950008.html"><b>You're 
+very thin now, but I can still recognize you</b></a> 
+</li>
+
+<li>Part 8: <a href="http://archives.miloush.net/michkap/archive/2007/09/18/4971376.html" mce_href="http://archives.miloush.net/michkap/archive/2007/09/18/4971376.html"><b>You 
+can often think of ignoring weights as a form of ignorance</b></a> 
+</li>
+
+<li>Part 9: <a href="http://archives.miloush.net/michkap/archive/2007/09/20/5008305.html" mce_href="http://archives.miloush.net/michkap/archive/2007/09/20/5008305.html"><b>Not 
+always transitive, but punctual and punctuating</b></a> 
+</li>
+
+<li>Part 10: <a href="http://archives.miloush.net/michkap/archive/2007/09/21/5027338.html" mce_href="http://archives.miloush.net/michkap/archive/2007/09/21/5027338.html"><b>I've 
+kana wanted to start talking about Japanese</b></a> 
+</li>
+
+<li>Part 11: <a href="http://archives.miloush.net/michkap/archive/2007/09/24/5085893.html" mce_href="http://archives.miloush.net/michkap/archive/2007/09/24/5085893.html"><b>It's 
+not like ideographic sorts were developed idiopathically</b></a> 
+</li>
+
+<li>Part 12: <a href="http://archives.miloush.net/michkap/archive/2007/10/08/5270854.html" mce_href="http://archives.miloush.net/michkap/archive/2007/10/08/5270854.html"><b>Han 
+sorts first!</b></a></li>
+
+<li>Part 13: <a href="http://archives.miloush.net/michkap/archive/2007/10/09/5375754.html" mce_href="http://archives.miloush.net/michkap/archive/2007/10/09/5375754.html"><b>About the function that 
+is too lazy to get it right every time</b></a><b></b></li>
+</ul>
+
+<p>I am not going try to explain the long unexplained hiatus the series went through, because that would ruin the whole <b>unexplained</b> nature of it. Odds are that 99.99% of the people reading this don't care, anyway. :-)</p>
+
+<p>So one thing I have skipped thus far is the handling for Old Hangul (even when I was talking about Hangul in prior blogs in the series and before it).</p>
+
+<p>The reason was simple.</p>
+
+<p>Though I'[m not going to tell you that yet, either. I'll do it near the end.</p>
+
+<p>Now first I'll start with an excerpt from The Unicode Standard (<a href="http://www.unicode.org/versions/Unicode5.0.0/ch03.pdf" mce_href="http://www.unicode.org/versions/Unicode5.0.0/ch03.pdf">3.12: Conjoining Jamo Behavior</a>):</p>
+
+<blockquote>
+<p><b>Hangul Syllable Composition</b><br></p>
+
+<p>The following algorithm describes how to take a sequence of canonically decomposed characters <b>D</b> and compose Hangul syllables. Hangul composition and decomposition are summarized here, but for a more complete description, implementers must consult Unicode Standard Annex #15, “Unicode Normalization Forms.” Note that, like other non-jamo characters, any combining mark between two conjoining jamos prevents the jamos from composing.</p>
+
+<p>First, define the following constants:<br>SBase = AC0016<br>LBase = 110016<br>VBase = 116116<br>TBase = 11A716<br>SCount = 11172<br>LCount = 19<br>VCount = 21<br>TCount = 28<br>NCount = VCount * TCount</p>
+
+<p>&nbsp;</p>
+
+<ol>
+<li>Iterate through the sequence of characters in D, performing steps 2 through 5.<br><br></li>
+
+<li>Let i represent the current position in the sequence D. Compute the following indices, which represent the ordinal number (zero-based) for each of the components of a syllable, and the index j, which represents the index of the last character in the syllable.<br><br>&nbsp;&nbsp;&nbsp; LIndex = D[i] - LBase<br>&nbsp;&nbsp;&nbsp; VIndex = D[i+1] - VBase<br>&nbsp;&nbsp;&nbsp; TIndex = D[i+2] - TBase<br>&nbsp;&nbsp;&nbsp; j = i + 2<br><br></li>
+
+<li>If either of the first two characters is out of bounds (LIndex &lt; 0 OR LIndex ≥ LCount OR VIndex &lt; 0 OR VIndex ≥ VCount), then increment i, return to step 2, and continue from there.<br><br></li>
+
+<li>If the third character is out of bounds (TIndex ≤ 0 or TIndex ≥ TCount), then it is not part of the syllable. Reset the following:<br><br>&nbsp;&nbsp;&nbsp; TIndex = 0<br>&nbsp;&nbsp;&nbsp; j = i + 1<br><br></li>
+
+<li>Replace the characters D[i] through D[j] by the Hangul syllable S, and set i to be j + 1.<br><br>&nbsp;&nbsp; S = (LIndex * VCount + VIndex) * TCount + TIndex + SBase<br></li>
+</ol>
+
+<p><i>Example</i>. The first three characters are<br><br>&nbsp;&nbsp;&nbsp; U+1111 ᄑ hangul choseong phieuph<br>&nbsp;&nbsp;&nbsp; U+1171 ᅱ hangul jungseong wi<br>&nbsp;&nbsp;&nbsp; U+11B6 ᆶ hangul jongseong rieul-hieuh<br><br>Compute the following indices:<br><br>&nbsp;&nbsp;&nbsp; LIndex = 17<br>&nbsp;&nbsp;&nbsp; VIndex = 16<br>&nbsp;&nbsp;&nbsp; TIndex = 15<br><br>Replace the three characters as follows:<br><br>&nbsp;&nbsp;&nbsp; S = [(17 * 21) + 16] * 28 + 15 + SBase<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; = D4DB<font size="1"><sub>16</sub></font><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; = 퓛</p>
+</blockquote>
+
+<p>&nbsp;Okay, there you go.</p>
+
+<p>Notice that one could in theory create an Old Hangul syllable and go through the same kind of algorithm, slightly modified.<br></p>
+
+<p>In fact the Old Hangul state machine on Windows kind of does.</p>
+
+<p>If you take that theoretical character I mentioned in <b><a href="http://archives.miloush.net/michkap/archive/2006/07/22/674270.html" mce_href="http://archives.miloush.net/michkap/archive/2006/07/22/674270.html">We're off on the road to Korea! We certainly do get around...</a></b>, that looks like this:</p>
+
+<p><font face="Tahoma"><img src="http://trigeminal.fmsinc.com/images/oldhangul.jpg" width="730" height="290"></font></p>
+
+<p><font face="Tahoma">And is made up of the following Jamo:</font> <br></p>
+
+<p><font size="2" face="Tahoma"><a href="http://www.fileformat.info/info/unicode/char/1107">1107</a> <a href="http://www.fileformat.info/info/unicode/char/1109">1109</a> <a href="http://www.fileformat.info/info/unicode/char/1110">1110</a> <a href="http://www.fileformat.info/info/unicode/char/116d">116d</a> <a href="http://www.fileformat.info/info/unicode/char/1161">1161</a> <a href="http://www.fileformat.info/info/unicode/char/1175">1175</a> <a href="http://www.fileformat.info/info/unicode/char/11b8">11b8</a> <a href="http://www.fileformat.info/info/unicode/char/11ba">11ba</a> <a href="http://www.fileformat.info/info/unicode/char/11ae">11ae</a></font></p>
+
+<p>Okay, great . So what do we do here?</p>
+
+<p>Well, it runs through a state machine that finds as its closest estimation <font size="5">삫</font> (<a href="http://www.fileformat.info/info/unicode/char/c0ab">U+c0ab</a>, aka 
+HANGUL SYLLABLE SSANGPIEUP I, aka <font face="Tahoma"><a href="http://www.fileformat.info/info/unicode/char/1108">U+1108</a> <a href="http://www.fileformat.info/info/unicode/char/1175">U+1175</a> <a href="http://www.fileformat.info/info/unicode/char/11c2">U+11c2</a></font>).</p>
+
+<p>Now I happen to think this example kind of points out a flaw in the state machine, but we will run with it. :-)</p>
+
+<p>The machine does two things for each part of the syllable (Lead, Vowel, Trailing):</p>
+
+<ul>
+<li>It figures out the highest index number (as defined in Unicode's 3.12 information of Jamo composition) and stores it;</li>
+
+<li>It stores extra information for each third of the Jamo sequence, for later.</li>
+</ul>
+
+<p>Thus it will have a notion, when it is done, of both the modern Hangul syllable it is closest to, and also the extra information that will later end up in the sort key. This sort key basically becomes:</p>
+
+<p><font><font face="Consolas,Courier New"><b>23 11 ff 37 ff 26 ff 58 01 01 01 01 
+00</b></font></font></p>
+
+<p>and thus the extra information became the <b>0x37</b>, the <b>0x26</b>, and the <b>0x58</b> in the end of the weight there.</p>
+
+<p>If you want to see the data that drives this state machine you can find it <a href="http://msdn.microsoft.com/library/cc249012.aspx" mce_href="http://msdn.microsoft.com/library/cc249012.aspx">here</a>. Or here are the small number of relevant entries at the end since that is a big file:<br></p>
+
+<blockquote>
+<p><font face="consolas,lucida console,courier new,courier,fixed">0x1107&nbsp;&nbsp;&nbsp; 5<br>&nbsp;&nbsp;&nbsp; 0x1107 0x00 0x07 0x00 0x00 0x2c&nbsp;&nbsp;&nbsp; 0x04&nbsp;&nbsp;&nbsp; ; U+1107<br>&nbsp;&nbsp;&nbsp; 0x1109 0x01 0x00 0x00 0x00 0x00&nbsp;&nbsp;&nbsp; 0x01&nbsp;&nbsp;&nbsp; ; U+1107,1109<br><b>&nbsp;&nbsp;&nbsp; 0x1110 0x01 0x08 0x14 0x1b <font color="#ff0000">0x37</font>&nbsp;&nbsp;&nbsp; 0x00&nbsp;&nbsp;&nbsp; ; U+1107,1109,1110</b><br>&nbsp;&nbsp;&nbsp; 0x110f 0x01 0x08 0x14 0x1b 0x3a&nbsp;&nbsp;&nbsp; 0x00&nbsp;&nbsp;&nbsp; ; U+1107,110f<br>&nbsp;&nbsp;&nbsp; 0x1112 0x01 0x08 0x14 0x1b 0x3d&nbsp;&nbsp;&nbsp; 0x00&nbsp;&nbsp;&nbsp; ; U+1107,1112<br><br>0x116d&nbsp;&nbsp;&nbsp; 4<br>&nbsp;&nbsp;&nbsp; 0x116d 0x00 0x00 0x0c 0x00 0x24&nbsp;&nbsp;&nbsp; 0x03&nbsp;&nbsp;&nbsp; ; U+116d<br>&nbsp;&nbsp;&nbsp; 0x1161 0x01 0x00 0x0c 0x1b 0x25&nbsp;&nbsp;&nbsp; 0x01&nbsp;&nbsp;&nbsp; ; U+116d,1161<br><b>&nbsp;&nbsp;&nbsp; 0x1175 0x01 0x00 0x0c 0x1b <font color="#ff0000">0x26</font>&nbsp;&nbsp;&nbsp; 0x00&nbsp;&nbsp;&nbsp; ; U+116d,1161,1175</b><br>&nbsp;&nbsp;&nbsp; 0x1165 0x01 0x00 0x0c 0x1b 0x29&nbsp;&nbsp;&nbsp; 0x00&nbsp;&nbsp;&nbsp; ; U+116d,1165<br><br>0x11b8&nbsp;&nbsp;&nbsp; 10<br>&nbsp;&nbsp;&nbsp; 0x11b8 0x00 0x00 0x00 0x11 0x51&nbsp;&nbsp;&nbsp; 0x09&nbsp;&nbsp;&nbsp; ; U+11b8<br>&nbsp;&nbsp;&nbsp; 0x11ae 0x01 0x00 0x00 0x11 0x52&nbsp;&nbsp;&nbsp; 0x00&nbsp;&nbsp;&nbsp; ; U+11b8,11ae<br>&nbsp;&nbsp;&nbsp; 0x11af 0x01 0x00 0x00 0x00 0x00&nbsp;&nbsp;&nbsp; 0x01&nbsp;&nbsp;&nbsp; ; U+11b8,11af<br>&nbsp;&nbsp;&nbsp; 0x11c1 0x01 0x00 0x00 0x11 0x54&nbsp;&nbsp;&nbsp; 0x00&nbsp;&nbsp;&nbsp; ; U+11b8,11af,11c1<br>&nbsp;&nbsp;&nbsp; 0x11b7 0x01 0x00 0x00 0x11 0x55&nbsp;&nbsp;&nbsp; 0x00&nbsp;&nbsp;&nbsp; ; U+11b8,11b7<br>&nbsp;&nbsp;&nbsp; 0x11b8 0x01 0x00 0x00 0x11 0x56&nbsp;&nbsp;&nbsp; 0x00&nbsp;&nbsp;&nbsp; ; U+11b8,11b8<br>&nbsp;&nbsp;&nbsp; 0x11ba 0x01 0x00 0x00 0x00 0x00&nbsp;&nbsp;&nbsp; 0x01&nbsp;&nbsp;&nbsp; ; U+11b8,11ba<br><b>&nbsp;&nbsp;&nbsp; 0x11ae 0x01 0x00 0x00 0x12 <font color="#ff0000">0x58</font>&nbsp;&nbsp;&nbsp; 0x00&nbsp;&nbsp;&nbsp; ; U+11b8,11ba,11ae</b><br>&nbsp;&nbsp;&nbsp; 0x11bd 0x01 0x00 0x00 0x12 0x59&nbsp;&nbsp;&nbsp; 0x00&nbsp;&nbsp;&nbsp; ; U+11b8,11bd<br>&nbsp;&nbsp;&nbsp; 0x11be 0x01 0x00 0x00 0x12 0x5a&nbsp;&nbsp;&nbsp; 0x00&nbsp;&nbsp;&nbsp; ; U+11b8,11be <br></font></p>
+</blockquote>
+
+<p>And now we get to a slightly less contrived case, namely the various doubled and tripled conjoining Jamo both in Unicode now and the new ones being added (now in Stage 6 of the <a href="http://www.unicode.org/alloc/Caution.html#ISO" mce_href="http://www.unicode.org/alloc/Caution.html#ISO">approval process</a>) that I discuss in <b><a href="http://archives.miloush.net/michkap/archive/2007/02/24/1751301.html" mce_href="http://archives.miloush.net/michkap/archive/2007/02/24/1751301.html">Using a character proposal for a 'repertoire fence' extension</a></b>. They will be in these three subranges in an upcoming version:</p>
+
+<ul>
+<li>29 in Old Hangul initial consonants (in Hangul Jamo Extended-A block: A960..A97F)</li>
+
+<li>23 in Old Hangul medial vowels (in Hangul Jamo Extended-B block: D7B0..D7FF)</li>
+
+<li>49 in Old Hangul final consonants (also in Hangul Jamo Extended-B block: D7B0..D7FF)</li>
+</ul>
+
+<p>So these ones that were constructed now are meant to exist on their own, and you can even see the leading and trailing consonants in the proposal:</p>
+
+<blockquote>
+<p>HX124 한글 초성 비읍-시옷-티읕<br>HANGUL CHOSEONG PIEUP-SIOS-THIEUTH<br><br>HX335 한글 종성 비읍-시옷-디귿<br>HANGUL JONGSEONG PIEUP-SIOS-TIKEUT<br></p>
+</blockquote>
+
+<p>And in the not-yet-official data for Unicode as:</p><p>A972;HANGUL CHOSEONG PIEUP-SIOS-THIEUTH;Lo;0;L;;;;;N;;;;;<br>D7E7;HANGUL JONGSEONG PIEUP-SIOS-TIKEUT;Lo;0;L;;;;;N;;;;; <br></p><p>though the vowel (which would be HANGUL JUNGSEONG YO-A-I) you cannot find there, which would suggest that OpenType has at least one Jamo vowel sequence defined for Old Hangul that neither the existing Unicode standard nor any proposal from Korea lists!</p>
+
+<p>Oops?</p><p>I wonder whose bug that is? <br></p>
+
+<p>Anyway, back to the point -- would it be easy to add an entry to the table for the new characters that will be added to Unicode based on the proposal any time, assuming that the Jamo exists. Thus all of these new characters can be kept backwards compatible with the old sequence, though it is likely that the order might not be the same between what the Koran proposal suggested vs. what is there now, which means Microsoft gets to decide what order it wants to be compatible with at whatever point these characters are added....</p>
+
+<p><i>Either with itself or with whatever order the standard suggests. </i><br></p>
+
+<p>I'll leave off with why this one annoyed me so much. </p>
+
+<p>The Old Hangul support I showed a bit in <b><a href="http://archives.miloush.net/michkap/archive/2006/07/22/674270.html" mce_href="http://archives.miloush.net/michkap/archive/2006/07/22/674270.html">We're off on the road to Korea! We certainly do get around...</a></b> has existed in a font that was created and made publicly available for download around the time of the Korean version of Office 2000, though the download was taken down at the request of the folks in Korea, who have been unhappy with the model for conjoining Jamo in Unicode that eventually led (over half a decade later) to the proposal I reference in <b><a href="http://archives.miloush.net/michkap/archive/2007/02/24/1751301.html" mce_href="http://archives.miloush.net/michkap/archive/2007/02/24/1751301.html">Using a character proposal for a 'repertoire fence' extension</a></b>.</p>
+
+<p>One of the reasons the proposal was eventually accepted was that there were no existing implementations of the fully conjoining model available. Though in this case the reason that it wasn't available was that th folks doing the proposing made sure it wouldn't be.</p>
+
+<p>Talk about killing your parents and then asking the court for leniency on the grounds that you're an orphan!</p>
+
+<p><i>I don't look forward to an input method to support the input of these characters, though I will talk more fully about this another time.... </i><br></p>
+
+<p><br></p>
+
+<p><font color="#ff00ff"><i>This blog brought to you by</i><font size="6"> ⑭ </font><i>(<a href="http://www.fileformat.info/info/unicode/char/246d" mce_href="http://www.fileformat.info/info/unicode/char/246d">U+246d</a>, aka CIRCLED NUMBER FOURTEEN)</i></font> <br></p>
+<hr/><p><strong>Robbie</strong> on 21 Aug 2008 4:11 AM:</p><div style="margin-left: 1em"><p>Well, I was wondering why windows desktop search protocol was enforing hangul so this article is interesting.</p>
+<p>Guess you have to lower your 99.99% now ;).</p>
+<p>Great article by the way.</p></div>
+<hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2010/04/21 <a href="http://archives.miloush.net/michkap/archive/2010/04/21/9997523.html">If no one supported the OLD Old proposal, jumping in to support the NEW Old proposal may not make sense…</a></p><p>2008/10/09 <a href="http://archives.miloush.net/michkap/archive/2008/10/09/8992427.html">Making a point without explaining the whole point of the point? *That* is the point!</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2008/08/21/8883552.html" title="Its the End[UpdateResource] of the world we know it">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2008/08/19/8877510.html" title="The super-cool panel about Windows, .NET, and SQL Server -- now live!">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2008-08">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2008-08-21">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2008/08/21/8883467.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:36 GMT -->
+</html>

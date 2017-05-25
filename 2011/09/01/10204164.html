@@ -1,0 +1,21 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2011/09/01/10204164.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>There is no spoon^H^H^H^Hystem calendar</title></head><body>
+<h1>There is no spoon^H^H^H^Hystem calendar</h1>
+<p><em>by Michael S. Kaplan, published on 2011/09/01 07:01 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2011/09/01/10204164.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<p>It was Mina who asked:</p>
+<p style="padding-left: 60px;"><em><span style="font-family: times new roman,times; font-size: medium;">I was trying to change the system calendar using C#. I was trying to use setCalendarInfo but it keeps on failing because it is not clear what the last two parameters should be. Would you please advise on how to change the system calendar?</span></em></p>
+<p>This one might have actually broken the record for bloggable issues found!</p>
+<p>The first thing to notice is that there is no such thing as the system calendar -- the calendar is purely a per-user choice.</p>
+<p><em>I suppose some think of the calendar of the LocalSystem account as a "system calendar", kinda, since <strong><a title="LocalSystem is people, too!" href="http://archives.miloush.net/michkap/archive/2007/10/18/5508827.html">LocalSystem is people, too!</a></strong>&nbsp;But a) it isn't, and b) that wasn't what was being asked. </em></p>
+<p>Next, there's the function to use. It isn't <a href="http://msdn.microsoft.com/library/dd374048.aspx">SetCalendarInfo</a>, which is only able to set the CAL_ITWODIGITYEARMAX value.&nbsp;The calendar&nbsp;is actually set by calling <a href="http://msdn.microsoft.com/library/dd374049.aspx">SetLocaleInfo</a>, with the <a href="http://msdn.microsoft.com/library/dd464799.aspx">LCTYPE</a>&nbsp;value of <a href="http://msdn.microsoft.com/library/dd373749.aspx">LOCALE_ICALENDARTYPE</a>.</p>
+<p>Then we have several doc bugs.</p>
+<p>Like the fact that the <a href="http://msdn.microsoft.com/library/dd373749.aspx">LOCALE_ICALENDARTYPE</a>&nbsp;incorrectly points to the <a title="Calendar Type Information" href="http://msdn.microsoft.com/library/dd317734.aspx">Calendar Type Information</a>&nbsp;topic (which contains the CALTYPEs), rather than the <a title="Calendar Identifiers" href="http://msdn.microsoft.com/library/dd317732.aspx">Calendar Identifiers</a>&nbsp;topic (which contains the CALIDs we need).</p>
+<p><em>Though I'm willing to be more forgiving of this one given how badly <a href="http://msdn.microsoft.com/library/dd373749.aspx">LOCALE_ICALENDARTYPE</a>&nbsp;is named given what it is.</em> :-)</p>
+<p>Notice also that on the big list of functions that use <a title="Calendar Identifiers" href="http://msdn.microsoft.com/library/dd317732.aspx">Calendar Identifiers</a>, you don't find SetLocaleInfo, GetLocaleInfo, or GetLocaleInfoEx (which is where <a href="http://msdn.microsoft.com/library/dd373749.aspx">LOCALE_ICALENDARTYPE</a>&nbsp;is used -- as the actual potential values).</p>
+<p>A lot of different potential ways to untangle these various problems, but it's gonna take some thought.</p>
+<p>Looks like perhaps a meeting may be in my future with a doc writer.....</p>
+<hr/><div style="margin-left: 1em"><em>no comments</em></div><hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2011/09/04/10205857.html" title="Microsoft corporate matching? It&#39;s time to raise the roof....">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2011/08/31/10203390.html" title="And then, the unrelated KB article fixes the problem...">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2011-09">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2011-09-01">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2011/09/01/10204164.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+</html>

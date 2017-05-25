@@ -1,0 +1,45 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2010/02/17/9964066.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:35 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Knock knock! Who's there? Kana! Kana Who? I Kana got something wrong!</title></head><body>
+<h1>Knock knock! Who's there? Kana! Kana Who? I Kana got something wrong!</h1>
+<p><em>by Michael S. Kaplan, published on 2010/02/17 07:01 -05:00, original URI: http://blogs.msdn.com/b/michkap/archive/2010/02/17/9964066.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P>Sometimes I look back at prior blogs from this Blog and am really quite happy with what they say.</P>
+<P>Other times, I am less impressed.</P>
+<P>You may have the same feeling if you are a regular reader. :-)</P>
+<P>Now still other times I feel like great at the time but then have reason to not feel as great later.</P>
+<P>Today I am going to talk about one of the times from that third category.</P>
+<P>The blog? From over four and a half years ago (<A href="http://archives.miloush.net/michkap/archive/2005/06/01/423711.html" mce_href="http://archives.miloush.net/michkap/archive/2005/06/01/423711.html"><STRONG>Knock knock! Who's there? Kana! Kana Who?</STRONG></A>).</P>
+<P>This blog involved a huge discussion with a lot of different people about the terminological, technical, linguistic, and collationary features of Kana in Japanese, and was finally reviewed by people both here and in Japan.</P>
+<P>Unfortunately, it was kinda wrong when it described the exact weight differences between the various Kana.</P>
+<P>The question, asked by the man who took on the role of the child who pointed out that the emperor was wearing no clothes, was Miles:</P>
+<BLOCKQUOTE>
+<P><FONT face="times new roman,times"><EM>We have some bugs with respect to sorting and matching katakana small letters. I’ve been trying to figure out what the desired sort/match semantics should be, but that is not trivial.</EM></FONT></P>
+<OL>
+<LI><FONT face="times new roman,times"><EM>according to </EM><A href="http://archives.miloush.net/michkap/archive/2005/06/01/423711.html"><EM>http://blogs.msdn.com/michkap/archive/2005/06/01/423711.aspx</EM></A><EM> katakana small letters should compare equal to their non small equivalents when NORM_IGNORECASE is used.</EM></FONT></LI>
+<LI><FONT face="times new roman,times"><EM>but calling CompareStringEx with various flags I get the following</EM></FONT></LI></OL>
+<BLOCKQUOTE>
+<P><FONT face="times new roman,times"><EM>NORM_IGNORECASE:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; U+30e3&nbsp; &lt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; U+30e4<BR>LINGUISTIC_IGNORECASE:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; U+30e3&nbsp; &lt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; U+30e4<BR>NORM_LINGUISTIC_CASING:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; U+30e3&nbsp; &lt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; U+30e4<BR>NORM_IGNORENONSPACE:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; U+30e3&nbsp; =&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; U+30e4<BR>LINGUISTIC_IGNOREDIACRITIC:&nbsp;&nbsp;&nbsp;&nbsp; U+30e3&nbsp; &lt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; U+30e4</EM></FONT></P></BLOCKQUOTE>
+<P><FONT face="times new roman,times"><EM>So, at least on Win2k8, it looks like Katakana Small letters are diacritic variants of their respective big equivalents. </EM></FONT></P>
+<P><FONT face="times new roman,times"><EM>Which of these two behaviors should SQL try to imitate ?</EM></FONT></P>
+<P><FONT face="times new roman,times"><EM>Thanks,<BR>Miles</EM></FONT></P></BLOCKQUOTE>
+<P>Oops.</P>
+<P>That was my first thought.</P>
+<P>Now the middle test of the five he tried was not relevant; NORM_LINGUISTIC_CASING has no impact whatsoever on Kana (it fixes the Turkic problem described <A href="http://archives.miloush.net/michkap/archive/2005/08/02/446522.html" mce_href="http://archives.miloush.net/michkap/archive/2005/08/02/446522.html"><STRONG>here</STRONG></A>).</P>
+<P>The other results made no sense though. Not if that blog of mine, the one everyone reviewed, the one <STRONG>I</STRONG> reviewed, the one no one has questioned in nearly five years, was right.</P>
+<P>Better check this one out....</P>
+<P>First let's look at the weights for the six Katakana A's:</P>
+<BLOCKQUOTE><FONT face="Consolas,Lucida Console,Courier New,Courier,Fixed"><B>
+<P>U+ff67 HALFWIDTH KATAKANA LETTER SMALL A 22 02 01&nbsp;&nbsp;&nbsp; 01&nbsp;01 c4 ff 02 c4 ff c4 ff 01 00<BR>U+30a1 KATAKANA LETTER SMALL A&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; 22 02 01&nbsp;&nbsp;&nbsp;&nbsp;01 01 c4 ff 02 c4 ff ff&nbsp;&nbsp; &nbsp;01 00<BR>U+ff71 HALFWIDTH KATAKANA LETTER A&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 22 02 01&nbsp;&nbsp;&nbsp; 01 01 ff 02 c4 ff c4 ff&nbsp;&nbsp; &nbsp;01 00<BR>U+30a2 KATAKANA LETTER A&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 22 02 01&nbsp;&nbsp;&nbsp;&nbsp;01 01 ff 02 c4 ff ff&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;01 00<BR>U+3041 HIRAGANA LETTER SMALL A&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; 22 02 01&nbsp;&nbsp;&nbsp; 01 01 c4 ff 02 ff ff&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;01 00<BR>U+3042 HIRAGANA LETTER A&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 22 02 01&nbsp;&nbsp;&nbsp; 01 01 ff 02 ff ff&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;01 00<BR>U+32d0 CIRCLED KATAKANA A&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; 22 02 01 ee 01 01 ff 02 c4 ff ff&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; 01 00</P></B></FONT></BLOCKQUOTE>
+<P>Hmmm.</P>
+<P>Circled Katakana looks to be a diacritic (DW) difference, none of them look to be a case (CW) difference, and all of them duke it out in the special (SW) area.</P>
+<P>now of course NORM_IGNOREWIDTH will muck with some of the information in here if you pass that flag; it will make the first and second items on the list look identical, and also the third and fourth to look identical.</P>
+<P>Of course these seem to behave differently than other fullwidth characters and halfwidth counterparts, like I described back in <A href="http://archives.miloush.net/michkap/archive/2007/09/17/4950008.html" mce_href="http://archives.miloush.net/michkap/archive/2007/09/17/4950008.html"><STRONG>A&amp;P of Sort Keys, part 7 (aka You're very thin now, but I can still recognize you)</STRONG></A>.</P>
+<P>But my hope that something had changed in Windows 7 were dashed; the behavior is the same, and it turns out that <A href="http://archives.miloush.net/michkap/archive/2007/09/17/4950008.html" mce_href="http://archives.miloush.net/michkap/archive/2007/09/17/4950008.html"><STRONG>A&amp;P of Sort Keys, part 7</STRONG></A>&nbsp;also has some minor differences to explain in regard to Kana behaving differently in weights than other differently "widthed" characters do.</P>
+<P>Plus perhaps <A href="http://archives.miloush.net/michkap/archive/2007/09/21/5027338.html" mce_href="http://archives.miloush.net/michkap/archive/2007/09/21/5027338.html"><STRONG>A&amp;P of Sort Keys, part 10 (aka I've Kana wanted to start talking about Japanese)</STRONG></A> was a bit too confident about that first blog....</P>
+<P>The really interesting thing about both "bugs" in the blog, which I discovered during this deeper dive&nbsp;for the blog you are reading now,&nbsp;are that neither are borne out by the actual raw values in the weight tables; the difference happens in the way the raw weights are read in the "special case" of Kana. </P>
+<P>My review, which was&nbsp;mainly of comparing the relative sorting of the characters and the raw weights, was complete enough to give me confidence but not complete enough for me to have deserved said confidence....</P>
+<hr/><p><strong>jepoykun</strong> on 17 Feb 2010 7:46 AM:</p><div style="margin-left: 1em"><P>Nice</P></div>
+<hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2010/02/18/9964072.html" title="IsSortable IsFixed in CLR v4. Well, kind of....">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2010/02/16/9964017.html" title="LOCALE_SDECIMAL? Quite a character! Or two. Or three...">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2010-02">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2010-02-17">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2010/02/17/9964066.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:35 GMT -->
+</html>

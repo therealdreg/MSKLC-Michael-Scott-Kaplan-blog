@@ -1,0 +1,57 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2007/01/16/1476857.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:38 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Tired, overused metaphors, a.k.a. Two rails forward, one rail back!</title></head><body>
+<h1>Tired, overused metaphors, a.k.a. Two rails forward, one rail back!</h1>
+<p><em>by Michael S. Kaplan, published on 2007/01/16 06:01 -05:00, original URI: http://blogs.msdn.com/b/michkap/archive/2007/01/16/1476857.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P>Remember when I talked about how <STRONG><A class="" href="http://archives.miloush.net/michkap/archive/2005/10/02/476213.html" mce_href="http://archives.miloush.net/michkap/archive/2005/10/02/476213.html">The Unicode train is leaving the station</A></STRONG>? and how I talked about the Unicode default</P>
+<P>Well, not to overtax a metaphor, but pointing out the two cool&nbsp;"rails" in that post ("by default" Unicode projects in C++, a resource editor that can support Unicode), there is at least one rail that kind of keeps the train from moving too far ahead,one that Mihai pointed out the other day in the Suggestion Box:</P>
+<BLOCKQUOTE><FONT face="Times New Roman,Times" size=2><I>
+<P>Fire up VS 2005, and start a new Visual C++ project (Win32/Win32 Project, or MFC/MFC Application, it does not matter).<BR><BR>Add a dialog to the project, or you can use the already existing About box, good enough.<BR><BR>(btw, why the About dialog uses "System" font, and all the others go with "MS Shell Dlg"? :-)<BR><BR>Experiment number 1:<BR><BR>Add a RichEdit 2.0 control to the dialog, and then save.<BR><BR>Open the .rc file in Notepad (or open it in VS as Source Code).<BR><BR>The RichEdit control has the "RichEdit20A" class!<BR><BR>Change it to "RichEdit20W" (because we want Unicode!), and save.<BR><BR>Now open it again the VS Resource editor, change something and save. Check the .rc file again, "RichEdit20A" is back!<BR><BR>Experiment number 2:<BR><BR>Add a custom control to the dialog, and set the class of the custom control to RichEdit20W. Save .rc.<BR><BR>Close project, open project, change something in the dialog and save .rc. Open in Notepad, "RichEdit20A" is back!<BR><BR>Experiment number 3:<BR><BR>No more hope in using the generic version, so that I can build both Unicode and ANSI versions of my application:<BR><BR>- add #include "Richedit.h" to the rc file<BR>- in the custom control set the class to RICHEDIT_CLASS (defined in Richedit.h as RICHEDIT_CLASSW or RICHEDIT_CLASSA)<BR>- save file, open in Notepad, "RichEdit20A" is back!<BR><BR>So, is there a way to get a Unicode RichEdit control without loosing it every time we edit the file in Visual Studio? And is there a way to stop the VS Resource Editor from trying to be smart, and just do what I tell it to do, because I know better?</P></I></FONT></BLOCKQUOTE>
+<P mce_keep="true">Sadly, it looks like this "little" Unicode scenario was missed. The only way I could avoid it was to not use the VS Resource Editor. Maybe there is a template for the control and its code somewhere that could be updated?</P>
+<P mce_keep="true">This will require a little investigation....</P>
+<P mce_keep="true">&nbsp;</P>
+<P mce_keep="true"><FONT color=#ff00ff><EM>This post brought to you by</EM>&nbsp;<FONT size=5>ঊ</FONT> <EM>(<A class="" href="http://www.fileformat.info/info/unicode/char/098a" mce_href="http://www.fileformat.info/info/unicode/char/098a">U+098a</A>, a.k.a. BENGALI LETTER UU)</EM></FONT></P>
+<hr/><p><a id="1478093" href="#1478093">#</a> <strong>Roger Lipscombe</strong> on 16 Jan 2007 6:42 AM:</p><div style="margin-left: 1em"><p>Yeah, I ran into this problem when writing the Rio Music Manager program (using Visual Studio 2003).</p>
+<p>In the end, we had a custom step that replaced RC.EXE, and preprocessed the .RC file to fix this specific case up. This wasn't a big deal for us, since we already wanted to do some other preprocessing (although I don't recall what).</p></div>
+<p><a id="1478829" href="#1478829">#</a> <strong>jonathan wilson</strong> on 16 Jan 2007 10:44 AM:</p><div style="margin-left: 1em"><p>If there isnt one already, someone should file a bug in the visual C++ bug database so that it can get looked at (and hopefully fixed :)</p></div>
+<p><a id="1478976" href="#1478976">#</a> <strong>Michael S. Kaplan</strong> on 16 Jan 2007 11:25 AM:</p><div style="margin-left: 1em"><p>Of course, look how they have &quot;fixed&quot; this sort of bug in the past like if you added strings to a form's RESX file and they were wiped out when you modified the form. The fix was to warn you when you tried to add/modify strings in the RESX.....</p>
+<p>The fear here is that they would fix this the same way and warn you about modifying the resource. :-(</p>
+</div>
+<p><a id="1479697" href="#1479697">#</a> <strong>Mihai</strong> on 16 Jan 2007 2:31 PM:</p><div style="margin-left: 1em"><p>It looks like the thing is hard-coded in %VSDir%\VC\vcpackages\resedit.dll</p>
+<p>There is one instance only, Unicode. Changing that instance fixes the problem.</p>
+<p>There are also hard-coded things that will break the wizards (in %VSDir%\VC\VCWizards\CodeWiz\MFC\Variable\HTML\1033\default.htm</p>
+<p>%VSDir%\VC\VCWizards\CodeWiz\MFC\Variable\Scripts\1033\default.js)</p>
+<p>But, as I said, changing that is not a solution:</p>
+<p> - is probably not legal to hex-edit MS files :-)</p>
+<p> - not portable</p>
+<p> - will break the ANSI projects</p></div>
+<p><a id="1484230" href="#1484230">#</a> <strong>Mihai</strong> on 17 Jan 2007 12:08 PM:</p><div style="margin-left: 1em"><p>Ok, I have something relatively clean for MFC, trying to come with something at least half decent for pure Win32.</p>
+<p>Then I will put together an article and post the code.</p>
+<p>(idea: change the dialog template in memory :-)</p></div>
+<p><a id="1486017" href="#1486017">#</a> <strong>Michael S. Kaplan</strong> on 17 Jan 2007 8:04 PM:</p><div style="margin-left: 1em"><p>Hmmm... which versions are you going to target?</p>
+</div>
+<p><a id="1486077" href="#1486077">#</a> <strong>Mihai</strong> on 17 Jan 2007 8:26 PM:</p><div style="margin-left: 1em"><p>&lt;&lt;Hmmm... which versions are you going to target?&gt;&gt;</p>
+<p>What I have now works on MFC 8.0, but does not use MFC for the implementation itself. One just needs to override the DoModal method of the CDialog derived class.</p>
+<p>The goal was to be as non-disruptive as possible: &quot;include this header, add DoModal to your class, call this function inside your DoModal, then call the original.&quot;</p>
+<p>But the function itself does not use MFC at all, so it should work on any MFC version.</p>
+<p>I want something as clean for plain Win32 API, &quot;just replace DialogBox[Indirect][Param] with this X&quot;</p>
+<p>If by version you mean &quot;dialog memory template version&quot; then the 32 bit version, both DIALOG and DIALOGEX</p>
+<p>(only the Ex version is ready now, but working on it)</p>
+<p>Although now I have second thoughts: the structure is not quite officially documented, might change at any time, etc. :-) Changing resources in memory might even break in Vista (<a rel="nofollow" target="_new" href="http://blogs.msdn.com/oldnewthing/archive/2007/01/08/1434501.aspx">http://blogs.msdn.com/oldnewthing/archive/2007/01/08/1434501.aspx</a> :-)</p></div>
+<p><a id="1602595" href="#1602595">#</a> <strong>Andre</strong> on 5 Feb 2007 3:28 AM:</p><div style="margin-left: 1em"><p>I just want to say Hello to Roger, see you on the empeg BBS :-)</p>
+</div>
+<p><a id="6486169" href="#6486169">#</a> <strong>Paul Sanders</strong> on 23 Nov 2007 10:50 AM:</p><div style="margin-left: 1em"><P>Hi there,</P>
+<P>I have a clean and tidy solution for the 'RichEdit20A' problem. &nbsp;I add a 'pre-build' event to my project to run the following batch file (tested on VS 2005 SP1):</P>
+<BLOCKQUOTE>
+<P>--------------------------------------------<BR><FONT face="consolas,lucida console,courier new,courier"><STRONG>@echo off<BR>echo Convert Richedit20A to RichEdit20W in .rc file...<BR>gawk -f richedit20w.awk &lt;VinylStudio.rc &gt;xxx<BR>if errorlevel 1 goto move<BR>echo No changes made<BR>goto end<BR>:move<BR>move xxx VinylStudio.rc<BR>echo VinylStudio.rc updated<BR>:end</STRONG><BR></FONT>--------------------------------------------</P></BLOCKQUOTE>
+<P>And file richedit20w.awk looks like this:</P>
+<BLOCKQUOTE>
+<P>--------------------------------------------<BR><FONT face="consolas,lucida console,courier new,courier"><STRONG># Replace RICHEDIT20A with RICHEDIT20W, if found<BR>/"RichEdit20A"/ {<BR>&nbsp;&nbsp;&nbsp;sub (/"RichEdit20A"/, "\"Richedit20W\"")<BR>&nbsp;&nbsp;&nbsp;++changes<BR>}<BR><BR>// {<BR>&nbsp;&nbsp;&nbsp;print<BR>}<BR><BR>END {<BR>&nbsp;&nbsp;&nbsp;if (changes &gt; 0)<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;exit (1)<BR>}</STRONG></FONT><BR>--------------------------------------------</P></BLOCKQUOTE>
+<P>You will also need a copy of GAWK.EXE somewhere in your path. &nbsp;You can get it from here:</P>
+<P><A href="http://gnuwin32.sourceforge.net/packages/gawk.htm" target=_new rel=nofollow>http://gnuwin32.sourceforge.net/packages/gawk.htm</A></P>
+<P>Hope this helps. &nbsp;It's certainly helping me!</P>
+<P>Regards,<BR>Paul Sanders<BR>AlpineSoft<BR><A href="http://www.alpinesoft.co.uk/" target=_new rel=nofollow>http://www.alpinesoft.co.uk</A></P></div>
+<hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2007/03/16 <a href="http://archives.miloush.net/michkap/archive/2007/03/16/1895610.html">A way better model for features</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2007/01/17/1478366.html" title="Insufficient documentation, revisited">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2007/01/16/1475944.html" title="Please excuse the interruption">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2007-01">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2007-01-16">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2007/01/16/1476857.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:38 GMT -->
+</html>

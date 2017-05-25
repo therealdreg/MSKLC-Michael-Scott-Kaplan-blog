@@ -1,0 +1,66 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2008/11/10/9056364.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:35 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Grease is the word; ░░░░░░ not so much...</title></head><body>
+<h1>Grease is the word; ░░░░░░ not so much...</h1>
+<p><em>by Michael S. Kaplan, published on 2008/11/10 10:01 -05:00, original URI: http://blogs.msdn.com/b/michkap/archive/2008/11/10/9056364.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<p>The question from, the other day was an interesting one. It was something like this:</p>
+<blockquote>
+<blockquote>
+<p><span style="font-family: times new roman,times;">I’m trying to do a word-boundary check, and I noticed regex doesn’t handle boundaries correctly for some extended characters&nbsp; (░╤╞╬═╣etc.). </span><br style="font-family: times new roman,times;"><br style="font-family: times new roman,times;"><span style="font-family: times new roman,times;">A simple example is “\b░” which should match “░” but doesn’t. Any normal character in front (“\bg░” : “g░”) will match correctly.</span><br style="font-family: times new roman,times;"><br style="font-family: times new roman,times;"><span style="font-family: times new roman,times;">If I manually check for boundaries (^$\W\s etc.) it works correctly.</span><br style="font-family: times new roman,times;"><br style="font-family: times new roman,times;"><span style="font-family: times new roman,times;">I haven’t found any of the regex options fix it.</span><br style="font-family: times new roman,times;"><br style="font-family: times new roman,times;"><span style="font-family: times new roman,times;">Is this a known issue?</span><br style="font-family: times new roman,times;"><br style="font-family: times new roman,times;"><span style="font-family: times new roman,times;">Does anyone have the equivalent pattern for \b so I recreate it myself?</span><br></p>
+</blockquote>
+</blockquote>
+<p>&nbsp;First let's look at those characters. They are:</p>
+<ul>
+<li>░, aka <a href="http://www.fileformat.info/info/unicode/char/2591" mce_href="http://www.fileformat.info/info/unicode/char/2591">U+2591</a>, aka LIGHT SHADE<br></li>
+<li>╤, aka <a href="http://www.fileformat.info/info/unicode/char/2564" mce_href="http://www.fileformat.info/info/unicode/char/2564">U+2564</a>, aka BOX DRAWINGS DOWN SINGLE AND HORIZONTAL DOUBLE </li>
+<li>╞, aka <a href="http://www.fileformat.info/info/unicode/char/255e" mce_href="http://www.fileformat.info/info/unicode/char/255e">U+255e</a>, aka BOX
+DRAWINGS VERTICAL SINGLE AND RIGHT DOUBLE<br></li>
+<li>╬, aka <a href="http://www.fileformat.info/info/unicode/char/256c" mce_href="http://www.fileformat.info/info/unicode/char/256c">U+256c</a>, aka BOX DRAWINGS DOUBLE VERTICAL
+AND HORIZONTAL<br></li>
+<li>═, aka <a href="http://www.fileformat.info/info/unicode/char/2550" mce_href="http://www.fileformat.info/info/unicode/char/2550">U+2550</a>, aka BOX DRAWINGS DOUBLE HORIZONTAL<br></li>
+<li>╣, aka <a href="http://www.fileformat.info/info/unicode/char/2563" mce_href="http://www.fileformat.info/info/unicode/char/2563">U+2563</a>, aka BOX DRAWINGS DOUBLE
+VERTICAL AND LEFT</li>
+</ul>
+<p>Did you realize there was all this graphical crap in Unicode? :-)</p>
+<p>All of them have a Unicode General Category of <a href="http://www.fileformat.info/info/unicode/category/So/index.htm" mce_href="http://www.fileformat.info/info/unicode/category/So/index.htm">So</a>, also known as <b>Symbol, Other</b>. What the <a href="http://msdn.microsoft.com/library/system.globalization.unicodecategory.aspx" mce_href="http://msdn.microsoft.com/library/system.globalization.unicodecategory.aspx">CharUnicodeInfo</a> class I <b><a href="http://archives.miloush.net/michkap/archive/2005/09/09/462934.html" mce_href="http://archives.miloush.net/michkap/archive/2005/09/09/462934.html">mentioned</a></b> earlier would call <a href="http://msdn.microsoft.com/library/system.globalization.unicodecategory.aspx" mce_href="http://msdn.microsoft.com/library/system.globalization.unicodecategory.aspx">UnicodeCategory</a>.OtherSymbol.</p>
+<p>And then we'll look at how <b>\b</b> is defined when it comes to regular expressions, in topics like <a href="http://msdn.microsoft.com/library/h5181w5w.aspx" mce_href="http://msdn.microsoft.com/library/h5181w5w.aspx">Atomic Zero-Width Assertions</a>:</p>
+<blockquote>
+<table border="1"><tbody>
+<tr>
+<td><b>&nbsp;Assertion&nbsp; <br></b></td><td><b>Description</b></td>
+</tr>
+<tr>
+<td>
+<p><b>\b</b> </p>
+</td>
+
+<td>
+<p>Specifies that the match must occur on a boundary between <b>\w</b> 
+(alphanumeric) and <b>\W</b> (nonalphanumeric) characters. The match 
+must occur on word boundaries (that is, at the first or last characters in words 
+separated by any nonalphanumeric characters). The match can also occur on a word 
+boundary at the end of the string. </p>
+</td>
+</tr>
+
+<tr>
+<td>
+<p><b>\B</b> </p>
+</td>
+
+<td>
+<p>Specifies that the match must not occur on a <b>\b</b> boundary. </p>
+</td>
+</tr>
+</tbody></table>
+
+</blockquote>
+<p>There we go -- the explanation!</p><p>It would be unrealistic to assume that a regular expresion engine even remotely Unicode aware would think that ░ or any other symbol would be a <b>\w</b> character -- because those symbols aren't words!</p><p>When this was pointed out, the person asking the question definitely didn't expect anything different here; he said:</p><p style="margin-left: 80px;"><span style="font-family: times new roman,times;">That seems reasonable enough.<br><br>If I need to support this scenario (probably don’t) I can create my own \w patterns that include those Unicode characters, like [^\p{L}\p{Nd}\p{Pc}…].</span></p><p>which gives the workaround if anyone if looking for it (I suspect the actual need here to treat a symbol as a word would be pretty uncommon in text scenarios, as is the use of these symbols anyway).</p><p>&nbsp;</p><p><font color="#ff00ff"><i>This blog brought to you by the previously mentioned symbols, obviously!</i></font> <br></p>
+<hr/><p><a id="9058482" href="#9058482">#</a> <strong>Josh</strong> on 10 Nov 2008 1:58 PM:</p><div style="margin-left: 1em"><p>&quot;Did you realize there was all this graphical crap in Unicode? :-)&quot;</p>
+<p>Not only realized it, but created several scripts to automatically generate them in fonts. What is even more funny (as in &quot;sad; pathetic&quot;) is that some of our clients, who shall remain nameless, have requested bold and italic versions of these characters...really...</p></div>
+<p><a id="9058513" href="#9058513">#</a> <strong>Michael S. Kaplan</strong> on 10 Nov 2008 2:14 PM:</p><div style="margin-left: 1em"><p>Given who the client is, Josh, I have to agree with the sad/pathetic tags. :-)</p></div>
+<p><a id="9059697" href="#9059697">#</a> <strong>Centaur</strong> on 11 Nov 2008 5:15 AM:</p><div style="margin-left: 1em"><p>I suspect the use case is Ctrl+Left/Right cursor movement. The logic is not quite trivial there.</p></div>
+<hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2008/11/10/9056619.html" title="From I SCOOT to IBOT, #4 of ?? (with some pictures!)">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2008/11/08/9053209.html" title="&#39;It&#39;s Not Easy&#39; saying WTF to an &#39;Ant in Alaska&#39;">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2008-11">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2008-11-10">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2008/11/10/9056364.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:35 GMT -->
+</html>

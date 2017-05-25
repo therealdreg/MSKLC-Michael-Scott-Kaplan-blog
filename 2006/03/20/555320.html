@@ -1,0 +1,36 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2006/03/20/555320.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:40 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Pretending the vowels aren't there</title></head><body>
+<h1>Pretending the vowels aren't there</h1>
+<p><em>by Michael S. Kaplan, published on 2006/03/20 09:01 -05:00, original URI: http://blogs.msdn.com/b/michkap/archive/2006/03/20/555320.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P><FONT face=Tahoma>The other day, Suzanne was talking about Hebrew searches (it was good that she finally posted, or else people might have started talking about Suzanne searches?).</FONT></P>
+<P><FONT face=Tahoma>So let us look at the issue a bit. The problem is that the two strings:</FONT></P>
+<P><FONT face=Tahoma size=6>ארץ־ישראל</FONT></P>
+<P><FONT face=Tahoma>and</FONT></P>
+<P><FONT face=Tahoma size=6>אֶרֶץ־יִשְׂרָאֵל</FONT></P>
+<P><FONT face=Tahoma>are at some level the <EM>same string</EM> and in some cases it is entirely reasonable to want a search to find them both.</FONT></P>
+<P><FONT face=Tahoma>So, let's look at the sort keys for them, with vowels:</FONT></P>
+<BLOCKQUOTE dir=ltr style="MARGIN-RIGHT: 0px">
+<P><FONT face="Courier New" size=2><STRONG>12 02 12 1a 12 17 07 6b 12 0b 12 1b 12 1a 12 02 12 0e 01 2a 2a 02 02 28 57 2c 29 01 01 01 00</STRONG></FONT></P></BLOCKQUOTE>
+<P><FONT face=Tahoma>and without them:</FONT></P>
+<BLOCKQUOTE dir=ltr style="MARGIN-RIGHT: 0px">
+<P><FONT face="Courier New" size=2><STRONG>12 02 12 1a 12 17 07 6b 12 0b 12 1b 12 1a 12 02 12 0e 01 01 01 01 00</STRONG></FONT></P></BLOCKQUOTE>
+<P><FONT face=Tahoma>and now (wait for it!) with vowels but while including the NORM_IGNORENONSPACE flag to remove the secondary weights:</FONT></P><FONT face=Tahoma>
+<BLOCKQUOTE dir=ltr style="MARGIN-RIGHT: 0px">
+<P><FONT face="Courier New" size=2><STRONG>12 02 12 1a 12 17 07 6b 12 0b 12 1b 12 1a 12 02 12 0e 01 01 01 01 00</STRONG></FONT></P></BLOCKQUOTE></FONT>
+<P><FONT face=Tahoma>Ah, there is our answer -- if we have a search capability to optionally ignore the secondary weights, it will find both strings.</FONT></P><FONT face=Tahoma>
+<P><FONT face=Tahoma>Note that these same principles apply to the trope marks that are used to indicate how to chant in Hebrew -- they get ignored via the same flag.</FONT></P></FONT><FONT face=Tahoma>
+<P><FONT face=Tahoma>(You can ignore symbols to get rid of that hyphen looking thing in there, the Maqaf!)</FONT></P>
+<P>This does not exist in Google or Live.com, and although it appears to exist in Word, it does not work:</FONT></P>
+<P><FONT face=Tahoma><IMG src="http://trigeminal.fmsinc.com/images/EretzYisraelSearch.jpg"></FONT></P>
+<P><FONT face=Tahoma>Ah well, something everyone can work on for the future! :-)</FONT></P>
+<P><FONT face=Tahoma></FONT>&nbsp;</P>
+<P><FONT face=Tahoma color=#ff1493><EM>This post brought to you by</EM> "<FONT size=6>ל</FONT>" <EM>(<A href="http://www.fileformat.info/info/unicode/char/05dc">U+05dc</A>, a.k.a. HEBREW LETTER LAMED)</EM></FONT></P>
+<hr/><p><a id="555547" href="#555547">#</a> <strong>Ilya Konstantinov</strong> on 20 Mar 2006 11:12 AM:</p><div style="margin-left: 1em">Well, that's basically what Unicode calls character folding (<a rel="nofollow" target="_new" href="http://www.unicode.org/reports/tr30/">http://www.unicode.org/reports/tr30/</a>). It's peculiar, though, that there's no character folding for eliminating Hebrew diacritics (a.k.a. Nikkud).</div>
+<p><a id="555553" href="#555553">#</a> <strong>Michael S. Kaplan</strong> on 20 Mar 2006 11:16 AM:</p><div style="margin-left: 1em">Hi Ilya....<br><br>Well, I think since it has existed in Windows since long before it did in Unicode, that we'll probably stick with our own ways of talking about it. :-)<br><br>It might be a useful potential addition to consider for TR30, though it is probably better in most cases to handle in collation so that it is not a destrutive operation to the points that are present....</div>
+<p><a id="555652" href="#555652">#</a> <strong>Ilya Konstantinov</strong> on 20 Mar 2006 12:45 PM:</p><div style="margin-left: 1em">Mike, could you explain how the concept of &quot;collation&quot; fits in here? I always thought it was simply a fancy word for &quot;sorting order&quot;.<br>I always imagined the technique to be: Fold both the searched string and the index string and then compare them, thus eliminating unnecessary details introduced by those Unicode geeks.<br><br>And yeah, I guess you folks *do* have the privilege of using your own terms :) This problem goes beyond the domain of Microsoft -- as you mentioned, this is also a problem with Google. While at it, I'd also wish Wikipedia's article names were insensitive to EN-DASH vs. MINUS-HYPHEN vs. MAQAF differences, so we could use the proper character (e.g. the fancy HEBREW PUNCTUATION MAQAF) in the article name and yet make it feasible for normal people to stumble on it by enetering its name (without using Character Map, funny key-combos, 20-meter-long Unicode keyboards -- heck, without at all being aware of the difference between Maqaf and Minus). It'd be great if we could tell every such project &nbsp;to simply implement the (not yet-)standard set of Unicode character foldings and be done with it.</div>
+<p><a id="555673" href="#555673">#</a> <strong>Michael S. Kaplan</strong> on 20 Mar 2006 1:05 PM:</p><div style="margin-left: 1em">Hi Ilya, <br><br>It is actually described in the post above -- these items are given a secondary weight in sorting -- so if you ignore secondary weights, then the two strings will be considered equal, without having to modify the underlying strings.</div>
+<hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2006/03/21/556489.html" title="MSLU with MFC and the CRT">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2006/03/20/555288.html" title="Practical Uses for Replacement Cultures/Locales">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2006-03">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2006-03-20">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2006/03/20/555320.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:40 GMT -->
+</html>

@@ -1,0 +1,77 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2006/03/07/545097.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:40 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Everybody's doing the wraparound....</title></head><body>
+<h1>Everybody's doing the wraparound....</h1>
+<p><em>by Michael S. Kaplan, published on 2006/03/07 03:01 -05:00, original URI: http://blogs.msdn.com/b/michkap/archive/2006/03/07/545097.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P><FONT face=Tahoma size=2><EM>(computerized apologies to Ray Charles for the title of the post!)</EM></FONT></P>
+<P><FONT face=Tahoma>Will anyone forget when I asked the question <A href="http://archives.miloush.net/michkap/archive/2006/02/17/533929.html"><STRONG>What do you get when you combine a base character with a buttload of diacritics?</STRONG></A></FONT></P>
+<P><FONT face=Tahoma>I was of course talking about fonts there. This time I am going to take a slightly different approach, and talk about collation.</FONT></P>
+<P><FONT face=Tahoma>I will give the string, the code points, and the sort key. We'll start simply, with one letter:</FONT></P>
+<BLOCKQUOTE dir=ltr style="MARGIN-RIGHT: 0px">
+<P><FONT face=Tahoma><STRONG>e</STRONG><BR></FONT><FONT face="Courier New"><STRONG>U+0065<BR>0e 21 01 01 01 01 00</STRONG></FONT></P></BLOCKQUOTE>
+<P><FONT face=Tahoma>Now we will go with something&nbsp;a little more complicated (the difference from above marked in <FONT color=#ff0000><STRONG>RED</STRONG></FONT>):</FONT></P>
+<BLOCKQUOTE dir=ltr style="MARGIN-RIGHT: 0px">
+<P><FONT face=Tahoma><STRONG>ẽ</STRONG><BR></FONT><FONT face="Courier New"><STRONG>U+1ebd<BR>0e 21 01 <FONT color=#ff0000>19</FONT> 01 01 01 00</STRONG></FONT></P></BLOCKQUOTE>
+<P><FONT face=Tahoma>or its alter ego in normalization form D:</FONT></P><FONT face=Tahoma><STRONG>
+<BLOCKQUOTE dir=ltr style="MARGIN-RIGHT: 0px">
+<P>ẽ</STRONG><BR></FONT><FONT face="Courier New"><STRONG>U+0065 U+0308<BR>0e 21 01 <FONT color=#ff0000>19</FONT> 01 01 01 00</STRONG></FONT></P></BLOCKQUOTE>
+<P><FONT face=Tahoma>Hmmm... let's look at another diacritic:</FONT></P><FONT face=Tahoma>
+<BLOCKQUOTE dir=ltr style="MARGIN-RIGHT: 0px">
+<P><STRONG>ê</STRONG><BR></FONT><FONT face="Courier New"><STRONG>U+00ea<BR>0e 21 01 <FONT color=#ff0000>12</FONT> 01 01 01 00</STRONG></FONT></P><FONT face=Tahoma>
+<P><STRONG>ê<BR><FONT face="Courier New">U+0065 U+0302<BR>0e 21 01 <FONT color=#ff0000>12</FONT> 01 01 01 00</FONT></STRONG></FONT></P></BLOCKQUOTE>
+<P><FONT face=Tahoma>Ok, and now for the kicker:</FONT></P><FONT face=Tahoma><STRONG>
+<BLOCKQUOTE dir=ltr style="MARGIN-RIGHT: 0px">
+<P>ễ<BR><FONT face="Courier New">U+1ec5<BR>0e 21 01 <FONT color=#ff0000>29</FONT> 01 01 01 00</FONT></STRONG></FONT></P><FONT face=Tahoma><STRONG>
+<P>ễ<BR><FONT face="Courier New">U+0065 U+0302 U+0303<BR>0e 21 01 <FONT color=#ff0000>29</FONT> 01 01 01 00</FONT></STRONG></FONT></P></BLOCKQUOTE>
+<P><FONT face=Tahoma>But wait -- where did the 29 come from? I mean the first one had no DW (diacritc weight), and the next two had 19 and 12, respectively.</FONT></P>
+<P><FONT face=Tahoma>I had talked in previous posts about sort keys about how the minimal weight is 2, but that this weight would only be seen when it was needed as a placeholder, e.g. in the following string:</FONT></P>
+<BLOCKQUOTE dir=ltr style="MARGIN-RIGHT: 0px">
+<P><FONT face=Tahoma><STRONG>eễ<BR></STRONG></FONT><FONT face="Courier New"><STRONG>U+0065 U+1ec5<BR>0e 21 0e 21 01 <FONT color=#ff0000>02 29</FONT> 01 01 01 00</STRONG></FONT></P></BLOCKQUOTE>
+<P><FONT face=Tahoma>So, if you take that (sometimes invisible) 2 that as there on the 'e' always and combine it with the 17 on the tilde and the 10 on the circumflex, you get 29.</FONT></P>
+<P><FONT face=Tahoma>Easy.</FONT></P>
+<P><FONT face=Tahoma>Now what happens when you get that buttload of diacritics? Let's add them one at a time:</FONT></P>
+<BLOCKQUOTE dir=ltr style="MARGIN-RIGHT: 0px">
+<P><FONT face="Courier New" size=2>U+0065<BR>0e 21 01 01 01 01 00</FONT></P>
+<P><FONT face="Courier New" size=2>U+0065 U+0300<BR>0e 21 01 <FONT color=#ff0000>0f</FONT> 01 01 01 00</FONT></P>
+<P><FONT face="Courier New" size=2>U+0065 U+0300 U+0301<BR>0e 21 01 <FONT color=#ff0000>1b</FONT> 01 01 01 00</FONT></P>
+<P><FONT face="Courier New" size=2>U+0065 U+0300 U+0301 U+0302<BR>0e 21 01 <FONT color=#ff0000>2b</FONT> 01 01 01 00</FONT></P>
+<P><FONT face="Courier New" size=2>U+0065 U+0300 U+0301 U+0302 U+0303<BR>0e 21 01 <FONT color=#ff0000>42</FONT> 01 01 01 00</FONT></P>
+<P><FONT face="Courier New" size=2>U+0065 U+0300 U+0301 U+0302 U+0303 U+0304<BR>0e 21 01 <FONT color=#ff0000>57</FONT> 01 01 01 00</FONT></P>
+<P><FONT face="Courier New" size=2>U+0065 U+0300 U+0301 U+0302 U+0303 U+0304 U+0305<BR>0e 21 01 <FONT color=#ff0000>95</FONT> 01 01 01 00</FONT></P>
+<P><FONT face="Courier New" size=2>U+0065 U+0300 U+0301 U+0302 U+0303 U+0304 U+0305 U+0306<BR>0e 21 01 <FONT color=#ff0000>a8</FONT> 01 01 01 00</FONT></P>
+<P><FONT face="Courier New" size=2>U+0065 U+0300 U+0301 U+0302 U+0303 U+0304 U+0305 U+0306 U+0307<BR>0e 21 01 <FONT color=#ff0000>b6</FONT> 01 01 01 00</FONT></P>
+<P><FONT face="Courier New" size=2>U+0065 U+0300 U+0301 U+0302 U+0303 U+0304 U+0305 U+0306 U+0307 U+0308<BR>0e 21 01 <FONT color=#ff0000>c7</FONT> 01 01 01 00</FONT></P>
+<P><FONT face="Courier New" size=2>U+0065 U+0300 U+0301 U+0302 U+0303 U+0304 U+0305 U+0306 U+0307 U+0308 U+0309<BR>0e 21 01 <FONT color=#ff0000>06</FONT> 01 01 01 00</FONT></P>
+<P><FONT size=2><FONT face="Courier New">U+0065 U+0300 U+0301 U+0302 U+0303 U+0304 U+0305 U+0306 U+0307 U+0308 U+0309 U+030a<BR></FONT><FONT face="Courier New">0e 21 01 <FONT color=#ff0000>1e</FONT> 01 01 01 00</FONT></FONT></P>
+<P><FONT face="Courier New" size=2>U+0065 U+0300 U+0301 U+0302 U+0303 U+0304 U+0305 U+0306 U+0307 U+0308 U+0309 U+030a U+030b<BR>0e 21 01 <FONT color=#ff0000>39</FONT> 01 01 01 00</FONT></P>
+<P><FONT face="Courier New" size=2>U+0065 U+0300 U+0301 U+0302 U+0303 U+0304 U+0305 U+0306 U+0307 U+0308 U+0309 U+030a U+030b U+030c<BR>0e 21 01 <FONT color=#ff0000>4b</FONT> 01 01 01 00</FONT></P></BLOCKQUOTE>
+<P><FONT face=Tahoma>Uh oh! Eventually we wrap....</FONT></P>
+<P><FONT face=Tahoma>We only have one byte of space to store that diacritic weight (any more than a byte would run into the next character's byte), and when we run out there were really only three choices:</FONT></P>
+<OL>
+<LI><FONT face=Tahoma>We could stop at 0xff and simply not added any more after that;</FONT> 
+<LI><FONT face=Tahoma>We could stop at 0xff and given an error;</FONT> 
+<LI><FONT face=Tahoma>We could wrap around.</FONT></LI></OL>
+<P><FONT face=Tahoma>The problem with #2 is that it pretty sharply limits what one could do in a potentially unpredictable way, and the problem with #1 is that all such strings would be equal.&nbsp;Now with option #3 there is a good chance that there will be a difference between strings being compared,&nbsp;though it will sometimes unfortunately make a string that is clearly greater than another string feeling like it is less than it -- a cure that may be worse than the disease....</FONT></P>
+<P><FONT face=Tahoma>Well, I won't argue whether one of the other choices might have been better; we are kind of stuck with it now (there are technically a few cases that wrap that are less theoretical than the case above, lest you try to dismiss the example&nbsp;as being a bit too unrealistic!).</FONT></P>
+<P><FONT face=Tahoma>But at least that answers the question about what happens when you try to collate a buttload of diacritics....</FONT></P>
+<P><FONT face=Tahoma></FONT>&nbsp;</P>
+<P><FONT face=Tahoma color=#ff1493><EM>This post brought to you by</EM> "e" <EM>(<A href="http://www.fileformat.info/info/unicode/char/0065">U+0065</A>, a.k.a. LATIN SMALL LETTER E)</EM></FONT></P>
+<hr/><p><strong>Ben Bryant</strong> on 7 Mar 2006 7:32 AM:</p><div style="margin-left: 1em">Would it be correct to say it doesn't really matter what you (MS) do, just that you do something, since this is an edge case not to occur in practical data.</div>
+<p><strong>Michael S. Kaplan</strong> on 7 Mar 2006 10:08 AM:</p><div style="margin-left: 1em">Hi Ben,<br><br>Well, I would not want to say it does not matter, since there are some actual realistic cases where we wrap around. And if one was unlucky enough to be caught in those situations, then one would be very unhappy if I was just dismissive about the situation.... :-(<br> <br>But I *would* say that there is good an bad in all three possibilities.<br><br>I can usually convince myself that any of the three choices is the &quot;best&quot; choice, usually on the basis of a paticular bug report in one or both of the other alternatives!</div>
+<p><strong>Maurits [MSFT]</strong> on 7 Mar 2006 11:13 AM:</p><div style="margin-left: 1em">... why, exactly, do you only have one byte?</div>
+<p><strong>Michael S. Kaplan</strong> on 7 Mar 2006 4:29 PM:</p><div style="margin-left: 1em">It is due to the actual binary format of sort keys, which we cannot change....</div>
+<p><strong>Maurits [MSFT]</strong> on 7 Mar 2006 4:59 PM:</p><div style="margin-left: 1em">... um... why not? &nbsp;Sorry if I'm being a pest.</div>
+<p><strong>Michael S. Kaplan</strong> on 7 Mar 2006 11:35 PM:</p><div style="margin-left: 1em">Hi Maurits,<br><br>A pest? No, not at all. :-)<br><br>The binary format of sort keys is important to people who need to &quot;unpack&quot; the keys, which is possible and there are people who depend on the ability. If we were able to support more than one byte of DW per sort element we would need sentinels or some other mechanism to support such a change.</div>
+<p><strong>Maurits [MSFT]</strong> on 29 Mar 2006 11:48 AM:</p><div style="margin-left: 1em">I just thought of a way to use sentinels in a way that would be backwards-compatible. &nbsp;I'll try to post it today.</div>
+<p><strong>Maurits [MSFT]</strong> on 29 Mar 2006 1:57 PM:</p><div style="margin-left: 1em">Hmmm... I just thought of a potentially serious problem with the third method (wrap.) &nbsp;What if the value wraps to 0xfe or 0xfd? &nbsp;Then when you add 2, you get 01 or (worse?) 00.<br><br>In particular:<br><br>&quot;e&quot; with 15 tildes will have a DW of 15 * 17 which comes to 255; add 2 and you wrap to 1.<br><br>&quot;e&quot; with 5 circumflexes and 12 tildes will have a DW of (5 * 10) + (12 * 17) = 254; add 2 and you wrap to 0.<br><br>On the other hand, what are the odds of encountering a string with such a diacritically-loaded character?</div>
+<p><strong>Michael S. Kaplan</strong> on 29 Mar 2006 2:05 PM:</p><div style="margin-left: 1em">Yes, I agree that is pretty bad, too. Let me give this one some thought....</div>
+<p><strong>Maurits [MSFT]</strong> on 29 Mar 2006 2:27 PM:</p><div style="margin-left: 1em">OK, here's my suggested encoding mechanism in the form of a C# console app:<br><br><a rel="nofollow" target="_new" href="http://www.geocities.com/mvaneerde/diacritic-weight-encoder.txt">http://www.geocities.com/mvaneerde/diacritic-weight-encoder.txt</a></div>
+<p><strong>Michael S. Kaplan</strong> on 29 Mar 2006 4:02 PM:</p><div style="margin-left: 1em">Hi Maurits! <br><br>Interesting -- though not backwards compatible -- since no one can crack this sort key without building in explicit knowledge of the format change.... :-)</div>
+<p><strong>Maurits [MSFT]</strong> on 29 Mar 2006 4:15 PM:</p><div style="margin-left: 1em">Perhaps backwards-compatible was the wrong term. &nbsp;I meant that it generates the same sort keys that the current method does for most data (non-pathological data.)</div>
+<p><strong>Michael S. Kaplan</strong> on 29 Mar 2006 4:25 PM:</p><div style="margin-left: 1em">Right, understood -- but this would still be a known format change, and one that would impact comparisons of sort keys (i.e. it would not always allow comparisons to work the same between comparing sort keys and strings....</div>
+<p><strong>Maurits [MSFT]</strong> on 29 Mar 2006 4:41 PM:</p><div style="margin-left: 1em">Indeed it would be :)<br>I was trying to generate an example string that wraparounded (ugh) to 00 or 01, but I couldn't (on Windows 2000)<br>Maybe I'm trying to solve a problem that doesn't exist?</div>
+<p><strong>Maurits [MSFT]</strong> on 29 Mar 2006 6:01 PM:</p><div style="margin-left: 1em">&gt; one that would impact comparisons of sort keys...<br><br>Not sure I understand this. &nbsp;As I see it, it would /fix/ comparisons of sort keys.<br><br>Given a set of strings of the same UW but with various DW, the current algorithm sometimes sorts correctly and sometimes incorrectly. &nbsp;In fact, sometimes it considers strings to be equal that are not equal (any time the difference in the DW is 256.)<br><br>The proposed algorithm sorts the strings in DW order correctly in all cases, AFAICS.</div>
+<hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2010/09/07 <a href="http://archives.miloush.net/michkap/archive/2010/09/07/10058112.html">Refusing to ignore some particular character's width isn't [always] an act of discrimination…</a></p><p>2007/09/12 <a href="http://archives.miloush.net/michkap/archive/2007/09/12/4875560.html">A&P of Sort Keys, part 2 (aka The string that won? Didn't have a mark on him!)</a></p><p>2007/09/10 <a href="http://archives.miloush.net/michkap/archive/2007/09/10/4847780.html">A&P of Sort Keys, part 0 (aka The empty string sorts the same in every language)</a></p><p>2006/09/19 <a href="http://archives.miloush.net/michkap/archive/2006/09/19/762106.html">Put in on my Tab, please</a></p><p>2006/05/31 <a href="http://archives.miloush.net/michkap/archive/2006/05/31/612544.html">Keeping out the undesirables?</a></p><p>2006/03/30 <a href="http://archives.miloush.net/michkap/archive/2006/03/30/564598.html">If at first you don't succeed, there's probably still a bug</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2006/03/07/545115.html" title="The real problems with keyboard switching">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2006/03/06/544257.html" title="Grouping and Sorting in a ListView">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2006-03">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2006-03-07">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2006/03/07/545097.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:40 GMT -->
+</html>

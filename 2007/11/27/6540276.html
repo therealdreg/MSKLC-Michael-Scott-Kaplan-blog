@@ -1,0 +1,53 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2007/11/27/6540276.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:37 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>There is no E in MUI, even if you pronounce it MOO-EE</title></head><body>
+<h1>There is no E in MUI, even if you pronounce it MOO-EE</h1>
+<p><em>by Michael S. Kaplan, published on 2007/11/27 10:16 -05:00, original URI: http://blogs.msdn.com/b/michkap/archive/2007/11/27/6540276.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P>This guest blog is written by Erik Fortune, the development&nbsp;manager for MUI.</P>
+<P>He gave a tutorial presentation at the 31st Internationalization and Unicode Conference (IUC) entitled <A class="" href="http://www.unicodeconference.org/program-d.htm#tut_4_Wijaya" mce_href="http://www.unicodeconference.org/program-d.htm#tut_4_Wijaya">Writing Win32 Multilingual Applications Using the Windows Vista MUI Technology</A>, in which he mentioned he'd be posting some information/resources here.</P>
+<P>I have to mention that Erik is someone whose office I am unable to walk by without him having&nbsp;some relevant story from his past, but he did draw a blank at&nbsp;coming up with a story for the post.</P>
+<P>So instead I will put up his picture, which as they say is always worth 1000 words (in this case the 1000 words he did not give me!):</P>
+<CENTER><IMG height=155 alt="Erik Fortune " src="http://www.unicodeconference.org/images/photos/Erik-Fortune-sm.jpg" width=138 border=1></CENTER>
+<P>When he doesn't have a story, he usually has random music to play, some if which I enjoy and some of which horrifies me. But I wasn't going to try to attach a song to the page either. :-)</P>
+<P>Anyway, without further delay, let me present that guest blog post!</P>
+<BLOCKQUOTE>
+<HR>
+
+<P>First off, I’d like to apologize for the delay in getting these links posted (and for the lack of content for Michael’s weekend readers).&nbsp; The links have actually been ready for a long time, but we’ve been waiting on the MFC sample code and for me to write something to accompany them.&nbsp;&nbsp;&nbsp; We’ve decided to stop waiting and just post the code when it’s ready.&nbsp; It’ll probably take even longer for me to write something interesting<FONT size=1><SUP>1</SUP></FONT>.</P>
+<P>I’d also like to thank everyone who attended for your questions and suggestions.&nbsp; Here in MUI Central Command, we’re trying to figure out how to fit them in both functionally and schedule-wise.</P>
+<P mce_keep="true">Finally, the slides on the conference CD are out of date.&nbsp; If you need to refer back to the presentation, please pull the slides from the “late presentations” section of the Unicode website.</P>
+<P mce_keep="true">And now for some links to more detailed information on various things discussed in the tutorial.</P>
+<P mce_keep="true"><STRONG>MUI<BR></STRONG>Start off with the "Multilingual User Interface" section on MSDN :&nbsp; <A href="http://msdn2.microsoft.com/en-us/library/ms776201.aspx" mce_href="http://msdn2.microsoft.com/en-us/library/ms776201.aspx">http://msdn2.microsoft.com/en-us/library/ms776201.aspx</A></P>
+<P mce_keep="true"><STRONG>Sample MUI Application<BR></STRONG>The Windows Vista SDK includes a sample MUI Application that demonstrates many of the techniques covered in the tutorial.&nbsp;&nbsp; Documentation here:&nbsp; <A href="http://msdn2.microsoft.com/en-us/library/ms776235.aspx" mce_href="http://msdn2.microsoft.com/en-us/library/ms776235.aspx">http://msdn2.microsoft.com/en-us/library/ms776235.aspx</A> </P>
+<P mce_keep="true"><STRONG>Indirect Strings<BR></STRONG>Prior to Windows Vista, it was quite common to store localized strings in the registry, .inf files and so forth.&nbsp; That leads to all kinds of problems for multilingual systems or distributions, so starting with Windows Vista we recommend the use of MUI indirection.&nbsp;&nbsp; MUI indirection replaces hardcoded localized strings with references to strings contained in MUI files.</P>
+<P>A discussion of the use of MUI indirection for registry stings, shell shortcuts and verbs, MMC snap-in names, service names and much much more can be found here: <BR><A href="http://msdn2.microsoft.com/en-us/library/ms776232.aspx" mce_href="http://msdn2.microsoft.com/en-us/library/ms776232.aspx">http://msdn2.microsoft.com/en-us/library/ms776232.aspx</A></P>
+<P mce_keep="true"><STRONG>Event Logs<BR></STRONG>In the XML&nbsp; Instrumentation Manifest that describes your events:</P>
+<UL>
+<LI>
+<DIV mce_keep="true">Specify the resource DLL that holds your localizable strings.</DIV></LI>
+<LI>
+<DIV mce_keep="true">Define a string table containing values for the localizable strings.</DIV></LI>
+<LI>
+<DIV mce_keep="true">Refer to the string table in your event descriptions</DIV></LI></UL>
+<P mce_keep="true">The Message Compiler (mc.exe) uses this XML event description to produce header and localized binary resource files.</P>
+<P mce_keep="true">As you might expect, there are lots of details.&nbsp;&nbsp; You’ll find much more information, including examples, in MSDN:<BR><A href="http://msdn2.microsoft.com/en-us/library/aa382690.aspx" mce_href="http://msdn2.microsoft.com/en-us/library/aa382690.aspx">http://msdn2.microsoft.com/en-us/library/aa382690.aspx</A></P>
+<P mce_keep="true"><STRONG>Group Policies<BR></STRONG>Windows Vista uses XML for group policy descriptions.&nbsp;&nbsp; Language neutral content in “.ADMX” files refers to localized content defined in “.ADML” files, which live in subdirectories that follow MUI naming conventions (e.g. “%windir%\policydefinitions\de-DE\Policy.adml” contains the localized German strings for “Policy.admx”).</P>
+<P mce_keep="true">You’ll find overall documentation for using and managing group policy at: <BR><A href="http://technet2.microsoft.com/WindowsVista/en/library/02633470-396c-4e34-971a-0c5b090dc4fd1033.mspx?mfr=true" mce_href="http://technet2.microsoft.com/WindowsVista/en/library/02633470-396c-4e34-971a-0c5b090dc4fd1033.mspx?mfr=true">http://technet2.microsoft.com/WindowsVista/en/library/02633470-396c-4e34-971a-0c5b090dc4fd1033.mspx?mfr=true</A></P>
+<P mce_keep="true">The schema for ADMX and ADML is described at:<BR><A href="http://msdn2.microsoft.com/en-us/library/aa373476.aspx" mce_href="http://msdn2.microsoft.com/en-us/library/aa373476.aspx">http://msdn2.microsoft.com/en-us/library/aa373476.aspx</A></P>
+<P mce_keep="true">And you’ll find an example of creating a custom group policy (including localizable strings) here:<BR><A href="http://support.microsoft.com/kb/918239" mce_href="http://support.microsoft.com/kb/918239">http://support.microsoft.com/kb/918239</A> </P>
+<P><STRONG>WMI<BR></STRONG>A WMI provider consists of a Managed Object Format (MOF) file and a DLL with provider logic.&nbsp;&nbsp; Localizable resources are marked with the “amended” qualifier in the MOF file. </P>
+<P mce_keep="true">Documentation for localizing WMI class information can be found at:<BR><A href="http://msdn2.microsoft.com/en-us/library/aa392276.aspx" mce_href="http://msdn2.microsoft.com/en-us/library/aa392276.aspx">http://msdn2.microsoft.com/en-us/library/aa392276.aspx</A></P>
+<P mce_keep="true"><STRONG>MFC<BR></STRONG>The MFC helper function is still not ready.</P>
+<P mce_keep="true">&nbsp;</P>
+<P><FONT size=1>1 - Due to brain-freeze when I need to blog on a specific topic and inability to turn off my inner editor, which are two of the reasons I stopped blogging on my own.&nbsp;&nbsp; The third is that it became counterproductive – I started blogging as a way to vent but eventually wound up searching out things that pissed me off so I’d have something to write about.&nbsp;&nbsp; Not exactly the most cunning of plans.<BR></FONT><BR></P>
+<HR>
+</BLOCKQUOTE>
+<P mce_keep="true"><EM><FONT color=#ff00ff>Every visible character in Unicode supports MUI in general and this post in particular; the invisible ones are still evaluating the technology</FONT></EM></P>
+<hr/><p><a id="6584939" href="#6584939">#</a> <strong>Cristian Secară</strong> on 28 Nov 2007 4:10 PM:</p><div style="margin-left: 1em"><p>To whom is addressed that tutorial ? The sense of the above post is like &quot;we, Microsoft, are recommending to you (?) that MUI files should be build like this and like that&quot;.</p>
+<p>Who else is building MUI files other than Microsoft itself for the own software ? I never encountered a non-Microsoft product that uses the &quot;MUI&quot; model Microsoft is using. Most other translations are either simple .ini files or .lng files (plain text, usually ANSI, sometimes UTF-8 with explicit header), or GNU gettext compiled files (UTF-8), only rarely C++ distinctly compiled files (either locked to a single language, or user selectable).</p>
+<p>What about LIPs ? (an unfortunate user restricted language translation concept, in my opinion)</p>
+<p>Cristi</p></div>
+<hr/><p><em>referenced by</em></p><div style="margin-left: 1em"><p>2011/05/28 <a href="http://archives.miloush.net/michkap/archive/2011/05/28/10168547.html">MUI and MFC live together in perfect harmony...</a></p><p>2007/12/10 <a href="http://archives.miloush.net/michkap/archive/2007/12/10/6715776.html">MUI is like your heartbeat; it's important and useful, whether you know about it or not</a></p></div><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2007/11/27/6544551.html" title="How many versions does a bug have to exist before backporting the fix can&#39;t be successfully argued?">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2007/11/26/6527833.html" title="When yesterday&#39;s workaround becomes tomorrow&#39;s potential solution...">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2007-11">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2007-11-27">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2007/11/27/6540276.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:37 GMT -->
+</html>

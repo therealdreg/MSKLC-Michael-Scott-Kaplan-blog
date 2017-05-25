@@ -1,0 +1,43 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2011/07/01/10182228.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Once more into the UCS-2 breach, SQL Server marches</title></head><body>
+<h1>Once more into the UCS-2 breach, SQL Server marches</h1>
+<p><em>by Michael S. Kaplan, published on 2011/07/01 07:01 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2011/07/01/10182228.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<p>It is probably important for me to write fewer blogs in advance.</p>
+<p>They are simply too much of a time sink.</p>
+<p><em>I'll now try to avoid presenting some largely fictional numbers to prove my point. If&nbsp;I falter in this task, just pretend I'm&nbsp;a politician and you're on my staff, it'll go smoother.</em></p>
+<p>Now the average blog that I finish writing some time between 4pm the night before and 6:51am the morning of? It gets reviewed a little, but I don't make very many changes.</p>
+<p>But the ones that are written much earlier? I'll tweak them and change them delete stuff and add new stuff, trying to "get it right" in almost crazed Charlie Chaplin-esque way.</p>
+<p>Though in the end I don't think they read better. In fact, all that over-editing comes out reading slightly worse.</p>
+<p>And to add insult to injury, I tend to think of these older pieces as if they are somehow less interesting, more forgettable. Easier to move anytime something interesting comes along.</p>
+<p>All that despite the fact that they too might have been the product of some inspiration.</p>
+<p>Sigh....</p>
+<hr />
+<p>Anyhow, just a couple of days ago, a Mike G who I don't believe to be either Mike G.1 or Mike G.2 asked me&nbsp;over in the Suggestion Box:</p>
+<p style="padding-left: 60px;"><em><span style="font-family: times new roman,times; font-size: medium;">I noticed while combing over the SQL Server 2008R2 documentation that nvarchar and nchar only support the UCS-2 subset of UTF-16 (ref:&nbsp;<a href="http://msdn.microsoft.com/en-us/library/ms191200.aspx">Using Unicode Data</a>) (i.e this would indicate to me that searching by strings or expecting string semantics for strings with surrogate pairs might have bugs), This would seem to me to be a critical oversight.</span></em></p>
+<p>Now I wouldn't want to judge SQL Server's Unicode support by that <a href="http://msdn.microsoft.com/en-us/library/ms191200.aspx">Using Unicode Data</a>&nbsp;article, since it does seem to mostly be talk about about a time before supplementary characters even existed as a notion, let alone before any were defined.</p>
+<p>There actually are <em>a few</em>&nbsp;parts of SQL Server that readily support the semantic of supplementary characters as specific linguistic elements..</p>
+<p>Like the *_BIN2 collations I mentioned in <strong><a title="SQL Server has its own version of .NET &quot;ordinal&quot; comparisons" href="http://archives.miloush.net/michkap/archive/2005/01/23/358946.html">SQL Server has its own version of .NET "ordinal" comparisons</a></strong>&nbsp;and elsewhere.</p>
+<p>And in several of the collations first added to SQL Server that I first talked about in <strong><a title="On changing the world, or at least the way people order things in it" href="http://archives.miloush.net/michkap/archive/2008/03/16/8238240.html">On changing the world, or at least the way people order things in it</a></strong>.</p>
+<p>Now the support isn't all encompassing, mind you.</p>
+<p>I mean, what is first and foremost missing is the case information for scripts like <a href="http://www.unicode.org/charts/PDF/U10400.pdf">Deseret</a>.</p>
+<p>And it may have&nbsp;a somewhat negative impact on the LDS church's opinion of this Blog for me to say it, but the fact that that case insensitive sorts will generally be lacking support for Deseret case folding may not be accurately cast as a "critical oversight".</p>
+<p><em>The sentence before last might have held out Deseret as an example but in Unicode as it stands it is the only cased script currently encoded in Unicode. Though perhaps other parts of the <a href="http://www.unicode.org/roadmaps/smp/">SMP</a>&nbsp;will reverse that trend in some future version of Unicode.</em></p>
+<p>For now I'm inclined to say that despite SQL Server being principally on the UCS-2 side of the UCS-2 vs. UTF-16 debate, it is for most purposes "UTF-16 enough" and the fact that developers can use the .Net Framework to support all of Unicode allow databases to fully support UTF-16 and all of the supplementary characters in it improves the situation tremendously.</p>
+<p>Unless you are one of the SQL admins that turns off SQLCLR support, I mean. :-)</p>
+<hr />
+<p>You know, in reading over today's blog in the minutes before it is time to go live, I can't say I'm terribly impressed.</p>
+<p>Maybe the ones written further in advance are superior.</p>
+<p>Or maybe they both suck, a little bit....</p>
+<hr/><p><strong>Mike G.</strong> on 1 Jul 2011 9:20 AM:</p><div style="margin-left: 1em"><p>Thanks for the timely response, I wasn&#39;t expecting something so soon. My concern is mostly related to Azure, where the admins do turn of SQLCLR support, and quite a bit more as well. Given the localization push on the horizon being aware of how SQL Server handles comparisons such as these will be critical, we&#39;re not worried about LDS so much as the PRC.</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 1 Jul 2011 9:59 AM:</p><div style="margin-left: 1em"><p>My pleasure. :-)</p>
+<p>In that case, the new SQL Server colations for Simplified Chinese that are based on government standards for pronunciation and stroke count/order should give you what you are principally looking for. the extra work to not truncate strings in a way that would split surrogate pairs is the only extra care you will need to take....</p></div>
+<p><strong>𐐔𐐲𐑀 𐐏𐐭𐐯𐑊</strong> on 5 Jul 2011 2:41 PM:</p><div style="margin-left: 1em"><p>I suppose you know the LDS Church no longer actively uses or promotes the Deseret Alphabet, and so their opinion of your Blog is probably safe.</p>
+</div>
+<p><strong>Michael S. Kaplan</strong> on 5 Jul 2011 5:48 PM:</p><div style="margin-left: 1em"><p>Ah, but times do change. Plus there are historical documents to worry about....</p>
+</div>
+<hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2011/07/04/10182859.html" title="It could be worse. We could be telling Japanese users &#39;Go stick your head in a pig&#39;!">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2011/06/30/10181768.html" title="Falling back can sometimes be falling over">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2011-07">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2011-07-01">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2011/07/01/10182228.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+</html>

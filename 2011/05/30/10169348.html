@@ -1,0 +1,100 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2011/05/30/10169348.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Semijazzed about semilight!</title></head><body>
+<h1>Semijazzed about semilight!</h1>
+<p><em>by Michael S. Kaplan, published on 2011/05/30 07:01 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2011/05/30/10169348.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<p>So the other day, in response to <strong><a href="http://archives.miloush.net/michkap/archive/2011/05/26/10167955.html" title="To True Boldly Go Where No Font...(yada yada yada)">To True Boldly Go Where No Font...(yada yada yada)</a></strong>, Quppa commented:</p>
+<p style="padding-left: 60px;"><em><span style="font-family: times new roman,times; font-size: medium;">What weight does Segoe UI Semilight (found in WP7 and maybe Windows 8) correspond to?</span></em></p>
+<p>I don't know what&nbsp;the latter&nbsp;product is, never heard of it before. :-)</p>
+<p>But the former product doesn't have a <strong>Segoe UI Semilight</strong> in it or on it.</p>
+<p>Now Windows Phone 7 has a <strong>Segoe WP Semilight</strong>, and the other fonts in the <strong>Segoe WP *</strong> series seem by all appearances to be honest subsets of the <strong>Segoe UI *</strong> series of fonts in Windows 7.</p>
+<p>So perhaps there is something to this idea.</p>
+<p>Though it puts things in a weird place. </p>
+<p>I mean, thinking back to the weight names in this table from <a href="http://msdn.microsoft.com/library/dd145037.aspx">LOGFONT-&gt;lfWeight</a>:</p>
+<table cellpadding="3" cellspacing="3" border="1">
+<tbody>
+<tr>
+<th>Value</th><th>Weight</th>
+</tr>
+<tr>
+<td>FW_DONTCARE</td>
+<td>0</td>
+</tr>
+<tr>
+<td>FW_THIN</td>
+<td>100</td>
+</tr>
+<tr>
+<td>FW_EXTRALIGHT</td>
+<td>200</td>
+</tr>
+<tr>
+<td>FW_ULTRALIGHT</td>
+<td>200</td>
+</tr>
+<tr>
+<td>FW_LIGHT</td>
+<td>300</td>
+</tr>
+<tr>
+<td>FW_NORMAL</td>
+<td>400</td>
+</tr>
+<tr>
+<td>FW_REGULAR</td>
+<td>400</td>
+</tr>
+<tr>
+<td>FW_MEDIUM</td>
+<td>500</td>
+</tr>
+<tr>
+<td>FW_SEMIBOLD</td>
+<td>600</td>
+</tr>
+<tr>
+<td>FW_DEMIBOLD</td>
+<td>600</td>
+</tr>
+<tr>
+<td>FW_BOLD</td>
+<td>700</td>
+</tr>
+<tr>
+<td>FW_EXTRABOLD</td>
+<td>800</td>
+</tr>
+<tr>
+<td>FW_ULTRABOLD</td>
+<td>800</td>
+</tr>
+<tr>
+<td>FW_HEAVY</td>
+<td>900</td>
+</tr>
+<tr>
+<td>FW_BLACK</td>
+<td>900</td>
+</tr>
+</tbody>
+</table>
+<p>Now in pretty much every context that counts, <strong>semilight</strong> would be less light than <strong>light</strong>.</p>
+<p>Just like <strong>semibold</strong> in this table is less bold than <strong>bold</strong> -- thus FW_BOLD is 700, FW_SEMIBOLD is 600, and FW_REGULAR is 400.</p>
+<p>But on the other side, FW_LIGHT is 300 and FW_REGULAR is 400, so I guess some theoretical future FW_SEMILIGHT may well be 350 (or some other number between 300 and 400).</p>
+<p>Of course it does seem like the scale is a bit off here if you compare what the <strong>Semi*</strong> and <strong>Demi* </strong>meanings are on the bold side. But these are just descriptive words that act as approximations, not mathematical concepts with all the rigor that would imply.</p>
+<p>Perhaps if I had sophisticated font file tools on my WP7 device I could find out exactly what weight <strong>Segoe&nbsp;WP Semilight</strong> claimed to be, as perhaps that would cause it all to make sense.</p>
+<p>&nbsp;Or I suppose I could just get it from the <a href="http://go.microsoft.com/fwlink/?LinkId=196225">Design Templates for Windows Phone 7</a>&nbsp;and find out more directly....</p>
+<p><img height="334" width="648" src="http://msdnshared.blob.core.windows.net/media/MSDNBlogsFS/prod.evol.blogs.msdn.com/CommunityServer.Blogs.Components.WeblogFiles/00/00/00/33/81/4666.segoewp01.jpg" />&nbsp;&nbsp;&nbsp;</p>
+<p><br /><img height="359" width="646" src="http://msdnshared.blob.core.windows.net/media/MSDNBlogsFS/prod.evol.blogs.msdn.com/CommunityServer.Blogs.Components.WeblogFiles/00/00/00/33/81/0434.segoewp02.jpg" /></p>
+<p><br /><img height="359" width="645" src="http://msdnshared.blob.core.windows.net/media/MSDNBlogsFS/prod.evol.blogs.msdn.com/CommunityServer.Blogs.Components.WeblogFiles/00/00/00/33/81/2577.segoewp03.jpg" />&nbsp;&nbsp;&nbsp; </p>
+<p>Okay, clearly <strong>Segoe WP Semilight</strong> sits between <strong>Segoe WP Light</strong> and <strong>Segoe WP</strong>. </p>
+<p>Now just to keep me from feeling too guilty for breaking future code from anyone who does their own defines, please be sure to wrap it all up as follows if you agree with my logic and want to use it sooner:</p>
+<p style="padding-left: 30px;"><strong><span style="font-family: consolas,lucida console,courier new,courier,fixed;">#ifndef FW_SEMILIGHT<br />#define FW_SEMILIGHT 350<br />#endif //&nbsp;FW_SEMILIGHT</span></strong></p>
+<p>Okay, now I feel better.... :-)</p>
+<p>I am truly at a minimum semi-jazzed about the <strong>Semilight</strong> weight (<em>full jazz would require all the hinting work to be done</em>!).</p>
+<hr/><p><strong>parkrrrr</strong> on 2 Jun 2011 10:56 AM:</p><div style="margin-left: 1em"><p>There&#39;s a field in OpenType fonts, usWeightClass in the not-so-well-named OS/2 table, that contains these weights. Segoe WP Semilight has a 300 there, and Segoe WP Light has a 200. I don&#39;t know if this will make you feel better or worse....</p>
+</div>
+<hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2011/05/31/10169732.html" title="f y cn rd ths, thn cd tht strps yr vwls my nt bther y s mch....">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2011/05/29/10169312.html" title="Relationships (according to Science!)">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2011-05">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2011-05-30">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2011/05/30/10169348.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:34 GMT -->
+</html>

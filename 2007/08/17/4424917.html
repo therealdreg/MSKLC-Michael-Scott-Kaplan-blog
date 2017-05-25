@@ -1,0 +1,71 @@
+<html>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2007/08/17/4424917.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:37 GMT -->
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Normalize Wide Shut</title></head><body>
+<h1>Normalize Wide Shut</h1>
+<p><em>by Michael S. Kaplan, published on 2007/08/17 03:46 -04:00, original URI: http://blogs.msdn.com/b/michkap/archive/2007/08/17/4424917.aspx</em></p>
+<hr/> <!-- Archival Source: ProcessPostNew -->
+<P><EM>(Apologies to Stanley Kubrick, of course!)</EM>&nbsp;</P>
+<P>It was almost the very first blog post I ever wrote, back in end of November 2004, entitled <STRONG><A class="" href="http://archives.miloush.net/michkap/archive/2004/11/29/271476.html" mce_href="http://archives.miloush.net/michkap/archive/2004/11/29/271476.html">Normalization and Microsoft -- whats the story?</A></STRONG></P>
+<P>In it I mentioned that during my time at Microsoft I really had heard of four different uses of the word <STRONG>normalization</STRONG>.</P>
+<P>Well, the day before yesterday I heard of another.</P>
+<P>It seems that the <A class="" href="http://msdn2.microsoft.com/library/ms696729.aspx" mce_href="http://msdn2.microsoft.com/library/ms696729.aspx">ManagementAgent class</A> has a <A class="" href="http://msdn2.microsoft.com/library/ms697269.aspx" mce_href="http://msdn2.microsoft.com/library/ms697269.aspx">NormalizeString method</A> which (according to MSDN):</P>
+<BLOCKQUOTE>
+<BLOCKQUOTE>
+<P><EM>The <B>NormalizeString(String)</B> method enables the user to normalize case and accent in a string according to the setting for that particular MA. By calling this function, the user can normalize the string according to the connected directory format during provisioning. As a result, when the management agent string is imported back to the connector space from the target directory, the string value imported will be the same as what was written to connector space at provisioning time, allowing confirmation of the export.</EM></P></BLOCKQUOTE></BLOCKQUOTE>
+<P mce_keep="true">As long as I am being all quote happy I'll include the remarks:</P>
+<BLOCKQUOTE>
+<BLOCKQUOTE>
+<P><EM>Certain directories, such as RACF, TopSecret, or ACF2 change text strings that are imported into the directory to remove accents from text characters or to make the text all upper case. When data from the management agent is imported back into the connector space, the string in connector space is not the same as what was staged for export, since the directory will have modified the value. When you use this method, you can set case rules on the string, which makes the string all upper case, or accent rules, which removes accent characters from the string. Since normalization is carried out only in outbound synchronization, setting the initial value of an attribute in CS where the configuration specifies normalizing both case and accents would yield the following: </EM></P>
+<UL>
+<LI><EM>MV attribute value is café. </EM>
+<LI><EM>On initial attribute setting or during EAF, use of NormalizeString transforms the value (assuming both case and accents are configured in the UI) to CAFE. </EM>
+<LI><EM>CS attribute is export to RACF as CAFE. </EM>
+<LI><EM>At a later stage, the CAFE is imported, and the unconfirmed change is cleared. </EM></LI></UL>
+<P mce_keep="true">
+<TABLE class="" border=1>
+<TBODY>
+<TR>
+<TH class="">MV</TH>
+<TH class="">Data flow</TH>
+<TH class="">CS uses NormalizeString</TH>
+<TH class="">Data flow</TH>
+<TH class="">Connected directory</TH></TR>
+<TR>
+<TD class="">café</TD>
+<TD class="">
+<P>———&gt;</P>
+<P>Initial attribute value (provisioning) Or EAF</P></TD>
+<TD class="">
+<P>String is normalized</P>
+<P>café&lt;——&gt;CAFE</P></TD>
+<TD class="">
+<P>——&gt;</P>
+<P>Export</P></TD>
+<TD class="">
+<P>CAFE</P>
+<P>RACF Directory</P></TD></TR>
+<TR>
+<TD class="">café</TD>
+<TD class="">———&gt;</TD>
+<TD class="">
+<P>Exported data is re-imported</P>
+<P>CAFE&lt;——&gt;CAFE</P></TD>
+<TD class="">
+<P>&lt;——</P>
+<P>Stage</P></TD>
+<TD class="">
+<P>CAFE</P>
+<P>RACF Directory</P></TD></TR></TBODY></TABLE></P>
+<P><EM>This method is used on the Extensible Management Agent and the XML Management Agent. The management agents can be call-based or file-based.<BR><BR>Once you have created the management agent that contains this method, you must use the <B>Identity Manager</B> UI to set the options for how the string should be normalized. In <B>Identity Manager</B>, you will need to create a new management agent. In the <B>Create Management Agent</B> UI, on the <B>Configure Connection Information</B> page, the management agents can be set as call-based or file-based. You must select the <B>Import and Export</B> radio button as the step type. On the <B>Configure Attributes</B> page, there are two check boxes: <B>Upper Case</B> and <B>Remove Accents</B>. Select one or both options.</EM></P></BLOCKQUOTE></BLOCKQUOTE>
+<P mce_keep="true">It is actually a little known fact, but if you call <A class="" href="http://msdn2.microsoft.com/library/ms776290.aspx" mce_href="http://msdn2.microsoft.com/library/ms776290.aspx">LCMapString</A> or <A class="" href="http://msdn2.microsoft.com/library/ms776387.aspx" mce_href="http://msdn2.microsoft.com/library/ms776387.aspx">LCMapStringEx</A>&nbsp;with&nbsp;nothing but&nbsp;NORM_IGNORENONSPACE, you can actually see it did a bit of diacritic stripping (it will not do as complete of a job as my <A class="" href="http://archives.miloush.net/michkap/archive/2005/02/19/376617.html" mce_href="http://archives.miloush.net/michkap/archive/2005/02/19/376617.html"><STRONG>prior</STRONG></A> <STRONG><A class="" href="http://archives.miloush.net/michkap/archive/2005/08/01/446486.html" mce_href="http://archives.miloush.net/michkap/archive/2005/08/01/446486.html">posts</A></STRONG> <STRONG><A class="" href="http://archives.miloush.net/michkap/archive/2006/09/22/765618.html" mce_href="http://archives.miloush.net/michkap/archive/2006/09/22/765618.html">on</A></STRONG> <STRONG><A class="" href="http://archives.miloush.net/michkap/archive/2007/05/14/2629747.html" mce_href="http://archives.miloush.net/michkap/archive/2007/05/14/2629747.html">this</A></STRONG> <A class="" href="http://archives.miloush.net/michkap/archive/2007/03/04/1802729.html" mce_href="http://archives.miloush.net/michkap/archive/2007/03/04/1802729.html"><STRONG>subject</STRONG></A> get into across all versions of the .NET Framework and Windows, but it was a step&nbsp;long before my blog existed. Hell, before .NET even existed as a concept. It never occurred to me to call it that way....</P>
+<P mce_keep="true">Anyway, there is also the <A class="" href="http://msdn2.microsoft.com/library/microsoft.teamfoundation.server.aux.normalizestring.aspx" mce_href="http://msdn2.microsoft.com/library/microsoft.teamfoundation.server.aux.normalizestring.aspx">Aux.NormalizeString method</A> that is part of the Team Foundation Server SDK. Though with documentation that does not explain what it does and even goes so far as to directly say "<EM>This method supports the .NET Framework infrastructure and is not intended to be used directly from your code.</EM>", who knows what to expect!</P>
+<P mce_keep="true">So feel free to think of <A class="" href="http://msdn2.microsoft.com/library/microsoft.teamfoundation.server.aux.normalizestring.aspx" mce_href="http://msdn2.microsoft.com/library/microsoft.teamfoundation.server.aux.normalizestring.aspx">Aux.NormalizeString method</A>&nbsp;as the "mystery meat" of the normalization world, and don't spend too much time looking directly at it. :-)</P>
+<P mce_keep="true">But anyway, this fifth Microsoft meaning to "normalization" that I honestly didn't think I got until I read all of the text in the topic and even after that was not 100% sure I got it, plus the sixth method that is a real mystery, should be added to the list. If nothing else it will add to the challenge of <A class="" href="http://search.msdn.microsoft.com/search/Default.aspx?query=NormalizeString&amp;brand=msdn&amp;locale=en-us&amp;refinement=00&amp;lang=en-us" mce_href="http://search.msdn.microsoft.com/search/Default.aspx?query=NormalizeString&amp;brand=msdn&amp;locale=en-us&amp;refinement=00&amp;lang=en-us">searching for that NormalizeString function on MSDN</A>. :-)</P>
+<P mce_keep="true">&nbsp;</P>
+<P mce_keep="true"><FONT color=#ff00ff><EM>This post brought to you by</EM> <FONT size=5>ƕ</FONT> <EM>(<A class="" href="http://www.fileformat.info/info/unicode/char/00d5" mce_href="http://www.fileformat.info/info/unicode/char/00d5">U+0195</A>, a.k.a. LATIN SMALL LETTER HV)</EM></FONT></P>
+<hr/><p><a id="4429746" href="#4429746">#</a> <strong>Doug</strong> on 17 Aug 2007 8:30 AM:</p><div style="margin-left: 1em"><p>Perhaps &quot;normal&quot; is wishful thinking when it isn't applied to a minimal universal representation for the data.</p>
+<p>&quot;Normalize&quot; just sounds more impressive that &quot;cleanup&quot; or &quot;make valid.&quot;</p></div>
+<p><a id="4430668" href="#4430668">#</a> <strong>Michael S. Kaplan</strong> on 17 Aug 2007 10:38 AM:</p><div style="margin-left: 1em"><P>I suppose we should be grateful and say hosanahs that they did not use&nbsp;<STRONG>Disambiguate</STRONG> in the title? :-)</P></div>
+<hr/><p><em>go to <a id="newer" href="http://archives.miloush.net/michkap/archive/2007/08/17/4425267.html" title="Ever look in the mirror[ing] and not like what you see?">newer</a> or <a id="older" href="http://archives.miloush.net/michkap/archive/2007/08/17/4424342.html" title="Alive and well, but more grown up">older</a> post, or back to <a href="http://archives.miloush.net/michkap/archive/index.html">index</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2007-08">month</a> or <a href="http://archives.miloush.net/michkap/archive/index.html#2007-08-17">day</a></em></p></body>
+<!-- Mirrored from archives.miloush.net/michkap/archive/2007/08/17/4424917.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 May 2017 00:42:37 GMT -->
+</html>
